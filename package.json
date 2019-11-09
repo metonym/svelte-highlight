@@ -111,7 +111,8 @@
   "files": [
     "languages",
     "lib",
-    "styles"
+    "styles",
+    "src"
   ],
   "bugs": "https://github.com/metonym/svelte-highlight/issues"
 }
