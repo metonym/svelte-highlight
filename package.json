@@ -1,0 +1,117 @@
+{
+  "name": "svelte-highlight",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Syntax Highlighting for Svelte using highlight.js",
+  "author": "Eric Liu (https://github.com/metonym)",
+  "svelte": "src/Highlight.svelte",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "scripts": {
+    "start": "start-storybook -p 9000",
+    "build": "rollup -c",
+    "build:docs": "build-storybook -o docs",
+    "lint": "eslint --fix 'src/**'",
+    "test": "jest --coverage",
+    "test:tdd": "jest --watch",
+    "prepublishOnly": "yarn build"
+  },
+  "dependencies": {
+    "highlight.js": "^9.16.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@storybook/addon-storysource": "^5.2.6",
+    "@storybook/cli": "^5.2.6",
+    "@storybook/svelte": "^5.2.6",
+    "@testing-library/jest-dom": "^4.2.2",
+    "@testing-library/svelte": "^1.9.0",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "husky": "^3.0.9",
+    "jest": "^24.9.0",
+    "jest-transform-svelte": "^2.1.0",
+    "prettier": "^1.19.1",
+    "prettier-plugin-svelte": "^0.7.0",
+    "pretty-quick": "^2.0.1",
+    "regenerator-runtime": "^0.13.3",
+    "rollup": "^1.26.4",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-svelte": "^5.1.1",
+    "rollup-plugin-terser": "^5.1.2",
+    "shelljs": "^0.8.3",
+    "svelte": "^3.12.1",
+    "svelte-loader": "^2.13.6"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --pattern 'src/**/*.{js,svelte}' --staged",
+      "pre-push": "yarn test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "eslint": {
+    "extends": "eslint:recommended"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.svelte$": "jest-transform-svelte",
+      "^.+\\.js$": "babel-jest"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "svelte"
+    ],
+    "setupFilesAfterEnv": [
+      "regenerator-runtime/runtime",
+      "@testing-library/jest-dom/extend-expect"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/*.stories.js",
+      "<rootDir>/src/languages",
+      "<rootDir>/src/hljs.js"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metonym/svelte-highlight.git"
+  },
+  "homepage": "https://github.com/metonym/svelte-highlight",
+  "keywords": [
+    "svelte",
+    "svelte 3",
+    "highlight.js",
+    "highlight",
+    "code",
+    "syntax"
+  ],
+  "files": [
+    "languages",
+    "lib",
+    "styles"
+  ],
+  "bugs": "https://github.com/metonym/svelte-highlight/issues"
+}
