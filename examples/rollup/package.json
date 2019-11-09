@@ -23,7 +23,9 @@
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-svelte": "^5.1.0",
     "rollup-plugin-terser": "^5.1.2",
-    "svelte": "^3.12.1",
-    "svelte-highlight": "../../"
+    "svelte": "^3.12.1"
+  },
+  "dependencies": {
+    "svelte-highlight": "^0.1.1"
   }
 }

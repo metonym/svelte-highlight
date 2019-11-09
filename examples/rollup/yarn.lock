@@ -3420,8 +3420,10 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-svelte-highlight@../../:
-  version "0.1.0"
+svelte-highlight@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-0.1.1.tgz#877cae07aec4866749e9daeb0bd150102f179fb9"
+  integrity sha512-Q2jXPEV9YBuzcnvzOtYlAb8eoJyFmXcYo/MkowJimrgA23hLDADrbj/+2VY1dSP+Fn6TzjP6wKkthl6hB9+9gg==
   dependencies:
     highlight.js "^9.16.2"
 
