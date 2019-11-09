@@ -1,0 +1,4 @@
+language: node_js
+node_js: stable
+cache: yarn
+after_success: npx codecov

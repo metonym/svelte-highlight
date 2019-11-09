@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the snapshot 1`] = `
+Highlight_wrapper {
+  "$$": Object {
+    "after_update": Array [],
+    "before_update": Array [],
+    "bound": Object {},
+    "callbacks": Object {},
+    "context": Map {},
+    "ctx": Object {
+      "_code": "const a: number = 4;",
+      "className": "svelte-highlight",
+      "language": Object {
+        "name": "typescript",
+        "register": [Function],
+      },
+    },
+    "dirty": null,
+    "fragment": Object {
+      "c": [Function],
+      "d": [Function],
+      "i": [Function],
+      "l": [Function],
+      "m": [Function],
+      "o": [Function],
+      "p": [Function],
+    },
+    "not_equal": [Function],
+    "on_destroy": Array [
+      [Function],
+    ],
+    "on_mount": Array [],
+    "props": Array [
+      "className",
+      "language",
+      "_code",
+    ],
+    "update": [Function],
+  },
+  "$capture_state": [Function],
+  "$inject_state": [Function],
+  "$set": [Function],
+}
+`;

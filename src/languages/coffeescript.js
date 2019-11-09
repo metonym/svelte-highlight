@@ -1,0 +1,3 @@
+import coffeescript from 'highlight.js/lib/languages/coffeescript';
+
+export default { name: 'coffeescript', register: coffeescript };

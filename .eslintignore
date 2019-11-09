@@ -1,0 +1,4 @@
+src/**/*.svelte
+languages/
+lib/
+styles/
