@@ -1331,6 +1331,16 @@ has@^1.0.0, has@^1.0.1, has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hash-static@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/hash-static/-/hash-static-0.1.2.tgz#be9c79fb7ed0a8e9cb4195ca545946e7c7a077d1"
+  integrity sha512-Ls0cwS71AYEIXsp1RvZfz3d9BszY5bU8QqAnoIIAiYYvUzpgajUmSK2unTyiM1SeBzBESImUroxGedSZ5PHWMQ==
+  dependencies:
+    chalk "^2.4.2"
+    htmlnano "^0.2.4"
+    posthtml "^0.12.0"
+    posthtml-hash "^0.2.1"
+
 hasha@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/hasha/-/hasha-5.0.0.tgz#fdc3785caea03df29535fc8adb512c3d3a709004"
@@ -2733,7 +2743,7 @@ postcss@^7.0.14:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-posthtml-hash@^0.2.2:
+posthtml-hash@^0.2.1:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/posthtml-hash/-/posthtml-hash-0.2.2.tgz#4655802a40a92e0d76e376b214fbc7d007bf756f"
   integrity sha512-wz45CvLN+NK2+m0u4677p4gx8W92MeHO/ROMuPKoE8hm4P/SND83OE1qb7wOOeJJwkofnskXBz28hXBADo3pUQ==

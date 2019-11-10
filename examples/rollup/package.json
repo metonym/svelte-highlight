@@ -5,15 +5,13 @@
   "scripts": {
     "develop": "rollup -cw",
     "build": "rimraf build && rollup -c",
-    "postbuild": "node postbuild.js"
+    "postbuild": "hash-static build/index.html"
   },
   "dependencies": {
     "svelte-highlight": "^0.1.1"
   },
   "devDependencies": {
-    "htmlnano": "^0.2.4",
-    "posthtml": "^0.12.0",
-    "posthtml-hash": "^0.2.2",
+    "hash-static": "^0.1.2",
     "rimraf": "^3.0.0",
     "rollup": "^1.26.3",
     "rollup-plugin-commonjs": "^10.1.0",
