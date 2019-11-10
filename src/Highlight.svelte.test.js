@@ -10,8 +10,10 @@ it('matches the snapshot', () => {
     language: typescript,
     _code: 'const a: number = 4;'
   };
-  const { container, component } = render(Highlight, { props });
+  const { container, rerender } = render(Highlight, { props });
 
-  expect(component).toMatchSnapshot();
   expect(container.firstChild).toHaveTextContent(props._code);
+
+  rerender({ props: { _code: 'const b: string = "4";' } });
+  expect(container.firstChild).toHaveTextContent('const b: string = "4";');
 });
