@@ -23,10 +23,16 @@ yarn add svelte-highlight
   import 'svelte-highlight/styles/github.css';
 </script>
 
-<Highlight language={typescript}>const a: number = 4;</Highlight>
+<Highlight language={typescript}>
+  {`function add(a: number, b: number) {
+  return a + b;
+}
+
+const sum = add(1, 2);`}
+</Highlight>
 ```
 
-Note: Importing a css file in Svelte requires the appropriate module loader. Refer to the [rollup](examples/rollup) example.
+Note: Importing a css file in Svelte requires the appropriate module loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for sample configuration.
 
 ## [Examples](examples/)
 
