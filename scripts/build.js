@@ -42,6 +42,8 @@ async function build() {
   });
 
   await fs.mkdir('src/languages');
+
+  baseExport.push('\n');
   await fs.writeFile('src/languages/index.js', baseExport.join('\n'));
 
   files.forEach(async (file, index) => {
