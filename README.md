@@ -28,6 +28,8 @@ yarn add svelte-highlight
 
 Note: Importing a css file in Svelte requires the appropriate module loader. Refer to the [rollup](examples/rollup) example.
 
+## [Examples](examples/)
+
 ## [Changelog](CHANGELOG.md)
 
 ## License
