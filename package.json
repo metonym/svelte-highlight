@@ -85,9 +85,8 @@
       "@testing-library/jest-dom/extend-expect"
     ],
     "coveragePathIgnorePatterns": [
-      "<rootDir>/src/*.stories.js",
-      "<rootDir>/src/languages",
-      "<rootDir>/src/hljs.js"
+      "languages",
+      ".wrapper.svelte"
     ]
   },
   "commitlint": {
