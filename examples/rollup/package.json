@@ -1,13 +1,14 @@
 {
-  "name": "svelte-rollup-template",
+  "name": "rollup",
   "version": "0.1.0",
-  "license": "MIT",
-  "description": "Svelte Rollup template with static asset hashing and minification",
-  "author": "Eric Liu (https://github.com/metonym)",
+  "private": true,
   "scripts": {
     "develop": "rollup -cw",
     "build": "rimraf build && rollup -c",
     "postbuild": "node postbuild.js"
+  },
+  "dependencies": {
+    "svelte-highlight": "^0.1.1"
   },
   "devDependencies": {
     "htmlnano": "^0.2.4",
@@ -24,8 +25,5 @@
     "rollup-plugin-svelte": "^5.1.0",
     "rollup-plugin-terser": "^5.1.2",
     "svelte": "^3.12.1"
-  },
-  "dependencies": {
-    "svelte-highlight": "^0.1.1"
   }
 }

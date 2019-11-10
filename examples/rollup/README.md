@@ -59,7 +59,3 @@ The first plugin ([posthtml-hash](https://github.com/posthtml/posthtml-hash)) ha
 <!-- Result of `htmlnano` -->
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Svelte Rollup Template</title><link rel="stylesheet" href="bundle.b19ea05c629cee24e7b1.css"></head><body> <script src="bundle.d84688974c6150c07e5f.js"></script> </body></html>
 ```
-
-## License
-
-[MIT](LICENSE)
