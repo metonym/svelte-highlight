@@ -4,4 +4,10 @@
   import 'svelte-highlight/styles/github.css';
 </script>
 
-<Highlight language={typescript}>const a: number = 4;</Highlight>
+<Highlight language={typescript}>
+  {`function add(a: number, b: number) {
+  return a + b;
+}
+
+const sum = add(1, 2);`}
+</Highlight>
