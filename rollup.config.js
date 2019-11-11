@@ -3,9 +3,6 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import svelte from 'rollup-plugin-svelte';
 import pkg from './package.json';
-import { build } from './scripts/build';
-
-build();
 
 const lib = ['es', 'umd'].map(format => {
   const UMD = format === 'umd';
@@ -47,4 +44,24 @@ const languages = ['es', 'umd'].map(format => {
   };
 });
 
-export default [...lib, ...languages];
+const styles = ['es', 'umd'].map(format => {
+  const UMD = format === 'umd';
+
+  const output = {
+    format,
+    file: UMD ? 'styles/index.js' : 'styles/index.mjs',
+    exports: UMD ? 'named' : undefined
+  };
+
+  if (UMD) {
+    output.name = 'svelte-highlight-styles';
+  }
+
+  return {
+    input: 'src/styles',
+    output,
+    plugins: [resolve(), commonjs(), UMD && terser()]
+  };
+});
+
+export default [...lib, ...languages, ...styles];
