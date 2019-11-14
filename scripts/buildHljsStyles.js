@@ -10,6 +10,8 @@ async function buildHljsStyles() {
   await fs.mkdir('src/styles');
   await fs.mkdir('styles');
 
+  const supportedStyles = ['# Supported Styles\n'];
+
   glob('node_modules/highlight.js/styles/*.css', {}, async (error, files) => {
     if (error) {
       return;
@@ -26,6 +28,8 @@ async function buildHljsStyles() {
         name = `_${name}`;
       }
 
+      supportedStyles.push(`- ${styleName} (\`${name}\`)`);
+
       baseExport.push(`export { default as ${name} } from './${styleName}';`);
       const buffer = await fs.readFile(file);
       const content = buffer.toString();
@@ -39,6 +43,9 @@ async function buildHljsStyles() {
 
     baseExport.push('\n');
     await fs.writeFile('src/styles/index.js', baseExport.join('\n'));
+
+    supportedStyles.push('\n');
+    await fs.writeFile('SUPPORTED_STYLES.md', supportedStyles.join('\n'));
   });
 }
 
