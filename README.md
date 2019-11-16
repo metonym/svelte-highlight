@@ -32,9 +32,9 @@ const sum = add(1, 2);`}
 </Highlight>
 ```
 
-Note: Importing a CSS file in a Svelte file requires the appropriate CSS loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for sample set-ups.
+**Note**: Importing a CSS stylesheet in Svelte requires a CSS loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for sample set-ups.
 
-In case you do not want to include a CSS loader, this component exports highlight.js themes in JavaScript. You can import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
+In case you do not want to use a CSS loader, this component exports highlight.js themes in JavaScript. Simply import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
 ```html
 <script>
