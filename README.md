@@ -8,6 +8,8 @@
 
 This component wraps [highlight.js](https://github.com/highlightjs/highlight.js) to provide syntax highlighting in [Svelte 3](https://github.com/sveltejs/svelte).
 
+## [Demo](https://metonym.github.io/svelte-highlight)
+
 ## Install
 
 ```bash
