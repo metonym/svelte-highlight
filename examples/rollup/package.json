@@ -8,7 +8,7 @@
     "postbuild": "hash-static build/index.html"
   },
   "dependencies": {
-    "svelte-highlight": "^0.1.1"
+    "svelte-highlight": "^0.2.1"
   },
   "devDependencies": {
     "hash-static": "^0.1.2",
