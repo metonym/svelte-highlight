@@ -56,6 +56,8 @@ const sum = add(1, 2);`}
 </Highlight>
 ```
 
+## [Supported Languages](SUPPORTED_LANGUAGES.md)
+
 ## [Supported Styles](SUPPORTED_STYLES.md)
 
 ## [Examples](examples/)
