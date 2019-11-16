@@ -20,10 +20,12 @@
   {@html style}
 </svelte:head>
 
-<Highlight {language}>
-  {`function add(a: number, b: number) {
+{#if loaded}
+  <Highlight {language}>
+    {`function add(a: number, b: number) {
   return a + b;
 }
 
 const sum = add(1, 2);`}
-</Highlight>
+  </Highlight>
+{/if}
