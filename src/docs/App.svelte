@@ -2,6 +2,13 @@
   import Highlight from '../Highlight.svelte';
   import { onMount } from 'svelte';
 
+  const code = [
+    'function add(a: number, b: number) {',
+    '  return a + b;',
+    '}\n',
+    'const sum = add(1, 2);'
+  ].join('\n')
+
   let currentStyle;
   let languages = {};
   let styles = {};
@@ -177,12 +184,7 @@
       {#if loaded}
         <div class="container">
           <Highlight {language}>
-            {`${[
-    'function add(a: number, b: number) {',
-    '  return a + b;',
-    '}\n',
-    'const sum = add(1, 2);'
-  ].join('\n')}`}
+            {`${code}`}
           </Highlight>
         </div>
       {/if}
