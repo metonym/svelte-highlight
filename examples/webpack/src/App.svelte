@@ -1,13 +1,8 @@
 <script>
-  import Highlight from 'svelte-highlight';
-  import { typescript } from 'svelte-highlight/languages';
-  import 'svelte-highlight/styles/github.css';
+  import Sync from './Sync.svelte';
+  import SyncStylesheet from './SyncStylesheet.svelte';
+  import Async from './Async.svelte';
+  import AsyncStylesheet from './AsyncStylesheet.svelte';
 </script>
 
-<Highlight language={typescript}>
-  {`function add(a: number, b: number) {
-  return a + b;
-}
-
-const sum = add(1, 2);`}
-</Highlight>
+<Sync />
