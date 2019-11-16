@@ -28,7 +28,25 @@ async function buildHljsStyles() {
         name = `_${name}`;
       }
 
-      supportedStyles.push(`- ${styleName} (\`${name}\`)`);
+      supportedStyles.push(`## ${styleName} (\`${name}\`)\n`);
+      supportedStyles.push('<details>');
+      supportedStyles.push('<summary>Usage</summary>\n');
+      supportedStyles.push('### CSS Stylesheet\n');
+      supportedStyles.push('```html');
+      supportedStyles.push('<script>');
+      supportedStyles.push(`import 'svelte-highlight/styles/${name}.css';`);
+      supportedStyles.push('</script>');
+      supportedStyles.push('```\n');
+      supportedStyles.push('### JavaScript\n');
+      supportedStyles.push('```html');
+      supportedStyles.push('<script>');
+      supportedStyles.push(`import { ${name} } from 'svelte-highlight/styles';`);
+      supportedStyles.push('</script>\n');
+      supportedStyles.push('<svelte:head>');
+      supportedStyles.push(`{@html ${name}}`);
+      supportedStyles.push('</svelte:head>');
+      supportedStyles.push('```');
+      supportedStyles.push('</details>\n');
 
       baseExport.push(`export { default as ${name} } from './${styleName}';`);
       const buffer = await fs.readFile(file);
