@@ -2,18 +2,9 @@
   import Highlight from '../Highlight.svelte';
   import { onMount } from 'svelte';
 
-  const code = [
-    'function add(a: number, b: number) {',
-    '  return a + b;',
-    '}\n',
-    'const sum = add(1, 2);'
-  ].join('\n');
-
+  let currentStyle;
   let languages = {};
   let styles = {};
-
-  let currentStyle;
-
   let language;
   let style;
 
@@ -27,15 +18,10 @@
   });
 
   $: loaded = language && style;
-
-  $: supportedLanguages = Object.keys(languages);
   $: supportedStyles = Object.keys(styles);
-
   $: {
-    if (styles) {
-      if (currentStyle) {
-        style = styles[currentStyle];
-      }
+    if (styles && currentStyle) {
+      style = styles[currentStyle];
     }
   }
 </script>
@@ -76,7 +62,7 @@
 
   :global(.svelte-highlight).hljs {
     padding: 1rem 1.25rem;
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
   }
 
   .root {
@@ -191,7 +177,12 @@
       {#if loaded}
         <div class="container">
           <Highlight {language}>
-            {`${code}`}
+            {`${[
+    'function add(a: number, b: number) {',
+    '  return a + b;',
+    '}\n',
+    'const sum = add(1, 2);'
+  ].join('\n')}`}
           </Highlight>
         </div>
       {/if}
