@@ -1,2 +1,6 @@
 README.md
+docs/
+lib/
+languages/
+styles/
 src/docs/**/*.svelte
