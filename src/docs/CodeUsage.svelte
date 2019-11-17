@@ -2,6 +2,8 @@
   export let currentStyle;
   export let code;
 
+  let text;
+
   $: preview = [
     '<script>',
     "  import Highlight from 'svelte-highlight';",
@@ -14,11 +16,22 @@
   ]
     .join('\n')
     .replace(/< \//g, '</');
+
+  $: [first, second] = preview.split(currentStyle);
 </script>
 
+<style>
+  pre {
+    display: inline-block;
+    padding: 1rem 1.25rem;
+    background-color: #f4f4f4;
+    cursor: text;
+  }
+</style>
+
 <section>
-  <h1>Usage</h1>
-  <pre class="pre">
-    <code>{preview}</code>
+  <h2>Usage</h2>
+  <pre>
+    <code>{first}<strong>{currentStyle}</strong>{second}</code>
   </pre>
 </section>

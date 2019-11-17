@@ -11,7 +11,7 @@
 </style>
 
 <section>
-  <h1>Preview</h1>
+  <h2>Preview</h2>
   <div class="container">
     <Highlight language={typescript}>{`${code}`}</Highlight>
   </div>
