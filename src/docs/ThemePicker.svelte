@@ -73,7 +73,8 @@
 </svelte:head>
 
 <ul>
-  <h3>Themes</h3>
+  <slot />
+  <h2>Themes</h2>
   {#each supportedStyles as style, i (style)}
     <li class:active={currentStyle === style}>
       <button

@@ -24,8 +24,21 @@
     display: flex;
     flex-direction: column;
     margin-left: 16rem;
-    padding: 1rem 2rem;
+    padding: 4rem 2rem 1rem;
     overflow: auto;
+  }
+
+  header {
+    display: flex;
+    height: 3rem;
+  }
+
+  h1 {
+    font-size: 1.125rem;
+  }
+
+  a {
+    color: #0f62fe;
   }
 </style>
 
@@ -33,7 +46,13 @@
   {currentStyle}
   updateStyle={style => {
     currentStyle = style;
-  }} />
+  }}>
+  <header>
+    <h1>
+      <a href="https://github.com/metonym/svelte-highlight">svelte-highlight</a>
+    </h1>
+  </header>
+</ThemePicker>
 
 <main>
   <CodePreview {code} />
