@@ -53,3 +53,13 @@ h2 {
   margin-left: 1.25rem;
   margin-bottom: 1rem;
 }
+
+button {
+  outline: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
