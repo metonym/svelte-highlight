@@ -4,29 +4,17 @@
   export let updateStyle = () => false;
 
   let styles = {};
-  let style;
 
   onMount(async () => {
     styles = await import('../styles');
   });
 
   $: supportedStyles = Object.keys(styles);
-  $: {
-    if (styles) {
-      style = styles[currentStyle];
-    }
-  }
+  $: style = styles[currentStyle];
 </script>
 
 <style>
   button {
-    outline: 0;
-    border: 0;
-    background: none;
-    font: inherit;
-    color: inherit;
-    letter-spacing: inherit;
-    cursor: pointer;
     width: 100%;
     height: 100%;
     padding: 0.5rem 1rem;
