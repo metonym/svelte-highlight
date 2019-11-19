@@ -1,7 +1,8 @@
 <script>
-  import Highlight from '../Highlight.svelte';
-  import typescript from '../languages/typescript';
   export let code = '';
+
+  import Highlight from '../Highlight.svelte';
+  import language from '../languages/typescript';
 </script>
 
 <style>
@@ -13,6 +14,6 @@
 <section>
   <h2>Preview</h2>
   <div class="container">
-    <Highlight language={typescript}>{`${code}`}</Highlight>
+    <Highlight {language} {code} />
   </div>
 </section>
