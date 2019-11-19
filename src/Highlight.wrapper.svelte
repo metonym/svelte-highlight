@@ -6,7 +6,7 @@
 
   import Highlight from './Highlight.svelte';
 
-  const props = { language, className, codeClassName };
+  const props = { language, className };
 </script>
 
 {#if renderCodeProp}
