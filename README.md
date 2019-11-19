@@ -18,6 +18,10 @@ yarn add svelte-highlight
 
 ## Usage
 
+### Using a CSS Loader
+
+Importing a CSS stylesheet in Svelte requires a CSS loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for sample set-ups.
+
 ```html
 <script>
   import Highlight from 'svelte-highlight';
@@ -34,7 +38,7 @@ const sum = add(1, 2);`}
 </Highlight>
 ```
 
-**Note**: Importing a CSS stylesheet in Svelte requires a CSS loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for sample set-ups.
+### Injected JavaScript Styles
 
 In case you do not want to use a CSS loader, this component exports highlight.js themes in JavaScript. Simply import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
@@ -56,6 +60,30 @@ In case you do not want to use a CSS loader, this component exports highlight.js
 
 const sum = add(1, 2);`}
 </Highlight>
+```
+
+### The `code` Prop
+
+Code passed to the slot (like in the above examples) will not dynamically update. Use the `code` prop for code that changes.
+
+```html
+<script>
+  import Highlight from 'svelte-highlight';
+  import { typescript } from 'svelte-highlight/languages';
+  import 'svelte-highlight/styles/github.css';
+
+  let count = 0;
+
+  function increment() {
+    count += 1;
+  }
+
+  $: code = `let count = ${count};`;
+</script>
+
+<button on:click={increment}>Increment</button>
+
+<Highlight language={typescript} {code} />
 ```
 
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
