@@ -122,5 +122,8 @@
     "styles",
     "src"
   ],
-  "bugs": "https://github.com/metonym/svelte-highlight/issues"
+  "bugs": "https://github.com/metonym/svelte-highlight/issues",
+  "resolutions": {
+    "**/**/serialize-javascript": ">=2.1.1"
+  }
 }
