@@ -4185,6 +4185,11 @@ highlight.js@^9.16.2:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.16.2.tgz#68368d039ffe1c6211bcc07e483daf95de3e403e"
   integrity sha512-feMUrVLZvjy0oC7FVJQcSQRqbBq9kwqnYE4+Kj9ZjbHh3g+BisiPgF49NyQbVLNdrL/qqZr3Ca9yOKwgn2i/tw==
 
+highlightjs-svelte@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/highlightjs-svelte/-/highlightjs-svelte-1.0.3.tgz#6fc4dbadcff5d286c24507d2e9bcf14faa922aae"
+  integrity sha512-49nlbdqXFzNGwQO69L3zHocJfSSs1ezSytWVdpt0CVUWYAwzd8986l8cYKLKjA0xSGbei1FDZ8ZJXkj6j9tacg==
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
