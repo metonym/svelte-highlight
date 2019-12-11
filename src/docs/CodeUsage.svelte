@@ -3,7 +3,10 @@
   export let code = undefined;
 
   import Highlight from '../Highlight.svelte';
-  import language from '../languages/xml';
+  import hljs from 'highlight.js';
+  import svelte from 'hljsSvelte';
+
+  const language = { name: 'svelte', register: svelte(hljs) };
 
   $: _code = `<script>
   import Highlight from 'svelte-highlight';

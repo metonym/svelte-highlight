@@ -40,6 +40,7 @@
     display: flex;
     align-items: flex-start;
     border-left: 0.25rem solid transparent;
+    letter-spacing: 0.03rem;
   }
 
   li:hover {

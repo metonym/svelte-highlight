@@ -14,7 +14,10 @@ module.exports = {
   devtool: IS_PROD ? false : 'source-map',
   entry: { bundle: ['./src/docs/index.js'] },
   resolve: {
-    alias: { svelte: path.resolve('node_modules', 'svelte') },
+    alias: {
+      svelte: path.resolve('node_modules', 'svelte'),
+      hljsSvelte: path.resolve('node_modules', 'highlightjs-svelte', 'dist/index.js')
+    },
     extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main']
   },

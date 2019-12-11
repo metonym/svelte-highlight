@@ -1,7 +1,6 @@
 <script>
   import './style.css';
   import ThemePicker from './ThemePicker.svelte';
-  import CodePreview from './CodePreview.svelte';
   import CodeUsage from './CodeUsage.svelte';
 
   let currentStyle = 'a11yLight';
@@ -55,6 +54,5 @@
 </ThemePicker>
 
 <main>
-  <CodePreview {code} />
   <CodeUsage {code} {currentStyle} />
 </main>
