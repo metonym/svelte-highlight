@@ -12,7 +12,7 @@ const IS_PROD = NODE_ENV === 'production';
 
 module.exports = {
   devtool: IS_PROD ? false : 'source-map',
-  entry: { bundle: ['./src/docs/index.js'] },
+  entry: { bundle: ['./demo/index.js'] },
   resolve: {
     alias: {
       svelte: path.resolve('node_modules', 'svelte'),
@@ -37,13 +37,13 @@ module.exports = {
   mode: NODE_ENV,
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyPlugin([{ from: 'src/docs/public' }]),
+    new CopyPlugin([{ from: 'demo/public' }]),
     new MiniCssExtractPlugin({ filename: '[name].[chunkhash].css' }),
     new OptimizeCssAssetsPlugin({}),
     new HtmlWebpackPlugin(
       Object.assign(
         {},
-        { inject: true, template: 'src/docs/public/index.html' },
+        { inject: true, template: 'demo/public/index.html' },
         IS_PROD
           ? {
               minify: {

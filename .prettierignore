@@ -3,4 +3,4 @@ docs/
 lib/
 languages/
 styles/
-src/docs/**/*.svelte
+demo/**/*.svelte
