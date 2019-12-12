@@ -1,18 +1,24 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true,
-    "jest": true
-  },
-  "extends": ["airbnb-base"],
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2019,
     "sourceType": "module"
   },
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "plugins": ["svelte3"],
+  "overrides": [
+    {
+      "files": ["**/*.svelte"],
+      "processor": "svelte3/svelte3"
+    }
+  ],
   "rules": {
     "arrow-parens": 0,
     "comma-dangle": 0,
     "import/prefer-default-export": 0,
     "import/no-extraneous-dependencies": 0
-  }
+  },
+  "settings": {}
 }
