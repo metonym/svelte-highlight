@@ -4259,9 +4259,9 @@ highlight.js@9.17.0:
     handlebars "^4.5.3"
 
 highlightjs-svelte@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/highlightjs-svelte/-/highlightjs-svelte-1.0.3.tgz#6fc4dbadcff5d286c24507d2e9bcf14faa922aae"
-  integrity sha512-49nlbdqXFzNGwQO69L3zHocJfSSs1ezSytWVdpt0CVUWYAwzd8986l8cYKLKjA0xSGbei1FDZ8ZJXkj6j9tacg==
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/highlightjs-svelte/-/highlightjs-svelte-1.0.4.tgz#fb4c2cc12ef3d137a4ba45eec1f1622a8318ae08"
+  integrity sha512-YsxXjKw2T8TWiY81HSXfKEf+v+Vgy1eKBV7rpny/eVBfGedJD6OexqiUswmtFkXaBe4kVj6E7IK44XlO7SJcAA==
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
