@@ -6,9 +6,6 @@ const monoBlue = `<style>/*
   overflow-x: auto;
   padding: 0.5em;
   background: #eaeef3;
-}
-
-.hljs {
   color: #00193a;
 }
 

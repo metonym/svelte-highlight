@@ -1196,6 +1196,32 @@ import { googlecode } from 'svelte-highlight/styles';
 ```
 </details>
 
+## gradient-dark (`gradientDark`)
+
+<details>
+<summary>Usage</summary>
+
+### CSS Stylesheet
+
+```html
+<script>
+import 'svelte-highlight/styles/gradientDark.css';
+</script>
+```
+
+### JavaScript
+
+```html
+<script>
+import { gradientDark } from 'svelte-highlight/styles';
+</script>
+
+<svelte:head>
+{@html gradientDark}
+</svelte:head>
+```
+</details>
+
 ## grayscale (`grayscale`)
 
 <details>

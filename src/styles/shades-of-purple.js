@@ -11,8 +11,7 @@ const shadesOfPurple = `<style>/**
   overflow-x: auto;
   /* Custom font is optional */
   /* font-family: 'Operator Mono', 'Fira Code', 'Menlo', 'Monaco', 'Courier New', 'monospace';  */
-  line-height: 1.45;
-  padding: 2rem;
+  padding: 0.5em;
   background: #2d2b57;
   font-weight: normal;
 }

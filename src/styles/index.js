@@ -44,6 +44,7 @@ export { default as githubGist } from './github-gist';
 export { default as github } from './github';
 export { default as gml } from './gml';
 export { default as googlecode } from './googlecode';
+export { default as gradientDark } from './gradient-dark';
 export { default as grayscale } from './grayscale';
 export { default as gruvboxDark } from './gruvbox-dark';
 export { default as gruvboxLight } from './gruvbox-light';
@@ -88,3 +89,4 @@ export { default as vs2015 } from './vs2015';
 export { default as xcode } from './xcode';
 export { default as xt256 } from './xt256';
 export { default as zenburn } from './zenburn';
+
