@@ -18,7 +18,9 @@ yarn add svelte-highlight
 
 ## Usage
 
-### Using a CSS Loader
+There are two ways to use highlight.js styles: through a CSS stylesheet loader or the `svelte:head` API.
+
+### CSS Stylesheet
 
 Importing a CSS stylesheet in Svelte requires a CSS loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for sample set-ups.
 
@@ -38,9 +40,9 @@ const sum = add(1, 2);`}
 </Highlight>
 ```
 
-### Injected JavaScript Styles
+### `svelte:head`
 
-In case you do not want to use a CSS loader, this component exports highlight.js themes in JavaScript. Simply import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
+This component exports highlight.js themes in JavaScript. Simply import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
 ```html
 <script>
