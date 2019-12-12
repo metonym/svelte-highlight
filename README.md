@@ -86,6 +86,32 @@ Code passed to the slot (like in the above examples) will not dynamically update
 <Highlight language={typescript} {code} />
 ```
 
+### Custom Language
+
+For custom language highlighting, pass a `name` and `register` function to the language prop.
+
+Refer to the highlight.js [language definition guide](https://highlightjs.readthedocs.io/en/latest/language-guide.html) for more info.
+
+```html
+<script>
+  import Highlight from 'svelte-highlight';
+  import hljs from 'highlight.js';
+
+  const language = {
+    name: 'custom-lang',
+    register: (hljs) => {
+      return {
+        // ...
+      }
+    }
+  }
+
+  const code = 'custom language';
+</script>
+
+<Highlight {language} {code} />
+```
+
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
 
 ## [Supported Styles](SUPPORTED_STYLES.md)
