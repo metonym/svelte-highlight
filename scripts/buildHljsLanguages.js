@@ -32,7 +32,7 @@ async function buildHljsLanguages() {
     md.push('<summary>Usage</summary>\n');
     md.push('```html');
     md.push('<script>');
-    md.push(`import { ${exportee} } from 'svelte-highlight/languages';`);
+    md.push(`  import { ${exportee} } from 'svelte-highlight/languages';`);
     md.push('</script>');
     md.push('```');
     md.push('</details>\n');
