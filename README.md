@@ -40,7 +40,7 @@ const sum = add(1, 2);`}
 </Highlight>
 ```
 
-### `svelte:head`
+### Injected JavaScript Styles
 
 This component exports highlight.js themes in JavaScript. Simply import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
