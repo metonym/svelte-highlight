@@ -6,6 +6,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const { version } = require('./package.json');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const IS_PROD = NODE_ENV === 'production';
@@ -43,7 +44,7 @@ module.exports = {
     new HtmlWebpackPlugin(
       Object.assign(
         {},
-        { inject: true, template: 'demo/public/index.html' },
+        { inject: true, template: 'demo/public/index.html', version },
         IS_PROD
           ? {
               minify: {

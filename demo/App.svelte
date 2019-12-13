@@ -39,6 +39,11 @@
   a {
     color: #0f62fe;
   }
+
+  a span {
+    font-size: 0.875rem;
+    color: #161616;
+  }
 </style>
 
 <ThemePicker
@@ -48,7 +53,11 @@
   }}>
   <header>
     <h1>
-      <a href="https://github.com/metonym/svelte-highlight">svelte-highlight</a>
+      <a href="https://github.com/metonym/svelte-highlight">
+        svelte-highlight
+        <span>v{window.version}</span>
+      </a>
+
     </h1>
   </header>
 </ThemePicker>
