@@ -1,6 +1,6 @@
 {
   "name": "svelte-highlight",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "description": "Syntax Highlighting for Svelte using highlight.js",
   "author": "Eric Liu (https://github.com/metonym)",
@@ -37,7 +37,7 @@
     "glob": "^7.1.6",
     "highlightjs-svelte": "^1.0.3",
     "html-webpack-plugin": "^3.2.0",
-    "husky": "^3.0.9",
+    "husky": "^3.1.0",
     "jest": "^24.9.0",
     "jest-transform-svelte": "^2.1.0",
     "lint-staged": "^9.5.0",

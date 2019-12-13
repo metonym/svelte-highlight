@@ -38,7 +38,7 @@
 <style>
   .container {
     display: inline-block;
-    border: 1px solid #f4f4f4;
+    border: 2px solid #f4f4f4;
   }
 
   :global(.highlight.hljs) {
@@ -74,7 +74,7 @@
 <section>
   <h2>Usage</h2>
   <ul role="tablist">
-    {#each ['CSS Loader', 'JavaScript Styles'] as item, i (item)}
+    {#each ['CSS Stylesheet', 'Injected JavaScript Styles'] as item, i (item)}
       <li class:active={i === activeTabIndex}>
         <button
           type="button"
