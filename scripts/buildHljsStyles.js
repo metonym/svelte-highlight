@@ -63,7 +63,8 @@ async function buildHljsStyles() {
     await fs.writeFile('src/styles/index.js', baseExport.join('\n'));
 
     md.push('\n');
-    await fs.writeFile('SUPPORTED_STYLES.md', md.join('\n'));
+    await fs.ensureDir('docs');
+    await fs.writeFile('docs/SUPPORTED_STYLES.md', md.join('\n'));
   });
 }
 
