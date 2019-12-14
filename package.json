@@ -17,7 +17,7 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "highlight.js": "9.17.0"
+    "highlight.js": "9.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
