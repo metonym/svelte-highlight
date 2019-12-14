@@ -53,7 +53,8 @@ async function buildHljsLanguages() {
   });
 
   md.push('\n');
-  await fs.writeFile('SUPPORTED_LANGUAGES.md', md.join('\n'));
+  await fs.ensureDir('docs');
+  await fs.writeFile('docs/SUPPORTED_LANGUAGES.md', md.join('\n'));
 }
 
 module.exports = { buildHljsLanguages };

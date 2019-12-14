@@ -114,9 +114,9 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 <Highlight {language} {code} />
 ```
 
-## [Supported Languages](SUPPORTED_LANGUAGES.md)
+## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
 
-## [Supported Styles](SUPPORTED_STYLES.md)
+## [Supported Styles](docs/SUPPORTED_STYLES.md)
 
 ## [Examples](examples/)
 

@@ -1,12 +1,14 @@
 <script>
-  import { onMount } from 'svelte';
-  export let currentStyle;
-  export let updateStyle = () => false;
+  export let currentStyle = undefined;
 
+  import { onMount, createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
   let styles = {};
 
   onMount(async () => {
-    styles = await import('../styles');
+    // eslint-disable-next-line
+    styles = await import('svelte-highlight/styles');
   });
 
   $: supportedStyles = Object.keys(styles);
@@ -14,17 +16,6 @@
 </script>
 
 <style>
-  button {
-    width: 100%;
-    height: 100%;
-    padding: 0.5rem 1rem;
-    text-align: left;
-  }
-
-  button:focus {
-    color: #0f62fe;
-  }
-
   ul {
     position: fixed;
     top: 0;
@@ -36,20 +27,10 @@
   }
 
   li {
-    list-style: none;
     display: flex;
     align-items: flex-start;
     border-left: 0.25rem solid transparent;
     letter-spacing: 0.03rem;
-  }
-
-  li:hover {
-    background-color: #f4f4f4;
-  }
-
-  li.active {
-    color: #0f62fe;
-    background-color: #f4f4f4;
   }
 
   li.active {
@@ -69,7 +50,7 @@
       <button
         type="button"
         on:click={() => {
-          updateStyle(style);
+          dispatch('style', style);
         }}>
         {style}
       </button>

@@ -6,14 +6,14 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
-const { version } = require('./package.json');
+const { version } = require('../package.json');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const IS_PROD = NODE_ENV === 'production';
 
 module.exports = {
   devtool: IS_PROD ? false : 'source-map',
-  entry: { bundle: ['./demo/index.js'] },
+  entry: { bundle: ['./src/index.js'] },
   resolve: {
     alias: {
       svelte: path.resolve('node_modules', 'svelte'),
@@ -22,7 +22,7 @@ module.exports = {
     extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main']
   },
-  output: { path: `${__dirname}/docs`, filename: '[name].[chunkhash].js' },
+  output: { path: `${__dirname}/build`, filename: '[name].[chunkhash].js' },
   module: {
     rules: [
       {
@@ -38,13 +38,13 @@ module.exports = {
   mode: NODE_ENV,
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyPlugin([{ from: 'demo/public' }]),
+    new CopyPlugin([{ from: 'public' }]),
     new MiniCssExtractPlugin({ filename: '[name].[chunkhash].css' }),
     new OptimizeCssAssetsPlugin({}),
     new HtmlWebpackPlugin(
       Object.assign(
         {},
-        { inject: true, template: 'demo/public/index.html', version },
+        { inject: true, template: 'public/index.html', version },
         IS_PROD
           ? {
               minify: {

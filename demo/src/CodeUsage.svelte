@@ -2,7 +2,7 @@
   export let currentStyle = undefined;
   export let code = undefined;
 
-  import Highlight from '../src/Highlight.svelte';
+  import Highlight from 'svelte-highlight';
   import hljs from 'highlight.js';
   import svelte from 'hljsSvelte';
 
@@ -41,33 +41,16 @@
     border: 2px solid #f4f4f4;
   }
 
-  :global(.highlight.hljs) {
+  :global(.hljs.hljs) {
     padding: 1rem 1.25rem;
   }
 
   ul {
     display: flex;
-    list-style: none;
   }
 
   li {
-    letter-spacing: 0.03rem;
     cursor: pointer;
-  }
-
-  li:hover {
-    background-color: #f4f4f4;
-  }
-
-  button {
-    width: 100%;
-    height: 100%;
-    padding: 0.5rem 1.25rem;
-  }
-
-  .active {
-    background-color: #f4f4f4;
-    color: #0f62fe;
   }
 </style>
 
@@ -88,9 +71,9 @@
   </ul>
   <div class="container">
     {#if activeTabIndex === 0}
-      <Highlight {language} code={_code} className="highlight" />
+      <Highlight {language} code={_code} />
     {:else if activeTabIndex === 1}
-      <Highlight {language} code={_codeJavaScript} className="highlight" />
+      <Highlight {language} code={_codeJavaScript} />
     {/if}
   </div>
 </section>

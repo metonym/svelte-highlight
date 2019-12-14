@@ -1,5 +1,4 @@
 <script>
-  import './style.css';
   import ThemePicker from './ThemePicker.svelte';
   import CodeUsage from './CodeUsage.svelte';
 
@@ -48,7 +47,7 @@
 
 <ThemePicker
   {currentStyle}
-  updateStyle={style => {
+  on:style={({ detail: style }) => {
     currentStyle = style;
   }}>
   <header>
@@ -57,7 +56,6 @@
         svelte-highlight
         <span>v{window.version}</span>
       </a>
-
     </h1>
   </header>
 </ThemePicker>
