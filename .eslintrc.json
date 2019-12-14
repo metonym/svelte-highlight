@@ -10,7 +10,7 @@
   "plugins": ["svelte3"],
   "overrides": [
     {
-      "files": ["**/*.svelte"],
+      "files": ["src/**/*.svelte"],
       "processor": "svelte3/svelte3"
     }
   ],
