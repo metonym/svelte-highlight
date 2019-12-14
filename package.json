@@ -8,10 +8,7 @@
   "main": "lib/index.js",
   "module": "lib/index.mjs",
   "scripts": {
-    "start": "webpack-dev-server",
     "build": "node scripts/build.js && rollup -c",
-    "build:docs": "NODE_ENV=production webpack",
-    "lint": "eslint --fix 'src/**'",
     "test": "jest --coverage",
     "test:tdd": "jest --watch",
     "prepublishOnly": "yarn build"
