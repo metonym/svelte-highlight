@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0](https://github.com/metonym/svelte-highlight/releases/tag/v0.4.0) - 2019-12-18
+
+- Pass `id`, `style`, `class` props to `pre` element
+  ([#48](https://github.com/metonym/svelte-highlight/issues/48))
+
+- Deprecate `darkula` style
+  ([#49](https://github.com/metonym/svelte-highlight/issues/49))
+
 ## [0.3.5](https://github.com/metonym/svelte-highlight/releases/tag/v0.3.5) - 2019-12-14
 
 - Use `gh-pages` to publish demo
