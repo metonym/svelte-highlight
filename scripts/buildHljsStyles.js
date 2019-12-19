@@ -14,6 +14,14 @@ async function buildHljsStyles() {
 
   const md = ['# Supported Styles\n'];
 
+  glob('node_modules/highlight.js/styles/!(*.css)', {}, async (error, files) => {
+    if (!error) {
+      files.forEach(async file => {
+        await fs.copyFile(file, `styles/${file.split('/').pop()}`, file);
+      });
+    }
+  });
+
   glob('node_modules/highlight.js/styles/*.css', {}, async (error, files) => {
     if (error) {
       return;
