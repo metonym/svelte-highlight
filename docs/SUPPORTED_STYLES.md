@@ -936,32 +936,6 @@
 ```
 </details>
 
-## darkula (`darkula`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
-
-```html
-<script>
-  import 'svelte-highlight/styles/darkula.css';
-</script>
-```
-
-### JavaScript
-
-```html
-<script>
-  import { darkula } from 'svelte-highlight/styles';
-</script>
-
-<svelte:head>
-  {@html darkula}
-</svelte:head>
-```
-</details>
-
 ## default (`_default`)
 
 <details>

@@ -2,6 +2,8 @@ const fs = require('fs-extra');
 const glob = require('glob');
 const { toPascalCase } = require('./utils/toPascalCase');
 
+const deprecatedStyles = ['darkula'];
+
 async function buildHljsStyles() {
   const baseExport = [];
 
@@ -23,6 +25,10 @@ async function buildHljsStyles() {
         .pop()
         .replace('.css', '');
       let name = toPascalCase(styleName);
+
+      if (deprecatedStyles.includes(name)) {
+        return;
+      }
 
       if (['default'].includes(name)) {
         name = `_${name}`;

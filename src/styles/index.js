@@ -34,7 +34,6 @@ export { default as codepenEmbed } from './codepen-embed';
 export { default as colorBrewer } from './color-brewer';
 export { default as darcula } from './darcula';
 export { default as dark } from './dark';
-export { default as darkula } from './darkula';
 export { default as _default } from './default';
 export { default as docco } from './docco';
 export { default as dracula } from './dracula';
