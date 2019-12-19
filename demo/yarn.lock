@@ -4725,10 +4725,10 @@ svelte-dev-helper@^1.1.9:
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
   integrity sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M=
 
-svelte-highlight@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-0.3.4.tgz#54c7996f503ae7a2ab8270aedddcc395cf6d101a"
-  integrity sha512-t1C4RKMjO261auI2erKsGG0/cTShPrNVR32jPOeQDdTh/8XWkcAWKwtP4AzJYKT2I65pKJb2QOuQ2xroLZjdkA==
+svelte-highlight@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-0.4.0.tgz#d5fd9485265c58ac6826fb51aa54e07fa9d53c03"
+  integrity sha512-PwpKSRV2vVk75nYqGZd5TYfCkCF9gwyUhJTysTIanEiTMwkC3QtL+vHAL9h0sewQwo92UVmHvXaKGjnrhxdGDQ==
   dependencies:
     highlight.js "9.17.1"
 
