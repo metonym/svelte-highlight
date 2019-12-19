@@ -85,7 +85,8 @@
     ],
     "coveragePathIgnorePatterns": [
       "languages",
-      ".wrapper.svelte"
+      ".wrapper.svelte",
+      "hljs"
     ]
   },
   "commitlint": {

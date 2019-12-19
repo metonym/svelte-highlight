@@ -7,6 +7,8 @@ import { typescript } from './languages';
 test('slot', () => {
   const props = {
     className: 'svelte-highlight',
+    class: 'svelte-highlight',
+    style: '',
     language: typescript,
     _code: 'const a: number = 4;',
     renderCodeProp: false
@@ -20,6 +22,8 @@ test('slot', () => {
 test('code prop', () => {
   const props = {
     className: 'svelte-highlight',
+    class: 'svelte-highlight',
+    style: '',
     language: typescript,
     _code: 'const a: number = 4;',
     renderCodeProp: true
