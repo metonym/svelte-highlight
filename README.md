@@ -8,7 +8,7 @@
 
 This component wraps [highlight.js](https://github.com/highlightjs/highlight.js) to provide syntax highlighting in [Svelte 3](https://github.com/sveltejs/svelte).
 
-## [Demo](https://metonym.github.io/svelte-highlight)
+## [Live Demo](https://metonym.github.io/svelte-highlight) [Svelte REPL](https://svelte.dev/repl/0dd3cee4973b45cebd9970c17a04c89a?version=3.16.7)
 
 ## Install
 
@@ -102,9 +102,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
   const language = {
     name: 'custom-lang',
     register: (hljs) => {
-      return {
-        // ...
-      }
+      return { /** custom language rules */ }
     }
   }
 
