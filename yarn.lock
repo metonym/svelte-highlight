@@ -5912,9 +5912,9 @@ svelte-loader@^2.13.6:
     svelte-dev-helper "^1.1.9"
 
 svelte@^3.14.1:
-  version "3.16.7"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.16.7.tgz#9ade80a4bbbac95595c676dd817222f632fa2c07"
-  integrity sha512-egrva1UklB1n7KAv179IhDpQzMGAvubJUlOQ9PitmmZmAfrCUEgrQnx2vPxn2s+mGV3aYegXvJ/yQ35N2SfnYQ==
+  version "3.17.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.17.0.tgz#c633d13aa436ef37d701bb24e1022837230af318"
+  integrity sha512-/ycVYZ7etveSnJU7pSeZ3KHbuK9OfdQRheEIBPf12lomElNMc1c3tML0STVQUrpcFClUAAwufEaaeiuY43X12w==
 
 symbol-observable@^1.1.0:
   version "1.2.0"
