@@ -21,7 +21,7 @@
     "@babel/preset-env": "^7.7.1",
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
-    "@testing-library/jest-dom": "^4.2.2",
+    "@testing-library/jest-dom": "^5.0.0",
     "@testing-library/svelte": "^1.9.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
