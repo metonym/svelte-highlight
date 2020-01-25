@@ -114,6 +114,16 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 <Highlight {language} {code} />
 ```
 
+## API
+
+| Name             | Value                                                 |
+| ---------------- | ----------------------------------------------------- |
+| id               | `string`                                              |
+| class            | `string` (default: 'svelte-highlight')                |
+| code (or `slot`) | `string`                                              |
+| style            | `string`                                              |
+| language         | `object` { name: `string`; register: hljs => object } |
+
 ## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
 
 ## [Supported Styles](docs/SUPPORTED_STYLES.md)
