@@ -14,15 +14,17 @@ This component wraps [highlight.js](https://github.com/highlightjs/highlight.js)
 
 ```bash
 yarn add svelte-highlight
+# OR
+npm i svelte-highlight
 ```
 
 ## Usage
 
-There are two ways to use highlight.js styles: through a CSS stylesheet loader or the `svelte:head` API.
+There are two ways to use `highlight.js` styles: a CSS style sheet loader or the `svelte:head` API.
 
 ### CSS Stylesheet
 
-Importing a CSS stylesheet in Svelte requires a CSS loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for sample set-ups.
+Importing a CSS stylesheet in Svelte requires a CSS loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for working configs.
 
 ```html
 <script>
@@ -42,7 +44,7 @@ const sum = add(1, 2);`}
 
 ### Injected JavaScript Styles
 
-This component exports highlight.js themes in JavaScript. Simply import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
+This component exports `highlight.js` themes in JavaScript. Simply import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
 ```html
 <script>
@@ -66,7 +68,7 @@ const sum = add(1, 2);`}
 
 ### The `code` Prop
 
-Code passed to the slot (like in the above examples) will not dynamically update. Use the `code` prop for code that changes.
+Code passed through a slot will not update dynamically. Use the `code` prop for dynamic content.
 
 ```html
 <script>
@@ -100,8 +102,8 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
   import hljs from 'highlight.js';
 
   const language = {
-    name: 'custom-lang',
-    register: (hljs) => {
+    name: 'custom-language',
+    register: hljs => {
       return { /** custom language rules */ }
     }
   }
@@ -111,6 +113,16 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 <Highlight {language} {code} />
 ```
+
+## API
+
+| Name             | Value                                                 |
+| ---------------- | ----------------------------------------------------- |
+| id               | `string`                                              |
+| class            | `string` (default: 'svelte-highlight')                |
+| code (or `slot`) | `string`                                              |
+| style            | `string`                                              |
+| language         | `object` { name: `string`; register: hljs => object } |
 
 ## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
 
