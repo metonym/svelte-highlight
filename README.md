@@ -14,6 +14,8 @@ This component wraps [highlight.js](https://github.com/highlightjs/highlight.js)
 
 ```bash
 yarn add svelte-highlight
+# OR
+npm i svelte-highlight
 ```
 
 ## Usage
@@ -101,7 +103,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
   const language = {
     name: 'custom-lang',
-    register: (hljs) => {
+    register: hljs => {
       return { /** custom language rules */ }
     }
   }
