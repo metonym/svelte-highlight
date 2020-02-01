@@ -4,6 +4,7 @@
   import { onMount, createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
+
   let styles = {};
 
   onMount(async () => {

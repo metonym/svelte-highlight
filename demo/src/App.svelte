@@ -2,7 +2,7 @@
   import ThemePicker from './ThemePicker.svelte';
   import CodeUsage from './CodeUsage.svelte';
 
-  let currentStyle = 'a11yLight';
+  let currentStyle = 'agate';
 
   const code = [
     'function add(a: number, b: number) {',

@@ -2,6 +2,7 @@
   export let currentStyle = undefined;
   export let code = undefined;
 
+  // use v0.4.0 for `highlightjs-svelte`
   import Highlight from 'svelte-highlight';
   import hljs from 'highlight.js';
   import svelte from 'hljsSvelte';
