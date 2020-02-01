@@ -8,7 +8,7 @@
     "deploy": "node gh-pages.js"
   },
   "dependencies": {
-    "svelte-highlight": "^0.4.0"
+    "svelte-highlight": "^0.4.1"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
