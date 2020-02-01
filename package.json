@@ -30,7 +30,7 @@
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
     "husky": "^4.0.0",
-    "jest": "^24.9.0",
+    "jest": "^25.1.0",
     "jest-transform-svelte": "^2.1.0",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
