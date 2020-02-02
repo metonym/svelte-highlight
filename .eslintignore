@@ -1,5 +1,5 @@
-src/**/*.svelte
 languages/
 lib/
 styles/
 demo/
+examples/
