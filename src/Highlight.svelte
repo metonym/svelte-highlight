@@ -6,8 +6,8 @@
   export let code = undefined;
   export let id = undefined;
   export let style = undefined;
-  export let contenteditable = false;
-  export let spellcheck = false;
+  export let contenteditable = undefined;
+  export let spellcheck = undefined;
 
   import { hljs } from './hljs';
 
@@ -37,7 +37,7 @@
   {spellcheck}
   class={_class}
   on:blur={({ target }) => {
-    if (contenteditable) {
+    if (contenteditable !== undefined && contenteditable !== 'false') {
       code = target.innerText;
       if (block.querySelector('code') == null) {
         block.innerHTML = '<code></code>';
