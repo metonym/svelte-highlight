@@ -1,8 +1,8 @@
 # svelte-highlight
 
 [![NPM][npm]][npm-url]
+![NPM downloads to date](https://img.shields.io/npm/dt/svelte-highlight)
 [![Build][build]][build-badge]
-[![Coverage][codecov-shield]][codecov]
 
 > Syntax Highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
@@ -140,5 +140,3 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 [npm-url]: https://npmjs.com/package/svelte-highlight
 [build]: https://travis-ci.com/metonym/svelte-highlight.svg?branch=master
 [build-badge]: https://travis-ci.com/metonym/svelte-highlight
-[codecov]: https://codecov.io/gh/metonym/svelte-highlight
-[codecov-shield]: https://img.shields.io/codecov/c/github/metonym/svelte-highlight.svg
