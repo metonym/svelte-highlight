@@ -1,6 +1,6 @@
 const agate = `<style>/*!
- * Agate by Taufik Nurrohman <https://github.com/tovic>
- * ----------------------------------------------------
+ * Agate by Taufik Nurrohman <https://github.com/taufik-nurrohman>
+ * ---------------------------------------------------------------
  *
  * #ade5fc
  * #a2fca2
