@@ -114,15 +114,35 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 <Highlight {language} {code} />
 ```
 
+### Editable code
+
+Enable editing using the [contenteditable](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content) property.
+
+```html
+<script>
+  import Highlight from 'svelte-highlight';
+  import { typescript } from 'svelte-highlight/languages';
+  import 'svelte-highlight/styles/github.css';
+
+  $: code = 'let count: number = 0';
+</script>
+
+<Highlight contenteditable language={typescript} bind:code />
+
+{code}
+```
+
 ## API
 
-| Name             | Value                                                 |
+| Property name    | Value                                                 |
 | ---------------- | ----------------------------------------------------- |
 | id               | `string`                                              |
 | class            | `string` (default: 'svelte-highlight')                |
 | code (or `slot`) | `string`                                              |
 | style            | `string`                                              |
 | language         | `object` { name: `string`; register: hljs => object } |
+| contenteditable  | `boolean` (default: `undefined`)                      |
+| spellcheck       | `boolean` (default: `undefined`)                      |
 
 ## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
 
