@@ -1,8 +1,8 @@
 # svelte-highlight
 
 [![NPM][npm]][npm-url]
+![NPM downloads to date](https://img.shields.io/npm/dt/svelte-highlight)
 [![Build][build]][build-badge]
-[![Coverage][codecov-shield]][codecov]
 
 > Syntax Highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
@@ -114,15 +114,35 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 <Highlight {language} {code} />
 ```
 
+### Editable code
+
+Enable editing using the [contenteditable](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content) property.
+
+```html
+<script>
+  import Highlight from 'svelte-highlight';
+  import { typescript } from 'svelte-highlight/languages';
+  import 'svelte-highlight/styles/github.css';
+
+  $: code = 'let count: number = 0';
+</script>
+
+<Highlight contenteditable language={typescript} bind:code />
+
+{code}
+```
+
 ## API
 
-| Name             | Value                                                 |
+| Property name    | Value                                                 |
 | ---------------- | ----------------------------------------------------- |
 | id               | `string`                                              |
 | class            | `string` (default: 'svelte-highlight')                |
 | code (or `slot`) | `string`                                              |
 | style            | `string`                                              |
 | language         | `object` { name: `string`; register: hljs => object } |
+| contenteditable  | `boolean` (default: `undefined`)                      |
+| spellcheck       | `boolean` (default: `undefined`)                      |
 
 ## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
 
@@ -140,5 +160,3 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 [npm-url]: https://npmjs.com/package/svelte-highlight
 [build]: https://travis-ci.com/metonym/svelte-highlight.svg?branch=master
 [build-badge]: https://travis-ci.com/metonym/svelte-highlight
-[codecov]: https://codecov.io/gh/metonym/svelte-highlight
-[codecov-shield]: https://img.shields.io/codecov/c/github/metonym/svelte-highlight.svg

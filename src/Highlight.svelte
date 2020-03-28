@@ -6,6 +6,8 @@
   export let code = undefined;
   export let id = undefined;
   export let style = undefined;
+  export let contenteditable = undefined;
+  export let spellcheck = undefined;
 
   import { hljs } from './hljs';
 
@@ -18,7 +20,7 @@
     }
 
     if (block) {
-      if (code) {
+      if (code && block.querySelector('code') != null) {
         block.querySelector('code').innerText = code;
       }
 
@@ -27,7 +29,21 @@
   }
 </script>
 
-<pre {id} {style} bind:this={block} class={_class}>
+<pre
+  bind:this={block}
+  {id}
+  {style}
+  {contenteditable}
+  {spellcheck}
+  class={_class}
+  on:blur={({ target }) => {
+    if (contenteditable !== undefined && contenteditable !== 'false') {
+      code = target.innerText;
+      if (block.querySelector('code') == null) {
+        block.innerHTML = '<code></code>';
+      }
+    }
+  }}>
   <code>
     <slot>{code}</slot>
   </code>
