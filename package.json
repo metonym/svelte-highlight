@@ -1,103 +1,40 @@
 {
   "name": "svelte-highlight",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "Syntax Highlighting for Svelte using highlight.js",
   "author": "Eric Liu (https://github.com/metonym)",
-  "svelte": "src/Highlight.svelte",
+  "svelte": "src/index.js",
   "main": "lib/index.js",
   "module": "lib/index.mjs",
+  "sideEffects": false,
   "scripts": {
-    "build": "node scripts/build.js && rollup -c",
-    "test": "jest --coverage",
-    "test:tdd": "jest --watch",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "node scripts/build && rollup -c"
   },
   "dependencies": {
-    "highlight.js": "9.18.1"
+    "highlight.js": "9.17.1",
+    "highlightjs-svelte": "1.0.4"
+  },
+  "peerDependencies": {
+    "svelte": "^3.20.x"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.2",
-    "@babel/preset-env": "^7.7.1",
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
-    "@testing-library/jest-dom": "^5.0.0",
-    "@testing-library/svelte": "^3.0.0",
-    "babel-jest": "^24.9.0",
-    "babel-loader": "^8.0.6",
-    "eslint": "^6.8.0",
-    "eslint-plugin-svelte3": "^2.7.3",
-    "fs-extra": "^9.0.0",
     "glob": "^7.1.6",
-    "husky": "^4.0.0",
-    "jest": "^24.9.0",
-    "jest-transform-svelte": "^2.1.0",
-    "lint-staged": "^10.0.7",
-    "prettier": "^1.19.1",
-    "prettier-plugin-svelte": "^0.7.0",
-    "pretty-quick": "^2.0.1",
-    "regenerator-runtime": "^0.13.3",
-    "rollup": "^2.3.2",
+    "rollup": "^2.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-svelte": "^5.1.1",
-    "rollup-plugin-terser": "^5.1.2",
-    "style-loader": "^1.0.0",
-    "svelte": "^3.14.1",
-    "svelte-loader": "^2.13.6"
+    "rollup-plugin-svelte": "^5.2.1",
+    "svelte": "^3.20.x"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && pretty-quick --pattern 'src/**/*.{js,svelte}' --staged",
-      "pre-push": "yarn test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "lint-staged": {
-    "*.{js,svelte}": [
-      "eslint --fix"
-    ]
-  },
-  "prettier": {
-    "printWidth": 100,
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.svelte$": "jest-transform-svelte",
-      "^.+\\.js$": "babel-jest"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "svelte"
-    ],
-    "setupFilesAfterEnv": [
-      "regenerator-runtime/runtime",
-      "@testing-library/jest-dom/extend-expect"
-    ],
-    "coveragePathIgnorePatterns": [
-      "languages",
-      ".wrapper.svelte",
-      "hljs"
-    ]
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+  "engines": {
+    "node": ">=12"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/metonym/svelte-highlight.git"
   },
   "homepage": "https://github.com/metonym/svelte-highlight",
+  "bugs": "https://github.com/metonym/svelte-highlight/issues",
   "keywords": [
     "svelte",
     "svelte 3",
@@ -111,6 +48,5 @@
     "lib",
     "styles",
     "src"
-  ],
-  "bugs": "https://github.com/metonym/svelte-highlight/issues"
+  ]
 }

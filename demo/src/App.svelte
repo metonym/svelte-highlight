@@ -1,65 +1,33 @@
 <script>
-  import ThemePicker from './ThemePicker.svelte';
-  import CodeUsage from './CodeUsage.svelte';
+  import Highlight, { HighlightSvelte } from "svelte-highlight";
+  import { typescript } from "svelte-highlight/languages";
+  import { solarizedDark } from "svelte-highlight/styles";
 
-  let currentStyle = 'agate';
+  let code_typescript = `function add(a: number, b: number) {
+  return a + b;
+}
 
-  const code = [
-    'function add(a: number, b: number) {',
-    '  return a + b;',
-    '}\n',
-    'const sum = add(1, 2);'
-  ].join('\n');
+const sum = add(1, 2);`;
+
+  let code = `<script>
+  import { HighlightSvelte } from 'svelte-highlight';
+  import { typescript } from 'svelte-highlight/languages';
+  import 'svelte-highlight/styles/solarizedDark.css';
+<\/script>
+
+<Highlight language={typescript}>
+  {'function add(a: number, b: number) {
+  return a + b;
+}
+
+const sum = add(1, 2);'}
+</Highlight>`;
 </script>
 
-<style>
-  main {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: calc(100% - 16rem);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin-left: 16rem;
-    padding: 4rem 2rem 1rem;
-    overflow: auto;
-  }
+<svelte:head>
+  {@html solarizedDark}
+</svelte:head>
 
-  header {
-    display: flex;
-    height: 3rem;
-  }
+<Highlight code={code_typescript} language={typescript} />
 
-  h1 {
-    font-size: 1.125rem;
-  }
-
-  a {
-    color: #0f62fe;
-  }
-
-  a span {
-    font-size: 0.875rem;
-    color: #161616;
-  }
-</style>
-
-<ThemePicker
-  {currentStyle}
-  on:style={({ detail: style }) => {
-    currentStyle = style;
-  }}>
-  <header>
-    <h1>
-      <a href="https://github.com/metonym/svelte-highlight">
-        svelte-highlight
-        <span>v{window.version}</span>
-      </a>
-    </h1>
-  </header>
-</ThemePicker>
-
-<main>
-  <CodeUsage {code} {currentStyle} />
-</main>
+<HighlightSvelte {code} />
