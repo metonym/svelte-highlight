@@ -3,11 +3,17 @@
   export let code = undefined;
 
   import hljs from "highlight.js/lib/highlight";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
 
   let highlighted = undefined;
+
+  afterUpdate(() => {
+    if (highlighted) {
+      dispatch("highlight");
+    }
+  });
 
   $: {
     if (language.name && language.register) {
@@ -15,12 +21,19 @@
     }
 
     highlighted = hljs.highlight(language.name, code).value;
-    dispatch("highlight");
   }
 </script>
 
 <slot {highlighted}>
-  <pre {...$$restProps} class:hljs={true}>
+  <pre
+    {...$$restProps}
+    on:click
+    on:mouseover
+    on:mouseenter
+    on:mouseleave
+    on:focus
+    on:blur
+    class:hljs={true}>
     <code>
       {@html highlighted}
     </code>
