@@ -1,6 +1,6 @@
 {
   "name": "svelte-highlight",
-  "version": "1.0.0",
+  "version": "0.6.0",
   "license": "MIT",
   "description": "Syntax Highlighting for Svelte using highlight.js",
   "author": "Eric Liu (https://github.com/metonym)",
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "glob": "^7.1.6",
-    "rollup": "^2.3.3",
+    "rollup": "^2.7.6",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^5.2.1",
