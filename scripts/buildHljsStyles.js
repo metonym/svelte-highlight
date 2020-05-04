@@ -1,31 +1,31 @@
-const fs = require("fs");
 const glob = require("glob");
 const { toPascalCase } = require("./utils/toPascalCase");
+const fs = require("./utils/fs");
 
 const deprecatedStyles = ["darkula"];
 
-function buildHljsStyles() {
+async function buildHljsStyles() {
   const baseExport = [];
 
-  fs.rmdirSync("src/styles", { recursive: true });
-  fs.rmdirSync("styles", { recursive: true });
-  fs.mkdirSync("src/styles");
-  fs.mkdirSync("styles");
+  await fs.rmdir("src/styles", { recursive: true });
+  await fs.rmdir("styles", { recursive: true });
+  await fs.mkdir("src/styles");
+  await fs.mkdir("styles");
 
   const md = ["# Supported Styles\n"];
 
   glob("node_modules/highlight.js/styles/!(*.css)", {}, (error, files) => {
     if (error) return;
 
-    files.forEach((file) => {
-      fs.copyFileSync(file, `styles/${file.split("/").pop()}`, file);
+    files.forEach(async (file) => {
+      await fs.copyFile(file, `styles/${file.split("/").pop()}`, file);
     });
   });
 
-  glob("node_modules/highlight.js/styles/*.css", {}, (error, files) => {
+  glob("node_modules/highlight.js/styles/*.css", {}, async (error, files) => {
     if (error) return;
 
-    files.forEach((file) => {
+    files.forEach(async (file) => {
       const styleName = file.split("/").pop().replace(".css", "");
       let name = toPascalCase(styleName);
 
@@ -58,20 +58,20 @@ function buildHljsStyles() {
       md.push("</details>\n");
 
       baseExport.push(`export { default as ${name} } from './${styleName}';`);
-      const content = fs.readFileSync(file).toString();
+      const content = await fs.readFile(file, "utf-8");
       const exportee = [
         `const ${name} = \`<style>${content}</style>\`;\n`,
         `export default ${name};\n`,
       ].join("\n");
-      fs.writeFileSync(`src/styles/${styleName}.js`, exportee);
-      fs.writeFileSync(`styles/${styleName}.css`, content);
+      await fs.writeFile(`src/styles/${styleName}.js`, exportee);
+      await fs.writeFile(`styles/${styleName}.css`, content);
     });
 
     baseExport.push("\n");
-    fs.writeFileSync("src/styles/index.js", baseExport.join("\n"));
+    await fs.writeFile("src/styles/index.js", baseExport.join("\n"));
 
     md.push("\n");
-    fs.writeFileSync("docs/SUPPORTED_STYLES.md", md.join("\n"));
+    await fs.writeFile("docs/SUPPORTED_STYLES.md", md.join("\n"));
   });
 }
 

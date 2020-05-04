@@ -1,5 +1,7 @@
 const { buildHljsLanguages } = require("./buildHljsLanguages");
 const { buildHljsStyles } = require("./buildHljsStyles");
 
-buildHljsLanguages();
-buildHljsStyles();
+(async () => {
+  await buildHljsLanguages();
+  await buildHljsStyles();
+})();

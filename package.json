@@ -9,7 +9,7 @@
   "module": "lib/index.mjs",
   "sideEffects": false,
   "scripts": {
-    "prepack": "node scripts/build && rollup -c"
+    "prepack": "node scripts && rollup -c"
   },
   "dependencies": {
     "highlight.js": "9.17.1",

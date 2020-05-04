@@ -1,15 +1,16 @@
-const fs = require("fs");
 const hljs = require("highlight.js");
 const { toPascalCase } = require("./utils/toPascalCase");
+const fs = require("./utils/fs");
 
-function buildHljsLanguages() {
-  fs.rmdirSync("src/languages", { recursive: true });
-  fs.rmdirSync("languages", { recursive: true });
-  fs.mkdirSync("src/languages");
-  fs.mkdirSync("languages");
+async function buildHljsLanguages() {
+  await fs.rmdir("src/languages", { recursive: true });
+  await fs.rmdir("languages", { recursive: true });
+  await fs.rmdir("docs", { recursive: true });
+  await fs.mkdir("src/languages");
+  await fs.mkdir("languages");
+  await fs.mkdir("docs");
 
   const md = ["# Supported Languages\n"];
-
   const languages = hljs.listLanguages();
   const baseExport = [];
 
@@ -48,17 +49,15 @@ function buildHljsLanguages() {
   });
 
   baseExport.push("\n");
-  fs.writeFileSync("src/languages/index.js", baseExport.join("\n"));
+  await fs.writeFile("src/languages/index.js", baseExport.join("\n"));
 
-  files.forEach((file, index) => {
-    fs.writeFileSync(`src/languages/${languages[index]}.js`, file);
+  files.forEach(async (file, index) => {
+    await fs.writeFile(`src/languages/${languages[index]}.js`, file);
   });
 
   md.push("\n");
 
-  fs.rmdirSync("docs", { recursive: true });
-  fs.mkdirSync("docs");
-  fs.writeFileSync("docs/SUPPORTED_LANGUAGES.md", md.join("\n"));
+  await fs.writeFile("docs/SUPPORTED_LANGUAGES.md", md.join("\n"));
 }
 
 module.exports = { buildHljsLanguages };
