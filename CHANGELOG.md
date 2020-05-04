@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0](https://github.com/metonym/svelte-highlight/releases/tag/v0.6.0) - 2020-05-03
+
+- Export new `Highlight`, `HighlightSvelte` components; maintain backwards compatibility with `Legacy` component
+
+- Require svelte^3.20.x as a peer dependency due to usage of the `$$restProps` API
+
+- Support Svelte syntax highlighting by wrapping `highlightjs-svelte`
+
+- Dispatch `highlight` event
+
+- Forward the following events to the `pre` element (on:click, on:mouseover, on:mouseenter, on:mouseleave, on:focus, on:blur)
+
 ## [0.5.0](https://github.com/metonym/svelte-highlight/releases/tag/v0.5.0) - 2020-03-27
 
 - Add editable support by exporting `contenteditable`, `spellcheck` props
