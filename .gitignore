@@ -1,9 +1,8 @@
-/coverage
+.DS_Store
+/.vscode
 /languages
-/styles
 /lib
 /node_modules
-.DS_Store
+/styles
 yarn-debug.log*
 yarn-error.log*
-*.tgz

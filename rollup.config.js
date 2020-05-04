@@ -1,66 +1,56 @@
-import { terser } from 'rollup-plugin-terser';
-import commonjs from 'rollup-plugin-commonjs';
-import resolve from 'rollup-plugin-node-resolve';
-import svelte from 'rollup-plugin-svelte';
-import pkg from './package.json';
+import resolve from "rollup-plugin-node-resolve";
+import svelte from "rollup-plugin-svelte";
+import commonjs from "rollup-plugin-commonjs";
+import pkg from "./package.json";
 
-const lib = ['es', 'umd'].map(format => {
-  const UMD = format === 'umd';
+const lib = ["es", "umd"].map((format) => {
+  const UMD = format === "umd";
 
   const output = {
     format,
     file: UMD ? pkg.main : pkg.module,
-    exports: UMD ? 'named' : undefined
+    exports: UMD ? "named" : undefined,
+    name: UMD ? pkg.name : undefined,
   };
 
-  if (UMD) {
-    output.name = 'svelte-highlight';
-  }
-
   return {
-    input: 'src',
+    input: "src",
     output,
-    plugins: [svelte(), resolve(), commonjs(), UMD && terser()]
+    plugins: [svelte(), resolve(), commonjs()],
   };
 });
 
-const languages = ['es', 'umd'].map(format => {
-  const UMD = format === 'umd';
+const languages = ["es", "umd"].map((format) => {
+  const UMD = format === "umd";
 
   const output = {
     format,
-    file: UMD ? 'languages/index.js' : 'languages/index.mjs',
-    exports: UMD ? 'named' : undefined
+    file: UMD ? "languages/index.js" : "languages/index.mjs",
+    exports: UMD ? "named" : undefined,
+    name: UMD ? "svelte-highlight-languages" : undefined,
   };
 
-  if (UMD) {
-    output.name = 'svelte-highlight-languages';
-  }
-
   return {
-    input: 'src/languages',
+    input: "src/languages",
     output,
-    plugins: [resolve(), commonjs(), UMD && terser()]
+    plugins: [resolve(), commonjs()],
   };
 });
 
-const styles = ['es', 'umd'].map(format => {
-  const UMD = format === 'umd';
+const styles = ["es", "umd"].map((format) => {
+  const UMD = format === "umd";
 
   const output = {
     format,
-    file: UMD ? 'styles/index.js' : 'styles/index.mjs',
-    exports: UMD ? 'named' : undefined
+    file: UMD ? "styles/index.js" : "styles/index.mjs",
+    exports: UMD ? "named" : undefined,
+    name: UMD ? "svelte-highlight-styles" : undefined,
   };
 
-  if (UMD) {
-    output.name = 'svelte-highlight-styles';
-  }
-
   return {
-    input: 'src/styles',
+    input: "src/styles",
     output,
-    plugins: [resolve(), commonjs(), UMD && terser()]
+    plugins: [resolve(), commonjs()],
   };
 });
 

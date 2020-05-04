@@ -9,7 +9,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/a11yDark.css';
+  import "svelte-highlight/styles/a11yDark.css";
 </script>
 ```
 
@@ -17,13 +17,14 @@
 
 ```html
 <script>
-  import { a11yDark } from 'svelte-highlight/styles';
+  import { a11yDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html a11yDark}
 </svelte:head>
 ```
+
 </details>
 
 ## a11y-light (`a11yLight`)
@@ -35,7 +36,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/a11yLight.css';
+  import "svelte-highlight/styles/a11yLight.css";
 </script>
 ```
 
@@ -43,13 +44,14 @@
 
 ```html
 <script>
-  import { a11yLight } from 'svelte-highlight/styles';
+  import { a11yLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html a11yLight}
 </svelte:head>
 ```
+
 </details>
 
 ## agate (`agate`)
@@ -61,7 +63,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/agate.css';
+  import "svelte-highlight/styles/agate.css";
 </script>
 ```
 
@@ -69,13 +71,14 @@
 
 ```html
 <script>
-  import { agate } from 'svelte-highlight/styles';
+  import { agate } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html agate}
 </svelte:head>
 ```
+
 </details>
 
 ## an-old-hope (`anOldHope`)
@@ -87,7 +90,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/anOldHope.css';
+  import "svelte-highlight/styles/anOldHope.css";
 </script>
 ```
 
@@ -95,13 +98,14 @@
 
 ```html
 <script>
-  import { anOldHope } from 'svelte-highlight/styles';
+  import { anOldHope } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html anOldHope}
 </svelte:head>
 ```
+
 </details>
 
 ## androidstudio (`androidstudio`)
@@ -113,7 +117,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/androidstudio.css';
+  import "svelte-highlight/styles/androidstudio.css";
 </script>
 ```
 
@@ -121,13 +125,14 @@
 
 ```html
 <script>
-  import { androidstudio } from 'svelte-highlight/styles';
+  import { androidstudio } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html androidstudio}
 </svelte:head>
 ```
+
 </details>
 
 ## arduino-light (`arduinoLight`)
@@ -139,7 +144,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/arduinoLight.css';
+  import "svelte-highlight/styles/arduinoLight.css";
 </script>
 ```
 
@@ -147,13 +152,14 @@
 
 ```html
 <script>
-  import { arduinoLight } from 'svelte-highlight/styles';
+  import { arduinoLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html arduinoLight}
 </svelte:head>
 ```
+
 </details>
 
 ## arta (`arta`)
@@ -165,7 +171,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/arta.css';
+  import "svelte-highlight/styles/arta.css";
 </script>
 ```
 
@@ -173,13 +179,14 @@
 
 ```html
 <script>
-  import { arta } from 'svelte-highlight/styles';
+  import { arta } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html arta}
 </svelte:head>
 ```
+
 </details>
 
 ## ascetic (`ascetic`)
@@ -191,7 +198,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/ascetic.css';
+  import "svelte-highlight/styles/ascetic.css";
 </script>
 ```
 
@@ -199,13 +206,14 @@
 
 ```html
 <script>
-  import { ascetic } from 'svelte-highlight/styles';
+  import { ascetic } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html ascetic}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-cave-dark (`atelierCaveDark`)
@@ -217,7 +225,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierCaveDark.css';
+  import "svelte-highlight/styles/atelierCaveDark.css";
 </script>
 ```
 
@@ -225,13 +233,14 @@
 
 ```html
 <script>
-  import { atelierCaveDark } from 'svelte-highlight/styles';
+  import { atelierCaveDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierCaveDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-cave-light (`atelierCaveLight`)
@@ -243,7 +252,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierCaveLight.css';
+  import "svelte-highlight/styles/atelierCaveLight.css";
 </script>
 ```
 
@@ -251,13 +260,14 @@
 
 ```html
 <script>
-  import { atelierCaveLight } from 'svelte-highlight/styles';
+  import { atelierCaveLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierCaveLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-dune-dark (`atelierDuneDark`)
@@ -269,7 +279,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierDuneDark.css';
+  import "svelte-highlight/styles/atelierDuneDark.css";
 </script>
 ```
 
@@ -277,13 +287,14 @@
 
 ```html
 <script>
-  import { atelierDuneDark } from 'svelte-highlight/styles';
+  import { atelierDuneDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierDuneDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-dune-light (`atelierDuneLight`)
@@ -295,7 +306,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierDuneLight.css';
+  import "svelte-highlight/styles/atelierDuneLight.css";
 </script>
 ```
 
@@ -303,13 +314,14 @@
 
 ```html
 <script>
-  import { atelierDuneLight } from 'svelte-highlight/styles';
+  import { atelierDuneLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierDuneLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-estuary-dark (`atelierEstuaryDark`)
@@ -321,7 +333,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierEstuaryDark.css';
+  import "svelte-highlight/styles/atelierEstuaryDark.css";
 </script>
 ```
 
@@ -329,13 +341,14 @@
 
 ```html
 <script>
-  import { atelierEstuaryDark } from 'svelte-highlight/styles';
+  import { atelierEstuaryDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierEstuaryDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-estuary-light (`atelierEstuaryLight`)
@@ -347,7 +360,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierEstuaryLight.css';
+  import "svelte-highlight/styles/atelierEstuaryLight.css";
 </script>
 ```
 
@@ -355,13 +368,14 @@
 
 ```html
 <script>
-  import { atelierEstuaryLight } from 'svelte-highlight/styles';
+  import { atelierEstuaryLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierEstuaryLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-forest-dark (`atelierForestDark`)
@@ -373,7 +387,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierForestDark.css';
+  import "svelte-highlight/styles/atelierForestDark.css";
 </script>
 ```
 
@@ -381,13 +395,14 @@
 
 ```html
 <script>
-  import { atelierForestDark } from 'svelte-highlight/styles';
+  import { atelierForestDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierForestDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-forest-light (`atelierForestLight`)
@@ -399,7 +414,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierForestLight.css';
+  import "svelte-highlight/styles/atelierForestLight.css";
 </script>
 ```
 
@@ -407,13 +422,14 @@
 
 ```html
 <script>
-  import { atelierForestLight } from 'svelte-highlight/styles';
+  import { atelierForestLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierForestLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-heath-dark (`atelierHeathDark`)
@@ -425,7 +441,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierHeathDark.css';
+  import "svelte-highlight/styles/atelierHeathDark.css";
 </script>
 ```
 
@@ -433,13 +449,14 @@
 
 ```html
 <script>
-  import { atelierHeathDark } from 'svelte-highlight/styles';
+  import { atelierHeathDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierHeathDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-heath-light (`atelierHeathLight`)
@@ -451,7 +468,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierHeathLight.css';
+  import "svelte-highlight/styles/atelierHeathLight.css";
 </script>
 ```
 
@@ -459,13 +476,14 @@
 
 ```html
 <script>
-  import { atelierHeathLight } from 'svelte-highlight/styles';
+  import { atelierHeathLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierHeathLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-lakeside-dark (`atelierLakesideDark`)
@@ -477,7 +495,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierLakesideDark.css';
+  import "svelte-highlight/styles/atelierLakesideDark.css";
 </script>
 ```
 
@@ -485,13 +503,14 @@
 
 ```html
 <script>
-  import { atelierLakesideDark } from 'svelte-highlight/styles';
+  import { atelierLakesideDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierLakesideDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-lakeside-light (`atelierLakesideLight`)
@@ -503,7 +522,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierLakesideLight.css';
+  import "svelte-highlight/styles/atelierLakesideLight.css";
 </script>
 ```
 
@@ -511,13 +530,14 @@
 
 ```html
 <script>
-  import { atelierLakesideLight } from 'svelte-highlight/styles';
+  import { atelierLakesideLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierLakesideLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-plateau-dark (`atelierPlateauDark`)
@@ -529,7 +549,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierPlateauDark.css';
+  import "svelte-highlight/styles/atelierPlateauDark.css";
 </script>
 ```
 
@@ -537,13 +557,14 @@
 
 ```html
 <script>
-  import { atelierPlateauDark } from 'svelte-highlight/styles';
+  import { atelierPlateauDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierPlateauDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-plateau-light (`atelierPlateauLight`)
@@ -555,7 +576,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierPlateauLight.css';
+  import "svelte-highlight/styles/atelierPlateauLight.css";
 </script>
 ```
 
@@ -563,13 +584,14 @@
 
 ```html
 <script>
-  import { atelierPlateauLight } from 'svelte-highlight/styles';
+  import { atelierPlateauLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierPlateauLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-savanna-dark (`atelierSavannaDark`)
@@ -581,7 +603,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierSavannaDark.css';
+  import "svelte-highlight/styles/atelierSavannaDark.css";
 </script>
 ```
 
@@ -589,13 +611,14 @@
 
 ```html
 <script>
-  import { atelierSavannaDark } from 'svelte-highlight/styles';
+  import { atelierSavannaDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierSavannaDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-savanna-light (`atelierSavannaLight`)
@@ -607,7 +630,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierSavannaLight.css';
+  import "svelte-highlight/styles/atelierSavannaLight.css";
 </script>
 ```
 
@@ -615,13 +638,14 @@
 
 ```html
 <script>
-  import { atelierSavannaLight } from 'svelte-highlight/styles';
+  import { atelierSavannaLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierSavannaLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-seaside-dark (`atelierSeasideDark`)
@@ -633,7 +657,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierSeasideDark.css';
+  import "svelte-highlight/styles/atelierSeasideDark.css";
 </script>
 ```
 
@@ -641,13 +665,14 @@
 
 ```html
 <script>
-  import { atelierSeasideDark } from 'svelte-highlight/styles';
+  import { atelierSeasideDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierSeasideDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-seaside-light (`atelierSeasideLight`)
@@ -659,7 +684,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierSeasideLight.css';
+  import "svelte-highlight/styles/atelierSeasideLight.css";
 </script>
 ```
 
@@ -667,13 +692,14 @@
 
 ```html
 <script>
-  import { atelierSeasideLight } from 'svelte-highlight/styles';
+  import { atelierSeasideLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierSeasideLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-sulphurpool-dark (`atelierSulphurpoolDark`)
@@ -685,7 +711,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierSulphurpoolDark.css';
+  import "svelte-highlight/styles/atelierSulphurpoolDark.css";
 </script>
 ```
 
@@ -693,13 +719,14 @@
 
 ```html
 <script>
-  import { atelierSulphurpoolDark } from 'svelte-highlight/styles';
+  import { atelierSulphurpoolDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierSulphurpoolDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atelier-sulphurpool-light (`atelierSulphurpoolLight`)
@@ -711,7 +738,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelierSulphurpoolLight.css';
+  import "svelte-highlight/styles/atelierSulphurpoolLight.css";
 </script>
 ```
 
@@ -719,13 +746,14 @@
 
 ```html
 <script>
-  import { atelierSulphurpoolLight } from 'svelte-highlight/styles';
+  import { atelierSulphurpoolLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atelierSulphurpoolLight}
 </svelte:head>
 ```
+
 </details>
 
 ## atom-one-dark-reasonable (`atomOneDarkReasonable`)
@@ -737,7 +765,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atomOneDarkReasonable.css';
+  import "svelte-highlight/styles/atomOneDarkReasonable.css";
 </script>
 ```
 
@@ -745,13 +773,14 @@
 
 ```html
 <script>
-  import { atomOneDarkReasonable } from 'svelte-highlight/styles';
+  import { atomOneDarkReasonable } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atomOneDarkReasonable}
 </svelte:head>
 ```
+
 </details>
 
 ## atom-one-dark (`atomOneDark`)
@@ -763,7 +792,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atomOneDark.css';
+  import "svelte-highlight/styles/atomOneDark.css";
 </script>
 ```
 
@@ -771,13 +800,14 @@
 
 ```html
 <script>
-  import { atomOneDark } from 'svelte-highlight/styles';
+  import { atomOneDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atomOneDark}
 </svelte:head>
 ```
+
 </details>
 
 ## atom-one-light (`atomOneLight`)
@@ -789,7 +819,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atomOneLight.css';
+  import "svelte-highlight/styles/atomOneLight.css";
 </script>
 ```
 
@@ -797,13 +827,14 @@
 
 ```html
 <script>
-  import { atomOneLight } from 'svelte-highlight/styles';
+  import { atomOneLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html atomOneLight}
 </svelte:head>
 ```
+
 </details>
 
 ## brown-paper (`brownPaper`)
@@ -815,7 +846,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/brownPaper.css';
+  import "svelte-highlight/styles/brownPaper.css";
 </script>
 ```
 
@@ -823,13 +854,14 @@
 
 ```html
 <script>
-  import { brownPaper } from 'svelte-highlight/styles';
+  import { brownPaper } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html brownPaper}
 </svelte:head>
 ```
+
 </details>
 
 ## codepen-embed (`codepenEmbed`)
@@ -841,7 +873,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/codepenEmbed.css';
+  import "svelte-highlight/styles/codepenEmbed.css";
 </script>
 ```
 
@@ -849,13 +881,14 @@
 
 ```html
 <script>
-  import { codepenEmbed } from 'svelte-highlight/styles';
+  import { codepenEmbed } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html codepenEmbed}
 </svelte:head>
 ```
+
 </details>
 
 ## color-brewer (`colorBrewer`)
@@ -867,7 +900,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/colorBrewer.css';
+  import "svelte-highlight/styles/colorBrewer.css";
 </script>
 ```
 
@@ -875,13 +908,14 @@
 
 ```html
 <script>
-  import { colorBrewer } from 'svelte-highlight/styles';
+  import { colorBrewer } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html colorBrewer}
 </svelte:head>
 ```
+
 </details>
 
 ## darcula (`darcula`)
@@ -893,7 +927,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/darcula.css';
+  import "svelte-highlight/styles/darcula.css";
 </script>
 ```
 
@@ -901,13 +935,14 @@
 
 ```html
 <script>
-  import { darcula } from 'svelte-highlight/styles';
+  import { darcula } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html darcula}
 </svelte:head>
 ```
+
 </details>
 
 ## dark (`dark`)
@@ -919,7 +954,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/dark.css';
+  import "svelte-highlight/styles/dark.css";
 </script>
 ```
 
@@ -927,13 +962,14 @@
 
 ```html
 <script>
-  import { dark } from 'svelte-highlight/styles';
+  import { dark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html dark}
 </svelte:head>
 ```
+
 </details>
 
 ## default (`_default`)
@@ -945,7 +981,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/_default.css';
+  import "svelte-highlight/styles/_default.css";
 </script>
 ```
 
@@ -953,13 +989,14 @@
 
 ```html
 <script>
-  import { _default } from 'svelte-highlight/styles';
+  import { _default } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html _default}
 </svelte:head>
 ```
+
 </details>
 
 ## docco (`docco`)
@@ -971,7 +1008,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/docco.css';
+  import "svelte-highlight/styles/docco.css";
 </script>
 ```
 
@@ -979,13 +1016,14 @@
 
 ```html
 <script>
-  import { docco } from 'svelte-highlight/styles';
+  import { docco } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html docco}
 </svelte:head>
 ```
+
 </details>
 
 ## dracula (`dracula`)
@@ -997,7 +1035,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/dracula.css';
+  import "svelte-highlight/styles/dracula.css";
 </script>
 ```
 
@@ -1005,13 +1043,14 @@
 
 ```html
 <script>
-  import { dracula } from 'svelte-highlight/styles';
+  import { dracula } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html dracula}
 </svelte:head>
 ```
+
 </details>
 
 ## far (`far`)
@@ -1023,7 +1062,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/far.css';
+  import "svelte-highlight/styles/far.css";
 </script>
 ```
 
@@ -1031,13 +1070,14 @@
 
 ```html
 <script>
-  import { far } from 'svelte-highlight/styles';
+  import { far } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html far}
 </svelte:head>
 ```
+
 </details>
 
 ## foundation (`foundation`)
@@ -1049,7 +1089,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/foundation.css';
+  import "svelte-highlight/styles/foundation.css";
 </script>
 ```
 
@@ -1057,13 +1097,14 @@
 
 ```html
 <script>
-  import { foundation } from 'svelte-highlight/styles';
+  import { foundation } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html foundation}
 </svelte:head>
 ```
+
 </details>
 
 ## github-gist (`githubGist`)
@@ -1075,7 +1116,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/githubGist.css';
+  import "svelte-highlight/styles/githubGist.css";
 </script>
 ```
 
@@ -1083,13 +1124,14 @@
 
 ```html
 <script>
-  import { githubGist } from 'svelte-highlight/styles';
+  import { githubGist } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html githubGist}
 </svelte:head>
 ```
+
 </details>
 
 ## github (`github`)
@@ -1101,7 +1143,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/github.css';
+  import "svelte-highlight/styles/github.css";
 </script>
 ```
 
@@ -1109,13 +1151,14 @@
 
 ```html
 <script>
-  import { github } from 'svelte-highlight/styles';
+  import { github } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html github}
 </svelte:head>
 ```
+
 </details>
 
 ## gml (`gml`)
@@ -1127,7 +1170,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/gml.css';
+  import "svelte-highlight/styles/gml.css";
 </script>
 ```
 
@@ -1135,13 +1178,14 @@
 
 ```html
 <script>
-  import { gml } from 'svelte-highlight/styles';
+  import { gml } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html gml}
 </svelte:head>
 ```
+
 </details>
 
 ## googlecode (`googlecode`)
@@ -1153,7 +1197,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/googlecode.css';
+  import "svelte-highlight/styles/googlecode.css";
 </script>
 ```
 
@@ -1161,13 +1205,14 @@
 
 ```html
 <script>
-  import { googlecode } from 'svelte-highlight/styles';
+  import { googlecode } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html googlecode}
 </svelte:head>
 ```
+
 </details>
 
 ## gradient-dark (`gradientDark`)
@@ -1179,7 +1224,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/gradientDark.css';
+  import "svelte-highlight/styles/gradientDark.css";
 </script>
 ```
 
@@ -1187,13 +1232,14 @@
 
 ```html
 <script>
-  import { gradientDark } from 'svelte-highlight/styles';
+  import { gradientDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html gradientDark}
 </svelte:head>
 ```
+
 </details>
 
 ## grayscale (`grayscale`)
@@ -1205,7 +1251,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/grayscale.css';
+  import "svelte-highlight/styles/grayscale.css";
 </script>
 ```
 
@@ -1213,13 +1259,14 @@
 
 ```html
 <script>
-  import { grayscale } from 'svelte-highlight/styles';
+  import { grayscale } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html grayscale}
 </svelte:head>
 ```
+
 </details>
 
 ## gruvbox-dark (`gruvboxDark`)
@@ -1231,7 +1278,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/gruvboxDark.css';
+  import "svelte-highlight/styles/gruvboxDark.css";
 </script>
 ```
 
@@ -1239,13 +1286,14 @@
 
 ```html
 <script>
-  import { gruvboxDark } from 'svelte-highlight/styles';
+  import { gruvboxDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html gruvboxDark}
 </svelte:head>
 ```
+
 </details>
 
 ## gruvbox-light (`gruvboxLight`)
@@ -1257,7 +1305,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/gruvboxLight.css';
+  import "svelte-highlight/styles/gruvboxLight.css";
 </script>
 ```
 
@@ -1265,13 +1313,14 @@
 
 ```html
 <script>
-  import { gruvboxLight } from 'svelte-highlight/styles';
+  import { gruvboxLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html gruvboxLight}
 </svelte:head>
 ```
+
 </details>
 
 ## hopscotch (`hopscotch`)
@@ -1283,7 +1332,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/hopscotch.css';
+  import "svelte-highlight/styles/hopscotch.css";
 </script>
 ```
 
@@ -1291,13 +1340,14 @@
 
 ```html
 <script>
-  import { hopscotch } from 'svelte-highlight/styles';
+  import { hopscotch } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html hopscotch}
 </svelte:head>
 ```
+
 </details>
 
 ## hybrid (`hybrid`)
@@ -1309,7 +1359,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/hybrid.css';
+  import "svelte-highlight/styles/hybrid.css";
 </script>
 ```
 
@@ -1317,13 +1367,14 @@
 
 ```html
 <script>
-  import { hybrid } from 'svelte-highlight/styles';
+  import { hybrid } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html hybrid}
 </svelte:head>
 ```
+
 </details>
 
 ## idea (`idea`)
@@ -1335,7 +1386,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/idea.css';
+  import "svelte-highlight/styles/idea.css";
 </script>
 ```
 
@@ -1343,13 +1394,14 @@
 
 ```html
 <script>
-  import { idea } from 'svelte-highlight/styles';
+  import { idea } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html idea}
 </svelte:head>
 ```
+
 </details>
 
 ## ir-black (`irBlack`)
@@ -1361,7 +1413,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/irBlack.css';
+  import "svelte-highlight/styles/irBlack.css";
 </script>
 ```
 
@@ -1369,13 +1421,14 @@
 
 ```html
 <script>
-  import { irBlack } from 'svelte-highlight/styles';
+  import { irBlack } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html irBlack}
 </svelte:head>
 ```
+
 </details>
 
 ## isbl-editor-dark (`isblEditorDark`)
@@ -1387,7 +1440,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/isblEditorDark.css';
+  import "svelte-highlight/styles/isblEditorDark.css";
 </script>
 ```
 
@@ -1395,13 +1448,14 @@
 
 ```html
 <script>
-  import { isblEditorDark } from 'svelte-highlight/styles';
+  import { isblEditorDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html isblEditorDark}
 </svelte:head>
 ```
+
 </details>
 
 ## isbl-editor-light (`isblEditorLight`)
@@ -1413,7 +1467,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/isblEditorLight.css';
+  import "svelte-highlight/styles/isblEditorLight.css";
 </script>
 ```
 
@@ -1421,13 +1475,14 @@
 
 ```html
 <script>
-  import { isblEditorLight } from 'svelte-highlight/styles';
+  import { isblEditorLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html isblEditorLight}
 </svelte:head>
 ```
+
 </details>
 
 ## kimbie.dark (`kimbieDark`)
@@ -1439,7 +1494,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/kimbieDark.css';
+  import "svelte-highlight/styles/kimbieDark.css";
 </script>
 ```
 
@@ -1447,13 +1502,14 @@
 
 ```html
 <script>
-  import { kimbieDark } from 'svelte-highlight/styles';
+  import { kimbieDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html kimbieDark}
 </svelte:head>
 ```
+
 </details>
 
 ## kimbie.light (`kimbieLight`)
@@ -1465,7 +1521,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/kimbieLight.css';
+  import "svelte-highlight/styles/kimbieLight.css";
 </script>
 ```
 
@@ -1473,13 +1529,14 @@
 
 ```html
 <script>
-  import { kimbieLight } from 'svelte-highlight/styles';
+  import { kimbieLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html kimbieLight}
 </svelte:head>
 ```
+
 </details>
 
 ## lightfair (`lightfair`)
@@ -1491,7 +1548,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/lightfair.css';
+  import "svelte-highlight/styles/lightfair.css";
 </script>
 ```
 
@@ -1499,13 +1556,14 @@
 
 ```html
 <script>
-  import { lightfair } from 'svelte-highlight/styles';
+  import { lightfair } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html lightfair}
 </svelte:head>
 ```
+
 </details>
 
 ## magula (`magula`)
@@ -1517,7 +1575,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/magula.css';
+  import "svelte-highlight/styles/magula.css";
 </script>
 ```
 
@@ -1525,13 +1583,14 @@
 
 ```html
 <script>
-  import { magula } from 'svelte-highlight/styles';
+  import { magula } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html magula}
 </svelte:head>
 ```
+
 </details>
 
 ## mono-blue (`monoBlue`)
@@ -1543,7 +1602,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/monoBlue.css';
+  import "svelte-highlight/styles/monoBlue.css";
 </script>
 ```
 
@@ -1551,13 +1610,14 @@
 
 ```html
 <script>
-  import { monoBlue } from 'svelte-highlight/styles';
+  import { monoBlue } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html monoBlue}
 </svelte:head>
 ```
+
 </details>
 
 ## monokai-sublime (`monokaiSublime`)
@@ -1569,7 +1629,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/monokaiSublime.css';
+  import "svelte-highlight/styles/monokaiSublime.css";
 </script>
 ```
 
@@ -1577,13 +1637,14 @@
 
 ```html
 <script>
-  import { monokaiSublime } from 'svelte-highlight/styles';
+  import { monokaiSublime } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html monokaiSublime}
 </svelte:head>
 ```
+
 </details>
 
 ## monokai (`monokai`)
@@ -1595,7 +1656,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/monokai.css';
+  import "svelte-highlight/styles/monokai.css";
 </script>
 ```
 
@@ -1603,13 +1664,14 @@
 
 ```html
 <script>
-  import { monokai } from 'svelte-highlight/styles';
+  import { monokai } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html monokai}
 </svelte:head>
 ```
+
 </details>
 
 ## night-owl (`nightOwl`)
@@ -1621,7 +1683,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/nightOwl.css';
+  import "svelte-highlight/styles/nightOwl.css";
 </script>
 ```
 
@@ -1629,13 +1691,14 @@
 
 ```html
 <script>
-  import { nightOwl } from 'svelte-highlight/styles';
+  import { nightOwl } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html nightOwl}
 </svelte:head>
 ```
+
 </details>
 
 ## nord (`nord`)
@@ -1647,7 +1710,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/nord.css';
+  import "svelte-highlight/styles/nord.css";
 </script>
 ```
 
@@ -1655,13 +1718,14 @@
 
 ```html
 <script>
-  import { nord } from 'svelte-highlight/styles';
+  import { nord } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html nord}
 </svelte:head>
 ```
+
 </details>
 
 ## obsidian (`obsidian`)
@@ -1673,7 +1737,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/obsidian.css';
+  import "svelte-highlight/styles/obsidian.css";
 </script>
 ```
 
@@ -1681,13 +1745,14 @@
 
 ```html
 <script>
-  import { obsidian } from 'svelte-highlight/styles';
+  import { obsidian } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html obsidian}
 </svelte:head>
 ```
+
 </details>
 
 ## ocean (`ocean`)
@@ -1699,7 +1764,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/ocean.css';
+  import "svelte-highlight/styles/ocean.css";
 </script>
 ```
 
@@ -1707,13 +1772,14 @@
 
 ```html
 <script>
-  import { ocean } from 'svelte-highlight/styles';
+  import { ocean } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html ocean}
 </svelte:head>
 ```
+
 </details>
 
 ## paraiso-dark (`paraisoDark`)
@@ -1725,7 +1791,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/paraisoDark.css';
+  import "svelte-highlight/styles/paraisoDark.css";
 </script>
 ```
 
@@ -1733,13 +1799,14 @@
 
 ```html
 <script>
-  import { paraisoDark } from 'svelte-highlight/styles';
+  import { paraisoDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html paraisoDark}
 </svelte:head>
 ```
+
 </details>
 
 ## paraiso-light (`paraisoLight`)
@@ -1751,7 +1818,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/paraisoLight.css';
+  import "svelte-highlight/styles/paraisoLight.css";
 </script>
 ```
 
@@ -1759,13 +1826,14 @@
 
 ```html
 <script>
-  import { paraisoLight } from 'svelte-highlight/styles';
+  import { paraisoLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html paraisoLight}
 </svelte:head>
 ```
+
 </details>
 
 ## pojoaque (`pojoaque`)
@@ -1777,7 +1845,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/pojoaque.css';
+  import "svelte-highlight/styles/pojoaque.css";
 </script>
 ```
 
@@ -1785,13 +1853,14 @@
 
 ```html
 <script>
-  import { pojoaque } from 'svelte-highlight/styles';
+  import { pojoaque } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html pojoaque}
 </svelte:head>
 ```
+
 </details>
 
 ## purebasic (`purebasic`)
@@ -1803,7 +1872,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/purebasic.css';
+  import "svelte-highlight/styles/purebasic.css";
 </script>
 ```
 
@@ -1811,13 +1880,14 @@
 
 ```html
 <script>
-  import { purebasic } from 'svelte-highlight/styles';
+  import { purebasic } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html purebasic}
 </svelte:head>
 ```
+
 </details>
 
 ## qtcreator_dark (`qtcreator_dark`)
@@ -1829,7 +1899,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/qtcreator_dark.css';
+  import "svelte-highlight/styles/qtcreator_dark.css";
 </script>
 ```
 
@@ -1837,13 +1907,14 @@
 
 ```html
 <script>
-  import { qtcreator_dark } from 'svelte-highlight/styles';
+  import { qtcreator_dark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html qtcreator_dark}
 </svelte:head>
 ```
+
 </details>
 
 ## qtcreator_light (`qtcreator_light`)
@@ -1855,7 +1926,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/qtcreator_light.css';
+  import "svelte-highlight/styles/qtcreator_light.css";
 </script>
 ```
 
@@ -1863,13 +1934,14 @@
 
 ```html
 <script>
-  import { qtcreator_light } from 'svelte-highlight/styles';
+  import { qtcreator_light } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html qtcreator_light}
 </svelte:head>
 ```
+
 </details>
 
 ## railscasts (`railscasts`)
@@ -1881,7 +1953,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/railscasts.css';
+  import "svelte-highlight/styles/railscasts.css";
 </script>
 ```
 
@@ -1889,13 +1961,14 @@
 
 ```html
 <script>
-  import { railscasts } from 'svelte-highlight/styles';
+  import { railscasts } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html railscasts}
 </svelte:head>
 ```
+
 </details>
 
 ## rainbow (`rainbow`)
@@ -1907,7 +1980,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/rainbow.css';
+  import "svelte-highlight/styles/rainbow.css";
 </script>
 ```
 
@@ -1915,13 +1988,14 @@
 
 ```html
 <script>
-  import { rainbow } from 'svelte-highlight/styles';
+  import { rainbow } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html rainbow}
 </svelte:head>
 ```
+
 </details>
 
 ## routeros (`routeros`)
@@ -1933,7 +2007,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/routeros.css';
+  import "svelte-highlight/styles/routeros.css";
 </script>
 ```
 
@@ -1941,13 +2015,14 @@
 
 ```html
 <script>
-  import { routeros } from 'svelte-highlight/styles';
+  import { routeros } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html routeros}
 </svelte:head>
 ```
+
 </details>
 
 ## school-book (`schoolBook`)
@@ -1959,7 +2034,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/schoolBook.css';
+  import "svelte-highlight/styles/schoolBook.css";
 </script>
 ```
 
@@ -1967,13 +2042,14 @@
 
 ```html
 <script>
-  import { schoolBook } from 'svelte-highlight/styles';
+  import { schoolBook } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html schoolBook}
 </svelte:head>
 ```
+
 </details>
 
 ## shades-of-purple (`shadesOfPurple`)
@@ -1985,7 +2061,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/shadesOfPurple.css';
+  import "svelte-highlight/styles/shadesOfPurple.css";
 </script>
 ```
 
@@ -1993,13 +2069,14 @@
 
 ```html
 <script>
-  import { shadesOfPurple } from 'svelte-highlight/styles';
+  import { shadesOfPurple } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html shadesOfPurple}
 </svelte:head>
 ```
+
 </details>
 
 ## solarized-dark (`solarizedDark`)
@@ -2011,7 +2088,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/solarizedDark.css';
+  import "svelte-highlight/styles/solarizedDark.css";
 </script>
 ```
 
@@ -2019,13 +2096,14 @@
 
 ```html
 <script>
-  import { solarizedDark } from 'svelte-highlight/styles';
+  import { solarizedDark } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html solarizedDark}
 </svelte:head>
 ```
+
 </details>
 
 ## solarized-light (`solarizedLight`)
@@ -2037,7 +2115,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/solarizedLight.css';
+  import "svelte-highlight/styles/solarizedLight.css";
 </script>
 ```
 
@@ -2045,13 +2123,14 @@
 
 ```html
 <script>
-  import { solarizedLight } from 'svelte-highlight/styles';
+  import { solarizedLight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html solarizedLight}
 </svelte:head>
 ```
+
 </details>
 
 ## sunburst (`sunburst`)
@@ -2063,7 +2142,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/sunburst.css';
+  import "svelte-highlight/styles/sunburst.css";
 </script>
 ```
 
@@ -2071,13 +2150,14 @@
 
 ```html
 <script>
-  import { sunburst } from 'svelte-highlight/styles';
+  import { sunburst } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html sunburst}
 </svelte:head>
 ```
+
 </details>
 
 ## tomorrow-night-blue (`tomorrowNightBlue`)
@@ -2089,7 +2169,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrowNightBlue.css';
+  import "svelte-highlight/styles/tomorrowNightBlue.css";
 </script>
 ```
 
@@ -2097,13 +2177,14 @@
 
 ```html
 <script>
-  import { tomorrowNightBlue } from 'svelte-highlight/styles';
+  import { tomorrowNightBlue } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html tomorrowNightBlue}
 </svelte:head>
 ```
+
 </details>
 
 ## tomorrow-night-bright (`tomorrowNightBright`)
@@ -2115,7 +2196,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrowNightBright.css';
+  import "svelte-highlight/styles/tomorrowNightBright.css";
 </script>
 ```
 
@@ -2123,13 +2204,14 @@
 
 ```html
 <script>
-  import { tomorrowNightBright } from 'svelte-highlight/styles';
+  import { tomorrowNightBright } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html tomorrowNightBright}
 </svelte:head>
 ```
+
 </details>
 
 ## tomorrow-night-eighties (`tomorrowNightEighties`)
@@ -2141,7 +2223,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrowNightEighties.css';
+  import "svelte-highlight/styles/tomorrowNightEighties.css";
 </script>
 ```
 
@@ -2149,13 +2231,14 @@
 
 ```html
 <script>
-  import { tomorrowNightEighties } from 'svelte-highlight/styles';
+  import { tomorrowNightEighties } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html tomorrowNightEighties}
 </svelte:head>
 ```
+
 </details>
 
 ## tomorrow-night (`tomorrowNight`)
@@ -2167,7 +2250,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrowNight.css';
+  import "svelte-highlight/styles/tomorrowNight.css";
 </script>
 ```
 
@@ -2175,13 +2258,14 @@
 
 ```html
 <script>
-  import { tomorrowNight } from 'svelte-highlight/styles';
+  import { tomorrowNight } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html tomorrowNight}
 </svelte:head>
 ```
+
 </details>
 
 ## tomorrow (`tomorrow`)
@@ -2193,7 +2277,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrow.css';
+  import "svelte-highlight/styles/tomorrow.css";
 </script>
 ```
 
@@ -2201,13 +2285,14 @@
 
 ```html
 <script>
-  import { tomorrow } from 'svelte-highlight/styles';
+  import { tomorrow } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html tomorrow}
 </svelte:head>
 ```
+
 </details>
 
 ## vs (`vs`)
@@ -2219,7 +2304,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/vs.css';
+  import "svelte-highlight/styles/vs.css";
 </script>
 ```
 
@@ -2227,13 +2312,14 @@
 
 ```html
 <script>
-  import { vs } from 'svelte-highlight/styles';
+  import { vs } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html vs}
 </svelte:head>
 ```
+
 </details>
 
 ## vs2015 (`vs2015`)
@@ -2245,7 +2331,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/vs2015.css';
+  import "svelte-highlight/styles/vs2015.css";
 </script>
 ```
 
@@ -2253,13 +2339,14 @@
 
 ```html
 <script>
-  import { vs2015 } from 'svelte-highlight/styles';
+  import { vs2015 } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html vs2015}
 </svelte:head>
 ```
+
 </details>
 
 ## xcode (`xcode`)
@@ -2271,7 +2358,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/xcode.css';
+  import "svelte-highlight/styles/xcode.css";
 </script>
 ```
 
@@ -2279,13 +2366,14 @@
 
 ```html
 <script>
-  import { xcode } from 'svelte-highlight/styles';
+  import { xcode } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html xcode}
 </svelte:head>
 ```
+
 </details>
 
 ## xt256 (`xt256`)
@@ -2297,7 +2385,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/xt256.css';
+  import "svelte-highlight/styles/xt256.css";
 </script>
 ```
 
@@ -2305,13 +2393,14 @@
 
 ```html
 <script>
-  import { xt256 } from 'svelte-highlight/styles';
+  import { xt256 } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html xt256}
 </svelte:head>
 ```
+
 </details>
 
 ## zenburn (`zenburn`)
@@ -2323,7 +2412,7 @@
 
 ```html
 <script>
-  import 'svelte-highlight/styles/zenburn.css';
+  import "svelte-highlight/styles/zenburn.css";
 </script>
 ```
 
@@ -2331,13 +2420,12 @@
 
 ```html
 <script>
-  import { zenburn } from 'svelte-highlight/styles';
+  import { zenburn } from "svelte-highlight/styles";
 </script>
 
 <svelte:head>
   {@html zenburn}
 </svelte:head>
 ```
+
 </details>
-
-

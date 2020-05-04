@@ -7,9 +7,10 @@
 
 ```html
 <script>
-  import { _1c } from 'svelte-highlight/languages';
+  import { _1c } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## abnf (`abnf`)
@@ -19,9 +20,10 @@
 
 ```html
 <script>
-  import { abnf } from 'svelte-highlight/languages';
+  import { abnf } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## accesslog (`accesslog`)
@@ -31,9 +33,10 @@
 
 ```html
 <script>
-  import { accesslog } from 'svelte-highlight/languages';
+  import { accesslog } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## actionscript (`actionscript`)
@@ -43,9 +46,10 @@
 
 ```html
 <script>
-  import { actionscript } from 'svelte-highlight/languages';
+  import { actionscript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## ada (`ada`)
@@ -55,9 +59,10 @@
 
 ```html
 <script>
-  import { ada } from 'svelte-highlight/languages';
+  import { ada } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## angelscript (`angelscript`)
@@ -67,9 +72,10 @@
 
 ```html
 <script>
-  import { angelscript } from 'svelte-highlight/languages';
+  import { angelscript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## apache (`apache`)
@@ -79,9 +85,10 @@
 
 ```html
 <script>
-  import { apache } from 'svelte-highlight/languages';
+  import { apache } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## applescript (`applescript`)
@@ -91,9 +98,10 @@
 
 ```html
 <script>
-  import { applescript } from 'svelte-highlight/languages';
+  import { applescript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## arcade (`arcade`)
@@ -103,9 +111,10 @@
 
 ```html
 <script>
-  import { arcade } from 'svelte-highlight/languages';
+  import { arcade } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## cpp (`cpp`)
@@ -115,9 +124,10 @@
 
 ```html
 <script>
-  import { cpp } from 'svelte-highlight/languages';
+  import { cpp } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## arduino (`arduino`)
@@ -127,9 +137,10 @@
 
 ```html
 <script>
-  import { arduino } from 'svelte-highlight/languages';
+  import { arduino } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## armasm (`armasm`)
@@ -139,9 +150,10 @@
 
 ```html
 <script>
-  import { armasm } from 'svelte-highlight/languages';
+  import { armasm } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## xml (`xml`)
@@ -151,9 +163,10 @@
 
 ```html
 <script>
-  import { xml } from 'svelte-highlight/languages';
+  import { xml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## asciidoc (`asciidoc`)
@@ -163,9 +176,10 @@
 
 ```html
 <script>
-  import { asciidoc } from 'svelte-highlight/languages';
+  import { asciidoc } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## aspectj (`aspectj`)
@@ -175,9 +189,10 @@
 
 ```html
 <script>
-  import { aspectj } from 'svelte-highlight/languages';
+  import { aspectj } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## autohotkey (`autohotkey`)
@@ -187,9 +202,10 @@
 
 ```html
 <script>
-  import { autohotkey } from 'svelte-highlight/languages';
+  import { autohotkey } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## autoit (`autoit`)
@@ -199,9 +215,10 @@
 
 ```html
 <script>
-  import { autoit } from 'svelte-highlight/languages';
+  import { autoit } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## avrasm (`avrasm`)
@@ -211,9 +228,10 @@
 
 ```html
 <script>
-  import { avrasm } from 'svelte-highlight/languages';
+  import { avrasm } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## awk (`awk`)
@@ -223,9 +241,10 @@
 
 ```html
 <script>
-  import { awk } from 'svelte-highlight/languages';
+  import { awk } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## axapta (`axapta`)
@@ -235,9 +254,10 @@
 
 ```html
 <script>
-  import { axapta } from 'svelte-highlight/languages';
+  import { axapta } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## bash (`bash`)
@@ -247,9 +267,10 @@
 
 ```html
 <script>
-  import { bash } from 'svelte-highlight/languages';
+  import { bash } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## basic (`basic`)
@@ -259,9 +280,10 @@
 
 ```html
 <script>
-  import { basic } from 'svelte-highlight/languages';
+  import { basic } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## bnf (`bnf`)
@@ -271,9 +293,10 @@
 
 ```html
 <script>
-  import { bnf } from 'svelte-highlight/languages';
+  import { bnf } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## brainfuck (`brainfuck`)
@@ -283,9 +306,10 @@
 
 ```html
 <script>
-  import { brainfuck } from 'svelte-highlight/languages';
+  import { brainfuck } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## cal (`cal`)
@@ -295,9 +319,10 @@
 
 ```html
 <script>
-  import { cal } from 'svelte-highlight/languages';
+  import { cal } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## capnproto (`capnproto`)
@@ -307,9 +332,10 @@
 
 ```html
 <script>
-  import { capnproto } from 'svelte-highlight/languages';
+  import { capnproto } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## ceylon (`ceylon`)
@@ -319,9 +345,10 @@
 
 ```html
 <script>
-  import { ceylon } from 'svelte-highlight/languages';
+  import { ceylon } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## clean (`clean`)
@@ -331,9 +358,10 @@
 
 ```html
 <script>
-  import { clean } from 'svelte-highlight/languages';
+  import { clean } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## clojure (`clojure`)
@@ -343,9 +371,10 @@
 
 ```html
 <script>
-  import { clojure } from 'svelte-highlight/languages';
+  import { clojure } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## clojure-repl (`clojureRepl`)
@@ -355,9 +384,10 @@
 
 ```html
 <script>
-  import { clojureRepl } from 'svelte-highlight/languages';
+  import { clojureRepl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## cmake (`cmake`)
@@ -367,9 +397,10 @@
 
 ```html
 <script>
-  import { cmake } from 'svelte-highlight/languages';
+  import { cmake } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## coffeescript (`coffeescript`)
@@ -379,9 +410,10 @@
 
 ```html
 <script>
-  import { coffeescript } from 'svelte-highlight/languages';
+  import { coffeescript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## coq (`coq`)
@@ -391,9 +423,10 @@
 
 ```html
 <script>
-  import { coq } from 'svelte-highlight/languages';
+  import { coq } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## cos (`cos`)
@@ -403,9 +436,10 @@
 
 ```html
 <script>
-  import { cos } from 'svelte-highlight/languages';
+  import { cos } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## crmsh (`crmsh`)
@@ -415,9 +449,10 @@
 
 ```html
 <script>
-  import { crmsh } from 'svelte-highlight/languages';
+  import { crmsh } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## crystal (`crystal`)
@@ -427,9 +462,10 @@
 
 ```html
 <script>
-  import { crystal } from 'svelte-highlight/languages';
+  import { crystal } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## cs (`cs`)
@@ -439,9 +475,10 @@
 
 ```html
 <script>
-  import { cs } from 'svelte-highlight/languages';
+  import { cs } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## csp (`csp`)
@@ -451,9 +488,10 @@
 
 ```html
 <script>
-  import { csp } from 'svelte-highlight/languages';
+  import { csp } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## css (`css`)
@@ -463,9 +501,10 @@
 
 ```html
 <script>
-  import { css } from 'svelte-highlight/languages';
+  import { css } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## d (`d`)
@@ -475,9 +514,10 @@
 
 ```html
 <script>
-  import { d } from 'svelte-highlight/languages';
+  import { d } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## markdown (`markdown`)
@@ -487,9 +527,10 @@
 
 ```html
 <script>
-  import { markdown } from 'svelte-highlight/languages';
+  import { markdown } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## dart (`dart`)
@@ -499,9 +540,10 @@
 
 ```html
 <script>
-  import { dart } from 'svelte-highlight/languages';
+  import { dart } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## delphi (`delphi`)
@@ -511,9 +553,10 @@
 
 ```html
 <script>
-  import { delphi } from 'svelte-highlight/languages';
+  import { delphi } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## diff (`diff`)
@@ -523,9 +566,10 @@
 
 ```html
 <script>
-  import { diff } from 'svelte-highlight/languages';
+  import { diff } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## django (`django`)
@@ -535,9 +579,10 @@
 
 ```html
 <script>
-  import { django } from 'svelte-highlight/languages';
+  import { django } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## dns (`dns`)
@@ -547,9 +592,10 @@
 
 ```html
 <script>
-  import { dns } from 'svelte-highlight/languages';
+  import { dns } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## dockerfile (`dockerfile`)
@@ -559,9 +605,10 @@
 
 ```html
 <script>
-  import { dockerfile } from 'svelte-highlight/languages';
+  import { dockerfile } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## dos (`dos`)
@@ -571,9 +618,10 @@
 
 ```html
 <script>
-  import { dos } from 'svelte-highlight/languages';
+  import { dos } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## dsconfig (`dsconfig`)
@@ -583,9 +631,10 @@
 
 ```html
 <script>
-  import { dsconfig } from 'svelte-highlight/languages';
+  import { dsconfig } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## dts (`dts`)
@@ -595,9 +644,10 @@
 
 ```html
 <script>
-  import { dts } from 'svelte-highlight/languages';
+  import { dts } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## dust (`dust`)
@@ -607,9 +657,10 @@
 
 ```html
 <script>
-  import { dust } from 'svelte-highlight/languages';
+  import { dust } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## ebnf (`ebnf`)
@@ -619,9 +670,10 @@
 
 ```html
 <script>
-  import { ebnf } from 'svelte-highlight/languages';
+  import { ebnf } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## elixir (`elixir`)
@@ -631,9 +683,10 @@
 
 ```html
 <script>
-  import { elixir } from 'svelte-highlight/languages';
+  import { elixir } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## elm (`elm`)
@@ -643,9 +696,10 @@
 
 ```html
 <script>
-  import { elm } from 'svelte-highlight/languages';
+  import { elm } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## ruby (`ruby`)
@@ -655,9 +709,10 @@
 
 ```html
 <script>
-  import { ruby } from 'svelte-highlight/languages';
+  import { ruby } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## erb (`erb`)
@@ -667,9 +722,10 @@
 
 ```html
 <script>
-  import { erb } from 'svelte-highlight/languages';
+  import { erb } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## erlang-repl (`erlangRepl`)
@@ -679,9 +735,10 @@
 
 ```html
 <script>
-  import { erlangRepl } from 'svelte-highlight/languages';
+  import { erlangRepl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## erlang (`erlang`)
@@ -691,9 +748,10 @@
 
 ```html
 <script>
-  import { erlang } from 'svelte-highlight/languages';
+  import { erlang } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## excel (`excel`)
@@ -703,9 +761,10 @@
 
 ```html
 <script>
-  import { excel } from 'svelte-highlight/languages';
+  import { excel } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## fix (`fix`)
@@ -715,9 +774,10 @@
 
 ```html
 <script>
-  import { fix } from 'svelte-highlight/languages';
+  import { fix } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## flix (`flix`)
@@ -727,9 +787,10 @@
 
 ```html
 <script>
-  import { flix } from 'svelte-highlight/languages';
+  import { flix } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## fortran (`fortran`)
@@ -739,9 +800,10 @@
 
 ```html
 <script>
-  import { fortran } from 'svelte-highlight/languages';
+  import { fortran } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## fsharp (`fsharp`)
@@ -751,9 +813,10 @@
 
 ```html
 <script>
-  import { fsharp } from 'svelte-highlight/languages';
+  import { fsharp } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## gams (`gams`)
@@ -763,9 +826,10 @@
 
 ```html
 <script>
-  import { gams } from 'svelte-highlight/languages';
+  import { gams } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## gauss (`gauss`)
@@ -775,9 +839,10 @@
 
 ```html
 <script>
-  import { gauss } from 'svelte-highlight/languages';
+  import { gauss } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## gcode (`gcode`)
@@ -787,9 +852,10 @@
 
 ```html
 <script>
-  import { gcode } from 'svelte-highlight/languages';
+  import { gcode } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## gherkin (`gherkin`)
@@ -799,9 +865,10 @@
 
 ```html
 <script>
-  import { gherkin } from 'svelte-highlight/languages';
+  import { gherkin } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## glsl (`glsl`)
@@ -811,9 +878,10 @@
 
 ```html
 <script>
-  import { glsl } from 'svelte-highlight/languages';
+  import { glsl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## gml (`gml`)
@@ -823,9 +891,10 @@
 
 ```html
 <script>
-  import { gml } from 'svelte-highlight/languages';
+  import { gml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## go (`go`)
@@ -835,9 +904,10 @@
 
 ```html
 <script>
-  import { go } from 'svelte-highlight/languages';
+  import { go } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## golo (`golo`)
@@ -847,9 +917,10 @@
 
 ```html
 <script>
-  import { golo } from 'svelte-highlight/languages';
+  import { golo } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## gradle (`gradle`)
@@ -859,9 +930,10 @@
 
 ```html
 <script>
-  import { gradle } from 'svelte-highlight/languages';
+  import { gradle } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## groovy (`groovy`)
@@ -871,9 +943,10 @@
 
 ```html
 <script>
-  import { groovy } from 'svelte-highlight/languages';
+  import { groovy } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## haml (`haml`)
@@ -883,9 +956,10 @@
 
 ```html
 <script>
-  import { haml } from 'svelte-highlight/languages';
+  import { haml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## handlebars (`handlebars`)
@@ -895,9 +969,10 @@
 
 ```html
 <script>
-  import { handlebars } from 'svelte-highlight/languages';
+  import { handlebars } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## haskell (`haskell`)
@@ -907,9 +982,10 @@
 
 ```html
 <script>
-  import { haskell } from 'svelte-highlight/languages';
+  import { haskell } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## haxe (`haxe`)
@@ -919,9 +995,10 @@
 
 ```html
 <script>
-  import { haxe } from 'svelte-highlight/languages';
+  import { haxe } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## hsp (`hsp`)
@@ -931,9 +1008,10 @@
 
 ```html
 <script>
-  import { hsp } from 'svelte-highlight/languages';
+  import { hsp } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## htmlbars (`htmlbars`)
@@ -943,9 +1021,10 @@
 
 ```html
 <script>
-  import { htmlbars } from 'svelte-highlight/languages';
+  import { htmlbars } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## http (`http`)
@@ -955,9 +1034,10 @@
 
 ```html
 <script>
-  import { http } from 'svelte-highlight/languages';
+  import { http } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## hy (`hy`)
@@ -967,9 +1047,10 @@
 
 ```html
 <script>
-  import { hy } from 'svelte-highlight/languages';
+  import { hy } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## inform7 (`inform7`)
@@ -979,9 +1060,10 @@
 
 ```html
 <script>
-  import { inform7 } from 'svelte-highlight/languages';
+  import { inform7 } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## ini (`ini`)
@@ -991,9 +1073,10 @@
 
 ```html
 <script>
-  import { ini } from 'svelte-highlight/languages';
+  import { ini } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## irpf90 (`irpf90`)
@@ -1003,9 +1086,10 @@
 
 ```html
 <script>
-  import { irpf90 } from 'svelte-highlight/languages';
+  import { irpf90 } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## isbl (`isbl`)
@@ -1015,9 +1099,10 @@
 
 ```html
 <script>
-  import { isbl } from 'svelte-highlight/languages';
+  import { isbl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## java (`java`)
@@ -1027,9 +1112,10 @@
 
 ```html
 <script>
-  import { java } from 'svelte-highlight/languages';
+  import { java } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## javascript (`javascript`)
@@ -1039,9 +1125,10 @@
 
 ```html
 <script>
-  import { javascript } from 'svelte-highlight/languages';
+  import { javascript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## jboss-cli (`jbossCli`)
@@ -1051,9 +1138,10 @@
 
 ```html
 <script>
-  import { jbossCli } from 'svelte-highlight/languages';
+  import { jbossCli } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## json (`json`)
@@ -1063,9 +1151,10 @@
 
 ```html
 <script>
-  import { json } from 'svelte-highlight/languages';
+  import { json } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## julia (`julia`)
@@ -1075,9 +1164,10 @@
 
 ```html
 <script>
-  import { julia } from 'svelte-highlight/languages';
+  import { julia } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## julia-repl (`juliaRepl`)
@@ -1087,9 +1177,10 @@
 
 ```html
 <script>
-  import { juliaRepl } from 'svelte-highlight/languages';
+  import { juliaRepl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## kotlin (`kotlin`)
@@ -1099,9 +1190,10 @@
 
 ```html
 <script>
-  import { kotlin } from 'svelte-highlight/languages';
+  import { kotlin } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## lasso (`lasso`)
@@ -1111,9 +1203,10 @@
 
 ```html
 <script>
-  import { lasso } from 'svelte-highlight/languages';
+  import { lasso } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## ldif (`ldif`)
@@ -1123,9 +1216,10 @@
 
 ```html
 <script>
-  import { ldif } from 'svelte-highlight/languages';
+  import { ldif } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## leaf (`leaf`)
@@ -1135,9 +1229,10 @@
 
 ```html
 <script>
-  import { leaf } from 'svelte-highlight/languages';
+  import { leaf } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## less (`less`)
@@ -1147,9 +1242,10 @@
 
 ```html
 <script>
-  import { less } from 'svelte-highlight/languages';
+  import { less } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## lisp (`lisp`)
@@ -1159,9 +1255,10 @@
 
 ```html
 <script>
-  import { lisp } from 'svelte-highlight/languages';
+  import { lisp } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## livecodeserver (`livecodeserver`)
@@ -1171,9 +1268,10 @@
 
 ```html
 <script>
-  import { livecodeserver } from 'svelte-highlight/languages';
+  import { livecodeserver } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## livescript (`livescript`)
@@ -1183,9 +1281,10 @@
 
 ```html
 <script>
-  import { livescript } from 'svelte-highlight/languages';
+  import { livescript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## llvm (`llvm`)
@@ -1195,9 +1294,10 @@
 
 ```html
 <script>
-  import { llvm } from 'svelte-highlight/languages';
+  import { llvm } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## lsl (`lsl`)
@@ -1207,9 +1307,10 @@
 
 ```html
 <script>
-  import { lsl } from 'svelte-highlight/languages';
+  import { lsl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## lua (`lua`)
@@ -1219,9 +1320,10 @@
 
 ```html
 <script>
-  import { lua } from 'svelte-highlight/languages';
+  import { lua } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## makefile (`makefile`)
@@ -1231,9 +1333,10 @@
 
 ```html
 <script>
-  import { makefile } from 'svelte-highlight/languages';
+  import { makefile } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## mathematica (`mathematica`)
@@ -1243,9 +1346,10 @@
 
 ```html
 <script>
-  import { mathematica } from 'svelte-highlight/languages';
+  import { mathematica } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## matlab (`matlab`)
@@ -1255,9 +1359,10 @@
 
 ```html
 <script>
-  import { matlab } from 'svelte-highlight/languages';
+  import { matlab } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## maxima (`maxima`)
@@ -1267,9 +1372,10 @@
 
 ```html
 <script>
-  import { maxima } from 'svelte-highlight/languages';
+  import { maxima } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## mel (`mel`)
@@ -1279,9 +1385,10 @@
 
 ```html
 <script>
-  import { mel } from 'svelte-highlight/languages';
+  import { mel } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## mercury (`mercury`)
@@ -1291,9 +1398,10 @@
 
 ```html
 <script>
-  import { mercury } from 'svelte-highlight/languages';
+  import { mercury } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## mipsasm (`mipsasm`)
@@ -1303,9 +1411,10 @@
 
 ```html
 <script>
-  import { mipsasm } from 'svelte-highlight/languages';
+  import { mipsasm } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## mizar (`mizar`)
@@ -1315,9 +1424,10 @@
 
 ```html
 <script>
-  import { mizar } from 'svelte-highlight/languages';
+  import { mizar } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## perl (`perl`)
@@ -1327,9 +1437,10 @@
 
 ```html
 <script>
-  import { perl } from 'svelte-highlight/languages';
+  import { perl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## mojolicious (`mojolicious`)
@@ -1339,9 +1450,10 @@
 
 ```html
 <script>
-  import { mojolicious } from 'svelte-highlight/languages';
+  import { mojolicious } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## monkey (`monkey`)
@@ -1351,9 +1463,10 @@
 
 ```html
 <script>
-  import { monkey } from 'svelte-highlight/languages';
+  import { monkey } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## moonscript (`moonscript`)
@@ -1363,9 +1476,10 @@
 
 ```html
 <script>
-  import { moonscript } from 'svelte-highlight/languages';
+  import { moonscript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## n1ql (`n1ql`)
@@ -1375,9 +1489,10 @@
 
 ```html
 <script>
-  import { n1ql } from 'svelte-highlight/languages';
+  import { n1ql } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## nginx (`nginx`)
@@ -1387,9 +1502,10 @@
 
 ```html
 <script>
-  import { nginx } from 'svelte-highlight/languages';
+  import { nginx } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## nimrod (`nimrod`)
@@ -1399,9 +1515,10 @@
 
 ```html
 <script>
-  import { nimrod } from 'svelte-highlight/languages';
+  import { nimrod } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## nix (`nix`)
@@ -1411,9 +1528,10 @@
 
 ```html
 <script>
-  import { nix } from 'svelte-highlight/languages';
+  import { nix } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## nsis (`nsis`)
@@ -1423,9 +1541,10 @@
 
 ```html
 <script>
-  import { nsis } from 'svelte-highlight/languages';
+  import { nsis } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## objectivec (`objectivec`)
@@ -1435,9 +1554,10 @@
 
 ```html
 <script>
-  import { objectivec } from 'svelte-highlight/languages';
+  import { objectivec } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## ocaml (`ocaml`)
@@ -1447,9 +1567,10 @@
 
 ```html
 <script>
-  import { ocaml } from 'svelte-highlight/languages';
+  import { ocaml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## openscad (`openscad`)
@@ -1459,9 +1580,10 @@
 
 ```html
 <script>
-  import { openscad } from 'svelte-highlight/languages';
+  import { openscad } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## oxygene (`oxygene`)
@@ -1471,9 +1593,10 @@
 
 ```html
 <script>
-  import { oxygene } from 'svelte-highlight/languages';
+  import { oxygene } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## parser3 (`parser3`)
@@ -1483,9 +1606,10 @@
 
 ```html
 <script>
-  import { parser3 } from 'svelte-highlight/languages';
+  import { parser3 } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## pf (`pf`)
@@ -1495,9 +1619,10 @@
 
 ```html
 <script>
-  import { pf } from 'svelte-highlight/languages';
+  import { pf } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## pgsql (`pgsql`)
@@ -1507,9 +1632,10 @@
 
 ```html
 <script>
-  import { pgsql } from 'svelte-highlight/languages';
+  import { pgsql } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## php (`php`)
@@ -1519,9 +1645,10 @@
 
 ```html
 <script>
-  import { php } from 'svelte-highlight/languages';
+  import { php } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## plaintext (`plaintext`)
@@ -1531,9 +1658,10 @@
 
 ```html
 <script>
-  import { plaintext } from 'svelte-highlight/languages';
+  import { plaintext } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## pony (`pony`)
@@ -1543,9 +1671,10 @@
 
 ```html
 <script>
-  import { pony } from 'svelte-highlight/languages';
+  import { pony } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## powershell (`powershell`)
@@ -1555,9 +1684,10 @@
 
 ```html
 <script>
-  import { powershell } from 'svelte-highlight/languages';
+  import { powershell } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## processing (`processing`)
@@ -1567,9 +1697,10 @@
 
 ```html
 <script>
-  import { processing } from 'svelte-highlight/languages';
+  import { processing } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## profile (`profile`)
@@ -1579,9 +1710,10 @@
 
 ```html
 <script>
-  import { profile } from 'svelte-highlight/languages';
+  import { profile } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## prolog (`prolog`)
@@ -1591,9 +1723,10 @@
 
 ```html
 <script>
-  import { prolog } from 'svelte-highlight/languages';
+  import { prolog } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## properties (`properties`)
@@ -1603,9 +1736,10 @@
 
 ```html
 <script>
-  import { properties } from 'svelte-highlight/languages';
+  import { properties } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## protobuf (`protobuf`)
@@ -1615,9 +1749,10 @@
 
 ```html
 <script>
-  import { protobuf } from 'svelte-highlight/languages';
+  import { protobuf } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## puppet (`puppet`)
@@ -1627,9 +1762,10 @@
 
 ```html
 <script>
-  import { puppet } from 'svelte-highlight/languages';
+  import { puppet } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## purebasic (`purebasic`)
@@ -1639,9 +1775,10 @@
 
 ```html
 <script>
-  import { purebasic } from 'svelte-highlight/languages';
+  import { purebasic } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## python (`python`)
@@ -1651,9 +1788,10 @@
 
 ```html
 <script>
-  import { python } from 'svelte-highlight/languages';
+  import { python } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## q (`q`)
@@ -1663,9 +1801,10 @@
 
 ```html
 <script>
-  import { q } from 'svelte-highlight/languages';
+  import { q } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## qml (`qml`)
@@ -1675,9 +1814,10 @@
 
 ```html
 <script>
-  import { qml } from 'svelte-highlight/languages';
+  import { qml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## r (`r`)
@@ -1687,9 +1827,10 @@
 
 ```html
 <script>
-  import { r } from 'svelte-highlight/languages';
+  import { r } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## reasonml (`reasonml`)
@@ -1699,9 +1840,10 @@
 
 ```html
 <script>
-  import { reasonml } from 'svelte-highlight/languages';
+  import { reasonml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## rib (`rib`)
@@ -1711,9 +1853,10 @@
 
 ```html
 <script>
-  import { rib } from 'svelte-highlight/languages';
+  import { rib } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## roboconf (`roboconf`)
@@ -1723,9 +1866,10 @@
 
 ```html
 <script>
-  import { roboconf } from 'svelte-highlight/languages';
+  import { roboconf } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## routeros (`routeros`)
@@ -1735,9 +1879,10 @@
 
 ```html
 <script>
-  import { routeros } from 'svelte-highlight/languages';
+  import { routeros } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## rsl (`rsl`)
@@ -1747,9 +1892,10 @@
 
 ```html
 <script>
-  import { rsl } from 'svelte-highlight/languages';
+  import { rsl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## ruleslanguage (`ruleslanguage`)
@@ -1759,9 +1905,10 @@
 
 ```html
 <script>
-  import { ruleslanguage } from 'svelte-highlight/languages';
+  import { ruleslanguage } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## rust (`rust`)
@@ -1771,9 +1918,10 @@
 
 ```html
 <script>
-  import { rust } from 'svelte-highlight/languages';
+  import { rust } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## sas (`sas`)
@@ -1783,9 +1931,10 @@
 
 ```html
 <script>
-  import { sas } from 'svelte-highlight/languages';
+  import { sas } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## scala (`scala`)
@@ -1795,9 +1944,10 @@
 
 ```html
 <script>
-  import { scala } from 'svelte-highlight/languages';
+  import { scala } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## scheme (`scheme`)
@@ -1807,9 +1957,10 @@
 
 ```html
 <script>
-  import { scheme } from 'svelte-highlight/languages';
+  import { scheme } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## scilab (`scilab`)
@@ -1819,9 +1970,10 @@
 
 ```html
 <script>
-  import { scilab } from 'svelte-highlight/languages';
+  import { scilab } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## scss (`scss`)
@@ -1831,9 +1983,10 @@
 
 ```html
 <script>
-  import { scss } from 'svelte-highlight/languages';
+  import { scss } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## shell (`shell`)
@@ -1843,9 +1996,10 @@
 
 ```html
 <script>
-  import { shell } from 'svelte-highlight/languages';
+  import { shell } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## smali (`smali`)
@@ -1855,9 +2009,10 @@
 
 ```html
 <script>
-  import { smali } from 'svelte-highlight/languages';
+  import { smali } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## smalltalk (`smalltalk`)
@@ -1867,9 +2022,10 @@
 
 ```html
 <script>
-  import { smalltalk } from 'svelte-highlight/languages';
+  import { smalltalk } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## sml (`sml`)
@@ -1879,9 +2035,10 @@
 
 ```html
 <script>
-  import { sml } from 'svelte-highlight/languages';
+  import { sml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## sqf (`sqf`)
@@ -1891,9 +2048,10 @@
 
 ```html
 <script>
-  import { sqf } from 'svelte-highlight/languages';
+  import { sqf } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## sql (`sql`)
@@ -1903,9 +2061,10 @@
 
 ```html
 <script>
-  import { sql } from 'svelte-highlight/languages';
+  import { sql } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## stan (`stan`)
@@ -1915,9 +2074,10 @@
 
 ```html
 <script>
-  import { stan } from 'svelte-highlight/languages';
+  import { stan } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## stata (`stata`)
@@ -1927,9 +2087,10 @@
 
 ```html
 <script>
-  import { stata } from 'svelte-highlight/languages';
+  import { stata } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## step21 (`step21`)
@@ -1939,9 +2100,10 @@
 
 ```html
 <script>
-  import { step21 } from 'svelte-highlight/languages';
+  import { step21 } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## stylus (`stylus`)
@@ -1951,9 +2113,10 @@
 
 ```html
 <script>
-  import { stylus } from 'svelte-highlight/languages';
+  import { stylus } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## subunit (`subunit`)
@@ -1963,9 +2126,10 @@
 
 ```html
 <script>
-  import { subunit } from 'svelte-highlight/languages';
+  import { subunit } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## swift (`swift`)
@@ -1975,9 +2139,10 @@
 
 ```html
 <script>
-  import { swift } from 'svelte-highlight/languages';
+  import { swift } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## taggerscript (`taggerscript`)
@@ -1987,9 +2152,10 @@
 
 ```html
 <script>
-  import { taggerscript } from 'svelte-highlight/languages';
+  import { taggerscript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## yaml (`yaml`)
@@ -1999,9 +2165,10 @@
 
 ```html
 <script>
-  import { yaml } from 'svelte-highlight/languages';
+  import { yaml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## tap (`tap`)
@@ -2011,9 +2178,10 @@
 
 ```html
 <script>
-  import { tap } from 'svelte-highlight/languages';
+  import { tap } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## tcl (`tcl`)
@@ -2023,9 +2191,10 @@
 
 ```html
 <script>
-  import { tcl } from 'svelte-highlight/languages';
+  import { tcl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## tex (`tex`)
@@ -2035,9 +2204,10 @@
 
 ```html
 <script>
-  import { tex } from 'svelte-highlight/languages';
+  import { tex } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## thrift (`thrift`)
@@ -2047,9 +2217,10 @@
 
 ```html
 <script>
-  import { thrift } from 'svelte-highlight/languages';
+  import { thrift } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## tp (`tp`)
@@ -2059,9 +2230,10 @@
 
 ```html
 <script>
-  import { tp } from 'svelte-highlight/languages';
+  import { tp } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## twig (`twig`)
@@ -2071,9 +2243,10 @@
 
 ```html
 <script>
-  import { twig } from 'svelte-highlight/languages';
+  import { twig } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## typescript (`typescript`)
@@ -2083,9 +2256,10 @@
 
 ```html
 <script>
-  import { typescript } from 'svelte-highlight/languages';
+  import { typescript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## vala (`vala`)
@@ -2095,9 +2269,10 @@
 
 ```html
 <script>
-  import { vala } from 'svelte-highlight/languages';
+  import { vala } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## vbnet (`vbnet`)
@@ -2107,9 +2282,10 @@
 
 ```html
 <script>
-  import { vbnet } from 'svelte-highlight/languages';
+  import { vbnet } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## vbscript (`vbscript`)
@@ -2119,9 +2295,10 @@
 
 ```html
 <script>
-  import { vbscript } from 'svelte-highlight/languages';
+  import { vbscript } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## vbscript-html (`vbscriptHtml`)
@@ -2131,9 +2308,10 @@
 
 ```html
 <script>
-  import { vbscriptHtml } from 'svelte-highlight/languages';
+  import { vbscriptHtml } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## verilog (`verilog`)
@@ -2143,9 +2321,10 @@
 
 ```html
 <script>
-  import { verilog } from 'svelte-highlight/languages';
+  import { verilog } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## vhdl (`vhdl`)
@@ -2155,9 +2334,10 @@
 
 ```html
 <script>
-  import { vhdl } from 'svelte-highlight/languages';
+  import { vhdl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## vim (`vim`)
@@ -2167,9 +2347,10 @@
 
 ```html
 <script>
-  import { vim } from 'svelte-highlight/languages';
+  import { vim } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## x86asm (`x86asm`)
@@ -2179,9 +2360,10 @@
 
 ```html
 <script>
-  import { x86asm } from 'svelte-highlight/languages';
+  import { x86asm } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## xl (`xl`)
@@ -2191,9 +2373,10 @@
 
 ```html
 <script>
-  import { xl } from 'svelte-highlight/languages';
+  import { xl } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## xquery (`xquery`)
@@ -2203,9 +2386,10 @@
 
 ```html
 <script>
-  import { xquery } from 'svelte-highlight/languages';
+  import { xquery } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
 
 ## zephir (`zephir`)
@@ -2215,9 +2399,8 @@
 
 ```html
 <script>
-  import { zephir } from 'svelte-highlight/languages';
+  import { zephir } from "svelte-highlight/languages";
 </script>
 ```
+
 </details>
-
-

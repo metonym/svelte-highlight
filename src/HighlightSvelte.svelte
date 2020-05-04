@@ -1,13 +1,15 @@
 <script>
-  export let language = { name: undefined, register: undefined };
   export let code = undefined;
 
-  import hljs from "highlight.js/lib/highlight";
+  import hljs from "highlight.js";
+  import xml from "highlight.js/lib/languages/xml";
+  import hljsSvelte from "highlightjs-svelte/dist/index.js";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
 
-  let highlighted = undefined;
+  hljs.registerLanguage("xml", xml);
+  hljsSvelte(hljs);
 
   afterUpdate(() => {
     if (highlighted) {
@@ -15,13 +17,7 @@
     }
   });
 
-  $: {
-    if (language.name && language.register) {
-      hljs.registerLanguage(language.name, language.register);
-    }
-
-    highlighted = hljs.highlight(language.name, code).value;
-  }
+  $: highlighted = hljs.highlight("svelte", code).value;
 </script>
 
 <slot {highlighted}>
