@@ -5,17 +5,12 @@
 
   let activeTabIndex = 0;
 
+  $: currentStyleCSS = (currentStyle || "")
+    .split(/(?=[A-Z])/)
+    .map(fragment => fragment.toLowerCase())
+    .join("-");
+
   let code = "const add = (a: number, b: number) => a + b;";
-
-  $: _code = `<script>
-  import { Highlight } from 'svelte-highlight';
-  import { typescript } from 'svelte-highlight/languages';
-  import 'svelte-highlight/styles/${currentStyle}.css';
-
-  $: code = \`${code}\`;
-<\/script>
-
-<Highlight language={typescript} {code} />`;
 
   $: _codeJavaScript = `<script>
   import { Highlight } from 'svelte-highlight';
@@ -28,6 +23,16 @@
 <svelte:head>
   {@html ${currentStyle}}
 </svelte:head>
+
+<Highlight language={typescript} {code} />`;
+
+  $: _code = `<script>
+  import { Highlight } from 'svelte-highlight';
+  import { typescript } from 'svelte-highlight/languages';
+  import 'svelte-highlight/styles/${currentStyleCSS}.css';
+
+  $: code = \`${code}\`;
+<\/script>
 
 <Highlight language={typescript} {code} />`;
 </script>
@@ -45,7 +50,7 @@
   }
 
   :global(.hljs.hljs) {
-    padding: 1rem 1.25rem;
+    padding: 1rem 1.5rem 1rem 1.25rem;
   }
 
   ul {
