@@ -13,9 +13,9 @@ This component wraps [highlight.js](https://github.com/highlightjs/highlight.js)
 ## Install
 
 ```bash
-yarn add svelte-highlight
+yarn add -D svelte-highlight
 # OR
-npm i svelte-highlight
+npm i -D svelte-highlight
 ```
 
 ## Usage
@@ -44,7 +44,7 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 
 ### CSS Stylesheet
 
-Importing a CSS StyleSheet in Svelte requires a CSS loader.
+Importing a CSS StyleSheet in Svelte requires a CSS loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
 
 ```html
 <script>
@@ -111,6 +111,23 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 | ---------------- | ----------------------------------------------------- |
 | code             | `string`                                              |
 | language         | `object` { name: `string`; register: hljs => object } |
+| `...$$restProps` | (forwarded to the `pre` element)                      |
+
+### Forwarded Events
+
+The following events are forwarded to the `pre` element:
+
+- on:click
+- on:mouseover
+- on:mouseenter
+- on:mouseleave
+- on:focus
+- on:blur
+
+## Webpack/Rollup Examples
+
+- [examples/rollup](examples/rollup)
+- [examples/webpack](examples/webpack)
 
 ## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
 
