@@ -43,7 +43,7 @@ async function buildHljsStyles() {
       md.push("### CSS Stylesheet\n");
       md.push("```html");
       md.push("<script>");
-      md.push(`  import 'svelte-highlight/styles/${name}.css';`);
+      md.push(`  import 'svelte-highlight/styles/${styleName}.css';`);
       md.push("</script>");
       md.push("```\n");
       md.push("### JavaScript\n");
