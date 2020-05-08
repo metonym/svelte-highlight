@@ -8,7 +8,7 @@
 
 This component wraps [highlight.js](https://github.com/highlightjs/highlight.js) to provide syntax highlighting in [Svelte 3](https://github.com/sveltejs/svelte).
 
-## [Live Demo](https://metonym.github.io/svelte-highlight) · [Svelte REPL](https://svelte.dev/repl/0dd3cee4973b45cebd9970c17a04c89a?version=3.16.7)
+## [Live Demo](https://metonym.github.io/svelte-highlight)
 
 ## Install
 
@@ -20,74 +20,65 @@ npm i svelte-highlight
 
 ## Usage
 
-There are two ways to use `highlight.js` styles: a CSS style sheet loader or the `svelte:head` API.
+There are two ways to apply `highlight.js` styles: injected styles through `svelte:head` or with a CSS style sheet loader.
 
-### CSS Stylesheet
+### Injected Styles
 
-Importing a CSS stylesheet in Svelte requires a CSS loader. Refer to the [rollup](examples/rollup) and [webpack](examples/webpack) examples for working configs.
-
-```html
-<script>
-  import Highlight from 'svelte-highlight';
-  import { typescript } from 'svelte-highlight/languages';
-  import 'svelte-highlight/styles/github.css';
-</script>
-
-<Highlight language={typescript}>
-  {`function add(a: number, b: number) {
-  return a + b;
-}
-
-const sum = add(1, 2);`}
-</Highlight>
-```
-
-### Injected JavaScript Styles
-
-This component exports `highlight.js` themes in JavaScript. Simply import the theme as JavaScript and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
+This component exports `highlight.js` themes in JavaScript. Import the theme from `svelte-highlight/styles` and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
 ```html
 <script>
-  import Highlight from 'svelte-highlight';
+  import { Highlight } from 'svelte-highlight';
   import { typescript } from 'svelte-highlight/languages';
   import { github } from 'svelte-highlight/styles';
+
+  $: code = `const add = (a: number, b: number) => a + b;`;
 </script>
 
 <svelte:head>
   {@html github}
 </svelte:head>
 
-<Highlight language={typescript}>
-  {`function add(a: number, b: number) {
-  return a + b;
-}
-
-const sum = add(1, 2);`}
-</Highlight>
+<Highlight language={typescript} {code} />
 ```
 
-### The `code` Prop
+### CSS Stylesheet
 
-Code passed through a slot will not update dynamically. Use the `code` prop for dynamic content.
+Importing a CSS StyleSheet in Svelte requires a CSS loader.
 
 ```html
 <script>
-  import Highlight from 'svelte-highlight';
+  import { Highlight } from 'svelte-highlight';
   import { typescript } from 'svelte-highlight/languages';
   import 'svelte-highlight/styles/github.css';
 
-  let count = 0;
-
-  function increment() {
-    count += 1;
-  }
-
-  $: code = `let count = ${count};`;
+  $: code = `const add = (a: number, b: number) => a + b;`;
 </script>
 
-<button on:click={increment}>Increment</button>
-
 <Highlight language={typescript} {code} />
+```
+
+### Svelte Syntax Highlighting
+
+This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-svelte) to highlight Svelte code.
+
+```html
+<script>
+  import { HighlightSvelte } from 'svelte-highlight';
+  import { github } from 'svelte-highlight/styles';
+
+  $: code = `<script>
+  let count = 0;
+</script>
+
+<button on:click="{() => { count += 1; }}">Click me</button>`;
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<HighlightSvelte {code} />
 ```
 
 ### Custom Language
@@ -98,7 +89,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ```html
 <script>
-  import Highlight from 'svelte-highlight';
+  import { Highlight } from 'svelte-highlight';
   import hljs from 'highlight.js';
 
   const language = {
@@ -114,41 +105,16 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 <Highlight {language} {code} />
 ```
 
-### Editable code
-
-Enable editing using the [contenteditable](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content) property.
-
-```html
-<script>
-  import Highlight from 'svelte-highlight';
-  import { typescript } from 'svelte-highlight/languages';
-  import 'svelte-highlight/styles/github.css';
-
-  $: code = 'let count: number = 0';
-</script>
-
-<Highlight contenteditable language={typescript} bind:code />
-
-{code}
-```
-
 ## API
 
 | Property name    | Value                                                 |
 | ---------------- | ----------------------------------------------------- |
-| id               | `string`                                              |
-| class            | `string` (default: 'svelte-highlight')                |
-| code (or `slot`) | `string`                                              |
-| style            | `string`                                              |
+| code             | `string`                                              |
 | language         | `object` { name: `string`; register: hljs => object } |
-| contenteditable  | `boolean` (default: `undefined`)                      |
-| spellcheck       | `boolean` (default: `undefined`)                      |
 
 ## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
 
 ## [Supported Styles](docs/SUPPORTED_STYLES.md)
-
-## [Examples](examples/)
 
 ## [Changelog](CHANGELOG.md)
 

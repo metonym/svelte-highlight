@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    %sapper.base%
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      a {
+        color: #161616;
+        text-decoration: none;
+      }
+      
+      section {
+        margin-bottom: 2.5rem;
+      }
+      
+      code {
+        font-family: Consolas, Menlo, monospace;
+      }
+      
+      h1,
+      h2 {
+        font-size: 1.25rem;
+        line-height: 1.2;
+        margin-left: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      
+      button {
+        outline: 0;
+        border: 0;
+        background: none;
+        font: inherit;
+        color: inherit;
+        letter-spacing: inherit;
+        cursor: pointer;
+      }
+      
+      li {
+        list-style: none;
+        letter-spacing: 0.03rem;
+      }
+      
+      li:hover {
+        background-color: #f4f4f4;
+      }
+      
+      li.active {
+        color: #0f62fe;
+        background-color: #f4f4f4;
+        font-weight: 700;
+      }
+      
+      button {
+        width: 100%;
+        height: 100%;
+        padding: 0.5rem 1rem;
+        text-align: left;
+      }
+      
+      button:focus {
+        color: #0f62fe;
+      }
+    </style>
+    %sapper.styles% %sapper.head%
+  </head>
+  <body>
+    <div id="sapper">%sapper.html%</div>
+    %sapper.scripts%
+  </body>
+</html>
