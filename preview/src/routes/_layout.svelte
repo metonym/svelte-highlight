@@ -4,8 +4,15 @@
     padding: 0;
     box-sizing: border-box;
   }
+
   :global(html) {
     line-height: 1.42;
+  }
+
+  @media (max-width: 720px) {
+    :global(html) {
+      font-size: 14px;
+    }
   }
 
   :global(body) {
@@ -16,14 +23,20 @@
   main {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 16rem;
     width: calc(100% - 16rem);
     height: 100vh;
     display: flex;
     flex-direction: column;
-    margin-left: 16rem;
     padding: 4rem 2rem 1rem;
     overflow: auto;
+  }
+
+  @media (max-width: 720px) {
+    main {
+      left: 14.5rem;
+      width: calc(100% - 14.5rem);
+    }
   }
 </style>
 

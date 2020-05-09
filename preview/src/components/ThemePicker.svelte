@@ -1,13 +1,7 @@
 <script>
   export let currentStyle = "anOldHope";
 
-  import { onMount } from "svelte";
-
-  let styles = {};
-
-  onMount(async () => {
-    styles = await import("svelte-highlight/styles");
-  });
+  import * as styles from "svelte-highlight/styles";
 
   $: supportedStyles = Object.keys(styles);
   $: style = styles[currentStyle] || "";
@@ -21,14 +15,20 @@
     width: 16rem;
     height: 100vh;
     overflow-y: scroll;
+    overflow-x: hidden;
     padding: 1rem 0;
+  }
+
+  @media (max-width: 720px) {
+    ul {
+      width: 14.5rem;
+    }
   }
 
   li {
     display: flex;
     align-items: flex-start;
     border-left: 0.25rem solid transparent;
-    letter-spacing: 0.01rem;
   }
 
   li.active {
