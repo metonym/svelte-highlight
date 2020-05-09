@@ -1,3 +1,8 @@
+<script>
+  import { Highlight } from "svelte-highlight";
+  import { bash } from "svelte-highlight/languages";
+</script>
+
 <style>
   :global(*) {
     margin: 0;
@@ -41,5 +46,12 @@
 </style>
 
 <main>
+  <div style="margin-bottom: 2rem;">
+    <h2>Install</h2>
+    <div
+      style="position: relative; max-width: 38rem; border: 2px solid #f4f4f4">
+      <Highlight language={bash} code="yarn add -D svelte-highlight" />
+    </div>
+  </div>
   <slot />
 </main>

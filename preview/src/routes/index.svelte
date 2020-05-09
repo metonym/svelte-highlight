@@ -39,4 +39,5 @@
     </h1>
   </header>
 </ThemePicker>
+
 <CodeUsage {currentStyle} />
