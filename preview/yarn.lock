@@ -2279,10 +2279,10 @@ svelte-octicons@^9.6.0:
   resolved "https://registry.yarnpkg.com/svelte-octicons/-/svelte-octicons-9.6.0.tgz#496129a2f1d7a7538b43561bf53b9b7a6eabd652"
   integrity sha512-wikHAPeQfM3GzPrIEHbmixZbFeYBO5ZIrDTwH5nhJdpvX6gtTOr7tmLwM8Wmo89pFJZWuCoV+L/7IWPb7/CxAw==
 
-svelte-primer@^0.1.0-rc.1:
-  version "0.1.0-rc.1"
-  resolved "https://registry.yarnpkg.com/svelte-primer/-/svelte-primer-0.1.0-rc.1.tgz#f7a36fb59b65489f2f2e1e88c65ca77789d9997d"
-  integrity sha512-LepcrkZki8Mko53zINmw7hlGpq8dhiVH/afBGgG1s0cJhJAawQ0+4OBrS/lEcx1tR32/CId5vKpB0x8PijpLdQ==
+svelte-primer@^0.1.0-rc.2:
+  version "0.1.0-rc.2"
+  resolved "https://registry.yarnpkg.com/svelte-primer/-/svelte-primer-0.1.0-rc.2.tgz#53d1c85b93c7cd09b1907fc675a391520df33efd"
+  integrity sha512-0fGoi1ww33jb8eqGKB3SObOjWkiq3DPNEGVz/iiQdl725452kbFUZAJvos5DBKEtUmNg2RLBcvXmc5pVb+7Nmw==
   dependencies:
     svelte-octicons "^9.6.0"
 

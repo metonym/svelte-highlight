@@ -108,10 +108,6 @@
         <h2 slot="heading">Install</h2>
       </Subhead>
     </div>
-    <p class="mb-4">
-      <code>svelte-highlight</code>
-      can be installed using yarn or npm.
-    </p>
     <Navigation.TabNav>
       <Navigation.TabNavItem
         current={tabIndexInstall === 0}
@@ -138,14 +134,14 @@
       </Subhead>
     </div>
     <p class="mb-4">
-      There are two ways to apply styles: injected styles through the
+      Use the
       <a
         href="https://svelte.dev/docs#svelte_head"
         target="_blank"
         rel="noopener noreferrer">
         svelte:head API
       </a>
-      or with a CSS StyleSheet loader.
+      or CSS StyleSheet loader to apply styles.
     </p>
     <Navigation.TabNav>
       <Navigation.TabNavItem
