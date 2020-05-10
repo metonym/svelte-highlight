@@ -3,13 +3,6 @@ const { toPascalCase } = require("./utils/toPascalCase");
 const fs = require("./utils/fs");
 
 async function buildHljsLanguages() {
-  await fs.rmdir("src/languages", { recursive: true });
-  await fs.rmdir("languages", { recursive: true });
-  await fs.rmdir("docs", { recursive: true });
-  await fs.mkdir("src/languages");
-  await fs.mkdir("languages");
-  await fs.mkdir("docs");
-
   const md = ["# Supported Languages\n"];
   const languages = hljs.listLanguages();
   const baseExport = [];
@@ -49,10 +42,10 @@ async function buildHljsLanguages() {
   });
 
   baseExport.push("\n");
-  await fs.writeFile("src/languages/index.js", baseExport.join("\n"));
+  await fs.writeFile("dist/languages/index.js", baseExport.join("\n"));
 
   files.forEach(async (file, index) => {
-    await fs.writeFile(`src/languages/${languages[index]}.js`, file);
+    await fs.writeFile(`dist/languages/${languages[index]}.js`, file);
   });
 
   md.push("\n");

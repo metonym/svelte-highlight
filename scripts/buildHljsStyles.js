@@ -6,12 +6,6 @@ const deprecatedStyles = ["darkula"];
 
 async function buildHljsStyles() {
   const baseExport = [];
-
-  await fs.rmdir("src/styles", { recursive: true });
-  await fs.rmdir("styles", { recursive: true });
-  await fs.mkdir("src/styles");
-  await fs.mkdir("styles");
-
   const md = ["# Supported Styles\n"];
 
   glob("node_modules/highlight.js/styles/!(*.css)", {}, (error, files) => {
@@ -63,12 +57,12 @@ async function buildHljsStyles() {
         `const ${name} = \`<style>${content}</style>\`;\n`,
         `export default ${name};\n`,
       ].join("\n");
-      await fs.writeFile(`src/styles/${styleName}.js`, exportee);
+      await fs.writeFile(`dist/styles/${styleName}.js`, exportee);
       await fs.writeFile(`styles/${styleName}.css`, content);
     });
 
     baseExport.push("\n");
-    await fs.writeFile("src/styles/index.js", baseExport.join("\n"));
+    await fs.writeFile("dist/styles/index.js", baseExport.join("\n"));
 
     md.push("\n");
     await fs.writeFile("docs/SUPPORTED_STYLES.md", md.join("\n"));

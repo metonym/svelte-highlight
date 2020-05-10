@@ -1,21 +1,19 @@
 import resolve from "rollup-plugin-node-resolve";
 import svelte from "rollup-plugin-svelte";
 import commonjs from "rollup-plugin-commonjs";
-import pkg from "./package.json";
+import { main, module, name } from "./package.json";
 
 const lib = ["es", "umd"].map((format) => {
   const UMD = format === "umd";
 
-  const output = {
-    format,
-    file: UMD ? pkg.main : pkg.module,
-    exports: UMD ? "named" : undefined,
-    name: UMD ? pkg.name : undefined,
-  };
-
   return {
     input: "src",
-    output,
+    output: {
+      format,
+      file: UMD ? main : module,
+      exports: UMD ? "named" : undefined,
+      name: UMD ? name : undefined,
+    },
     plugins: [svelte(), resolve(), commonjs()],
   };
 });
@@ -23,16 +21,14 @@ const lib = ["es", "umd"].map((format) => {
 const languages = ["es", "umd"].map((format) => {
   const UMD = format === "umd";
 
-  const output = {
-    format,
-    file: UMD ? "languages/index.js" : "languages/index.mjs",
-    exports: UMD ? "named" : undefined,
-    name: UMD ? "svelte-highlight-languages" : undefined,
-  };
-
   return {
-    input: "src/languages",
-    output,
+    input: "dist/languages",
+    output: {
+      format,
+      file: UMD ? "languages/index.js" : "languages/index.mjs",
+      exports: UMD ? "named" : undefined,
+      name: UMD ? "svelte-highlight-languages" : undefined,
+    },
     plugins: [resolve(), commonjs()],
   };
 });
@@ -40,16 +36,14 @@ const languages = ["es", "umd"].map((format) => {
 const styles = ["es", "umd"].map((format) => {
   const UMD = format === "umd";
 
-  const output = {
-    format,
-    file: UMD ? "styles/index.js" : "styles/index.mjs",
-    exports: UMD ? "named" : undefined,
-    name: UMD ? "svelte-highlight-styles" : undefined,
-  };
-
   return {
-    input: "src/styles",
-    output,
+    input: "dist/styles",
+    output: {
+      format,
+      file: UMD ? "styles/index.js" : "styles/index.mjs",
+      exports: UMD ? "named" : undefined,
+      name: UMD ? "svelte-highlight-styles" : undefined,
+    },
     plugins: [resolve(), commonjs()],
   };
 });

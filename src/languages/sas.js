@@ -1,3 +1,0 @@
-import sas from 'highlight.js/lib/languages/sas';
-
-export default { name: 'sas', register: sas };
