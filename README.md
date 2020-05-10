@@ -20,7 +20,7 @@ npm i -D svelte-highlight
 
 ## Usage
 
-There are two ways to apply `highlight.js` styles: injected styles through `svelte:head` or with a CSS style sheet loader.
+There are two ways to apply `highlight.js` styles: injected styles through `svelte:head` or with a CSS StyleSheet loader.
 
 ### Injected Styles
 

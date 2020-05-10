@@ -1,43 +1,210 @@
 <script>
-  import HighlightLegacy, {
-    Highlight,
-    HighlightSvelte
-  } from "svelte-highlight";
-  import CodeUsage from "../components/CodeUsage.svelte";
-  import ThemePicker from "../components/ThemePicker.svelte";
+  import pkg from "../../../package.json";
+  import { Highlight, HighlightSvelte } from "svelte-highlight";
+  import { bash } from "svelte-highlight/languages";
+  import Copy from "../components/Copy.svelte";
+  import {
+    Navigation,
+    Box,
+    Button,
+    Subhead,
+    Pagehead,
+    Alert
+  } from "svelte-primer";
+  import { LinkExternal, MarkGithub, Paintcan } from "svelte-octicons";
+  import * as styles from "svelte-highlight/styles";
 
-  let currentStyle = undefined;
+  $: currentStyle = "anOldHope";
+  $: supportedStyles = Object.keys(styles);
+  $: style = styles[currentStyle];
+  $: tabIndexUsage = 0;
+  $: tabIndexInstall = 0;
+  $: codeInstall =
+    tabIndexInstall === 0
+      ? "yarn add -D svelte-highlight"
+      : "npm -i -D svelte-highlight";
+
+  $: currentStyleCSS = (currentStyle || "")
+    .split(/(?=[A-Z])/)
+    .map(fragment => fragment.toLowerCase())
+    .join("-");
+
+  let code = "const add = (a: number, b: number) => a + b;";
+
+  $: codeInjectedStyles = `<script>
+  import { Highlight } from 'svelte-highlight';
+  import { typescript } from 'svelte-highlight/languages';
+  import { ${currentStyle} } from 'svelte-highlight/styles';
+
+  $: code = \`${code}\`;
+<\/script>
+
+<svelte:head>
+  {@html ${currentStyle}}
+</svelte:head>
+
+<Highlight language={typescript} {code} />`;
+
+  $: codeCssStylesheet = `<script>
+  import { Highlight } from 'svelte-highlight';
+  import { typescript } from 'svelte-highlight/languages';
+  import 'svelte-highlight/styles/${currentStyleCSS}.css';
+
+  $: code = \`${code}\`;
+<\/script>
+
+<Highlight language={typescript} {code} />`;
+
+  $: codeUsage = tabIndexUsage === 0 ? codeInjectedStyles : codeCssStylesheet;
 </script>
 
 <style>
-  header {
-    display: flex;
-    height: 3rem;
+  aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 14rem;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
 
-  h1 {
-    font-size: 1.125rem;
+  main {
+    margin-left: 14rem;
   }
 
-  a {
-    color: #0f62fe;
+  ul {
+    list-style: none;
   }
 
-  a span {
+  :global(.hljs.hljs) {
+    padding: 0.75rem 1rem;
+    cursor: text;
+  }
+
+  .version {
     font-size: 0.875rem;
-    color: #161616;
   }
 </style>
 
-<ThemePicker bind:currentStyle>
-  <header>
-    <h1>
-      <a href="https://github.com/metonym/svelte-highlight">
-        svelte-highlight
-        <span>v0.6.0</span>
-      </a>
-    </h1>
-  </header>
-</ThemePicker>
+<svelte:head>
+  {@html style}
+</svelte:head>
 
-<CodeUsage {currentStyle} />
+<main class="mt-3 mb-6 pl-6 pr-6">
+  <div style="max-width: 36rem;">
+    <Pagehead>
+      svelte-highlight
+      <a href="https://www.npmjs.com/package/svelte-highlight">
+        <span class="version">v{pkg.version}</span>
+      </a>
+    </Pagehead>
+    <a href="https://github.com/metonym/svelte-highlight">
+      <MarkGithub />
+      View on GitHub
+    </a>
+    <div class="mt-4">
+      <Subhead>
+        <h2 slot="heading">Install</h2>
+      </Subhead>
+    </div>
+    <p class="mb-4">
+      <code>svelte-highlight</code>
+      can be installed using yarn or npm.
+    </p>
+    <Navigation.TabNav>
+      <Navigation.TabNavItem
+        current={tabIndexInstall === 0}
+        on:click={() => {
+          tabIndexInstall = 0;
+        }}>
+        yarn
+      </Navigation.TabNavItem>
+      <Navigation.TabNavItem
+        current={tabIndexInstall === 1}
+        on:click={() => {
+          tabIndexInstall = 1;
+        }}>
+        npm
+      </Navigation.TabNavItem>
+    </Navigation.TabNav>
+    <Box.Box class="d-flex">
+      <Highlight class="flex-1" language={bash} code={codeInstall} />
+      <Copy text={codeInstall} />
+    </Box.Box>
+    <div class="mt-4">
+      <Subhead>
+        <h2 slot="heading">Usage</h2>
+      </Subhead>
+    </div>
+    <p class="mb-4">
+      There are two ways to apply styles: injected styles through the
+      <a
+        href="https://svelte.dev/docs#svelte_head"
+        target="_blank"
+        rel="noopener noreferrer">
+        svelte:head API
+      </a>
+      or with a CSS StyleSheet loader.
+    </p>
+    <Navigation.TabNav>
+      <Navigation.TabNavItem
+        current={tabIndexUsage === 0}
+        on:click={() => {
+          tabIndexUsage = 0;
+        }}>
+        Injected Styles
+      </Navigation.TabNavItem>
+      <Navigation.TabNavItem
+        current={tabIndexUsage === 1}
+        on:click={() => {
+          tabIndexUsage = 1;
+        }}>
+        CSS StyleSheet
+      </Navigation.TabNavItem>
+    </Navigation.TabNav>
+    <Box.Box class="d-flex">
+      <HighlightSvelte class="flex-1" code={codeUsage} />
+      <Copy text={codeUsage} />
+    </Box.Box>
+    {#if tabIndexUsage === 1}
+      <Alert class="mt-2">
+        <p>
+          A CSS loader is required to import a CSS StyleSheet in a Svelte
+          component.
+        </p>
+        <p>
+          <a
+            target="_blank"
+            rel="noopener noreferre"
+            href="https://github.com/metonym/svelte-highlight/tree/master/examples/webpack">
+            Example webpack set-up
+            <LinkExternal />
+          </a>
+        </p>
+      </Alert>
+    {/if}
+  </div>
+</main>
+
+<aside class="d-inline-flex">
+  <ul>
+    <h4 class="mt-5 mb-2 pl-2">
+      <Paintcan style="margin-right: 0.25rem;" />
+      Themes
+    </h4>
+    {#each supportedStyles as style, i (style)}
+      <li class:bg-blue={currentStyle === style}>
+        <Button
+          invisible
+          class={currentStyle === style ? 'text-white' : undefined}
+          style="width: 100%; text-align: left; background-color: transparent;"
+          on:click={() => {
+            currentStyle = style;
+          }}>
+          {style}
+        </Button>
+      </li>
+    {/each}
+  </ul>
+</aside>

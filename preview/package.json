@@ -6,15 +6,17 @@
     "deploy": "node gh-pages"
   },
   "dependencies": {
-    "polka": "next",
-    "sirv": "^0.4.0"
+    "polka": "next"
   },
   "devDependencies": {
     "@metonym/sapper": "^0.27.12",
+    "clipboard-copy": "^3.1.0",
     "gh-pages": "^2.2.0",
     "svelte": "^3.22.2",
     "svelte-highlight": "../",
     "svelte-loader": "^2.13.6",
+    "svelte-octicons": "^9.6.0",
+    "svelte-primer": "^0.1.0-rc.1",
     "webpack": "^4.43.0"
   }
 }
