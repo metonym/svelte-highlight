@@ -58,7 +58,7 @@ Importing a CSS StyleSheet in Svelte requires a CSS loader. Refer to [examples/w
 <Highlight language={typescript} {code} />
 ```
 
-### Svelte Syntax Highlighting
+## Svelte Syntax Highlighting
 
 This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-svelte) to highlight Svelte code.
 
@@ -81,7 +81,7 @@ This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-sv
 <HighlightSvelte {code} />
 ```
 
-### Custom Language
+## Custom Language
 
 For custom language highlighting, pass a `name` and `register` function to the language prop.
 
@@ -124,14 +124,14 @@ The following events are forwarded to the `pre` element:
 - on:focus
 - on:blur
 
-## Webpack/Rollup Examples
-
-- [examples/rollup](examples/rollup)
-- [examples/webpack](examples/webpack)
-
 ## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
 
 ## [Supported Styles](docs/SUPPORTED_STYLES.md)
+
+## Examples
+
+- [examples/rollup](examples/rollup)
+- [examples/webpack](examples/webpack)
 
 ## [Changelog](CHANGELOG.md)
 
