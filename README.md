@@ -124,9 +124,9 @@ The following events are forwarded to the `pre` element:
 - on:focus
 - on:blur
 
-## [Supported Languages](docs/SUPPORTED_LANGUAGES.md)
+## [Supported Languages](SUPPORTED_LANGUAGES.md)
 
-## [Supported Styles](docs/SUPPORTED_STYLES.md)
+## [Supported Styles](SUPPORTED_STYLES.md)
 
 ## Examples
 
