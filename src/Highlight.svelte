@@ -15,11 +15,8 @@
     }
   });
 
-  $: {
-    if (language.name && language.register) {
-      hljs.registerLanguage(language.name, language.register);
-    }
-
+  $: if (language.name && language.register) {
+    hljs.registerLanguage(language.name, language.register);
     highlighted = hljs.highlight(language.name, code).value;
   }
 </script>
@@ -35,7 +32,9 @@
     on:blur
     class:hljs={true}>
     <code>
-      {@html highlighted}
+      {#if highlighted !== undefined}
+        {@html highlighted}
+      {:else}{code}{/if}
     </code>
   </pre>
 </slot>

@@ -95,14 +95,27 @@
   <div style="max-width: 36rem;">
     <Pagehead>
       svelte-highlight
-      <a href="https://www.npmjs.com/package/svelte-highlight">
-        <span class="version">v{pkg.version}</span>
+      <a
+        class="d-inline-flex ml-1 mr-2"
+        href="https://www.npmjs.com/package/svelte-highlight"
+        target="_blank"
+        rel="noopener noreferrer">
+        <span class="version">
+          v{pkg.version}
+          <LinkExternal style="margin-left: .125rem;" />
+        </span>
+      </a>
+      <a href="https://github.com/metonym/svelte-highlight">
+        <span class="version">
+          View on GitHub
+          <MarkGithub style="margin-left: .125rem;" />
+        </span>
       </a>
     </Pagehead>
-    <a href="https://github.com/metonym/svelte-highlight">
-      <MarkGithub />
-      View on GitHub
-    </a>
+    <p class="mt-2">
+      Syntax Highlighting for Svelte using
+      <a href="https://github.com/highlightjs/highlight.js">highlight.js</a>.
+    </p>
     <div class="mt-4">
       <Subhead>
         <h2 slot="heading">Install</h2>
@@ -141,7 +154,7 @@
         rel="noopener noreferrer">
         svelte:head API
       </a>
-      or CSS StyleSheet loader to apply styles.
+      or a CSS StyleSheet loader to load styles.
     </p>
     <Navigation.TabNav>
       <Navigation.TabNavItem
