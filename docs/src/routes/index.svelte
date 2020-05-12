@@ -77,6 +77,7 @@
 
   .version {
     font-size: 0.875rem;
+    font-weight: 400;
   }
 </style>
 
@@ -90,7 +91,7 @@
       <h1>
         svelte-highlight
         <a
-          class="d-inline-flex ml-1 mr-2"
+          class="d-inline-flex ml-2 mr-2"
           href="https://www.npmjs.com/package/svelte-highlight"
           target="_blank"
           rel="noopener noreferrer">
@@ -99,13 +100,16 @@
             <LinkExternal style="margin-left: .125rem;" />
           </span>
         </a>
-        <a href="https://github.com/metonym/svelte-highlight">
+        <a
+          class="d-inline-flex"
+          href="https://github.com/metonym/svelte-highlight">
           <span class="version">
             View on GitHub
             <MarkGithub style="margin-left: .125rem;" />
           </span>
         </a>
       </h1>
+
     </div>
     <div class="markdown-body mt-3 mt-3">
       <blockquote>
