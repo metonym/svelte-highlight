@@ -2261,7 +2261,7 @@ svelte-dev-helper@^1.1.9:
   integrity sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M=
 
 svelte-highlight@../:
-  version "0.6.0"
+  version "0.6.2"
   dependencies:
     highlight.js "9.17.1"
     highlightjs-svelte "1.0.4"
@@ -2274,17 +2274,17 @@ svelte-loader@^2.13.6:
     loader-utils "^1.1.0"
     svelte-dev-helper "^1.1.9"
 
-svelte-octicons@^9.6.0:
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/svelte-octicons/-/svelte-octicons-9.6.0.tgz#496129a2f1d7a7538b43561bf53b9b7a6eabd652"
-  integrity sha512-wikHAPeQfM3GzPrIEHbmixZbFeYBO5ZIrDTwH5nhJdpvX6gtTOr7tmLwM8Wmo89pFJZWuCoV+L/7IWPb7/CxAw==
+svelte-octicons@^9.6.3:
+  version "9.6.3"
+  resolved "https://registry.yarnpkg.com/svelte-octicons/-/svelte-octicons-9.6.3.tgz#c326ffee5d58c8b92183fd58d2b9d038b6dc40ff"
+  integrity sha512-SAwijL58UDtqEOTe8Gsn2YnPy7UaXgQ6U4/HBnUZt2zNlpe7veeLyaQTOC4z+2HalsqELDHJGdXkXUpBJdJEpw==
 
-svelte-primer@^0.1.0-rc.2:
-  version "0.1.0-rc.2"
-  resolved "https://registry.yarnpkg.com/svelte-primer/-/svelte-primer-0.1.0-rc.2.tgz#53d1c85b93c7cd09b1907fc675a391520df33efd"
-  integrity sha512-0fGoi1ww33jb8eqGKB3SObOjWkiq3DPNEGVz/iiQdl725452kbFUZAJvos5DBKEtUmNg2RLBcvXmc5pVb+7Nmw==
+svelte-primer@^0.1.0-rc.4:
+  version "0.1.0-rc.4"
+  resolved "https://registry.yarnpkg.com/svelte-primer/-/svelte-primer-0.1.0-rc.4.tgz#b8fc23033fda7027af3471d257476b631a314925"
+  integrity sha512-hEeVBpY4TY8Ij0UQKU0QP0cA/+L/bMJ+hJ7Qtq04Twi9Lk3N7TVctiN1OrGl33O4kTaYpyVsaxM+s5hK/6ol2Q==
   dependencies:
-    svelte-octicons "^9.6.0"
+    svelte-octicons "^9.6.3"
 
 svelte@^3.22.2:
   version "3.22.2"

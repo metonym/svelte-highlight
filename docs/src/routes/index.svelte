@@ -3,14 +3,7 @@
   import { Highlight, HighlightSvelte } from "svelte-highlight";
   import { bash } from "svelte-highlight/languages";
   import Copy from "../components/Copy.svelte";
-  import {
-    Navigation,
-    Box,
-    Button,
-    Subhead,
-    Pagehead,
-    Alert
-  } from "svelte-primer";
+  import { Navigation, Box, Button, Alert } from "svelte-primer";
   import { LinkExternal, MarkGithub, Paintcan } from "svelte-octicons";
   import * as styles from "svelte-highlight/styles";
 
@@ -73,8 +66,8 @@
     margin-left: 14rem;
   }
 
-  ul {
-    list-style: none;
+  :global(code) {
+    font-size: 14px;
   }
 
   :global(.hljs.hljs) {
@@ -91,35 +84,39 @@
   {@html style}
 </svelte:head>
 
-<main class="mt-3 mb-6 pl-6 pr-6">
-  <div style="max-width: 36rem;">
-    <Pagehead>
-      svelte-highlight
-      <a
-        class="d-inline-flex ml-1 mr-2"
-        href="https://www.npmjs.com/package/svelte-highlight"
-        target="_blank"
-        rel="noopener noreferrer">
-        <span class="version">
-          v{pkg.version}
-          <LinkExternal style="margin-left: .125rem;" />
-        </span>
-      </a>
-      <a href="https://github.com/metonym/svelte-highlight">
-        <span class="version">
-          View on GitHub
-          <MarkGithub style="margin-left: .125rem;" />
-        </span>
-      </a>
-    </Pagehead>
-    <p class="mt-2">
-      Syntax Highlighting for Svelte using
-      <a href="https://github.com/highlightjs/highlight.js">highlight.js</a>.
-    </p>
-    <div class="mt-4">
-      <Subhead>
-        <h2 slot="heading">Install</h2>
-      </Subhead>
+<main class="p-6">
+  <div style="max-width: 40rem;">
+    <div class="markdown-body">
+      <h1>
+        svelte-highlight
+        <a
+          class="d-inline-flex ml-1 mr-2"
+          href="https://www.npmjs.com/package/svelte-highlight"
+          target="_blank"
+          rel="noopener noreferrer">
+          <span class="version">
+            v{pkg.version}
+            <LinkExternal style="margin-left: .125rem;" />
+          </span>
+        </a>
+        <a href="https://github.com/metonym/svelte-highlight">
+          <span class="version">
+            View on GitHub
+            <MarkGithub style="margin-left: .125rem;" />
+          </span>
+        </a>
+      </h1>
+    </div>
+    <div class="markdown-body mt-3 mt-3">
+      <blockquote>
+        <p>
+          Syntax Highlighting for Svelte using
+          <a href="https://github.com/highlightjs/highlight.js">highlight.js</a>
+        </p>
+      </blockquote>
+    </div>
+    <div class="markdown-body mt-4 mb-4">
+      <h2>Install</h2>
     </div>
     <Navigation.TabNav>
       <Navigation.TabNavItem
@@ -141,12 +138,10 @@
       <Highlight class="flex-1" language={bash} code={codeInstall} />
       <Copy text={codeInstall} />
     </Box.Box>
-    <div class="mt-4">
-      <Subhead>
-        <h2 slot="heading">Usage</h2>
-      </Subhead>
+    <div class="markdown-body mt-4 mb-4">
+      <h2>Usage</h2>
     </div>
-    <p class="mb-4">
+    <p class="markdown-body mb-4">
       Use the
       <a
         href="https://svelte.dev/docs#svelte_head"
@@ -196,8 +191,22 @@
   </div>
 </main>
 
-<aside class="d-inline-flex">
-  <ul>
+<aside class="d-inline-flex bg-gray-light border-right">
+  <Navigation.SideNav class="p-3 pr-6">
+    <h5 class="text-gray mb-2 pb-1 border-bottom">Themes</h5>
+    {#each supportedStyles as style, i (style)}
+      <Navigation.SideNavSubItem
+        href="#"
+        current={currentStyle === style}
+        on:click={e => {
+          e.preventDefault();
+          currentStyle = style;
+        }}>
+        {style}
+      </Navigation.SideNavSubItem>
+    {/each}
+  </Navigation.SideNav>
+  <!-- <ul>
     <h4 class="mt-5 mb-2 pl-2">
       <Paintcan style="margin-right: 0.25rem;" />
       Themes
@@ -215,5 +224,5 @@
         </Button>
       </li>
     {/each}
-  </ul>
+  </ul> -->
 </aside>

@@ -15,8 +15,7 @@
     "svelte": "^3.22.2",
     "svelte-highlight": "../",
     "svelte-loader": "^2.13.6",
-    "svelte-octicons": "^9.6.0",
-    "svelte-primer": "^0.1.0-rc.2",
+    "svelte-primer": "^0.1.0-rc.4",
     "webpack": "^4.43.0"
   }
 }
