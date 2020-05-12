@@ -125,14 +125,16 @@
     <Navigation.TabNav>
       <Navigation.TabNavItem
         current={tabIndexInstall === 0}
-        on:click={() => {
+        on:click={e => {
+          e.preventDefault();
           tabIndexInstall = 0;
         }}>
         yarn
       </Navigation.TabNavItem>
       <Navigation.TabNavItem
         current={tabIndexInstall === 1}
-        on:click={() => {
+        on:click={e => {
+          e.preventDefault();
           tabIndexInstall = 1;
         }}>
         npm
@@ -158,14 +160,16 @@
     <Navigation.TabNav>
       <Navigation.TabNavItem
         current={tabIndexUsage === 0}
-        on:click={() => {
+        on:click={e => {
+          e.preventDefault();
           tabIndexUsage = 0;
         }}>
         Injected Styles
       </Navigation.TabNavItem>
       <Navigation.TabNavItem
         current={tabIndexUsage === 1}
-        on:click={() => {
+        on:click={e => {
+          e.preventDefault();
           tabIndexUsage = 1;
         }}>
         CSS StyleSheet
@@ -210,23 +214,4 @@
       </Navigation.SideNavSubItem>
     {/each}
   </Navigation.SideNav>
-  <!-- <ul>
-    <h4 class="mt-5 mb-2 pl-2">
-      <Paintcan style="margin-right: 0.25rem;" />
-      Themes
-    </h4>
-    {#each supportedStyles as style, i (style)}
-      <li class:bg-blue={currentStyle === style}>
-        <Button
-          invisible
-          class={currentStyle === style ? 'text-white' : undefined}
-          style="width: 100%; text-align: left; background-color: transparent;"
-          on:click={() => {
-            currentStyle = style;
-          }}>
-          {style}
-        </Button>
-      </li>
-    {/each}
-  </ul> -->
 </aside>
