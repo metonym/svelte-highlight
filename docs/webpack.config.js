@@ -28,8 +28,9 @@ module.exports = {
             loader: "svelte-loader",
             options: {
               dev,
+              immutable: true,
               hydratable: true,
-              hotReload: false, // pending https://github.com/sveltejs/svelte/issues/2377
+              hotReload: false,
             },
           },
         },
@@ -44,10 +45,8 @@ module.exports = {
     },
     mode,
     plugins: [
-      new MiniCssExtractPlugin({ filename: "[name].[chunkhash].css" }),
+      new MiniCssExtractPlugin({ filename: "[name].[chunkhash:8].css" }),
       new OptimizeCssAssetsPlugin({}),
-      // pending https://github.com/sveltejs/svelte/issues/2377
-      // dev && new webpack.HotModuleReplacementPlugin(),
       new webpack.DefinePlugin({
         "process.browser": true,
         "process.env.NODE_ENV": JSON.stringify(mode),

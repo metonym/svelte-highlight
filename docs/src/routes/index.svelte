@@ -25,9 +25,9 @@
   let code = "const add = (a: number, b: number) => a + b;";
 
   $: codeInjectedStyles = `<script>
-  import { Highlight } from 'svelte-highlight';
-  import { typescript } from 'svelte-highlight/languages';
-  import { ${currentStyle} } from 'svelte-highlight/styles';
+  import { Highlight } from "svelte-highlight";
+  import { typescript } from "svelte-highlight/languages";
+  import { ${currentStyle} } from "svelte-highlight/styles";
 
   $: code = \`${code}\`;
 <\/script>
@@ -39,9 +39,9 @@
 <Highlight language={typescript} {code} />`;
 
   $: codeCssStylesheet = `<script>
-  import { Highlight } from 'svelte-highlight';
-  import { typescript } from 'svelte-highlight/languages';
-  import 'svelte-highlight/styles/${currentStyleCSS}.css';
+  import { Highlight } from "svelte-highlight";
+  import { typescript } from "svelte-highlight/languages";
+  import "svelte-highlight/styles/${currentStyleCSS}.css";
 
   $: code = \`${code}\`;
 <\/script>
@@ -56,14 +56,14 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 14rem;
+    width: 16rem;
     height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
   }
 
   main {
-    margin-left: 14rem;
+    margin-left: 16rem;
   }
 
   :global(code) {
@@ -78,6 +78,7 @@
   .version {
     font-size: 0.875rem;
     font-weight: 400;
+    fill: #0366d6;
   }
 </style>
 
@@ -109,7 +110,6 @@
           </span>
         </a>
       </h1>
-
     </div>
     <div class="markdown-body mt-3 mt-3">
       <blockquote>
@@ -188,7 +188,7 @@
         <p>
           <a
             target="_blank"
-            rel="noopener noreferre"
+            rel="noopener noreferrer"
             href="https://github.com/metonym/svelte-highlight/tree/master/examples/webpack">
             Example webpack set-up
             <LinkExternal />
@@ -200,8 +200,17 @@
 </main>
 
 <aside class="d-inline-flex bg-gray-light border-right">
-  <Navigation.SideNav class="p-3 pr-6">
-    <h5 class="text-gray mb-2 pb-1 border-bottom">Themes</h5>
+  <Navigation.SideNav class="width-full p-3">
+    <div class="d-flex width-full">
+      <h5
+        class="d-flex width-full flex-justify-between text-gray mb-2 pb-1
+        border-bottom">
+        Themes
+        <a style="margin-top: auto; margin-left: auto" href="themes" class="f6">
+          View on one page
+        </a>
+      </h5>
+    </div>
     {#each supportedStyles as style, i (style)}
       <Navigation.SideNavSubItem
         href="#"
