@@ -19,12 +19,12 @@
 
   li {
     width: 50%;
-    min-height: 330px;
+    min-height: 380px;
   }
 
   iframe {
     width: 100%;
-    height: 290px;
+    height: 300px;
   }
 </style>
 
@@ -37,9 +37,9 @@
 <ul class="d-flex flex-wrap">
   {#each posts as post}
     <li class="mb-2">
-      <h3 class="ml-3 mb-2">
+      <h4 class="ml-3 mb-2">
         <a href="themes/{post.slug}">{post.title}</a>
-      </h3>
+      </h4>
       <iframe
         class="border-0"
         loading="lazy"

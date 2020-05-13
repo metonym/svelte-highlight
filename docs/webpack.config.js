@@ -54,7 +54,6 @@ module.exports = {
     ].filter(Boolean),
     devtool: dev && "inline-source-map",
   },
-
   server: {
     entry: config.server.entry(),
     output: config.server.output(),

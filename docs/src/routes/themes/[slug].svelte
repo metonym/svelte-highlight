@@ -33,13 +33,6 @@
 <Highlight language={typescript} {code} />`;
 </script>
 
-<style>
-  :global(.hljs.hljs) {
-    padding: 0.75rem 1rem;
-    cursor: text;
-  }
-</style>
-
 <svelte:head>
   <title>{post.title}</title>
   {@html styles[currentStyle]}

@@ -51,37 +51,6 @@
   $: codeUsage = tabIndexUsage === 0 ? codeInjectedStyles : codeCssStylesheet;
 </script>
 
-<style>
-  aside {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 16rem;
-    height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-  }
-
-  main {
-    margin-left: 16rem;
-  }
-
-  :global(code) {
-    font-size: 14px;
-  }
-
-  :global(.hljs.hljs) {
-    padding: 0.75rem 1rem;
-    cursor: text;
-  }
-
-  .version {
-    font-size: 0.875rem;
-    font-weight: 400;
-    fill: #0366d6;
-  }
-</style>
-
 <svelte:head>
   {@html style}
 </svelte:head>
@@ -191,7 +160,7 @@
             rel="noopener noreferrer"
             href="https://github.com/metonym/svelte-highlight/tree/master/examples/webpack">
             Example webpack set-up
-            <LinkExternal />
+            <LinkExternal style="fill: #0366d6; margin-left: .125rem;" />
           </a>
         </p>
       </Alert>
