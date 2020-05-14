@@ -31,8 +31,8 @@
 
 <Button
   variant="octicon"
-  class="border-left"
-  style="margin-left: 0; min-width: 2.5rem;"
+  class="border-0 border-left"
+  style="margin-left: 0; min-width: 2.75rem;"
   on:click={copyToClipboard}>
   <svelte:component this={copied ? Check : Clippy} />
 </Button>

@@ -1,9 +1,11 @@
 const webpack = require("webpack");
 const path = require("path");
+const glob = require("glob");
 const config = require("@metonym/sapper/config/webpack.js");
 const pkg = require("./package.json");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const PurgecssPlugin = require("purgecss-webpack-plugin");
 
 const mode = process.env.NODE_ENV || "production";
 const dev = mode === "development";
@@ -46,6 +48,14 @@ module.exports = {
     mode,
     plugins: [
       new MiniCssExtractPlugin({ filename: "[name].[chunkhash:8].css" }),
+      new PurgecssPlugin({
+        paths: glob.sync(`${path.join(__dirname, "src")}/**/*`, {
+          nodir: true,
+        }),
+        whitelistPatternsChildren: () => {
+          return [/^SideNav-/, /^Box-/, /^tabnav-/, /^flash/, /^hljs/];
+        },
+      }),
       new OptimizeCssAssetsPlugin({}),
       new webpack.DefinePlugin({
         "process.browser": true,
