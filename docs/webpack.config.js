@@ -55,6 +55,7 @@ module.exports = {
         whitelistPatternsChildren: () => {
           return [/^SideNav-/, /^Box-/, /^tabnav-/, /^flash/, /^hljs/];
         },
+        keyframes: true,
       }),
       new OptimizeCssAssetsPlugin({}),
       new webpack.DefinePlugin({
