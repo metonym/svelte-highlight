@@ -10,6 +10,7 @@ aside {
 
 main {
   margin-left: 16rem;
+  min-width: 720px;
 }
 
 code {
