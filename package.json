@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "glob": "^7.1.6",
-    "rollup": "^2.18.0",
+    "rollup": "^2.19.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^5.2.3",
