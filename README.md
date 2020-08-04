@@ -10,7 +10,26 @@ This component wraps [highlight.js](https://github.com/highlightjs/highlight.js)
 
 ## [Live Demo](https://metonym.github.io/svelte-highlight)
 
+## Table of Contents
+
+- [Install](#install)
+- [Usage](#usage)
+  - [Injected Styles](#injected-styles)
+  - [CSS StyleSheet](#css-stylesheet)
+- [Svelte Syntax Highlighting](#svelte-syntax-highlighting)
+- [Custom Language](#custom-language)
+- [API](#api)
+  - [Forwarded Events](#forwarded-events)
+  - [Dispatched Events](#dispatched-events)
+- [Supported Languages](#supported-languages)
+- [Supported Styles](#supported-styles)
+- [Examples](#examples)
+- [Changelog](#changelog)
+- [License](#license)
+
 ## Install
+
+`svelte-highlight` requires svelte [version 3.20.x](https://github.com/sveltejs/svelte/blob/master/CHANGELOG.md#3200) or greater due to use of the `$$restProps` API.
 
 ```bash
 yarn add -D svelte-highlight
@@ -20,7 +39,10 @@ npm i -D svelte-highlight
 
 ## Usage
 
-There are two ways to apply `highlight.js` styles: injected styles through `svelte:head` or with a CSS StyleSheet loader.
+There are two ways to apply `highlight.js` styles:
+
+1. inject JavaScript styles through `svelte:head`
+2. import CSS StyleSheets using a css file loader.
 
 ### Injected Styles
 
@@ -28,9 +50,9 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 
 ```html
 <script>
-  import { Highlight } from 'svelte-highlight';
-  import { typescript } from 'svelte-highlight/languages';
-  import { github } from 'svelte-highlight/styles';
+  import { Highlight } from "svelte-highlight";
+  import { typescript } from "svelte-highlight/languages";
+  import { github } from "svelte-highlight/styles";
 
   $: code = `const add = (a: number, b: number) => a + b;`;
 </script>
@@ -39,23 +61,23 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
   {@html github}
 </svelte:head>
 
-<Highlight language={typescript} {code} />
+<Highlight language="{typescript}" {code} />
 ```
 
-### CSS Stylesheet
+### CSS StyleSheet
 
-Importing a CSS StyleSheet in Svelte requires a CSS loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
+Importing a CSS StyleSheet in Svelte requires a CSS file loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
 
 ```html
 <script>
-  import { Highlight } from 'svelte-highlight';
-  import { typescript } from 'svelte-highlight/languages';
-  import 'svelte-highlight/styles/github.css';
+  import { Highlight } from "svelte-highlight";
+  import { typescript } from "svelte-highlight/languages";
+  import "svelte-highlight/styles/github.css";
 
   $: code = `const add = (a: number, b: number) => a + b;`;
 </script>
 
-<Highlight language={typescript} {code} />
+<Highlight language="{typescript}" {code} />
 ```
 
 ## Svelte Syntax Highlighting
@@ -85,21 +107,23 @@ This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-sv
 
 For custom language highlighting, pass a `name` and `register` function to the language prop.
 
-Refer to the highlight.js [language definition guide](https://highlightjs.readthedocs.io/en/latest/language-guide.html) for more info.
+Refer to the highlight.js [language definition guide](https://highlightjs.readthedocs.io/en/latest/language-guide.html) for guidance.
 
 ```html
 <script>
-  import { Highlight } from 'svelte-highlight';
-  import hljs from 'highlight.js';
+  import { Highlight } from "svelte-highlight";
+  import hljs from "highlight.js";
 
   const language = {
-    name: 'custom-language',
-    register: hljs => {
-      return { /** custom language rules */ }
-    }
-  }
+    name: "custom-language",
+    register: (hljs) => {
+      return {
+        /** custom language rules */
+      };
+    },
+  };
 
-  const code = 'custom language';
+  const code = "custom language";
 </script>
 
 <Highlight {language} {code} />
