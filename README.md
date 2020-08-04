@@ -86,14 +86,12 @@ This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-sv
 
 ```html
 <script>
-  import { HighlightSvelte } from 'svelte-highlight';
-  import { github } from 'svelte-highlight/styles';
+  import { HighlightSvelte } from "svelte-highlight";
+  import { github } from "svelte-highlight/styles";
 
-  $: code = `<script>
-  let count = 0;
-</script>
-
-<button on:click="{() => { count += 1; }}">Click me</button>`;
+  $: code = `
+  <script>let count = 0;<\/script>
+  <button on:click="{() => { count += 1; }}">Click me<\/button>`;
 </script>
 
 <svelte:head>
