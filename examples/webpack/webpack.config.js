@@ -3,8 +3,6 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin")
-  .default;
 
 const NODE_ENV = process.env.NODE_ENV || "development";
 const IS_PROD = NODE_ENV === "production";
@@ -17,7 +15,7 @@ module.exports = {
   resolve: {
     alias: { svelte: path.resolve("node_modules", "svelte") },
     extensions: [".mjs", ".js", ".svelte"],
-    mainFields: ["svelte", "browser", "module", "main"]
+    mainFields: ["svelte", "browser", "module", "main"],
   },
   output: { path: `${__dirname}/build`, filename: "[name].[chunkhash].js" },
   module: {
@@ -26,23 +24,25 @@ module.exports = {
         test: /\.svelte$/,
         use: {
           loader: "svelte-loader",
-          options: { emitCss: true, hotReload: true }
-        }
+          options: { emitCss: true, hotReload: true },
+        },
       },
       {
         test: /\.css$/,
+        sideEffects: true,
         use: [
-          IS_PROD ? MiniCssExtractPlugin.loader : "style-loader",
-          "css-loader"
-        ]
-      }
-    ]
+          { loader: MiniCssExtractPlugin.loader, options: { hmr: !IS_PROD } },
+          "css-loader",
+        ],
+      },
+    ],
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({ filename: "[name].[chunkhash].css" }),
+    new MiniCssExtractPlugin({
+      filename: IS_PROD ? "[name].[chunkhash].css" : "[name].css",
+    }),
     new OptimizeCssAssetsPlugin({}),
     new HtmlWebpackPlugin({ template: "public/index.html" }),
-    new HTMLInlineCSSWebpackPlugin()
-  ]
+  ],
 };
