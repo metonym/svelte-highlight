@@ -9,7 +9,7 @@
   "module": "lib/index.mjs",
   "sideEffects": false,
   "scripts": {
-    "prettier": "prettier --write '{src,docs,examples}/**/*.{svelte,js}'",
+    "prettier": "prettier --write '{src,scripts,docs,examples}/**/*.{svelte,js}'",
     "prepack": "node scripts && rollup -c"
   },
   "dependencies": {
