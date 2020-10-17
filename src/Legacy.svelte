@@ -32,20 +32,21 @@
 </script>
 
 <pre
-  bind:this={block}
-  {id}
-  {style}
-  {contenteditable}
-  {spellcheck}
-  class={_class}
-  on:blur={({ target }) => {
+  bind:this="{block}"
+  id="{id}"
+  style="{style}"
+  contenteditable="{contenteditable}"
+  spellcheck="{spellcheck}"
+  class="{_class}"
+  on:blur="{({ target }) => {
     if (contenteditable !== undefined && contenteditable !== 'false') {
       code = target.innerText;
       if (block.querySelector('code') == null) {
         block.innerHTML = '<code></code>';
       }
     }
-  }}>
+  }}"
+>
   <code>
     <slot>{code}</slot>
   </code>

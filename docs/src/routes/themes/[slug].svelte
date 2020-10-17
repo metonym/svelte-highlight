@@ -37,4 +37,4 @@
   <title>{post.title}</title>
   {@html styles[currentStyle]}
 </svelte:head>
-<HighlightSvelte {code} />
+<HighlightSvelte code="{code}" />

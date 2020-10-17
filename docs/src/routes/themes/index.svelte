@@ -1,8 +1,8 @@
 <script context="module">
   export function preload() {
     return this.fetch("themes.json")
-      .then(r => r.json())
-      .then(posts => {
+      .then((r) => r.json())
+      .then((posts) => {
         return { posts };
       });
   }
@@ -37,14 +37,13 @@
 <ul class="d-flex flex-wrap">
   {#each posts as post}
     <li class="mb-2">
-      <h4 class="ml-3 mb-2">
-        <a href="themes/{post.slug}">{post.title}</a>
-      </h4>
+      <h4 class="ml-3 mb-2"><a href="themes/{post.slug}">{post.title}</a></h4>
       <iframe
         class="border-0"
         loading="lazy"
-        title={post.title}
-        src="themes/{post.slug}" />
+        title="{post.title}"
+        src="themes/{post.slug}"
+      ></iframe>
     </li>
   {/each}
 </ul>
