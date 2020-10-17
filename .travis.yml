@@ -1,5 +1,4 @@
 language: node_js
 node_js: 12
 cache: yarn
-scripts:
-  - yarn prepack
+script: yarn prepack
