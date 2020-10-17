@@ -6,4 +6,4 @@
   $: code = `const add = (a: number, b: number) => a + b;`;
 </script>
 
-<Highlight language={typescript} {code} />
+<Highlight language="{typescript}" code="{code}" />

@@ -6,9 +6,9 @@ function toPascalCase(str) {
         return fragment;
       }
 
-      return [fragment.slice(0, 1).toUpperCase(), fragment.slice(1)].join('');
+      return [fragment.slice(0, 1).toUpperCase(), fragment.slice(1)].join("");
     })
-    .join('');
+    .join("");
 }
 
 module.exports = { toPascalCase };

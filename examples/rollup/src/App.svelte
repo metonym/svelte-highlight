@@ -10,4 +10,4 @@
   {@html anOldHope}
 </svelte:head>
 
-<Highlight language={typescript} {code} />
+<Highlight language="{typescript}" code="{code}" />

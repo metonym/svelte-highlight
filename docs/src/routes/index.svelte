@@ -19,7 +19,7 @@
 
   $: currentStyleCSS = (currentStyle || "")
     .split(/(?=[A-Z])/)
-    .map(fragment => fragment.toLowerCase())
+    .map((fragment) => fragment.toLowerCase())
     .join("-");
 
   let code = "const add = (a: number, b: number) => a + b;";
@@ -64,7 +64,8 @@
           class="d-inline-flex ml-2 mr-2"
           href="https://www.npmjs.com/package/svelte-highlight"
           target="_blank"
-          rel="noopener noreferrer">
+          rel="noopener noreferrer"
+        >
           <span class="version">
             v{pkg.version}
             <LinkExternal style="margin-left: .125rem;" />
@@ -72,7 +73,8 @@
         </a>
         <a
           class="d-inline-flex"
-          href="https://github.com/metonym/svelte-highlight">
+          href="https://github.com/metonym/svelte-highlight"
+        >
           <span class="version">
             View on GitHub
             <MarkGithub style="margin-left: .125rem;" />
@@ -93,25 +95,27 @@
     </div>
     <Navigation.TabNav>
       <Navigation.TabNavItem
-        current={tabIndexInstall === 0}
-        on:click={e => {
+        current="{tabIndexInstall === 0}"
+        on:click="{(e) => {
           e.preventDefault();
           tabIndexInstall = 0;
-        }}>
+        }}"
+      >
         yarn
       </Navigation.TabNavItem>
       <Navigation.TabNavItem
-        current={tabIndexInstall === 1}
-        on:click={e => {
+        current="{tabIndexInstall === 1}"
+        on:click="{(e) => {
           e.preventDefault();
           tabIndexInstall = 1;
-        }}>
+        }}"
+      >
         npm
       </Navigation.TabNavItem>
     </Navigation.TabNav>
     <Box.Box class="d-flex">
-      <Highlight class="flex-1" language={bash} code={codeInstall} />
-      <Copy text={codeInstall} />
+      <Highlight class="flex-1" language="{bash}" code="{codeInstall}" />
+      <Copy text="{codeInstall}" />
     </Box.Box>
     <div class="markdown-body mt-4 mb-4">
       <h2>Usage</h2>
@@ -121,32 +125,35 @@
       <a
         href="https://svelte.dev/docs#svelte_head"
         target="_blank"
-        rel="noopener noreferrer">
+        rel="noopener noreferrer"
+      >
         svelte:head API
       </a>
       or a CSS StyleSheet loader to load styles.
     </p>
     <Navigation.TabNav>
       <Navigation.TabNavItem
-        current={tabIndexUsage === 0}
-        on:click={e => {
+        current="{tabIndexUsage === 0}"
+        on:click="{(e) => {
           e.preventDefault();
           tabIndexUsage = 0;
-        }}>
+        }}"
+      >
         Injected Styles
       </Navigation.TabNavItem>
       <Navigation.TabNavItem
-        current={tabIndexUsage === 1}
-        on:click={e => {
+        current="{tabIndexUsage === 1}"
+        on:click="{(e) => {
           e.preventDefault();
           tabIndexUsage = 1;
-        }}>
+        }}"
+      >
         CSS StyleSheet
       </Navigation.TabNavItem>
     </Navigation.TabNav>
     <Box.Box class="d-flex">
-      <HighlightSvelte class="flex-1" code={codeUsage} />
-      <Copy text={codeUsage} />
+      <HighlightSvelte class="flex-1" code="{codeUsage}" />
+      <Copy text="{codeUsage}" />
     </Box.Box>
     {#if tabIndexUsage === 1}
       <Alert class="mt-2">
@@ -158,7 +165,8 @@
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://github.com/metonym/svelte-highlight/tree/master/examples/webpack">
+            href="https://github.com/metonym/svelte-highlight/tree/master/examples/webpack"
+          >
             Example webpack set-up
             <LinkExternal style="fill: #0366d6; margin-left: .125rem;" />
           </a>
@@ -173,7 +181,8 @@
     <div class="d-flex width-full">
       <h5
         class="d-flex width-full flex-justify-between text-gray mb-2 pb-1
-        border-bottom">
+        border-bottom"
+      >
         Themes
         <a style="margin-top: auto; margin-left: auto" href="themes" class="f6">
           View on one page
@@ -183,11 +192,12 @@
     {#each supportedStyles as style, i (style)}
       <Navigation.SideNavSubItem
         href="#"
-        current={currentStyle === style}
-        on:click={e => {
+        current="{currentStyle === style}"
+        on:click="{(e) => {
           e.preventDefault();
           currentStyle = style;
-        }}>
+        }}"
+      >
         {style}
       </Navigation.SideNavSubItem>
     {/each}
