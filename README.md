@@ -161,6 +161,7 @@ The following events are forwarded to the `pre` element:
 ## Examples
 
 - [examples/rollup](examples/rollup)
+- [examples/snowpack](examples/snowpack)
 - [examples/svite](examples/svite)
 - [examples/webpack](examples/webpack)
 
