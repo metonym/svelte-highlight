@@ -1,4 +1,9 @@
 <script>
+  /**
+   * @slot {{ highlighted: string; }}
+   * @event {string} highlight
+   */
+
   export let code = "";
   export let highlighted = "";
   export let typescript = false;

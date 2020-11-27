@@ -1,6 +1,10 @@
 <script>
   export let code = "";
   export let highlighted = "";
+
+  /**
+   * @type {{name: string; register: any;}}
+   */
   export let language = { name: undefined, register: undefined };
 
   import hljs from "highlight.js/lib/core";
