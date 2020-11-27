@@ -2,15 +2,30 @@ import resolve from "@rollup/plugin-node-resolve";
 import svelte from "rollup-plugin-svelte";
 import commonjs from "@rollup/plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
-import { main, module, name } from "./package.json";
+import {
+  dependencies,
+  svelte as input,
+  main,
+  module,
+  name,
+} from "./package.json";
+
+const external = Object.keys(dependencies);
+const globals = {
+  "highlightjs-svelte": "hljsSvelte",
+  prettier: "prettier",
+  "prettier-plugin-svelte": "parserSvelte",
+};
 
 export default [
   ["es", "umd"].map((format) => {
     const UMD = format === "umd";
 
     return {
-      input: "src",
+      input,
+      external,
       output: {
+        globals,
         format,
         file: UMD ? main : module,
         exports: UMD ? "named" : undefined,
@@ -24,7 +39,10 @@ export default [
 
     return {
       input: "dist/languages",
+      external,
+
       output: {
+        globals,
         format,
         file: UMD ? "languages/index.js" : "languages/index.mjs",
         exports: UMD ? "named" : undefined,
@@ -38,7 +56,9 @@ export default [
 
     return {
       input: "dist/styles",
+      external,
       output: {
+        globals,
         format,
         file: UMD ? "styles/index.js" : "styles/index.mjs",
         exports: UMD ? "named" : undefined,

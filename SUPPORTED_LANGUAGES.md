@@ -108,18 +108,6 @@
 ```
 </details>
 
-## cpp (`cpp`)
-
-<details>
-<summary>Usage</summary>
-
-```html
-<script>
-  import { cpp } from 'svelte-highlight/languages';
-</script>
-```
-</details>
-
 ## arduino (`arduino`)
 
 <details>
@@ -288,6 +276,30 @@
 ```
 </details>
 
+## c-like (`cLike`)
+
+<details>
+<summary>Usage</summary>
+
+```html
+<script>
+  import { cLike } from 'svelte-highlight/languages';
+</script>
+```
+</details>
+
+## c (`c`)
+
+<details>
+<summary>Usage</summary>
+
+```html
+<script>
+  import { c } from 'svelte-highlight/languages';
+</script>
+```
+</details>
+
 ## cal (`cal`)
 
 <details>
@@ -408,6 +420,18 @@
 ```
 </details>
 
+## cpp (`cpp`)
+
+<details>
+<summary>Usage</summary>
+
+```html
+<script>
+  import { cpp } from 'svelte-highlight/languages';
+</script>
+```
+</details>
+
 ## crmsh (`crmsh`)
 
 <details>
@@ -432,14 +456,14 @@
 ```
 </details>
 
-## cs (`cs`)
+## csharp (`csharp`)
 
 <details>
 <summary>Usage</summary>
 
 ```html
 <script>
-  import { cs } from 'svelte-highlight/languages';
+  import { csharp } from 'svelte-highlight/languages';
 </script>
 ```
 </details>
@@ -1116,6 +1140,18 @@
 ```
 </details>
 
+## latex (`latex`)
+
+<details>
+<summary>Usage</summary>
+
+```html
+<script>
+  import { latex } from 'svelte-highlight/languages';
+</script>
+```
+</details>
+
 ## ldif (`ldif`)
 
 <details>
@@ -1392,14 +1428,14 @@
 ```
 </details>
 
-## nimrod (`nimrod`)
+## nim (`nim`)
 
 <details>
 <summary>Usage</summary>
 
 ```html
 <script>
-  import { nimrod } from 'svelte-highlight/languages';
+  import { nim } from 'svelte-highlight/languages';
 </script>
 ```
 </details>
@@ -1412,6 +1448,18 @@
 ```html
 <script>
   import { nix } from 'svelte-highlight/languages';
+</script>
+```
+</details>
+
+## node-repl (`nodeRepl`)
+
+<details>
+<summary>Usage</summary>
+
+```html
+<script>
+  import { nodeRepl } from 'svelte-highlight/languages';
 </script>
 ```
 </details>
@@ -1520,6 +1568,18 @@
 ```html
 <script>
   import { php } from 'svelte-highlight/languages';
+</script>
+```
+</details>
+
+## php-template (`phpTemplate`)
+
+<details>
+<summary>Usage</summary>
+
+```html
+<script>
+  import { phpTemplate } from 'svelte-highlight/languages';
 </script>
 ```
 </details>
@@ -1652,6 +1712,18 @@
 ```html
 <script>
   import { python } from 'svelte-highlight/languages';
+</script>
+```
+</details>
+
+## python-repl (`pythonRepl`)
+
+<details>
+<summary>Usage</summary>
+
+```html
+<script>
+  import { pythonRepl } from 'svelte-highlight/languages';
 </script>
 ```
 </details>
@@ -2024,18 +2096,6 @@
 ```html
 <script>
   import { tcl } from 'svelte-highlight/languages';
-</script>
-```
-</details>
-
-## tex (`tex`)
-
-<details>
-<summary>Usage</summary>
-
-```html
-<script>
-  import { tex } from 'svelte-highlight/languages';
 </script>
 ```
 </details>

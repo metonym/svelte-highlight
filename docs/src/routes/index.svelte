@@ -1,11 +1,14 @@
 <script>
   import pkg from "../../../package.json";
-  import { Highlight, HighlightSvelte } from "svelte-highlight";
+  import { Highlight, HighlightLite, HighlightSvelte, HighlightSvelteFormatted } from "svelte-highlight";
   import { bash } from "svelte-highlight/languages";
+  import * as languages from "svelte-highlight/languages";
   import Copy from "../components/Copy.svelte";
-  import { Navigation, Box, Button, Alert } from "svelte-primer";
-  import { LinkExternal, MarkGithub, Paintcan } from "svelte-octicons";
+  import { Navigation, Box, Alert } from "svelte-primer";
+  import { LinkExternal, MarkGithub } from "svelte-octicons";
   import * as styles from "svelte-highlight/styles";
+
+  console.log(Object.keys(languages).length, "languages");
 
   $: currentStyle = "anOldHope";
   $: supportedStyles = Object.keys(styles);
@@ -24,10 +27,12 @@
 
   let code = "const add = (a: number, b: number) => a + b;";
 
-  $: codeInjectedStyles = `<script>
+  $: codeInjectedStyles = `<script lang="ts">
   import { Highlight } from "svelte-highlight";
   import { typescript } from "svelte-highlight/languages";
   import { ${currentStyle} } from "svelte-highlight/styles";
+
+  let a: boolean = false;
 
   $: code = \`${code}\`;
 <\/script>
@@ -152,9 +157,19 @@
       </Navigation.TabNavItem>
     </Navigation.TabNav>
     <Box.Box class="d-flex">
-      <HighlightSvelte class="flex-1" code="{codeUsage}" />
+      <div class="flex-1">
+      <HighlightLite code="{codeUsage}" language={languages.javascript} /></div>
       <Copy text="{codeUsage}" />
     </Box.Box>
+    <Box.Box class="d-flex">
+      <HighlightSvelte typescript class="flex-1" code="{codeUsage}" />
+      <Copy text="{codeUsage}" />
+    </Box.Box>
+    <Box.Box class="d-flex">
+      <HighlightSvelteFormatted typescript class="flex-1" code="{codeUsage}" prettier={{svelteStrictMode: true, svelteBracketNewLine: true }} />
+      <Copy text="{codeUsage}" />
+    </Box.Box>
+    
     {#if tabIndexUsage === 1}
       <Alert class="mt-2">
         <p>

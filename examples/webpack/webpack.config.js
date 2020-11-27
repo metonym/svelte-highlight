@@ -5,12 +5,12 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
 const NODE_ENV = process.env.NODE_ENV || "development";
-const IS_PROD = NODE_ENV === "production";
+const PROD = NODE_ENV === "production";
 
 module.exports = {
   stats: "errors-only",
   mode: NODE_ENV,
-  devtool: IS_PROD ? false : "cheap-eval-source-map",
+  devtool: PROD ? false : "cheap-eval-source-map",
   entry: { bundle: ["./src/index.js"] },
   resolve: {
     alias: { svelte: path.resolve("node_modules", "svelte") },
@@ -30,17 +30,14 @@ module.exports = {
       {
         test: /\.css$/,
         sideEffects: true,
-        use: [
-          { loader: MiniCssExtractPlugin.loader, options: { hmr: !IS_PROD } },
-          "css-loader",
-        ],
+        use: [{ loader: MiniCssExtractPlugin.loader, options: { hmr: !PROD } }, "css-loader"],
       },
     ],
   },
   plugins: [
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: IS_PROD ? "[name].[chunkhash].css" : "[name].css",
+      filename: PROD ? "[name].[chunkhash].css" : "[name].css",
     }),
     new OptimizeCssAssetsPlugin({}),
     new HtmlWebpackPlugin({ template: "public/index.html" }),

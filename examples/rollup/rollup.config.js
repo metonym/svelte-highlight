@@ -6,12 +6,12 @@ import livereload from "rollup-plugin-livereload";
 import serve from "rollup-plugin-serve";
 import copy from "rollup-plugin-copy";
 
-const IS_PROD = !process.env.ROLLUP_WATCH;
+const PROD = !process.env.ROLLUP_WATCH;
 
 export default {
   input: "src/index.js",
   output: {
-    sourcemap: !IS_PROD,
+    sourcemap: !PROD,
     format: "iife",
     name: "app",
     file: "build/bundle.js",
@@ -23,13 +23,13 @@ export default {
     copy({ targets: [{ src: "public/*", dest: "build" }] }),
 
     svelte({
-      dev: !IS_PROD,
+      dev: !PROD,
       css: (css) => {
         /**
          * Emits CSS to file
          * Disables CSS sourcemaps in production
          */
-        css.write("build/bundle.css", !IS_PROD);
+        css.write("build/bundle.css", !PROD);
       },
     }),
 
@@ -39,17 +39,17 @@ export default {
     /**
      * Livereloads app in development mode
      */
-    !IS_PROD &&
+    !PROD &&
       serve({
         contentBase: ["build"],
         port: 3000,
       }),
-    !IS_PROD && livereload({ watch: "build" }),
+    !PROD && livereload({ watch: "build" }),
 
     /**
      * Minifies JavaScript bundle in production
      */
-    IS_PROD && terser(),
+    PROD && terser(),
 
     /**
      * See `postbuild.js` for PostHTML plugins executed after building for production

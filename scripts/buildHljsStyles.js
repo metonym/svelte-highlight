@@ -53,10 +53,7 @@ async function buildHljsStyles() {
 
       baseExport.push(`export { default as ${name} } from './${styleName}';`);
       const content = await fs.readFile(file, "utf-8");
-      const exportee = [
-        `const ${name} = \`<style>${content}</style>\`;\n`,
-        `export default ${name};\n`,
-      ].join("\n");
+      const exportee = [`const ${name} = \`<style>${content}</style>\`;\n`, `export default ${name};\n`].join("\n");
       await fs.writeFile(`dist/styles/${styleName}.js`, exportee);
       await fs.writeFile(`styles/${styleName}.css`, content);
     });

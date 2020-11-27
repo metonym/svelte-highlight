@@ -8,9 +8,7 @@ async function buildHljsLanguages() {
   const baseExport = [];
 
   const files = languages.map((language) => {
-    const languageNameStartsWithNumber = language
-      .slice(0, 1)
-      .match(new RegExp(/[0-9]/g));
+    const languageNameStartsWithNumber = language.slice(0, 1).match(new RegExp(/[0-9]/g));
     const languageNameHasDash = language.match(new RegExp(/-/g));
 
     let exportee = language;

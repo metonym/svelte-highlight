@@ -1196,6 +1196,32 @@
 ```
 </details>
 
+## gradient-light (`gradientLight`)
+
+<details>
+<summary>Usage</summary>
+
+### CSS Stylesheet
+
+```html
+<script>
+  import 'svelte-highlight/styles/gradient-light.css';
+</script>
+```
+
+### JavaScript
+
+```html
+<script>
+  import { gradientLight } from 'svelte-highlight/styles';
+</script>
+
+<svelte:head>
+  {@html gradientLight}
+</svelte:head>
+```
+</details>
+
 ## grayscale (`grayscale`)
 
 <details>
@@ -1508,6 +1534,32 @@
 ```
 </details>
 
+## lioshi (`lioshi`)
+
+<details>
+<summary>Usage</summary>
+
+### CSS Stylesheet
+
+```html
+<script>
+  import 'svelte-highlight/styles/lioshi.css';
+</script>
+```
+
+### JavaScript
+
+```html
+<script>
+  import { lioshi } from 'svelte-highlight/styles';
+</script>
+
+<svelte:head>
+  {@html lioshi}
+</svelte:head>
+```
+</details>
+
 ## magula (`magula`)
 
 <details>
@@ -1634,6 +1686,58 @@
 
 <svelte:head>
   {@html nightOwl}
+</svelte:head>
+```
+</details>
+
+## nnfx-dark (`nnfxDark`)
+
+<details>
+<summary>Usage</summary>
+
+### CSS Stylesheet
+
+```html
+<script>
+  import 'svelte-highlight/styles/nnfx-dark.css';
+</script>
+```
+
+### JavaScript
+
+```html
+<script>
+  import { nnfxDark } from 'svelte-highlight/styles';
+</script>
+
+<svelte:head>
+  {@html nnfxDark}
+</svelte:head>
+```
+</details>
+
+## nnfx (`nnfx`)
+
+<details>
+<summary>Usage</summary>
+
+### CSS Stylesheet
+
+```html
+<script>
+  import 'svelte-highlight/styles/nnfx.css';
+</script>
+```
+
+### JavaScript
+
+```html
+<script>
+  import { nnfx } from 'svelte-highlight/styles';
+</script>
+
+<svelte:head>
+  {@html nnfx}
 </svelte:head>
 ```
 </details>
@@ -2050,6 +2154,84 @@
 
 <svelte:head>
   {@html solarizedLight}
+</svelte:head>
+```
+</details>
+
+## srcery (`srcery`)
+
+<details>
+<summary>Usage</summary>
+
+### CSS Stylesheet
+
+```html
+<script>
+  import 'svelte-highlight/styles/srcery.css';
+</script>
+```
+
+### JavaScript
+
+```html
+<script>
+  import { srcery } from 'svelte-highlight/styles';
+</script>
+
+<svelte:head>
+  {@html srcery}
+</svelte:head>
+```
+</details>
+
+## stackoverflow-dark (`stackoverflowDark`)
+
+<details>
+<summary>Usage</summary>
+
+### CSS Stylesheet
+
+```html
+<script>
+  import 'svelte-highlight/styles/stackoverflow-dark.css';
+</script>
+```
+
+### JavaScript
+
+```html
+<script>
+  import { stackoverflowDark } from 'svelte-highlight/styles';
+</script>
+
+<svelte:head>
+  {@html stackoverflowDark}
+</svelte:head>
+```
+</details>
+
+## stackoverflow-light (`stackoverflowLight`)
+
+<details>
+<summary>Usage</summary>
+
+### CSS Stylesheet
+
+```html
+<script>
+  import 'svelte-highlight/styles/stackoverflow-light.css';
+</script>
+```
+
+### JavaScript
+
+```html
+<script>
+  import { stackoverflowLight } from 'svelte-highlight/styles';
+</script>
+
+<svelte:head>
+  {@html stackoverflowLight}
 </svelte:head>
 ```
 </details>

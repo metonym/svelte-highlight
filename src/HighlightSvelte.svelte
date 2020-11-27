@@ -1,36 +1,31 @@
 <script>
-  export let code = undefined;
+  export let code = "";
+  export let highlighted = "";
+  export let typescript = false;
 
-  import hljs from "highlight.js";
+  import hljs from "highlight.js/lib/core";
   import xml from "highlight.js/lib/languages/xml";
-  import hljsSvelte from "highlightjs-svelte/dist/index.js";
-  import { createEventDispatcher, afterUpdate } from "svelte";
+  import langJavascript from "highlight.js/lib/languages/javascript";
+  import langTypescript from "highlight.js/lib/languages/typescript";
+  import css from "highlight.js/lib/languages/css";
+  import hljsSvelte from "highlightjs-svelte";
+  import { createEventDispatcher, tick } from "svelte";
 
   const dispatch = createEventDispatcher();
 
   hljs.registerLanguage("xml", xml);
+  hljs.registerLanguage("javascript", typescript ? langTypescript : langJavascript);
+  hljs.registerLanguage("css", css);
   hljsSvelte(hljs);
 
-  afterUpdate(() => {
-    if (highlighted) {
-      dispatch("highlight");
-    }
-  });
-
-  $: highlighted = hljs.highlight("svelte", code).value;
+  $: {
+    highlighted = hljs.highlight("svelte", code).value;
+    tick().then(() => dispatch("highlight", highlighted));
+  }
 </script>
 
 <slot highlighted="{highlighted}">
-  <pre
-    {...$$restProps}
-    on:click
-    on:mouseover
-    on:mouseenter
-    on:mouseleave
-    on:focus
-    on:blur
-    class:hljs="{true}"
-  >
+  <pre {...$$restProps} class:hljs="{true}">
     <code>
       {@html highlighted}
     </code>
