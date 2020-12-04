@@ -13,7 +13,7 @@
     "prepack": "node scripts && rollup -c"
   },
   "dependencies": {
-    "highlight.js": "9.17.1",
+    "highlight.js": "10.4.1",
     "highlightjs-svelte": "1.0.4"
   },
   "peerDependencies": {
