@@ -1,12 +1,23 @@
 <script>
+  /** @type {{ name?: string; register: (hljs: any) => Record<string, any>; }} */
   export let language = { name: undefined, register: undefined };
   export let className = "svelte-highlight";
   export let _className = className;
   export { _className as class };
+
+  /** @type {string} */
   export let code = undefined;
+
+  /** @type {string} */
   export let id = undefined;
+
+  /** @type {string} */
   export let style = undefined;
+
+  /** @type {boolean | "true" | "false"} */
   export let contenteditable = undefined;
+
+  /** @type {boolean} */
   export let spellcheck = undefined;
 
   import hljs from "highlight.js/lib/highlight";

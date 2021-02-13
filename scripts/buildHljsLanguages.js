@@ -7,6 +7,10 @@ async function buildHljsLanguages() {
   const languages = hljs.listLanguages();
   const baseExport = [];
 
+  let types = `interface HljsLanguage {
+  register: (hljs: any) => Record<string, any>;
+}\n\n`;
+
   const files = languages.map((language) => {
     const languageNameStartsWithNumber = language
       .slice(0, 1)
@@ -22,6 +26,10 @@ async function buildHljsLanguages() {
     if (languageNameHasDash) {
       exportee = toPascalCase(language);
     }
+
+    types += `export const ${exportee}: HljsLanguage & {
+  name: "${language}";
+};\n\n`;
 
     md.push(`## ${language} (\`${exportee}\`)\n`);
     md.push("<details>");
@@ -51,6 +59,7 @@ async function buildHljsLanguages() {
   md.push("\n");
 
   await fs.writeFile("SUPPORTED_LANGUAGES.md", md.join("\n"));
+  await fs.writeFile("types/languages/index.d.ts", types);
 }
 
 module.exports = { buildHljsLanguages };

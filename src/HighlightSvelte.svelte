@@ -1,4 +1,13 @@
 <script>
+  /**
+   * @slot {{ highlighted?: string; }}
+   * @event {{ highlighted: string; }} highlight
+   */
+
+  /**
+   * Source code to highlight
+   * @type {string}
+   */
   export let code = undefined;
 
   import hljs from "highlight.js";
