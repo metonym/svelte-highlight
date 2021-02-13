@@ -29,7 +29,6 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        sideEffects: true,
         use: [
           { loader: MiniCssExtractPlugin.loader, options: { hmr: !IS_PROD } },
           "css-loader",
