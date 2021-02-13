@@ -3,4 +3,6 @@ node_js:
   - 12
   - 14
 cache: yarn
-script: yarn prepack
+script:
+  - yarn prepack
+  - yarn test:types
