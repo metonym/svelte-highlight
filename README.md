@@ -19,8 +19,10 @@ This component wraps [highlight.js](https://github.com/highlightjs/highlight.js)
 - [Svelte Syntax Highlighting](#svelte-syntax-highlighting)
 - [Custom Language](#custom-language)
 - [API](#api)
+  - [Props](#props)
   - [Forwarded Events](#forwarded-events)
   - [Dispatched Events](#dispatched-events)
+- [TypeScript](#typescript)
 - [Supported Languages](#supported-languages)
 - [Supported Styles](#supported-styles)
 - [Examples](#examples)
@@ -28,8 +30,6 @@ This component wraps [highlight.js](https://github.com/highlightjs/highlight.js)
 - [License](#license)
 
 ## Install
-
-`svelte-highlight` requires svelte [version 3.20.x](https://github.com/sveltejs/svelte/blob/master/CHANGELOG.md#3200) or greater due to use of the `$$restProps` API.
 
 ```bash
 yarn add -D svelte-highlight
@@ -94,13 +94,11 @@ This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-sv
   import { HighlightSvelte } from "svelte-highlight";
   import { github } from "svelte-highlight/styles";
 
-  $: code = `
-<script>
+  $: code = `<script>
   let count = 0;
 <\/script>
 
-<button on:click="{() => { count += 1; }}">Click me<\/button>
-`.trim();
+<button on:click="{() => (count += 1)}">Increment {count}<\/button>`;
 </script>
 
 <svelte:head>
@@ -141,6 +139,8 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ## API
 
+### Props
+
 | Property name    | Value                                                 |
 | ---------------- | ----------------------------------------------------- |
 | code             | `string`                                              |
@@ -162,6 +162,22 @@ The following events are forwarded to the `pre` element:
 
 - on:highlight
 
+<!-- prettier-ignore-start -->
+```svelte
+<Highlight
+  language="{typescript}"
+  code="{code}"
+  on:highlight="{(e) => {
+    console.log(e.detail.highlighted); // "<span>...</span>"
+  }}"
+/>
+```
+<!-- prettier-ignore-end -->
+
+## TypeScript
+
+Svelte version 3.31 or greater is required to use this component with TypeScript.
+
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
 
 ## [Supported Styles](SUPPORTED_STYLES.md)
@@ -169,6 +185,7 @@ The following events are forwarded to the `pre` element:
 ## Examples
 
 - [examples/rollup](examples/rollup)
+- [examples/rollup-typescript](examples/rollup-typescript)
 - [examples/snowpack](examples/snowpack)
 - [examples/svite](examples/svite)
 - [examples/webpack](examples/webpack)
