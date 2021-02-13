@@ -1,8 +1,8 @@
 # svelte-highlight
 
-[![NPM][npm]][npm-url]
-![NPM downloads to date](https://img.shields.io/npm/dt/svelte-highlight)
-[![Build][build]][build-badge]
+![npm](https://img.shields.io/npm/v/svelte-highlight?color=ff3e00&style=for-the-badge)
+![npm](https://img.shields.io/npm/dt/svelte-highlight?color=ff3e00&style=for-the-badge)
+![Travis (.com)](https://img.shields.io/travis/com/metonym/svelte-highlight?style=for-the-badge)
 
 > Syntax Highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
@@ -48,7 +48,8 @@ There are two ways to apply `highlight.js` styles:
 
 This component exports `highlight.js` themes in JavaScript. Import the theme from `svelte-highlight/styles` and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
-```html
+<!-- prettier-ignore-start -->
+```svelte
 <script>
   import { Highlight } from "svelte-highlight";
   import { typescript } from "svelte-highlight/languages";
@@ -63,12 +64,14 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 
 <Highlight language="{typescript}" {code} />
 ```
+<!-- prettier-ignore-end -->
 
 ### CSS StyleSheet
 
 Importing a CSS StyleSheet in Svelte requires a CSS file loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
 
-```html
+<!-- prettier-ignore-start -->
+```svelte
 <script>
   import { Highlight } from "svelte-highlight";
   import { typescript } from "svelte-highlight/languages";
@@ -79,12 +82,14 @@ Importing a CSS StyleSheet in Svelte requires a CSS file loader. Refer to [examp
 
 <Highlight language="{typescript}" {code} />
 ```
+<!-- prettier-ignore-end -->
 
 ## Svelte Syntax Highlighting
 
 This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-svelte) to highlight Svelte code.
 
-```html
+<!-- prettier-ignore-start -->
+```svelte
 <script>
   import { HighlightSvelte } from "svelte-highlight";
   import { github } from "svelte-highlight/styles";
@@ -104,6 +109,7 @@ This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-sv
 
 <HighlightSvelte {code} />
 ```
+<!-- prettier-ignore-end -->
 
 ## Custom Language
 
@@ -111,7 +117,8 @@ For custom language highlighting, pass a `name` and `register` function to the l
 
 Refer to the highlight.js [language definition guide](https://highlightjs.readthedocs.io/en/latest/language-guide.html) for guidance.
 
-```html
+<!-- prettier-ignore-start -->
+```svelte
 <script>
   import { Highlight } from "svelte-highlight";
   import hljs from "highlight.js";
@@ -130,6 +137,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 <Highlight {language} {code} />
 ```
+<!-- prettier-ignore-end -->
 
 ## API
 
@@ -170,8 +178,3 @@ The following events are forwarded to the `pre` element:
 ## License
 
 [MIT](LICENSE)
-
-[npm]: https://img.shields.io/npm/v/svelte-highlight.svg?color=blue
-[npm-url]: https://npmjs.com/package/svelte-highlight
-[build]: https://travis-ci.com/metonym/svelte-highlight.svg?branch=master
-[build-badge]: https://travis-ci.com/metonym/svelte-highlight
