@@ -30,8 +30,7 @@
     on:mouseleave
     on:focus
     on:blur
-    class:hljs="{true}"
-  >
+    class:hljs="{true}">
     <code>
       {#if highlighted !== undefined}
         {@html highlighted}

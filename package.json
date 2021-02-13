@@ -11,7 +11,7 @@
     "styles/*.css"
   ],
   "scripts": {
-    "prettier": "prettier --write '{src,scripts,docs,examples}/**/*.{svelte,js}'",
+    "format": "prettier --write '{src,scripts,docs,examples}/**/*.{svelte,js,md}'",
     "prepack": "node scripts && rollup -c"
   },
   "dependencies": {

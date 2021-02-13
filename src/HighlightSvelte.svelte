@@ -29,8 +29,7 @@
     on:mouseleave
     on:focus
     on:blur
-    class:hljs="{true}"
-  >
+    class:hljs="{true}">
     <code>
       {@html highlighted}
     </code>

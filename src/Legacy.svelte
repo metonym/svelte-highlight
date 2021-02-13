@@ -45,8 +45,7 @@
         block.innerHTML = '<code></code>';
       }
     }
-  }}"
->
+  }}">
   <code>
     <slot>{code}</slot>
   </code>
