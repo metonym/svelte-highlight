@@ -48,7 +48,8 @@ There are two ways to apply `highlight.js` styles:
 
 This component exports `highlight.js` themes in JavaScript. Import the theme from `svelte-highlight/styles` and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
-```html
+<!-- prettier-ignore-start -->
+```svelte
 <script>
   import { Highlight } from "svelte-highlight";
   import { typescript } from "svelte-highlight/languages";
@@ -63,12 +64,14 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 
 <Highlight language="{typescript}" {code} />
 ```
+<!-- prettier-ignore-end -->
 
 ### CSS StyleSheet
 
 Importing a CSS StyleSheet in Svelte requires a CSS file loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
 
-```html
+<!-- prettier-ignore-start -->
+```svelte
 <script>
   import { Highlight } from "svelte-highlight";
   import { typescript } from "svelte-highlight/languages";
@@ -79,12 +82,14 @@ Importing a CSS StyleSheet in Svelte requires a CSS file loader. Refer to [examp
 
 <Highlight language="{typescript}" {code} />
 ```
+<!-- prettier-ignore-end -->
 
 ## Svelte Syntax Highlighting
 
 This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-svelte) to highlight Svelte code.
 
-```html
+<!-- prettier-ignore-start -->
+```svelte
 <script>
   import { HighlightSvelte } from "svelte-highlight";
   import { github } from "svelte-highlight/styles";
@@ -104,6 +109,7 @@ This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-sv
 
 <HighlightSvelte {code} />
 ```
+<!-- prettier-ignore-end -->
 
 ## Custom Language
 
@@ -111,7 +117,8 @@ For custom language highlighting, pass a `name` and `register` function to the l
 
 Refer to the highlight.js [language definition guide](https://highlightjs.readthedocs.io/en/latest/language-guide.html) for guidance.
 
-```html
+<!-- prettier-ignore-start -->
+```svelte
 <script>
   import { Highlight } from "svelte-highlight";
   import hljs from "highlight.js";
@@ -130,6 +137,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 <Highlight {language} {code} />
 ```
+<!-- prettier-ignore-end -->
 
 ## API
 
