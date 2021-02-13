@@ -1,8 +1,8 @@
 # svelte-highlight
 
-[![NPM][npm]][npm-url]
-![NPM downloads to date](https://img.shields.io/npm/dt/svelte-highlight)
-[![Build][build]][build-badge]
+![npm](https://img.shields.io/npm/v/svelte-highlight?color=ff3e00&style=for-the-badge)
+![npm](https://img.shields.io/npm/dt/svelte-highlight?color=ff3e00&style=for-the-badge)
+![Travis (.com)](https://img.shields.io/travis/com/metonym/svelte-highlight?style=for-the-badge)
 
 > Syntax Highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
@@ -178,8 +178,3 @@ The following events are forwarded to the `pre` element:
 ## License
 
 [MIT](LICENSE)
-
-[npm]: https://img.shields.io/npm/v/svelte-highlight.svg?color=blue
-[npm-url]: https://npmjs.com/package/svelte-highlight
-[build]: https://travis-ci.com/metonym/svelte-highlight.svg?branch=master
-[build-badge]: https://travis-ci.com/metonym/svelte-highlight
