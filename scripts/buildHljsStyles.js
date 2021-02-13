@@ -12,7 +12,7 @@ async function buildHljsStyles() {
     if (error) return;
 
     files.forEach(async (file) => {
-      await fs.copyFile(file, `styles/${file.split("/").pop()}`, file);
+      await fs.copyFile(file, `styles/${file.split("/").pop()}`);
     });
   });
 
