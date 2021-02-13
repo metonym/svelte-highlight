@@ -10,9 +10,7 @@
   let highlighted = undefined;
 
   afterUpdate(() => {
-    if (highlighted) {
-      dispatch("highlight");
-    }
+    if (highlighted) dispatch("highlight", { highlighted });
   });
 
   $: if (language.name && language.register) {
@@ -23,14 +21,14 @@
 
 <slot highlighted="{highlighted}">
   <pre
+    class:hljs="{true}"
     {...$$restProps}
     on:click
     on:mouseover
     on:mouseenter
     on:mouseleave
     on:focus
-    on:blur
-    class:hljs="{true}">
+    on:blur>
     <code>
       {#if highlighted !== undefined}
         {@html highlighted}

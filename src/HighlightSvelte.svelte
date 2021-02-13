@@ -12,9 +12,7 @@
   hljsSvelte(hljs);
 
   afterUpdate(() => {
-    if (highlighted) {
-      dispatch("highlight");
-    }
+    if (highlighted) dispatch("highlight", { highlighted });
   });
 
   $: highlighted = hljs.highlight("svelte", code).value;
@@ -22,14 +20,14 @@
 
 <slot highlighted="{highlighted}">
   <pre
+    class:hljs="{true}"
     {...$$restProps}
     on:click
     on:mouseover
     on:mouseenter
     on:mouseleave
     on:focus
-    on:blur
-    class:hljs="{true}">
+    on:blur>
     <code>
       {@html highlighted}
     </code>
