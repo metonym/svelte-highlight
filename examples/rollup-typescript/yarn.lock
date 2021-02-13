@@ -615,10 +615,10 @@ supports-color@^7.0.0, supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-check@1.1.26:
-  version "1.1.26"
-  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-1.1.26.tgz#e29dec0a51714613796d38d0c568a69d1b569881"
-  integrity sha512-IDi6KwDUSryxo5+F2Ru8oRMdaZse9c2UW8DJEjXAIYitn7qb0acNDj6WOK/4E1TlgDesO5MzS0SoeHZg5qUonQ==
+svelte-check@1.1.34:
+  version "1.1.34"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-1.1.34.tgz#3d99d3dc48278d13509f223b2875688d5dd48b11"
+  integrity sha512-9k3XoSBiXKIu34w3R8adM35pjJhbB7PJN8aMMusYVZQoPs9+HBJ8OPRfIr6c+LCT0kqR/3WnxkQ/1ooitISbBA==
   dependencies:
     chalk "^4.0.0"
     chokidar "^3.4.1"
@@ -629,18 +629,28 @@ svelte-check@1.1.26:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-highlight@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-0.7.0.tgz#b988fbe7c633aff360c158965743f3d05d544454"
-  integrity sha512-R5NUoXEFZScCGOfUAdJYYHSTNFLAn0akas5DBBBdn9JbbCkgi4KSFEsjdqXtRbRP7FMooQNET1KrvCo3oiIQjg==
+svelte-highlight@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-0.7.1.tgz#6b193b31cd062f9375be290d2ac02a35cfc6a4e3"
+  integrity sha512-rOboHnWy7FEZpszZ9YQKmebtmIgZqyaGaYtkr9KWXlV1bIspqTNdgxAW74eecwUEreFmaJLmuP9wKf2e58wqLw==
   dependencies:
     highlight.js "9.17.1"
     highlightjs-svelte "1.0.4"
 
-svelte-preprocess@^4.0.0, svelte-preprocess@^4.6.1:
+svelte-preprocess@^4.0.0:
   version "4.6.8"
   resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.6.8.tgz#bad8a3a1a03163f3941f0dc264b64a40c44a7ae0"
   integrity sha512-yrT+vuHPoGnNx5Oxa6gMqWV5ZhLgA4isfhUOBwv9iVqZAro9/Nyy8XF5sahAglfMmnCxJkDZSwg7CdAwGpVxhw==
+  dependencies:
+    "@types/pug" "^2.0.4"
+    "@types/sass" "^1.16.0"
+    detect-indent "^6.0.0"
+    strip-indent "^3.0.0"
+
+svelte-preprocess@^4.6.9:
+  version "4.6.9"
+  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.6.9.tgz#073d923eb351b98b6c6a454ba5feee981cd9dbf5"
+  integrity sha512-SROWH0rB0DJ+0Ii264cprmNu/NJyZacs5wFD71ya93Cg/oA2lKHgQm4F6j0EWA4ktFMzeuJJm/eX6fka39hEHA==
   dependencies:
     "@types/pug" "^2.0.4"
     "@types/sass" "^1.16.0"
