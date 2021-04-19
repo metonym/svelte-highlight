@@ -9,12 +9,13 @@ async function buildHljsStyles() {
   const md = ["# Supported Styles\n"];
 
   let types = "";
+  let base = "";
 
   glob("node_modules/highlight.js/styles/!(*.css)", {}, (error, files) => {
     if (error) return;
 
     files.forEach(async (file) => {
-      await fs.copyFile(file, `styles/${file.split("/").pop()}`);
+      await fs.copyFile(file, `src/styles/${file.split("/").pop()}`);
     });
   });
 
@@ -34,6 +35,7 @@ async function buildHljsStyles() {
       }
 
       types += `export const ${name}: string;\n`;
+      base += `export { default as ${name} } from './${styleName}';`;
 
       md.push(`## ${styleName} (\`${name}\`)\n`);
       md.push("<details>");
@@ -41,13 +43,13 @@ async function buildHljsStyles() {
       md.push("### CSS Stylesheet\n");
       md.push("```html");
       md.push("<script>");
-      md.push(`  import 'svelte-highlight/styles/${styleName}.css';`);
+      md.push(`  import 'svelte-highlight/src/styles/${styleName}.css';`);
       md.push("</script>");
       md.push("```\n");
       md.push("### JavaScript\n");
       md.push("```html");
       md.push("<script>");
-      md.push(`  import { ${name} } from 'svelte-highlight/styles';`);
+      md.push(`  import { ${name} } from 'svelte-highlight/src/styles';`);
       md.push("</script>\n");
       md.push("<svelte:head>");
       md.push(`  {@html ${name}}`);
@@ -61,16 +63,20 @@ async function buildHljsStyles() {
         `const ${name} = \`<style>${content}</style>\`;\n`,
         `export default ${name};\n`,
       ].join("\n");
-      await fs.writeFile(`dist/styles/${styleName}.js`, exportee);
-      await fs.writeFile(`styles/${styleName}.css`, content);
+      await fs.writeFile(
+        `types/src/styles/${styleName}.d.ts`,
+        `export { ${name} as default } from "./";\n`
+      );
+      await fs.writeFile(`src/styles/${styleName}.js`, exportee);
+      await fs.writeFile(`src/styles/${styleName}.css`, content);
     });
 
     baseExport.push("\n");
-    await fs.writeFile("dist/styles/index.js", baseExport.join("\n"));
+    await fs.writeFile("src/styles/index.js", baseExport.join("\n"));
 
     md.push("\n");
     await fs.writeFile("SUPPORTED_STYLES.md", md.join("\n"));
-    await fs.writeFile("types/styles/index.d.ts", types);
+    await fs.writeFile("types/src/styles/index.d.ts", types);
   });
 }
 

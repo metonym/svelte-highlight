@@ -1,9 +1,6 @@
 .DS_Store
-/.vscode
-/dist
-/languages
-/lib
 /node_modules
-/styles
+/src/styles
+/src/languages
 yarn-debug.log*
 yarn-error.log*

@@ -10,8 +10,8 @@
    */
   export let code = undefined;
 
-  import hljs from "highlight.js";
-  import xml from "highlight.js/lib/languages/xml";
+  import hljs from "highlight.js/lib/core.js";
+  import xml from "highlight.js/lib/languages/xml.js";
   import hljsSvelte from "highlightjs-svelte/dist/index.js";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
@@ -24,7 +24,7 @@
     if (highlighted) dispatch("highlight", { highlighted });
   });
 
-  $: highlighted = hljs.highlight("svelte", code).value;
+  $: highlighted = hljs.highlight(code, { language: "svelte" }).value;
 </script>
 
 <slot highlighted="{highlighted}">

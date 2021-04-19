@@ -13,7 +13,7 @@
    */
   export let code = undefined;
 
-  import hljs from "highlight.js/lib/highlight";
+  import hljs from "highlight.js/lib/core.js";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -26,7 +26,7 @@
 
   $: if (language.name && language.register) {
     hljs.registerLanguage(language.name, language.register);
-    highlighted = hljs.highlight(language.name, code).value;
+    highlighted = hljs.highlight(code, { language: language.name }).value;
   }
 </script>
 

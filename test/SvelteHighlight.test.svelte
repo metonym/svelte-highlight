@@ -1,7 +1,7 @@
 <script lang="ts">
   import Legacy, { Highlight, HighlightSvelte } from "../types";
-  import { typescript, cpp } from "../types/languages";
-  import { github, purebasic } from "../types/styles";
+  import { typescript, cpp } from "../types/src/languages";
+  import { github, purebasic } from "../types/src/styles";
   import "svelte-highlight/styles/github.css";
 
   $: code = `const add = (a: number, b: number) => a + b;`;

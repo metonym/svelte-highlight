@@ -3,14 +3,14 @@ const { buildHljsLanguages } = require("./buildHljsLanguages");
 const { buildHljsStyles } = require("./buildHljsStyles");
 
 (async () => {
-  await fs.rmdir("languages", { recursive: true });
-  await fs.rmdir("styles", { recursive: true });
-  await fs.rmdir("dist", { recursive: true });
-  await fs.mkdir("dist");
-  await fs.mkdir("dist/languages");
-  await fs.mkdir("dist/styles");
-  await fs.mkdir("languages");
-  await fs.mkdir("styles");
+  await fs.rmdir("src/languages", { recursive: true });
+  await fs.rmdir("src/styles", { recursive: true });
+  await fs.mkdir("src/languages");
+  await fs.mkdir("src/styles");
+  await fs.rmdir("types/src", { recursive: true });
+  await fs.mkdir("types/src");
+  await fs.mkdir("types/src/languages");
+  await fs.mkdir("types/src/styles");
   await buildHljsLanguages();
   await buildHljsStyles();
 })();
