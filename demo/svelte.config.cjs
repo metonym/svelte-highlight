@@ -1,14 +1,16 @@
 const static = require("@sveltejs/adapter-static");
-const pkg = require("./package.json");
+const { name } = require("../package.json");
+
+const BASE = `/${name}/`;
 
 /** @type {import('@sveltejs/kit').Config} */
 module.exports = {
   kit: {
     adapter: static(),
     target: "#svelte",
-
-    vite: {
-      base: "/",
+    paths: {
+      base: BASE,
+      assets: BASE,
     },
   },
 };
