@@ -765,4 +765,3 @@ export const xquery: HljsLanguage & {
 export const zephir: HljsLanguage & {
   name: "zephir";
 };
-

@@ -11,7 +11,7 @@
     "src/styles/*.css"
   ],
   "scripts": {
-    "format": "prettier --write '{src,scripts,demo,examples}/**/*.{svelte,ts,md}'",
+    "format": "prettier --write '.'",
     "prepack": "node scripts",
     "test": "svelte-check --workspace=test"
   },
@@ -29,6 +29,7 @@
     "typescript": "^4.2.4"
   },
   "prettier": {
+    "printWidth": 120,
     "svelteStrictMode": true,
     "svelteBracketNewLine": true
   },
