@@ -32,13 +32,7 @@
 <slot highlighted="{highlighted}">
   <pre
     class:hljs="{true}"
-    {...$$restProps}
-    on:click
-    on:mouseover
-    on:mouseenter
-    on:mouseleave
-    on:focus
-    on:blur>
+    {...$$restProps}>
     <code>
       {@html highlighted}
     </code>

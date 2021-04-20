@@ -1,7 +1,7 @@
 /// <reference types="svelte" />
 import { SvelteComponentTyped } from "svelte";
 
-export interface HighlightSvelteProps
+export interface HighlightAutoProps
   extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap["pre"]> {
   /**
    * Source code to highlight
@@ -9,8 +9,8 @@ export interface HighlightSvelteProps
   code?: string;
 }
 
-export default class HighlightSvelte extends SvelteComponentTyped<
-  HighlightSvelteProps,
+export default class HighlightAuto extends SvelteComponentTyped<
+  HighlightAutoProps,
   { highlight: CustomEvent<{ highlighted: string }> },
   { default: { highlighted?: string } }
 > {}

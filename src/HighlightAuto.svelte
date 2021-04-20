@@ -4,9 +4,6 @@
    * @event {{ highlighted: string; }} highlight
    */
 
-  /** @type {{ name?: string; register: (hljs: any) => Record<string, any>; }} */
-  export let language = { name: undefined, register: undefined };
-
   /**
    * Source code to highlight
    * @type {string}
@@ -18,26 +15,19 @@
 
   const dispatch = createEventDispatcher();
 
-  let highlighted = undefined;
-
   afterUpdate(() => {
     if (highlighted) dispatch("highlight", { highlighted });
   });
 
-  $: if (language.name && language.register) {
-    hljs.registerLanguage(language.name, language.register);
-    highlighted = hljs.highlight(code, { language: language.name }).value;
-  }
+  $: highlighted = hljs.highlightAuto(code).value;
 </script>
 
 <slot highlighted="{highlighted}">
   <pre
     class:hljs="{true}"
     {...$$restProps}>
-    <code>
-      {#if highlighted !== undefined}
+      <code>
         {@html highlighted}
-      {:else}{code}{/if}
-    </code>
-  </pre>
+      </code>
+    </pre>
 </slot>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Legacy, { Highlight, HighlightSvelte } from "../types";
+  import Highlight, { HighlightAuto, HighlightSvelte } from "../types";
   import { typescript, cpp } from "../types/src/languages";
   import javascript from "../types/src/languages/javascript";
   import { github, purebasic } from "../types/src/styles";
@@ -18,7 +18,7 @@
   {@html purebasic}
 </svelte:head>
 
-<Legacy code="" contenteditable="false" language="{cpp}" />
+<HighlightAuto code="" />
 
 <Highlight
   language="{typescript}"
@@ -26,24 +26,9 @@
   on:highlight="{(e) => {
     console.log(e.detail.highlighted);
   }}"
-  on:click
-  on:mouseover
-  on:mouseenter
-  on:mouseleave
-  on:focus
-  on:blur
   let:highlighted
 >
   {@html highlighted}
 </Highlight>
 
-<HighlightSvelte
-  code="{codeSvelte}"
-  on:click
-  on:mouseover
-  on:mouseenter
-  on:mouseleave
-  on:focus
-  on:blur
-  on:highlight
-/>
+<HighlightSvelte code="{codeSvelte}" on:highlight />
