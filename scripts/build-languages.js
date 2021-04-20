@@ -1,19 +1,12 @@
 const hljs = require("highlight.js");
-const { toPascalCase } = require("./utils/to-pascal-case");
-const { writeTo } = require("./utils/write-to");
-const pkg = require("../package.json");
+const utils = require("./utils");
 
 async function buildLanguages() {
   let languages = hljs.listLanguages();
-  let markdown = `# Supported Languages
-  
-> ${languages.length} languages exported from highlight.js@${pkg.dependencies["highlight.js"]}  
-`;
-
+  let markdown = utils.createMarkdown('Languages', languages.length);
   let types = `interface HljsLanguage {
-  register: (hljs: any) => Record<string, any>;
-}\n\n`;
-
+    register: (hljs: any) => Record<string, any>;
+  }\n\n`
   let base = "";
   let lang = [];
 
@@ -21,7 +14,7 @@ async function buildLanguages() {
     let moduleName = name;
 
     if (/^[0-9]/.test(name)) moduleName = `_${name}`;
-    if (/-/.test(name)) moduleName = toPascalCase(name);
+    if (/-/.test(name)) moduleName = utils.toPascalCase(name);
 
     types += `export const ${moduleName}: HljsLanguage & { name: "${name}"; };\n\n`;
     base += `export { default as ${moduleName} } from './${name}';\n`;
@@ -38,21 +31,21 @@ async function buildLanguages() {
 <\/script>
 \`\`\`\n\n`;
 
-    await writeTo(
+    await utils.writeTo(
       `types/src/languages/${moduleName}.d.ts`,
       `export { ${moduleName} as default } from "./";\n`
     );
-    await writeTo(
+    await utils.writeTo(
       `src/languages/${name}.js`,
       `import ${moduleName} from "highlight.js/lib/languages/${name}.js";\n
 export default { name: "${name}", register: ${moduleName} };\n`
     );
   });
 
-  await writeTo("src/languages/index.js", base);
-  await writeTo("types/src/languages/index.d.ts", types);
-  await writeTo("SUPPORTED_LANGUAGES.md", markdown);
-  await writeTo("demo/src/lib/languages.json", lang);
+  await utils.writeTo("src/languages/index.js", base);
+  await utils.writeTo("types/src/languages/index.d.ts", types);
+  await utils.writeTo("SUPPORTED_LANGUAGES.md", markdown);
+  await utils.writeTo("demo/src/lib/languages.json", lang);
 }
 
 module.exports = { buildLanguages };

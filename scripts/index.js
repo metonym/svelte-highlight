@@ -1,16 +1,16 @@
-const fs = require("./utils/fs");
+const utils = require("./utils");
 const { buildLanguages } = require("./build-languages");
 const { buildStyles } = require("./build-styles");
 
 (async () => {
-  await fs.rmdir("src/languages", { recursive: true });
-  await fs.rmdir("src/styles", { recursive: true });
-  await fs.mkdir("src/languages");
-  await fs.mkdir("src/styles");
-  await fs.rmdir("types/src", { recursive: true });
-  await fs.mkdir("types/src");
-  await fs.mkdir("types/src/languages");
-  await fs.mkdir("types/src/styles");
+  await utils.fs.rmdir("src/languages", { recursive: true });
+  await utils.fs.rmdir("src/styles", { recursive: true });
+  await utils.fs.rmdir("types/src", { recursive: true });
+  await utils.fs.mkdir("src/styles");
+  await utils.fs.mkdir("src/languages");
+  await utils.fs.mkdir("types/src");
+  await utils.fs.mkdir("types/src/languages");
+  await utils.fs.mkdir("types/src/styles");
   await buildLanguages();
   await buildStyles();
 })();
