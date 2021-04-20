@@ -1,10 +1,10 @@
 const glob = require("glob");
-const { toPascalCase } = require("./utils/toPascalCase");
+const { toPascalCase } = require("./utils/to-pascal-case");
 const fs = require("./utils/fs");
 
 const deprecatedStyles = ["darkula"];
 
-async function buildHljsStyles() {
+async function buildStyles() {
   const baseExport = [];
   const md = ["# Supported Styles\n"];
 
@@ -89,4 +89,4 @@ async function buildHljsStyles() {
   });
 }
 
-module.exports = { buildHljsStyles };
+module.exports = { buildStyles };

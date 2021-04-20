@@ -1,9 +1,11 @@
 <script lang="ts">
   import Highlight, { HighlightAuto, HighlightSvelte } from "../types";
-  import { typescript, cpp } from "../types/src/languages";
+  import { typescript } from "../types/src/languages";
   import javascript from "../types/src/languages/javascript";
   import { github, purebasic } from "../types/src/styles";
   import "svelte-highlight/styles/github.css";
+
+  let toggled = true;
 
   $: code = `const add = (a: number, b: number) => a + b;`;
   $: codeSvelte = `<script>
@@ -18,10 +20,10 @@
   {@html purebasic}
 </svelte:head>
 
-<HighlightAuto code="" />
+<HighlightAuto code="{toggled ? code : codeSvelte}" />
 
 <Highlight
-  language="{typescript}"
+  language="{toggled ? javascript : typescript}"
   code="{code}"
   on:highlight="{(e) => {
     console.log(e.detail.highlighted);

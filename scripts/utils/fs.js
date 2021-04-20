@@ -1,10 +1,10 @@
 const fs = require("fs");
-const util = require("util");
+const { promisify } = require("util");
 
-const rmdir = util.promisify(fs.rmdir);
-const mkdir = util.promisify(fs.mkdir);
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-const copyFile = util.promisify(fs.copyFile);
+const rmdir = promisify(fs.rmdir);
+const mkdir = promisify(fs.mkdir);
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+const copyFile = promisify(fs.copyFile);
 
 module.exports = { rmdir, mkdir, readFile, writeFile, copyFile };

@@ -1,6 +1,6 @@
 const fs = require("./utils/fs");
-const { buildHljsLanguages } = require("./buildHljsLanguages");
-const { buildHljsStyles } = require("./buildHljsStyles");
+const { buildLanguages } = require("./build-languages");
+const { buildStyles } = require("./build-styles");
 
 (async () => {
   await fs.rmdir("src/languages", { recursive: true });
@@ -11,6 +11,6 @@ const { buildHljsStyles } = require("./buildHljsStyles");
   await fs.mkdir("types/src");
   await fs.mkdir("types/src/languages");
   await fs.mkdir("types/src/styles");
-  await buildHljsLanguages();
-  await buildHljsStyles();
+  await buildLanguages();
+  await buildStyles();
 })();

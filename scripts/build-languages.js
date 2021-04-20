@@ -1,8 +1,8 @@
 const hljs = require("highlight.js");
-const { toPascalCase } = require("./utils/toPascalCase");
+const { toPascalCase } = require("./utils/to-pascal-case");
 const fs = require("./utils/fs");
 
-async function buildHljsLanguages() {
+async function buildLanguages() {
   const md = ["# Supported Languages\n"];
   const languages = hljs.listLanguages();
   const baseExport = [];
@@ -12,6 +12,7 @@ async function buildHljsLanguages() {
 }\n\n`;
 
   let base = "";
+  let lang = [];
 
   const files = languages.map(async (language) => {
     const languageNameStartsWithNumber = language
@@ -34,6 +35,10 @@ async function buildHljsLanguages() {
 };\n\n`;
 
     base += `export { default as ${exportee} } from './${language}';`;
+    lang.push({
+      name: language,
+      moduleName: exportee,
+    });
 
     md.push(`## ${language} (\`${exportee}\`)\n`);
     md.push("<details>");
@@ -66,18 +71,16 @@ async function buildHljsLanguages() {
 
   baseExport.push("\n");
 
-  // console.log("base", base);
   await fs.writeFile("src/languages/index.js", base);
-
-  files.forEach(async (file, index) => {
-    // console.log(file);
-    // await fs.writeFile(`src/languages/${languages[index]}.js`, file);
-  });
 
   md.push("\n");
 
   await fs.writeFile("SUPPORTED_LANGUAGES.md", md.join("\n"));
   await fs.writeFile("types/src/languages/index.d.ts", types);
+  await fs.writeFile(
+    "demo/src/lib/languages.json",
+    JSON.stringify(lang, null, 2)
+  );
 }
 
-module.exports = { buildHljsLanguages };
+module.exports = { buildLanguages };
