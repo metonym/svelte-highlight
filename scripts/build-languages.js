@@ -1,6 +1,6 @@
 const hljs = require("highlight.js");
 const { toPascalCase } = require("./utils/to-pascal-case");
-const fs = require("./utils/fs");
+const { writeTo } = require("./utils/write-to");
 const pkg = require("../package.json");
 
 async function buildLanguages() {
@@ -17,26 +17,16 @@ async function buildLanguages() {
   let base = "";
   let lang = [];
 
-  languages.forEach(async (language) => {
-    const languageNameStartsWithNumber = language
-      .slice(0, 1)
-      .match(new RegExp(/[0-9]/g));
-    const languageNameHasDash = language.match(new RegExp(/-/g));
+  languages.forEach(async (name) => {
+    let moduleName = name;
 
-    let moduleName = language;
+    if (/^[0-9]/.test(name)) moduleName = `_${name}`;
+    if (/-/.test(name)) moduleName = toPascalCase(name);
 
-    if (languageNameStartsWithNumber) {
-      moduleName = ["_", language].join("");
-    }
-
-    if (languageNameHasDash) {
-      moduleName = toPascalCase(language);
-    }
-
-    types += `export const ${moduleName}: HljsLanguage & { name: "${language}"; };\n\n`;
-    base += `export { default as ${moduleName} } from './${language}';\n`;
-    lang.push({ name: language, moduleName });
-    markdown += `## ${language} (\`${moduleName}\`)
+    types += `export const ${moduleName}: HljsLanguage & { name: "${name}"; };\n\n`;
+    base += `export { default as ${moduleName} } from './${name}';\n`;
+    lang.push({ name, moduleName });
+    markdown += `## ${name} (\`${moduleName}\`)
 
 \`\`\`html
 <script>
@@ -44,28 +34,25 @@ async function buildLanguages() {
   import { ${moduleName} } from "svelte-highlight/src/languages";
   
   // direct import
-  import ${moduleName} from "svelte-highlight/src/languages/${language}";
+  import ${moduleName} from "svelte-highlight/src/languages/${name}";
 <\/script>
 \`\`\`\n\n`;
 
-    await fs.writeFile(
+    await writeTo(
       `types/src/languages/${moduleName}.d.ts`,
       `export { ${moduleName} as default } from "./";\n`
     );
-    await fs.writeFile(
-      `src/languages/${language}.js`,
-      `import ${moduleName} from "highlight.js/lib/languages/${language}.js";\n
-export default { name: "${language}", register: ${moduleName} };\n`
+    await writeTo(
+      `src/languages/${name}.js`,
+      `import ${moduleName} from "highlight.js/lib/languages/${name}.js";\n
+export default { name: "${name}", register: ${moduleName} };\n`
     );
   });
 
-  await fs.writeFile("src/languages/index.js", base);
-  await fs.writeFile("types/src/languages/index.d.ts", types);
-  await fs.writeFile("SUPPORTED_LANGUAGES.md", markdown);
-  await fs.writeFile(
-    "demo/src/lib/languages.json",
-    JSON.stringify(lang, null, 2)
-  );
+  await writeTo("src/languages/index.js", base);
+  await writeTo("types/src/languages/index.d.ts", types);
+  await writeTo("SUPPORTED_LANGUAGES.md", markdown);
+  await writeTo("demo/src/lib/languages.json", lang);
 }
 
 module.exports = { buildLanguages };

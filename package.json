@@ -11,8 +11,7 @@
     "src/styles/*.css"
   ],
   "scripts": {
-    "build": "node scripts && yarn format",
-    "prepack": "yarn build",
+    "prepack": "node scripts",
     "test": "svelte-check --workspace=test",
     "format": "prettier --write '.'"
   },

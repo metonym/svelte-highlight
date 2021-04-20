@@ -1,12 +1,15 @@
 const glob = require("glob");
 const { toPascalCase } = require("./utils/to-pascal-case");
 const fs = require("./utils/fs");
-
-const deprecatedStyles = ["darkula"];
+const { writeTo } = require("./utils/write-to");
+const pkg = require("../package.json");
 
 async function buildStyles() {
-  const baseExport = [];
-  const md = ["# Supported Styles\n"];
+  let hljsStyles = glob.sync("node_modules/highlight.js/styles/*.css");
+  let markdown = `# Supported Styles
+  
+> ${hljsStyles.length} styles exported from highlight.js@${pkg.dependencies["highlight.js"]}  
+`;
 
   let types = "";
   let base = "";
@@ -16,77 +19,62 @@ async function buildStyles() {
     if (error) return;
 
     files.forEach(async (file) => {
+      console.info('copying', file)
       await fs.copyFile(file, `src/styles/${file.split("/").pop()}`);
     });
   });
 
-  glob("node_modules/highlight.js/styles/*.css", {}, async (error, files) => {
-    if (error) return;
+  hljsStyles.forEach(async (file) => {
+    let name = file.split("/").pop().replace(".css", "");
+    let moduleName = toPascalCase(name);
 
-    files.forEach(async (file) => {
-      const styleName = file.split("/").pop().replace(".css", "");
-      let name = toPascalCase(styleName);
+    if (/^default$/.test(moduleName)) moduleName = `_${moduleName}`;
 
-      if (deprecatedStyles.includes(name)) {
-        return;
-      }
+    types += `export const ${moduleName}: string;\n`;
+    base += `export { default as ${moduleName} } from './${name}';`;
+    styles.push({ name, moduleName });
+    markdown += `## ${name} (\`${moduleName}\`)
 
-      if (["default"].includes(name)) {
-        name = `_${name}`;
-      }
+**Injected Styles**
 
-      types += `export const ${name}: string;\n`;
-      base += `export { default as ${name} } from './${styleName}';`;
-      styles.push({
-        name: styleName,
-        moduleName: name,
-      });
+\`\`\`html
+<script>
+// base import
+import { ${moduleName} } from "svelte-highlight/src/styles";
 
-      md.push(`## ${styleName} (\`${name}\`)\n`);
-      md.push("<details>");
-      md.push("<summary>Usage</summary>\n");
-      md.push("### CSS Stylesheet\n");
-      md.push("```html");
-      md.push("<script>");
-      md.push(`  import 'svelte-highlight/src/styles/${styleName}.css';`);
-      md.push("</script>");
-      md.push("```\n");
-      md.push("### JavaScript\n");
-      md.push("```html");
-      md.push("<script>");
-      md.push(`  import { ${name} } from 'svelte-highlight/src/styles';`);
-      md.push("</script>\n");
-      md.push("<svelte:head>");
-      md.push(`  {@html ${name}}`);
-      md.push("</svelte:head>");
-      md.push("```");
-      md.push("</details>\n");
+// direct import
+import ${moduleName} from "svelte-highlight/src/styles/${moduleName}";
+<\/script>
 
-      baseExport.push(`export { default as ${name} } from './${styleName}';`);
-      const content = await fs.readFile(file, "utf-8");
-      const exportee = [
-        `const ${name} = \`<style>${content}</style>\`;\n`,
-        `export default ${name};\n`,
-      ].join("\n");
-      await fs.writeFile(
-        `types/src/styles/${styleName}.d.ts`,
-        `export { ${name} as default } from "./";\n`
-      );
-      await fs.writeFile(`src/styles/${styleName}.js`, exportee);
-      await fs.writeFile(`src/styles/${styleName}.css`, content);
-    });
+<svelte:head>
+{@html ${moduleName}}
+<\/svelte:head>
+\`\`\`\n\n
 
-    baseExport.push("\n");
-    await fs.writeFile("src/styles/index.js", baseExport.join("\n"));
+**CSS StyleSheet**
 
-    md.push("\n");
-    await fs.writeFile("SUPPORTED_STYLES.md", md.join("\n"));
-    await fs.writeFile("types/src/styles/index.d.ts", types);
-    await fs.writeFile(
-      "demo/src/lib/styles.json",
-      JSON.stringify(styles, null, 2)
+\`\`\`html
+<script>
+import "svelte-highlight/src/languages/${name}.css";
+<\/script>
+\`\`\`\n\n`;
+
+    const content = await fs.readFile(file, "utf-8");
+    const exportee = `const ${moduleName} = \`<style>${content}</style>\`;\n
+export default ${moduleName};\n`;
+
+    await writeTo(
+      `types/src/styles/${name}.d.ts`,
+      `export { ${moduleName} as default } from "./";\n`
     );
+    await writeTo(`src/styles/${name}.js`, exportee);
+    await writeTo(`src/styles/${name}.css`, content);
   });
+
+  await writeTo("src/styles/index.js", base);
+  await writeTo("SUPPORTED_STYLES.md", markdown);
+  await writeTo("types/src/styles/index.d.ts", types);
+  await writeTo("demo/src/lib/styles.json", styles);
 }
 
 module.exports = { buildStyles };
