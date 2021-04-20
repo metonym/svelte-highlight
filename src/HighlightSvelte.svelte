@@ -12,19 +12,21 @@
 
   import hljs from "highlight.js/lib/core.js";
   import xml from "highlight.js/lib/languages/xml.js";
-  import hljsSvelte from "highlightjs-svelte/dist/index.js";
+  import javascript from "highlight.js/lib/languages/javascript.js";
+  import css from "highlight.js/lib/languages/css.js";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
 
   hljs.registerLanguage("xml", xml);
-  hljsSvelte(hljs);
+  hljs.registerLanguage("javascript", javascript);
+  hljs.registerLanguage("css", css);
 
   afterUpdate(() => {
     if (highlighted) dispatch("highlight", { highlighted });
   });
 
-  $: highlighted = hljs.highlight(code, { language: "svelte" }).value;
+  $: highlighted = hljs.highlightAuto(code).value;
 </script>
 
 <slot highlighted="{highlighted}">
