@@ -1,3 +1,10 @@
+/**
+ * Converts a dash/period separated string into pascal case
+ * @example
+ * "one-two-three" --> "oneTwoThree"
+ * @param {string} str
+ * @returns {string}
+ */
 function toPascalCase(str) {
   return str
     .split(new RegExp(/-|\./g))
