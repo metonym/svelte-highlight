@@ -1,3 +1,4 @@
 /.svelte
 /build
 /node_modules
+/src/lib/*.json

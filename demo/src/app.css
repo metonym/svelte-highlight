@@ -1,0 +1,24 @@
+/* code {
+  font-size: 0.875rem;
+  font-family: Menlo;
+}
+
+.hljs.hljs {
+  padding: 1rem;
+  cursor: text;
+}
+ */
+
+code {
+  font-size: 0.875rem;
+  font-family: Menlo;
+  line-height: 1.5;
+}
+
+pre.hljs {
+  padding: 1.25rem 1rem 1.5rem !important;
+}
+
+.mb-5 {
+  margin-bottom: var(--cds-spacing-05);
+}

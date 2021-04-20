@@ -16,8 +16,7 @@
     "test": "svelte-check --workspace=test"
   },
   "dependencies": {
-    "highlight.js": "10.7.2",
-    "highlightjs-svelte": "1.0.6"
+    "highlight.js": "10.7.2"
   },
   "devDependencies": {
     "@tsconfig/svelte": "^1.0.10",
