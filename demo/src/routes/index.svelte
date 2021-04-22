@@ -12,22 +12,22 @@
   </Column>
 </Row>
 
-<Row>
+<!-- <Row>
   <Column xlg="{10}" lg="{10}">
     <p>
       Install the NPM module as a development dependency using either Yarn or
       NPM.
     </p>
   </Column>
-</Row>
+</Row> -->
 
 <Row>
   <Column xlg="{10}" lg="{10}">
-    <p class="mb-5">Using Yarn:</p>
+    <p class="mb-5">Install using Yarn:</p>
     <Row class="mb-7" noGutter>
       <CodeSnippet code="yarn add -D svelte-highlight" />
     </Row>
-    <p class="mb-5">Using NPM:</p>
+    <p class="mb-5">Install using NPM:</p>
     <Row class="mb-7" noGutter>
       <CodeSnippet code="npm i -D svelte-highlight" />
     </Row>
@@ -50,8 +50,8 @@
   <Column xlg="{6}" lg="{6}">
     <p>Regular Highlight</p>
   </Column>
-  <Column xlg="{10}" lg="{10}">
-    <ScopedStyle name="github" moduleName="github" />
+  <Column noGutter xlg="{10}" lg="{10}">
+    <ScopedStyle name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
 
@@ -81,25 +81,31 @@
 
 <Row>
   <Column>
-    <h3>Props</h3>
+    <h4>Props</h4>
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <h3>Slots</h3>
+    <h4>Slots</h4>
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <h3>Events</h3>
+    <h4>Events</h4>
   </Column>
 </Row>
 
 <Row noGutter>
   <Column>
     <hr />
+  </Column>
+</Row>
+
+<Row>
+  <Column>
+    <h3>Custom language</h3>
   </Column>
 </Row>
 
