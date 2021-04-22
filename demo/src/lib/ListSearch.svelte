@@ -9,7 +9,7 @@
 
   export let labelA = "Base import";
 
-  export let labelB = "Direct import (recommended)";
+  export let labelB = "Direct import";
 
   export let toggled = true;
 

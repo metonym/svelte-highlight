@@ -124,3 +124,10 @@
     </p>
   </Column>
 </Row>
+
+<Row>
+  <Column>
+    <h3 class="mb-7">License</h3>
+    <p class="mb-5">MIT</p>
+  </Column>
+</Row>
