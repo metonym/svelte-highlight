@@ -15,8 +15,11 @@
     Content,
   } from "carbon-components-svelte";
   import { LogoGithub20 } from "carbon-icons-svelte";
+  import { prefetchRoutes } from "$app/navigation";
   import { page } from "$app/stores";
-  import { tick } from "svelte";
+  import { onMount, tick } from "svelte";
+
+  onMount(prefetchRoutes);
 
   const routes = {
     "/": "Getting started",
