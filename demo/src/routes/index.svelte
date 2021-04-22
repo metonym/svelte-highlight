@@ -1,34 +1,75 @@
 <script>
-  import { Row, Column } from "carbon-components-svelte";
+  import { Row, Column, CodeSnippet } from "carbon-components-svelte";
+  import ScopedStyle from "$lib/ScopedStyle.svelte";
 </script>
 
 <Row>
+  <Column xlg="{12}" lg="{12}">
+    <h4>
+      svelte-highlight uses highlight.js to provide Svelte components for code
+      syntax highlighting.
+    </h4>
+  </Column>
+</Row>
+
+<Row>
+  <Column xlg="{10}" lg="{10}">
+    <p>
+      Install the NPM module as a development dependency using either Yarn or
+      NPM.
+    </p>
+  </Column>
+</Row>
+
+<Row>
+  <Column xlg="{10}" lg="{10}">
+    <p class="mb-5">Using Yarn:</p>
+    <Row class="mb-7" noGutter>
+      <CodeSnippet code="yarn add -D svelte-highlight" />
+    </Row>
+    <p class="mb-5">Using NPM:</p>
+    <Row class="mb-7" noGutter>
+      <CodeSnippet code="npm i -D svelte-highlight" />
+    </Row>
+  </Column>
+</Row>
+
+<Row noGutter>
   <Column>
-    <p>Install the NPM module using Yarn or NPM:</p>
+    <hr />
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <h3>Usage</h3>
+    <h3>Highlight</h3>
+  </Column>
+</Row>
+
+<Row>
+  <Column xlg="{6}" lg="{6}">
+    <p>Regular Highlight</p>
+  </Column>
+  <Column xlg="{10}" lg="{10}">
+    <ScopedStyle name="github" moduleName="github" />
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <h4>Highlight</h4>
+    <h3>HighlightSvelte</h3>
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <h4>HighlightSvelte</h4>
+    <h3>HighlightAuto</h3>
   </Column>
 </Row>
 
-<Row>
+<Row noGutter>
   <Column>
-    <h4>HighlightAuto</h4>
+    <hr />
   </Column>
 </Row>
 
@@ -40,18 +81,30 @@
 
 <Row>
   <Column>
-    <h4>Props</h4>
+    <h3>Props</h3>
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <h4>Slots</h4>
+    <h3>Slots</h3>
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <h4>Events</h4>
+    <h3>Events</h3>
+  </Column>
+</Row>
+
+<Row noGutter>
+  <Column>
+    <hr />
+  </Column>
+</Row>
+
+<Row>
+  <Column>
+    <h3>TypeScript support</h3>
   </Column>
 </Row>

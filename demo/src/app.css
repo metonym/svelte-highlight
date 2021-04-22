@@ -39,3 +39,10 @@ pre.hljs {
   line-height: var(--cds-label-01-line-height);
   letter-spacing: var(--cds-label-01-letter-spacing);
 }
+
+hr {
+  margin-top: var(--cds-spacing-05);
+  margin-bottom: var(--cds-spacing-05);
+  border: 0;
+  border-bottom: 1px solid var(--cds-ui-03);
+}

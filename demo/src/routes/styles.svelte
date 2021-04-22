@@ -38,7 +38,7 @@
     <Search
       size="lg"
       bind:value
-      placeholder="{`Filter styles (e.g., "Monokai"`}"
+      placeholder="{`Filter styles (e.g., "Monokai")`}"
     />
   </Column>
 </Row>

@@ -12,7 +12,7 @@
     Toggle,
   } from "carbon-components-svelte";
   import HighlightSvelte from "svelte-highlight/src/HighlightSvelte.svelte";
-  import github from "svelte-highlight/src/styles/github";
+  import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
   import languages from "$lib/languages.json";
 
   function formatCode(name, moduleName, useDirectImport) {
@@ -38,7 +38,7 @@
 </script>
 
 <svelte:head>
-  {@html github}
+  {@html atomOneDark}
 </svelte:head>
 
 <Row>
@@ -54,7 +54,7 @@
     <Search
       size="lg"
       bind:value
-      placeholder="{`Filter languages (e.g., "JavaScript"`}"
+      placeholder="{`Filter languages (e.g., "JavaScript")`}"
     />
   </Column>
 </Row>
