@@ -1,4 +1,5 @@
 const static = require("@sveltejs/adapter-static");
+const carbon = require("carbon-components-svelte/preprocess");
 const { name } = require("../package.json");
 
 const BASE = process.env.BASE === "true";
@@ -7,12 +8,11 @@ const paths = BASE ? { base: BASE_PATH, assets: BASE_PATH } : {};
 
 /** @type {import('@sveltejs/kit').Config} */
 module.exports = {
-  preprocess: [
-    require("carbon-components-svelte/preprocess").optimizeCarbonImports(),
-  ],
+  preprocess: [carbon.optimizeCarbonImports()],
   kit: {
     adapter: static(),
     target: "#svelte",
     paths,
+    vite: { optimizeDeps: ["copy-to-clipboard"] },
   },
 };
