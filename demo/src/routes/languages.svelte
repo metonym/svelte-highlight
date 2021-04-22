@@ -11,7 +11,7 @@
     Search,
     Toggle,
   } from "carbon-components-svelte";
-  import HighlightAuto from "svelte-highlight/src/HighlightAuto.svelte";
+  import HighlightSvelte from "svelte-highlight/src/HighlightSvelte.svelte";
   import github from "svelte-highlight/src/styles/github";
   import languages from "$lib/languages.json";
 
@@ -103,7 +103,7 @@
               </div>
             </StructuredListCell>
             <StructuredListCell>
-              <HighlightAuto
+              <HighlightSvelte
                 code="{formatCode(
                   language.name,
                   language.moduleName,
