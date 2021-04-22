@@ -15,11 +15,13 @@
 
   const dispatch = createEventDispatcher();
 
+  let highlighted = undefined;
+
   afterUpdate(() => {
     if (highlighted) dispatch("highlight", { highlighted });
   });
 
-  $: highlighted = hljs.highlightAuto(code).value;
+  $: if (code) highlighted = hljs.highlightAuto(code).value;
 </script>
 
 <slot highlighted="{highlighted}">
@@ -27,7 +29,9 @@
     class:hljs="{true}"
     {...$$restProps}>
       <code>
+        {#if highlighted !== undefined}
         {@html highlighted}
+      {:else}{code}{/if}
       </code>
     </pre>
 </slot>
