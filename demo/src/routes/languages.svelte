@@ -8,12 +8,14 @@
     StructuredListCell,
     StructuredListBody,
     CodeSnippet,
-    Search,
-    Toggle,
   } from "carbon-components-svelte";
   import HighlightSvelte from "svelte-highlight/src/HighlightSvelte.svelte";
   import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
+  import ListSearch from "$lib/ListSearch.svelte";
   import languages from "$lib/languages.json";
+
+  let useDirectImport = true;
+  let filtered = [];
 
   function formatCode(name, moduleName, useDirectImport) {
     return `<script>
@@ -25,107 +27,57 @@
 
 <Highlight language={${moduleName}} code="code" />`;
   }
-
-  let value = "";
-  let useDirectImport = true;
-
-  $: normalizedValue = value.toLowerCase();
-  $: filteredLanguages = languages.filter(
-    (language) =>
-      language.name.toLowerCase().includes(normalizedValue) ||
-      language.moduleName.toLowerCase().includes(normalizedValue)
-  );
 </script>
 
 <svelte:head>
   {@html atomOneDark}
 </svelte:head>
 
-<Row>
-  <Column>
-    <p>
-      {languages.length} languages exported from highlight.js@10.7
-    </p>
-  </Column>
-</Row>
-
-<Row>
-  <Column noGutter>
-    <Search
-      size="lg"
-      bind:value
-      placeholder="{`Filter languages (e.g., "JavaScript")`}"
-    />
-  </Column>
-</Row>
-
-<!-- <Row>
-  <Column>
-    <p class="body-short-01 text-02">
-      Showing {filteredLanguages.length} of {languages.length} languages
-    </p>
-  </Column>
-</Row> -->
-
-<Row>
-  <Column>
-    <Toggle
-      labelText="Import method"
-      size="sm"
-      labelA="Base import"
-      labelB="Direct import (recommended)"
-      bind:toggled="{useDirectImport}"
-    />
-  </Column>
-</Row>
-
-{#if filteredLanguages.length > 0}
-  <Row>
-    <Column noGutter>
-      <StructuredList>
-        <StructuredListHead>
-          <StructuredListRow head>
-            <StructuredListCell head>Name</StructuredListCell>
-            <StructuredListCell head>Import</StructuredListCell>
-          </StructuredListRow>
-        </StructuredListHead>
-        <StructuredListBody>
-          {#each filteredLanguages as language (language.name)}
-            <StructuredListRow>
-              <StructuredListCell>
-                <div class="mb-7">
-                  <div class="label-01 mb-3">Language name</div>
-                  <CodeSnippet type="inline" code="{language.name}" />
-                </div>
-
-                <div class="mb-7">
-                  <div class="label-01 mb-3">Module name</div>
-                  <CodeSnippet type="inline" code="{language.moduleName}" />
-                </div>
-              </StructuredListCell>
-              <StructuredListCell>
-                <HighlightSvelte
-                  code="{formatCode(
-                    language.name,
-                    language.moduleName,
-                    useDirectImport
-                  )}"
-                />
-              </StructuredListCell>
+<ListSearch
+  items="{languages}"
+  itemName="language"
+  placeholderExample="JavaScript"
+  bind:toggled="{useDirectImport}"
+  bind:filtered
+>
+  {#if filtered.length > 0}
+    <Row>
+      <Column noGutter>
+        <StructuredList>
+          <StructuredListHead>
+            <StructuredListRow head>
+              <StructuredListCell head>Name</StructuredListCell>
+              <StructuredListCell head>Import</StructuredListCell>
             </StructuredListRow>
-          {/each}
-        </StructuredListBody>
-      </StructuredList>
-    </Column>
-  </Row>
-{/if}
+          </StructuredListHead>
+          <StructuredListBody>
+            {#each filtered as language (language.name)}
+              <StructuredListRow>
+                <StructuredListCell>
+                  <div class="mb-7">
+                    <div class="label-01 mb-3">Language name</div>
+                    <CodeSnippet type="inline" code="{language.name}" />
+                  </div>
 
-{#if filteredLanguages.length === 0}
-  <Row>
-    <Column>
-      <p>
-        No matches found for "{value}."
-      </p>
-    </Column>
-  </Row>
-{/if}
+                  <div class="mb-7">
+                    <div class="label-01 mb-3">Module name</div>
+                    <CodeSnippet type="inline" code="{language.moduleName}" />
+                  </div>
+                </StructuredListCell>
+                <StructuredListCell>
+                  <HighlightSvelte
+                    code="{formatCode(
+                      language.name,
+                      language.moduleName,
+                      useDirectImport
+                    )}"
+                  />
+                </StructuredListCell>
+              </StructuredListRow>
+            {/each}
+          </StructuredListBody>
+        </StructuredList>
+      </Column>
+    </Row>
+  {/if}
+</ListSearch>

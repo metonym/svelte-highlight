@@ -16,6 +16,7 @@
   } from "carbon-components-svelte";
   import { LogoGithub20 } from "carbon-icons-svelte";
   import { page } from "$app/stores";
+  import { tick } from "svelte";
 
   const routes = {
     "/": "Getting started",
@@ -59,6 +60,11 @@
         href="{href}"
         text="{text}"
         isSelected="{$page.path === href}"
+        on:click="{async () => {
+          await tick();
+          // TODO: only close if mobile (1056)
+          // if (isSideNavOpen) isSideNavOpen = false;
+        }}"
       />
     {/each}
   </SideNavItems>
