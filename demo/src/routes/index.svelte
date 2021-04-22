@@ -1,25 +1,22 @@
 <script>
-  import { Row, Column, CodeSnippet } from "carbon-components-svelte";
+  import { Row, Column, Link } from "carbon-components-svelte";
   import ScopedStyle from "$lib/ScopedStyle.svelte";
+  import CodeSnippet from "$lib/CodeSnippet.svelte";
 </script>
 
 <Row>
   <Column xlg="{12}" lg="{12}">
-    <h4>
-      svelte-highlight uses highlight.js to provide Svelte components for code
-      syntax highlighting.
+    <h4 class="mb-7">
+      svelte-highlight provides Svelte components for code syntax highlighting
+      using <Link
+        inline
+        style="font-size: inherit"
+        rel="external"
+        href="https://github.com/highlightjs/highlight.js">highlight.js</Link
+      >.
     </h4>
   </Column>
 </Row>
-
-<!-- <Row>
-  <Column xlg="{10}" lg="{10}">
-    <p>
-      Install the NPM module as a development dependency using either Yarn or
-      NPM.
-    </p>
-  </Column>
-</Row> -->
 
 <Row>
   <Column xlg="{10}" lg="{10}">
@@ -42,7 +39,7 @@
 
 <Row>
   <Column>
-    <h3>Highlight</h3>
+    <h3>Basic usage</h3>
   </Column>
 </Row>
 
@@ -57,13 +54,13 @@
 
 <Row>
   <Column>
-    <h3>HighlightSvelte</h3>
+    <h3>Svelte syntax highlighting</h3>
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <h3>HighlightAuto</h3>
+    <h3>Auto-highlighting</h3>
   </Column>
 </Row>
 
@@ -111,6 +108,19 @@
 
 <Row>
   <Column>
-    <h3>TypeScript support</h3>
+    <h3 class="mb-7">TypeScript support</h3>
+    <p class="mb-5">
+      Svelte version 3.31 or greater is required to use this library with
+      TypeScript.
+    </p>
+    <p class="mb-5">
+      TypeScript definitions are located in the <Link
+        inline
+        size="lg"
+        rel="external"
+        href="https://github.com/metonym/svelte-highlight/tree/master/types"
+        >types folder in the GitHub repository</Link
+      >.
+    </p>
   </Column>
 </Row>

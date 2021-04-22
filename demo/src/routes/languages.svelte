@@ -7,11 +7,11 @@
     StructuredListRow,
     StructuredListCell,
     StructuredListBody,
-    CodeSnippet,
   } from "carbon-components-svelte";
   import HighlightSvelte from "svelte-highlight/src/HighlightSvelte.svelte";
   import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
   import ListSearch from "$lib/ListSearch.svelte";
+  import CodeSnippet from "$lib/CodeSnippet.svelte";
   import languages from "$lib/languages.json";
 
   let useDirectImport = true;
