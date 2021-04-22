@@ -43,13 +43,13 @@
   </Column>
 </Row>
 
-<Row>
+<!-- <Row>
   <Column>
     <p class="body-short-01">
       Showing {filteredStyles.length} of {styles.length} styles
     </p>
   </Column>
-</Row>
+</Row> -->
 
 <Row>
   <Column>

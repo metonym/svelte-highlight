@@ -20,6 +20,10 @@ pre.hljs {
   margin-bottom: var(--cds-spacing-07);
 }
 
+.text-02 {
+  color: var(--cds-text-02);
+}
+
 .body-short-01 {
   font-family: var(--cds-body-short-01-font-family);
   font-weight: var(--cds-body-short-01-font-weight);

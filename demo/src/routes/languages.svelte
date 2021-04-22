@@ -59,13 +59,13 @@
   </Column>
 </Row>
 
-<Row>
+<!-- <Row>
   <Column>
-    <p class="body-short-01">
+    <p class="body-short-01 text-02">
       Showing {filteredLanguages.length} of {languages.length} languages
     </p>
   </Column>
-</Row>
+</Row> -->
 
 <Row>
   <Column>

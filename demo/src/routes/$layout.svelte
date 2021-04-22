@@ -18,17 +18,19 @@
   import { page } from "$app/stores";
 
   const routes = {
-    "/": "Usage",
+    "/": "Getting started",
     "/languages": "Languages",
     "/styles": "Styles",
   };
 
   let isSideNavOpen = false;
 
-  $: title = routes[$page.path];
+  $: title = $page.path === "/" ? "svelte-highlight" : routes[$page.path];
 </script>
 
-<svelte:head><title>{title}</title></svelte:head>
+<svelte:head>
+  <title>{title}</title>
+</svelte:head>
 
 <Header
   aria-label="Navigation"
