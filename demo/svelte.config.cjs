@@ -3,6 +3,7 @@ const { name } = require("../package.json");
 
 const BASE = process.env.BASE === "true";
 const BASE_PATH = `/${name}/`;
+const paths = BASE ? { base: BASE_PATH, assets: BASE_PATH } : {};
 
 /** @type {import('@sveltejs/kit').Config} */
 module.exports = {
@@ -12,11 +13,6 @@ module.exports = {
   kit: {
     adapter: static(),
     target: "#svelte",
-    paths: {
-      base: BASE ? BASE_PATH : undefined,
-      assets: BASE ? BASE_PATH : undefined,
-    },
-    ssr: false,
-    vite: { optimizeDeps: ["carbon-components-svelte", "clipboard-copy"] },
+    paths,
   },
 };

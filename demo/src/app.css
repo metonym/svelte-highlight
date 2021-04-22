@@ -1,24 +1,37 @@
-/* code {
-  font-size: 0.875rem;
-  font-family: Menlo;
-}
-
-.hljs.hljs {
-  padding: 1rem;
-  cursor: text;
-}
- */
-
 code {
-  font-size: 0.875rem;
+  font-size: 0.825rem;
   font-family: Menlo;
   line-height: 1.5;
 }
 
 pre.hljs {
-  padding: 1.25rem 1rem 1.5rem !important;
+  padding: 1.25rem 1rem 1.375rem !important;
+}
+
+.mb-3 {
+  margin-bottom: var(--cds-spacing-03);
 }
 
 .mb-5 {
   margin-bottom: var(--cds-spacing-05);
+}
+
+.mb-7 {
+  margin-bottom: var(--cds-spacing-07);
+}
+
+.body-short-01 {
+  font-family: var(--cds-body-short-01-font-family);
+  font-weight: var(--cds-body-short-01-font-weight);
+  font-size: var(--cds-body-short-01-font-size);
+  line-height: var(--cds-body-short-01-line-height);
+  letter-spacing: var(--cds-body-short-01-letter-spacing);
+}
+
+.label-01 {
+  font-family: var(--cds-label-01-font-family);
+  font-weight: var(--cds-label-01-font-weight);
+  font-size: var(--cds-label-01-font-size);
+  line-height: var(--cds-label-01-line-height);
+  letter-spacing: var(--cds-label-01-letter-spacing);
 }

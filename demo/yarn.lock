@@ -45,13 +45,12 @@ ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-carbon-components-svelte@^0.32.1:
-  version "0.32.1"
-  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.32.1.tgz#730afd461601f8c8968cf6b13cb5269adb07d786"
-  integrity sha512-48ezWmDQCqdfxQHWV4OaG984v8pLT6qEIHJ6nKbqpUMJ0+FR1Z755HEU1T/AyZebMY4808SF5xH7Ayi8PvAMSA==
+carbon-components-svelte@~0.31.0:
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.31.1.tgz#24fa89d4b80ac37949849d137adc11e8ceaa7f19"
+  integrity sha512-9b8yr3ASwjvl1JX9qBItpDQQgKT7Qv3Z2N8EzMS3M74RgT5icpjvkkKiDF4uWJx8u+eAPk4CIx/DYZgw/SUK8w==
   dependencies:
     carbon-icons-svelte "^10.27.0"
-    clipboard-copy "3.2.0"
     flatpickr "4.6.9"
 
 carbon-icons-svelte@^10.27.0:
@@ -71,11 +70,6 @@ cheap-watch@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cheap-watch/-/cheap-watch-1.0.3.tgz#3c4265718bcf8f1ae08f5e450f9f4693432e028e"
   integrity sha512-xC5CruMhLzjPwJ5ecUxGu1uGmwJQykUhqd2QrCrYbwvsFYdRyviu6jG9+pccwDXJR/OpmOTOJ9yLFunVgQu9wg==
-
-clipboard-copy@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/clipboard-copy/-/clipboard-copy-3.2.0.tgz#3c5b8651d3512dcfad295d77a9eb09e7fac8d5fb"
-  integrity sha512-vooFaGFL6ulEP1liiaWFBmmfuPm3cY3y7T9eB83ZTnYc/oFeAKsq3NcDrOkBC8XaauEE8zHQwI7k0+JSYiVQSQ==
 
 color-convert@^2.0.1:
   version "2.0.1"

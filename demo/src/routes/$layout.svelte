@@ -2,50 +2,91 @@
   import "carbon-components-svelte/css/all.css";
   import "../app.css";
   import {
+    Header,
+    HeaderUtilities,
+    HeaderActionLink,
+    SideNav,
+    SideNavItems,
+    SideNavLink,
+    SkipToContent,
     Grid,
     Row,
     Column,
     Content,
-    Tabs,
-    Tab,
-    TabContent,
   } from "carbon-components-svelte";
-  import Usage from "$lib/Usage.svelte";
-  import Languages from "$lib/Languages.svelte";
-  import Styles from "$lib/Styles.svelte";
+  import { LogoGithub20 } from "carbon-icons-svelte";
+  import { page } from "$app/stores";
 
-  let selected = 0;
+  const routes = {
+    "/": "Usage",
+    "/languages": "Languages",
+    "/styles": "Styles",
+  };
+
+  let isSideNavOpen = false;
+
+  $: title = routes[$page.path];
 </script>
 
-<Content style="background: none; padding: 0">
+<svelte:head><title>{title}</title></svelte:head>
+
+<Header
+  aria-label="Navigation"
+  href="/"
+  platformName="Svelte Highlight"
+  bind:isSideNavOpen
+>
+  <div slot="skip-to-content">
+    <SkipToContent />
+  </div>
+
+  <HeaderUtilities>
+    <HeaderActionLink
+      icon="{LogoGithub20}"
+      href="https://github.com/metonym/svelte-highlight"
+      target="_blank"
+    />
+  </HeaderUtilities>
+</Header>
+
+<SideNav bind:isOpen="{isSideNavOpen}">
+  <SideNavItems>
+    {#each Object.entries(routes) as [href, text]}
+      <SideNavLink
+        sveltekit:prefetch
+        href="{href}"
+        text="{text}"
+        isSelected="{$page.path === href}"
+      />
+    {/each}
+  </SideNavItems>
+</SideNav>
+
+<Content>
   <Grid padding>
     <Row>
       <Column>
-        <h2 class="mb-5">svelte-highlight</h2>
+        <h2>{title}</h2>
       </Column>
     </Row>
 
-    <Row>
-      <Column noGutter>
-        <Tabs bind:selected>
-          <Tab label="Usage" />
-          <Tab label="Languages" />
-          <Tab label="Styles" />
-          <div slot="content">
-            <Grid as fullWidth let:props>
-              <TabContent {...props}>
-                <Usage active="{selected === 0}" />
-              </TabContent>
-              <TabContent {...props}>
-                <Languages />
-              </TabContent>
-              <TabContent {...props}>
-                <Styles />
-              </TabContent>
-            </Grid>
-          </div>
-        </Tabs>
-      </Column>
-    </Row>
+    <slot />
   </Grid>
 </Content>
+
+<style>
+  @media (max-width: 1056px) {
+    :global(.bx--content) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  :global(.bx--side-nav ~ .bx--content) {
+    margin-left: 0;
+  }
+
+  :global(.bx--side-nav__overlay-active) {
+    z-index: 1;
+  }
+</style>
