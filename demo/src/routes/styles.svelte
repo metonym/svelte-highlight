@@ -63,35 +63,50 @@
   </Column>
 </Row>
 
-<Row>
-  <Column noGutter>
-    <StructuredList>
-      <StructuredListHead>
-        <StructuredListRow head>
-          <StructuredListCell head>Name</StructuredListCell>
-          <StructuredListCell head>Import</StructuredListCell>
-        </StructuredListRow>
-      </StructuredListHead>
-      <StructuredListBody>
-        {#each filteredStyles as style (style.name)}
-          <StructuredListRow>
-            <StructuredListCell>
-              <div class="mb-7">
-                <div class="label-01 mb-3">Language name</div>
-                <CodeSnippet type="inline" code="{style.name}" />
-              </div>
-
-              <div class="mb-7">
-                <div class="label-01 mb-3">Module name</div>
-                <CodeSnippet type="inline" code="{style.moduleName}" />
-              </div>
-            </StructuredListCell>
-            <StructuredListCell>
-              <ScopedStyle {...style} useInjectedStyles="{useInjectedStyles}" />
-            </StructuredListCell>
+{#if filteredStyles.length > 0}
+  <Row>
+    <Column noGutter>
+      <StructuredList>
+        <StructuredListHead>
+          <StructuredListRow head>
+            <StructuredListCell head>Name</StructuredListCell>
+            <StructuredListCell head>Import</StructuredListCell>
           </StructuredListRow>
-        {/each}
-      </StructuredListBody>
-    </StructuredList>
-  </Column>
-</Row>
+        </StructuredListHead>
+        <StructuredListBody>
+          {#each filteredStyles as style (style.name)}
+            <StructuredListRow>
+              <StructuredListCell>
+                <div class="mb-7">
+                  <div class="label-01 mb-3">Language name</div>
+                  <CodeSnippet type="inline" code="{style.name}" />
+                </div>
+
+                <div class="mb-7">
+                  <div class="label-01 mb-3">Module name</div>
+                  <CodeSnippet type="inline" code="{style.moduleName}" />
+                </div>
+              </StructuredListCell>
+              <StructuredListCell>
+                <ScopedStyle
+                  {...style}
+                  useInjectedStyles="{useInjectedStyles}"
+                />
+              </StructuredListCell>
+            </StructuredListRow>
+          {/each}
+        </StructuredListBody>
+      </StructuredList>
+    </Column>
+  </Row>
+{/if}
+
+{#if filteredStyles.length === 0}
+  <Row>
+    <Column>
+      <p>
+        No matches found for "{value}."
+      </p>
+    </Column>
+  </Row>
+{/if}
