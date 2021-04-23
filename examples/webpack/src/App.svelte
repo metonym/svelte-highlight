@@ -1,9 +1,9 @@
 <script>
-  import { Highlight } from "svelte-highlight";
-  import { typescript } from "svelte-highlight/languages";
-  import "svelte-highlight/styles/an-old-hope.css";
+  import Highlight from "svelte-highlight";
+  import typescript from "svelte-highlight/src/languages/typescript";
+  import "svelte-highlight/src/styles/atom-one-dark.css";
 
-  $: code = `const add = (a: number, b: number) => a + b;`;
+  const code = "const add = (a: number, b: number) => a + b;";
 </script>
 
 <Highlight language="{typescript}" code="{code}" />
