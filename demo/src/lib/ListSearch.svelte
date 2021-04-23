@@ -33,7 +33,7 @@
   <Column>
     <p>
       {items.length}
-      {itemName}s exported from highlight.js@{VERSION_HLJS}
+      {itemName}s exported from <code class="code">highlight.js</code> version {VERSION_HLJS}
     </p>
   </Column>
 </Row>

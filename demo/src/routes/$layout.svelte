@@ -28,6 +28,8 @@
     "/styles": "Styles",
   };
 
+  const HOMEPAGE = process.env.HOMEPAGE
+
   let isSideNavOpen = false;
 
   $: title = $page.path === "/" ? "Svelte Highlight" : routes[$page.path];
@@ -50,7 +52,7 @@
   <HeaderUtilities>
     <HeaderActionLink
       icon="{LogoGithub20}"
-      href="https://github.com/metonym/svelte-highlight"
+      href="{HOMEPAGE}"
       target="_blank"
     />
   </HeaderUtilities>
@@ -81,7 +83,6 @@
         <h2>{title}</h2>
       </Column>
     </Row>
-
     <slot />
   </Grid>
 </Content>
