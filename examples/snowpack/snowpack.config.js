@@ -1,4 +1,4 @@
+/** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
-  mount: { public: "/", src: "/a" },
   plugins: ["@snowpack/plugin-svelte"],
 };
