@@ -20,7 +20,11 @@ module.exports = {
               /process.env.VERSION_HLJS/g,
               JSON.stringify(dependencies["highlight.js"])
             )
-            .replace(/process.env.HOMEPAGE/g, JSON.stringify(homepage)).replace(/process.env.TS/g, JSON.stringify(new Date().toLocaleString())),
+            .replace(/process.env.HOMEPAGE/g, JSON.stringify(homepage))
+            .replace(
+              /process.env.TS/g,
+              JSON.stringify(new Date().toLocaleString())
+            ),
         };
       },
     },
