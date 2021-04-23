@@ -73,7 +73,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg="{10}" lg="{10}">
+  <Column noGutter>
     <ScopedStyle name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
   <Column xlg="{10}" lg="{10}">
@@ -113,7 +113,7 @@
       highlighting.
     </p>
   </Column>
-  <Column noGutter xlg="{10}" lg="{10}">
+  <Column noGutter>
     <ScopedStyleSvelte name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
@@ -132,7 +132,7 @@
       API from <code class="code">highlight.js</code>.
     </p>
   </Column>
-  <Column noGutter xlg="{10}" lg="{10}">
+  <Column noGutter>
     <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
