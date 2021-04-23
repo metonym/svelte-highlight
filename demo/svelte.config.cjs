@@ -15,12 +15,12 @@ module.exports = {
         return {
           code: content
             .replace(/process.env.NAME/g, JSON.stringify(name))
-            .replace(/process.env.VERSION$/g, JSON.stringify(version))
+            .replace(/process.env.VERSION_PACKAGE/g, JSON.stringify(version))
             .replace(
               /process.env.VERSION_HLJS/g,
               JSON.stringify(dependencies["highlight.js"])
             )
-            .replace(/process.env.HOMEPAGE/g, JSON.stringify(homepage)),
+            .replace(/process.env.HOMEPAGE/g, JSON.stringify(homepage)).replace(/process.env.TS/g, JSON.stringify(new Date().toLocaleString())),
         };
       },
     },
