@@ -4,7 +4,7 @@
 
 ## Available Scripts
 
-### `yarn start`
+### `yarn dev`
 
 Runs the project in development mode and watches for any changes.
 
