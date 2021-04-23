@@ -2,13 +2,14 @@
   import { Row, Column, Link } from "carbon-components-svelte";
   import ScopedStyle from "$lib/ScopedStyle.svelte";
   import CodeSnippet from "$lib/CodeSnippet.svelte";
+
+  const NAME = process.env.NAME;
 </script>
 
 <Row>
   <Column xlg="{12}" lg="{12}">
     <h4 class="mb-7">
-      svelte-highlight provides Svelte components for code syntax highlighting
-      using <Link
+      {NAME} provides Svelte components for code syntax highlighting using <Link
         inline
         style="font-size: inherit"
         rel="external"
@@ -22,11 +23,11 @@
   <Column xlg="{10}" lg="{10}">
     <p class="mb-5">Install using Yarn:</p>
     <Row class="mb-7" noGutter>
-      <CodeSnippet code="yarn add -D svelte-highlight" />
+      <CodeSnippet code="yarn add -D {NAME}" />
     </Row>
     <p class="mb-5">Install using NPM:</p>
     <Row class="mb-7" noGutter>
-      <CodeSnippet code="npm i -D svelte-highlight" />
+      <CodeSnippet code="npm i -D {NAME}" />
     </Row>
   </Column>
 </Row>

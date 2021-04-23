@@ -17,6 +17,8 @@
 
   import { Row, Column, Search, Toggle } from "carbon-components-svelte";
 
+  const VERSION_HLJS = process.env.VERSION_HLJS;
+
   let value = "";
 
   $: normalizedValue = value.trim().toLowerCase();
@@ -31,7 +33,7 @@
   <Column>
     <p>
       {items.length}
-      {itemName}s exported from highlight.js@10.7
+      {itemName}s exported from highlight.js@{VERSION_HLJS}
     </p>
   </Column>
 </Row>

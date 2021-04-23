@@ -17,6 +17,7 @@
   import { LogoGithub20 } from "carbon-icons-svelte";
   import { prefetchRoutes } from "$app/navigation";
   import { page } from "$app/stores";
+  import { base } from "$app/paths";
   import { onMount, tick } from "svelte";
 
   onMount(prefetchRoutes);
@@ -29,7 +30,7 @@
 
   let isSideNavOpen = false;
 
-  $: title = $page.path === "/" ? "svelte-highlight" : routes[$page.path];
+  $: title = $page.path === "/" ? "Svelte Highlight" : routes[$page.path];
 </script>
 
 <svelte:head>
@@ -38,8 +39,8 @@
 
 <Header
   aria-label="Navigation"
-  href="/"
   platformName="Svelte Highlight"
+  href="{base}/"
   bind:isSideNavOpen
 >
   <div slot="skip-to-content">
@@ -60,7 +61,7 @@
     {#each Object.entries(routes) as [href, text]}
       <SideNavLink
         sveltekit:prefetch
-        href="{href}"
+        href="{base}{href}"
         text="{text}"
         isSelected="{$page.path === href}"
         on:click="{async () => {
