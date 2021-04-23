@@ -9,7 +9,8 @@
 <Row>
   <Column xlg="{16}" lg="{16}">
     <h4 class="mb-7">
-      <code class="code">{NAME}</code> provides Svelte components for code syntax highlighting using <Link
+      <code class="code">{NAME}</code> provides Svelte components for code
+      syntax highlighting using <Link
         inline
         style="font-size: inherit"
         rel="external"

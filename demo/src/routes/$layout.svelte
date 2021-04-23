@@ -15,10 +15,11 @@
     Content,
   } from "carbon-components-svelte";
   import { LogoGithub20 } from "carbon-icons-svelte";
+  import { onMount, tick } from "svelte";
   import { prefetchRoutes } from "$app/navigation";
   import { page } from "$app/stores";
   import { base } from "$app/paths";
-  import { onMount, tick } from "svelte";
+  import Footer from "$lib/Footer.svelte";
 
   onMount(prefetchRoutes);
 
@@ -28,7 +29,7 @@
     "/styles": "Styles",
   };
 
-  const HOMEPAGE = process.env.HOMEPAGE
+  const HOMEPAGE = process.env.HOMEPAGE;
 
   let isSideNavOpen = false;
 
@@ -50,11 +51,7 @@
   </div>
 
   <HeaderUtilities>
-    <HeaderActionLink
-      icon="{LogoGithub20}"
-      href="{HOMEPAGE}"
-      target="_blank"
-    />
+    <HeaderActionLink icon="{LogoGithub20}" href="{HOMEPAGE}" target="_blank" />
   </HeaderUtilities>
 </Header>
 
@@ -84,6 +81,7 @@
       </Column>
     </Row>
     <slot />
+    <Footer />
   </Grid>
 </Content>
 

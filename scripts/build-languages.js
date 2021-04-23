@@ -3,10 +3,10 @@ const utils = require("./utils");
 
 async function buildLanguages() {
   let languages = hljs.listLanguages();
-  let markdown = utils.createMarkdown('Languages', languages.length);
+  let markdown = utils.createMarkdown("Languages", languages.length);
   let types = `interface HljsLanguage {
     register: (hljs: any) => Record<string, any>;
-  }\n\n`
+  }\n\n`;
   let base = "";
   let lang = [];
 

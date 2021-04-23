@@ -8,18 +8,22 @@
   position: relative;
   display: inline;
   font-weight: 400;
-  font-size: .875rem;
+  font-size: 0.875rem;
   line-height: 1.34;
-  letter-spacing: .32px;
-  border-radius: .25rem;
+  letter-spacing: 0.32px;
+  border-radius: 0.25rem;
   background-color: #e0e0e0;
   color: #161616;
-  padding: 0 .5rem;
+  padding: 0 0.5rem;
 }
 
 pre.hljs {
   padding: 1.25rem 1rem 1.375rem !important;
   max-width: 44rem;
+}
+
+.mr-3 {
+  margin-right: var(--cds-spacing-03);
 }
 
 .mb-3 {
