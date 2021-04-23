@@ -8,6 +8,8 @@
 
 This component wraps [highlight.js](https://github.com/highlightjs/highlight.js) to provide syntax highlighting in [Svelte 3](https://github.com/sveltejs/svelte).
 
+Try it in the [Svelte REPL](https://svelte.dev/repl/fe613c5a58f041b9babc801226a17220).
+
 ## [Live Demo](https://metonym.github.io/svelte-highlight)
 
 ## Installation
@@ -33,8 +35,8 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 ```svelte
 <script>
   import Highlight from "svelte-highlight";
-  import typescript from "svelte-highlight/languages/typescript";
-  import github from "svelte-highlight/styles/github";
+  import typescript from "svelte-highlight/src/languages/typescript";
+  import github from "svelte-highlight/src/styles/github";
 
   $: code = `const add = (a: number, b: number) => a + b;`;
 </script>
@@ -55,8 +57,8 @@ Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS
 ```svelte
 <script>
   import { Highlight } from "svelte-highlight";
-  import typescript from "svelte-highlight/languages/typescript";
-  import "svelte-highlight/styles/github.css";
+  import typescript from "svelte-highlight/src/languages/typescript";
+  import "svelte-highlight/src/styles/github.css";
 
   $: code = `const add = (a: number, b: number) => a + b;`;
 </script>
@@ -73,7 +75,7 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 ```svelte
 <script>
   import { HighlightSvelte } from "svelte-highlight";
-  import github from "svelte-highlight/styles/github";
+  import github from "svelte-highlight/src/styles/github";
 
   $: code = `<script>
   let count = 0;
@@ -98,7 +100,7 @@ The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js
 ```svelte
 <script>
   import { HighlightAuto } from "svelte-highlight";
-  import github from "svelte-highlight/styles/github";
+  import github from "svelte-highlight/src/styles/github";
 
   $: code = `<style>
   .body { margin: 0; padding: 0; }
@@ -145,7 +147,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ### Props
 
-| Property name                   | Value                                                 |
+| Prop name                       | Value                                                 |
 | ------------------------------- | ----------------------------------------------------- |
 | code                            | `string`                                              |
 | language (only for `Highlight`) | `object` { name: `string`; register: hljs => object } |
@@ -180,6 +182,7 @@ Svelte version 3.31 or greater is required to use this component with TypeScript
 - [examples/rollup](examples/rollup)
 - [examples/rollup-typescript](examples/rollup-typescript)
 - [examples/snowpack](examples/snowpack)
+- [examples/sveltekit](examples/sveltekit)
 - [examples/svite](examples/svite)
 - [examples/webpack](examples/webpack)
 
