@@ -11,14 +11,6 @@ export interface HighlightSvelteProps
 
 export default class HighlightSvelte extends SvelteComponentTyped<
   HighlightSvelteProps,
-  {
-    highlight: CustomEvent<{ highlighted: string }>;
-    click: WindowEventMap["click"];
-    mouseover: WindowEventMap["mouseover"];
-    mouseenter: WindowEventMap["mouseenter"];
-    mouseleave: WindowEventMap["mouseleave"];
-    focus: WindowEventMap["focus"];
-    blur: WindowEventMap["blur"];
-  },
+  { highlight: CustomEvent<{ highlighted: string }> },
   { default: { highlighted?: string } }
 > {}

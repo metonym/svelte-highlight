@@ -1,0 +1,20 @@
+{
+  "name": "demo",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "svelte-kit dev",
+    "build:local": "svelte-kit build",
+    "build": "BASE=true svelte-kit build",
+    "start": "svelte-kit start"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "next",
+    "@sveltejs/kit": "next",
+    "carbon-components-svelte": "~0.31.0",
+    "copy-to-clipboard": "^3.3.1",
+    "svelte": "^3.37.0",
+    "vite": "^2.2.1"
+  }
+}

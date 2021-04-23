@@ -1,2343 +1,2525 @@
 # Supported Styles
 
+> 97 styles exported from highlight.js@10.7.2
+
 ## a11y-dark (`a11yDark`)
 
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**Injected Styles**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/a11y-dark.css';
-</script>
-```
+  // base import
+  import { a11yDark } from "svelte-highlight/src/styles";
 
-### JavaScript
-
-```html
-<script>
-  import { a11yDark } from 'svelte-highlight/styles';
+  // direct import
+  import a11yDark from "svelte-highlight/src/styles/a11yDark";
 </script>
 
 <svelte:head>
   {@html a11yDark}
 </svelte:head>
 ```
-</details>
 
-## a11y-light (`a11yLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/a11y-light.css';
+  import "svelte-highlight/src/languages/a11y-dark.css";
 </script>
 ```
 
-### JavaScript
+## a11y-light (`a11yLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { a11yLight } from 'svelte-highlight/styles';
+  // base import
+  import { a11yLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import a11yLight from "svelte-highlight/src/styles/a11yLight";
 </script>
 
 <svelte:head>
   {@html a11yLight}
 </svelte:head>
 ```
-</details>
 
-## agate (`agate`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/agate.css';
+  import "svelte-highlight/src/languages/a11y-light.css";
 </script>
 ```
 
-### JavaScript
+## agate (`agate`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { agate } from 'svelte-highlight/styles';
+  // base import
+  import { agate } from "svelte-highlight/src/styles";
+
+  // direct import
+  import agate from "svelte-highlight/src/styles/agate";
 </script>
 
 <svelte:head>
   {@html agate}
 </svelte:head>
 ```
-</details>
 
-## an-old-hope (`anOldHope`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/an-old-hope.css';
+  import "svelte-highlight/src/languages/agate.css";
 </script>
 ```
 
-### JavaScript
+## an-old-hope (`anOldHope`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { anOldHope } from 'svelte-highlight/styles';
+  // base import
+  import { anOldHope } from "svelte-highlight/src/styles";
+
+  // direct import
+  import anOldHope from "svelte-highlight/src/styles/anOldHope";
 </script>
 
 <svelte:head>
   {@html anOldHope}
 </svelte:head>
 ```
-</details>
 
-## androidstudio (`androidstudio`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/androidstudio.css';
+  import "svelte-highlight/src/languages/an-old-hope.css";
 </script>
 ```
 
-### JavaScript
+## androidstudio (`androidstudio`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { androidstudio } from 'svelte-highlight/styles';
+  // base import
+  import { androidstudio } from "svelte-highlight/src/styles";
+
+  // direct import
+  import androidstudio from "svelte-highlight/src/styles/androidstudio";
 </script>
 
 <svelte:head>
   {@html androidstudio}
 </svelte:head>
 ```
-</details>
 
-## arduino-light (`arduinoLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/arduino-light.css';
+  import "svelte-highlight/src/languages/androidstudio.css";
 </script>
 ```
 
-### JavaScript
+## arduino-light (`arduinoLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { arduinoLight } from 'svelte-highlight/styles';
+  // base import
+  import { arduinoLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import arduinoLight from "svelte-highlight/src/styles/arduinoLight";
 </script>
 
 <svelte:head>
   {@html arduinoLight}
 </svelte:head>
 ```
-</details>
 
-## arta (`arta`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/arta.css';
+  import "svelte-highlight/src/languages/arduino-light.css";
 </script>
 ```
 
-### JavaScript
+## arta (`arta`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { arta } from 'svelte-highlight/styles';
+  // base import
+  import { arta } from "svelte-highlight/src/styles";
+
+  // direct import
+  import arta from "svelte-highlight/src/styles/arta";
 </script>
 
 <svelte:head>
   {@html arta}
 </svelte:head>
 ```
-</details>
 
-## ascetic (`ascetic`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/ascetic.css';
+  import "svelte-highlight/src/languages/arta.css";
 </script>
 ```
 
-### JavaScript
+## ascetic (`ascetic`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { ascetic } from 'svelte-highlight/styles';
+  // base import
+  import { ascetic } from "svelte-highlight/src/styles";
+
+  // direct import
+  import ascetic from "svelte-highlight/src/styles/ascetic";
 </script>
 
 <svelte:head>
   {@html ascetic}
 </svelte:head>
 ```
-</details>
 
-## atelier-cave-dark (`atelierCaveDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-cave-dark.css';
+  import "svelte-highlight/src/languages/ascetic.css";
 </script>
 ```
 
-### JavaScript
+## atelier-cave-dark (`atelierCaveDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierCaveDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierCaveDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierCaveDark from "svelte-highlight/src/styles/atelierCaveDark";
 </script>
 
 <svelte:head>
   {@html atelierCaveDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-cave-light (`atelierCaveLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-cave-light.css';
+  import "svelte-highlight/src/languages/atelier-cave-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-cave-light (`atelierCaveLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierCaveLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierCaveLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierCaveLight from "svelte-highlight/src/styles/atelierCaveLight";
 </script>
 
 <svelte:head>
   {@html atelierCaveLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-dune-dark (`atelierDuneDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-dune-dark.css';
+  import "svelte-highlight/src/languages/atelier-cave-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-dune-dark (`atelierDuneDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierDuneDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierDuneDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierDuneDark from "svelte-highlight/src/styles/atelierDuneDark";
 </script>
 
 <svelte:head>
   {@html atelierDuneDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-dune-light (`atelierDuneLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-dune-light.css';
+  import "svelte-highlight/src/languages/atelier-dune-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-dune-light (`atelierDuneLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierDuneLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierDuneLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierDuneLight from "svelte-highlight/src/styles/atelierDuneLight";
 </script>
 
 <svelte:head>
   {@html atelierDuneLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-estuary-dark (`atelierEstuaryDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-estuary-dark.css';
+  import "svelte-highlight/src/languages/atelier-dune-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-estuary-dark (`atelierEstuaryDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierEstuaryDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierEstuaryDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierEstuaryDark from "svelte-highlight/src/styles/atelierEstuaryDark";
 </script>
 
 <svelte:head>
   {@html atelierEstuaryDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-estuary-light (`atelierEstuaryLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-estuary-light.css';
+  import "svelte-highlight/src/languages/atelier-estuary-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-estuary-light (`atelierEstuaryLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierEstuaryLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierEstuaryLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierEstuaryLight from "svelte-highlight/src/styles/atelierEstuaryLight";
 </script>
 
 <svelte:head>
   {@html atelierEstuaryLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-forest-dark (`atelierForestDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-forest-dark.css';
+  import "svelte-highlight/src/languages/atelier-estuary-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-forest-dark (`atelierForestDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierForestDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierForestDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierForestDark from "svelte-highlight/src/styles/atelierForestDark";
 </script>
 
 <svelte:head>
   {@html atelierForestDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-forest-light (`atelierForestLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-forest-light.css';
+  import "svelte-highlight/src/languages/atelier-forest-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-forest-light (`atelierForestLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierForestLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierForestLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierForestLight from "svelte-highlight/src/styles/atelierForestLight";
 </script>
 
 <svelte:head>
   {@html atelierForestLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-heath-dark (`atelierHeathDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-heath-dark.css';
+  import "svelte-highlight/src/languages/atelier-forest-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-heath-dark (`atelierHeathDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierHeathDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierHeathDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierHeathDark from "svelte-highlight/src/styles/atelierHeathDark";
 </script>
 
 <svelte:head>
   {@html atelierHeathDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-heath-light (`atelierHeathLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-heath-light.css';
+  import "svelte-highlight/src/languages/atelier-heath-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-heath-light (`atelierHeathLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierHeathLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierHeathLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierHeathLight from "svelte-highlight/src/styles/atelierHeathLight";
 </script>
 
 <svelte:head>
   {@html atelierHeathLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-lakeside-dark (`atelierLakesideDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-lakeside-dark.css';
+  import "svelte-highlight/src/languages/atelier-heath-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-lakeside-dark (`atelierLakesideDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierLakesideDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierLakesideDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierLakesideDark from "svelte-highlight/src/styles/atelierLakesideDark";
 </script>
 
 <svelte:head>
   {@html atelierLakesideDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-lakeside-light (`atelierLakesideLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-lakeside-light.css';
+  import "svelte-highlight/src/languages/atelier-lakeside-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-lakeside-light (`atelierLakesideLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierLakesideLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierLakesideLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierLakesideLight from "svelte-highlight/src/styles/atelierLakesideLight";
 </script>
 
 <svelte:head>
   {@html atelierLakesideLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-plateau-dark (`atelierPlateauDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-plateau-dark.css';
+  import "svelte-highlight/src/languages/atelier-lakeside-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-plateau-dark (`atelierPlateauDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierPlateauDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierPlateauDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierPlateauDark from "svelte-highlight/src/styles/atelierPlateauDark";
 </script>
 
 <svelte:head>
   {@html atelierPlateauDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-plateau-light (`atelierPlateauLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-plateau-light.css';
+  import "svelte-highlight/src/languages/atelier-plateau-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-plateau-light (`atelierPlateauLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierPlateauLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierPlateauLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierPlateauLight from "svelte-highlight/src/styles/atelierPlateauLight";
 </script>
 
 <svelte:head>
   {@html atelierPlateauLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-savanna-dark (`atelierSavannaDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-savanna-dark.css';
+  import "svelte-highlight/src/languages/atelier-plateau-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-savanna-dark (`atelierSavannaDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierSavannaDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierSavannaDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierSavannaDark from "svelte-highlight/src/styles/atelierSavannaDark";
 </script>
 
 <svelte:head>
   {@html atelierSavannaDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-savanna-light (`atelierSavannaLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-savanna-light.css';
+  import "svelte-highlight/src/languages/atelier-savanna-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-savanna-light (`atelierSavannaLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierSavannaLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierSavannaLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierSavannaLight from "svelte-highlight/src/styles/atelierSavannaLight";
 </script>
 
 <svelte:head>
   {@html atelierSavannaLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-seaside-dark (`atelierSeasideDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-seaside-dark.css';
+  import "svelte-highlight/src/languages/atelier-savanna-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-seaside-dark (`atelierSeasideDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierSeasideDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierSeasideDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierSeasideDark from "svelte-highlight/src/styles/atelierSeasideDark";
 </script>
 
 <svelte:head>
   {@html atelierSeasideDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-seaside-light (`atelierSeasideLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-seaside-light.css';
+  import "svelte-highlight/src/languages/atelier-seaside-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-seaside-light (`atelierSeasideLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierSeasideLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierSeasideLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierSeasideLight from "svelte-highlight/src/styles/atelierSeasideLight";
 </script>
 
 <svelte:head>
   {@html atelierSeasideLight}
 </svelte:head>
 ```
-</details>
 
-## atelier-sulphurpool-dark (`atelierSulphurpoolDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-sulphurpool-dark.css';
+  import "svelte-highlight/src/languages/atelier-seaside-light.css";
 </script>
 ```
 
-### JavaScript
+## atelier-sulphurpool-dark (`atelierSulphurpoolDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierSulphurpoolDark } from 'svelte-highlight/styles';
+  // base import
+  import { atelierSulphurpoolDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierSulphurpoolDark from "svelte-highlight/src/styles/atelierSulphurpoolDark";
 </script>
 
 <svelte:head>
   {@html atelierSulphurpoolDark}
 </svelte:head>
 ```
-</details>
 
-## atelier-sulphurpool-light (`atelierSulphurpoolLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atelier-sulphurpool-light.css';
+  import "svelte-highlight/src/languages/atelier-sulphurpool-dark.css";
 </script>
 ```
 
-### JavaScript
+## atelier-sulphurpool-light (`atelierSulphurpoolLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atelierSulphurpoolLight } from 'svelte-highlight/styles';
+  // base import
+  import { atelierSulphurpoolLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atelierSulphurpoolLight from "svelte-highlight/src/styles/atelierSulphurpoolLight";
 </script>
 
 <svelte:head>
   {@html atelierSulphurpoolLight}
 </svelte:head>
 ```
-</details>
 
-## atom-one-dark-reasonable (`atomOneDarkReasonable`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atom-one-dark-reasonable.css';
+  import "svelte-highlight/src/languages/atelier-sulphurpool-light.css";
 </script>
 ```
 
-### JavaScript
+## atom-one-dark-reasonable (`atomOneDarkReasonable`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atomOneDarkReasonable } from 'svelte-highlight/styles';
+  // base import
+  import { atomOneDarkReasonable } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atomOneDarkReasonable from "svelte-highlight/src/styles/atomOneDarkReasonable";
 </script>
 
 <svelte:head>
   {@html atomOneDarkReasonable}
 </svelte:head>
 ```
-</details>
 
-## atom-one-dark (`atomOneDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atom-one-dark.css';
+  import "svelte-highlight/src/languages/atom-one-dark-reasonable.css";
 </script>
 ```
 
-### JavaScript
+## atom-one-dark (`atomOneDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atomOneDark } from 'svelte-highlight/styles';
+  // base import
+  import { atomOneDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atomOneDark from "svelte-highlight/src/styles/atomOneDark";
 </script>
 
 <svelte:head>
   {@html atomOneDark}
 </svelte:head>
 ```
-</details>
 
-## atom-one-light (`atomOneLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/atom-one-light.css';
+  import "svelte-highlight/src/languages/atom-one-dark.css";
 </script>
 ```
 
-### JavaScript
+## atom-one-light (`atomOneLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { atomOneLight } from 'svelte-highlight/styles';
+  // base import
+  import { atomOneLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import atomOneLight from "svelte-highlight/src/styles/atomOneLight";
 </script>
 
 <svelte:head>
   {@html atomOneLight}
 </svelte:head>
 ```
-</details>
 
-## brown-paper (`brownPaper`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/brown-paper.css';
+  import "svelte-highlight/src/languages/atom-one-light.css";
 </script>
 ```
 
-### JavaScript
+## brown-paper (`brownPaper`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { brownPaper } from 'svelte-highlight/styles';
+  // base import
+  import { brownPaper } from "svelte-highlight/src/styles";
+
+  // direct import
+  import brownPaper from "svelte-highlight/src/styles/brownPaper";
 </script>
 
 <svelte:head>
   {@html brownPaper}
 </svelte:head>
 ```
-</details>
 
-## codepen-embed (`codepenEmbed`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/codepen-embed.css';
+  import "svelte-highlight/src/languages/brown-paper.css";
 </script>
 ```
 
-### JavaScript
+## codepen-embed (`codepenEmbed`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { codepenEmbed } from 'svelte-highlight/styles';
+  // base import
+  import { codepenEmbed } from "svelte-highlight/src/styles";
+
+  // direct import
+  import codepenEmbed from "svelte-highlight/src/styles/codepenEmbed";
 </script>
 
 <svelte:head>
   {@html codepenEmbed}
 </svelte:head>
 ```
-</details>
 
-## color-brewer (`colorBrewer`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/color-brewer.css';
+  import "svelte-highlight/src/languages/codepen-embed.css";
 </script>
 ```
 
-### JavaScript
+## color-brewer (`colorBrewer`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { colorBrewer } from 'svelte-highlight/styles';
+  // base import
+  import { colorBrewer } from "svelte-highlight/src/styles";
+
+  // direct import
+  import colorBrewer from "svelte-highlight/src/styles/colorBrewer";
 </script>
 
 <svelte:head>
   {@html colorBrewer}
 </svelte:head>
 ```
-</details>
 
-## darcula (`darcula`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/darcula.css';
+  import "svelte-highlight/src/languages/color-brewer.css";
 </script>
 ```
 
-### JavaScript
+## darcula (`darcula`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { darcula } from 'svelte-highlight/styles';
+  // base import
+  import { darcula } from "svelte-highlight/src/styles";
+
+  // direct import
+  import darcula from "svelte-highlight/src/styles/darcula";
 </script>
 
 <svelte:head>
   {@html darcula}
 </svelte:head>
 ```
-</details>
 
-## dark (`dark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/dark.css';
+  import "svelte-highlight/src/languages/darcula.css";
 </script>
 ```
 
-### JavaScript
+## dark (`dark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { dark } from 'svelte-highlight/styles';
+  // base import
+  import { dark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import dark from "svelte-highlight/src/styles/dark";
 </script>
 
 <svelte:head>
   {@html dark}
 </svelte:head>
 ```
-</details>
 
-## default (`_default`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/default.css';
+  import "svelte-highlight/src/languages/dark.css";
 </script>
 ```
 
-### JavaScript
+## default (`_default`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { _default } from 'svelte-highlight/styles';
+  // base import
+  import { _default } from "svelte-highlight/src/styles";
+
+  // direct import
+  import _default from "svelte-highlight/src/styles/_default";
 </script>
 
 <svelte:head>
   {@html _default}
 </svelte:head>
 ```
-</details>
 
-## docco (`docco`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/docco.css';
+  import "svelte-highlight/src/languages/default.css";
 </script>
 ```
 
-### JavaScript
+## docco (`docco`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { docco } from 'svelte-highlight/styles';
+  // base import
+  import { docco } from "svelte-highlight/src/styles";
+
+  // direct import
+  import docco from "svelte-highlight/src/styles/docco";
 </script>
 
 <svelte:head>
   {@html docco}
 </svelte:head>
 ```
-</details>
 
-## dracula (`dracula`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/dracula.css';
+  import "svelte-highlight/src/languages/docco.css";
 </script>
 ```
 
-### JavaScript
+## dracula (`dracula`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { dracula } from 'svelte-highlight/styles';
+  // base import
+  import { dracula } from "svelte-highlight/src/styles";
+
+  // direct import
+  import dracula from "svelte-highlight/src/styles/dracula";
 </script>
 
 <svelte:head>
   {@html dracula}
 </svelte:head>
 ```
-</details>
 
-## far (`far`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/far.css';
+  import "svelte-highlight/src/languages/dracula.css";
 </script>
 ```
 
-### JavaScript
+## far (`far`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { far } from 'svelte-highlight/styles';
+  // base import
+  import { far } from "svelte-highlight/src/styles";
+
+  // direct import
+  import far from "svelte-highlight/src/styles/far";
 </script>
 
 <svelte:head>
   {@html far}
 </svelte:head>
 ```
-</details>
 
-## foundation (`foundation`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/foundation.css';
+  import "svelte-highlight/src/languages/far.css";
 </script>
 ```
 
-### JavaScript
+## foundation (`foundation`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { foundation } from 'svelte-highlight/styles';
+  // base import
+  import { foundation } from "svelte-highlight/src/styles";
+
+  // direct import
+  import foundation from "svelte-highlight/src/styles/foundation";
 </script>
 
 <svelte:head>
   {@html foundation}
 </svelte:head>
 ```
-</details>
 
-## github-gist (`githubGist`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/github-gist.css';
+  import "svelte-highlight/src/languages/foundation.css";
 </script>
 ```
 
-### JavaScript
+## github-gist (`githubGist`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { githubGist } from 'svelte-highlight/styles';
+  // base import
+  import { githubGist } from "svelte-highlight/src/styles";
+
+  // direct import
+  import githubGist from "svelte-highlight/src/styles/githubGist";
 </script>
 
 <svelte:head>
   {@html githubGist}
 </svelte:head>
 ```
-</details>
 
-## github (`github`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/github.css';
+  import "svelte-highlight/src/languages/github-gist.css";
 </script>
 ```
 
-### JavaScript
+## github (`github`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { github } from 'svelte-highlight/styles';
+  // base import
+  import { github } from "svelte-highlight/src/styles";
+
+  // direct import
+  import github from "svelte-highlight/src/styles/github";
 </script>
 
 <svelte:head>
   {@html github}
 </svelte:head>
 ```
-</details>
 
-## gml (`gml`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/gml.css';
+  import "svelte-highlight/src/languages/github.css";
 </script>
 ```
 
-### JavaScript
+## gml (`gml`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { gml } from 'svelte-highlight/styles';
+  // base import
+  import { gml } from "svelte-highlight/src/styles";
+
+  // direct import
+  import gml from "svelte-highlight/src/styles/gml";
 </script>
 
 <svelte:head>
   {@html gml}
 </svelte:head>
 ```
-</details>
 
-## googlecode (`googlecode`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/googlecode.css';
+  import "svelte-highlight/src/languages/gml.css";
 </script>
 ```
 
-### JavaScript
+## googlecode (`googlecode`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { googlecode } from 'svelte-highlight/styles';
+  // base import
+  import { googlecode } from "svelte-highlight/src/styles";
+
+  // direct import
+  import googlecode from "svelte-highlight/src/styles/googlecode";
 </script>
 
 <svelte:head>
   {@html googlecode}
 </svelte:head>
 ```
-</details>
 
-## gradient-dark (`gradientDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/gradient-dark.css';
+  import "svelte-highlight/src/languages/googlecode.css";
 </script>
 ```
 
-### JavaScript
+## gradient-dark (`gradientDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { gradientDark } from 'svelte-highlight/styles';
+  // base import
+  import { gradientDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import gradientDark from "svelte-highlight/src/styles/gradientDark";
 </script>
 
 <svelte:head>
   {@html gradientDark}
 </svelte:head>
 ```
-</details>
 
-## grayscale (`grayscale`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/grayscale.css';
+  import "svelte-highlight/src/languages/gradient-dark.css";
 </script>
 ```
 
-### JavaScript
+## gradient-light (`gradientLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { grayscale } from 'svelte-highlight/styles';
+  // base import
+  import { gradientLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import gradientLight from "svelte-highlight/src/styles/gradientLight";
+</script>
+
+<svelte:head>
+  {@html gradientLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/gradient-light.css";
+</script>
+```
+
+## grayscale (`grayscale`)
+
+**Injected Styles**
+
+```html
+<script>
+  // base import
+  import { grayscale } from "svelte-highlight/src/styles";
+
+  // direct import
+  import grayscale from "svelte-highlight/src/styles/grayscale";
 </script>
 
 <svelte:head>
   {@html grayscale}
 </svelte:head>
 ```
-</details>
 
-## gruvbox-dark (`gruvboxDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/gruvbox-dark.css';
+  import "svelte-highlight/src/languages/grayscale.css";
 </script>
 ```
 
-### JavaScript
+## gruvbox-dark (`gruvboxDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { gruvboxDark } from 'svelte-highlight/styles';
+  // base import
+  import { gruvboxDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import gruvboxDark from "svelte-highlight/src/styles/gruvboxDark";
 </script>
 
 <svelte:head>
   {@html gruvboxDark}
 </svelte:head>
 ```
-</details>
 
-## gruvbox-light (`gruvboxLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/gruvbox-light.css';
+  import "svelte-highlight/src/languages/gruvbox-dark.css";
 </script>
 ```
 
-### JavaScript
+## gruvbox-light (`gruvboxLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { gruvboxLight } from 'svelte-highlight/styles';
+  // base import
+  import { gruvboxLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import gruvboxLight from "svelte-highlight/src/styles/gruvboxLight";
 </script>
 
 <svelte:head>
   {@html gruvboxLight}
 </svelte:head>
 ```
-</details>
 
-## hopscotch (`hopscotch`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/hopscotch.css';
+  import "svelte-highlight/src/languages/gruvbox-light.css";
 </script>
 ```
 
-### JavaScript
+## hopscotch (`hopscotch`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { hopscotch } from 'svelte-highlight/styles';
+  // base import
+  import { hopscotch } from "svelte-highlight/src/styles";
+
+  // direct import
+  import hopscotch from "svelte-highlight/src/styles/hopscotch";
 </script>
 
 <svelte:head>
   {@html hopscotch}
 </svelte:head>
 ```
-</details>
 
-## hybrid (`hybrid`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/hybrid.css';
+  import "svelte-highlight/src/languages/hopscotch.css";
 </script>
 ```
 
-### JavaScript
+## hybrid (`hybrid`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { hybrid } from 'svelte-highlight/styles';
+  // base import
+  import { hybrid } from "svelte-highlight/src/styles";
+
+  // direct import
+  import hybrid from "svelte-highlight/src/styles/hybrid";
 </script>
 
 <svelte:head>
   {@html hybrid}
 </svelte:head>
 ```
-</details>
 
-## idea (`idea`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/idea.css';
+  import "svelte-highlight/src/languages/hybrid.css";
 </script>
 ```
 
-### JavaScript
+## idea (`idea`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { idea } from 'svelte-highlight/styles';
+  // base import
+  import { idea } from "svelte-highlight/src/styles";
+
+  // direct import
+  import idea from "svelte-highlight/src/styles/idea";
 </script>
 
 <svelte:head>
   {@html idea}
 </svelte:head>
 ```
-</details>
 
-## ir-black (`irBlack`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/ir-black.css';
+  import "svelte-highlight/src/languages/idea.css";
 </script>
 ```
 
-### JavaScript
+## ir-black (`irBlack`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { irBlack } from 'svelte-highlight/styles';
+  // base import
+  import { irBlack } from "svelte-highlight/src/styles";
+
+  // direct import
+  import irBlack from "svelte-highlight/src/styles/irBlack";
 </script>
 
 <svelte:head>
   {@html irBlack}
 </svelte:head>
 ```
-</details>
 
-## isbl-editor-dark (`isblEditorDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/isbl-editor-dark.css';
+  import "svelte-highlight/src/languages/ir-black.css";
 </script>
 ```
 
-### JavaScript
+## isbl-editor-dark (`isblEditorDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { isblEditorDark } from 'svelte-highlight/styles';
+  // base import
+  import { isblEditorDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import isblEditorDark from "svelte-highlight/src/styles/isblEditorDark";
 </script>
 
 <svelte:head>
   {@html isblEditorDark}
 </svelte:head>
 ```
-</details>
 
-## isbl-editor-light (`isblEditorLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/isbl-editor-light.css';
+  import "svelte-highlight/src/languages/isbl-editor-dark.css";
 </script>
 ```
 
-### JavaScript
+## isbl-editor-light (`isblEditorLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { isblEditorLight } from 'svelte-highlight/styles';
+  // base import
+  import { isblEditorLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import isblEditorLight from "svelte-highlight/src/styles/isblEditorLight";
 </script>
 
 <svelte:head>
   {@html isblEditorLight}
 </svelte:head>
 ```
-</details>
 
-## kimbie.dark (`kimbieDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/kimbie.dark.css';
+  import "svelte-highlight/src/languages/isbl-editor-light.css";
 </script>
 ```
 
-### JavaScript
+## kimbie.dark (`kimbieDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { kimbieDark } from 'svelte-highlight/styles';
+  // base import
+  import { kimbieDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import kimbieDark from "svelte-highlight/src/styles/kimbieDark";
 </script>
 
 <svelte:head>
   {@html kimbieDark}
 </svelte:head>
 ```
-</details>
 
-## kimbie.light (`kimbieLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/kimbie.light.css';
+  import "svelte-highlight/src/languages/kimbie.dark.css";
 </script>
 ```
 
-### JavaScript
+## kimbie.light (`kimbieLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { kimbieLight } from 'svelte-highlight/styles';
+  // base import
+  import { kimbieLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import kimbieLight from "svelte-highlight/src/styles/kimbieLight";
 </script>
 
 <svelte:head>
   {@html kimbieLight}
 </svelte:head>
 ```
-</details>
 
-## lightfair (`lightfair`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/lightfair.css';
+  import "svelte-highlight/src/languages/kimbie.light.css";
 </script>
 ```
 
-### JavaScript
+## lightfair (`lightfair`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { lightfair } from 'svelte-highlight/styles';
+  // base import
+  import { lightfair } from "svelte-highlight/src/styles";
+
+  // direct import
+  import lightfair from "svelte-highlight/src/styles/lightfair";
 </script>
 
 <svelte:head>
   {@html lightfair}
 </svelte:head>
 ```
-</details>
 
-## magula (`magula`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/magula.css';
+  import "svelte-highlight/src/languages/lightfair.css";
 </script>
 ```
 
-### JavaScript
+## lioshi (`lioshi`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { magula } from 'svelte-highlight/styles';
+  // base import
+  import { lioshi } from "svelte-highlight/src/styles";
+
+  // direct import
+  import lioshi from "svelte-highlight/src/styles/lioshi";
+</script>
+
+<svelte:head>
+  {@html lioshi}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/lioshi.css";
+</script>
+```
+
+## magula (`magula`)
+
+**Injected Styles**
+
+```html
+<script>
+  // base import
+  import { magula } from "svelte-highlight/src/styles";
+
+  // direct import
+  import magula from "svelte-highlight/src/styles/magula";
 </script>
 
 <svelte:head>
   {@html magula}
 </svelte:head>
 ```
-</details>
 
-## mono-blue (`monoBlue`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/mono-blue.css';
+  import "svelte-highlight/src/languages/magula.css";
 </script>
 ```
 
-### JavaScript
+## mono-blue (`monoBlue`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { monoBlue } from 'svelte-highlight/styles';
+  // base import
+  import { monoBlue } from "svelte-highlight/src/styles";
+
+  // direct import
+  import monoBlue from "svelte-highlight/src/styles/monoBlue";
 </script>
 
 <svelte:head>
   {@html monoBlue}
 </svelte:head>
 ```
-</details>
 
-## monokai-sublime (`monokaiSublime`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/monokai-sublime.css';
+  import "svelte-highlight/src/languages/mono-blue.css";
 </script>
 ```
 
-### JavaScript
+## monokai-sublime (`monokaiSublime`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { monokaiSublime } from 'svelte-highlight/styles';
+  // base import
+  import { monokaiSublime } from "svelte-highlight/src/styles";
+
+  // direct import
+  import monokaiSublime from "svelte-highlight/src/styles/monokaiSublime";
 </script>
 
 <svelte:head>
   {@html monokaiSublime}
 </svelte:head>
 ```
-</details>
 
-## monokai (`monokai`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/monokai.css';
+  import "svelte-highlight/src/languages/monokai-sublime.css";
 </script>
 ```
 
-### JavaScript
+## monokai (`monokai`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { monokai } from 'svelte-highlight/styles';
+  // base import
+  import { monokai } from "svelte-highlight/src/styles";
+
+  // direct import
+  import monokai from "svelte-highlight/src/styles/monokai";
 </script>
 
 <svelte:head>
   {@html monokai}
 </svelte:head>
 ```
-</details>
 
-## night-owl (`nightOwl`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/night-owl.css';
+  import "svelte-highlight/src/languages/monokai.css";
 </script>
 ```
 
-### JavaScript
+## night-owl (`nightOwl`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { nightOwl } from 'svelte-highlight/styles';
+  // base import
+  import { nightOwl } from "svelte-highlight/src/styles";
+
+  // direct import
+  import nightOwl from "svelte-highlight/src/styles/nightOwl";
 </script>
 
 <svelte:head>
   {@html nightOwl}
 </svelte:head>
 ```
-</details>
 
-## nord (`nord`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/nord.css';
+  import "svelte-highlight/src/languages/night-owl.css";
 </script>
 ```
 
-### JavaScript
+## nnfx-dark (`nnfxDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { nord } from 'svelte-highlight/styles';
+  // base import
+  import { nnfxDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import nnfxDark from "svelte-highlight/src/styles/nnfxDark";
+</script>
+
+<svelte:head>
+  {@html nnfxDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/nnfx-dark.css";
+</script>
+```
+
+## nnfx (`nnfx`)
+
+**Injected Styles**
+
+```html
+<script>
+  // base import
+  import { nnfx } from "svelte-highlight/src/styles";
+
+  // direct import
+  import nnfx from "svelte-highlight/src/styles/nnfx";
+</script>
+
+<svelte:head>
+  {@html nnfx}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/nnfx.css";
+</script>
+```
+
+## nord (`nord`)
+
+**Injected Styles**
+
+```html
+<script>
+  // base import
+  import { nord } from "svelte-highlight/src/styles";
+
+  // direct import
+  import nord from "svelte-highlight/src/styles/nord";
 </script>
 
 <svelte:head>
   {@html nord}
 </svelte:head>
 ```
-</details>
 
-## obsidian (`obsidian`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/obsidian.css';
+  import "svelte-highlight/src/languages/nord.css";
 </script>
 ```
 
-### JavaScript
+## obsidian (`obsidian`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { obsidian } from 'svelte-highlight/styles';
+  // base import
+  import { obsidian } from "svelte-highlight/src/styles";
+
+  // direct import
+  import obsidian from "svelte-highlight/src/styles/obsidian";
 </script>
 
 <svelte:head>
   {@html obsidian}
 </svelte:head>
 ```
-</details>
 
-## ocean (`ocean`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/ocean.css';
+  import "svelte-highlight/src/languages/obsidian.css";
 </script>
 ```
 
-### JavaScript
+## ocean (`ocean`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { ocean } from 'svelte-highlight/styles';
+  // base import
+  import { ocean } from "svelte-highlight/src/styles";
+
+  // direct import
+  import ocean from "svelte-highlight/src/styles/ocean";
 </script>
 
 <svelte:head>
   {@html ocean}
 </svelte:head>
 ```
-</details>
 
-## paraiso-dark (`paraisoDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/paraiso-dark.css';
+  import "svelte-highlight/src/languages/ocean.css";
 </script>
 ```
 
-### JavaScript
+## paraiso-dark (`paraisoDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { paraisoDark } from 'svelte-highlight/styles';
+  // base import
+  import { paraisoDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import paraisoDark from "svelte-highlight/src/styles/paraisoDark";
 </script>
 
 <svelte:head>
   {@html paraisoDark}
 </svelte:head>
 ```
-</details>
 
-## paraiso-light (`paraisoLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/paraiso-light.css';
+  import "svelte-highlight/src/languages/paraiso-dark.css";
 </script>
 ```
 
-### JavaScript
+## paraiso-light (`paraisoLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { paraisoLight } from 'svelte-highlight/styles';
+  // base import
+  import { paraisoLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import paraisoLight from "svelte-highlight/src/styles/paraisoLight";
 </script>
 
 <svelte:head>
   {@html paraisoLight}
 </svelte:head>
 ```
-</details>
 
-## pojoaque (`pojoaque`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/pojoaque.css';
+  import "svelte-highlight/src/languages/paraiso-light.css";
 </script>
 ```
 
-### JavaScript
+## pojoaque (`pojoaque`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { pojoaque } from 'svelte-highlight/styles';
+  // base import
+  import { pojoaque } from "svelte-highlight/src/styles";
+
+  // direct import
+  import pojoaque from "svelte-highlight/src/styles/pojoaque";
 </script>
 
 <svelte:head>
   {@html pojoaque}
 </svelte:head>
 ```
-</details>
 
-## purebasic (`purebasic`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/purebasic.css';
+  import "svelte-highlight/src/languages/pojoaque.css";
 </script>
 ```
 
-### JavaScript
+## purebasic (`purebasic`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { purebasic } from 'svelte-highlight/styles';
+  // base import
+  import { purebasic } from "svelte-highlight/src/styles";
+
+  // direct import
+  import purebasic from "svelte-highlight/src/styles/purebasic";
 </script>
 
 <svelte:head>
   {@html purebasic}
 </svelte:head>
 ```
-</details>
 
-## qtcreator_dark (`qtcreator_dark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/qtcreator_dark.css';
+  import "svelte-highlight/src/languages/purebasic.css";
 </script>
 ```
 
-### JavaScript
+## qtcreator_dark (`qtcreator_dark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { qtcreator_dark } from 'svelte-highlight/styles';
+  // base import
+  import { qtcreator_dark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import qtcreator_dark from "svelte-highlight/src/styles/qtcreator_dark";
 </script>
 
 <svelte:head>
   {@html qtcreator_dark}
 </svelte:head>
 ```
-</details>
 
-## qtcreator_light (`qtcreator_light`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/qtcreator_light.css';
+  import "svelte-highlight/src/languages/qtcreator_dark.css";
 </script>
 ```
 
-### JavaScript
+## qtcreator_light (`qtcreator_light`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { qtcreator_light } from 'svelte-highlight/styles';
+  // base import
+  import { qtcreator_light } from "svelte-highlight/src/styles";
+
+  // direct import
+  import qtcreator_light from "svelte-highlight/src/styles/qtcreator_light";
 </script>
 
 <svelte:head>
   {@html qtcreator_light}
 </svelte:head>
 ```
-</details>
 
-## railscasts (`railscasts`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/railscasts.css';
+  import "svelte-highlight/src/languages/qtcreator_light.css";
 </script>
 ```
 
-### JavaScript
+## railscasts (`railscasts`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { railscasts } from 'svelte-highlight/styles';
+  // base import
+  import { railscasts } from "svelte-highlight/src/styles";
+
+  // direct import
+  import railscasts from "svelte-highlight/src/styles/railscasts";
 </script>
 
 <svelte:head>
   {@html railscasts}
 </svelte:head>
 ```
-</details>
 
-## rainbow (`rainbow`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/rainbow.css';
+  import "svelte-highlight/src/languages/railscasts.css";
 </script>
 ```
 
-### JavaScript
+## rainbow (`rainbow`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { rainbow } from 'svelte-highlight/styles';
+  // base import
+  import { rainbow } from "svelte-highlight/src/styles";
+
+  // direct import
+  import rainbow from "svelte-highlight/src/styles/rainbow";
 </script>
 
 <svelte:head>
   {@html rainbow}
 </svelte:head>
 ```
-</details>
 
-## routeros (`routeros`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/routeros.css';
+  import "svelte-highlight/src/languages/rainbow.css";
 </script>
 ```
 
-### JavaScript
+## routeros (`routeros`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { routeros } from 'svelte-highlight/styles';
+  // base import
+  import { routeros } from "svelte-highlight/src/styles";
+
+  // direct import
+  import routeros from "svelte-highlight/src/styles/routeros";
 </script>
 
 <svelte:head>
   {@html routeros}
 </svelte:head>
 ```
-</details>
 
-## school-book (`schoolBook`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/school-book.css';
+  import "svelte-highlight/src/languages/routeros.css";
 </script>
 ```
 
-### JavaScript
+## school-book (`schoolBook`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { schoolBook } from 'svelte-highlight/styles';
+  // base import
+  import { schoolBook } from "svelte-highlight/src/styles";
+
+  // direct import
+  import schoolBook from "svelte-highlight/src/styles/schoolBook";
 </script>
 
 <svelte:head>
   {@html schoolBook}
 </svelte:head>
 ```
-</details>
 
-## shades-of-purple (`shadesOfPurple`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/shades-of-purple.css';
+  import "svelte-highlight/src/languages/school-book.css";
 </script>
 ```
 
-### JavaScript
+## shades-of-purple (`shadesOfPurple`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { shadesOfPurple } from 'svelte-highlight/styles';
+  // base import
+  import { shadesOfPurple } from "svelte-highlight/src/styles";
+
+  // direct import
+  import shadesOfPurple from "svelte-highlight/src/styles/shadesOfPurple";
 </script>
 
 <svelte:head>
   {@html shadesOfPurple}
 </svelte:head>
 ```
-</details>
 
-## solarized-dark (`solarizedDark`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/solarized-dark.css';
+  import "svelte-highlight/src/languages/shades-of-purple.css";
 </script>
 ```
 
-### JavaScript
+## solarized-dark (`solarizedDark`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { solarizedDark } from 'svelte-highlight/styles';
+  // base import
+  import { solarizedDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import solarizedDark from "svelte-highlight/src/styles/solarizedDark";
 </script>
 
 <svelte:head>
   {@html solarizedDark}
 </svelte:head>
 ```
-</details>
 
-## solarized-light (`solarizedLight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/solarized-light.css';
+  import "svelte-highlight/src/languages/solarized-dark.css";
 </script>
 ```
 
-### JavaScript
+## solarized-light (`solarizedLight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { solarizedLight } from 'svelte-highlight/styles';
+  // base import
+  import { solarizedLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import solarizedLight from "svelte-highlight/src/styles/solarizedLight";
 </script>
 
 <svelte:head>
   {@html solarizedLight}
 </svelte:head>
 ```
-</details>
 
-## sunburst (`sunburst`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/sunburst.css';
+  import "svelte-highlight/src/languages/solarized-light.css";
 </script>
 ```
 
-### JavaScript
+## srcery (`srcery`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { sunburst } from 'svelte-highlight/styles';
+  // base import
+  import { srcery } from "svelte-highlight/src/styles";
+
+  // direct import
+  import srcery from "svelte-highlight/src/styles/srcery";
+</script>
+
+<svelte:head>
+  {@html srcery}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/srcery.css";
+</script>
+```
+
+## stackoverflow-dark (`stackoverflowDark`)
+
+**Injected Styles**
+
+```html
+<script>
+  // base import
+  import { stackoverflowDark } from "svelte-highlight/src/styles";
+
+  // direct import
+  import stackoverflowDark from "svelte-highlight/src/styles/stackoverflowDark";
+</script>
+
+<svelte:head>
+  {@html stackoverflowDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/stackoverflow-dark.css";
+</script>
+```
+
+## stackoverflow-light (`stackoverflowLight`)
+
+**Injected Styles**
+
+```html
+<script>
+  // base import
+  import { stackoverflowLight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import stackoverflowLight from "svelte-highlight/src/styles/stackoverflowLight";
+</script>
+
+<svelte:head>
+  {@html stackoverflowLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/stackoverflow-light.css";
+</script>
+```
+
+## sunburst (`sunburst`)
+
+**Injected Styles**
+
+```html
+<script>
+  // base import
+  import { sunburst } from "svelte-highlight/src/styles";
+
+  // direct import
+  import sunburst from "svelte-highlight/src/styles/sunburst";
 </script>
 
 <svelte:head>
   {@html sunburst}
 </svelte:head>
 ```
-</details>
 
-## tomorrow-night-blue (`tomorrowNightBlue`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrow-night-blue.css';
+  import "svelte-highlight/src/languages/sunburst.css";
 </script>
 ```
 
-### JavaScript
+## tomorrow-night-blue (`tomorrowNightBlue`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { tomorrowNightBlue } from 'svelte-highlight/styles';
+  // base import
+  import { tomorrowNightBlue } from "svelte-highlight/src/styles";
+
+  // direct import
+  import tomorrowNightBlue from "svelte-highlight/src/styles/tomorrowNightBlue";
 </script>
 
 <svelte:head>
   {@html tomorrowNightBlue}
 </svelte:head>
 ```
-</details>
 
-## tomorrow-night-bright (`tomorrowNightBright`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrow-night-bright.css';
+  import "svelte-highlight/src/languages/tomorrow-night-blue.css";
 </script>
 ```
 
-### JavaScript
+## tomorrow-night-bright (`tomorrowNightBright`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { tomorrowNightBright } from 'svelte-highlight/styles';
+  // base import
+  import { tomorrowNightBright } from "svelte-highlight/src/styles";
+
+  // direct import
+  import tomorrowNightBright from "svelte-highlight/src/styles/tomorrowNightBright";
 </script>
 
 <svelte:head>
   {@html tomorrowNightBright}
 </svelte:head>
 ```
-</details>
 
-## tomorrow-night-eighties (`tomorrowNightEighties`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrow-night-eighties.css';
+  import "svelte-highlight/src/languages/tomorrow-night-bright.css";
 </script>
 ```
 
-### JavaScript
+## tomorrow-night-eighties (`tomorrowNightEighties`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { tomorrowNightEighties } from 'svelte-highlight/styles';
+  // base import
+  import { tomorrowNightEighties } from "svelte-highlight/src/styles";
+
+  // direct import
+  import tomorrowNightEighties from "svelte-highlight/src/styles/tomorrowNightEighties";
 </script>
 
 <svelte:head>
   {@html tomorrowNightEighties}
 </svelte:head>
 ```
-</details>
 
-## tomorrow-night (`tomorrowNight`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrow-night.css';
+  import "svelte-highlight/src/languages/tomorrow-night-eighties.css";
 </script>
 ```
 
-### JavaScript
+## tomorrow-night (`tomorrowNight`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { tomorrowNight } from 'svelte-highlight/styles';
+  // base import
+  import { tomorrowNight } from "svelte-highlight/src/styles";
+
+  // direct import
+  import tomorrowNight from "svelte-highlight/src/styles/tomorrowNight";
 </script>
 
 <svelte:head>
   {@html tomorrowNight}
 </svelte:head>
 ```
-</details>
 
-## tomorrow (`tomorrow`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/tomorrow.css';
+  import "svelte-highlight/src/languages/tomorrow-night.css";
 </script>
 ```
 
-### JavaScript
+## tomorrow (`tomorrow`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { tomorrow } from 'svelte-highlight/styles';
+  // base import
+  import { tomorrow } from "svelte-highlight/src/styles";
+
+  // direct import
+  import tomorrow from "svelte-highlight/src/styles/tomorrow";
 </script>
 
 <svelte:head>
   {@html tomorrow}
 </svelte:head>
 ```
-</details>
 
-## vs (`vs`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/vs.css';
+  import "svelte-highlight/src/languages/tomorrow.css";
 </script>
 ```
 
-### JavaScript
+## vs (`vs`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { vs } from 'svelte-highlight/styles';
+  // base import
+  import { vs } from "svelte-highlight/src/styles";
+
+  // direct import
+  import vs from "svelte-highlight/src/styles/vs";
 </script>
 
 <svelte:head>
   {@html vs}
 </svelte:head>
 ```
-</details>
 
-## vs2015 (`vs2015`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/vs2015.css';
+  import "svelte-highlight/src/languages/vs.css";
 </script>
 ```
 
-### JavaScript
+## vs2015 (`vs2015`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { vs2015 } from 'svelte-highlight/styles';
+  // base import
+  import { vs2015 } from "svelte-highlight/src/styles";
+
+  // direct import
+  import vs2015 from "svelte-highlight/src/styles/vs2015";
 </script>
 
 <svelte:head>
   {@html vs2015}
 </svelte:head>
 ```
-</details>
 
-## xcode (`xcode`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/xcode.css';
+  import "svelte-highlight/src/languages/vs2015.css";
 </script>
 ```
 
-### JavaScript
+## xcode (`xcode`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { xcode } from 'svelte-highlight/styles';
+  // base import
+  import { xcode } from "svelte-highlight/src/styles";
+
+  // direct import
+  import xcode from "svelte-highlight/src/styles/xcode";
 </script>
 
 <svelte:head>
   {@html xcode}
 </svelte:head>
 ```
-</details>
 
-## xt256 (`xt256`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/xt256.css';
+  import "svelte-highlight/src/languages/xcode.css";
 </script>
 ```
 
-### JavaScript
+## xt256 (`xt256`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { xt256 } from 'svelte-highlight/styles';
+  // base import
+  import { xt256 } from "svelte-highlight/src/styles";
+
+  // direct import
+  import xt256 from "svelte-highlight/src/styles/xt256";
 </script>
 
 <svelte:head>
   {@html xt256}
 </svelte:head>
 ```
-</details>
 
-## zenburn (`zenburn`)
-
-<details>
-<summary>Usage</summary>
-
-### CSS Stylesheet
+**CSS StyleSheet**
 
 ```html
 <script>
-  import 'svelte-highlight/styles/zenburn.css';
+  import "svelte-highlight/src/languages/xt256.css";
 </script>
 ```
 
-### JavaScript
+## zenburn (`zenburn`)
+
+**Injected Styles**
 
 ```html
 <script>
-  import { zenburn } from 'svelte-highlight/styles';
+  // base import
+  import { zenburn } from "svelte-highlight/src/styles";
+
+  // direct import
+  import zenburn from "svelte-highlight/src/styles/zenburn";
 </script>
 
 <svelte:head>
   {@html zenburn}
 </svelte:head>
 ```
-</details>
 
+**CSS StyleSheet**
 
+```html
+<script>
+  import "svelte-highlight/src/languages/zenburn.css";
+</script>
+```

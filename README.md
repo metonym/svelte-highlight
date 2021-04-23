@@ -10,26 +10,7 @@ This component wraps [highlight.js](https://github.com/highlightjs/highlight.js)
 
 ## [Live Demo](https://metonym.github.io/svelte-highlight)
 
-## Table of Contents
-
-- [Install](#install)
-- [Usage](#usage)
-  - [Injected Styles](#injected-styles)
-  - [CSS StyleSheet](#css-stylesheet)
-- [Svelte Syntax Highlighting](#svelte-syntax-highlighting)
-- [Custom Language](#custom-language)
-- [API](#api)
-  - [Props](#props)
-  - [Forwarded Events](#forwarded-events)
-  - [Dispatched Events](#dispatched-events)
-- [TypeScript](#typescript)
-- [Supported Languages](#supported-languages)
-- [Supported Styles](#supported-styles)
-- [Examples](#examples)
-- [Changelog](#changelog)
-- [License](#license)
-
-## Install
+## Installation
 
 ```bash
 yarn add -D svelte-highlight
@@ -41,8 +22,8 @@ npm i -D svelte-highlight
 
 There are two ways to apply `highlight.js` styles:
 
-1. inject JavaScript styles through `svelte:head`
-2. import CSS StyleSheets using a css file loader.
+1. JavaScript styles injected into the DOM through `svelte:head`
+2. CSS StyleSheets imported using a file loader
 
 ### Injected Styles
 
@@ -51,9 +32,9 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 <!-- prettier-ignore-start -->
 ```svelte
 <script>
-  import { Highlight } from "svelte-highlight";
-  import { typescript } from "svelte-highlight/languages";
-  import { github } from "svelte-highlight/styles";
+  import Highlight from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
 
   $: code = `const add = (a: number, b: number) => a + b;`;
 </script>
@@ -68,13 +49,13 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 
 ### CSS StyleSheet
 
-Importing a CSS StyleSheet in Svelte requires a CSS file loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
+Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS file loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
 
 <!-- prettier-ignore-start -->
 ```svelte
 <script>
   import { Highlight } from "svelte-highlight";
-  import { typescript } from "svelte-highlight/languages";
+  import typescript from "svelte-highlight/languages/typescript";
   import "svelte-highlight/styles/github.css";
 
   $: code = `const add = (a: number, b: number) => a + b;`;
@@ -86,13 +67,13 @@ Importing a CSS StyleSheet in Svelte requires a CSS file loader. Refer to [examp
 
 ## Svelte Syntax Highlighting
 
-This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-svelte) to highlight Svelte code.
+Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 <!-- prettier-ignore-start -->
 ```svelte
 <script>
   import { HighlightSvelte } from "svelte-highlight";
-  import { github } from "svelte-highlight/styles";
+  import github from "svelte-highlight/styles/github";
 
   $: code = `<script>
   let count = 0;
@@ -106,6 +87,29 @@ This library uses [highlightjs-svelte](https://github.com/AlexxNB/highlightjs-sv
 </svelte:head>
 
 <HighlightSvelte {code} />
+```
+<!-- prettier-ignore-end -->
+
+## Auto-highlighting
+
+The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js`.
+
+<!-- prettier-ignore-start -->
+```svelte
+<script>
+  import { HighlightAuto } from "svelte-highlight";
+  import github from "svelte-highlight/styles/github";
+
+  $: code = `<style>
+  .body { margin: 0; padding: 0; }
+<\/style>;
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<HighlightAuto {code} />
 ```
 <!-- prettier-ignore-end -->
 
@@ -141,22 +145,11 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ### Props
 
-| Property name    | Value                                                 |
-| ---------------- | ----------------------------------------------------- |
-| code             | `string`                                              |
-| language         | `object` { name: `string`; register: hljs => object } |
-| `...$$restProps` | (forwarded to the `pre` element)                      |
-
-### Forwarded Events
-
-The following events are forwarded to the `pre` element:
-
-- on:click
-- on:mouseover
-- on:mouseenter
-- on:mouseleave
-- on:focus
-- on:blur
+| Property name                   | Value                                                 |
+| ------------------------------- | ----------------------------------------------------- |
+| code                            | `string`                                              |
+| language (only for `Highlight`) | `object` { name: `string`; register: hljs => object } |
+| `...$$restProps`                | (forwarded to the `pre` element)                      |
 
 ### Dispatched Events
 

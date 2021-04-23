@@ -1,2223 +1,2295 @@
 # Supported Languages
 
-## 1c (`_1c`)
+> 191 languages exported from highlight.js@10.7.2
 
-<details>
-<summary>Usage</summary>
+## 1c (`_1c`)
 
 ```html
 <script>
-  import { _1c } from 'svelte-highlight/languages';
+  // base import
+  import { _1c } from "svelte-highlight/src/languages";
+
+  // direct import
+  import _1c from "svelte-highlight/src/languages/1c";
 </script>
 ```
-</details>
 
 ## abnf (`abnf`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { abnf } from 'svelte-highlight/languages';
+  // base import
+  import { abnf } from "svelte-highlight/src/languages";
+
+  // direct import
+  import abnf from "svelte-highlight/src/languages/abnf";
 </script>
 ```
-</details>
 
 ## accesslog (`accesslog`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { accesslog } from 'svelte-highlight/languages';
+  // base import
+  import { accesslog } from "svelte-highlight/src/languages";
+
+  // direct import
+  import accesslog from "svelte-highlight/src/languages/accesslog";
 </script>
 ```
-</details>
 
 ## actionscript (`actionscript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { actionscript } from 'svelte-highlight/languages';
+  // base import
+  import { actionscript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import actionscript from "svelte-highlight/src/languages/actionscript";
 </script>
 ```
-</details>
 
 ## ada (`ada`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { ada } from 'svelte-highlight/languages';
+  // base import
+  import { ada } from "svelte-highlight/src/languages";
+
+  // direct import
+  import ada from "svelte-highlight/src/languages/ada";
 </script>
 ```
-</details>
 
 ## angelscript (`angelscript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { angelscript } from 'svelte-highlight/languages';
+  // base import
+  import { angelscript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import angelscript from "svelte-highlight/src/languages/angelscript";
 </script>
 ```
-</details>
 
 ## apache (`apache`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { apache } from 'svelte-highlight/languages';
+  // base import
+  import { apache } from "svelte-highlight/src/languages";
+
+  // direct import
+  import apache from "svelte-highlight/src/languages/apache";
 </script>
 ```
-</details>
 
 ## applescript (`applescript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { applescript } from 'svelte-highlight/languages';
+  // base import
+  import { applescript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import applescript from "svelte-highlight/src/languages/applescript";
 </script>
 ```
-</details>
 
 ## arcade (`arcade`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { arcade } from 'svelte-highlight/languages';
+  // base import
+  import { arcade } from "svelte-highlight/src/languages";
+
+  // direct import
+  import arcade from "svelte-highlight/src/languages/arcade";
 </script>
 ```
-</details>
-
-## cpp (`cpp`)
-
-<details>
-<summary>Usage</summary>
-
-```html
-<script>
-  import { cpp } from 'svelte-highlight/languages';
-</script>
-```
-</details>
 
 ## arduino (`arduino`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { arduino } from 'svelte-highlight/languages';
+  // base import
+  import { arduino } from "svelte-highlight/src/languages";
+
+  // direct import
+  import arduino from "svelte-highlight/src/languages/arduino";
 </script>
 ```
-</details>
 
 ## armasm (`armasm`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { armasm } from 'svelte-highlight/languages';
+  // base import
+  import { armasm } from "svelte-highlight/src/languages";
+
+  // direct import
+  import armasm from "svelte-highlight/src/languages/armasm";
 </script>
 ```
-</details>
 
 ## xml (`xml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { xml } from 'svelte-highlight/languages';
+  // base import
+  import { xml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import xml from "svelte-highlight/src/languages/xml";
 </script>
 ```
-</details>
 
 ## asciidoc (`asciidoc`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { asciidoc } from 'svelte-highlight/languages';
+  // base import
+  import { asciidoc } from "svelte-highlight/src/languages";
+
+  // direct import
+  import asciidoc from "svelte-highlight/src/languages/asciidoc";
 </script>
 ```
-</details>
 
 ## aspectj (`aspectj`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { aspectj } from 'svelte-highlight/languages';
+  // base import
+  import { aspectj } from "svelte-highlight/src/languages";
+
+  // direct import
+  import aspectj from "svelte-highlight/src/languages/aspectj";
 </script>
 ```
-</details>
 
 ## autohotkey (`autohotkey`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { autohotkey } from 'svelte-highlight/languages';
+  // base import
+  import { autohotkey } from "svelte-highlight/src/languages";
+
+  // direct import
+  import autohotkey from "svelte-highlight/src/languages/autohotkey";
 </script>
 ```
-</details>
 
 ## autoit (`autoit`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { autoit } from 'svelte-highlight/languages';
+  // base import
+  import { autoit } from "svelte-highlight/src/languages";
+
+  // direct import
+  import autoit from "svelte-highlight/src/languages/autoit";
 </script>
 ```
-</details>
 
 ## avrasm (`avrasm`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { avrasm } from 'svelte-highlight/languages';
+  // base import
+  import { avrasm } from "svelte-highlight/src/languages";
+
+  // direct import
+  import avrasm from "svelte-highlight/src/languages/avrasm";
 </script>
 ```
-</details>
 
 ## awk (`awk`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { awk } from 'svelte-highlight/languages';
+  // base import
+  import { awk } from "svelte-highlight/src/languages";
+
+  // direct import
+  import awk from "svelte-highlight/src/languages/awk";
 </script>
 ```
-</details>
 
 ## axapta (`axapta`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { axapta } from 'svelte-highlight/languages';
+  // base import
+  import { axapta } from "svelte-highlight/src/languages";
+
+  // direct import
+  import axapta from "svelte-highlight/src/languages/axapta";
 </script>
 ```
-</details>
 
 ## bash (`bash`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { bash } from 'svelte-highlight/languages';
+  // base import
+  import { bash } from "svelte-highlight/src/languages";
+
+  // direct import
+  import bash from "svelte-highlight/src/languages/bash";
 </script>
 ```
-</details>
 
 ## basic (`basic`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { basic } from 'svelte-highlight/languages';
+  // base import
+  import { basic } from "svelte-highlight/src/languages";
+
+  // direct import
+  import basic from "svelte-highlight/src/languages/basic";
 </script>
 ```
-</details>
 
 ## bnf (`bnf`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { bnf } from 'svelte-highlight/languages';
+  // base import
+  import { bnf } from "svelte-highlight/src/languages";
+
+  // direct import
+  import bnf from "svelte-highlight/src/languages/bnf";
 </script>
 ```
-</details>
 
 ## brainfuck (`brainfuck`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { brainfuck } from "svelte-highlight/src/languages";
+
+  // direct import
+  import brainfuck from "svelte-highlight/src/languages/brainfuck";
+</script>
+```
+
+## c-like (`cLike`)
 
 ```html
 <script>
-  import { brainfuck } from 'svelte-highlight/languages';
+  // base import
+  import { cLike } from "svelte-highlight/src/languages";
+
+  // direct import
+  import cLike from "svelte-highlight/src/languages/c-like";
 </script>
 ```
-</details>
+
+## c (`c`)
+
+```html
+<script>
+  // base import
+  import { c } from "svelte-highlight/src/languages";
+
+  // direct import
+  import c from "svelte-highlight/src/languages/c";
+</script>
+```
 
 ## cal (`cal`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { cal } from 'svelte-highlight/languages';
+  // base import
+  import { cal } from "svelte-highlight/src/languages";
+
+  // direct import
+  import cal from "svelte-highlight/src/languages/cal";
 </script>
 ```
-</details>
 
 ## capnproto (`capnproto`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { capnproto } from 'svelte-highlight/languages';
+  // base import
+  import { capnproto } from "svelte-highlight/src/languages";
+
+  // direct import
+  import capnproto from "svelte-highlight/src/languages/capnproto";
 </script>
 ```
-</details>
 
 ## ceylon (`ceylon`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { ceylon } from 'svelte-highlight/languages';
+  // base import
+  import { ceylon } from "svelte-highlight/src/languages";
+
+  // direct import
+  import ceylon from "svelte-highlight/src/languages/ceylon";
 </script>
 ```
-</details>
 
 ## clean (`clean`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { clean } from 'svelte-highlight/languages';
+  // base import
+  import { clean } from "svelte-highlight/src/languages";
+
+  // direct import
+  import clean from "svelte-highlight/src/languages/clean";
 </script>
 ```
-</details>
 
 ## clojure (`clojure`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { clojure } from 'svelte-highlight/languages';
+  // base import
+  import { clojure } from "svelte-highlight/src/languages";
+
+  // direct import
+  import clojure from "svelte-highlight/src/languages/clojure";
 </script>
 ```
-</details>
 
 ## clojure-repl (`clojureRepl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { clojureRepl } from 'svelte-highlight/languages';
+  // base import
+  import { clojureRepl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import clojureRepl from "svelte-highlight/src/languages/clojure-repl";
 </script>
 ```
-</details>
 
 ## cmake (`cmake`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { cmake } from 'svelte-highlight/languages';
+  // base import
+  import { cmake } from "svelte-highlight/src/languages";
+
+  // direct import
+  import cmake from "svelte-highlight/src/languages/cmake";
 </script>
 ```
-</details>
 
 ## coffeescript (`coffeescript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { coffeescript } from 'svelte-highlight/languages';
+  // base import
+  import { coffeescript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import coffeescript from "svelte-highlight/src/languages/coffeescript";
 </script>
 ```
-</details>
 
 ## coq (`coq`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { coq } from 'svelte-highlight/languages';
+  // base import
+  import { coq } from "svelte-highlight/src/languages";
+
+  // direct import
+  import coq from "svelte-highlight/src/languages/coq";
 </script>
 ```
-</details>
 
 ## cos (`cos`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { cos } from "svelte-highlight/src/languages";
+
+  // direct import
+  import cos from "svelte-highlight/src/languages/cos";
+</script>
+```
+
+## cpp (`cpp`)
 
 ```html
 <script>
-  import { cos } from 'svelte-highlight/languages';
+  // base import
+  import { cpp } from "svelte-highlight/src/languages";
+
+  // direct import
+  import cpp from "svelte-highlight/src/languages/cpp";
 </script>
 ```
-</details>
 
 ## crmsh (`crmsh`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { crmsh } from 'svelte-highlight/languages';
+  // base import
+  import { crmsh } from "svelte-highlight/src/languages";
+
+  // direct import
+  import crmsh from "svelte-highlight/src/languages/crmsh";
 </script>
 ```
-</details>
 
 ## crystal (`crystal`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { crystal } from "svelte-highlight/src/languages";
+
+  // direct import
+  import crystal from "svelte-highlight/src/languages/crystal";
+</script>
+```
+
+## csharp (`csharp`)
 
 ```html
 <script>
-  import { crystal } from 'svelte-highlight/languages';
+  // base import
+  import { csharp } from "svelte-highlight/src/languages";
+
+  // direct import
+  import csharp from "svelte-highlight/src/languages/csharp";
 </script>
 ```
-</details>
-
-## cs (`cs`)
-
-<details>
-<summary>Usage</summary>
-
-```html
-<script>
-  import { cs } from 'svelte-highlight/languages';
-</script>
-```
-</details>
 
 ## csp (`csp`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { csp } from 'svelte-highlight/languages';
+  // base import
+  import { csp } from "svelte-highlight/src/languages";
+
+  // direct import
+  import csp from "svelte-highlight/src/languages/csp";
 </script>
 ```
-</details>
 
 ## css (`css`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { css } from 'svelte-highlight/languages';
+  // base import
+  import { css } from "svelte-highlight/src/languages";
+
+  // direct import
+  import css from "svelte-highlight/src/languages/css";
 </script>
 ```
-</details>
 
 ## d (`d`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { d } from 'svelte-highlight/languages';
+  // base import
+  import { d } from "svelte-highlight/src/languages";
+
+  // direct import
+  import d from "svelte-highlight/src/languages/d";
 </script>
 ```
-</details>
 
 ## markdown (`markdown`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { markdown } from 'svelte-highlight/languages';
+  // base import
+  import { markdown } from "svelte-highlight/src/languages";
+
+  // direct import
+  import markdown from "svelte-highlight/src/languages/markdown";
 </script>
 ```
-</details>
 
 ## dart (`dart`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { dart } from 'svelte-highlight/languages';
+  // base import
+  import { dart } from "svelte-highlight/src/languages";
+
+  // direct import
+  import dart from "svelte-highlight/src/languages/dart";
 </script>
 ```
-</details>
 
 ## delphi (`delphi`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { delphi } from 'svelte-highlight/languages';
+  // base import
+  import { delphi } from "svelte-highlight/src/languages";
+
+  // direct import
+  import delphi from "svelte-highlight/src/languages/delphi";
 </script>
 ```
-</details>
 
 ## diff (`diff`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { diff } from 'svelte-highlight/languages';
+  // base import
+  import { diff } from "svelte-highlight/src/languages";
+
+  // direct import
+  import diff from "svelte-highlight/src/languages/diff";
 </script>
 ```
-</details>
 
 ## django (`django`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { django } from 'svelte-highlight/languages';
+  // base import
+  import { django } from "svelte-highlight/src/languages";
+
+  // direct import
+  import django from "svelte-highlight/src/languages/django";
 </script>
 ```
-</details>
 
 ## dns (`dns`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { dns } from 'svelte-highlight/languages';
+  // base import
+  import { dns } from "svelte-highlight/src/languages";
+
+  // direct import
+  import dns from "svelte-highlight/src/languages/dns";
 </script>
 ```
-</details>
 
 ## dockerfile (`dockerfile`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { dockerfile } from 'svelte-highlight/languages';
+  // base import
+  import { dockerfile } from "svelte-highlight/src/languages";
+
+  // direct import
+  import dockerfile from "svelte-highlight/src/languages/dockerfile";
 </script>
 ```
-</details>
 
 ## dos (`dos`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { dos } from 'svelte-highlight/languages';
+  // base import
+  import { dos } from "svelte-highlight/src/languages";
+
+  // direct import
+  import dos from "svelte-highlight/src/languages/dos";
 </script>
 ```
-</details>
 
 ## dsconfig (`dsconfig`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { dsconfig } from 'svelte-highlight/languages';
+  // base import
+  import { dsconfig } from "svelte-highlight/src/languages";
+
+  // direct import
+  import dsconfig from "svelte-highlight/src/languages/dsconfig";
 </script>
 ```
-</details>
 
 ## dts (`dts`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { dts } from 'svelte-highlight/languages';
+  // base import
+  import { dts } from "svelte-highlight/src/languages";
+
+  // direct import
+  import dts from "svelte-highlight/src/languages/dts";
 </script>
 ```
-</details>
 
 ## dust (`dust`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { dust } from 'svelte-highlight/languages';
+  // base import
+  import { dust } from "svelte-highlight/src/languages";
+
+  // direct import
+  import dust from "svelte-highlight/src/languages/dust";
 </script>
 ```
-</details>
 
 ## ebnf (`ebnf`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { ebnf } from 'svelte-highlight/languages';
+  // base import
+  import { ebnf } from "svelte-highlight/src/languages";
+
+  // direct import
+  import ebnf from "svelte-highlight/src/languages/ebnf";
 </script>
 ```
-</details>
 
 ## elixir (`elixir`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { elixir } from 'svelte-highlight/languages';
+  // base import
+  import { elixir } from "svelte-highlight/src/languages";
+
+  // direct import
+  import elixir from "svelte-highlight/src/languages/elixir";
 </script>
 ```
-</details>
 
 ## elm (`elm`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { elm } from 'svelte-highlight/languages';
+  // base import
+  import { elm } from "svelte-highlight/src/languages";
+
+  // direct import
+  import elm from "svelte-highlight/src/languages/elm";
 </script>
 ```
-</details>
 
 ## ruby (`ruby`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { ruby } from 'svelte-highlight/languages';
+  // base import
+  import { ruby } from "svelte-highlight/src/languages";
+
+  // direct import
+  import ruby from "svelte-highlight/src/languages/ruby";
 </script>
 ```
-</details>
 
 ## erb (`erb`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { erb } from 'svelte-highlight/languages';
+  // base import
+  import { erb } from "svelte-highlight/src/languages";
+
+  // direct import
+  import erb from "svelte-highlight/src/languages/erb";
 </script>
 ```
-</details>
 
 ## erlang-repl (`erlangRepl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { erlangRepl } from 'svelte-highlight/languages';
+  // base import
+  import { erlangRepl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import erlangRepl from "svelte-highlight/src/languages/erlang-repl";
 </script>
 ```
-</details>
 
 ## erlang (`erlang`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { erlang } from 'svelte-highlight/languages';
+  // base import
+  import { erlang } from "svelte-highlight/src/languages";
+
+  // direct import
+  import erlang from "svelte-highlight/src/languages/erlang";
 </script>
 ```
-</details>
 
 ## excel (`excel`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { excel } from 'svelte-highlight/languages';
+  // base import
+  import { excel } from "svelte-highlight/src/languages";
+
+  // direct import
+  import excel from "svelte-highlight/src/languages/excel";
 </script>
 ```
-</details>
 
 ## fix (`fix`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { fix } from 'svelte-highlight/languages';
+  // base import
+  import { fix } from "svelte-highlight/src/languages";
+
+  // direct import
+  import fix from "svelte-highlight/src/languages/fix";
 </script>
 ```
-</details>
 
 ## flix (`flix`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { flix } from 'svelte-highlight/languages';
+  // base import
+  import { flix } from "svelte-highlight/src/languages";
+
+  // direct import
+  import flix from "svelte-highlight/src/languages/flix";
 </script>
 ```
-</details>
 
 ## fortran (`fortran`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { fortran } from 'svelte-highlight/languages';
+  // base import
+  import { fortran } from "svelte-highlight/src/languages";
+
+  // direct import
+  import fortran from "svelte-highlight/src/languages/fortran";
 </script>
 ```
-</details>
 
 ## fsharp (`fsharp`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { fsharp } from 'svelte-highlight/languages';
+  // base import
+  import { fsharp } from "svelte-highlight/src/languages";
+
+  // direct import
+  import fsharp from "svelte-highlight/src/languages/fsharp";
 </script>
 ```
-</details>
 
 ## gams (`gams`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { gams } from 'svelte-highlight/languages';
+  // base import
+  import { gams } from "svelte-highlight/src/languages";
+
+  // direct import
+  import gams from "svelte-highlight/src/languages/gams";
 </script>
 ```
-</details>
 
 ## gauss (`gauss`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { gauss } from 'svelte-highlight/languages';
+  // base import
+  import { gauss } from "svelte-highlight/src/languages";
+
+  // direct import
+  import gauss from "svelte-highlight/src/languages/gauss";
 </script>
 ```
-</details>
 
 ## gcode (`gcode`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { gcode } from 'svelte-highlight/languages';
+  // base import
+  import { gcode } from "svelte-highlight/src/languages";
+
+  // direct import
+  import gcode from "svelte-highlight/src/languages/gcode";
 </script>
 ```
-</details>
 
 ## gherkin (`gherkin`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { gherkin } from 'svelte-highlight/languages';
+  // base import
+  import { gherkin } from "svelte-highlight/src/languages";
+
+  // direct import
+  import gherkin from "svelte-highlight/src/languages/gherkin";
 </script>
 ```
-</details>
 
 ## glsl (`glsl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { glsl } from 'svelte-highlight/languages';
+  // base import
+  import { glsl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import glsl from "svelte-highlight/src/languages/glsl";
 </script>
 ```
-</details>
 
 ## gml (`gml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { gml } from 'svelte-highlight/languages';
+  // base import
+  import { gml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import gml from "svelte-highlight/src/languages/gml";
 </script>
 ```
-</details>
 
 ## go (`go`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { go } from 'svelte-highlight/languages';
+  // base import
+  import { go } from "svelte-highlight/src/languages";
+
+  // direct import
+  import go from "svelte-highlight/src/languages/go";
 </script>
 ```
-</details>
 
 ## golo (`golo`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { golo } from 'svelte-highlight/languages';
+  // base import
+  import { golo } from "svelte-highlight/src/languages";
+
+  // direct import
+  import golo from "svelte-highlight/src/languages/golo";
 </script>
 ```
-</details>
 
 ## gradle (`gradle`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { gradle } from 'svelte-highlight/languages';
+  // base import
+  import { gradle } from "svelte-highlight/src/languages";
+
+  // direct import
+  import gradle from "svelte-highlight/src/languages/gradle";
 </script>
 ```
-</details>
 
 ## groovy (`groovy`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { groovy } from 'svelte-highlight/languages';
+  // base import
+  import { groovy } from "svelte-highlight/src/languages";
+
+  // direct import
+  import groovy from "svelte-highlight/src/languages/groovy";
 </script>
 ```
-</details>
 
 ## haml (`haml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { haml } from 'svelte-highlight/languages';
+  // base import
+  import { haml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import haml from "svelte-highlight/src/languages/haml";
 </script>
 ```
-</details>
 
 ## handlebars (`handlebars`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { handlebars } from 'svelte-highlight/languages';
+  // base import
+  import { handlebars } from "svelte-highlight/src/languages";
+
+  // direct import
+  import handlebars from "svelte-highlight/src/languages/handlebars";
 </script>
 ```
-</details>
 
 ## haskell (`haskell`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { haskell } from 'svelte-highlight/languages';
+  // base import
+  import { haskell } from "svelte-highlight/src/languages";
+
+  // direct import
+  import haskell from "svelte-highlight/src/languages/haskell";
 </script>
 ```
-</details>
 
 ## haxe (`haxe`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { haxe } from 'svelte-highlight/languages';
+  // base import
+  import { haxe } from "svelte-highlight/src/languages";
+
+  // direct import
+  import haxe from "svelte-highlight/src/languages/haxe";
 </script>
 ```
-</details>
 
 ## hsp (`hsp`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { hsp } from 'svelte-highlight/languages';
+  // base import
+  import { hsp } from "svelte-highlight/src/languages";
+
+  // direct import
+  import hsp from "svelte-highlight/src/languages/hsp";
 </script>
 ```
-</details>
 
 ## htmlbars (`htmlbars`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { htmlbars } from 'svelte-highlight/languages';
+  // base import
+  import { htmlbars } from "svelte-highlight/src/languages";
+
+  // direct import
+  import htmlbars from "svelte-highlight/src/languages/htmlbars";
 </script>
 ```
-</details>
 
 ## http (`http`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { http } from 'svelte-highlight/languages';
+  // base import
+  import { http } from "svelte-highlight/src/languages";
+
+  // direct import
+  import http from "svelte-highlight/src/languages/http";
 </script>
 ```
-</details>
 
 ## hy (`hy`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { hy } from 'svelte-highlight/languages';
+  // base import
+  import { hy } from "svelte-highlight/src/languages";
+
+  // direct import
+  import hy from "svelte-highlight/src/languages/hy";
 </script>
 ```
-</details>
 
 ## inform7 (`inform7`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { inform7 } from 'svelte-highlight/languages';
+  // base import
+  import { inform7 } from "svelte-highlight/src/languages";
+
+  // direct import
+  import inform7 from "svelte-highlight/src/languages/inform7";
 </script>
 ```
-</details>
 
 ## ini (`ini`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { ini } from 'svelte-highlight/languages';
+  // base import
+  import { ini } from "svelte-highlight/src/languages";
+
+  // direct import
+  import ini from "svelte-highlight/src/languages/ini";
 </script>
 ```
-</details>
 
 ## irpf90 (`irpf90`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { irpf90 } from 'svelte-highlight/languages';
+  // base import
+  import { irpf90 } from "svelte-highlight/src/languages";
+
+  // direct import
+  import irpf90 from "svelte-highlight/src/languages/irpf90";
 </script>
 ```
-</details>
 
 ## isbl (`isbl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { isbl } from 'svelte-highlight/languages';
+  // base import
+  import { isbl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import isbl from "svelte-highlight/src/languages/isbl";
 </script>
 ```
-</details>
 
 ## java (`java`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { java } from 'svelte-highlight/languages';
+  // base import
+  import { java } from "svelte-highlight/src/languages";
+
+  // direct import
+  import java from "svelte-highlight/src/languages/java";
 </script>
 ```
-</details>
 
 ## javascript (`javascript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { javascript } from 'svelte-highlight/languages';
+  // base import
+  import { javascript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import javascript from "svelte-highlight/src/languages/javascript";
 </script>
 ```
-</details>
 
 ## jboss-cli (`jbossCli`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { jbossCli } from 'svelte-highlight/languages';
+  // base import
+  import { jbossCli } from "svelte-highlight/src/languages";
+
+  // direct import
+  import jbossCli from "svelte-highlight/src/languages/jboss-cli";
 </script>
 ```
-</details>
 
 ## json (`json`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { json } from 'svelte-highlight/languages';
+  // base import
+  import { json } from "svelte-highlight/src/languages";
+
+  // direct import
+  import json from "svelte-highlight/src/languages/json";
 </script>
 ```
-</details>
 
 ## julia (`julia`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { julia } from 'svelte-highlight/languages';
+  // base import
+  import { julia } from "svelte-highlight/src/languages";
+
+  // direct import
+  import julia from "svelte-highlight/src/languages/julia";
 </script>
 ```
-</details>
 
 ## julia-repl (`juliaRepl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { juliaRepl } from 'svelte-highlight/languages';
+  // base import
+  import { juliaRepl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import juliaRepl from "svelte-highlight/src/languages/julia-repl";
 </script>
 ```
-</details>
 
 ## kotlin (`kotlin`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { kotlin } from 'svelte-highlight/languages';
+  // base import
+  import { kotlin } from "svelte-highlight/src/languages";
+
+  // direct import
+  import kotlin from "svelte-highlight/src/languages/kotlin";
 </script>
 ```
-</details>
 
 ## lasso (`lasso`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { lasso } from "svelte-highlight/src/languages";
+
+  // direct import
+  import lasso from "svelte-highlight/src/languages/lasso";
+</script>
+```
+
+## latex (`latex`)
 
 ```html
 <script>
-  import { lasso } from 'svelte-highlight/languages';
+  // base import
+  import { latex } from "svelte-highlight/src/languages";
+
+  // direct import
+  import latex from "svelte-highlight/src/languages/latex";
 </script>
 ```
-</details>
 
 ## ldif (`ldif`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { ldif } from 'svelte-highlight/languages';
+  // base import
+  import { ldif } from "svelte-highlight/src/languages";
+
+  // direct import
+  import ldif from "svelte-highlight/src/languages/ldif";
 </script>
 ```
-</details>
 
 ## leaf (`leaf`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { leaf } from 'svelte-highlight/languages';
+  // base import
+  import { leaf } from "svelte-highlight/src/languages";
+
+  // direct import
+  import leaf from "svelte-highlight/src/languages/leaf";
 </script>
 ```
-</details>
 
 ## less (`less`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { less } from 'svelte-highlight/languages';
+  // base import
+  import { less } from "svelte-highlight/src/languages";
+
+  // direct import
+  import less from "svelte-highlight/src/languages/less";
 </script>
 ```
-</details>
 
 ## lisp (`lisp`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { lisp } from 'svelte-highlight/languages';
+  // base import
+  import { lisp } from "svelte-highlight/src/languages";
+
+  // direct import
+  import lisp from "svelte-highlight/src/languages/lisp";
 </script>
 ```
-</details>
 
 ## livecodeserver (`livecodeserver`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { livecodeserver } from 'svelte-highlight/languages';
+  // base import
+  import { livecodeserver } from "svelte-highlight/src/languages";
+
+  // direct import
+  import livecodeserver from "svelte-highlight/src/languages/livecodeserver";
 </script>
 ```
-</details>
 
 ## livescript (`livescript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { livescript } from 'svelte-highlight/languages';
+  // base import
+  import { livescript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import livescript from "svelte-highlight/src/languages/livescript";
 </script>
 ```
-</details>
 
 ## llvm (`llvm`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { llvm } from 'svelte-highlight/languages';
+  // base import
+  import { llvm } from "svelte-highlight/src/languages";
+
+  // direct import
+  import llvm from "svelte-highlight/src/languages/llvm";
 </script>
 ```
-</details>
 
 ## lsl (`lsl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { lsl } from 'svelte-highlight/languages';
+  // base import
+  import { lsl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import lsl from "svelte-highlight/src/languages/lsl";
 </script>
 ```
-</details>
 
 ## lua (`lua`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { lua } from 'svelte-highlight/languages';
+  // base import
+  import { lua } from "svelte-highlight/src/languages";
+
+  // direct import
+  import lua from "svelte-highlight/src/languages/lua";
 </script>
 ```
-</details>
 
 ## makefile (`makefile`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { makefile } from 'svelte-highlight/languages';
+  // base import
+  import { makefile } from "svelte-highlight/src/languages";
+
+  // direct import
+  import makefile from "svelte-highlight/src/languages/makefile";
 </script>
 ```
-</details>
 
 ## mathematica (`mathematica`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { mathematica } from 'svelte-highlight/languages';
+  // base import
+  import { mathematica } from "svelte-highlight/src/languages";
+
+  // direct import
+  import mathematica from "svelte-highlight/src/languages/mathematica";
 </script>
 ```
-</details>
 
 ## matlab (`matlab`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { matlab } from 'svelte-highlight/languages';
+  // base import
+  import { matlab } from "svelte-highlight/src/languages";
+
+  // direct import
+  import matlab from "svelte-highlight/src/languages/matlab";
 </script>
 ```
-</details>
 
 ## maxima (`maxima`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { maxima } from 'svelte-highlight/languages';
+  // base import
+  import { maxima } from "svelte-highlight/src/languages";
+
+  // direct import
+  import maxima from "svelte-highlight/src/languages/maxima";
 </script>
 ```
-</details>
 
 ## mel (`mel`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { mel } from 'svelte-highlight/languages';
+  // base import
+  import { mel } from "svelte-highlight/src/languages";
+
+  // direct import
+  import mel from "svelte-highlight/src/languages/mel";
 </script>
 ```
-</details>
 
 ## mercury (`mercury`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { mercury } from 'svelte-highlight/languages';
+  // base import
+  import { mercury } from "svelte-highlight/src/languages";
+
+  // direct import
+  import mercury from "svelte-highlight/src/languages/mercury";
 </script>
 ```
-</details>
 
 ## mipsasm (`mipsasm`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { mipsasm } from 'svelte-highlight/languages';
+  // base import
+  import { mipsasm } from "svelte-highlight/src/languages";
+
+  // direct import
+  import mipsasm from "svelte-highlight/src/languages/mipsasm";
 </script>
 ```
-</details>
 
 ## mizar (`mizar`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { mizar } from 'svelte-highlight/languages';
+  // base import
+  import { mizar } from "svelte-highlight/src/languages";
+
+  // direct import
+  import mizar from "svelte-highlight/src/languages/mizar";
 </script>
 ```
-</details>
 
 ## perl (`perl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { perl } from 'svelte-highlight/languages';
+  // base import
+  import { perl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import perl from "svelte-highlight/src/languages/perl";
 </script>
 ```
-</details>
 
 ## mojolicious (`mojolicious`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { mojolicious } from 'svelte-highlight/languages';
+  // base import
+  import { mojolicious } from "svelte-highlight/src/languages";
+
+  // direct import
+  import mojolicious from "svelte-highlight/src/languages/mojolicious";
 </script>
 ```
-</details>
 
 ## monkey (`monkey`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { monkey } from 'svelte-highlight/languages';
+  // base import
+  import { monkey } from "svelte-highlight/src/languages";
+
+  // direct import
+  import monkey from "svelte-highlight/src/languages/monkey";
 </script>
 ```
-</details>
 
 ## moonscript (`moonscript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { moonscript } from 'svelte-highlight/languages';
+  // base import
+  import { moonscript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import moonscript from "svelte-highlight/src/languages/moonscript";
 </script>
 ```
-</details>
 
 ## n1ql (`n1ql`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { n1ql } from 'svelte-highlight/languages';
+  // base import
+  import { n1ql } from "svelte-highlight/src/languages";
+
+  // direct import
+  import n1ql from "svelte-highlight/src/languages/n1ql";
 </script>
 ```
-</details>
 
 ## nginx (`nginx`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { nginx } from "svelte-highlight/src/languages";
+
+  // direct import
+  import nginx from "svelte-highlight/src/languages/nginx";
+</script>
+```
+
+## nim (`nim`)
 
 ```html
 <script>
-  import { nginx } from 'svelte-highlight/languages';
+  // base import
+  import { nim } from "svelte-highlight/src/languages";
+
+  // direct import
+  import nim from "svelte-highlight/src/languages/nim";
 </script>
 ```
-</details>
-
-## nimrod (`nimrod`)
-
-<details>
-<summary>Usage</summary>
-
-```html
-<script>
-  import { nimrod } from 'svelte-highlight/languages';
-</script>
-```
-</details>
 
 ## nix (`nix`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { nix } from "svelte-highlight/src/languages";
+
+  // direct import
+  import nix from "svelte-highlight/src/languages/nix";
+</script>
+```
+
+## node-repl (`nodeRepl`)
 
 ```html
 <script>
-  import { nix } from 'svelte-highlight/languages';
+  // base import
+  import { nodeRepl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import nodeRepl from "svelte-highlight/src/languages/node-repl";
 </script>
 ```
-</details>
 
 ## nsis (`nsis`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { nsis } from 'svelte-highlight/languages';
+  // base import
+  import { nsis } from "svelte-highlight/src/languages";
+
+  // direct import
+  import nsis from "svelte-highlight/src/languages/nsis";
 </script>
 ```
-</details>
 
 ## objectivec (`objectivec`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { objectivec } from 'svelte-highlight/languages';
+  // base import
+  import { objectivec } from "svelte-highlight/src/languages";
+
+  // direct import
+  import objectivec from "svelte-highlight/src/languages/objectivec";
 </script>
 ```
-</details>
 
 ## ocaml (`ocaml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { ocaml } from 'svelte-highlight/languages';
+  // base import
+  import { ocaml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import ocaml from "svelte-highlight/src/languages/ocaml";
 </script>
 ```
-</details>
 
 ## openscad (`openscad`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { openscad } from 'svelte-highlight/languages';
+  // base import
+  import { openscad } from "svelte-highlight/src/languages";
+
+  // direct import
+  import openscad from "svelte-highlight/src/languages/openscad";
 </script>
 ```
-</details>
 
 ## oxygene (`oxygene`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { oxygene } from 'svelte-highlight/languages';
+  // base import
+  import { oxygene } from "svelte-highlight/src/languages";
+
+  // direct import
+  import oxygene from "svelte-highlight/src/languages/oxygene";
 </script>
 ```
-</details>
 
 ## parser3 (`parser3`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { parser3 } from 'svelte-highlight/languages';
+  // base import
+  import { parser3 } from "svelte-highlight/src/languages";
+
+  // direct import
+  import parser3 from "svelte-highlight/src/languages/parser3";
 </script>
 ```
-</details>
 
 ## pf (`pf`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { pf } from 'svelte-highlight/languages';
+  // base import
+  import { pf } from "svelte-highlight/src/languages";
+
+  // direct import
+  import pf from "svelte-highlight/src/languages/pf";
 </script>
 ```
-</details>
 
 ## pgsql (`pgsql`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { pgsql } from 'svelte-highlight/languages';
+  // base import
+  import { pgsql } from "svelte-highlight/src/languages";
+
+  // direct import
+  import pgsql from "svelte-highlight/src/languages/pgsql";
 </script>
 ```
-</details>
 
 ## php (`php`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { php } from "svelte-highlight/src/languages";
+
+  // direct import
+  import php from "svelte-highlight/src/languages/php";
+</script>
+```
+
+## php-template (`phpTemplate`)
 
 ```html
 <script>
-  import { php } from 'svelte-highlight/languages';
+  // base import
+  import { phpTemplate } from "svelte-highlight/src/languages";
+
+  // direct import
+  import phpTemplate from "svelte-highlight/src/languages/php-template";
 </script>
 ```
-</details>
 
 ## plaintext (`plaintext`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { plaintext } from 'svelte-highlight/languages';
+  // base import
+  import { plaintext } from "svelte-highlight/src/languages";
+
+  // direct import
+  import plaintext from "svelte-highlight/src/languages/plaintext";
 </script>
 ```
-</details>
 
 ## pony (`pony`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { pony } from 'svelte-highlight/languages';
+  // base import
+  import { pony } from "svelte-highlight/src/languages";
+
+  // direct import
+  import pony from "svelte-highlight/src/languages/pony";
 </script>
 ```
-</details>
 
 ## powershell (`powershell`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { powershell } from 'svelte-highlight/languages';
+  // base import
+  import { powershell } from "svelte-highlight/src/languages";
+
+  // direct import
+  import powershell from "svelte-highlight/src/languages/powershell";
 </script>
 ```
-</details>
 
 ## processing (`processing`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { processing } from 'svelte-highlight/languages';
+  // base import
+  import { processing } from "svelte-highlight/src/languages";
+
+  // direct import
+  import processing from "svelte-highlight/src/languages/processing";
 </script>
 ```
-</details>
 
 ## profile (`profile`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { profile } from 'svelte-highlight/languages';
+  // base import
+  import { profile } from "svelte-highlight/src/languages";
+
+  // direct import
+  import profile from "svelte-highlight/src/languages/profile";
 </script>
 ```
-</details>
 
 ## prolog (`prolog`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { prolog } from 'svelte-highlight/languages';
+  // base import
+  import { prolog } from "svelte-highlight/src/languages";
+
+  // direct import
+  import prolog from "svelte-highlight/src/languages/prolog";
 </script>
 ```
-</details>
 
 ## properties (`properties`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { properties } from 'svelte-highlight/languages';
+  // base import
+  import { properties } from "svelte-highlight/src/languages";
+
+  // direct import
+  import properties from "svelte-highlight/src/languages/properties";
 </script>
 ```
-</details>
 
 ## protobuf (`protobuf`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { protobuf } from 'svelte-highlight/languages';
+  // base import
+  import { protobuf } from "svelte-highlight/src/languages";
+
+  // direct import
+  import protobuf from "svelte-highlight/src/languages/protobuf";
 </script>
 ```
-</details>
 
 ## puppet (`puppet`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { puppet } from 'svelte-highlight/languages';
+  // base import
+  import { puppet } from "svelte-highlight/src/languages";
+
+  // direct import
+  import puppet from "svelte-highlight/src/languages/puppet";
 </script>
 ```
-</details>
 
 ## purebasic (`purebasic`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { purebasic } from 'svelte-highlight/languages';
+  // base import
+  import { purebasic } from "svelte-highlight/src/languages";
+
+  // direct import
+  import purebasic from "svelte-highlight/src/languages/purebasic";
 </script>
 ```
-</details>
 
 ## python (`python`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { python } from "svelte-highlight/src/languages";
+
+  // direct import
+  import python from "svelte-highlight/src/languages/python";
+</script>
+```
+
+## python-repl (`pythonRepl`)
 
 ```html
 <script>
-  import { python } from 'svelte-highlight/languages';
+  // base import
+  import { pythonRepl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import pythonRepl from "svelte-highlight/src/languages/python-repl";
 </script>
 ```
-</details>
 
 ## q (`q`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { q } from 'svelte-highlight/languages';
+  // base import
+  import { q } from "svelte-highlight/src/languages";
+
+  // direct import
+  import q from "svelte-highlight/src/languages/q";
 </script>
 ```
-</details>
 
 ## qml (`qml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { qml } from 'svelte-highlight/languages';
+  // base import
+  import { qml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import qml from "svelte-highlight/src/languages/qml";
 </script>
 ```
-</details>
 
 ## r (`r`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { r } from 'svelte-highlight/languages';
+  // base import
+  import { r } from "svelte-highlight/src/languages";
+
+  // direct import
+  import r from "svelte-highlight/src/languages/r";
 </script>
 ```
-</details>
 
 ## reasonml (`reasonml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { reasonml } from 'svelte-highlight/languages';
+  // base import
+  import { reasonml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import reasonml from "svelte-highlight/src/languages/reasonml";
 </script>
 ```
-</details>
 
 ## rib (`rib`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { rib } from 'svelte-highlight/languages';
+  // base import
+  import { rib } from "svelte-highlight/src/languages";
+
+  // direct import
+  import rib from "svelte-highlight/src/languages/rib";
 </script>
 ```
-</details>
 
 ## roboconf (`roboconf`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { roboconf } from 'svelte-highlight/languages';
+  // base import
+  import { roboconf } from "svelte-highlight/src/languages";
+
+  // direct import
+  import roboconf from "svelte-highlight/src/languages/roboconf";
 </script>
 ```
-</details>
 
 ## routeros (`routeros`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { routeros } from 'svelte-highlight/languages';
+  // base import
+  import { routeros } from "svelte-highlight/src/languages";
+
+  // direct import
+  import routeros from "svelte-highlight/src/languages/routeros";
 </script>
 ```
-</details>
 
 ## rsl (`rsl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { rsl } from 'svelte-highlight/languages';
+  // base import
+  import { rsl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import rsl from "svelte-highlight/src/languages/rsl";
 </script>
 ```
-</details>
 
 ## ruleslanguage (`ruleslanguage`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { ruleslanguage } from 'svelte-highlight/languages';
+  // base import
+  import { ruleslanguage } from "svelte-highlight/src/languages";
+
+  // direct import
+  import ruleslanguage from "svelte-highlight/src/languages/ruleslanguage";
 </script>
 ```
-</details>
 
 ## rust (`rust`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { rust } from 'svelte-highlight/languages';
+  // base import
+  import { rust } from "svelte-highlight/src/languages";
+
+  // direct import
+  import rust from "svelte-highlight/src/languages/rust";
 </script>
 ```
-</details>
 
 ## sas (`sas`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { sas } from 'svelte-highlight/languages';
+  // base import
+  import { sas } from "svelte-highlight/src/languages";
+
+  // direct import
+  import sas from "svelte-highlight/src/languages/sas";
 </script>
 ```
-</details>
 
 ## scala (`scala`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { scala } from 'svelte-highlight/languages';
+  // base import
+  import { scala } from "svelte-highlight/src/languages";
+
+  // direct import
+  import scala from "svelte-highlight/src/languages/scala";
 </script>
 ```
-</details>
 
 ## scheme (`scheme`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { scheme } from 'svelte-highlight/languages';
+  // base import
+  import { scheme } from "svelte-highlight/src/languages";
+
+  // direct import
+  import scheme from "svelte-highlight/src/languages/scheme";
 </script>
 ```
-</details>
 
 ## scilab (`scilab`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { scilab } from 'svelte-highlight/languages';
+  // base import
+  import { scilab } from "svelte-highlight/src/languages";
+
+  // direct import
+  import scilab from "svelte-highlight/src/languages/scilab";
 </script>
 ```
-</details>
 
 ## scss (`scss`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { scss } from 'svelte-highlight/languages';
+  // base import
+  import { scss } from "svelte-highlight/src/languages";
+
+  // direct import
+  import scss from "svelte-highlight/src/languages/scss";
 </script>
 ```
-</details>
 
 ## shell (`shell`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { shell } from 'svelte-highlight/languages';
+  // base import
+  import { shell } from "svelte-highlight/src/languages";
+
+  // direct import
+  import shell from "svelte-highlight/src/languages/shell";
 </script>
 ```
-</details>
 
 ## smali (`smali`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { smali } from 'svelte-highlight/languages';
+  // base import
+  import { smali } from "svelte-highlight/src/languages";
+
+  // direct import
+  import smali from "svelte-highlight/src/languages/smali";
 </script>
 ```
-</details>
 
 ## smalltalk (`smalltalk`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { smalltalk } from 'svelte-highlight/languages';
+  // base import
+  import { smalltalk } from "svelte-highlight/src/languages";
+
+  // direct import
+  import smalltalk from "svelte-highlight/src/languages/smalltalk";
 </script>
 ```
-</details>
 
 ## sml (`sml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { sml } from 'svelte-highlight/languages';
+  // base import
+  import { sml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import sml from "svelte-highlight/src/languages/sml";
 </script>
 ```
-</details>
 
 ## sqf (`sqf`)
 
-<details>
-<summary>Usage</summary>
+```html
+<script>
+  // base import
+  import { sqf } from "svelte-highlight/src/languages";
+
+  // direct import
+  import sqf from "svelte-highlight/src/languages/sqf";
+</script>
+```
+
+## sql_more (`sql_more`)
 
 ```html
 <script>
-  import { sqf } from 'svelte-highlight/languages';
+  // base import
+  import { sql_more } from "svelte-highlight/src/languages";
+
+  // direct import
+  import sql_more from "svelte-highlight/src/languages/sql_more";
 </script>
 ```
-</details>
 
 ## sql (`sql`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { sql } from 'svelte-highlight/languages';
+  // base import
+  import { sql } from "svelte-highlight/src/languages";
+
+  // direct import
+  import sql from "svelte-highlight/src/languages/sql";
 </script>
 ```
-</details>
 
 ## stan (`stan`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { stan } from 'svelte-highlight/languages';
+  // base import
+  import { stan } from "svelte-highlight/src/languages";
+
+  // direct import
+  import stan from "svelte-highlight/src/languages/stan";
 </script>
 ```
-</details>
 
 ## stata (`stata`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { stata } from 'svelte-highlight/languages';
+  // base import
+  import { stata } from "svelte-highlight/src/languages";
+
+  // direct import
+  import stata from "svelte-highlight/src/languages/stata";
 </script>
 ```
-</details>
 
 ## step21 (`step21`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { step21 } from 'svelte-highlight/languages';
+  // base import
+  import { step21 } from "svelte-highlight/src/languages";
+
+  // direct import
+  import step21 from "svelte-highlight/src/languages/step21";
 </script>
 ```
-</details>
 
 ## stylus (`stylus`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { stylus } from 'svelte-highlight/languages';
+  // base import
+  import { stylus } from "svelte-highlight/src/languages";
+
+  // direct import
+  import stylus from "svelte-highlight/src/languages/stylus";
 </script>
 ```
-</details>
 
 ## subunit (`subunit`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { subunit } from 'svelte-highlight/languages';
+  // base import
+  import { subunit } from "svelte-highlight/src/languages";
+
+  // direct import
+  import subunit from "svelte-highlight/src/languages/subunit";
 </script>
 ```
-</details>
 
 ## swift (`swift`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { swift } from 'svelte-highlight/languages';
+  // base import
+  import { swift } from "svelte-highlight/src/languages";
+
+  // direct import
+  import swift from "svelte-highlight/src/languages/swift";
 </script>
 ```
-</details>
 
 ## taggerscript (`taggerscript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { taggerscript } from 'svelte-highlight/languages';
+  // base import
+  import { taggerscript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import taggerscript from "svelte-highlight/src/languages/taggerscript";
 </script>
 ```
-</details>
 
 ## yaml (`yaml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { yaml } from 'svelte-highlight/languages';
+  // base import
+  import { yaml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import yaml from "svelte-highlight/src/languages/yaml";
 </script>
 ```
-</details>
 
 ## tap (`tap`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { tap } from 'svelte-highlight/languages';
+  // base import
+  import { tap } from "svelte-highlight/src/languages";
+
+  // direct import
+  import tap from "svelte-highlight/src/languages/tap";
 </script>
 ```
-</details>
 
 ## tcl (`tcl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { tcl } from 'svelte-highlight/languages';
+  // base import
+  import { tcl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import tcl from "svelte-highlight/src/languages/tcl";
 </script>
 ```
-</details>
-
-## tex (`tex`)
-
-<details>
-<summary>Usage</summary>
-
-```html
-<script>
-  import { tex } from 'svelte-highlight/languages';
-</script>
-```
-</details>
 
 ## thrift (`thrift`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { thrift } from 'svelte-highlight/languages';
+  // base import
+  import { thrift } from "svelte-highlight/src/languages";
+
+  // direct import
+  import thrift from "svelte-highlight/src/languages/thrift";
 </script>
 ```
-</details>
 
 ## tp (`tp`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { tp } from 'svelte-highlight/languages';
+  // base import
+  import { tp } from "svelte-highlight/src/languages";
+
+  // direct import
+  import tp from "svelte-highlight/src/languages/tp";
 </script>
 ```
-</details>
 
 ## twig (`twig`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { twig } from 'svelte-highlight/languages';
+  // base import
+  import { twig } from "svelte-highlight/src/languages";
+
+  // direct import
+  import twig from "svelte-highlight/src/languages/twig";
 </script>
 ```
-</details>
 
 ## typescript (`typescript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { typescript } from 'svelte-highlight/languages';
+  // base import
+  import { typescript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import typescript from "svelte-highlight/src/languages/typescript";
 </script>
 ```
-</details>
 
 ## vala (`vala`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { vala } from 'svelte-highlight/languages';
+  // base import
+  import { vala } from "svelte-highlight/src/languages";
+
+  // direct import
+  import vala from "svelte-highlight/src/languages/vala";
 </script>
 ```
-</details>
 
 ## vbnet (`vbnet`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { vbnet } from 'svelte-highlight/languages';
+  // base import
+  import { vbnet } from "svelte-highlight/src/languages";
+
+  // direct import
+  import vbnet from "svelte-highlight/src/languages/vbnet";
 </script>
 ```
-</details>
 
 ## vbscript (`vbscript`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { vbscript } from 'svelte-highlight/languages';
+  // base import
+  import { vbscript } from "svelte-highlight/src/languages";
+
+  // direct import
+  import vbscript from "svelte-highlight/src/languages/vbscript";
 </script>
 ```
-</details>
 
 ## vbscript-html (`vbscriptHtml`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { vbscriptHtml } from 'svelte-highlight/languages';
+  // base import
+  import { vbscriptHtml } from "svelte-highlight/src/languages";
+
+  // direct import
+  import vbscriptHtml from "svelte-highlight/src/languages/vbscript-html";
 </script>
 ```
-</details>
 
 ## verilog (`verilog`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { verilog } from 'svelte-highlight/languages';
+  // base import
+  import { verilog } from "svelte-highlight/src/languages";
+
+  // direct import
+  import verilog from "svelte-highlight/src/languages/verilog";
 </script>
 ```
-</details>
 
 ## vhdl (`vhdl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { vhdl } from 'svelte-highlight/languages';
+  // base import
+  import { vhdl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import vhdl from "svelte-highlight/src/languages/vhdl";
 </script>
 ```
-</details>
 
 ## vim (`vim`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { vim } from 'svelte-highlight/languages';
+  // base import
+  import { vim } from "svelte-highlight/src/languages";
+
+  // direct import
+  import vim from "svelte-highlight/src/languages/vim";
 </script>
 ```
-</details>
 
 ## x86asm (`x86asm`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { x86asm } from 'svelte-highlight/languages';
+  // base import
+  import { x86asm } from "svelte-highlight/src/languages";
+
+  // direct import
+  import x86asm from "svelte-highlight/src/languages/x86asm";
 </script>
 ```
-</details>
 
 ## xl (`xl`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { xl } from 'svelte-highlight/languages';
+  // base import
+  import { xl } from "svelte-highlight/src/languages";
+
+  // direct import
+  import xl from "svelte-highlight/src/languages/xl";
 </script>
 ```
-</details>
 
 ## xquery (`xquery`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { xquery } from 'svelte-highlight/languages';
+  // base import
+  import { xquery } from "svelte-highlight/src/languages";
+
+  // direct import
+  import xquery from "svelte-highlight/src/languages/xquery";
 </script>
 ```
-</details>
 
 ## zephir (`zephir`)
 
-<details>
-<summary>Usage</summary>
-
 ```html
 <script>
-  import { zephir } from 'svelte-highlight/languages';
+  // base import
+  import { zephir } from "svelte-highlight/src/languages";
+
+  // direct import
+  import zephir from "svelte-highlight/src/languages/zephir";
 </script>
 ```
-</details>
-
-
