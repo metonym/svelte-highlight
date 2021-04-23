@@ -19,9 +19,7 @@ export default {
     svelte({
       emitCss: false,
       preprocess: sveltePreprocess(),
-      compilerOptions: {
-        dev: !IS_PROD,
-      },
+      compilerOptions: { dev: !IS_PROD },
     }),
     commonjs(),
     resolve({ browser: true, dedupe: ["svelte"] }),
