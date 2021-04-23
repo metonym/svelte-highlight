@@ -17,6 +17,10 @@
   padding: 0 0.5rem;
 }
 
+li > .code {
+  font-size: .75rem;
+}
+
 pre.hljs {
   padding: 1.25rem 1rem 1.375rem !important;
   max-width: 44rem;

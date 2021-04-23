@@ -6,8 +6,6 @@
   import HighlightSvelte from "svelte-highlight/src/HighlightSvelte.svelte";
   import * as styles from "svelte-highlight/src/styles";
 
-  // TODO: toggle between CSS/JS import
-
   $: code = `<script>
   import Highlight from "svelte-highlight";
   import typescript from "svelte-highlight/src/languages/typescript";

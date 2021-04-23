@@ -9,16 +9,16 @@
 
 <Row>
   <Column xlg="{4}" lg="{4}">
-    <span class="mr-3">{NAME} v{VERSION_PACKAGE}</span>
+    <span class="mr-3">{NAME} version {VERSION_PACKAGE}</span>
   </Column>
   <Column>
-    <Link class="mr-3" href="{HOMEPAGE}">GitHub</Link>
-    <Link class="mr-3" href="https://www.npmjs.com/package/{NAME}">NPM</Link>
+    <Link class="mr-3" href="{HOMEPAGE}" target="_blank">GitHub</Link>
+    <Link class="mr-3" href="https://www.npmjs.com/package/{NAME}" target="_blank">NPM</Link>
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <span class="text-02 mr-3">Site last updated {TS}</span>
+    <span class="label-01 mr-3">Site last updated {TS}</span>
   </Column>
 </Row>

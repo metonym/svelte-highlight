@@ -1,7 +1,16 @@
 <script>
-  import { Row, Column, Link } from "carbon-components-svelte";
+  import {
+    Row,
+    Column,
+    Link,
+    UnorderedList,
+    ListItem,
+  } from "carbon-components-svelte";
   import ScopedStyle from "$lib/ScopedStyle.svelte";
   import CodeSnippet from "$lib/CodeSnippet.svelte";
+  import { base } from "$app/paths";
+  import ScopedStyleSvelte from "$lib/ScopedStyleSvelte.svelte";
+  import ScopedStyleAuto from "$lib/ScopedStyleAuto.svelte";
 
   const NAME = process.env.NAME;
 </script>
@@ -45,12 +54,49 @@
   </Column>
 </Row>
 
-<Row>
-  <Column xlg="{6}" lg="{6}">
-    <p>Regular Highlight</p>
+<Row class="mb-7">
+  <Column xlg="{10}" lg="{10}">
+    <p class="mb-5">The default Highlight component requires two props:</p>
+    <UnorderedList class="mb-5">
+      <ListItem><code class="code">code</code>: text to highlight</ListItem>
+      <ListItem>
+        <code class="code">language</code>: language used to highlight the text
+      </ListItem>
+    </UnorderedList>
+    <p class="mb-5">
+      Languages can be found in <code class="code"
+        >"svelte-highlight/src/languages"</code
+      >.
+    </p>
+    <p class="mb-5">
+      See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
+      list of supported languages.
+    </p>
   </Column>
   <Column noGutter xlg="{10}" lg="{10}">
     <ScopedStyle name="atom-one-dark" moduleName="atomOneDark" />
+  </Column>
+  <Column xlg="{10}" lg="{10}">
+    <p class="mb-5">
+      Styles can be imported from <code class="code"
+        >"svelte-highlight/src/styles"</code
+      >.
+    </p>
+    <p class="mb-5">There are two ways to add styles:</p>
+    <UnorderedList class="mb-5">
+      <ListItem
+        ><code class="code">Injected styles</code>: JavaScript styles injected
+        using the svelte:head API</ListItem
+      >
+      <ListItem>
+        <code class="code">CSS StyleSheet</code>: CSS file that may require an
+        appropriate file loader
+      </ListItem>
+    </UnorderedList>
+    <p class="mb-5">
+      Refer to the <Link size="lg" href="{base}/styles">Styles page</Link> for a
+      list of supported styles.
+    </p>
   </Column>
 </Row>
 
@@ -60,51 +106,40 @@
   </Column>
 </Row>
 
+<Row class="mb-7">
+  <Column xlg="{10}" lg="{10}">
+    <p class="mb-5">
+      Use the <code class="code">HighlightSvelte</code> component for Svelte syntax
+      highlighting.
+    </p>
+  </Column>
+  <Column noGutter xlg="{10}" lg="{10}">
+    <ScopedStyleSvelte name="atom-one-dark" moduleName="atomOneDark" />
+  </Column>
+</Row>
+
 <Row>
   <Column>
     <h3>Auto-highlighting</h3>
   </Column>
 </Row>
 
-<Row noGutter>
-  <Column>
-    <hr />
+<Row class="mb-7">
+  <Column xlg="{10}" lg="{10}">
+    <p class="mb-5">
+      The <code class="code">HighlightAuto</code> component invokes the
+      <code class="code">highlightAuto</code>
+      API from <code class="code">highlight.js</code>.
+    </p>
   </Column>
-</Row>
-
-<Row>
-  <Column>
-    <h3>API</h3>
-  </Column>
-</Row>
-
-<Row>
-  <Column>
-    <h4>Props</h4>
-  </Column>
-</Row>
-
-<Row>
-  <Column>
-    <h4>Slots</h4>
-  </Column>
-</Row>
-
-<Row>
-  <Column>
-    <h4>Events</h4>
+  <Column noGutter xlg="{10}" lg="{10}">
+    <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
 
 <Row noGutter>
   <Column>
     <hr />
-  </Column>
-</Row>
-
-<Row>
-  <Column>
-    <h3>Custom language</h3>
   </Column>
 </Row>
 
@@ -131,5 +166,11 @@
   <Column>
     <h3 class="mb-7">License</h3>
     <p class="mb-5">MIT</p>
+  </Column>
+</Row>
+
+<Row noGutter>
+  <Column>
+    <hr />
   </Column>
 </Row>
