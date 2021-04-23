@@ -7,6 +7,7 @@
     "dev": "svelte-kit dev",
     "build:local": "svelte-kit build",
     "build": "BASE=true svelte-kit build",
+    "deploy": "npx gh-pages -d build",
     "start": "svelte-kit start"
   },
   "devDependencies": {
