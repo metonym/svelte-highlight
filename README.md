@@ -102,7 +102,7 @@ The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js
 
   $: code = `<style>
   .body { margin: 0; padding: 0; }
-<\/style>;
+<\/style>`;
 </script>
 
 <svelte:head>
