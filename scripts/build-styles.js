@@ -4,8 +4,6 @@ const utils = require("./utils");
 
 async function buildStyles() {
   let names = [];
-  let types = "";
-  let base = "";
   let styles = [];
 
   await totalist("node_modules/highlight.js/styles", async (file, absPath) => {
@@ -23,9 +21,6 @@ async function buildStyles() {
       }
 
       names.push(name);
-
-      types += `export const ${moduleName}: string;\n`;
-      base += `export { default as ${moduleName} } from './${name}';`;
       styles.push({ name, moduleName });
 
       const content = await utils.fs.readFile(absPath, "utf-8");
@@ -76,6 +71,16 @@ async function buildStyles() {
 \`\`\`\n\n`;
       })
       .join("");
+
+  const types = styles
+    .map((style) => `export const ${style.moduleName}: string;\n`)
+    .join("");
+  const base = styles
+    .map(
+      (style) =>
+        `export { default as ${style.moduleName} } from './${style.name}';\n`
+    )
+    .join("");
 
   await utils.writeTo("src/styles/index.js", base);
   await utils.writeTo("SUPPORTED_STYLES.md", markdown);
