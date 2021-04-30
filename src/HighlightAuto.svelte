@@ -10,7 +10,7 @@
    */
   export let code = undefined;
 
-  import hljs from "highlight.js/lib/core.js";
+  import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
