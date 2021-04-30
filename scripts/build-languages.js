@@ -37,7 +37,7 @@ async function buildLanguages() {
     );
     await utils.writeTo(
       `src/languages/${name}.js`,
-      `import ${moduleName} from "highlight.js/lib/languages/${name}.js";\n
+      `import ${moduleName} from "highlight.js/lib/languages/${name}";\n
 export default { name: "${name}", register: ${moduleName} };\n`
     );
   });
