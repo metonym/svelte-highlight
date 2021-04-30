@@ -14,7 +14,7 @@ async function buildLanguages() {
     let moduleName = name;
 
     if (/^[0-9]/.test(name)) moduleName = `_${name}`;
-    if (/-/.test(name)) moduleName = utils.toPascalCase(name);
+    if (/-/.test(name)) moduleName = utils.toCamelCase(name);
 
     types += `export const ${moduleName}: HljsLanguage & { name: "${name}"; };\n\n`;
     base += `export { default as ${moduleName} } from './${name}';\n`;
@@ -37,7 +37,7 @@ async function buildLanguages() {
     );
     await utils.writeTo(
       `src/languages/${name}.js`,
-      `import ${moduleName} from "highlight.js/lib/languages/${name}.js";\n
+      `import ${moduleName} from "highlight.js/lib/languages/${name}";\n
 export default { name: "${name}", register: ${moduleName} };\n`
     );
   });

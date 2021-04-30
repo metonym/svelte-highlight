@@ -34,6 +34,8 @@ module.exports = {
     target: "#svelte",
     appDir: "app",
     paths,
-    vite: { optimizeDeps: ["copy-to-clipboard"] },
+    vite: {
+      optimizeDeps: { include: ["carbon-components-svelte", "clipboard-copy"] },
+    },
   },
 };

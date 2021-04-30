@@ -10,10 +10,10 @@
    */
   export let code = undefined;
 
-  import hljs from "highlight.js/lib/core.js";
-  import xml from "highlight.js/lib/languages/xml.js";
-  import javascript from "highlight.js/lib/languages/javascript.js";
-  import css from "highlight.js/lib/languages/css.js";
+  import hljs from "highlight.js/lib/core";
+  import xml from "highlight.js/lib/languages/xml";
+  import javascript from "highlight.js/lib/languages/javascript";
+  import css from "highlight.js/lib/languages/css";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();

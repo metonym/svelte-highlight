@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 191 languages exported from highlight.js@10.7.2
+> 190 languages exported from highlight.js@11.0.0-alpha1
 
 ## 1c (`_1c`)
 
@@ -275,18 +275,6 @@
 
   // direct import
   import brainfuck from "svelte-highlight/src/languages/brainfuck";
-</script>
-```
-
-## c-like (`cLike`)
-
-```html
-<script>
-  // base import
-  import { cLike } from "svelte-highlight/src/languages";
-
-  // direct import
-  import cLike from "svelte-highlight/src/languages/c-like";
 </script>
 ```
 
@@ -962,18 +950,6 @@
 </script>
 ```
 
-## htmlbars (`htmlbars`)
-
-```html
-<script>
-  // base import
-  import { htmlbars } from "svelte-highlight/src/languages";
-
-  // direct import
-  import htmlbars from "svelte-highlight/src/languages/htmlbars";
-</script>
-```
-
 ## http (`http`)
 
 ```html
@@ -1415,6 +1391,18 @@
 
   // direct import
   import n1ql from "svelte-highlight/src/languages/n1ql";
+</script>
+```
+
+## nestedtext (`nestedtext`)
+
+```html
+<script>
+  // base import
+  import { nestedtext } from "svelte-highlight/src/languages";
+
+  // direct import
+  import nestedtext from "svelte-highlight/src/languages/nestedtext";
 </script>
 ```
 
@@ -1970,18 +1958,6 @@
 </script>
 ```
 
-## sql_more (`sql_more`)
-
-```html
-<script>
-  // base import
-  import { sql_more } from "svelte-highlight/src/languages";
-
-  // direct import
-  import sql_more from "svelte-highlight/src/languages/sql_more";
-</script>
-```
-
 ## sql (`sql`)
 
 ```html
@@ -2243,6 +2219,18 @@
 
   // direct import
   import vim from "svelte-highlight/src/languages/vim";
+</script>
+```
+
+## wasm (`wasm`)
+
+```html
+<script>
+  // base import
+  import { wasm } from "svelte-highlight/src/languages";
+
+  // direct import
+  import wasm from "svelte-highlight/src/languages/wasm";
 </script>
 ```
 

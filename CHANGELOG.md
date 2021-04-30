@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-rc.1](https://github.com/metonym/svelte-highlight/releases/tag/v2.0.0-rc.1) - 2021-04-30
+
+**Fixes**
+
+- omit `.js` extension when importing `highlight.js` language
+- sort `types/styles/index.d.ts` by name
+
+## [2.0.0-rc.0](https://github.com/metonym/svelte-highlight/releases/tag/v2.0.0-rc.0) - 2021-04-30
+
+**Breaking Changes**
+
+- upgrade `highlight.js` to the next major version (v11), which supports ESM
+  - removed languages: `c-like`, `htmlbars`, `sql_more`
+
+**Features**
+
+- added languages: `nestedtext`, `wasm`
+- 143 new styles
+
 ## [1.0.1](https://github.com/metonym/svelte-highlight/releases/tag/v1.0.1) - 2021-04-23
 
 **Fixes**

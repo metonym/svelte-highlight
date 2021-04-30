@@ -2,7 +2,7 @@
   import Highlight, { HighlightAuto, HighlightSvelte } from "../types";
   import { typescript } from "../types/src/languages";
   import javascript from "../types/src/languages/javascript";
-  import { github, purebasic } from "../types/src/styles";
+  import { github, purebasic, _3024 } from "../types/src/styles";
   import "svelte-highlight/styles/github.css";
 
   let toggled = true;
@@ -18,6 +18,7 @@
 <svelte:head>
   {@html github}
   {@html purebasic}
+  {@html _3024}
 </svelte:head>
 
 <HighlightAuto code="{toggled ? code : codeSvelte}" />

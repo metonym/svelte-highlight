@@ -494,10 +494,10 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-highlight.js@10.7.2:
-  version "10.7.2"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.2.tgz#89319b861edc66c48854ed1e6da21ea89f847360"
-  integrity sha512-oFLl873u4usRM9K63j4ME9u3etNF0PLiJhSQ8rdfuL51Wn3zkD6drf9ZW0dOzjnZI22YYG24z30JcmfCZjMgYg==
+highlight.js@11.0.0-alpha1:
+  version "11.0.0-alpha1"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.0.0-alpha1.tgz#675188cf42c269e039ed1d55be54f546571e1f56"
+  integrity sha512-wQmLcqsHXOysXnETrFkiAjEJO+Jcy8t86/f0G8p8quszhuvrtJYa3yXtp7cWP5KCBDdsUD40/J1XHnKhM8hz5Q==
 
 hosted-git-info@^4.0.1:
   version "4.0.2"
@@ -1166,7 +1166,7 @@ smart-buffer@^4.1.0:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.1.0.tgz#91605c25d91652f4661ea69ccf45f1b331ca21ba"
   integrity sha512-iVICrxOzCynf/SNaBQCw34eM9jROU/s5rzIhpOvzhzuYHfJR/DhZfDkXiZSgKXfgv26HT3Yni3AV/DGw0cGnnw==
 
-snowpack@^3.0.1:
+snowpack@3.3.5:
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/snowpack/-/snowpack-3.3.5.tgz#b646ede049f0fc0c23e55bd3af579929f273cc79"
   integrity sha512-QI6/PcSud39ZAmrs7IiBSCr3PWXxc4/w2SNJp32+n7XsXxSB4waJ+jpG5rtJAeif5pqRNkX4887PKwWsMzFRCw==
@@ -1267,12 +1267,12 @@ strip-indent@^3.0.0:
   dependencies:
     min-indent "^1.0.0"
 
-svelte-highlight@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-1.0.0.tgz#eb3248685cc5fa54d66aa669b26b764c73144c0d"
-  integrity sha512-FiIDRg0g7zoPC+C4PrwF3KdADW3fuss6VF0tB72DwH9EJ0AZIZrGdalOwNy96WBs3I8X2jxsOsxL8n/kdPeMlw==
+svelte-highlight@^2.0.0-rc.1:
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-2.0.0-rc.1.tgz#8d711864e0392ae4e9f18bce8acbdad6f832caee"
+  integrity sha512-ulh35z0sAjobJ8Id25oQifBZMA+ehO2uGkNCNnpgNaXli1AtvstEroGUSi6Pyvvw0AM29HTUhHd9mYafNpxsOw==
   dependencies:
-    highlight.js "10.7.2"
+    highlight.js "11.0.0-alpha1"
 
 svelte-hmr@^0.13.2:
   version "0.13.3"
@@ -1289,10 +1289,10 @@ svelte-preprocess@^4.6.0:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.37.0:
-  version "3.37.0"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.37.0.tgz#dc7cd24bcc275cdb3f8c684ada89e50489144ccd"
-  integrity sha512-TRF30F4W4+d+Jr2KzUUL1j8Mrpns/WM/WacxYlo5MMb2E5Qy2Pk1Guj6GylxsW9OnKQl1tnF8q3hG/hQ3h6VUA==
+svelte@^3.38.0:
+  version "3.38.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.38.0.tgz#8ac83558bc7beda7541fc4a347b03cf7006d5447"
+  integrity sha512-V0CbyzvXEka7zQtRYt++cpPh0zxxDUTIeNlq4KncGXn2qHnQFZ2i4L4+2QOfLwOudb9cewJeegupBQcscnBaaA==
 
 tar@^6.0.2, tar@^6.1.0:
   version "6.1.0"
