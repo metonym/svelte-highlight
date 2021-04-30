@@ -794,6 +794,94 @@
 </script>
 ```
 
+## base16-github (`base16Github`)
+
+**Injected Styles**
+
+```html
+<script>
+  import base16Github from "svelte-highlight/src/styles/base16Github";
+</script>
+
+<svelte:head>
+  {@html base16Github}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/base16-github.css";
+</script>
+```
+
+## base16-ir-black (`base16IrBlack`)
+
+**Injected Styles**
+
+```html
+<script>
+  import base16IrBlack from "svelte-highlight/src/styles/base16IrBlack";
+</script>
+
+<svelte:head>
+  {@html base16IrBlack}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/base16-ir-black.css";
+</script>
+```
+
+## base16-monokai (`base16Monokai`)
+
+**Injected Styles**
+
+```html
+<script>
+  import base16Monokai from "svelte-highlight/src/styles/base16Monokai";
+</script>
+
+<svelte:head>
+  {@html base16Monokai}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/base16-monokai.css";
+</script>
+```
+
+## base16-nord (`base16Nord`)
+
+**Injected Styles**
+
+```html
+<script>
+  import base16Nord from "svelte-highlight/src/styles/base16Nord";
+</script>
+
+<svelte:head>
+  {@html base16Nord}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/base16-nord.css";
+</script>
+```
+
 ## bespin (`bespin`)
 
 **Injected Styles**
@@ -2092,28 +2180,6 @@
 </script>
 ```
 
-## github (`github`)
-
-**Injected Styles**
-
-```html
-<script>
-  import github from "svelte-highlight/src/styles/github";
-</script>
-
-<svelte:head>
-  {@html github}
-</svelte:head>
-```
-
-**CSS StyleSheet**
-
-```html
-<script>
-  import "svelte-highlight/src/languages/github.css";
-</script>
-```
-
 ## github-gist (`githubGist`)
 
 **Injected Styles**
@@ -2884,28 +2950,6 @@
 </script>
 ```
 
-## ir-black (`irBlack`)
-
-**Injected Styles**
-
-```html
-<script>
-  import irBlack from "svelte-highlight/src/styles/irBlack";
-</script>
-
-<svelte:head>
-  {@html irBlack}
-</svelte:head>
-```
-
-**CSS StyleSheet**
-
-```html
-<script>
-  import "svelte-highlight/src/languages/ir-black.css";
-</script>
-```
-
 ## isbl-editor-dark (`isblEditorDark`)
 
 **Injected Styles**
@@ -3412,28 +3456,6 @@
 </script>
 ```
 
-## monokai (`monokai`)
-
-**Injected Styles**
-
-```html
-<script>
-  import monokai from "svelte-highlight/src/styles/monokai";
-</script>
-
-<svelte:head>
-  {@html monokai}
-</svelte:head>
-```
-
-**CSS StyleSheet**
-
-```html
-<script>
-  import "svelte-highlight/src/languages/monokai.css";
-</script>
-```
-
 ## monokai-sublime (`monokaiSublime`)
 
 **Injected Styles**
@@ -3541,28 +3563,6 @@
 ```html
 <script>
   import "svelte-highlight/src/languages/nnfx-light.css";
-</script>
-```
-
-## nord (`nord`)
-
-**Injected Styles**
-
-```html
-<script>
-  import nord from "svelte-highlight/src/styles/nord";
-</script>
-
-<svelte:head>
-  {@html nord}
-</svelte:head>
-```
-
-**CSS StyleSheet**
-
-```html
-<script>
-  import "svelte-highlight/src/languages/nord.css";
 </script>
 ```
 

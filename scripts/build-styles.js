@@ -3,18 +3,26 @@ const path = require("path");
 const utils = require("./utils");
 
 async function buildStyles() {
+  let names = [];
   let types = "";
   let base = "";
   let styles = [];
 
   await totalist("node_modules/highlight.js/styles", async (file, absPath) => {
     if (/\.(css)$/.test(file)) {
-      let { name } = path.parse(file);
+      let { name, dir } = path.parse(file);
       let moduleName = utils.toPascalCase(name);
 
       if (/^[0-9]/.test(moduleName) || /^default$/.test(moduleName)) {
         moduleName = `_${moduleName}`;
       }
+
+      if (names.includes(name)) {
+        name = `${dir}-${name}`;
+        moduleName = utils.toPascalCase(name);
+      }
+
+      names.push(name);
 
       types += `export const ${moduleName}: string;\n`;
       base += `export { default as ${moduleName} } from './${name}';`;
