@@ -48,8 +48,6 @@ export const bnf: HljsLanguage & { name: "bnf" };
 
 export const brainfuck: HljsLanguage & { name: "brainfuck" };
 
-export const cLike: HljsLanguage & { name: "c-like" };
-
 export const c: HljsLanguage & { name: "c" };
 
 export const cal: HljsLanguage & { name: "cal" };
@@ -162,8 +160,6 @@ export const haxe: HljsLanguage & { name: "haxe" };
 
 export const hsp: HljsLanguage & { name: "hsp" };
 
-export const htmlbars: HljsLanguage & { name: "htmlbars" };
-
 export const http: HljsLanguage & { name: "http" };
 
 export const hy: HljsLanguage & { name: "hy" };
@@ -237,6 +233,8 @@ export const monkey: HljsLanguage & { name: "monkey" };
 export const moonscript: HljsLanguage & { name: "moonscript" };
 
 export const n1ql: HljsLanguage & { name: "n1ql" };
+
+export const nestedtext: HljsLanguage & { name: "nestedtext" };
 
 export const nginx: HljsLanguage & { name: "nginx" };
 
@@ -330,8 +328,6 @@ export const sml: HljsLanguage & { name: "sml" };
 
 export const sqf: HljsLanguage & { name: "sqf" };
 
-export const sql_more: HljsLanguage & { name: "sql_more" };
-
 export const sql: HljsLanguage & { name: "sql" };
 
 export const stan: HljsLanguage & { name: "stan" };
@@ -375,6 +371,8 @@ export const verilog: HljsLanguage & { name: "verilog" };
 export const vhdl: HljsLanguage & { name: "vhdl" };
 
 export const vim: HljsLanguage & { name: "vim" };
+
+export const wasm: HljsLanguage & { name: "wasm" };
 
 export const x86asm: HljsLanguage & { name: "x86asm" };
 

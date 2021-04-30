@@ -16,14 +16,14 @@
     "format": "prettier --write '.'"
   },
   "dependencies": {
-    "highlight.js": "10.7.2"
+    "highlight.js": "11.0.0-alpha1"
   },
   "devDependencies": {
-    "glob": "^7.1.6",
     "prettier": "^2.2.1",
     "prettier-plugin-svelte": "^2.2.0",
     "svelte": "^3.37.0",
-    "svelte-check": "^1.4.0"
+    "svelte-check": "^1.4.0",
+    "totalist": "^2.0.0"
   },
   "prettier": {
     "svelteStrictMode": true,
