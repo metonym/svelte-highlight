@@ -23,11 +23,11 @@ async function buildLanguages() {
 
 \`\`\`html
 <script>
+  // direct import (recommended)
+  import ${moduleName} from "svelte-highlight/src/languages/${name}";
+
   // base import
   import { ${moduleName} } from "svelte-highlight/src/languages";
-  
-  // direct import
-  import ${moduleName} from "svelte-highlight/src/languages/${name}";
 <\/script>
 \`\`\`\n\n`;
 
