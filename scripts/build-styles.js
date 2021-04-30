@@ -11,7 +11,7 @@ async function buildStyles() {
   await totalist("node_modules/highlight.js/styles", async (file, absPath) => {
     if (/\.(css)$/.test(file)) {
       let { name, dir } = path.parse(file);
-      let moduleName = utils.toPascalCase(name);
+      let moduleName = utils.toCamelCase(name);
 
       if (/^[0-9]/.test(moduleName) || /^default$/.test(moduleName)) {
         moduleName = `_${moduleName}`;
@@ -19,7 +19,7 @@ async function buildStyles() {
 
       if (names.includes(name)) {
         name = `${dir}-${name}`;
-        moduleName = utils.toPascalCase(name);
+        moduleName = utils.toCamelCase(name);
       }
 
       names.push(name);

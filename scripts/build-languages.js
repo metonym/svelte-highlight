@@ -14,7 +14,7 @@ async function buildLanguages() {
     let moduleName = name;
 
     if (/^[0-9]/.test(name)) moduleName = `_${name}`;
-    if (/-/.test(name)) moduleName = utils.toPascalCase(name);
+    if (/-/.test(name)) moduleName = utils.toCamelCase(name);
 
     types += `export const ${moduleName}: HljsLanguage & { name: "${name}"; };\n\n`;
     base += `export { default as ${moduleName} } from './${name}';\n`;

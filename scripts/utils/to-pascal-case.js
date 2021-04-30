@@ -5,7 +5,7 @@
  * @param {string} str
  * @returns {string}
  */
-function toPascalCase(str) {
+function toCamelCase(str) {
   return str
     .split(new RegExp(/-|\./g))
     .map((fragment, index) => {
@@ -15,4 +15,4 @@ function toPascalCase(str) {
     .join("");
 }
 
-module.exports = { toPascalCase };
+module.exports = { toCamelCase };
