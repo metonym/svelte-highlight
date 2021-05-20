@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 240 styles exported from highlight.js@11.0.0-alpha1
+> 241 styles exported from highlight.js@11.0.0-beta1
 
 ## 3024 (`_3024`)
 
@@ -1429,6 +1429,28 @@
 ```html
 <script>
   import "svelte-highlight/src/languages/color-brewer.css";
+</script>
+```
+
+## colors (`colors`)
+
+**Injected Styles**
+
+```html
+<script>
+  import colors from "svelte-highlight/src/styles/colors";
+</script>
+
+<svelte:head>
+  {@html colors}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/colors.css";
 </script>
 ```
 

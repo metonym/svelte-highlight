@@ -63,6 +63,7 @@ export const classicLight: string;
 export const codepenEmbed: string;
 export const codeschool: string;
 export const colorBrewer: string;
+export const colors: string;
 export const cupcake: string;
 export const cupertino: string;
 export const danqing: string;
