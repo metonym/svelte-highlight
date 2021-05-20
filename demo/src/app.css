@@ -62,6 +62,13 @@ pre.hljs {
   letter-spacing: var(--cds-label-01-letter-spacing);
 }
 
+.code-01 {
+  font-size: var(--cds-code-01-font-size);
+  font-weight: var(--cds-code-01-font-weight);
+  letter-spacing: var(--cds-code-01-letter-spacing);
+  line-height: var(--cds-code-01-line-height);
+}
+
 hr {
   margin-top: var(--cds-spacing-05);
   margin-bottom: var(--cds-spacing-05);
