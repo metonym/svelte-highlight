@@ -150,10 +150,10 @@ has-flag@^4.0.0:
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
 
-highlight.js@11.0.0-alpha1:
-  version "11.0.0-alpha1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.0.0-alpha1.tgz#675188cf42c269e039ed1d55be54f546571e1f56"
-  integrity sha512-wQmLcqsHXOysXnETrFkiAjEJO+Jcy8t86/f0G8p8quszhuvrtJYa3yXtp7cWP5KCBDdsUD40/J1XHnKhM8hz5Q==
+highlight.js@11.0.0-beta1:
+  version "11.0.0-beta1"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.0.0-beta1.tgz#25a5bb4d3d146559eced4546e30589b677eaea55"
+  integrity sha512-VW5JkcAcxP4xmNXd30gI5xlgDyb+gdRRfs/uviAknAxbykaoW1Ua0xCHPFrZgeuAcWSc0ZpyI11r5kigJFVH2A==
 
 import-fresh@^3.2.1:
   version "3.3.0"

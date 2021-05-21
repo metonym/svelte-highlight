@@ -24,7 +24,10 @@ async function buildStyles() {
       styles.push({ name, moduleName });
 
       const content = await utils.fs.readFile(absPath, "utf-8");
-      const exportee = `const ${moduleName} = \`<style>${content}</style>\`;\n
+      const exportee = `const ${moduleName} = \`<style>${content.replace(
+        /\`/g,
+        "\\`"
+      )}</style>\`;\n
       export default ${moduleName};\n`;
 
       await utils.writeTo(

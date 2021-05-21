@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 190 languages exported from highlight.js@11.0.0-alpha1
+> 191 languages exported from highlight.js@11.0.0-beta1
 
 ## 1c (`_1c`)
 
@@ -2231,6 +2231,18 @@
 
   // base import
   import { wasm } from "svelte-highlight/src/languages";
+</script>
+```
+
+## wren (`wren`)
+
+```html
+<script>
+  // direct import (recommended)
+  import wren from "svelte-highlight/src/languages/wren";
+
+  // base import
+  import { wren } from "svelte-highlight/src/languages";
 </script>
 ```
 

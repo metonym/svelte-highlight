@@ -374,6 +374,8 @@ export const vim: HljsLanguage & { name: "vim" };
 
 export const wasm: HljsLanguage & { name: "wasm" };
 
+export const wren: HljsLanguage & { name: "wren" };
+
 export const x86asm: HljsLanguage & { name: "x86asm" };
 
 export const xl: HljsLanguage & { name: "xl" };

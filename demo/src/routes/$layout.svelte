@@ -30,6 +30,7 @@
   };
 
   const HOMEPAGE = process.env.HOMEPAGE;
+  const VERSION_PACKAGE = process.env.VERSION_PACKAGE;
 
   let isSideNavOpen = false;
 
@@ -46,6 +47,12 @@
   href="{base}/"
   bind:isSideNavOpen
 >
+  <span class="flex align-baseline" slot="platform">
+    Svelte Highlight
+    <span class="code-01" style="color: #c6c6c6">
+      v{VERSION_PACKAGE}
+    </span>
+  </span>
   <div slot="skip-to-content">
     <SkipToContent />
   </div>
