@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 241 styles exported from highlight.js@11.0.0-beta1
+> 242 styles exported from highlight.js@11.0.0
 
 ## 3024 (`_3024`)
 
@@ -2202,17 +2202,17 @@
 </script>
 ```
 
-## github-gist (`githubGist`)
+## github-dark (`githubDark`)
 
 **Injected Styles**
 
 ```html
 <script>
-  import githubGist from "svelte-highlight/src/styles/githubGist";
+  import githubDark from "svelte-highlight/src/styles/githubDark";
 </script>
 
 <svelte:head>
-  {@html githubGist}
+  {@html githubDark}
 </svelte:head>
 ```
 
@@ -2220,7 +2220,29 @@
 
 ```html
 <script>
-  import "svelte-highlight/src/languages/github-gist.css";
+  import "svelte-highlight/src/languages/github-dark.css";
+</script>
+```
+
+## github-dark-dimmed (`githubDarkDimmed`)
+
+**Injected Styles**
+
+```html
+<script>
+  import githubDarkDimmed from "svelte-highlight/src/styles/githubDarkDimmed";
+</script>
+
+<svelte:head>
+  {@html githubDarkDimmed}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/github-dark-dimmed.css";
 </script>
 ```
 
