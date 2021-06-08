@@ -1,15 +1,20 @@
-const static = require("@sveltejs/adapter-static");
-const carbon = require("carbon-components-svelte/preprocess");
-const { name, version, dependencies, homepage } = require("../package.json");
+import addapter from "@sveltejs/adapter-static";
+import fs from "fs";
+import { optimizeImports } from "carbon-preprocess-svelte";
+
+const pkg = JSON.parse(
+  fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")
+);
+const { name, version, dependencies, homepage } = pkg;
 
 const BASE = process.env.BASE === "true";
 const BASE_PATH = `/${name}`;
 const paths = BASE ? { base: BASE_PATH } : {};
 
 /** @type {import('@sveltejs/kit').Config} */
-module.exports = {
+const config = {
   preprocess: [
-    carbon.optimizeCarbonImports(),
+    optimizeImports(),
     {
       script: ({ content }) => {
         return {
@@ -30,12 +35,16 @@ module.exports = {
     },
   ],
   kit: {
-    adapter: static(),
+    adapter: addapter(),
     target: "#svelte",
     appDir: "app",
     paths,
     vite: {
-      optimizeDeps: { include: ["carbon-components-svelte", "clipboard-copy"] },
+      optimizeDeps: {
+        include: ["highlight.js/lib/core", "clipboard-copy"],
+      },
     },
   },
 };
+
+export default config;
