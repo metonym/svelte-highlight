@@ -13,6 +13,12 @@
   import ScopedStyleAuto from "$lib/ScopedStyleAuto.svelte";
 
   const NAME = process.env.NAME;
+
+  const sveltekit = `vite: {
+  optimizeDeps: {
+    include: ["highlight.js/lib/core"],
+  },
+}`;
 </script>
 
 <Row>
@@ -45,6 +51,37 @@
 <Row noGutter>
   <Column>
     <hr />
+  </Column>
+</Row>
+
+<Row>
+  <Column>
+    <h3>SvelteKit set-up</h3>
+  </Column>
+</Row>
+
+<Row class="mb-7">
+  <Column xlg="{10}" lg="{10}">
+    <p class="mb-5">
+      To use this library with SvelteKit, add the following to the kit field in
+      your
+      <strong>svelte.config.js</strong>:
+    </p>
+
+    <Row class="mb-7" noGutter>
+      <CodeSnippet type="multi" code="{sveltekit}" />
+    </Row>
+
+    <p class="mb-5">
+      Refer to the <Link
+        inline
+        size="lg"
+        rel="external"
+        href="https://github.com/metonym/svelte-highlight/tree/master/examples/sveltekit"
+      >
+        SvelteKit example
+      </Link> for a sample set-up.
+    </p>
   </Column>
 </Row>
 

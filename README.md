@@ -10,7 +10,7 @@ This component wraps [highlight.js](https://github.com/highlightjs/highlight.js)
 
 Try it in the [Svelte REPL](https://svelte.dev/repl/fe613c5a58f041b9babc801226a17220).
 
-## [Live Demo](https://metonym.github.io/svelte-highlight)
+## [Live demo](https://metonym.github.io/svelte-highlight)
 
 ## Installation
 
@@ -18,6 +18,23 @@ Try it in the [Svelte REPL](https://svelte.dev/repl/fe613c5a58f041b9babc801226a1
 yarn add -D svelte-highlight
 # OR
 npm i -D svelte-highlight
+```
+
+## SvelteKit set-up
+
+To use this library with SvelteKit, add the following to `svelte.config.js`:
+
+```diff
+export default {
+  kit: {
+    target: "#svelte",
++   vite: {
++     optimizeDeps: {
++       include: ["highlight.js/lib/core"],
++     },
++   },
+  },
+};
 ```
 
 ## Usage
