@@ -9,7 +9,7 @@ const { name, version, dependencies, homepage } = pkg;
 
 const BASE = process.env.BASE === "true";
 const BASE_PATH = `/${name}`;
-const paths = BASE ? { base: BASE_PATH } : {};
+const paths = BASE ? { base: BASE_PATH, assets: BASE_PATH } : {};
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
