@@ -55,14 +55,14 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
-"@snowpack/plugin-svelte@^3.6.1":
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/@snowpack/plugin-svelte/-/plugin-svelte-3.6.1.tgz#3e53c0805b66f54bafd6b248325a336a7855a746"
-  integrity sha512-i5E3AurytgdaUx58Ki40x+brjfALowxuM3At7EUw16QQAQ5tB2HY12enO0+BlWggLOdmNO5hR+pccd3soErdkQ==
+"@snowpack/plugin-svelte@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@snowpack/plugin-svelte/-/plugin-svelte-3.7.0.tgz#3f604fe17d7a82cd64fbac0c89b087b64c0b31e5"
+  integrity sha512-YR2t/aMswjUV0D/qFBjIGA7VIgl5IrNHIuJbNtj2YR2heRWaSm7LYLUJKbnho7iKUqCtc+ZcwpgGZO/VNYlLNg==
   dependencies:
     rollup-plugin-svelte "^7.0.0"
     svelte-hmr "^0.13.2"
-    svelte-preprocess "^4.6.0"
+    svelte-preprocess "^4.7.2"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -494,10 +494,10 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-highlight.js@11.0.0-alpha1:
-  version "11.0.0-alpha1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.0.0-alpha1.tgz#675188cf42c269e039ed1d55be54f546571e1f56"
-  integrity sha512-wQmLcqsHXOysXnETrFkiAjEJO+Jcy8t86/f0G8p8quszhuvrtJYa3yXtp7cWP5KCBDdsUD40/J1XHnKhM8hz5Q==
+highlight.js@11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.0.0.tgz#e22ac9ca45edc4f87a2187685d591a108ceb8449"
+  integrity sha512-ByaTMfsSuoqerTwemOgpIhfULEIaK52JJYhky/sK7/Yqc0+t7Uh5DHay9vIC94YXSupnQ1Vqfc9VXrYP4eXW3Q==
 
 hosted-git-info@^4.0.1:
   version "4.0.2"
@@ -1166,10 +1166,10 @@ smart-buffer@^4.1.0:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.1.0.tgz#91605c25d91652f4661ea69ccf45f1b331ca21ba"
   integrity sha512-iVICrxOzCynf/SNaBQCw34eM9jROU/s5rzIhpOvzhzuYHfJR/DhZfDkXiZSgKXfgv26HT3Yni3AV/DGw0cGnnw==
 
-snowpack@3.3.5:
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/snowpack/-/snowpack-3.3.5.tgz#b646ede049f0fc0c23e55bd3af579929f273cc79"
-  integrity sha512-QI6/PcSud39ZAmrs7IiBSCr3PWXxc4/w2SNJp32+n7XsXxSB4waJ+jpG5rtJAeif5pqRNkX4887PKwWsMzFRCw==
+snowpack@3.5.6:
+  version "3.5.6"
+  resolved "https://registry.yarnpkg.com/snowpack/-/snowpack-3.5.6.tgz#79f8699e4248e19f67ec50433e50072bb2e69e89"
+  integrity sha512-R9uqattPhS2j1zaOFgwl7i54rFTtxxk4kmKmqJBRwD+9YggUulGm7O7YRXaMMjtmi69czK7jxbtZs1Up/xA+1A==
   dependencies:
     cli-spinners "^2.5.0"
     default-browser-id "^2.0.0"
@@ -1267,32 +1267,32 @@ strip-indent@^3.0.0:
   dependencies:
     min-indent "^1.0.0"
 
-svelte-highlight@^2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-2.0.0-rc.1.tgz#8d711864e0392ae4e9f18bce8acbdad6f832caee"
-  integrity sha512-ulh35z0sAjobJ8Id25oQifBZMA+ehO2uGkNCNnpgNaXli1AtvstEroGUSi6Pyvvw0AM29HTUhHd9mYafNpxsOw==
+svelte-highlight@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-3.0.0.tgz#4ad63f8a2e239c7a60c79c0e3dc7e96b63beac40"
+  integrity sha512-Av9AC63eAKejT1ycMchbJTCoWvJnaBDGR2jpjyT7xbPjg8+DYwLpU1tFVRbpQr+iELI8Yzt0JAuVRpu67mx5nw==
   dependencies:
-    highlight.js "11.0.0-alpha1"
+    highlight.js "11.0.0"
 
 svelte-hmr@^0.13.2:
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.13.3.tgz#fba5739b477ea44caf70e542a24a4352bee2b897"
   integrity sha512-gagW62pLQ2lULmvNA3pIZu9pBCYOaGu3rQikUOv6Nokz5VxUgT9/mQLfMxj9phDEKHCg/lgr3i6PkqZDbO9P2Q==
 
-svelte-preprocess@^4.6.0:
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.7.2.tgz#e16bf5cc152df8097485ce8c7842073a83a12b1e"
-  integrity sha512-EToG+08rEsA33btv+C5g2qnRArwpTc5AoU0QBB3ZEkYagxAb2yPNsy0qsmtvbJOTBMy6o3oyijDdl3DMpMvpEg==
+svelte-preprocess@^4.7.2:
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.7.3.tgz#454fa059c2400b15e7a3caeca18993cff9df0e96"
+  integrity sha512-Zx1/xLeGOIBlZMGPRCaXtlMe4ZA0faato5Dc3CosEqwu75MIEPuOstdkH6cy+RYTUYynoxzNaDxkPX4DbrPwRA==
   dependencies:
     "@types/pug" "^2.0.4"
     "@types/sass" "^1.16.0"
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.38.0:
-  version "3.38.0"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.38.0.tgz#8ac83558bc7beda7541fc4a347b03cf7006d5447"
-  integrity sha512-V0CbyzvXEka7zQtRYt++cpPh0zxxDUTIeNlq4KncGXn2qHnQFZ2i4L4+2QOfLwOudb9cewJeegupBQcscnBaaA==
+svelte@^3.38.2:
+  version "3.38.2"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.38.2.tgz#55e5c681f793ae349b5cc2fe58e5782af4275ef5"
+  integrity sha512-q5Dq0/QHh4BLJyEVWGe7Cej5NWs040LWjMbicBGZ+3qpFWJ1YObRmUDZKbbovddLC9WW7THTj3kYbTOFmU9fbg==
 
 tar@^6.0.2, tar@^6.1.0:
   version "6.1.0"
