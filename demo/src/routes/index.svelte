@@ -201,6 +201,21 @@
 
 <Row>
   <Column>
+    <h3 class="mb-7">Examples</h3>
+    <p class="mb-5">
+      See the <Link
+        inline
+        size="lg"
+        rel="external"
+        href="https://github.com/metonym/svelte-highlight/tree/master/examples"
+        >examples folder</Link
+      > for sample set-ups including SvelteKit, Rollup, Webpack, Snowpack, and more.
+    </p>
+  </Column>
+</Row>
+
+<Row>
+  <Column>
     <h3 class="mb-7">License</h3>
     <p class="mb-5">MIT</p>
   </Column>
