@@ -6,13 +6,11 @@
     "build": "svelte-kit build",
     "preview": "svelte-kit preview"
   },
-  "dependencies": {
-    "svelte-highlight": "^2.0.0-rc.1"
-  },
   "devDependencies": {
     "@sveltejs/adapter-node": "next",
     "@sveltejs/kit": "next",
     "svelte": "^3.38.0",
+    "svelte-highlight": "^3.0.0",
     "vite": "^2.2.3"
   }
 }
