@@ -72,8 +72,10 @@
         isSelected="{$page.path === href}"
         on:click="{async () => {
           await tick();
-          // TODO: only close if mobile (1056)
-          // if (isSideNavOpen) isSideNavOpen = false;
+
+          if (window.innerWidth < 1056) {
+            isSideNavOpen = false;
+          }
         }}"
       />
     {/each}
