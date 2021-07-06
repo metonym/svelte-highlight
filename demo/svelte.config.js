@@ -39,10 +39,9 @@ const config = {
     target: "#svelte",
     appDir: "app",
     paths,
+    ssr: false,
     vite: {
-      optimizeDeps: {
-        include: ["highlight.js/lib/core", "clipboard-copy"],
-      },
+      optimizeDeps: { include: ["highlight.js/lib/core"] },
     },
   },
 };
