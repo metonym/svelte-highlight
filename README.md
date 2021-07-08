@@ -14,17 +14,24 @@ Try it in the [Svelte REPL](https://svelte.dev/repl/fe613c5a58f041b9babc801226a1
 
 ## Installation
 
+**Yarn**
+
 ```bash
 yarn add -D svelte-highlight
-# OR
+```
+
+**NPM**
+
+```bash
 npm i -D svelte-highlight
 ```
 
 ## SvelteKit set-up
 
-To use this library with SvelteKit, add the following to `svelte.config.js`:
+To use this library with SvelteKit, instruct vite to optimize `highlight.js/lib/core` in your `svelte.config.js`:
 
 ```diff
+# svelte.config.js
 export default {
   kit: {
     target: "#svelte",
@@ -36,6 +43,8 @@ export default {
   },
 };
 ```
+
+Refer to the [examples/sveltekit](examples/sveltekit) for a sample set-up.
 
 ## Usage
 
