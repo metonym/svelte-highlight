@@ -150,10 +150,10 @@ has-flag@^4.0.0:
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
 
-highlight.js@11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.0.0.tgz#e22ac9ca45edc4f87a2187685d591a108ceb8449"
-  integrity sha512-ByaTMfsSuoqerTwemOgpIhfULEIaK52JJYhky/sK7/Yqc0+t7Uh5DHay9vIC94YXSupnQ1Vqfc9VXrYP4eXW3Q==
+highlight.js@11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.1.0.tgz#0198f7326e64ddfbea5f76b00e84ab542cf24ae8"
+  integrity sha512-X9VVhYKHQPPuwffO8jk4bP/FVj+ibNCy3HxZZNDXFtJrq4O5FdcdCDRIkDis5MiMnjh7UwEdHgRZJcHFYdzDdA==
 
 import-fresh@^3.2.1:
   version "3.3.0"
@@ -251,15 +251,15 @@ picomatch@^2.0.4, picomatch@^2.2.1:
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.2.2.tgz#21f333e9b6b8eaff02468f5146ea406d345f4dad"
   integrity sha512-q0M/9eZHzmr0AulXyPwNfZjtwZ/RBZlbN3K3CErVrk50T2ASYI7Bye0EvekFY3IP1Nt2DHu0re+V2ZHIpMkuWg==
 
-prettier-plugin-svelte@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-svelte/-/prettier-plugin-svelte-2.3.0.tgz#9956a39d18b217557ab8766c264d8cd003983608"
-  integrity sha512-HTzXvSq7lWFuLsSaxYOUkGkVNCl3RrSjDCOgQjkBX5FQGmWjL8o3IFACSGhjPMMfWKADpapAr0zdbBWkND9mqw==
+prettier-plugin-svelte@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-svelte/-/prettier-plugin-svelte-2.3.1.tgz#926184a490549688dbea0a8d61c1b1ae20218368"
+  integrity sha512-F1/r6OYoBq8Zgurhs1MN25tdrhPw0JW5JjioPRqpxbYdmrZ3gY/DzHGs0B6zwd4DLyRsfGB2gqhxUCbHt/D1fw==
 
-prettier@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.0.tgz#b6a5bf1284026ae640f17f7ff5658a7567fc0d18"
-  integrity sha512-kXtO4s0Lz/DW/IJ9QdWhAf7/NmPWQXkFr/r/WkR3vyI+0v8amTDxiaQSLzs8NBlytfLWX/7uQUMIW677yLKl4w==
+prettier@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.2.tgz#ef280a05ec253712e486233db5c6f23441e7342d"
+  integrity sha512-lnJzDfJ66zkMy58OL5/NY5zp70S7Nz6KqcKkXYzn2tMVrNxvbqaBpg7H3qHaLxCJ5lNMsGuM8+ohS7cZrthdLQ==
 
 readdirp@~3.5.0:
   version "3.5.0"
@@ -299,7 +299,7 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-check@^2.0.0:
+svelte-check@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-2.0.0.tgz#c125bd69c204f5f0bb0b000247001400b7e27037"
   integrity sha512-72xHHZG2DUgt1QzKKKvirzvYYDKLfK5L2lJsCCbW87fd383VqZJ08RLKNf6pfEZQJl8yk2rUsTU6krgntB9TXQ==
@@ -324,10 +324,10 @@ svelte-preprocess@^4.0.0:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.38.2:
-  version "3.38.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.38.2.tgz#55e5c681f793ae349b5cc2fe58e5782af4275ef5"
-  integrity sha512-q5Dq0/QHh4BLJyEVWGe7Cej5NWs040LWjMbicBGZ+3qpFWJ1YObRmUDZKbbovddLC9WW7THTj3kYbTOFmU9fbg==
+svelte@^3.38.3:
+  version "3.38.3"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.38.3.tgz#e15a1da98ee4b10162a6c8cb4c80aa86b2b589ed"
+  integrity sha512-N7bBZJH0iF24wsalFZF+fVYMUOigaAUQMIcEKHO3jstK/iL8VmP9xE+P0/a76+FkNcWt+TDv2Gx1taUoUscrvw==
 
 to-regex-range@^5.0.1:
   version "5.0.1"
