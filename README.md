@@ -44,7 +44,7 @@ export default {
 };
 ```
 
-Refer to the [examples/sveltekit](examples/sveltekit) for a sample set-up.
+Refer to [examples/sveltekit](examples/sveltekit) for a sample set-up.
 
 ## Usage
 
