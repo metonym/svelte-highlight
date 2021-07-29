@@ -41,7 +41,7 @@ const config = {
     paths,
     vite: {
       optimizeDeps: {
-        include: ["highlight.js/lib/core", "clipboard-copy"],
+        include: ["highlight.js/lib/core"],
       },
     },
   },
