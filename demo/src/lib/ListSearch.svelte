@@ -11,11 +11,17 @@
 
   export let labelB = "Direct import";
 
-  export let toggled = true;
+  export let currentLabel = labelB;
 
   export let placeholderExample = "JavaScript";
 
-  import { Row, Column, Search, Toggle } from "carbon-components-svelte";
+  import {
+    Row,
+    Column,
+    Search,
+    RadioButton,
+    RadioButtonGroup,
+  } from "carbon-components-svelte";
 
   const VERSION_HLJS = process.env.VERSION_HLJS;
 
@@ -50,13 +56,10 @@
 
 <Row>
   <Column>
-    <Toggle
-      labelText="Import method"
-      size="sm"
-      labelA="{labelA}"
-      labelB="{labelB}"
-      bind:toggled
-    />
+    <RadioButtonGroup legendText="Import method" bind:selected="{currentLabel}">
+      <RadioButton labelText="{labelB}" value="{labelB}" />
+      <RadioButton labelText="{labelA}" value="{labelA}" />
+    </RadioButtonGroup>
   </Column>
 </Row>
 

@@ -13,8 +13,10 @@
   import ListSearch from "$lib/ListSearch.svelte";
   import styles from "$lib/styles.json";
 
-  let useInjectedStyles = true;
+  let currentLabel = "Injected styles";
   let filtered = [];
+
+  $: useInjectedStyles = currentLabel === 'Injected styles'
 </script>
 
 <ListSearch
@@ -23,7 +25,7 @@
   labelA="CSS StyleSheet"
   labelB="Injected styles"
   placeholderExample="Monokai"
-  bind:toggled="{useInjectedStyles}"
+  bind:currentLabel
   bind:filtered
 >
   {#if filtered.length > 0}

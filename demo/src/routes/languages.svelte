@@ -14,8 +14,10 @@
   import CodeSnippet from "$lib/CodeSnippet.svelte";
   import languages from "$lib/languages.json";
 
-  let useDirectImport = true;
+  let currentLabel = "Direct import";
   let filtered = [];
+
+  $: useDirectImport = currentLabel === "Direct import";
 
   function formatCode(name, moduleName, useDirectImport) {
     return `<script>
@@ -37,7 +39,7 @@
   items="{languages}"
   itemName="language"
   placeholderExample="JavaScript"
-  bind:toggled="{useDirectImport}"
+  bind:currentLabel
   bind:filtered
 >
   {#if filtered.length > 0}
