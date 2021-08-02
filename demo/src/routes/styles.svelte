@@ -16,7 +16,7 @@
   let currentLabel = "Injected styles";
   let filtered = [];
 
-  $: useInjectedStyles = currentLabel === 'Injected styles'
+  $: useInjectedStyles = currentLabel === "Injected styles";
 </script>
 
 <ListSearch

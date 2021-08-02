@@ -68,7 +68,10 @@
 <Row class="mb-7">
   <Column xlg="{10}" lg="{10}">
     <p class="mb-5">
-      To use this library with SvelteKit, add <code class="code">"highlight.js/lib/core"</code> to the dependencies for vite to optimize in your
+      To use this library with SvelteKit, add <code class="code"
+        >"highlight.js/lib/core"</code
+      >
+      to the dependencies for vite to optimize in your
       <strong>svelte.config.js</strong>:
     </p>
 
