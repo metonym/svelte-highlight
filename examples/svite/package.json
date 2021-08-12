@@ -5,10 +5,10 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.10",
-    "svelte": "^3.38.2",
-    "svelte-highlight": "^3.0.0",
-    "svelte-hmr": "^0.14.4",
-    "vite": "^2.3.7"
+    "@sveltejs/vite-plugin-svelte": "next",
+    "svelte": "^3.42.1",
+    "svelte-highlight": "^3.2.0",
+    "svelte-hmr": "^0.14.7",
+    "vite": "^2.4.4"
   }
 }

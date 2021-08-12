@@ -1,7 +1,7 @@
-const svelte = require("@sveltejs/vite-plugin-svelte");
+const { svelte } = require("@sveltejs/vite-plugin-svelte");
 const { defineConfig } = require("vite");
 
-module.exports = defineConfig(({ command, mode }) => {
+module.exports = defineConfig(({ mode }) => {
   return {
     plugins: [svelte()],
     build: { minify: mode === "production" },
