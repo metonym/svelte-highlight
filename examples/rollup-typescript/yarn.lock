@@ -533,10 +533,10 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.56.2:
-  version "2.56.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.56.2.tgz#a045ff3f6af53ee009b5f5016ca3da0329e5470f"
-  integrity sha512-s8H00ZsRi29M2/lGdm1u8DJpJ9ML8SUOpVVBd33XNeEeL3NVaTiUcSBHzBdF3eAyR0l7VSpsuoVUGrRHq7aPwQ==
+rollup@^2.56.3:
+  version "2.56.3"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.56.3.tgz#b63edadd9851b0d618a6d0e6af8201955a77aeff"
+  integrity sha512-Au92NuznFklgQCUcV96iXlxUbHuB1vQMaH76DHl5M11TotjOHwqk9CwcrT78+Tnv4FN9uTBxq6p4EJoYkpyekg==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -625,7 +625,7 @@ svelte-highlight@^3.2.0:
   dependencies:
     highlight.js "11.2.0"
 
-svelte-preprocess@^4.0.0, svelte-preprocess@^4.7.4:
+svelte-preprocess@^4.0.0:
   version "4.7.4"
   resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.7.4.tgz#e4d5208ab25c2aaaf19e837f7d7bbf7930e61d2b"
   integrity sha512-mDAmaltQl6e5zU2VEtoWEf7eLTfuOTGr9zt+BpA3AGHo8MIhKiNSPE9OLTCTOMgj0vj/uL9QBbaNmpG4G1CgIA==
@@ -635,10 +635,20 @@ svelte-preprocess@^4.0.0, svelte-preprocess@^4.7.4:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.42.1:
-  version "3.42.1"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.42.1.tgz#d4b4d9068cce911835f7c6b8ff1d290e1a0b5657"
-  integrity sha512-XtExLd2JAU3T7M2g/DkO3UNj/3n1WdTXrfL63OZ5nZq7nAqd9wQw+lR4Pv/wkVbrWbAIPfLDX47UjFdmnY+YtQ==
+svelte-preprocess@^4.8.0:
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.8.0.tgz#fd3ebc19aae1b8a49ac9e30db1af572bf4619245"
+  integrity sha512-i9Z17cwGlp+kuSSv3kJWdAdAP2L26A5yMzHHdDj8YL+86sN64Yz5/gfjQp3Xb6fiaToo4sB+wTpid/23Gz0yvw==
+  dependencies:
+    "@types/pug" "^2.0.4"
+    "@types/sass" "^1.16.0"
+    detect-indent "^6.0.0"
+    strip-indent "^3.0.0"
+
+svelte@^3.42.2:
+  version "3.42.2"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.42.2.tgz#0246c175c820c1aeca07300c48573a15aae3c1e4"
+  integrity sha512-FOyNYKXb8wdE0Ot+Ctt2/OyDLsNBP8+V6PUE9ag6ZKeLslIou0LnMu1fhtWUA+HjzKTbAM1yj+4PFLtg/3pMJA==
 
 terser@^5.0.0:
   version "5.7.1"
