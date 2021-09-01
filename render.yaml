@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: svelte-highlight
+    env: static
+    buildCommand: yarn && yarn prepack && yarn link && cd demo && yarn link "svelte-highlight" && yarn && yarn build:local
+    staticPublishPath: build
+    pullRequestPreviewsEnabled: true
