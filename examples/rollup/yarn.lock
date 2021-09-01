@@ -407,10 +407,10 @@ supports-color@^7.0.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-highlight@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-3.2.0.tgz#6768cf5dd4e56940c14d6d22f18f26b1793b97b5"
-  integrity sha512-eI1zh+bqisIH/y07pLOrqhaaKna+dV3jB4yiFqAdAbUkgcSpaaGL4lSjxKqUnAd1/lZh7NN1AxurEUQ2GfK2UA==
+svelte-highlight@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-3.3.0.tgz#46e34d34dc08cf08a96da0acd38e537d4d3b114f"
+  integrity sha512-Kz7+Df7kNgS6MJof57o0VDvz8m8oL1Tad6+Unb6/9E5hqpnMA227G1inGz/wdXp45IbUrOtKT8+7TcuU0lhJvw==
   dependencies:
     highlight.js "11.2.0"
 
