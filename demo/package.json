@@ -5,10 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "svelte-kit dev",
-    "build:local": "svelte-kit build",
-    "predeploy": "BASE=true svelte-kit build",
-    "deploy": "touch build/.nojekyll && npx gh-pages -d build -t",
-    "start": "svelte-kit start"
+    "build:local": "svelte-kit build"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "next",

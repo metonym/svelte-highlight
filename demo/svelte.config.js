@@ -1,4 +1,4 @@
-import addapter from "@sveltejs/adapter-static";
+import adapter from "@sveltejs/adapter-static";
 import fs from "fs";
 import { optimizeImports } from "carbon-preprocess-svelte";
 
@@ -6,10 +6,6 @@ const pkg = JSON.parse(
   fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")
 );
 const { name, version, dependencies, homepage } = pkg;
-
-const BASE = process.env.BASE === "true";
-const BASE_PATH = `/${name}`;
-const paths = BASE ? { base: BASE_PATH, assets: BASE_PATH } : {};
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -35,10 +31,9 @@ const config = {
     },
   ],
   kit: {
-    adapter: addapter(),
+    adapter: adapter(),
     target: "#svelte",
     appDir: "app",
-    paths,
     vite: {
       optimizeDeps: {
         include: ["highlight.js/lib/core"],
