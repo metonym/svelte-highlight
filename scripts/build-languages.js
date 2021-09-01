@@ -33,12 +33,13 @@ async function buildLanguages() {
 
     await utils.writeTo(
       `types/src/languages/${moduleName}.d.ts`,
-      `export { ${moduleName} as default } from "./";\n`
+      `export { ${moduleName} } from "./";\nexport { ${moduleName} as default } from "./";\n`
     );
     await utils.writeTo(
       `src/languages/${name}.js`,
-      `import ${moduleName} from "highlight.js/lib/languages/${name}";\n
-export default { name: "${name}", register: ${moduleName} };\n`
+      `import register from "highlight.js/lib/languages/${name}";\n
+export const ${moduleName} = { name: "${name}", register };
+export default ${moduleName};\n`
     );
   });
 

@@ -7,22 +7,23 @@
 
   let toggled = true;
 
-  $: code = `const add = (a: number, b: number) => a + b;`;
-  $: codeSvelte = `<script>
-  let count = 0;
-<\/script>
-
-<button on:click="{() => { count += 1; }}">Click me<\/button>`;
+  $: code = "const add = (a: number, b: number) => a + b;";
+  $: codeSvelte = "<button on:click>Click me</button>";
 </script>
 
 <svelte:head>
+  <!-- svelte-ignore missing-declaration -->
   {@html github}
+  <!-- svelte-ignore missing-declaration -->
   {@html purebasic}
+  <!-- svelte-ignore missing-declaration -->
   {@html _3024}
 </svelte:head>
 
+<!-- svelte-ignore missing-declaration -->
 <HighlightAuto code="{toggled ? code : codeSvelte}" />
 
+<!-- svelte-ignore missing-declaration -->
 <Highlight
   language="{toggled ? javascript : typescript}"
   code="{code}"
@@ -34,4 +35,5 @@
   {@html highlighted}
 </Highlight>
 
+<!-- svelte-ignore missing-declaration -->
 <HighlightSvelte code="{codeSvelte}" on:highlight />
