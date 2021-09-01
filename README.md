@@ -1,6 +1,6 @@
 # svelte-highlight
 
-![NPM][npm]][npm-url]
+[![NPM][npm]][npm-url]
 ![npm](https://img.shields.io/npm/dt/svelte-highlight?color=ff3e00&style=for-the-badge)
 ![Travis (.com)](https://img.shields.io/travis/com/metonym/svelte-highlight?style=for-the-badge)
 
@@ -218,4 +218,5 @@ TypeScript definitions are located in the [types folder](./types).
 
 [MIT](LICENSE)
 
-[npm-url]: https://www.npmjs.com/package/svelte-highlight?style=for-the-badge&color=%23ff3e00
+[npm]: https://img.shields.io/npm/v/svelte-highlight.svg?style=for-the-badge&color=%23ff3e00
+[npm-url]: https://npmjs.com/package/svelte-highlight
