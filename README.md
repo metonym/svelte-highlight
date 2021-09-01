@@ -1,6 +1,6 @@
 # svelte-highlight
 
-[![NPM][npm]][npm-url]
+![NPM][npm]][npm-url]
 ![npm](https://img.shields.io/npm/dt/svelte-highlight?color=ff3e00&style=for-the-badge)
 ![Travis (.com)](https://img.shields.io/travis/com/metonym/svelte-highlight?style=for-the-badge)
 
