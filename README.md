@@ -4,13 +4,11 @@
 ![npm](https://img.shields.io/npm/dt/svelte-highlight?color=ff3e00&style=for-the-badge)
 ![Travis (.com)](https://img.shields.io/travis/com/metonym/svelte-highlight?style=for-the-badge)
 
-> Syntax Highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
-
-This component wraps [highlight.js](https://github.com/highlightjs/highlight.js) to provide syntax highlighting in [Svelte 3](https://github.com/sveltejs/svelte).
+> Syntax highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
 Try it in the [Svelte REPL](https://svelte.dev/repl/fe613c5a58f041b9babc801226a17220).
 
-## [Live demo](https://metonym.github.io/svelte-highlight)
+## [Demo](https://svelte-highlight.onrender.com/)
 
 ## Installation
 
@@ -44,7 +42,7 @@ export default {
 };
 ```
 
-Refer to [examples/sveltekit](examples/sveltekit) for a sample set-up.
+Refer to [examples/sveltekit](examples/sveltekit) for an example set-up.
 
 ## Usage
 
@@ -198,6 +196,8 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 ## TypeScript
 
 Svelte version 3.31 or greater is required to use this component with TypeScript.
+
+TypeScript definitions are located in the [types folder](./types).
 
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
 
