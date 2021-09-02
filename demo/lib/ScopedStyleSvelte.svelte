@@ -2,21 +2,21 @@
   export let name = "";
   export let moduleName = "";
 
-  import HighlightAuto from "svelte-highlight/src/HighlightAuto.svelte";
-  import * as styles from "svelte-highlight/src/styles";
+  import HighlightSvelte from "../../src/HighlightSvelte.svelte";
+  import * as styles from "../../src/styles";
 
   $: code = `<script>
-  import { HighlightAuto } from "svelte-highlight";
+  import { HighlightSvelte } from "svelte-highlight";
   import ${moduleName} from "svelte-highlight/src/styles/${name}";
   
-  const code = ".body { padding: 0; margin: 0; }";
+  const code = \`<button on:click={() => { console.log(0); }}>Click me</button>\`;
 <\/script>
 
 <svelte:head>
   {@html ${moduleName}}
 </svelte:head>
 
-<HighlightAuto {code} />`;
+<HighlightSvelte {code} />`;
 
   $: css = (styles[moduleName] || "")
     .replace(/\.hljs/g, `.${moduleName}.hljs`)
@@ -28,4 +28,4 @@
   {@html css}
 </svelte:head>
 
-<HighlightAuto class="{moduleName}" code="{code}" />
+<HighlightSvelte class="{moduleName}" code="{code}" />

@@ -5,7 +5,7 @@
  * @param {string} str
  * @returns {string}
  */
-function toCamelCase(str) {
+export function toCamelCase(str) {
   return str
     .split(new RegExp(/-|\./g))
     .map((fragment, index) => {
@@ -14,5 +14,3 @@ function toCamelCase(str) {
     })
     .join("");
 }
-
-module.exports = { toCamelCase };

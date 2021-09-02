@@ -1,11 +1,6 @@
-const { createMarkdown } = require("./create-markdown");
-const fs = require("./fs");
-const { toCamelCase } = require("./to-pascal-case");
-const { writeTo } = require("./write-to");
+import { createMarkdown } from "./create-markdown.js";
+import { fs } from "./fs.js";
+import { toCamelCase } from "./to-pascal-case.js";
+import { writeTo } from "./write-to.js";
 
-module.exports = {
-  createMarkdown,
-  fs,
-  toCamelCase,
-  writeTo,
-};
+export { createMarkdown, fs, toCamelCase, writeTo };
