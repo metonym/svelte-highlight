@@ -1,4 +1,6 @@
 .DS_Store
+/.svelte-kit
+/build
 /node_modules
 /src/styles
 /src/languages

@@ -10,7 +10,10 @@
   "sideEffects": [
     "src/styles/*.css"
   ],
+  "type": "module",
   "scripts": {
+    "dev": "svelte-kit dev",
+    "build": "svelte-kit build",
     "prepack": "node scripts",
     "test": "svelte-check --workspace test",
     "format": "prettier --write '.'"
@@ -21,9 +24,14 @@
   "devDependencies": {
     "prettier": "^2.3.2",
     "prettier-plugin-svelte": "^2.3.1",
-    "svelte": "^3.41.0",
     "svelte-check": "^2.2.3",
-    "totalist": "^2.0.0"
+    "totalist": "^2.0.0",
+    "@sveltejs/adapter-static": "next",
+    "@sveltejs/kit": "next",
+    "carbon-components-svelte": "^0.42.2",
+    "carbon-preprocess-svelte": "^0.6.0",
+    "svelte": "^3.42.4",
+    "vite": "^2.5.3"
   },
   "prettier": {
     "svelteStrictMode": true,

@@ -1,15 +1,18 @@
-const { totalist } = require("totalist");
-const path = require("path");
-const utils = require("./utils");
+import { totalist } from "totalist";
+import path from "path";
+import { readFile, copyFile } from "./utils/fs.js";
+import { writeTo } from "./utils/write-to.js";
+import { toCamelCase } from "./utils/to-pascal-case.js";
+import { createMarkdown } from "./utils/create-markdown.js";
 
-async function buildStyles() {
+export async function buildStyles() {
   let names = [];
   let styles = [];
 
   await totalist("node_modules/highlight.js/styles", async (file, absPath) => {
     if (/\.(css)$/.test(file)) {
       let { name, dir } = path.parse(file);
-      let moduleName = utils.toCamelCase(name);
+      let moduleName = toCamelCase(name);
 
       if (/^[0-9]/.test(moduleName) || /^default$/.test(moduleName)) {
         moduleName = `_${moduleName}`;
@@ -17,27 +20,27 @@ async function buildStyles() {
 
       if (names.includes(name)) {
         name = `${dir}-${name}`;
-        moduleName = utils.toCamelCase(name);
+        moduleName = toCamelCase(name);
       }
 
       names.push(name);
       styles.push({ name, moduleName });
 
-      const content = await utils.fs.readFile(absPath, "utf-8");
+      const content = await readFile(absPath, "utf-8");
       const exportee = `const ${moduleName} = \`<style>${content.replace(
         /\`/g,
         "\\`"
       )}</style>\`;\n
       export default ${moduleName};\n`;
 
-      await utils.writeTo(
+      await writeTo(
         `types/src/styles/${name}.d.ts`,
         `export { ${moduleName} as default } from "./";\n`
       );
-      await utils.writeTo(`src/styles/${name}.js`, exportee);
-      await utils.writeTo(`src/styles/${name}.css`, content);
+      await writeTo(`src/styles/${name}.js`, exportee);
+      await writeTo(`src/styles/${name}.css`, content);
     } else {
-      await utils.fs.copyFile(absPath, `src/styles/${file}`);
+      await copyFile(absPath, `src/styles/${file}`);
     }
   });
 
@@ -48,7 +51,7 @@ async function buildStyles() {
   });
 
   const markdown =
-    utils.createMarkdown("Styles", styles.length) +
+    createMarkdown("Styles", styles.length) +
     styles
       .map(({ name, moduleName }) => {
         return `## ${name} (\`${moduleName}\`)
@@ -85,10 +88,8 @@ async function buildStyles() {
     )
     .join("");
 
-  await utils.writeTo("src/styles/index.js", base);
-  await utils.writeTo("SUPPORTED_STYLES.md", markdown);
-  await utils.writeTo("types/src/styles/index.d.ts", types);
-  await utils.writeTo("demo/src/lib/styles.json", styles);
+  await writeTo("src/styles/index.js", base);
+  await writeTo("SUPPORTED_STYLES.md", markdown);
+  await writeTo("types/src/styles/index.d.ts", types);
+  await writeTo("demo/lib/styles.json", styles);
 }
-
-module.exports = { buildStyles };

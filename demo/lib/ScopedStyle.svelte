@@ -3,8 +3,8 @@
   export let moduleName = "";
   export let useInjectedStyles = true;
 
-  import HighlightSvelte from "svelte-highlight/src/HighlightSvelte.svelte";
-  import * as styles from "svelte-highlight/src/styles";
+  import HighlightSvelte from "../../src/HighlightSvelte.svelte";
+  import * as styles from "../../src/styles";
 
   $: code = `<script>
   import Highlight from "svelte-highlight";

@@ -1,4 +1,8 @@
-const pkg = require("../../package.json");
+import fs from "fs";
+
+const pkg = JSON.parse(
+  fs.readFileSync(new URL("../../package.json", import.meta.url), "utf8")
+);
 
 /**
  * Creates header metadata for supported languages/styles
@@ -6,7 +10,7 @@ const pkg = require("../../package.json");
  * @param {number} len
  * @returns {string}
  */
-function createMarkdown(type, len) {
+export function createMarkdown(type, len) {
   return `# Supported ${type}
 
 > ${len} ${type.toLowerCase()} exported from highlight.js@${
@@ -14,5 +18,3 @@ function createMarkdown(type, len) {
   }  
 `;
 }
-
-module.exports = { createMarkdown };

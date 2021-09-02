@@ -1,6 +1,8 @@
-const { format } = require("prettier");
-const fs = require("./fs");
-const path = require("path");
+import prettier from "prettier";
+import { writeFile } from "./fs.js";
+import path from "path";
+
+const { format } = prettier;
 
 const PARSER = {
   ".md": "markdown",
@@ -10,14 +12,12 @@ const PARSER = {
   ".css": "css",
 };
 
-async function writeTo(file, source) {
+export async function writeTo(file, source) {
   const value =
     typeof source === "string" ? source : JSON.stringify(source, null, 2);
 
-  await fs.writeFile(
+  await writeFile(
     file,
     format(value, { parser: PARSER[path.parse(file).ext] })
   );
 }
-
-module.exports = { writeTo };

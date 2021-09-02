@@ -3,7 +3,7 @@ import fs from "fs";
 import { optimizeImports } from "carbon-preprocess-svelte";
 
 const pkg = JSON.parse(
-  fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")
+  fs.readFileSync(new URL("./package.json", import.meta.url), "utf8")
 );
 const { name, version, dependencies, homepage } = pkg;
 
@@ -33,7 +33,12 @@ const config = {
   kit: {
     adapter: adapter(),
     target: "#svelte",
-    appDir: "app",
+    files: {
+      assets: "demo/static",
+      lib: "demo/lib",
+      routes: "demo/routes",
+      template: "demo/app.html",
+    },
     vite: {
       optimizeDeps: {
         include: ["highlight.js/lib/core"],
