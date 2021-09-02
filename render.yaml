@@ -2,6 +2,6 @@ services:
   - type: web
     name: svelte-highlight
     env: static
-    buildCommand: yarn; yarn build
+    buildCommand: yarn; yarn prepack; yarn build
     staticPublishPath: build
     pullRequestPreviewsEnabled: true
