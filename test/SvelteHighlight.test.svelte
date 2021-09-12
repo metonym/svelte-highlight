@@ -21,12 +21,13 @@
 </svelte:head>
 
 <!-- svelte-ignore missing-declaration -->
-<HighlightAuto code="{toggled ? code : codeSvelte}" />
+<HighlightAuto code="{toggled ? code : codeSvelte}" langtag="{true}" />
 
 <!-- svelte-ignore missing-declaration -->
 <Highlight
   language="{toggled ? javascript : typescript}"
   code="{code}"
+  langtag="{true}"
   on:highlight="{(e) => {
     console.log(e.detail.highlighted);
   }}"
@@ -36,4 +37,4 @@
 </Highlight>
 
 <!-- svelte-ignore missing-declaration -->
-<HighlightSvelte code="{codeSvelte}" on:highlight />
+<HighlightSvelte code="{codeSvelte}" langtag="{true}" on:highlight />
