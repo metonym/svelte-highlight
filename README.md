@@ -139,6 +139,52 @@ The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js
 ```
 <!-- prettier-ignore-end -->
 
+## Language Targeting
+
+All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
+
+This is also compatible with custom languages.
+
+See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
+
+<!-- prettier-ignore-start -->
+```css
+pre.hljs[data-language="css"] {
+  /* custom style rules */
+}
+```
+<!-- prettier-ignore-end -->
+
+## Language Tags
+
+All `Highlight` components allow for a tag to be added at the top-right of the codeblock displaying the language name.
+
+The language tag can be given a custom `background`, `color`, and `border-radius` through the custom properties shown.
+
+This is also compatible with custom languages.
+
+See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
+
+<!-- prettier-ignore-start -->
+```svelte
+<script>
+  import { HighlightAuto } from "svelte-highlight";
+
+  $: code = `.body { padding: 0; margin: 0; }`;
+</script>
+
+<HighlightAuto {code} langtag="{true}" />
+```
+
+```css
+pre.hljs[data-language="css"] {
+  --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
+  --hljs-foreground: #fff;
+  --hljs-radius: 8px;
+}
+```
+<!-- prettier-ignore-end -->
+
 ## Custom Language
 
 For custom language highlighting, pass a `name` and `register` function to the language prop.

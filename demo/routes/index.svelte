@@ -12,6 +12,10 @@
   import ScopedStyleSvelte from "$lib/ScopedStyleSvelte.svelte";
   import ScopedStyleAuto from "$lib/ScopedStyleAuto.svelte";
 
+  // see lines 187-267
+  import HighlightSvelte from "../../src/HighlightSvelte.svelte";
+  import HighlightAuto from "../../src/HighlightAuto.svelte";
+
   const NAME = process.env.NAME;
 
   const sveltekit = `export default {
@@ -180,6 +184,83 @@
     <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
+
+<!-- start: uses HighlightAuto and HighlightSvelte, refactor? -->
+<Row>
+  <Column>
+    <h3>Language Targeting</h3>
+  </Column>
+</Row>
+
+<Row class="mb-7">
+  <Column xlg="{10}" lg="{10}">
+    <p class="mb-5">
+      All <code class="code">Highlight</code> components apply a
+      <code class="code">data-language</code> attribute on the codeblock containing
+      the language name.
+    </p>
+    <p class="mb-5">This is also compatible with custom languages.</p>
+    <p class="mb-5">
+      See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
+      list of supported languages.
+    </p>
+  </Column>
+  <Column noGutter>
+    <HighlightAuto
+      code="{'pre.hljs[data-language="css"] {\n\t/* custom style rules */\n}'}"
+      class="atomOneDark"
+    />
+  </Column>
+</Row>
+
+<Row>
+  <Column>
+    <h3>Language Tags</h3>
+  </Column>
+</Row>
+
+<Row class="mb-7">
+  <Column xlg="{10}" lg="{10}">
+    <p class="mb-5">
+      All <code class="code">Highlight</code> components allow for a tag to be added
+      at the top-right of the codeblock displaying the language name.
+    </p>
+    <p class="mb-5">
+      The language tag can be given a custom <code class="code">background</code
+      >, <code class="code">color</code>, and
+      <code class="code">border-radius</code> through the custom properties shown.
+    </p>
+    <p class="mb-5">This is also compatible with custom languages.</p>
+    <p class="mb-5">
+      See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
+      list of supported languages.
+    </p>
+  </Column>
+  <Column noGutter>
+    <HighlightSvelte
+      code="{`<script>
+  import { HighlightAuto } from "svelte-highlight";
+
+   $: code = \`.body { padding: 0; margin: 0; }\`;
+<\/script>
+
+<HighlightAuto {code} langtag="{true}" \/>`}"
+      class="atomOneDark"
+      langtag="{true}"
+    />
+    <HighlightAuto
+      code="{`pre.hljs[data-language="css"] {
+  --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
+  --hljs-foreground: #fff;
+  --hljs-radius: 8px;
+}`}"
+      class="atomOneDark"
+      langtag="{true}"
+    />
+    <style></style>
+  </Column>
+</Row>
+<!-- end: uses HighlightAuto and HighlightSvelte, refactor? -->
 
 <Row noGutter>
   <Column>
