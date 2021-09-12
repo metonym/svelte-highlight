@@ -15,6 +15,12 @@ export interface HighlightProps
    * Source code to highlight
    */
   code?: string;
+
+  /**
+   * Add a language tag to the top-right
+   * of the code block
+   */
+  langtag?: boolean;
 }
 
 export default class Highlight extends SvelteComponentTyped<
