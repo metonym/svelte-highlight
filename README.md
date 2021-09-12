@@ -142,7 +142,9 @@ The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js
 ## Language Targeting
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
+
 This is also compatible with custom languages.
+
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
 <!-- prettier-ignore-start -->
@@ -156,8 +158,11 @@ pre.hljs[data-language="css"] {
 ## Language Tags
 
 All `Highlight` components allow for a tag to be added at the top-right of the codeblock displaying the language name.
+
 The language tag can be given a custom `background`, `color`, and `border-radius` through the custom properties shown.
+
 This is also compatible with custom languages.
+
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
 <!-- prettier-ignore-start -->
