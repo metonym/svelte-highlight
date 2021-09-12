@@ -1,6 +1,6 @@
 {
   "name": "svelte-highlight",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "license": "MIT",
   "description": "Syntax Highlighting for Svelte using highlight.js",
   "author": "Eric Liu (https://github.com/metonym)",
