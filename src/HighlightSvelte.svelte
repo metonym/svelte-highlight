@@ -32,6 +32,7 @@
 <slot highlighted="{highlighted}">
   <pre
     class:hljs="{true}"
+    data-language="svelte"
     {...$$restProps}>
     <code>
       {@html highlighted}
