@@ -59,7 +59,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: calc(1em + 3px) calc(1em + 5px);
+    padding: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
