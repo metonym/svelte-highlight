@@ -36,11 +36,10 @@
 
 <slot highlighted="{highlighted}">
   <pre
-    class:hljs="{true}"
     class:langtag
     data-language="{(language && language) || 'plaintext'}"
     {...$$restProps}>
-      <code>
+      <code class="hljs">
         {#if highlighted !== undefined}
         {@html highlighted}
       {:else}{code}{/if}

@@ -38,11 +38,10 @@
 
 <slot highlighted="{highlighted}">
   <pre
-    class:hljs="{true}"
     class:langtag
     data-language="svelte"
     {...$$restProps}>
-    <code>
+    <code class="hljs">
       {@html highlighted}
     </code>
   </pre>
