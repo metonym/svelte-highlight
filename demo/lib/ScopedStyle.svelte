@@ -27,9 +27,10 @@ ${
 <Highlight language={typescript} {code} />`;
 
   $: css = (styles[moduleName] || "")
-    .replace(/\.hljs/g, `.${moduleName}.hljs`)
-    .replace(/\.hljs /g, `.${moduleName}.hljs`)
-    .replace(/\.hljs-/g, `.${moduleName} .hljs-`);
+    // prefix all styles with a scope
+    .replace(/\.hljs/g, `.${moduleName} .hljs`)
+    // adjust for first two rules being `code.hljs` not `.hljs`
+    .replace(/\s?code\.[_0-9a-zA-Z]+\s\.hljs/g, `.${moduleName} code.hljs`);
 </script>
 
 <svelte:head>
