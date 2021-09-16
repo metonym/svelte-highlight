@@ -39,11 +39,10 @@
 
 <slot highlighted="{highlighted}">
   <pre
-    class:hljs="{true}"
     class:langtag
     data-language="{(language.name && language.name) || 'plaintext'}"
     {...$$restProps}>
-    <code>
+    <code class="hljs">
       {#if highlighted !== undefined}
         {@html highlighted}
       {:else}{code}{/if}
@@ -60,7 +59,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: calc(1em + 3px) calc(1em + 5px);
+    padding: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
