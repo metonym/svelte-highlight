@@ -238,11 +238,11 @@
       on any theme.
     </p>
     <p class="mb-5">Defaults:</p>
-    <ul class="mb-5">
-      <li><code class="code">--hljs-background: inherit</code></li>
-      <li><code class="code">--hljs-foreground: inherit</code></li>
-      <li><code class="code">--hljs-border-radius: 0</code></li>
-    </ul>
+    <UnorderedList class="mb-5">
+      <ListItem><code class="code">--hljs-background: inherit</code></ListItem>
+      <ListItem><code class="code">--hljs-foreground: inherit</code></ListItem>
+      <ListItem><code class="code">--hljs-border-radius: 0</code></ListItem>
+    </UnorderedList>
     <p class="mb-5">
       See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
       list of supported languages.
