@@ -207,7 +207,7 @@
   </Column>
   <Column noGutter>
     <HighlightAuto
-      code="{'pre.hljs[data-language="css"] {\n\t/* custom style rules */\n}'}"
+      code="{'pre[data-language="css"] {\n\t/* custom style rules */\n}'}"
       class="atomOneDark"
     />
   </Column>
@@ -232,6 +232,18 @@
     </p>
     <p class="mb-5">This is also compatible with custom languages.</p>
     <p class="mb-5">
+      It is recommended that you set values for
+      <code class="code">--hljs-background</code> and
+      <code class="code">--hljs-foreground</code> to ensure the langtags remain readable
+      on any theme.
+    </p>
+    <p class="mb-5">Defaults:</p>
+    <ul class="mb-5">
+      <li><code class="code">--hljs-background: inherit</code></li>
+      <li><code class="code">--hljs-foreground: inherit</code></li>
+      <li><code class="code">--hljs-border-radius: 0</code></li>
+    </ul>
+    <p class="mb-5">
       See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
       list of supported languages.
     </p>
@@ -246,10 +258,9 @@
 
 <HighlightAuto {code} langtag="{true}" \/>`}"
       class="atomOneDark"
-      langtag="{true}"
     />
     <HighlightAuto
-      code="{`pre.hljs[data-language="css"] {
+      code="{`pre[data-language="css"] {
   --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
   --hljs-foreground: #fff;
   --hljs-radius: 8px;
@@ -257,7 +268,6 @@
       class="atomOneDark"
       langtag="{true}"
     />
-    <style></style>
   </Column>
 </Row>
 <!-- end: uses HighlightAuto and HighlightSvelte, refactor? -->

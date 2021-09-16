@@ -149,8 +149,8 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 
 <!-- prettier-ignore-start -->
 ```css
-pre.hljs[data-language="css"] {
-  /* custom style rules */
+pre[data-language="css"] {
+    /* custom style rules */
 }
 ```
 <!-- prettier-ignore-end -->
@@ -159,13 +159,21 @@ pre.hljs[data-language="css"] {
 
 All `Highlight` components allow for a tag to be added at the top-right of the codeblock displaying the language name.
 
-The language tag can be given a custom `background`, `color`, and `border-radius` through the custom properties shown.
+The language tag can be given a custom `background` , `color` , and `border-radius` through the custom properties shown.
 
 This is also compatible with custom languages.
 
+It is recommended that you set values for `--hljs-background` and `--hljs-foreground` to ensure the langtags remain readable on any theme.
+
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
+Defaults:
+
+- `--hljs-background: inherit`
+- `--hljs-foreground: inherit`
+- `--hljs-border-radius: 0`
 <!-- prettier-ignore-start -->
+
 ```svelte
 <script>
   import { HighlightAuto } from "svelte-highlight";
@@ -173,16 +181,17 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
   $: code = `.body { padding: 0; margin: 0; }`;
 </script>
 
-<HighlightAuto {code} langtag="{true}" />
+<HighlightAuto code="{code}" langtag="{true}" />
 ```
 
 ```css
-pre.hljs[data-language="css"] {
+pre[data-language="css"] {
   --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
   --hljs-foreground: #fff;
   --hljs-radius: 8px;
 }
 ```
+
 <!-- prettier-ignore-end -->
 
 ## Custom Language
