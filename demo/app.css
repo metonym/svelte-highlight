@@ -13,6 +13,9 @@ pre[data-language="css"] {
   --hljs-foreground: #fff;
   --hljs-radius: 8px;
 }
+pre[data-language="svelte"] {
+  --hljs-foreground: #fff;
+}
 
 .code {
   position: relative;
