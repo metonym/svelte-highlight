@@ -1,11 +1,17 @@
 .hljs {
   overflow-x: auto;
-}
-
-.hljs code {
   font-size: 0.8125rem;
   font-family: Menlo;
   line-height: 1.5;
+}
+
+pre {
+  max-width: 44rem;
+}
+pre[data-language="css"] {
+  --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
+  --hljs-foreground: #fff;
+  --hljs-radius: 8px;
 }
 
 .code {
@@ -23,11 +29,6 @@
 
 li > .code {
   font-size: 0.75rem;
-}
-
-pre.hljs {
-  padding: 1.25rem 1rem 1.375rem !important;
-  max-width: 44rem;
 }
 
 .mr-3 {
