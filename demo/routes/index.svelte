@@ -258,7 +258,7 @@
 
 <HighlightAuto {code} langtag="{true}" \/>`}"
       class="atomOneDark"
-			langtag="{true}"
+      langtag="{true}"
     />
     <HighlightAuto
       code="{`pre[data-language="css"] {
