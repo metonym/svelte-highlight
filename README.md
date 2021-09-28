@@ -8,7 +8,7 @@
 
 Try it in the [Svelte REPL](https://svelte.dev/repl/fe613c5a58f041b9babc801226a17220).
 
-## [Demo](https://svelte-highlight.onrender.com/)
+## [Demo](https://svhe.onrender.com)
 
 ## Installation
 
