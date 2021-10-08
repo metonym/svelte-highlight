@@ -1,5 +1,6 @@
 <script lang="ts">
   import Highlight, { HighlightAuto, HighlightSvelte } from "../types";
+  import Highlight2 from "../types/Highlight.svelte";
   import { typescript } from "../types/src/languages";
   import javascript from "../types/src/languages/javascript";
   import { github, purebasic, _3024 } from "../types/src/styles";
@@ -12,18 +13,13 @@
 </script>
 
 <svelte:head>
-  <!-- svelte-ignore missing-declaration -->
   {@html github}
-  <!-- svelte-ignore missing-declaration -->
   {@html purebasic}
-  <!-- svelte-ignore missing-declaration -->
   {@html _3024}
 </svelte:head>
 
-<!-- svelte-ignore missing-declaration -->
 <HighlightAuto code="{toggled ? code : codeSvelte}" langtag="{true}" />
 
-<!-- svelte-ignore missing-declaration -->
 <Highlight
   language="{toggled ? javascript : typescript}"
   code="{code}"
@@ -36,5 +32,6 @@
   {@html highlighted}
 </Highlight>
 
-<!-- svelte-ignore missing-declaration -->
 <HighlightSvelte code="{codeSvelte}" langtag="{true}" on:highlight />
+
+<Highlight2 code="123" />
