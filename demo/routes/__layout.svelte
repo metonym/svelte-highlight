@@ -53,9 +53,9 @@
       v{VERSION_PACKAGE}
     </span>
   </span>
-  <div slot="skip-to-content">
+  <svelte:fragment slot="skip-to-content">
     <SkipToContent />
-  </div>
+  </svelte:fragment>
 
   <HeaderUtilities>
     <HeaderActionLink icon="{LogoGithub20}" href="{HOMEPAGE}" target="_blank" />
@@ -95,18 +95,14 @@
 </Content>
 
 <style>
+  :global(.bx--side-nav__overlay-active) {
+    z-index: calc(10 + 1); /** supersede the z-index of code snippets */
+  }
+
   @media (max-width: 1056px) {
     :global(.bx--content) {
       padding-left: 0;
       padding-right: 0;
     }
-  }
-
-  :global(.bx--side-nav ~ .bx--content) {
-    margin-left: 0;
-  }
-
-  :global(.bx--side-nav__overlay-active) {
-    z-index: 1;
   }
 </style>
