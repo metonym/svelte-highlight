@@ -53,9 +53,9 @@
       v{VERSION_PACKAGE}
     </span>
   </span>
-  <div slot="skip-to-content">
+  <svelte:fragment slot="skip-to-content">
     <SkipToContent />
-  </div>
+  </svelte:fragment>
 
   <HeaderUtilities>
     <HeaderActionLink icon="{LogoGithub20}" href="{HOMEPAGE}" target="_blank" />
