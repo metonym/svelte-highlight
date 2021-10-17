@@ -1236,10 +1236,10 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-highlight.js@11.2.0:
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.2.0.tgz#a7e3b8c1fdc4f0538b93b2dc2ddd53a40c6ab0f0"
-  integrity sha512-JOySjtOEcyG8s4MLR2MNbLUyaXqUunmSnL2kdV/KuGJOmHZuAR5xC54Ko7goAXBWNhf09Vy3B+U7vR62UZ/0iw==
+highlight.js@11.3.0:
+  version "11.3.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.3.0.tgz#6990f1a9d42edb4c9b1df955b74aebb877b9f364"
+  integrity sha512-4NRoSbc7W4m7bZWsiE7JMBkGSKj/b1UI/acG2EigsQ3KHXyYfWPjdTUefNJuqbAtS13/r+pAWmXWHaGJVuWn2A==
 
 hosted-git-info@^4.0.1:
   version "4.0.2"
@@ -2717,12 +2717,12 @@ supports-color@^5.3.0:
   dependencies:
     has-flag "^3.0.0"
 
-svelte-highlight@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-3.3.0.tgz#46e34d34dc08cf08a96da0acd38e537d4d3b114f"
-  integrity sha512-Kz7+Df7kNgS6MJof57o0VDvz8m8oL1Tad6+Unb6/9E5hqpnMA227G1inGz/wdXp45IbUrOtKT8+7TcuU0lhJvw==
+svelte-highlight@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.1.0.tgz#f0a54fcce5e5dd9ab4d51de303780bd1c74ff28a"
+  integrity sha512-WX92XXgvdccwZeqUwySpzp24urHx8ykvckTHpPXcTTh2XuytBsfOimPe9bvbFwLYodX5y/yemT0WkzdTJp3zmg==
   dependencies:
-    highlight.js "11.2.0"
+    highlight.js "11.3.0"
 
 svelte-hmr@^0.13.2:
   version "0.13.5"
@@ -2739,10 +2739,10 @@ svelte-preprocess@^4.7.2:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.42.4:
-  version "3.42.4"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.42.4.tgz#838ed98fa7b26fc5fffe4df0d7ba345f1c54cf4f"
-  integrity sha512-DqC0AmDdBrrbIA+Kzl3yhBb6qCn4vZOAfxye2pTnIpinLegyagC5sLI8Pe9GPlXu9VpHBXIwpDDedpMfu++epA==
+svelte@^3.43.2:
+  version "3.43.2"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.43.2.tgz#217fc6059f52afa281f39200b6253ac1b83812b4"
+  integrity sha512-Lj+TJfSeod8UGnoG2opysdlCy4MCck/hHQsZwtNPXdYTwLTz+WC37QwewPhZtd+h3dpfps4h9QzFxWGVI4tzQw==
 
 tar@^6.0.2, tar@^6.1.0:
   version "6.1.11"

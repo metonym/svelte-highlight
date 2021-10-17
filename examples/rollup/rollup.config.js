@@ -14,7 +14,7 @@ export default {
     file: "public/build/bundle.js",
   },
   plugins: [
-    svelte({ compilerOptions: { dev: !production } }),
+    svelte({ compilerOptions: { dev: !production }, emitCss: false }),
     resolve({ browser: true, dedupe: ["svelte"] }),
     commonjs(),
     production && terser(),
