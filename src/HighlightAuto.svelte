@@ -17,7 +17,7 @@
    */
   export let langtag = false;
 
-  import hljs from "highlight.js/lib/core";
+  import { HighlightJS as hljs } from "highlight.js/lib/core";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
