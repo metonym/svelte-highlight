@@ -1,9 +1,9 @@
 <script lang="ts">
   import Highlight, { HighlightAuto, HighlightSvelte } from "../types";
   import Highlight2 from "../types/Highlight.svelte";
-  import { typescript } from "../types/src/languages";
-  import javascript from "../types/src/languages/javascript";
-  import { github, purebasic, _3024 } from "../types/src/styles";
+  import { typescript } from "../src/languages";
+  import javascript from "../src/languages/javascript";
+  import { github, purebasic, _3024 } from "../src/styles";
   import "svelte-highlight/styles/github.css";
 
   let toggled = true;

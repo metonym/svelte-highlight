@@ -34,7 +34,7 @@ export async function buildStyles() {
       export default ${moduleName};\n`;
 
       await writeTo(
-        `types/src/styles/${name}.d.ts`,
+        `src/styles/${name}.d.ts`,
         `export { ${moduleName} as default } from "./";\n`
       );
       await writeTo(`src/styles/${name}.js`, exportee);
@@ -89,7 +89,7 @@ export async function buildStyles() {
     .join("");
 
   await writeTo("src/styles/index.js", base);
+  await writeTo("src/styles/index.d.ts", types);
   await writeTo("SUPPORTED_STYLES.md", markdown);
-  await writeTo("types/src/styles/index.d.ts", types);
   await writeTo("demo/lib/styles.json", styles);
 }

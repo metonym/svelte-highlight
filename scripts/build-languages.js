@@ -34,7 +34,7 @@ export async function buildLanguages() {
 \`\`\`\n\n`;
 
     await writeTo(
-      `types/src/languages/${moduleName}.d.ts`,
+      `src/languages/${moduleName}.d.ts`,
       `export { ${moduleName} } from "./";\nexport { ${moduleName} as default } from "./";\n`
     );
     await writeTo(
@@ -46,7 +46,7 @@ export default ${moduleName};\n`
   });
 
   await writeTo("src/languages/index.js", base);
-  await writeTo("types/src/languages/index.d.ts", types);
+  await writeTo("src/languages/index.d.ts", types);
   await writeTo("SUPPORTED_LANGUAGES.md", markdown);
   await writeTo("demo/lib/languages.json", lang);
 }
