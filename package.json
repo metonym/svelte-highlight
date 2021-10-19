@@ -54,7 +54,6 @@
     "typescript"
   ],
   "files": [
-    "src",
-    "types"
+    "src"
   ]
 }
