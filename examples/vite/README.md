@@ -1,6 +1,6 @@
-# examples/svite
+# examples/vite
 
-> `svelte-highlight` svite set-up.
+> `svelte-highlight` vite set-up.
 
 ## Available Scripts
 

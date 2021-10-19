@@ -263,7 +263,7 @@ TypeScript definitions are located in the [src folder](./src).
 - [examples/rollup-typescript](examples/rollup-typescript)
 - [examples/snowpack](examples/snowpack)
 - [examples/sveltekit](examples/sveltekit)
-- [examples/svite](examples/svite)
+- [examples/vite](examples/vite)
 - [examples/webpack](examples/webpack)
 
 ## [Changelog](CHANGELOG.md)
