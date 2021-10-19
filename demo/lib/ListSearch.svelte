@@ -22,9 +22,11 @@
     RadioButton,
     RadioButtonGroup,
   } from "carbon-components-svelte";
+  import FocusKey from "svelte-focus-key";
 
   const VERSION_HLJS = process.env.VERSION_HLJS;
 
+  let ref = null;
   let value = "";
 
   $: normalizedValue = value.trim().toLowerCase();
@@ -34,6 +36,8 @@
       item.moduleName.toLowerCase().includes(normalizedValue)
   );
 </script>
+
+<FocusKey element="{ref}" />
 
 <Row>
   <Column>
@@ -48,6 +52,7 @@
   <Column noGutter>
     <Search
       size="lg"
+      bind:ref
       bind:value
       placeholder="{`Filter ${itemName}s (e.g., "${placeholderExample}")`}"
     />
