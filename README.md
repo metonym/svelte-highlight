@@ -251,7 +251,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 Svelte version 3.31 or greater is required to use this component with TypeScript.
 
-TypeScript definitions are located in the [types folder](./types).
+TypeScript definitions are located in the [src folder](./src).
 
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
 

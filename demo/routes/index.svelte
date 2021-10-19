@@ -291,8 +291,8 @@
         inline
         size="lg"
         rel="external"
-        href="https://github.com/metonym/svelte-highlight/tree/master/types"
-        >types folder in the GitHub repository</Link
+        href="https://github.com/metonym/svelte-highlight/tree/master/src"
+        >src folder in the GitHub repository</Link
       >.
     </p>
   </Column>
