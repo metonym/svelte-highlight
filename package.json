@@ -24,14 +24,14 @@
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.44.4",
+    "carbon-components-svelte": "^0.47.0",
     "carbon-preprocess-svelte": "^0.6.0",
     "prettier": "^2.4.1",
     "prettier-plugin-svelte": "^2.4.0",
-    "svelte": "^3.43.1",
+    "svelte": "^3.44.0",
     "svelte-check": "^2.2.7",
     "totalist": "^2.0.0",
-    "vite": "^2.6.5"
+    "vite": "^2.6.10"
   },
   "prettier": {
     "svelteStrictMode": true,
