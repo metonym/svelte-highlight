@@ -4630,10 +4630,10 @@ svelte-dev-helper@^1.1.9:
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
   integrity sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M=
 
-svelte-highlight@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.1.0.tgz#f0a54fcce5e5dd9ab4d51de303780bd1c74ff28a"
-  integrity sha512-WX92XXgvdccwZeqUwySpzp24urHx8ykvckTHpPXcTTh2XuytBsfOimPe9bvbFwLYodX5y/yemT0WkzdTJp3zmg==
+svelte-highlight@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.1.2.tgz#290b9595e5e3408628079ec79fc61f2c5ac8a591"
+  integrity sha512-H9uzrefgez7coRbZenkNOuosF9fTTl5WhfxqlRR+ywSn4s0OY5cYfucuagS9f1JLuJoZHdXG/DSUFW4OutNwEQ==
   dependencies:
     highlight.js "11.3.0"
 
@@ -4645,10 +4645,10 @@ svelte-loader@^2.13.6:
     loader-utils "^1.1.0"
     svelte-dev-helper "^1.1.9"
 
-svelte@^3.43.2:
-  version "3.43.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.43.2.tgz#217fc6059f52afa281f39200b6253ac1b83812b4"
-  integrity sha512-Lj+TJfSeod8UGnoG2opysdlCy4MCck/hHQsZwtNPXdYTwLTz+WC37QwewPhZtd+h3dpfps4h9QzFxWGVI4tzQw==
+svelte@^3.44.0:
+  version "3.44.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.44.0.tgz#e6176cb3ad93846ddb4140e93f43098136b23f3b"
+  integrity sha512-zWACSJBSncGiDvFfYOMFGNV5zDLOlyhftmO5yOZ0lEtQMptpElaRtl39MWz1+lYCpwUq4F3Q2lTzI9TrTL+eMA==
 
 svgo@^1.0.0:
   version "1.3.2"

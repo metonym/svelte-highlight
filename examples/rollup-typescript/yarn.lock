@@ -57,10 +57,10 @@
     magic-string "^0.25.7"
     resolve "^1.17.0"
 
-"@rollup/plugin-node-resolve@^13.0.5":
-  version "13.0.5"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-13.0.5.tgz#016abe58796a4ff544d6beac7818921e3d3777fc"
-  integrity sha512-mVaw6uxtvuGx/XCI4qBQXsDZJUfyx5vp39iE0J/7Hd6wDhEbjHr6aES7Nr9yWbuE0BY+oKp6N7Bq6jX5NCGNmQ==
+"@rollup/plugin-node-resolve@^13.0.6":
+  version "13.0.6"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-13.0.6.tgz#29629070bb767567be8157f575cfa8f2b8e9ef77"
+  integrity sha512-sFsPDMPd4gMqnh2gS0uIxELnoRUp5kBl5knxD2EO0778G1oOJv4G1vyT2cpWz75OU2jDVcXhjVUuTAczGyFNKA==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     "@types/resolve" "1.17.1"
@@ -748,10 +748,10 @@ svelte-check@2.2.7:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-highlight@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.1.0.tgz#f0a54fcce5e5dd9ab4d51de303780bd1c74ff28a"
-  integrity sha512-WX92XXgvdccwZeqUwySpzp24urHx8ykvckTHpPXcTTh2XuytBsfOimPe9bvbFwLYodX5y/yemT0WkzdTJp3zmg==
+svelte-highlight@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.1.2.tgz#290b9595e5e3408628079ec79fc61f2c5ac8a591"
+  integrity sha512-H9uzrefgez7coRbZenkNOuosF9fTTl5WhfxqlRR+ywSn4s0OY5cYfucuagS9f1JLuJoZHdXG/DSUFW4OutNwEQ==
   dependencies:
     highlight.js "11.3.0"
 
@@ -777,10 +777,10 @@ svelte-preprocess@^4.9.8:
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
 
-svelte@^3.43.2:
-  version "3.43.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.43.2.tgz#217fc6059f52afa281f39200b6253ac1b83812b4"
-  integrity sha512-Lj+TJfSeod8UGnoG2opysdlCy4MCck/hHQsZwtNPXdYTwLTz+WC37QwewPhZtd+h3dpfps4h9QzFxWGVI4tzQw==
+svelte@^3.44.0:
+  version "3.44.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.44.0.tgz#e6176cb3ad93846ddb4140e93f43098136b23f3b"
+  integrity sha512-zWACSJBSncGiDvFfYOMFGNV5zDLOlyhftmO5yOZ0lEtQMptpElaRtl39MWz1+lYCpwUq4F3Q2lTzI9TrTL+eMA==
 
 terser@^5.0.0:
   version "5.7.1"
