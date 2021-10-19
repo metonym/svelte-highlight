@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Highlight, { HighlightAuto, HighlightSvelte } from "../types";
-  import Highlight2 from "../types/Highlight.svelte";
+  import Highlight, { HighlightAuto, HighlightSvelte } from "../src";
+  import Highlight2 from "../src/Highlight.svelte";
   import { typescript } from "../src/languages";
   import javascript from "../src/languages/javascript";
   import { github, purebasic, _3024 } from "../src/styles";
