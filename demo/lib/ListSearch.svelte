@@ -54,7 +54,7 @@
       size="lg"
       bind:ref
       bind:value
-      placeholder="{`Filter ${itemName}s (e.g., "${placeholderExample}")`}"
+      placeholder="{`Search ${itemName}s (e.g., "${placeholderExample}")`}"
     />
   </Column>
 </Row>
