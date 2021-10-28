@@ -43,6 +43,11 @@ const config = {
       optimizeDeps: {
         include: ["highlight.js/lib/core"],
       },
+      server: {
+        fs: {
+          allow: [".."],
+        },
+      },
     },
   },
 };
