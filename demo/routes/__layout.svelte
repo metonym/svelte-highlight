@@ -99,6 +99,10 @@
     z-index: calc(10 + 1); /** supersede the z-index of code snippets */
   }
 
+  :global(.bx--side-nav~.bx--content) {
+    margin-left: 0;
+  }
+
   @media (max-width: 1056px) {
     :global(.bx--content) {
       padding-left: 0;
