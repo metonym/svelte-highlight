@@ -5,9 +5,7 @@
 
 > Syntax highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
-Try it in the [Svelte REPL](https://svelte.dev/repl/fe613c5a58f041b9babc801226a17220).
-
-## [Demo](https://svhe.onrender.com)
+## [Documentation](https://svhe.onrender.com)
 
 ## Installation
 
@@ -60,57 +58,48 @@ There are two ways to apply `highlight.js` styles:
 
 This component exports `highlight.js` themes in JavaScript. Import the theme from `svelte-highlight/styles` and inject it using the [svelte:head](https://svelte.dev/docs#svelte_head) API.
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   import Highlight from "svelte-highlight";
   import typescript from "svelte-highlight/src/languages/typescript";
   import github from "svelte-highlight/src/styles/github";
 
-  $: code = `const add = (a: number, b: number) => a + b;`;
+  const code = "const add = (a: number, b: number) => a + b;";
 </script>
 
 <svelte:head>
   {@html github}
 </svelte:head>
 
-<Highlight language="{typescript}" {code} />
+<Highlight language={typescript} {code} />
 ```
-<!-- prettier-ignore-end -->
 
 ### CSS StyleSheet
 
 Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS file loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   import { Highlight } from "svelte-highlight";
   import typescript from "svelte-highlight/src/languages/typescript";
   import "svelte-highlight/src/styles/github.css";
 
-  $: code = `const add = (a: number, b: number) => a + b;`;
+  const code = "const add = (a: number, b: number) => a + b;";
 </script>
 
-<Highlight language="{typescript}" {code} />
+<Highlight language={typescript} {code} />
 ```
-<!-- prettier-ignore-end -->
 
 ## Svelte Syntax Highlighting
 
 Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   import { HighlightSvelte } from "svelte-highlight";
   import github from "svelte-highlight/src/styles/github";
 
-  $: code = `<script>
-  let count = 0;
-<\/script>
-
-<button on:click="{() => (count += 1)}">Increment {count}<\/button>`;
+  $: code = "<button on:click={() => (count += 1)}>Increment {count}</button>";
 </script>
 
 <svelte:head>
@@ -119,13 +108,11 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 <HighlightSvelte {code} />
 ```
-<!-- prettier-ignore-end -->
 
 ## Auto-highlighting
 
 The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js`.
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   import { HighlightAuto } from "svelte-highlight";
@@ -142,7 +129,6 @@ The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js
 
 <HighlightAuto {code} />
 ```
-<!-- prettier-ignore-end -->
 
 ## Language Targeting
 
@@ -152,13 +138,11 @@ This is also compatible with custom languages.
 
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
-<!-- prettier-ignore-start -->
 ```css
 pre[data-language="css"] {
-    /* custom style rules */
+  /* custom style rules */
 }
 ```
-<!-- prettier-ignore-end -->
 
 ## Language Tags
 
@@ -202,7 +186,6 @@ For custom language highlighting, pass a `name` and `register` function to the l
 
 Refer to the highlight.js [language definition guide](https://highlightjs.readthedocs.io/en/latest/language-guide.html) for guidance.
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   import { Highlight } from "svelte-highlight";
@@ -216,13 +199,10 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
       };
     },
   };
-
-  const code = "custom language";
 </script>
 
-<Highlight {language} {code} />
+<Highlight {language} code="..." />
 ```
-<!-- prettier-ignore-end -->
 
 ## API
 
@@ -236,19 +216,17 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ### Dispatched Events
 
-- on:highlight
+- **on:highlight**: fired after code syntax is highlighted
 
-<!-- prettier-ignore-start -->
 ```svelte
 <Highlight
-  language="{typescript}"
-  code="{code}"
-  on:highlight="{(e) => {
+  language={typescript}
+  {code}
+  on:highlight={(e) => {
     console.log(e.detail.highlighted); // "<span>...</span>"
-  }}"
+  }}
 />
 ```
-<!-- prettier-ignore-end -->
 
 ## TypeScript
 
