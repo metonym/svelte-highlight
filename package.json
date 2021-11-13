@@ -28,15 +28,11 @@
     "carbon-preprocess-svelte": "^0.6.0",
     "prettier": "^2.4.1",
     "prettier-plugin-svelte": "^2.4.0",
-    "svelte": "^3.44.0",
-    "svelte-check": "^2.2.7",
-    "svelte-focus-key": "^0.1.0",
+    "svelte": "^3.44.1",
+    "svelte-check": "^2.2.8",
+    "svelte-focus-key": "^0.1.1",
     "totalist": "^2.0.0",
-    "vite": "^2.6.13"
-  },
-  "prettier": {
-    "svelteStrictMode": true,
-    "svelteBracketNewLine": true
+    "vite": "^2.6.14"
   },
   "repository": {
     "type": "git",
