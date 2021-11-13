@@ -31,7 +31,7 @@
 };`;
 </script>
 
-<Row>
+<Row noGutter>
   <Column xlg={16} lg={16}>
     <h4 class="mb-7">
       <code class="code">{NAME}</code> provides Svelte components for code
