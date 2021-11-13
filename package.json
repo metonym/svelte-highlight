@@ -1,6 +1,6 @@
 {
   "name": "svelte-highlight",
-  "version": "5.1.2",
+  "version": "5.1.3",
   "license": "MIT",
   "description": "Syntax Highlighting for Svelte using highlight.js",
   "author": "Eric Liu (https://github.com/metonym)",
@@ -19,7 +19,7 @@
     "format": "prettier --write '.'"
   },
   "dependencies": {
-    "highlight.js": "11.3.0"
+    "highlight.js": "11.3.1"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
