@@ -23,7 +23,13 @@ yarn add -D svelte-highlight
 npm i -D svelte-highlight
 ```
 
-## SvelteKit set-up
+**pnpm**
+
+```bash
+pnpm i -D svelte-highlight
+```
+
+## SvelteKit Set-up
 
 To use this library with SvelteKit, instruct vite to optimize `highlight.js/lib/core` in your `svelte.config.js`:
 
@@ -222,7 +228,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ### Props
 
-| Prop name                       | Value                                                 |
+| Name                            | Value                                                 |
 | ------------------------------- | ----------------------------------------------------- |
 | code                            | `string`                                              |
 | language (only for `Highlight`) | `object` { name: `string`; register: hljs => object } |

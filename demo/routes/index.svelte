@@ -1,5 +1,8 @@
 <script>
   import {
+    Tabs,
+    Tab,
+    TabContent,
     Row,
     Column,
     Link,
@@ -43,15 +46,29 @@
 </Row>
 
 <Row>
+  <Column>
+    <h3>Installation</h3>
+  </Column>
+</Row>
+
+<Row>
   <Column xlg={9} lg={12}>
-    <p class="mb-5">Install using Yarn:</p>
-    <Row class="mb-7" noGutter>
-      <CodeSnippet code="yarn add -D {NAME}" />
-    </Row>
-    <p class="mb-5">Install using NPM:</p>
-    <Row class="mb-7" noGutter>
-      <CodeSnippet code="npm i -D {NAME}" />
-    </Row>
+    <Tabs>
+      <Tab label="Yarn" />
+      <Tab label="NPM" />
+      <Tab label="pnpm" />
+      <div slot="content" style="margin: 1rem -1rem">
+        <TabContent>
+          <CodeSnippet code="yarn add -D {NAME}" />
+        </TabContent>
+        <TabContent>
+          <CodeSnippet code="npm i -D {NAME}" />
+        </TabContent>
+        <TabContent>
+          <CodeSnippet code="pnpm i -D {NAME}" />
+        </TabContent>
+      </div>
+    </Tabs>
   </Column>
 </Row>
 
