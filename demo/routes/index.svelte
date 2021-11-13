@@ -63,7 +63,7 @@
 
 <Row>
   <Column>
-    <h3>SvelteKit set-up</h3>
+    <h3>SvelteKit Set-up</h3>
   </Column>
 </Row>
 
@@ -96,7 +96,7 @@
 
 <Row>
   <Column>
-    <h3>Basic usage</h3>
+    <h3>Usage</h3>
   </Column>
 </Row>
 
@@ -148,7 +148,7 @@
 
 <Row>
   <Column>
-    <h3>Svelte syntax highlighting</h3>
+    <h3>Svelte Syntax Highlighting</h3>
   </Column>
 </Row>
 
@@ -185,7 +185,7 @@
 
 <Row>
   <Column>
-    <h3>Language targeting</h3>
+    <h3>Language Targeting</h3>
   </Column>
 </Row>
 
@@ -212,7 +212,7 @@
 
 <Row>
   <Column>
-    <h3>Language tags</h3>
+    <h3>Language Tags</h3>
   </Column>
 </Row>
 
@@ -277,7 +277,7 @@
 
 <Row>
   <Column xlg={9} lg={12}>
-    <h3 class="mb-7">TypeScript support</h3>
+    <h3 class="mb-7">TypeScript Support</h3>
     <p class="mb-5">
       Svelte version 3.31 or greater is required to use this library with
       TypeScript.
