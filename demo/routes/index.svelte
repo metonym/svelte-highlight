@@ -43,7 +43,7 @@
 </Row>
 
 <Row>
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <p class="mb-5">Install using Yarn:</p>
     <Row class="mb-7" noGutter>
       <CodeSnippet code="yarn add -D {NAME}" />
@@ -68,7 +68,7 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <p class="mb-5">
       To use this library with SvelteKit, add <code class="code"
         >"highlight.js/lib/core"</code
@@ -101,7 +101,7 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <p class="mb-5">The default Highlight component requires two props:</p>
     <UnorderedList class="mb-5">
       <ListItem><code class="code">code</code>: text to highlight</ListItem>
@@ -119,10 +119,10 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={{ span: 8, offset: 1 }}>
+  <Column noGutter xlg={12}>
     <ScopedStyle name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <p class="mb-5">
       Styles can be imported from <code class="code"
         >"svelte-highlight/src/styles"</code
@@ -153,13 +153,13 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <p class="mb-5">
       Use the <code class="code">HighlightSvelte</code> component for Svelte syntax
       highlighting.
     </p>
   </Column>
-  <Column noGutter xlg={{ span: 8, offset: 1 }}>
+  <Column noGutter xlg={12}>
     <ScopedStyleSvelte name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
@@ -171,14 +171,14 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <p class="mb-5">
       The <code class="code">HighlightAuto</code> component invokes the
       <code class="code">highlightAuto</code>
       API from <code class="code">highlight.js</code>.
     </p>
   </Column>
-  <Column noGutter xlg={{ span: 8, offset: 1 }}>
+  <Column noGutter xlg={12}>
     <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
@@ -190,7 +190,7 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components apply a
       <code class="code">data-language</code> attribute on the codeblock containing
@@ -202,7 +202,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={{ span: 8, offset: 1 }}>
+  <Column noGutter xlg={12}>
     <HighlightAuto
       code={'pre[data-language="css"] {\n  /* custom style rules */\n}'}
       class="atomOneDark"
@@ -217,7 +217,7 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components allow for a tag to be added
       at the top-right of the codeblock displaying the language name.
@@ -245,7 +245,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={{ span: 8, offset: 1 }}>
+  <Column noGutter xlg={12}>
     <HighlightSvelte
       code={`<script>
   import { HighlightAuto } from "svelte-highlight";
@@ -276,7 +276,7 @@
 </Row>
 
 <Row>
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <h3 class="mb-7">TypeScript support</h3>
     <p class="mb-5">
       Svelte version 3.31 or greater is required to use this library with
@@ -295,7 +295,7 @@
 </Row>
 
 <Row>
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <h3 class="mb-7">Examples</h3>
     <p class="mb-5">
       Example set-ups – including SvelteKit, Rollup, Webpack, and Snowpack – are
@@ -312,7 +312,7 @@
 </Row>
 
 <Row>
-  <Column xlg={7} lg={7}>
+  <Column xlg={9} lg={12}>
     <h3 class="mb-7">License</h3>
     <p class="mb-5">MIT</p>
   </Column>
