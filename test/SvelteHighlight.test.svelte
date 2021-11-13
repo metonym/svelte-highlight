@@ -18,20 +18,20 @@
   {@html _3024}
 </svelte:head>
 
-<HighlightAuto code="{toggled ? code : codeSvelte}" langtag="{true}" />
+<HighlightAuto code={toggled ? code : codeSvelte} langtag={true} />
 
 <Highlight
-  language="{toggled ? javascript : typescript}"
-  code="{code}"
-  langtag="{true}"
-  on:highlight="{(e) => {
+  language={toggled ? javascript : typescript}
+  {code}
+  langtag={true}
+  on:highlight={(e) => {
     console.log(e.detail.highlighted);
-  }}"
+  }}
   let:highlighted
 >
   {@html highlighted}
 </Highlight>
 
-<HighlightSvelte code="{codeSvelte}" langtag="{true}" on:highlight />
+<HighlightSvelte code={codeSvelte} langtag={true} on:highlight />
 
 <Highlight2 code="123" />

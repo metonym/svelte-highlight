@@ -8,7 +8,7 @@
 
 <Row>
   <Column>
-    <Link class="mr-3" href="{HOMEPAGE}" target="_blank">GitHub</Link>
+    <Link class="mr-3" href={HOMEPAGE} target="_blank">GitHub</Link>
     <Link
       class="mr-3"
       href="https://www.npmjs.com/package/{NAME}"

@@ -58,25 +58,25 @@
   </svelte:fragment>
 
   <HeaderUtilities>
-    <HeaderActionLink icon="{LogoGithub20}" href="{HOMEPAGE}" target="_blank" />
+    <HeaderActionLink icon={LogoGithub20} href={HOMEPAGE} target="_blank" />
   </HeaderUtilities>
 </Header>
 
-<SideNav bind:isOpen="{isSideNavOpen}">
+<SideNav bind:isOpen={isSideNavOpen}>
   <SideNavItems>
     {#each Object.entries(routes) as [href, text]}
       <SideNavLink
         sveltekit:prefetch
         href="{base}{href}"
-        text="{text}"
-        isSelected="{$page.path === href}"
-        on:click="{async () => {
+        {text}
+        isSelected={$page.path === href}
+        on:click={async () => {
           await tick();
 
           if (window.innerWidth < 1056) {
             isSideNavOpen = false;
           }
-        }}"
+        }}
       />
     {/each}
   </SideNavItems>
@@ -99,7 +99,7 @@
     z-index: calc(10 + 1); /** supersede the z-index of code snippets */
   }
 
-  :global(.bx--side-nav~.bx--content) {
+  :global(.bx--side-nav ~ .bx--content) {
     margin-left: 0;
   }
 

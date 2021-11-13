@@ -37,7 +37,7 @@
   );
 </script>
 
-<FocusKey element="{ref}" />
+<FocusKey element={ref} />
 
 <Row>
   <Column>
@@ -54,16 +54,16 @@
       size="lg"
       bind:ref
       bind:value
-      placeholder="{`Search ${itemName}s (e.g., "${placeholderExample}")`}"
+      placeholder={`Search ${itemName}s (e.g., "${placeholderExample}")`}
     />
   </Column>
 </Row>
 
 <Row>
   <Column>
-    <RadioButtonGroup legendText="Import method" bind:selected="{currentLabel}">
-      <RadioButton labelText="{labelB}" value="{labelB}" />
-      <RadioButton labelText="{labelA}" value="{labelA}" />
+    <RadioButtonGroup legendText="Import method" bind:selected={currentLabel}>
+      <RadioButton labelText={labelB} value={labelB} />
+      <RadioButton labelText={labelA} value={labelA} />
     </RadioButtonGroup>
   </Column>
 </Row>

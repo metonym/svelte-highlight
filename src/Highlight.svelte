@@ -37,10 +37,10 @@
   }
 </script>
 
-<slot highlighted="{highlighted}">
+<slot {highlighted}>
   <pre
     class:langtag
-    data-language="{(language.name && language.name) || 'plaintext'}"
+    data-language={(language.name && language.name) || "plaintext"}
     {...$$restProps}>
     <code class="hljs">
       {#if highlighted !== undefined}

@@ -10,4 +10,4 @@
   {@html atomOneDark}
 </svelte:head>
 
-<Highlight language="{typescript}" code="{code}" />
+<Highlight language={typescript} {code} />

@@ -36,7 +36,7 @@
 </svelte:head>
 
 <ListSearch
-  items="{languages}"
+  items={languages}
   itemName="language"
   placeholderExample="JavaScript"
   bind:currentLabel
@@ -58,21 +58,21 @@
                 <StructuredListCell>
                   <div class="mb-7">
                     <div class="label-01 mb-3">Language name</div>
-                    <CodeSnippet type="inline" code="{language.name}" />
+                    <CodeSnippet type="inline" code={language.name} />
                   </div>
 
                   <div class="mb-7">
                     <div class="label-01 mb-3">Module name</div>
-                    <CodeSnippet type="inline" code="{language.moduleName}" />
+                    <CodeSnippet type="inline" code={language.moduleName} />
                   </div>
                 </StructuredListCell>
                 <StructuredListCell>
                   <HighlightSvelte
-                    code="{formatCode(
+                    code={formatCode(
                       language.name,
                       language.moduleName,
                       useDirectImport
-                    )}"
+                    )}
                   />
                 </StructuredListCell>
               </StructuredListRow>

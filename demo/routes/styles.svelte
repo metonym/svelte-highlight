@@ -20,7 +20,7 @@
 </script>
 
 <ListSearch
-  items="{styles}"
+  items={styles}
   itemName="style"
   labelA="CSS StyleSheet"
   labelB="Injected styles"
@@ -44,19 +44,16 @@
                 <StructuredListCell>
                   <div class="mb-7">
                     <div class="label-01 mb-3">Language name</div>
-                    <CodeSnippet type="inline" code="{style.name}" />
+                    <CodeSnippet type="inline" code={style.name} />
                   </div>
 
                   <div class="mb-7">
                     <div class="label-01 mb-3">Module name</div>
-                    <CodeSnippet type="inline" code="{style.moduleName}" />
+                    <CodeSnippet type="inline" code={style.moduleName} />
                   </div>
                 </StructuredListCell>
                 <StructuredListCell>
-                  <ScopedStyle
-                    {...style}
-                    useInjectedStyles="{useInjectedStyles}"
-                  />
+                  <ScopedStyle {...style} {useInjectedStyles} />
                 </StructuredListCell>
               </StructuredListRow>
             {/each}

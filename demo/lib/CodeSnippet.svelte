@@ -4,4 +4,4 @@
   import { CodeSnippet } from "carbon-components-svelte";
 </script>
 
-<CodeSnippet {...$$restProps} code="{code}" />
+<CodeSnippet {...$$restProps} {code} />

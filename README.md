@@ -171,7 +171,6 @@ Defaults:
 - `--hljs-background: inherit`
 - `--hljs-foreground: inherit`
 - `--hljs-border-radius: 0`
-<!-- prettier-ignore-start -->
 
 ```svelte
 <script>
@@ -180,7 +179,7 @@ Defaults:
   $: code = `.body { padding: 0; margin: 0; }`;
 </script>
 
-<HighlightAuto code="{code}" langtag="{true}" />
+<HighlightAuto {code} langtag />
 ```
 
 ```css
@@ -190,8 +189,6 @@ pre[data-language="css"] {
   --hljs-radius: 8px;
 }
 ```
-
-<!-- prettier-ignore-end -->
 
 ## Custom Language
 

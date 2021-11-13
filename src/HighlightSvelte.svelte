@@ -36,7 +36,7 @@
   $: highlighted = hljs.highlightAuto(code).value;
 </script>
 
-<slot highlighted="{highlighted}">
+<slot {highlighted}>
   <pre
     class:langtag
     data-language="svelte"

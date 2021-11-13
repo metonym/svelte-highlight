@@ -29,4 +29,4 @@
   {@html css}
 </svelte:head>
 
-<HighlightAuto class="{moduleName}" code="{code}" />
+<HighlightAuto class={moduleName} {code} />

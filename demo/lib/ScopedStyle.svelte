@@ -37,4 +37,4 @@ ${
   {@html css}
 </svelte:head>
 
-<HighlightSvelte class="{moduleName}" code="{code}" />
+<HighlightSvelte class={moduleName} {code} />
