@@ -132,6 +132,11 @@ carbon-components-svelte@^0.49.0:
   dependencies:
     flatpickr "4.6.9"
 
+carbon-icons-svelte@^10.38.0:
+  version "10.38.0"
+  resolved "https://registry.yarnpkg.com/carbon-icons-svelte/-/carbon-icons-svelte-10.38.0.tgz#daf74e4a2a826ad994c950a67307b8392d80ca3a"
+  integrity sha512-uEckbbNHFtDzKz+QRx6GxvZcezXXqfDOiaE7mupkiRPkBbALrA9CPJZbI5Q2XW5mpn8lgN3IlTm2u1iJEAlVJw==
+
 carbon-preprocess-svelte@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/carbon-preprocess-svelte/-/carbon-preprocess-svelte-0.6.0.tgz#a2a2a7f7a23185bc38956a5b5250e97c5737c788"
