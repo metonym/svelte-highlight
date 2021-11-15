@@ -125,18 +125,12 @@ callsites@^3.0.0:
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
-carbon-components-svelte@^0.47.3:
-  version "0.47.6"
-  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.47.6.tgz#a792055b7beaa2dd62e8c050a8ab1923b0fe5592"
-  integrity sha512-lfUu521kXSumexrgbTSi6aWSyraFfWgJwGyEDiqdCs70cMpxjOnUmtdFtogzaARyHztE819jJb19GknJBd/3Hg==
+carbon-components-svelte@^0.49.0:
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.49.0.tgz#c4988fe558cbe010cbc5cbcffe233c3fd6d39428"
+  integrity sha512-Hjg9SB2HgZ0nTVTo8wMZn62ODm0EKOVIJkFUx+eBYJWJzxi/ezgyQ9QGAyMykjm5vPIKncms/zJu48l9kraqLg==
   dependencies:
-    carbon-icons-svelte "^10.36.0"
     flatpickr "4.6.9"
-
-carbon-icons-svelte@^10.36.0:
-  version "10.38.0"
-  resolved "https://registry.yarnpkg.com/carbon-icons-svelte/-/carbon-icons-svelte-10.38.0.tgz#daf74e4a2a826ad994c950a67307b8392d80ca3a"
-  integrity sha512-uEckbbNHFtDzKz+QRx6GxvZcezXXqfDOiaE7mupkiRPkBbALrA9CPJZbI5Q2XW5mpn8lgN3IlTm2u1iJEAlVJw==
 
 carbon-preprocess-svelte@^0.6.0:
   version "0.6.0"
@@ -590,10 +584,10 @@ postcss@^8.2.1, postcss@^8.3.8:
     picocolors "^1.0.0"
     source-map-js "^0.6.2"
 
-prettier-plugin-svelte@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-svelte/-/prettier-plugin-svelte-2.4.0.tgz#482bb6003bf1d5bd7ff002261a42a32b87d42d00"
-  integrity sha512-JwJ9bOz4XHLQtiLnX4mTSSDUdhu12WH8sTwy/XTDCSyPlah6IcV7NWeYBZscPEcceu2YnW8Y9sJCP40Z2UH9GA==
+prettier-plugin-svelte@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-svelte/-/prettier-plugin-svelte-2.5.0.tgz#7922534729f7febe59b4c56c3f5360539f0d8ab1"
+  integrity sha512-+iHY2uGChOngrgKielJUnqo74gIL/EO5oeWm8MftFWjEi213lq9QYTOwm1pv4lI1nA61tdgf80CF2i5zMcu1kw==
 
 prettier@^2.4.1:
   version "2.4.1"
@@ -722,10 +716,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-check@^2.2.8:
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-2.2.8.tgz#776befcfbfaad93f38642724619a400846a04923"
-  integrity sha512-y8BmSf3v+jOoVwKY0K3wAiIt3hupLiUS4HYqXSZPXJZrChKddp+N8fyNeClsDChLt2sLUo6sOAhlnok/RJ+iIw==
+svelte-check@^2.2.9:
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-2.2.9.tgz#667134662f268bcbfe5e22bcb596fcd524d67ab0"
+  integrity sha512-au77iP0v2f8F0gWu5Nk3dPkASk4H6DyLQEDQrQR6a7BWJaTnGEZKFhe5EsD8f9tHLyA4awPBi+D56hVuRsbgNA==
   dependencies:
     chalk "^4.0.0"
     chokidar "^3.4.1"
