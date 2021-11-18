@@ -125,10 +125,10 @@ callsites@^3.0.0:
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
-carbon-components-svelte@^0.49.0:
-  version "0.49.0"
-  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.49.0.tgz#c4988fe558cbe010cbc5cbcffe233c3fd6d39428"
-  integrity sha512-Hjg9SB2HgZ0nTVTo8wMZn62ODm0EKOVIJkFUx+eBYJWJzxi/ezgyQ9QGAyMykjm5vPIKncms/zJu48l9kraqLg==
+carbon-components-svelte@^0.50.0:
+  version "0.50.0"
+  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.50.0.tgz#cff96a2c5b0686eb4c66c7228c2c6f131f85b259"
+  integrity sha512-Db3BEDzV63fRK6TAFWpyOX/MKebdip9fQGB4wcZ9ZdGTxa/JYLe8HED0oTHCTO52IZBc2EAbPSrwPtZjxu5fTw==
   dependencies:
     flatpickr "4.6.9"
 
@@ -721,10 +721,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-check@^2.2.9:
-  version "2.2.9"
-  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-2.2.9.tgz#667134662f268bcbfe5e22bcb596fcd524d67ab0"
-  integrity sha512-au77iP0v2f8F0gWu5Nk3dPkASk4H6DyLQEDQrQR6a7BWJaTnGEZKFhe5EsD8f9tHLyA4awPBi+D56hVuRsbgNA==
+svelte-check@^2.2.10:
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-2.2.10.tgz#ca2e4fde2d077e703792d8301a643c36375f646c"
+  integrity sha512-UVLd/N7hUIG2v6dytofsw8MxYn2iS2hpNSglsGz9Z9b8ZfbJ5jayl4Mm1SXhNwiFs5aklG90zSBJtd7NTK8dTg==
   dependencies:
     chalk "^4.0.0"
     chokidar "^3.4.1"
