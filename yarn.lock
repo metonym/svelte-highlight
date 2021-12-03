@@ -125,17 +125,17 @@ callsites@^3.0.0:
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
-carbon-components-svelte@^0.50.0:
-  version "0.50.0"
-  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.50.0.tgz#cff96a2c5b0686eb4c66c7228c2c6f131f85b259"
-  integrity sha512-Db3BEDzV63fRK6TAFWpyOX/MKebdip9fQGB4wcZ9ZdGTxa/JYLe8HED0oTHCTO52IZBc2EAbPSrwPtZjxu5fTw==
+carbon-components-svelte@^0.50.2:
+  version "0.50.2"
+  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.50.2.tgz#62c5b92ce4315f850517a5019bb21ab46e8ef283"
+  integrity sha512-tfJhv0ipQMkAZr2umt3t825OTfW+7Lk89OzTEZvsLJW0C/CXpa7umiplfKtwryXAyfZkVLHmR0fuvk3GC/vEJA==
   dependencies:
     flatpickr "4.6.9"
 
-carbon-icons-svelte@^10.38.0:
-  version "10.38.0"
-  resolved "https://registry.yarnpkg.com/carbon-icons-svelte/-/carbon-icons-svelte-10.38.0.tgz#daf74e4a2a826ad994c950a67307b8392d80ca3a"
-  integrity sha512-uEckbbNHFtDzKz+QRx6GxvZcezXXqfDOiaE7mupkiRPkBbALrA9CPJZbI5Q2XW5mpn8lgN3IlTm2u1iJEAlVJw==
+carbon-icons-svelte@^10.44.0:
+  version "10.44.0"
+  resolved "https://registry.yarnpkg.com/carbon-icons-svelte/-/carbon-icons-svelte-10.44.0.tgz#72f0fd9f21c640982c90af205bfdcb5aef418a02"
+  integrity sha512-+CLBeDCORLk3FmIy27xheymkCQFfLk38gbdaT7+3Vxo23V48OJvKhfWJMdSTcSZwNJ5QSDU2iQo34hbxyf9i9g==
 
 carbon-preprocess-svelte@^0.6.0:
   version "0.6.0"
@@ -594,10 +594,10 @@ prettier-plugin-svelte@^2.5.0:
   resolved "https://registry.yarnpkg.com/prettier-plugin-svelte/-/prettier-plugin-svelte-2.5.0.tgz#7922534729f7febe59b4c56c3f5360539f0d8ab1"
   integrity sha512-+iHY2uGChOngrgKielJUnqo74gIL/EO5oeWm8MftFWjEi213lq9QYTOwm1pv4lI1nA61tdgf80CF2i5zMcu1kw==
 
-prettier@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.4.1.tgz#671e11c89c14a4cfc876ce564106c4a6726c9f5c"
-  integrity sha512-9fbDAXSBcc6Bs1mZrDYb3XKzDLm4EXXL9sC1LqKP5rZkT6KRr/rf9amVUcODVXgguK/isJz0d0hP72WeaKWsvA==
+prettier@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.5.0.tgz#a6370e2d4594e093270419d9cc47f7670488f893"
+  integrity sha512-FM/zAKgWTxj40rH03VxzIPdXmj39SwSjwG0heUcNFwI+EMZJnY93yAiKXM3dObIKAM5TA88werc8T/EwhB45eg==
 
 purgecss@^4.0.3:
   version "4.0.3"
@@ -736,10 +736,10 @@ svelte-check@^2.2.10:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-focus-key@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/svelte-focus-key/-/svelte-focus-key-0.1.1.tgz#a927afdccb9a9abf6f3d9d770dda06ca4cde5c17"
-  integrity sha512-lJdE8nktO58lcTZ7COcGq6UP++FgrMGPKRHFSllFtO45RAz5/6K10mX9m7ooPXzH9OMh6bzXT3ltG9ra+OJcYQ==
+svelte-focus-key@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/svelte-focus-key/-/svelte-focus-key-0.2.0.tgz#bd1da18f96a3843157ee38cf514e0a9bc52c0bdb"
+  integrity sha512-Yu7glpzpPY7f/ANjUBrz3m7lPSLPWnfLCE8aHoSA7JbP9PoZfjHrt5VUse2tc2nw2hJMdSHqkHMhQq/LbgVBSg==
 
 svelte-hmr@^0.14.7:
   version "0.14.7"
@@ -758,10 +758,10 @@ svelte-preprocess@^4.0.0, svelte-preprocess@^4.7.3:
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
 
-svelte@^3.44.1:
-  version "3.44.1"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.44.1.tgz#5cc772a8340f4519a4ecd1ac1a842325466b1a63"
-  integrity sha512-4DrCEJoBvdR689efHNSxIQn2pnFwB7E7j2yLEJtHE/P8hxwZWIphCtJ8are7bjl/iVMlcEf5uh5pJ68IwR09vQ==
+svelte@^3.44.2:
+  version "3.44.2"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.44.2.tgz#3e69be2598308dfc8354ba584cec54e648a50f7f"
+  integrity sha512-jrZhZtmH3ZMweXg1Q15onb8QlWD+a5T5Oca4C1jYvSURp2oD35h4A5TV6t6MEa93K4LlX6BkafZPdQoFjw/ylA==
 
 to-regex-range@^5.0.1:
   version "5.0.1"
