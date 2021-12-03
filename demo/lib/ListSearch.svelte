@@ -37,7 +37,7 @@
   );
 </script>
 
-<FocusKey element={ref} />
+<FocusKey element={ref} selectText />
 
 <Row>
   <Column>
