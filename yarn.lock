@@ -736,10 +736,10 @@ svelte-check@^2.2.10:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-focus-key@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/svelte-focus-key/-/svelte-focus-key-0.2.0.tgz#bd1da18f96a3843157ee38cf514e0a9bc52c0bdb"
-  integrity sha512-Yu7glpzpPY7f/ANjUBrz3m7lPSLPWnfLCE8aHoSA7JbP9PoZfjHrt5VUse2tc2nw2hJMdSHqkHMhQq/LbgVBSg==
+svelte-focus-key@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/svelte-focus-key/-/svelte-focus-key-0.2.1.tgz#f53f3705ac6bea0c704c5227b1693d78352a35e2"
+  integrity sha512-Jt1GiTJ1sAhWBxvosbDPd4Q0h0NkNfjUwDeK9EVIvuWpJplhVXVMjWY70Vttsckw/lh8B0x1seTm9enj4Z+HhQ==
 
 svelte-hmr@^0.14.7:
   version "0.14.7"
