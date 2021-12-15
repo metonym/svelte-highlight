@@ -132,10 +132,10 @@ carbon-components-svelte@^0.50.2:
   dependencies:
     flatpickr "4.6.9"
 
-carbon-icons-svelte@^10.44.0:
-  version "10.44.0"
-  resolved "https://registry.yarnpkg.com/carbon-icons-svelte/-/carbon-icons-svelte-10.44.0.tgz#72f0fd9f21c640982c90af205bfdcb5aef418a02"
-  integrity sha512-+CLBeDCORLk3FmIy27xheymkCQFfLk38gbdaT7+3Vxo23V48OJvKhfWJMdSTcSZwNJ5QSDU2iQo34hbxyf9i9g==
+carbon-icons-svelte@^10.44.3:
+  version "10.44.3"
+  resolved "https://registry.yarnpkg.com/carbon-icons-svelte/-/carbon-icons-svelte-10.44.3.tgz#cc437d5d10512777a8d476c742ff2885fc5dfcf0"
+  integrity sha512-vLBy3T5Dnv68vjTJEtwL7DKHX4VqXHeJ6DwPtiO9zTwoMOU3eLx/exzR6KTISuUMqfEPmrOy4dOwZc5sPWuxLA==
 
 carbon-preprocess-svelte@^0.6.0:
   version "0.6.0"
@@ -736,10 +736,10 @@ svelte-check@^2.2.10:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-focus-key@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/svelte-focus-key/-/svelte-focus-key-0.2.1.tgz#f53f3705ac6bea0c704c5227b1693d78352a35e2"
-  integrity sha512-Jt1GiTJ1sAhWBxvosbDPd4Q0h0NkNfjUwDeK9EVIvuWpJplhVXVMjWY70Vttsckw/lh8B0x1seTm9enj4Z+HhQ==
+svelte-focus-key@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/svelte-focus-key/-/svelte-focus-key-0.2.4.tgz#57624beb7d54de75232f735aa66de0bf2556c210"
+  integrity sha512-FzahPcsn7N5heJGhxN1S0sHEx1HPdDrwsqb+TPTO0bVCBhlLVIn4Ygi+qEHC7qL1HEDiaeZD3BNVbKe6djdpig==
 
 svelte-hmr@^0.14.7:
   version "0.14.7"
