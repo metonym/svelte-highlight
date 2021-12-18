@@ -24,7 +24,7 @@ npm i -D svelte-highlight
 **pnpm**
 
 ```bash
-pnpm i -D svelte-highlight
+pnpm i -D svelte-highlight highlight.js
 ```
 
 ## SvelteKit Set-up
