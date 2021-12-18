@@ -65,7 +65,7 @@
           <CodeSnippet code="npm i -D {NAME}" />
         </TabContent>
         <TabContent>
-          <CodeSnippet code="pnpm i -D {NAME}" />
+          <CodeSnippet code="pnpm i -D {NAME} highlight.js" />
         </TabContent>
       </div>
     </Tabs>
