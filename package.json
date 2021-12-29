@@ -24,13 +24,13 @@
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.50.2",
+    "carbon-components-svelte": "^0.50.3",
     "carbon-icons-svelte": "^10.44.3",
     "carbon-preprocess-svelte": "^0.6.0",
     "prettier": "^2.5.1",
     "prettier-plugin-svelte": "^2.5.1",
     "svelte": "^3.44.3",
-    "svelte-check": "^2.2.10",
+    "svelte-check": "^2.2.11",
     "svelte-focus-key": "^0.2.4",
     "totalist": "^2.0.0"
   },
