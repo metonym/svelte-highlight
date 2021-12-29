@@ -39,6 +39,9 @@ const config = {
       routes: "demo/routes",
       template: "demo/app.html",
     },
+    prerender: {
+      concurrency: 10,
+    },
     vite: {
       optimizeDeps: {
         include: ["highlight.js/lib/core"],
