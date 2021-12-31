@@ -24,7 +24,7 @@
   onMount(prefetchRoutes);
 
   const routes = {
-    "/": "Getting started",
+    "/": "Svelte Highlight",
     "/languages": "Languages",
     "/styles": "Styles",
   };
@@ -34,8 +34,9 @@
 
   let isSideNavOpen = false;
 
-  $: pathname = $page.url.pathname;
-  $: title = pathname === "/" ? "Svelte Highlight" : routes[pathname];
+  // TODO: `$page.url.pathname` is `//prerender` in prod; remove when fixed
+  $: pathname = $page.url.pathname in routes ? $page.url.pathname : "/";
+  $: title = routes[pathname];
 </script>
 
 <svelte:head>
@@ -69,7 +70,7 @@
       <SideNavLink
         sveltekit:prefetch
         href="{base}{href}"
-        {text}
+        text={href === "/" ? "Getting Started" : text}
         isSelected={pathname === href}
         on:click={async () => {
           await tick();
