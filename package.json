@@ -24,7 +24,7 @@
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.50.3",
+    "carbon-components-svelte": "^0.51.0",
     "carbon-icons-svelte": "^10.44.3",
     "carbon-preprocess-svelte": "^0.6.0",
     "prettier": "^2.5.1",
