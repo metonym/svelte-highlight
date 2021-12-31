@@ -40,6 +40,7 @@ const config = {
       routes: "demo/routes",
       template: "demo/app.html",
     },
+    ssr: false,
     prerender: {
       concurrency: 10,
     },

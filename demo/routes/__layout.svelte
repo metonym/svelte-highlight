@@ -34,8 +34,7 @@
 
   let isSideNavOpen = false;
 
-  // TODO: `$page.url.pathname` is `//prerender` in prod; remove when fixed
-  $: pathname = $page.url.pathname in routes ? $page.url.pathname : "/";
+  $: pathname = $page.url.pathname;
   $: title = routes[pathname];
 </script>
 
