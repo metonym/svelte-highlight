@@ -34,7 +34,8 @@
 
   let isSideNavOpen = false;
 
-  $: title = $page.path === "/" ? "Svelte Highlight" : routes[$page.path];
+  $: pathname = $page.url.pathname;
+  $: title = pathname === "/" ? "Svelte Highlight" : routes[pathname];
 </script>
 
 <svelte:head>
@@ -69,7 +70,7 @@
         sveltekit:prefetch
         href="{base}{href}"
         {text}
-        isSelected={$page.path === href}
+        isSelected={pathname === href}
         on:click={async () => {
           await tick();
 
