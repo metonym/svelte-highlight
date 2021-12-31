@@ -5,7 +5,13 @@ import { optimizeImports } from "carbon-preprocess-svelte";
 const pkg = JSON.parse(
   fs.readFileSync(new URL("./package.json", import.meta.url), "utf8")
 );
-const { name, version, dependencies, homepage } = pkg;
+const CONTENT = {
+  NAME: pkg.name,
+  VERSION_PACKAGE: pkg.version,
+  VERSION_HLJS: pkg.dependencies["highlight.js"],
+  HOMEPAGE: pkg.homepage,
+  TS: new Date().toLocaleString()
+}
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -13,19 +19,14 @@ const config = {
     optimizeImports(),
     {
       script: ({ content }) => {
+        let code = content;
+
+        Object.entries(CONTENT).map(([key, value]) => {
+          code = code.replace(new RegExp('process.env.' + key, 'g'), JSON.stringify(value))
+        });
+
         return {
-          code: content
-            .replace(/process.env.NAME/g, JSON.stringify(name))
-            .replace(/process.env.VERSION_PACKAGE/g, JSON.stringify(version))
-            .replace(
-              /process.env.VERSION_HLJS/g,
-              JSON.stringify(dependencies["highlight.js"])
-            )
-            .replace(/process.env.HOMEPAGE/g, JSON.stringify(homepage))
-            .replace(
-              /process.env.TS/g,
-              JSON.stringify(new Date().toLocaleString())
-            ),
+          code
         };
       },
     },
