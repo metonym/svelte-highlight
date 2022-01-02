@@ -40,13 +40,6 @@ const config = {
       routes: "demo/routes",
       template: "demo/app.html",
     },
-    ssr: false,
-    prerender: {
-      concurrency: 10,
-    },
-    serviceWorker: {
-      register: false,
-    },
     vite: {
       optimizeDeps: {
         include: ["highlight.js/lib/core"],
