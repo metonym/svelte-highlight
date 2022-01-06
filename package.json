@@ -19,7 +19,7 @@
     "format": "prettier --write '.'"
   },
   "dependencies": {
-    "highlight.js": "11.3.1"
+    "highlight.js": "11.4.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "next",

@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 191 languages exported from highlight.js@11.3.1
+> 191 languages exported from highlight.js@11.4.0
 
 ## 1c (`_1c`)
 
