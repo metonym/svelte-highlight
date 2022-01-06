@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 242 styles exported from highlight.js@11.3.1
+> 243 styles exported from highlight.js@11.4.0
 
 ## 3024 (`_3024`)
 
@@ -2969,6 +2969,28 @@
 ```html
 <script>
   import "svelte-highlight/src/languages/idea.css";
+</script>
+```
+
+## intellij-light (`intellijLight`)
+
+**Injected Styles**
+
+```html
+<script>
+  import intellijLight from "svelte-highlight/src/styles/intellijLight";
+</script>
+
+<svelte:head>
+  {@html intellijLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/intellij-light.css";
 </script>
 ```
 

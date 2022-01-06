@@ -540,6 +540,10 @@
     "moduleName": "idea"
   },
   {
+    "name": "intellij-light",
+    "moduleName": "intellijLight"
+  },
+  {
     "name": "ir-black",
     "moduleName": "irBlack"
   },
