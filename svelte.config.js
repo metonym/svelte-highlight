@@ -10,8 +10,8 @@ const CONTENT = {
   VERSION_PACKAGE: pkg.version,
   VERSION_HLJS: pkg.dependencies["highlight.js"],
   HOMEPAGE: pkg.homepage,
-  TS: new Date().toLocaleString()
-}
+  TS: new Date().toLocaleString(),
+};
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -22,11 +22,14 @@ const config = {
         let code = content;
 
         Object.entries(CONTENT).map(([key, value]) => {
-          code = code.replace(new RegExp('process.env.' + key, 'g'), JSON.stringify(value))
+          code = code.replace(
+            new RegExp("process.env." + key, "g"),
+            JSON.stringify(value)
+          );
         });
 
         return {
-          code
+          code,
         };
       },
     },
