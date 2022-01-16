@@ -1247,10 +1247,10 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-highlight.js@11.3.1:
-  version "11.3.1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.3.1.tgz#813078ef3aa519c61700f84fe9047231c5dc3291"
-  integrity sha512-PUhCRnPjLtiLHZAQ5A/Dt5F8cWZeMyj9KRsACsWT+OD6OP0x6dp5OmT5jdx0JgEyPxPZZIPQpRN2TciUT7occw==
+highlight.js@11.4.0:
+  version "11.4.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.4.0.tgz#34ceadd49e1596ee5aba3d99346cdfd4845ee05a"
+  integrity sha512-nawlpCBCSASs7EdvZOYOYVkJpGmAOKMYZgZtUqSRqodZE0GRVcFKwo1RcpeOemqh9hyttTdd5wDBwHkuSyUfnA==
 
 hosted-git-info@^4.0.1:
   version "4.0.2"
@@ -2761,12 +2761,12 @@ supports-color@^5.3.0:
   dependencies:
     has-flag "^3.0.0"
 
-svelte-highlight@^5.1.3:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.1.3.tgz#a1f6d8d259ed6765b234a954e80f593159d578bd"
-  integrity sha512-6P+rougGB1saKa1NMDf4UuFT1ryKnl11Sm+YWd++7nf+6xlRXZRjOre39Fa609GSa7ELVgn0Li/77ZA+h9B/PA==
+svelte-highlight@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.2.0.tgz#1362a979b52ac8b73218852f0c314ea36ec0a0f7"
+  integrity sha512-Gq0WFJdq7jDgj3BFmlfdZtE35O1XE1qDh2mIxkoMq0NQOn0WXcs24ZhioD/QHWpFOtT2KJOeCiMqjxJ0Am1m2Q==
   dependencies:
-    highlight.js "11.3.1"
+    highlight.js "11.4.0"
 
 svelte-hmr@^0.13.2:
   version "0.13.5"
@@ -2785,10 +2785,10 @@ svelte-preprocess@^4.7.2:
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
 
-svelte@^3.44.3:
-  version "3.44.3"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.44.3.tgz#795b1ced6ed3da44969099e5061b850c93c95e9a"
-  integrity sha512-aGgrNCip5PQFNfq9e9tmm7EYxWLVHoFsEsmKrtOeRD8dmoGDdyTQ+21xd7qgFd8MNdKGSYvg7F9dr+Tc0yDymg==
+svelte@^3.46.2:
+  version "3.46.2"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.46.2.tgz#f0ffbffaea3a9a760edcbefc0902b41998a686ad"
+  integrity sha512-RXSAtYNefe01Sb1lXtZ2I+gzn3t/h/59hoaRNeRrm8IkMIu6BSiAkbpi41xb+C44x54YKnbk9+dtfs3pM4hECA==
 
 tar@^6.0.2, tar@^6.1.0:
   version "6.1.11"

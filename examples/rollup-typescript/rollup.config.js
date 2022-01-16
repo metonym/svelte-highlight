@@ -5,7 +5,7 @@ import { terser } from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
 import typescript from "@rollup/plugin-typescript";
 
-const IS_PROD = !process.env.ROLLUP_WATCH;
+const PROD = !process.env.ROLLUP_WATCH;
 
 export default {
   input: "src/main.ts",
@@ -19,11 +19,11 @@ export default {
     svelte({
       emitCss: false,
       preprocess: sveltePreprocess(),
-      compilerOptions: { dev: !IS_PROD },
+      compilerOptions: { dev: !PROD },
     }),
     commonjs(),
     resolve({ browser: true, dedupe: ["svelte"] }),
-    typescript({ sourceMap: !IS_PROD }),
-    IS_PROD && terser(),
+    typescript({ sourceMap: !PROD }),
+    PROD && terser(),
   ],
 };
