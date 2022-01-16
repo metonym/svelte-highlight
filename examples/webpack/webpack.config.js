@@ -1,47 +1,67 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin").default;
 const path = require("path");
 
 const NODE_ENV = process.env.NODE_ENV || "development";
-const IS_PROD = NODE_ENV === "production";
+const PROD = NODE_ENV === "production";
 
 module.exports = {
-  stats: "errors-only",
-  mode: NODE_ENV,
-  devtool: IS_PROD ? false : "cheap-eval-source-map",
-  entry: { bundle: ["./src/index.js"] },
+  entry: { "build/bundle": ["./src/index.js"] },
   resolve: {
-    alias: { svelte: path.resolve("node_modules", "svelte") },
+    alias: { svelte: path.dirname(require.resolve("svelte/package.json")) },
     extensions: [".mjs", ".js", ".svelte"],
     mainFields: ["svelte", "browser", "module", "main"],
   },
-  output: { path: `${__dirname}/build`, filename: "[name].[chunkhash].js" },
+  output: {
+    publicPath: "/",
+    path: path.join(__dirname, "/public"),
+    filename: PROD ? "[name].[contenthash].js" : "[name].js",
+    chunkFilename: "[name].[id].js",
+  },
   module: {
     rules: [
       {
         test: /\.svelte$/,
         use: {
           loader: "svelte-loader",
-          options: { emitCss: true, hotReload: true },
+          options: {
+            hotReload: !PROD,
+            compilerOptions: { dev: !PROD },
+          },
         },
       },
       {
         test: /\.css$/,
-        use: [
-          { loader: MiniCssExtractPlugin.loader, options: { hmr: !IS_PROD } },
-          "css-loader",
-        ],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      {
+        test: /node_modules\/svelte\/.*\.mjs$/,
+        resolve: { fullySpecified: false },
       },
     ],
   },
+  mode: NODE_ENV,
   plugins: [
-    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: IS_PROD ? "[name].[chunkhash].css" : "[name].css",
+      filename: PROD ? "[name].[chunkhash].css" : "[name].css",
     }),
-    new OptimizeCssAssetsPlugin({}),
-    new HtmlWebpackPlugin({ template: "public/index.html" }),
+    new HtmlWebpackPlugin({
+      templateContent: `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          />
+        </head>
+        <body></body>
+      </html>
+      `,
+    }),
   ],
+  stats: "errors-only",
+  devtool: PROD ? false : "source-map",
+  devServer: { hot: true, historyApiFallback: true },
 };
