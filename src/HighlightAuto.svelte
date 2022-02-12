@@ -35,16 +35,11 @@
 </script>
 
 <slot {highlighted}>
+  <!-- prettier-ignore -->
   <pre
     class:langtag
     data-language={(language && language) || "plaintext"}
-    {...$$restProps}>
-      <code class="hljs">
-        {#if highlighted !== undefined}
-        {@html highlighted}
-      {:else}{code}{/if}
-      </code>
-    </pre>
+    {...$$restProps}><code class="hljs">{#if highlighted !== undefined}{@html highlighted}{:else}{code}{/if}</code></pre>
 </slot>
 
 <style>
