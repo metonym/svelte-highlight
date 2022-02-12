@@ -27,7 +27,7 @@
     "@sveltejs/kit": "next",
     "@testing-library/svelte": "^3.0.3",
     "@testing-library/user-event": "^13.5.0",
-    "carbon-components-svelte": "^0.58.0",
+    "carbon-components-svelte": "^0.58.1",
     "carbon-icons-svelte": "^10.44.4",
     "carbon-preprocess-svelte": "^0.6.0",
     "jsdom": "^19.0.0",
