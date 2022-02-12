@@ -4,9 +4,10 @@
   import { typescript } from "../src/languages";
   import javascript from "../src/languages/javascript";
   import { github, purebasic, _3024 } from "../src/styles";
-  import "svelte-highlight/styles/github.css";
+  import "../src/styles/3024.css";
 
   let toggled = true;
+  let highlighted = "";
 
   $: code = "const add = (a: number, b: number) => a + b;";
   $: codeSvelte = "<button on:click>Click me</button>";
@@ -18,20 +19,28 @@
   {@html _3024}
 </svelte:head>
 
-<HighlightAuto code={toggled ? code : codeSvelte} langtag={true} />
+<button on:click={() => (toggled = !toggled)}>Toggle</button>
+
+<HighlightAuto
+  id="highlight-auto"
+  code={toggled ? code : codeSvelte}
+  langtag={true}
+/>
 
 <Highlight
   language={toggled ? javascript : typescript}
   {code}
   langtag={true}
   on:highlight={(e) => {
-    console.log(e.detail.highlighted);
+    highlighted = e.detail.highlighted;
   }}
   let:highlighted
 >
   {@html highlighted}
 </Highlight>
 
-<HighlightSvelte code={codeSvelte} langtag={true} on:highlight />
+<HighlightSvelte id="langtag" code={codeSvelte} langtag={true} on:highlight />
 
 <Highlight2 code="123" />
+
+<div id="highlighted">{highlighted}</div>
