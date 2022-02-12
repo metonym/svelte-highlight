@@ -18,12 +18,16 @@ describe("SvelteHighlight", () => {
       </div>
     `;
 
+    expect(document.head.querySelector("style")).toBeNull();
+
     const target = document.getElementById("target")!;
 
     instance = new SvelteHighlight({
       target,
       props: {},
     });
+
+    expect(document.head.querySelector("style")?.innerHTML).toBeTruthy();
 
     expect(
       target.querySelector("#highlighted")?.innerHTML
