@@ -1,7 +1,8 @@
 .DS_Store
-/.svelte-kit
-/build
-/node_modules
+.svelte-kit
+build
+dist
+node_modules
 /src/styles
 /src/languages
 yarn-debug.log*

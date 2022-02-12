@@ -17,7 +17,7 @@
     "prepack": "node scripts",
     "test:types": "svelte-check --workspace tests",
     "test:vitest": "vitest",
-    "format": "prettier --write '.'"
+    "format": "prettier --ignore-path .gitignore --write ."
   },
   "dependencies": {
     "highlight.js": "11.4.0"
