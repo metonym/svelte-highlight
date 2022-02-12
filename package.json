@@ -15,7 +15,8 @@
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
     "prepack": "node scripts",
-    "test": "svelte-check --workspace test",
+    "test:types": "svelte-check --workspace tests",
+    "test:vitest": "vitest",
     "format": "prettier --write '.'"
   },
   "dependencies": {
