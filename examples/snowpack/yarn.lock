@@ -2761,10 +2761,10 @@ supports-color@^5.3.0:
   dependencies:
     has-flag "^3.0.0"
 
-svelte-highlight@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.2.0.tgz#1362a979b52ac8b73218852f0c314ea36ec0a0f7"
-  integrity sha512-Gq0WFJdq7jDgj3BFmlfdZtE35O1XE1qDh2mIxkoMq0NQOn0WXcs24ZhioD/QHWpFOtT2KJOeCiMqjxJ0Am1m2Q==
+svelte-highlight@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.2.1.tgz#d09dcfc0cf2e6ce7b8b19d3ac9b0e9193003cc47"
+  integrity sha512-PBZbuHWMPHblN0fc6uPclAXXTQDEM+IH5DS1kUENa5ixiX8ttDeeIdDMG1zX3BwrP7GXijMdXrBbDNv5uNlG7Q==
   dependencies:
     highlight.js "11.4.0"
 
@@ -2785,10 +2785,10 @@ svelte-preprocess@^4.7.2:
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
 
-svelte@^3.46.2:
-  version "3.46.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.46.2.tgz#f0ffbffaea3a9a760edcbefc0902b41998a686ad"
-  integrity sha512-RXSAtYNefe01Sb1lXtZ2I+gzn3t/h/59hoaRNeRrm8IkMIu6BSiAkbpi41xb+C44x54YKnbk9+dtfs3pM4hECA==
+svelte@^3.46.4:
+  version "3.46.4"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.46.4.tgz#0c46bc4a3e20a2617a1b7dc43a722f9d6c084a38"
+  integrity sha512-qKJzw6DpA33CIa+C/rGp4AUdSfii0DOTCzj/2YpSKKayw5WGSS624Et9L1nU1k2OVRS9vaENQXp2CVZNU+xvIg==
 
 tar@^6.0.2, tar@^6.1.0:
   version "6.1.11"
