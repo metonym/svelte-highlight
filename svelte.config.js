@@ -36,7 +36,6 @@ const config = {
   ],
   kit: {
     adapter: adapter(),
-    target: "#svelte",
     files: {
       assets: "demo/static",
       lib: "demo/lib",
