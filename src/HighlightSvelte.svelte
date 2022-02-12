@@ -37,11 +37,8 @@
 </script>
 
 <slot {highlighted}>
-  <pre class:langtag data-language="svelte" {...$$restProps}>
-    <code class="hljs">
-      {@html highlighted}
-    </code>
-  </pre>
+  <!-- prettier-ignore -->
+  <pre class:langtag data-language="svelte" {...$$restProps}><code class="hljs">{@html highlighted}</code></pre>
 </slot>
 
 <style>
