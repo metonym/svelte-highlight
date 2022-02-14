@@ -13,14 +13,9 @@ describe("SvelteHighlight", () => {
   });
 
   test("SvelteHighlight", async () => {
-    document.body.innerHTML = `
-      <div id="target">
-      </div>
-    `;
-
     expect(document.head.querySelector("style")).toBeNull();
 
-    const target = document.getElementById("target")!;
+    const target = document.querySelector("body")!;
 
     instance = new SvelteHighlight({
       target,
