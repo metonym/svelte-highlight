@@ -1,7 +1,7 @@
 import { test, expect, describe, afterEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { SvelteHighlight } from "./examples";
 import { tick } from "svelte";
+import SvelteHighlight from "./SvelteHighlight.test.svelte";
 
 describe("SvelteHighlight", () => {
   let instance: null | SvelteHighlight = null;
