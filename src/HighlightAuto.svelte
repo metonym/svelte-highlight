@@ -1,10 +1,5 @@
 <script>
   /**
-   * @slot {{ highlighted?: string; }}
-   * @event {{ highlighted: string; }} highlight
-   */
-
-  /**
    * Source code to highlight
    * @type {string}
    */
