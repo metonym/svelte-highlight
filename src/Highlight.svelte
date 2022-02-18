@@ -1,9 +1,4 @@
 <script>
-  /**
-   * @slot {{ highlighted?: string; }}
-   * @event {{ highlighted: string; }} highlight
-   */
-
   /** @type {{ name?: string; register: (hljs: any) => Record<string, any>; }} */
   export let language = { name: undefined, register: undefined };
 
