@@ -8,6 +8,6 @@
     "@sveltejs/vite-plugin-svelte": "next",
     "svelte": "^3.46.4",
     "svelte-highlight": "^5.2.1",
-    "vite": "^2.8.1"
+    "vite": "^2.8.4"
   }
 }
