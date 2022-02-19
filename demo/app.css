@@ -8,11 +8,13 @@
 pre {
   max-width: 44rem;
 }
+
 pre[data-language="css"] {
   --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
   --hljs-foreground: #fff;
   --hljs-radius: 8px;
 }
+
 pre[data-language="svelte"] {
   --hljs-foreground: #fff;
 }

@@ -40,6 +40,7 @@
   pre.langtag {
     position: relative;
   }
+
   pre.langtag::after {
     content: attr(data-language);
     position: absolute;
