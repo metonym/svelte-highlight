@@ -208,11 +208,12 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ### Props
 
-| Name                            | Value                                                 |
-| ------------------------------- | ----------------------------------------------------- |
-| code                            | `string`                                              |
-| language (only for `Highlight`) | `object` { name: `string`; register: hljs => object } |
-| `...$$restProps`                | (forwarded to the `pre` element)                      |
+| Name                            | Type                                         | Default value                            |
+| :------------------------------ | :------------------------------------------- | ---------------------------------------- |
+| code                            | `string`                                     | `""`                                     |
+| language (only for `Highlight`) | { name: `string`; register: hljs => object } | { name: undefined, register: undefined } |
+
+- `$$restProps` are forwarded to the `pre` element
 
 ### Dispatched Events
 
