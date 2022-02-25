@@ -5,6 +5,8 @@
 
 > Syntax highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
+Try it in the [Svelte REPL](https://svelte.dev/repl/e9c59b1d029a49e0b89d296ffc33555b).
+
 ## [Documentation](https://svhe.onrender.com)
 
 ## Installation
