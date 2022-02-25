@@ -12,7 +12,7 @@
    */
   export let langtag = false;
 
-  import { HighlightJS as hljs } from "highlight.js/lib/core";
+  import hljs from "highlight.js/lib/core";
   import xml from "highlight.js/lib/languages/xml";
   import javascript from "highlight.js/lib/languages/javascript";
   import css from "highlight.js/lib/languages/css";
