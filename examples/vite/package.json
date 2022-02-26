@@ -7,7 +7,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "next",
     "svelte": "^3.46.4",
-    "svelte-highlight": "^5.2.1",
+    "svelte-highlight": "^5.2.2",
     "vite": "^2.8.4"
   }
 }
