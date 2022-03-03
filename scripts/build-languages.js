@@ -2,8 +2,11 @@ import hljs from "highlight.js";
 import { writeTo } from "./utils/write-to.js";
 import { toCamelCase } from "./utils/to-pascal-case.js";
 import { createMarkdown } from "./utils/create-markdown.js";
+import { mkdir } from "./utils/fs.js";
 
 export async function buildLanguages() {
+  mkdir("src/languages");
+
   let languages = hljs.listLanguages();
   let markdown = createMarkdown("Languages", languages.length);
   let types = `interface HljsLanguage {
