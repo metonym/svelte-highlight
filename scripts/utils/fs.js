@@ -1,5 +1,5 @@
 import fs from "fs";
-import { promisify } from "util";
+import fsp from "fs/promises"
 
 /** @type {(dir: string) => void} */
 export const mkdir = (dir) => {
@@ -8,6 +8,6 @@ export const mkdir = (dir) => {
   }
   fs.mkdirSync(dir);
 };
-export const readFile = promisify(fs.readFile);
-export const writeFile = promisify(fs.writeFile);
-export const copyFile = promisify(fs.copyFile);
+export const readFile = fsp.readFile;
+export const writeFile = fsp.writeFile;
+export const copyFile = fsp.copyFile;
