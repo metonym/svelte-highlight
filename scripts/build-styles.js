@@ -4,9 +4,19 @@ import { readFile, copyFile } from "./utils/fs.js";
 import { writeTo } from "./utils/write-to.js";
 import { toCamelCase } from "./utils/to-pascal-case.js";
 import { createMarkdown } from "./utils/create-markdown.js";
+import { mkdir } from "./utils/fs.js";
+
+/**
+ * @typedef {Array<{ name: string; moduleName: string; }>} ModuleNames
+ */
 
 export async function buildStyles() {
+  mkdir("src/styles");
+
+  /** @type {string[]} */
   let names = [];
+
+  /** @type {ModuleNames} */
   let styles = [];
 
   await totalist("node_modules/highlight.js/styles", async (file, absPath) => {

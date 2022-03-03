@@ -6,15 +6,13 @@ const pkg = JSON.parse(
 
 /**
  * Creates header metadata for supported languages/styles
- * @param {"Languages" | "Styles"} type
- * @param {number} len
- * @returns {string}
+ * @type {(type: "Languages" | "Styles", len: number) => string}
  */
-export function createMarkdown(type, len) {
-  return `# Supported ${type}
+export const createMarkdown = (type, len) =>
+  `
+# Supported ${type}
 
 > ${len} ${type.toLowerCase()} exported from highlight.js@${
     pkg.dependencies["highlight.js"]
   }  
 `;
-}
