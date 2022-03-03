@@ -1,6 +1,7 @@
 import fs from "fs";
 import { promisify } from "util";
 
+/** @type {(dir: string) => void} */
 export const mkdir = (dir) => {
   if (fs.existsSync(dir)) {
     fs.rmSync(dir, { recursive: true });

@@ -1,6 +1,6 @@
 import prettier from "prettier";
-import { writeFile } from "./fs.js";
 import path from "path";
+import { writeFile } from "./fs.js";
 
 const { format } = prettier;
 
@@ -12,6 +12,7 @@ const PARSER = {
   ".css": "css",
 };
 
+/** @type {(file: string, source: object | string) => Promise<void>} */
 export async function writeTo(file, source) {
   const value =
     typeof source === "string" ? source : JSON.stringify(source, null, 2);

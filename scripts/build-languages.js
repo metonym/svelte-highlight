@@ -10,6 +10,8 @@ export async function buildLanguages() {
     register: (hljs: any) => Record<string, any>;
   }\n\n`;
   let base = "";
+
+  /** @type {import("./build-styles").ModuleNames} */
   let lang = [];
 
   languages.forEach(async (name) => {
