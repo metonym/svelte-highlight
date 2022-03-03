@@ -27,6 +27,7 @@
     "@sveltejs/kit": "next",
     "@testing-library/svelte": "^3.0.3",
     "@testing-library/user-event": "^13.5.0",
+    "@types/prettier": "^2.4.4",
     "carbon-components-svelte": "^0.59.0",
     "carbon-icons-svelte": "^10.44.4",
     "carbon-preprocess-svelte": "^0.6.0",
