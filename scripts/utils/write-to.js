@@ -4,6 +4,7 @@ import { writeFile } from "./fs.js";
 
 const { format } = prettier;
 
+/** @type {Record<string, import ("prettier").BuiltInParserName>} */
 const PARSER = {
   ".md": "markdown",
   ".js": "babel",
@@ -16,9 +17,7 @@ const PARSER = {
 export async function writeTo(file, source) {
   const value =
     typeof source === "string" ? source : JSON.stringify(source, null, 2);
+  const parser = PARSER[path.parse(file).ext];
 
-  await writeFile(
-    file,
-    format(value, { parser: PARSER[path.parse(file).ext] })
-  );
+  await writeFile(file, format(value, { parser }));
 }
