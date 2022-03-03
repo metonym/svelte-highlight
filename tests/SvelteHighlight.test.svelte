@@ -3,7 +3,7 @@
   import Highlight2 from "../src/Highlight.svelte";
   import { typescript } from "../src/languages";
   import javascript from "../src/languages/javascript";
-  import { github, purebasic, _3024 } from "../src/styles";
+  import { github, purebasic, _3024 } from "../src/styles/index";
   import "../src/styles/3024.css";
 
   let toggled = true;
