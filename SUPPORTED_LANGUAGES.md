@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 191 languages exported from highlight.js@11.4.0
+> 192 languages exported from highlight.js@11.5.0
 
 ## 1c (`_1c`)
 
@@ -875,6 +875,18 @@
 
   // base import
   import { gradle } from "svelte-highlight/src/languages";
+</script>
+```
+
+## graphql (`graphql`)
+
+```html
+<script>
+  // direct import (recommended)
+  import graphql from "svelte-highlight/src/languages/graphql";
+
+  // base import
+  import { graphql } from "svelte-highlight/src/languages";
 </script>
 ```
 

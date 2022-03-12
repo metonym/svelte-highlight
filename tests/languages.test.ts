@@ -6,7 +6,7 @@ test("Languages", () => {
 
   // @ts-expect-error
   expect(languages.default).toBeUndefined();
-  expect(languageNames.length).toMatchInlineSnapshot("191");
+  expect(languageNames.length).toMatchInlineSnapshot('192');
   expect(languageNames).toMatchInlineSnapshot(`
     [
       "_1c",
@@ -82,6 +82,7 @@ test("Languages", () => {
       "go",
       "golo",
       "gradle",
+      "graphql",
       "groovy",
       "haml",
       "handlebars",

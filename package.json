@@ -20,7 +20,7 @@
     "format": "prettier --ignore-path .gitignore --write ."
   },
   "dependencies": {
-    "highlight.js": "11.4.0"
+    "highlight.js": "11.5.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
@@ -28,7 +28,7 @@
     "@testing-library/svelte": "^3.0.3",
     "@testing-library/user-event": "^13.5.0",
     "@types/prettier": "^2.4.4",
-    "carbon-components-svelte": "^0.59.0",
+    "carbon-components-svelte": "^0.60.0",
     "carbon-icons-svelte": "^10.44.4",
     "carbon-preprocess-svelte": "^0.6.0",
     "jsdom": "^19.0.0",
@@ -38,8 +38,8 @@
     "svelte-check": "^2.4.5",
     "svelte-focus-key": "^0.3.2",
     "totalist": "^3.0.0",
-    "typescript": "^4.5.5",
-    "vitest": "^0.5.5"
+    "typescript": "^4.6.2",
+    "vitest": "^0.6.0"
   },
   "repository": {
     "type": "git",

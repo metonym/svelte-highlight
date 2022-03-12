@@ -292,6 +292,10 @@
     "moduleName": "gradle"
   },
   {
+    "name": "graphql",
+    "moduleName": "graphql"
+  },
+  {
     "name": "groovy",
     "moduleName": "groovy"
   },

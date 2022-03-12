@@ -376,6 +376,10 @@
     "moduleName": "far"
   },
   {
+    "name": "felipec",
+    "moduleName": "felipec"
+  },
+  {
     "name": "flat",
     "moduleName": "flat"
   },
@@ -878,6 +882,14 @@
   {
     "name": "tender",
     "moduleName": "tender"
+  },
+  {
+    "name": "tokyo-night-dark",
+    "moduleName": "tokyoNightDark"
+  },
+  {
+    "name": "tokyo-night-light",
+    "moduleName": "tokyoNightLight"
   },
   {
     "name": "tomorrow",
