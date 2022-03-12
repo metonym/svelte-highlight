@@ -34,7 +34,9 @@
         <StructuredList>
           <StructuredListHead>
             <StructuredListRow head>
-              <StructuredListCell head>Name</StructuredListCell>
+              <StructuredListCell head style="width: 18rem">
+                Name
+              </StructuredListCell>
               <StructuredListCell head>Import</StructuredListCell>
             </StructuredListRow>
           </StructuredListHead>
