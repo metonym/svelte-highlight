@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 243 styles exported from highlight.js@11.4.0
+> 246 styles exported from highlight.js@11.5.0
 
 ## 3024 (`_3024`)
 
@@ -2067,6 +2067,28 @@
 ```html
 <script>
   import "svelte-highlight/src/languages/far.css";
+</script>
+```
+
+## felipec (`felipec`)
+
+**Injected Styles**
+
+```html
+<script>
+  import felipec from "svelte-highlight/src/styles/felipec";
+</script>
+
+<svelte:head>
+  {@html felipec}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/felipec.css";
 </script>
 ```
 
@@ -4839,6 +4861,50 @@
 ```html
 <script>
   import "svelte-highlight/src/languages/tender.css";
+</script>
+```
+
+## tokyo-night-dark (`tokyoNightDark`)
+
+**Injected Styles**
+
+```html
+<script>
+  import tokyoNightDark from "svelte-highlight/src/styles/tokyoNightDark";
+</script>
+
+<svelte:head>
+  {@html tokyoNightDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/tokyo-night-dark.css";
+</script>
+```
+
+## tokyo-night-light (`tokyoNightLight`)
+
+**Injected Styles**
+
+```html
+<script>
+  import tokyoNightLight from "svelte-highlight/src/styles/tokyoNightLight";
+</script>
+
+<svelte:head>
+  {@html tokyoNightLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/src/languages/tokyo-night-light.css";
 </script>
 ```
 
