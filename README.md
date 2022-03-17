@@ -120,9 +120,7 @@ The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js
   import { HighlightAuto } from "svelte-highlight";
   import github from "svelte-highlight/src/styles/github";
 
-  $: code = `<style>
-  .body { margin: 0; padding: 0; }
-<\/style>`;
+  $: code = `body {\n  padding: 0;\n  color: red;\n}`;
 </script>
 
 <svelte:head>
