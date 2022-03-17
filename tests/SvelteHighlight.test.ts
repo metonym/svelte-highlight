@@ -37,8 +37,17 @@ describe("SvelteHighlight", () => {
     expect(
       target.querySelector("#highlight-auto")?.innerHTML
     ).toMatchInlineSnapshot(
-      '"<code class=\\"hljs\\">const add = (a: number, b: number) =&gt; a + b;</code>"'
+      '"<code class=\\"hljs\\">const add = <span class=\\"hljs-function\\">(<span class=\\"hljs-params\\">a: <span class=\\"hljs-built_in\\">number</span>, b: <span class=\\"hljs-built_in\\">number</span></span>) =&gt;</span> a + b;</code>"'
     );
+
+    expect(
+      target.querySelector("#highlight-auto-css")?.outerHTML
+    ).toMatchInlineSnapshot(`
+      "<pre data-language=\\"css\\" id=\\"highlight-auto-css\\" class=\\"langtag svelte-1xjucv4\\"><code class=\\"hljs\\"><span class=\\"hljs-selector-tag\\">body</span> {
+        <span class=\\"hljs-attribute\\">padding</span>: <span class=\\"hljs-number\\">0</span>;
+        <span class=\\"hljs-attribute\\">color</span>: red;
+      }</code></pre>"
+    `);
 
     userEvent.click(target.querySelector("button")!);
     await tick();
@@ -46,7 +55,7 @@ describe("SvelteHighlight", () => {
     expect(
       target.querySelector("#highlight-auto")?.innerHTML
     ).toMatchInlineSnapshot(
-      '"<code class=\\"hljs\\"><span class=\\"hljs-tag\\">&lt;<span class=\\"hljs-name\\">button</span> <span class=\\"hljs-attr\\">on:click</span>&gt;</span>Click me<span class=\\"hljs-tag\\">&lt;/<span class=\\"hljs-name\\">button</span>&gt;</span></code>"'
+      '"<code class=\\"hljs\\">&lt;<span class=\\"hljs-keyword\\">button</span> <span class=\\"hljs-keyword\\">on</span>:click&gt;Click me&lt;/<span class=\\"hljs-keyword\\">button</span>&gt;</code>"'
     );
   });
 });

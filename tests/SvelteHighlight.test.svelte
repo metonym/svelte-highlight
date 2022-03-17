@@ -27,6 +27,12 @@
   langtag={true}
 />
 
+<HighlightAuto
+  id="highlight-auto-css"
+  code={`body {\n  padding: 0;\n  color: red;\n}`}
+  langtag={true}
+/>
+
 <Highlight
   language={toggled ? javascript : typescript}
   {code}

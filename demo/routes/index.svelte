@@ -267,7 +267,7 @@
       code={`<script>
   import { HighlightAuto } from "svelte-highlight";
 
-   $: code = \`.body { padding: 0; margin: 0; }\`;
+   $: code = \`body {\n  padding: 0;\n  color: red;\n}\`;
 <\/script>
 
 <HighlightAuto {code} langtag="{true}" \/>`}
