@@ -364,10 +364,10 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-highlight.js@11.4.0:
-  version "11.4.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.4.0.tgz#34ceadd49e1596ee5aba3d99346cdfd4845ee05a"
-  integrity sha512-nawlpCBCSASs7EdvZOYOYVkJpGmAOKMYZgZtUqSRqodZE0GRVcFKwo1RcpeOemqh9hyttTdd5wDBwHkuSyUfnA==
+highlight.js@11.5.0:
+  version "11.5.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.5.0.tgz#00abb7ed926491adbdabc93a4f3fd2b88b451b4a"
+  integrity sha512-SM6WDj5/C+VfIY8pZ6yW6Xa0Fm1tniYVYWYW1Q/DcMnISZFrC3aQAZZZFAAZtybKNrGId3p/DNbFTtcTXXgYBw==
 
 import-fresh@^3.2.1:
   version "3.3.0"
@@ -614,10 +614,10 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.68.0:
-  version "2.68.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.68.0.tgz#6ccabfd649447f8f21d62bf41662e5caece3bd66"
-  integrity sha512-XrMKOYK7oQcTio4wyTz466mucnd8LzkiZLozZ4Rz0zQD+HeX4nUK4B8GrTX/2EvN2/vBF/i2WnaXboPxo0JylA==
+rollup@^2.70.1:
+  version "2.70.1"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.70.1.tgz#824b1f1f879ea396db30b0fc3ae8d2fead93523e"
+  integrity sha512-CRYsI5EuzLbXdxC6RnYhOuRdtz4bhejPMSWjsFLfVM/7w/85n2szZv6yExqUXsBdz5KT8eoubeyDUDjhLHEslA==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -711,10 +711,10 @@ supports-color@^7.0.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-check@2.4.5:
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-2.4.5.tgz#a2001993034d495118980bd95577fb3e7980661a"
-  integrity sha512-nRft8BbG2wcxyCdHDZ7X43xLcvDzua3xLwq6wzHGcAF3ka3Jyhv2rvgq0+SF9NwHLMefp9C2XkM6etzsxK/cMQ==
+svelte-check@2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-2.4.6.tgz#dfdb6b4a68d9b2cececdedd4e17d895eb82314b3"
+  integrity sha512-luzdly7RJhyXucQe8ID/7CqDgXdMrPYXmyZBjCbp+cixzTopZotuWevrB5hWDOnOU19m2cyetigIIa7WDHnCmQ==
   dependencies:
     chokidar "^3.4.1"
     fast-glob "^3.2.7"
@@ -726,12 +726,12 @@ svelte-check@2.4.5:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-highlight@^5.2.2:
-  version "5.2.2"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.2.2.tgz#99c35efb6c95c3d69ab68fb7800bcc138cb8a69d"
-  integrity sha512-9Ww/IUg3hxEzKIMElE2HwhyPqzFXzCAWub8G9RFRkAv4Yd/ElnxtVcbS9z0aXXVEHXqe9fWKyVXIp+N8N5GRAA==
+svelte-highlight@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.3.1.tgz#50afedfb412f67332c9902c14f10c933d833185f"
+  integrity sha512-cVqYKj7sPwAOA8/dbrAKz/A6GZRDoaoszq6xYpzYzp+UhkcX39RlMDYFpHowQrN5QxdFgoh1AHy5m8KcFd1Edw==
   dependencies:
-    highlight.js "11.4.0"
+    highlight.js "11.5.0"
 
 svelte-preprocess@^4.0.0:
   version "4.7.4"
@@ -786,10 +786,10 @@ typescript@*:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
   integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
 
-typescript@^4.5.5:
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
-  integrity sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==
+typescript@^4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.2.tgz#fe12d2727b708f4eef40f51598b3398baa9611d4"
+  integrity sha512-HM/hFigTBHZhLXshn9sN37H085+hQGeJHJ/X7LpBWLID/fbc2acUMfU+lGD98X81sKP+pFa9f0DZmCwB9GnbAg==
 
 wrappy@1:
   version "1.0.2"

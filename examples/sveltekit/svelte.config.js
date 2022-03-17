@@ -6,7 +6,7 @@ export default {
     adapter: adapter(),
     vite: {
       optimizeDeps: {
-        include: ["highlight.js/lib/core"],
+        include: ["highlight.js", "highlight.js/lib/core"],
       },
     },
   },

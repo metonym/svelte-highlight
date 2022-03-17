@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Highlight from "svelte-highlight";
+  import { Highlight, HighlightAuto } from "svelte-highlight";
   import typescript from "svelte-highlight/src/languages/typescript";
   import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
 
@@ -11,3 +11,5 @@
 </svelte:head>
 
 <Highlight language={typescript} {code} />
+
+<HighlightAuto langtag code={`body {\n  padding: 0;\n  color: red;\n}`} />
