@@ -1,5 +1,5 @@
 import fs from "fs";
-import fsp from "fs/promises"
+import fsp from "fs/promises";
 
 /** @type {(dir: string) => void} */
 export const mkdir = (dir) => {

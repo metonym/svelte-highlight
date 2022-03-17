@@ -6,7 +6,7 @@ test("Styles", () => {
 
   // @ts-expect-error
   expect(styles.default).toBeUndefined();
-  expect(styleNames.length).toMatchInlineSnapshot('246');
+  expect(styleNames.length).toMatchInlineSnapshot("246");
   expect(styleNames).toMatchInlineSnapshot(`
     [
       "_3024",
