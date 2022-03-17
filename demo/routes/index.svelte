@@ -21,10 +21,9 @@
 
   const sveltekit = `export default {
   kit: {
-    target: "#svelte",
     vite: {
       optimizeDeps: {
-        include: ["highlight.js/lib/core"],
+        include: ["highlight.js", "highlight.js/lib/core"],
       },
     },
   },
@@ -87,11 +86,11 @@
 <Row class="mb-7">
   <Column xlg={9} lg={12}>
     <p class="mb-5">
-      To use this library with SvelteKit, add <code class="code"
-        >"highlight.js/lib/core"</code
+      To use this library with SvelteKit or vite, add <code class="code"
+        >"highlight.js"</code
       >
-      to the dependencies for vite to optimize in your
-      <strong>svelte.config.js</strong>:
+      and <code class="code">"highlight.js/lib/core"</code>
+      to the dependencies for vite to optimize:
     </p>
 
     <Row class="mb-7" noGutter>

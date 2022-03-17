@@ -31,16 +31,15 @@ pnpm i -D svelte-highlight highlight.js
 
 ## SvelteKit Set-up
 
-To use this library with SvelteKit, instruct vite to optimize `highlight.js/lib/core` in your `svelte.config.js`:
+To use this library with [SvelteKit](https://github.com/sveltejs/kit) or [vite](https://github.com/sveltejs/vite-plugin-svelte), instruct vite to optimize `highlight.js` and `highlight.js/lib/core`:
 
 ```diff
 # svelte.config.js
 export default {
   kit: {
-    target: "#svelte",
 +   vite: {
 +     optimizeDeps: {
-+       include: ["highlight.js/lib/core"],
++       include: ["highlight.js", "highlight.js/lib/core"],
 +     },
 +   },
   },
