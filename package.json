@@ -4,9 +4,6 @@
   "license": "MIT",
   "description": "Syntax Highlighting for Svelte using highlight.js",
   "author": "Eric Liu (https://github.com/metonym)",
-  "svelte": "./src/index.js",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
   "sideEffects": [
     "src/styles/*.css"
   ],
@@ -14,7 +11,8 @@
   "scripts": {
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
-    "prepack": "node scripts",
+    "build:lib": "node scripts",
+    "package": "svelte-kit package",
     "check": "svelte-check --workspace tests",
     "test": "vitest",
     "format": "prettier --ignore-path .gitignore --write ."
@@ -57,8 +55,5 @@
     "code",
     "syntax",
     "typescript"
-  ],
-  "files": [
-    "src"
   ]
 }
