@@ -7,7 +7,7 @@
 
   $: code = `<script>
   import { HighlightSvelte } from "svelte-highlight";
-  import ${moduleName} from "svelte-highlight/src/styles/${name}";
+  import ${moduleName} from "svelte-highlight/styles/${name}";
   
   const code = \`<button on:click={() => { console.log(0); }}>Click me</button>\`;
 <\/script>

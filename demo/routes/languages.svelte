@@ -24,7 +24,7 @@
   import Highlight from "svelte-highlight";
   import ${
     useDirectImport ? moduleName : `{ ${moduleName} }`
-  } from "svelte-highlight/src/languages${useDirectImport ? `/${name}` : ""}";
+  } from "svelte-highlight/languages${useDirectImport ? `/${name}` : ""}";
 <\/script>
 
 <Highlight language={${moduleName}} code="code" />`;

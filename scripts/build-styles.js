@@ -66,7 +66,7 @@ export async function buildStyles() {
 
 \`\`\`html
 <script>
-  import ${moduleName} from "svelte-highlight/src/styles/${moduleName}";
+  import ${moduleName} from "svelte-highlight/styles/${moduleName}";
 <\/script>
 
 <svelte:head>
@@ -78,7 +78,7 @@ export async function buildStyles() {
 
 \`\`\`html
 <script>
-  import "svelte-highlight/src/languages/${name}.css";
+  import "svelte-highlight/languages/${name}.css";
 <\/script>
 \`\`\`\n\n`;
       })

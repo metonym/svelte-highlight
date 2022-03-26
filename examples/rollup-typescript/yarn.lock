@@ -725,10 +725,10 @@ svelte-check@2.4.6:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-highlight@^5.3.2:
-  version "5.3.2"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.3.2.tgz#d58f819d8c94a6a8e71691d60a4d0cfb6d1d3921"
-  integrity sha512-a9FbXm9oXkoUzLZxGaOpi/UZXxt2tO2+TTRQYtz+UpOFbbRGeZx7zG53QHwv7cpT+/kY10sc6VLZGzjBJviv6w==
+svelte-highlight@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-6.0.0.tgz#be499b866a318a2a7d751372a904703597cf0b84"
+  integrity sha512-ug+7lfrj25QThSXyT9bOJEt9UXk7eEtAIWi/hBiO21FKNLfl46NVUmFTyuMtIDVQ/mu/8zkfwBvMOfL8BNJujA==
   dependencies:
     highlight.js "11.5.0"
 

@@ -7,7 +7,7 @@
 
   $: code = `<script>
   import { HighlightAuto } from "svelte-highlight";
-  import ${moduleName} from "svelte-highlight/src/styles/${name}";
+  import ${moduleName} from "svelte-highlight/styles/${name}";
   
   const code = ".body { padding: 0; margin: 0; }";
 <\/script>

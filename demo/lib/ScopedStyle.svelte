@@ -8,11 +8,11 @@
 
   $: code = `<script>
   import Highlight from "svelte-highlight";
-  import typescript from "svelte-highlight/src/languages/typescript";
+  import typescript from "svelte-highlight/languages/typescript";
   ${
     useInjectedStyles
-      ? `import ${moduleName} from "svelte-highlight/src/styles/${name}";`
-      : `import "svelte-highlight/src/styles/${name}.css";`
+      ? `import ${moduleName} from "svelte-highlight/styles/${name}";`
+      : `import "svelte-highlight/styles/${name}.css";`
   }
 
   const code = "const add = (a: number, b: number) => a + b;";

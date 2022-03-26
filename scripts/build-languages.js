@@ -31,10 +31,10 @@ export async function buildLanguages() {
 \`\`\`html
 <script>
   // direct import (recommended)
-  import ${moduleName} from "svelte-highlight/src/languages/${name}";
+  import ${moduleName} from "svelte-highlight/languages/${name}";
 
   // base import
-  import { ${moduleName} } from "svelte-highlight/src/languages";
+  import { ${moduleName} } from "svelte-highlight/languages";
 <\/script>
 \`\`\`\n\n`;
     await writeTo(
