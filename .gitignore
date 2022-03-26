@@ -3,6 +3,7 @@
 build
 dist
 node_modules
+package
 /src/styles
 /src/languages
 yarn-debug.log*

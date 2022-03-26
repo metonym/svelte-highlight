@@ -37,11 +37,6 @@ export async function buildLanguages() {
   import { ${moduleName} } from "svelte-highlight/src/languages";
 <\/script>
 \`\`\`\n\n`;
-
-    await writeTo(
-      `src/languages/${moduleName}.d.ts`,
-      `export { ${moduleName} } from "./";\nexport { ${moduleName} as default } from "./";\n`
-    );
     await writeTo(
       `src/languages/${name}.js`,
       `import register from "highlight.js/lib/languages/${name}";\n
@@ -51,7 +46,6 @@ export default ${moduleName};\n`
   });
 
   await writeTo("src/languages/index.js", base);
-  await writeTo("src/languages/index.d.ts", types);
   await writeTo("SUPPORTED_LANGUAGES.md", markdown);
   await writeTo("demo/lib/languages.json", lang);
 }
