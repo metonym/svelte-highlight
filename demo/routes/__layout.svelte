@@ -19,7 +19,7 @@
   import { prefetchRoutes } from "$app/navigation";
   import { page } from "$app/stores";
   import { base } from "$app/paths";
-  import Footer from "$lib/Footer.svelte";
+  import Footer from "../lib/Footer.svelte";
 
   onMount(prefetchRoutes);
 

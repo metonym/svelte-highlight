@@ -2369,7 +2369,7 @@ svelte-dev-helper@^1.1.9:
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
   integrity sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M=
 
-svelte-highlight@^5.3.1:
+svelte-highlight@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-5.3.2.tgz#d58f819d8c94a6a8e71691d60a4d0cfb6d1d3921"
   integrity sha512-a9FbXm9oXkoUzLZxGaOpi/UZXxt2tO2+TTRQYtz+UpOFbbRGeZx7zG53QHwv7cpT+/kY10sc6VLZGzjBJviv6w==

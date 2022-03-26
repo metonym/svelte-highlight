@@ -8,10 +8,10 @@
     StructuredListCell,
     StructuredListBody,
   } from "carbon-components-svelte";
-  import ScopedStyle from "$lib/ScopedStyle.svelte";
-  import CodeSnippet from "$lib/CodeSnippet.svelte";
-  import ListSearch from "$lib/ListSearch.svelte";
-  import styles from "$lib/styles.json";
+  import ScopedStyle from "../lib/ScopedStyle.svelte";
+  import CodeSnippet from "../lib/CodeSnippet.svelte";
+  import ListSearch from "../lib/ListSearch.svelte";
+  import styles from "../lib/styles.json";
 
   let currentLabel = "Injected styles";
   let filtered = [];

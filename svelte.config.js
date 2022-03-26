@@ -41,7 +41,7 @@ const config = {
     },
     files: {
       assets: "demo/static",
-      lib: "demo/lib",
+      lib: "src",
       routes: "demo/routes",
       template: "demo/app.html",
     },

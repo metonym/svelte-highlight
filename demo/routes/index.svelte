@@ -9,11 +9,11 @@
     UnorderedList,
     ListItem,
   } from "carbon-components-svelte";
-  import ScopedStyle from "$lib/ScopedStyle.svelte";
-  import CodeSnippet from "$lib/CodeSnippet.svelte";
+  import ScopedStyle from "../lib/ScopedStyle.svelte";
+  import CodeSnippet from "../lib/CodeSnippet.svelte";
   import { base } from "$app/paths";
-  import ScopedStyleSvelte from "$lib/ScopedStyleSvelte.svelte";
-  import ScopedStyleAuto from "$lib/ScopedStyleAuto.svelte";
+  import ScopedStyleSvelte from "../lib/ScopedStyleSvelte.svelte";
+  import ScopedStyleAuto from "../lib/ScopedStyleAuto.svelte";
   import HighlightSvelte from "../../src/HighlightSvelte.svelte";
   import HighlightAuto from "../../src/HighlightAuto.svelte";
 

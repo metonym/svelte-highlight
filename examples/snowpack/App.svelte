@@ -12,4 +12,5 @@
 
 <Highlight language={typescript} {code} />
 
-<HighlightAuto langtag code={`body {\n  padding: 0;\n  color: red;\n}`} />
+<!-- <HighlightAuto langtag code={`body {\n  padding: 0;\n  color: red;\n}`} />
+ -->

@@ -10,6 +10,6 @@
     "@sveltejs/adapter-node": "next",
     "@sveltejs/kit": "next",
     "svelte": "^3.46.4",
-    "svelte-highlight": "^5.3.1"
+    "svelte-highlight": "^5.3.2"
   }
 }

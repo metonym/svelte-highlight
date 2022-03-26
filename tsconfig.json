@@ -1,17 +1,4 @@
 {
-  "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "lib": ["es2020", "DOM"],
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "es2020",
-    "types": ["svelte"]
-  }
+  "extends": "./.svelte-kit/tsconfig.json",
+  "include": ["demo/**/*.d.ts", "demo/**/*.js", "demo/**/*.svelte"]
 }

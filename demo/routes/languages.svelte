@@ -10,9 +10,9 @@
   } from "carbon-components-svelte";
   import HighlightSvelte from "../../src/HighlightSvelte.svelte";
   import atomOneDark from "../../src/styles/atom-one-dark";
-  import ListSearch from "$lib/ListSearch.svelte";
-  import CodeSnippet from "$lib/CodeSnippet.svelte";
-  import languages from "$lib/languages.json";
+  import ListSearch from "../lib/ListSearch.svelte";
+  import CodeSnippet from "../lib/CodeSnippet.svelte";
+  import languages from "../lib/languages.json";
 
   let currentLabel = "Direct import";
   let filtered = [];
