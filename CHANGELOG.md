@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.0](https://github.com/metonym/svelte-highlight/releases/tag/v6.0.0) - 2022-03-26
+
+**Breaking Changes**
+
+- use SvelteKit to package the library and auto-generate TypeScript definitions
+  - styles are moved from `src/styles` to `styles`
+  - languages are moved from `src/languages` to `languages`
+
 ## [5.3.2](https://github.com/metonym/svelte-highlight/releases/tag/v5.3.2) - 2022-03-16
 
 - specify in docs that vite should optimize both "highlight.js" and "highlight.js/lib/core" if using SvelteKit or vite
