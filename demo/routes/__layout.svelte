@@ -14,7 +14,7 @@
     Column,
     Content,
   } from "carbon-components-svelte";
-  import { LogoGithub20 } from "carbon-icons-svelte";
+  import { LogoGithub } from "carbon-icons-svelte";
   import { onMount, tick } from "svelte";
   import { prefetchRoutes } from "$app/navigation";
   import { page } from "$app/stores";
@@ -59,7 +59,7 @@
   </svelte:fragment>
 
   <HeaderUtilities>
-    <HeaderActionLink icon={LogoGithub20} href={HOMEPAGE} target="_blank" />
+    <HeaderActionLink icon={LogoGithub} href={HOMEPAGE} target="_blank" />
   </HeaderUtilities>
 </Header>
 

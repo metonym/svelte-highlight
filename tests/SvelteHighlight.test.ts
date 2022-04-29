@@ -48,7 +48,7 @@ describe("SvelteHighlight", () => {
       }</code></pre>"
     `);
 
-    userEvent.click(target.querySelector("button")!);
+    await userEvent.click(target.querySelector("button")!);
     await tick();
 
     expect(
