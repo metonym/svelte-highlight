@@ -1,6 +1,6 @@
 <script>
   import { Highlight, HighlightAuto } from "svelte-highlight";
-  import typescript from "svelte-highlight/languages/typescript";
+  import { typescript } from "svelte-highlight/languages/typescript";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
   const code = "const add = (a: number, b: number) => a + b;";
