@@ -67,17 +67,11 @@
   <SideNavItems>
     {#each Object.entries(routes) as [href, text]}
       <SideNavLink
+        sveltekit:reload
         sveltekit:prefetch
         href="{base}{href}"
         text={href === "/" ? "Getting Started" : text}
         isSelected={pathname === href}
-        on:click={async () => {
-          await tick();
-
-          if (window.innerWidth < 1056) {
-            isSideNavOpen = false;
-          }
-        }}
       />
     {/each}
   </SideNavItems>
