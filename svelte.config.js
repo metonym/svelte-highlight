@@ -44,6 +44,7 @@ const config = {
       lib: "src",
       routes: "demo/routes",
       template: "demo/app.html",
+      hooks: "demo/hooks.js",
     },
     vite: {
       optimizeDeps: {
