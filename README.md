@@ -61,7 +61,7 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 
 ```svelte
 <script>
-  import Highlight from "svelte-highlight";
+  import { Highlight } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
   import github from "svelte-highlight/styles/github";
 
