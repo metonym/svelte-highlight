@@ -55,5 +55,8 @@
     "code",
     "syntax",
     "typescript"
-  ]
+  ],
+  "engines": {
+    "node": ">=16.7"
+  }
 }
