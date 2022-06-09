@@ -1,26 +1,61 @@
-<script>
-  /** @type {{ name?: string; register: (hljs: any) => Record<string, any>; }} */
-  export let language = { name: undefined, register: undefined };
+<script context="module" lang="ts">
+  import type { LanguageFn } from "highlight.js";
 
-  /**
-   * Source code to highlight
-   * @type {string}
-   */
+  export type HighlightedCode = undefined | string;
+
+  export interface Language {
+    name?: string;
+    register: LanguageFn;
+  }
+
+  export interface Events {
+    highlight: {
+      highlighted?: HighlightedCode;
+    };
+  }
+</script>
+
+<script lang="ts">
+  interface $$Props extends Partial<HTMLPreElement> {
+    /**
+     * Specify the source code to highlight.
+     */
+    code?: any;
+
+    /**
+     * Provide the language to highlight the code.
+     * Import languages from `svelte-highlight/languages/*`.
+     */
+    language?: Language;
+
+    /**
+     * Set to `true` for the language name to be
+     * displayed at the top right of the code block.
+     */
+    langtag?: boolean;
+  }
+
+  interface $$Slots {
+    default: {
+      highlighted: HighlightedCode;
+    };
+  }
+
+  export let language: Language = {
+    name: undefined,
+    register: undefined,
+  };
+
   export let code = undefined;
 
-  /**
-   * Add a language tag to the top-right
-   * of the code block
-   * @type {boolean}
-   */
   export let langtag = false;
 
   import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<Events>();
 
-  let highlighted = undefined;
+  let highlighted: HighlightedCode = undefined;
 
   afterUpdate(() => {
     if (highlighted) dispatch("highlight", { highlighted });
