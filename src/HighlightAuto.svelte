@@ -1,23 +1,43 @@
-<script>
-  /**
-   * Source code to highlight
-   * @type {string}
-   */
+<script context="module" lang="ts">
+  import type { HighlightedCode, Language, Events } from "./Highlight.svelte";
+</script>
+
+<script lang="ts">
+  interface $$Props extends Partial<HTMLPreElement> {
+    /**
+     * Specify the source code to highlight.
+     */
+    code?: any;
+
+    /**
+     * Provide the language to highlight the code.
+     * Import languages from `svelte-highlight/languages/*`.
+     */
+    language?: Language;
+
+    /**
+     * Set to `true` for the language name to be
+     * displayed at the top right of the code block.
+     */
+    langtag?: boolean;
+  }
+
+  interface $$Slots {
+    default: {
+      highlighted: HighlightedCode;
+    };
+  }
+
   export let code = undefined;
 
-  /**
-   * Add a language tag to the top-right
-   * of the code block
-   * @type {boolean}
-   */
   export let langtag = false;
 
   import hljs from "highlight.js";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<Events>();
 
-  let highlighted = undefined;
+  let highlighted: HighlightedCode = undefined;
   let language = undefined;
 
   afterUpdate(() => {
