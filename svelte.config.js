@@ -1,5 +1,6 @@
 import adapter from "@sveltejs/adapter-static";
 import fs from "fs";
+import preprocess from "svelte-preprocess"
 import { optimizeImports } from "carbon-preprocess-svelte";
 
 const pkg = JSON.parse(
@@ -16,6 +17,7 @@ const CONTENT = {
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   preprocess: [
+    preprocess(),
     optimizeImports(),
     {
       script: ({ content }) => {
