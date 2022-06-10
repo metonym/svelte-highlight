@@ -11,23 +11,18 @@ Try it in the [Svelte REPL](https://svelte.dev/repl/e9c59b1d029a49e0b89d296ffc33
 
 ## Installation
 
-**Yarn**
-
 ```bash
+# Yarn
 yarn add -D svelte-highlight
-```
 
-**NPM**
-
-```bash
+# npm
 npm i -D svelte-highlight
-```
 
-**pnpm**
-
-```bash
+# pnpm
 pnpm i -D svelte-highlight highlight.js
 ```
+
+Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js` as a development dependency.
 
 ## SvelteKit Set-up
 
