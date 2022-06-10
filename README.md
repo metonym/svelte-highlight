@@ -211,11 +211,11 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ### Props
 
-| Name                            | Type                                           | Default value                            |
-| :------------------------------ | :--------------------------------------------- | ---------------------------------------- |
-| code                            | `string`                                       | `""`                                     |
-| language (only for `Highlight`) | { name: `string`; register: hljs => `object` } | { name: undefined, register: undefined } |
-| langtag                         | `boolean`                                      | `false`                                  |
+| Name                                            | Type                                           | Default value                            |
+| :---------------------------------------------- | :--------------------------------------------- | :--------------------------------------- |
+| code                                            | `any`                                          | `undefined`                              |
+| language (only required for `Highlight.svelte`) | { name: `string`; register: hljs => `object` } | { name: undefined, register: undefined } |
+| langtag                                         | `boolean`                                      | `false`                                  |
 
 - `$$restProps` are forwarded to the `pre` element
 
