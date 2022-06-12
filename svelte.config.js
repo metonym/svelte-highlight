@@ -20,7 +20,10 @@ const config = {
     preprocess(),
     optimizeImports(),
     {
-      script: ({ content }) => {
+      script: ({ content, filename }) => {
+        if (/node_modules/.test(filename)) return;
+        if (!/demo/.test(filename)) return;
+
         let code = content;
 
         Object.entries(CONTENT).map(([key, value]) => {
