@@ -42,11 +42,11 @@ describe("SvelteHighlight", () => {
 
     expect(target.querySelector("#highlight-auto-css")?.outerHTML)
       .toMatchInlineSnapshot(`
-      "<pre data-language=\\"css\\" id=\\"highlight-auto-css\\" class=\\"langtag svelte-1xjucv4\\"><code class=\\"hljs\\"><span class=\\"hljs-selector-tag\\">body</span> {
-        <span class=\\"hljs-attribute\\">padding</span>: <span class=\\"hljs-number\\">0</span>;
-        <span class=\\"hljs-attribute\\">color</span>: red;
-      }</code></pre>"
-    `);
+        "<pre data-language=\\"css\\" id=\\"highlight-auto-css\\" class=\\"langtag svelte-4cqgwq\\"><code class=\\"hljs\\"><span class=\\"hljs-selector-tag\\">body</span> {
+          <span class=\\"hljs-attribute\\">padding</span>: <span class=\\"hljs-number\\">0</span>;
+          <span class=\\"hljs-attribute\\">color</span>: red;
+        }</code></pre>"
+      `);
 
     await userEvent.click(target.querySelector("button")!);
     await tick();
