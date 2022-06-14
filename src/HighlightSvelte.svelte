@@ -51,11 +51,11 @@
 </slot>
 
 <style>
-  pre.langtag {
+  .langtag {
     position: relative;
   }
 
-  pre.langtag::after {
+  .langtag::after {
     content: attr(data-language);
     position: absolute;
     top: 0;
