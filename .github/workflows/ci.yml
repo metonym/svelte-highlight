@@ -6,11 +6,10 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - uses: actions/cache@v2
         id: yarn-cache
         with:
@@ -22,5 +21,4 @@ jobs:
           yarn
           yarn build:lib
           yarn build
-          yarn package
           yarn run check & yarn test
