@@ -231,7 +231,7 @@
   </Column>
   <Column noGutter xlg={12}>
     <HighlightAuto
-      code={'pre[data-language="css"] {\n  /* custom style rules */\n}'}
+      code={'[data-language="css"] {\n  /* custom style rules */\n}'}
       class="atomOneDark"
     />
   </Column>
@@ -285,7 +285,7 @@
       langtag={true}
     />
     <HighlightAuto
-      code={`pre[data-language="css"] {
+      code={`[data-language="css"] {
   --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
   --hljs-foreground: #fff;
   --hljs-radius: 8px;

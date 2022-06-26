@@ -137,7 +137,7 @@ This is also compatible with custom languages.
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
 ```css
-pre[data-language="css"] {
+[data-language="css"] {
   /* custom style rules */
 }
 ```
@@ -171,7 +171,7 @@ Defaults:
 ```
 
 ```css
-pre[data-language="css"] {
+[data-language="css"] {
   --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
   --hljs-foreground: #fff;
   --hljs-radius: 8px;
