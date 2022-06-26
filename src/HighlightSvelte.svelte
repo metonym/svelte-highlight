@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { HighlightedCode, Language, Events } from "./Highlight.svelte";
+  import type { HighlightedCode, Events } from "./Highlight.svelte";
 </script>
 
 <script lang="ts">
