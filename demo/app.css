@@ -1,21 +1,17 @@
 .hljs {
   overflow-x: auto;
   font-size: 0.875rem;
-  font-family: Menlo;
-  line-height: 1.5;
+  font-family: Menlo, monospace;
+  line-height: 1.6;
 }
 
-pre {
-  max-width: 44rem;
-}
-
-pre[data-language="css"] {
+[data-language="css"] {
   --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
   --hljs-foreground: #fff;
   --hljs-radius: 8px;
 }
 
-pre[data-language="svelte"] {
+[data-language="svelte"] {
   --hljs-foreground: #fff;
 }
 
