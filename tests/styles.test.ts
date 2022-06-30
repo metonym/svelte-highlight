@@ -4,7 +4,6 @@ import * as styles from "../src/styles";
 test("Styles", () => {
   const styleNames = Object.keys(styles);
 
-  // @ts-expect-error
   expect(styles.default).toBeUndefined();
   expect(styleNames.length).toMatchInlineSnapshot("246");
   expect(styleNames).toMatchInlineSnapshot(`

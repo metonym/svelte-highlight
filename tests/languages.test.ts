@@ -4,7 +4,6 @@ import * as languages from "../src/languages";
 test("Languages", () => {
   const languageNames = Object.keys(languages);
 
-  // @ts-expect-error
   expect(languages.default).toBeUndefined();
   expect(languageNames.length).toMatchInlineSnapshot("192");
   expect(languageNames).toMatchInlineSnapshot(`
