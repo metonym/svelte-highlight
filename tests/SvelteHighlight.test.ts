@@ -1,6 +1,5 @@
 import { test, expect, describe, afterEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { tick } from "svelte";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
 
 describe("SvelteHighlight", () => {
@@ -49,7 +48,6 @@ describe("SvelteHighlight", () => {
       `);
 
     await userEvent.click(target.querySelector("button")!);
-    await tick();
 
     expect(
       target.querySelector("#highlight-auto")?.innerHTML
