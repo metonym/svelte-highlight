@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { HighlightedCode, Events } from "./Highlight.svelte";
+  import type { Slots, Events } from "./Highlight.svelte";
 </script>
 
 <script lang="ts">
@@ -16,11 +16,9 @@
     langtag?: boolean;
   }
 
-  interface $$Slots {
-    default: {
-      highlighted: HighlightedCode;
-    };
-  }
+  interface $$Slots extends Slots {}
+
+  interface $$Events extends Events {}
 
   export let code = undefined;
 
@@ -32,7 +30,7 @@
   import css from "highlight.js/lib/languages/css";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
-  const dispatch = createEventDispatcher<Events>();
+  const dispatch = createEventDispatcher();
 
   hljs.registerLanguage("xml", xml);
   hljs.registerLanguage("javascript", javascript);

@@ -8,10 +8,22 @@
     register: LanguageFn;
   }
 
-  export interface Events {
-    highlight: {
-      highlighted?: HighlightedCode;
+  export interface Slots {
+    default: {
+      /**
+       * The highlighted code.
+       */
+      highlighted: HighlightedCode;
     };
+  }
+
+  export interface Events {
+    highlight: CustomEvent<{
+      /**
+       * The highlighted code.
+       */
+      highlighted?: HighlightedCode;
+    }>;
   }
 </script>
 
@@ -35,11 +47,9 @@
     langtag?: boolean;
   }
 
-  interface $$Slots {
-    default: {
-      highlighted: HighlightedCode;
-    };
-  }
+  interface $$Slots extends Slots {}
+
+  interface $$Events extends Events {}
 
   export let language: Language = {
     name: undefined,
@@ -53,7 +63,7 @@
   import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
-  const dispatch = createEventDispatcher<Events>();
+  const dispatch = createEventDispatcher();
 
   let highlighted: HighlightedCode = undefined;
 
