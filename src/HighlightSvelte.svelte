@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { HighlightedCode, Events } from "./Highlight.svelte";
+  import type { Slots, Events } from "./Highlight.svelte";
 </script>
 
 <script lang="ts">
@@ -16,11 +16,7 @@
     langtag?: boolean;
   }
 
-  interface $$Slots {
-    default: {
-      highlighted: HighlightedCode;
-    };
-  }
+  interface $$Slots extends Slots {}
 
   interface $$Events extends Events {}
 

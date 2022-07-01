@@ -8,6 +8,15 @@
     register: LanguageFn;
   }
 
+  export interface Slots {
+    default: {
+      /**
+       * The highlighted code.
+       */
+      highlighted: HighlightedCode;
+    };
+  }
+
   export interface Events {
     highlight: CustomEvent<{
       /**
@@ -38,11 +47,7 @@
     langtag?: boolean;
   }
 
-  interface $$Slots {
-    default: {
-      highlighted: HighlightedCode;
-    };
-  }
+  interface $$Slots extends Slots {}
 
   interface $$Events extends Events {}
 
