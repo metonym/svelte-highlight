@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { HighlightedCode, Language, Events } from "./Highlight.svelte";
+  import type { HighlightedCode, Events } from "./Highlight.svelte";
 </script>
 
 <script lang="ts">
@@ -8,12 +8,6 @@
      * Specify the source code to highlight.
      */
     code?: any;
-
-    /**
-     * Provide the language to highlight the code.
-     * Import languages from `svelte-highlight/languages/*`.
-     */
-    language?: Language;
 
     /**
      * Set to `true` for the language name to be
