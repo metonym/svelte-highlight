@@ -28,6 +28,8 @@
     };
   }
 
+  interface $$Events extends Events {}
+
   export let code = undefined;
 
   export let langtag = false;
@@ -35,7 +37,7 @@
   import hljs from "highlight.js";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
-  const dispatch = createEventDispatcher<Events>();
+  const dispatch = createEventDispatcher();
 
   let highlighted: HighlightedCode = undefined;
   let language = undefined;

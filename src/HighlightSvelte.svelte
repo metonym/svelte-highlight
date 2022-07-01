@@ -22,6 +22,8 @@
     };
   }
 
+  interface $$Events extends Events {}
+
   export let code = undefined;
 
   export let langtag = false;
@@ -32,7 +34,7 @@
   import css from "highlight.js/lib/languages/css";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
-  const dispatch = createEventDispatcher<Events>();
+  const dispatch = createEventDispatcher();
 
   hljs.registerLanguage("xml", xml);
   hljs.registerLanguage("javascript", javascript);

@@ -9,9 +9,12 @@
   }
 
   export interface Events {
-    highlight: {
+    highlight: CustomEvent<{
+      /**
+       * The highlighted code.
+       */
       highlighted?: HighlightedCode;
-    };
+    }>;
   }
 </script>
 
@@ -41,6 +44,8 @@
     };
   }
 
+  interface $$Events extends Events {}
+
   export let language: Language = {
     name: undefined,
     register: undefined,
@@ -53,7 +58,7 @@
   import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
-  const dispatch = createEventDispatcher<Events>();
+  const dispatch = createEventDispatcher();
 
   let highlighted: HighlightedCode = undefined;
 
