@@ -34,7 +34,7 @@
     /**
      * Specify the source code to highlight.
      */
-    code?: any;
+    code: any;
 
     /**
      * Provide the language grammar used to highlight the code.
@@ -42,7 +42,7 @@
      * @example
      * import typescript from "svelte-highlight/languages/typescript";
      */
-    language?: Language;
+    language: Language;
 
     /**
      * Set to `true` for the language name to be
@@ -77,12 +77,9 @@
 
   interface $$Events extends Events {}
 
-  export let language: Language = {
-    name: undefined,
-    register: undefined,
-  };
+  export let language: Language;
 
-  export let code = undefined;
+  export let code: any;
 
   export let langtag = false;
 
