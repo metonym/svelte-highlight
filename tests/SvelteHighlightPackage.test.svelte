@@ -7,7 +7,16 @@
   import "../package/styles/3024.css";
 </script>
 
-<Highlight code="" language={javascript || typescript} />
+<Highlight
+  code=""
+  language={javascript || typescript}
+  on:highlight={(e) => {
+    console.log(e.detail);
+  }}
+  let:highlighted
+>
+  {@html highlighted}
+</Highlight>
 
 <svelte:component this={Highlight2} />
 
