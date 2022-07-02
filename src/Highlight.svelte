@@ -43,6 +43,11 @@
     /**
      * Set to `true` for the language name to be
      * displayed at the top right of the code block.
+     *
+     * Use CSS variables to customize styles:
+     * - `--hljs-background`
+     * - `--hljs-foreground`
+     * - `--hljs-radius`
      */
     langtag?: boolean;
   }
