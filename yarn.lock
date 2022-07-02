@@ -84,10 +84,10 @@
   dependencies:
     tiny-glob "^0.2.9"
 
-"@sveltejs/kit@1.0.0-next.354":
-  version "1.0.0-next.354"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.354.tgz#e1786892b6fec93e78d270497231081174dffc55"
-  integrity sha512-dTfFT0c3sxztFpiw6H4bQnPd+PtHgEZG6j6ssT9sWLONfzUgWRX0S7H/WoPEjr7u65o2HNazoj8jmEq3ZTwb9g==
+"@sveltejs/kit@1.0.0-next.357":
+  version "1.0.0-next.357"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.357.tgz#da92d327a8ea3881ccb61318f5c5e89205ac02eb"
+  integrity sha512-nCAehVybIEpQNnPu61V/EFVdfDb1nBSiQUfW9EcSSDEUbyAMCVBOKZZuzQ0qQDp3xniqRkyDzpBA4wN+ADxHBw==
   dependencies:
     "@sveltejs/vite-plugin-svelte" "^1.0.0-next.48"
     chokidar "^3.5.3"
@@ -303,10 +303,10 @@ callsites@^3.0.0:
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
-carbon-components-svelte@^0.66.0:
-  version "0.66.0"
-  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.66.0.tgz#3229c6883f3103f9c05b886993fa02c3f34dd9c7"
-  integrity sha512-kMTPBAUG1pCTsDMMmqms5wHpNOlJ9f4AJ0IWMDsVlcjAsSe/sDuQ108/e9c/3tFRgTmWPTG8c/xUr2mzjQKEWw==
+carbon-components-svelte@^0.67.0:
+  version "0.67.0"
+  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.67.0.tgz#b572a18bb8e6269d9d54a1e78237542c48d49d4b"
+  integrity sha512-2PzAivpDmiQXDd+FVLMGNiE/p1DyueN7EWRl3wDYFCv6w7DVMWJ2rv4JT9pUaEjypSwGSuT2gNuxpA3njJ+7Yg==
   dependencies:
     flatpickr "4.6.9"
 
