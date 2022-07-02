@@ -41,14 +41,14 @@ export default {
 };
 ```
 
-Refer to [examples/sveltekit](examples/sveltekit) for an example set-up.
+Refer to [examples/sveltekit](examples/sveltekit) or [examples/vite](examples/vite).
 
 ## Usage
 
-There are two ways to apply `highlight.js` styles:
+There are two ways to apply `highlight.js` styles.
 
-1. JavaScript styles injected into the DOM through `svelte:head`
-2. CSS StyleSheets imported using a file loader
+1. Injected styles through [svelte:head](https://svelte.dev/docs#template-syntax-svelte-head)
+2. CSS StyleSheets
 
 ### Injected Styles
 
@@ -107,9 +107,9 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 ## Auto-highlighting
 
-The `HighlightAuto` component invokes the `highlightAuto` API from `highlight.js`.
+The `HighlightAuto` component uses [highlightAuto](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) API.
 
-Note that auto-highlighting will result in a larger bundle size in order to infer a language.
+**Note:** auto-highlighting will result in a larger bundle size in order to infer a language.
 
 Prefer to specify a language if possible.
 
@@ -132,8 +132,6 @@ Prefer to specify a language if possible.
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
 
-This is also compatible with custom languages.
-
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
 ```css
@@ -146,11 +144,9 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 
 All `Highlight` components allow for a tag to be added at the top-right of the codeblock displaying the language name.
 
-The language tag can be given a custom `background` , `color` , and `border-radius` through the custom properties shown.
+The language tag can be given a custom `background` , `color` , and `border-radius` through CSS custom properties.
 
-This is also compatible with custom languages.
-
-It is recommended that you set values for `--hljs-background` and `--hljs-foreground` to ensure the langtags remain readable on any theme.
+It is recommended that you set values for `--hljs-background` and `--hljs-foreground` to ensure the langtags are readable with your theme.
 
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
@@ -194,6 +190,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
     register: (hljs) => {
       return {
         /** custom language rules */
+        contains: [],
       };
     },
   };
