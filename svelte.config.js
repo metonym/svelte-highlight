@@ -51,16 +51,6 @@ const config = {
       template: "demo/app.html",
       hooks: "demo/hooks.js",
     },
-    vite: {
-      optimizeDeps: {
-        include: ["highlight.js", "highlight.js/lib/core"],
-      },
-      server: {
-        fs: {
-          allow: [".."],
-        },
-      },
-    },
   },
 };
 
