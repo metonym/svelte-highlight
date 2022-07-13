@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 246 styles exported from highlight.js@11.5.0
+> 248 styles exported from highlight.js@11.6.0
 
 ## 3024 (`_3024`)
 
@@ -3827,6 +3827,50 @@
 ```html
 <script>
   import "svelte-highlight/languages/outrun-dark.css";
+</script>
+```
+
+## panda-syntax-dark (`pandaSyntaxDark`)
+
+**Injected Styles**
+
+```html
+<script>
+  import pandaSyntaxDark from "svelte-highlight/styles/pandaSyntaxDark";
+</script>
+
+<svelte:head>
+  {@html pandaSyntaxDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/languages/panda-syntax-dark.css";
+</script>
+```
+
+## panda-syntax-light (`pandaSyntaxLight`)
+
+**Injected Styles**
+
+```html
+<script>
+  import pandaSyntaxLight from "svelte-highlight/styles/pandaSyntaxLight";
+</script>
+
+<svelte:head>
+  {@html pandaSyntaxLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/languages/panda-syntax-light.css";
 </script>
 ```
 
