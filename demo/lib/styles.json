@@ -696,6 +696,14 @@
     "moduleName": "outrunDark"
   },
   {
+    "name": "panda-syntax-dark",
+    "moduleName": "pandaSyntaxDark"
+  },
+  {
+    "name": "panda-syntax-light",
+    "moduleName": "pandaSyntaxLight"
+  },
+  {
     "name": "papercolor-dark",
     "moduleName": "papercolorDark"
   },
