@@ -5,7 +5,7 @@ test("Styles", () => {
   const styleNames = Object.keys(styles);
 
   expect(styles.default).toBeUndefined();
-  expect(styleNames.length).toMatchInlineSnapshot("246");
+  expect(styleNames.length).toMatchInlineSnapshot('248');
   expect(styleNames).toMatchInlineSnapshot(`
     [
       "_3024",
@@ -182,6 +182,8 @@ test("Styles", () => {
       "oneLight",
       "onedark",
       "outrunDark",
+      "pandaSyntaxDark",
+      "pandaSyntaxLight",
       "papercolorDark",
       "papercolorLight",
       "paraiso",
