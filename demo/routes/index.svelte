@@ -20,12 +20,8 @@
   const NAME = process.env.NAME;
 
   const sveltekit = `export default {
-  kit: {
-    vite: {
-      optimizeDeps: {
-        include: ["highlight.js", "highlight.js/lib/core"],
-      },
-    },
+  optimizeDeps: {
+    include: ["highlight.js", "highlight.js/lib/core"],
   },
 };`;
 </script>
@@ -88,8 +84,10 @@
         >"highlight.js"</code
       >
       and <code class="code">"highlight.js/lib/core"</code>
-      to the dependencies for vite to optimize:
+      to the dependencies for vite to optimize.
     </p>
+
+    <h5 class="mb-5">vite.config.js</h5>
 
     <CodeSnippet class="mb-5" type="multi" code={sveltekit} />
 
