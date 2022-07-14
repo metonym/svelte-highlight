@@ -77,23 +77,23 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@sveltejs/adapter-static@1.0.0-next.35":
-  version "1.0.0-next.35"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-static/-/adapter-static-1.0.0-next.35.tgz#4cad9e9d670926e8d89361ded499c761dffa26e2"
-  integrity sha512-iIg5nCMJF2/s/Y7zmy9pzp+U3YDBL6OQKmwfJm2H3Afde/XlhOuNlSO6K//hxmLmvrd7Oh6Kb0MLhwVKp0cuUA==
+"@sveltejs/adapter-static@1.0.0-next.36":
+  version "1.0.0-next.36"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-static/-/adapter-static-1.0.0-next.36.tgz#f72334f669926f606dc9c5963890a5da9c0a7e54"
+  integrity sha512-1g3W4wHPyBtUGy5zCDBA2nMG3mM36FKTP1zb0vNRBpoUmtNuzVFF74UVsHCpMC1GpPyrgOq9idfjkm4gRabisw==
   dependencies:
     tiny-glob "^0.2.9"
 
-"@sveltejs/kit@1.0.0-next.370":
-  version "1.0.0-next.370"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.370.tgz#ecd3b8b1f519bb13c72a5046a9e167ff819503eb"
-  integrity sha512-HAQtw8IjXs9yOPWKpuwpGgDT8x6Dgqm14NmFx0emF52vo5wn3tQzu0cBx299Po2RdRgfSDFKrNqVSlL1hVTHcA==
+"@sveltejs/kit@1.0.0-next.372":
+  version "1.0.0-next.372"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.372.tgz#3c7531e7154bbcc2f1097c57856d12b33841e9be"
+  integrity sha512-pcnDfV8YQwj7d/SCaKWT7yPBrmgkPH9Dc4UIeX8yTLXDu8IPzI5kukEOy4xf6LjyJsuSGPy1Ch91ULugtVIdAQ==
   dependencies:
-    "@sveltejs/vite-plugin-svelte" "^1.0.0-next.48"
+    "@sveltejs/vite-plugin-svelte" "1.0.0-next.49"
     chokidar "^3.5.3"
     sade "^1.8.1"
 
-"@sveltejs/vite-plugin-svelte@^1.0.0-next.48":
+"@sveltejs/vite-plugin-svelte@1.0.0-next.49":
   version "1.0.0-next.49"
   resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.49.tgz#44cc00a19c6c23002516b66c5ab90ee66720df57"
   integrity sha512-AKh0Ka8EDgidnxWUs8Hh2iZLZovkETkefO99XxZ4sW4WGJ7VFeBx5kH/NIIGlaNHLcrIvK3CK0HkZwC3Cici0A==
@@ -126,10 +126,10 @@
   dependencies:
     "@testing-library/dom" "^8.1.0"
 
-"@testing-library/user-event@^14.2.1":
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.2.1.tgz#8c5ff2d004544bb2220e1d864f7267fe7eb6c556"
-  integrity sha512-HOr1QiODrq+0j9lKU5i10y9TbhxMBMRMGimNx10asdmau9cb8Xb1Vyg0GvTwyIL2ziQyh2kAloOtAQFBQVuecA==
+"@testing-library/user-event@^14.2.2":
+  version "14.2.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.2.2.tgz#d09647bd612cff561510b642e49d20b833a1df83"
+  integrity sha512-qVUBP9JFPpfxhrQL9U85pZ3Wro4poglBHY/SBr1SkQblpD19G1bW04kQGeqy1SUrKqxQKv2QCJ0p+dPX0rnXhQ==
 
 "@tootallnate/once@2":
   version "2.0.0"
@@ -302,10 +302,10 @@ callsites@^3.0.0:
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
-carbon-components-svelte@^0.67.0:
-  version "0.67.0"
-  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.67.0.tgz#b572a18bb8e6269d9d54a1e78237542c48d49d4b"
-  integrity sha512-2PzAivpDmiQXDd+FVLMGNiE/p1DyueN7EWRl3wDYFCv6w7DVMWJ2rv4JT9pUaEjypSwGSuT2gNuxpA3njJ+7Yg==
+carbon-components-svelte@^0.67.1:
+  version "0.67.1"
+  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.67.1.tgz#5007273f0017f07fba5b45547e40bb924906fd7f"
+  integrity sha512-Xof9AItLnt6UTu/6GFM0HGCokaoVmivElcMainzy26KiaDCgLRP0AOuI0hpbUQAgUcLqiy2y+dBhQylMSvNn6g==
   dependencies:
     flatpickr "4.6.9"
 
