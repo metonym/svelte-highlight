@@ -20,12 +20,8 @@
   const NAME = process.env.NAME;
 
   const sveltekit = `export default {
-  kit: {
-    vite: {
-      optimizeDeps: {
-        include: ["highlight.js", "highlight.js/lib/core"],
-      },
-    },
+  optimizeDeps: {
+    include: ["highlight.js", "highlight.js/lib/core"],
   },
 };`;
 </script>
@@ -33,11 +29,9 @@
 <Row>
   <Column xlg={16} lg={16}>
     <h4 class="mb-7">
-      <code class="code">{NAME}</code> provides Svelte components for code
-      syntax highlighting using <Link
+      Syntax Highlighting for Svelte using <Link
         inline
         style="font-size: inherit"
-        rel="external"
         href="https://github.com/highlightjs/highlight.js">highlight.js</Link
       >.
     </h4>
@@ -50,7 +44,7 @@
   </Column>
 </Row>
 
-<Row noGutter>
+<Row>
   <Column xlg={9} lg={12}>
     <Tabs>
       <Tab label="Yarn" />
@@ -71,7 +65,7 @@
   </Column>
 </Row>
 
-<Row noGutter>
+<Row>
   <Column>
     <hr />
   </Column>
@@ -90,25 +84,23 @@
         >"highlight.js"</code
       >
       and <code class="code">"highlight.js/lib/core"</code>
-      to the dependencies for vite to optimize:
+      to the dependencies for vite to optimize.
     </p>
 
-    <Row class="mb-7" noGutter>
-      <CodeSnippet type="multi" code={sveltekit} />
-    </Row>
+    <h5 class="mb-5">vite.config.js</h5>
+
+    <CodeSnippet class="mb-5" type="multi" code={sveltekit} />
 
     <p class="mb-5">
       For example set-ups, refer to <Link
         inline
         size="lg"
-        rel="external"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples/sveltekit"
       >
         examples/sveltekit
       </Link> or <Link
         inline
         size="lg"
-        rel="external"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples/vite"
       >
         examples/vite
@@ -142,7 +134,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <ScopedStyle name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
   <Column xlg={9} lg={12}>
@@ -182,7 +174,7 @@
       highlighting.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <ScopedStyleSvelte name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
@@ -205,7 +197,7 @@
       to infer a language. Prefer to specify a language if possible.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
@@ -229,7 +221,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <HighlightAuto
       code={'[data-language="css"] {\n  /* custom style rules */\n}'}
       class="atomOneDark"
@@ -272,7 +264,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <HighlightSvelte
       code={`<script>
   import { HighlightAuto } from "svelte-highlight";
@@ -296,7 +288,7 @@
   </Column>
 </Row>
 
-<Row noGutter>
+<Row>
   <Column>
     <hr />
   </Column>
@@ -322,7 +314,6 @@
       <Link
         inline
         size="lg"
-        rel="external"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples"
         >examples folder in the GitHub repository</Link
       >.
@@ -337,7 +328,7 @@
   </Column>
 </Row>
 
-<Row noGutter>
+<Row>
   <Column>
     <hr />
   </Column>

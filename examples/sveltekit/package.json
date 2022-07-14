@@ -2,14 +2,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "svelte-kit dev",
-    "build": "svelte-kit build",
-    "preview": "svelte-kit preview"
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@sveltejs/adapter-node": "1.0.0-next.78",
-    "@sveltejs/kit": "1.0.0-next.357",
-    "svelte": "^3.48.0",
-    "svelte-highlight": "^6.1.2"
+    "@sveltejs/adapter-node": "1.0.0-next.79",
+    "@sveltejs/kit": "1.0.0-next.372",
+    "svelte": "^3.49.0",
+    "svelte-highlight": "^6.2.0",
+    "vite": "^3.0.0"
   }
 }

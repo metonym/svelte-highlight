@@ -5,7 +5,7 @@
 
 > Syntax highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
-Try it in the [StackBlitz](https://stackblitz.com/edit/svelte-highlight?file=src%2Froutes%2Findex.svelte).
+Try it in [StackBlitz](https://stackblitz.com/edit/svelte-highlight?file=src%2Froutes%2Findex.svelte).
 
 ## [Documentation](https://svhe.onrender.com)
 
@@ -22,24 +22,53 @@ npm i -D svelte-highlight
 pnpm i -D svelte-highlight highlight.js
 ```
 
-Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js` as a development dependency.
+Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js`.
 
 ## SvelteKit Set-up
 
 To use this library with [SvelteKit](https://github.com/sveltejs/kit) or [vite](https://github.com/sveltejs/vite-plugin-svelte), instruct vite to optimize `highlight.js` and `highlight.js/lib/core`:
 
 ```diff
-# svelte.config.js
++ optimizeDeps: {
++   include: ["highlight.js", "highlight.js/lib/core"],
++ },
+```
+
+As of [SvelteKit version 1.0.0-next.359](https://github.com/sveltejs/kit/releases/tag/%40sveltejs/kit%401.0.0-next.359), `vite` options are defined in `vite.config.js`.
+
+**vite.config.js**
+
+```js
+import { sveltekit } from "@sveltejs/kit/vite";
+
+/** @type {import('vite').UserConfig} */
+const config = {
+  plugins: [sveltekit()],
+  optimizeDeps: {
+    include: ["highlight.js", "highlight.js/lib/core"],
+  },
+};
+
+export default config;
+```
+
+<details>
+  <summary>SvelteKit <=1.0.0-next.358</summary>
+
+```js
+// svelte.config.js
 export default {
   kit: {
-+   vite: {
-+     optimizeDeps: {
-+       include: ["highlight.js", "highlight.js/lib/core"],
-+     },
-+   },
+    vite: {
+      optimizeDeps: {
+        include: ["highlight.js", "highlight.js/lib/core"],
+      },
+    },
   },
 };
 ```
+
+</details>
 
 Refer to [examples/sveltekit](examples/sveltekit) or [examples/vite](examples/vite).
 

@@ -49,11 +49,11 @@
 </Row>
 
 <Row>
-  <Column noGutter>
+  <Column>
     <Search
-      size="lg"
       bind:ref
       bind:value
+      spellcheck="false"
       placeholder={`Search ${itemName}s (e.g., "${placeholderExample}")`}
     />
   </Column>
