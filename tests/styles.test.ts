@@ -5,7 +5,7 @@ test("Styles", () => {
   const styleNames = Object.keys(styles);
 
   expect(styles.default).toBeUndefined();
-  expect(styleNames.length).toMatchInlineSnapshot('248');
+  expect(styleNames.length).toMatchInlineSnapshot("248");
   expect(styleNames).toMatchInlineSnapshot(`
     [
       "_3024",
