@@ -22,7 +22,7 @@ npm i -D svelte-highlight
 pnpm i -D svelte-highlight highlight.js
 ```
 
-Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js` as a development dependency.
+Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js`.
 
 ## SvelteKit Set-up
 
