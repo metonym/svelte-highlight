@@ -33,11 +33,9 @@
 <Row>
   <Column xlg={16} lg={16}>
     <h4 class="mb-7">
-      <code class="code">{NAME}</code> provides Svelte components for code
-      syntax highlighting using <Link
+      Syntax Highlighting for Svelte using <Link
         inline
         style="font-size: inherit"
-        rel="external"
         href="https://github.com/highlightjs/highlight.js">highlight.js</Link
       >.
     </h4>
@@ -99,14 +97,12 @@
       For example set-ups, refer to <Link
         inline
         size="lg"
-        rel="external"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples/sveltekit"
       >
         examples/sveltekit
       </Link> or <Link
         inline
         size="lg"
-        rel="external"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples/vite"
       >
         examples/vite
@@ -320,7 +316,6 @@
       <Link
         inline
         size="lg"
-        rel="external"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples"
         >examples folder in the GitHub repository</Link
       >.
