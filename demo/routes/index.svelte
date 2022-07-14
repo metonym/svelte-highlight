@@ -50,7 +50,7 @@
   </Column>
 </Row>
 
-<Row noGutter>
+<Row>
   <Column xlg={9} lg={12}>
     <Tabs>
       <Tab label="Yarn" />
@@ -71,7 +71,7 @@
   </Column>
 </Row>
 
-<Row noGutter>
+<Row>
   <Column>
     <hr />
   </Column>
@@ -93,9 +93,7 @@
       to the dependencies for vite to optimize:
     </p>
 
-    <Row class="mb-7" noGutter>
-      <CodeSnippet type="multi" code={sveltekit} />
-    </Row>
+    <CodeSnippet class="mb-5" type="multi" code={sveltekit} />
 
     <p class="mb-5">
       For example set-ups, refer to <Link
@@ -142,7 +140,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <ScopedStyle name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
   <Column xlg={9} lg={12}>
@@ -182,7 +180,7 @@
       highlighting.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <ScopedStyleSvelte name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
@@ -205,7 +203,7 @@
       to infer a language. Prefer to specify a language if possible.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
@@ -229,7 +227,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <HighlightAuto
       code={'[data-language="css"] {\n  /* custom style rules */\n}'}
       class="atomOneDark"
@@ -272,7 +270,7 @@
       list of supported languages.
     </p>
   </Column>
-  <Column noGutter xlg={12}>
+  <Column xlg={12}>
     <HighlightSvelte
       code={`<script>
   import { HighlightAuto } from "svelte-highlight";
@@ -296,7 +294,7 @@
   </Column>
 </Row>
 
-<Row noGutter>
+<Row>
   <Column>
     <hr />
   </Column>
@@ -337,7 +335,7 @@
   </Column>
 </Row>
 
-<Row noGutter>
+<Row>
   <Column>
     <hr />
   </Column>
