@@ -5,7 +5,7 @@
 
 > Syntax highlighting for Svelte using [highlight.js](https://github.com/highlightjs/highlight.js).
 
-Try it in the [StackBlitz](https://stackblitz.com/edit/svelte-highlight?file=src%2Froutes%2Findex.svelte).
+Try it in [StackBlitz](https://stackblitz.com/edit/svelte-highlight?file=src%2Froutes%2Findex.svelte).
 
 ## [Documentation](https://svhe.onrender.com)
 
