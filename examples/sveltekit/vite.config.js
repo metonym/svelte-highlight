@@ -1,11 +1,9 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 
 /** @type {import('vite').UserConfig} */
-const config = {
+export default {
   plugins: [sveltekit()],
   optimizeDeps: {
     include: ["highlight.js", "highlight.js/lib/core"],
   },
 };
-
-export default config;

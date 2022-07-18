@@ -1,6 +1,6 @@
 # examples/vite
 
-> `svelte-highlight` vite set-up.
+> `svelte-highlight` Vite set-up.
 
 ## Available Scripts
 
@@ -11,3 +11,7 @@ Runs the project in development mode and watches for any changes.
 ### `yarn build`
 
 Builds the project for production.
+
+### `yarn preview`
+
+Preview the app locally. Run `yarn build` first.
