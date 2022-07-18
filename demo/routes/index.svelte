@@ -80,11 +80,11 @@
 <Row class="mb-7">
   <Column xlg={9} lg={12}>
     <p class="mb-5">
-      To use this library with SvelteKit or vite, add <code class="code"
+      To use this library with SvelteKit or Vite, add <code class="code"
         >"highlight.js"</code
       >
       and <code class="code">"highlight.js/lib/core"</code>
-      to the dependencies for vite to optimize.
+      to the dependencies for Vite to optimize.
     </p>
 
     <h5 class="mb-5">vite.config.js</h5>
@@ -309,14 +309,15 @@
   <Column xlg={9} lg={12}>
     <h3 class="mb-7">Examples</h3>
     <p class="mb-5">
-      Example set-ups – including SvelteKit, Rollup, Webpack, and Snowpack – are
-      located in the
+      Example set-ups – including SvelteKit, Vite, Rollup, Webpack, and Snowpack
+      – are located in the
       <Link
         inline
         size="lg"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples"
-        >examples folder in the GitHub repository</Link
-      >.
+      >
+        examples folder in the GitHub repository
+      </Link>.
     </p>
   </Column>
 </Row>

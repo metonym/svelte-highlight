@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.3.2](https://github.com/metonym/svelte-highlight/releases/tag/v5.3.2) - 2022-03-16
 
-- specify in docs that vite should optimize both "highlight.js" and "highlight.js/lib/core" if using SvelteKit or vite
+- specify in docs that Vite should optimize both "highlight.js" and "highlight.js/lib/core" if using SvelteKit or Vite
 
 ## [5.3.1](https://github.com/metonym/svelte-highlight/releases/tag/v5.3.1) - 2022-03-16
 
