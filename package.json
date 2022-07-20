@@ -21,10 +21,10 @@
     "highlight.js": "11.6.0"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "1.0.0-next.36",
-    "@sveltejs/kit": "1.0.0-next.377",
+    "@sveltejs/adapter-static": "1.0.0-next.38",
+    "@sveltejs/kit": "1.0.0-next.385",
     "@testing-library/svelte": "^3.1.3",
-    "@testing-library/user-event": "^14.2.5",
+    "@testing-library/user-event": "^14.3.0",
     "@types/prettier": "^2.6.3",
     "carbon-components-svelte": "^0.67.1",
     "carbon-icons-svelte": "^11.1.0",
@@ -36,9 +36,10 @@
     "svelte-check": "^2.8.0",
     "svelte-focus-key": "^0.3.2",
     "svelte-preprocess": "^4.10.7",
-    "svelte2tsx": "^0.5.11",
+    "svelte2tsx": "^0.5.12",
     "totalist": "^3.0.0",
     "typescript": "^4.7.4",
+    "vite": "^3.0.2",
     "vitest": "^0.18.1"
   },
   "repository": {
