@@ -26,7 +26,7 @@ Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highligh
 
 ## SvelteKit Set-up
 
-To use this library with [SvelteKit](https://github.com/sveltejs/kit) or [Vite](https://github.com/sveltejs/vite-plugin-svelte), instruct Vite to optimize `highlight.js` and `highlight.js/lib/core`:
+To use this library with [SvelteKit](https://github.com/sveltejs/kit) or [Vite](https://github.com/sveltejs/vite-plugin-svelte), instruct Vite to [optimize](https://vitejs.dev/config/dep-optimization-options.html#optimizedeps-include) `highlight.js` and `highlight.js/lib/core`:
 
 ```diff
 + optimizeDeps: {
@@ -34,10 +34,9 @@ To use this library with [SvelteKit](https://github.com/sveltejs/kit) or [Vite](
 + },
 ```
 
-As of [SvelteKit version 1.0.0-next.359](https://github.com/sveltejs/kit/releases/tag/%40sveltejs/kit%401.0.0-next.359), `vite` options are defined in `vite.config.js`.
+**vite.config.js**
 
 ```js
-// vite.config.js
 import { sveltekit } from "@sveltejs/kit/vite";
 
 /** @type {import('vite').UserConfig} */
@@ -47,26 +46,7 @@ export default {
     include: ["highlight.js", "highlight.js/lib/core"],
   },
 };
-
 ```
-
-<details>
-  <summary>SvelteKit <=1.0.0-next.358</summary>
-
-```js
-// svelte.config.js
-export default {
-  kit: {
-    vite: {
-      optimizeDeps: {
-        include: ["highlight.js", "highlight.js/lib/core"],
-      },
-    },
-  },
-};
-```
-
-</details>
 
 Refer to [examples/sveltekit](examples/sveltekit) or [examples/vite](examples/vite).
 
