@@ -10,17 +10,17 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@sveltejs/adapter-node@1.0.0-next.81":
-  version "1.0.0-next.81"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-1.0.0-next.81.tgz#242ea37e5cb47a9eda7e7a1005101ad5528c0116"
-  integrity sha512-OCYteMK4iNRR+sHMtpMBkNvJoo7lpfMiGF1TsvtE8wv7IjBA5pHwTETrvwZL9nGoQzhpDiDuUWYt7w0cLKCukw==
+"@sveltejs/adapter-node@1.0.0-next.84":
+  version "1.0.0-next.84"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-1.0.0-next.84.tgz#3367aa9ea57d30d09a1b7099aaf82e993d157307"
+  integrity sha512-MEt1Ej2yfmKJhyW1rfBeQbmCzeFvMSqUnH78pyHDvmaOH7/jfjBTu9UpBlkfObRMclo9ZW6P+1tiHE6gwXkesQ==
   dependencies:
     tiny-glob "^0.2.9"
 
-"@sveltejs/kit@1.0.0-next.377":
-  version "1.0.0-next.377"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.377.tgz#e74565b35e78d068a26640a3b5492e70dd2787c5"
-  integrity sha512-DH2v2yUBUuDZ7vzjPXUd/yt1AMR3BIkZN0ubLAvS2C+q5Wbvk7ZvAJhfPZ3OYc3ZpQXe4ZGEcptOjvEYvd1lLA==
+"@sveltejs/kit@1.0.0-next.394":
+  version "1.0.0-next.394"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.394.tgz#0f06064c166f31f0de322d0a47456e78f049a4c7"
+  integrity sha512-YfRNSKdbvihHFvmQodaMlChcyf9dfU36FwK8WYQF5jqEmiRajLBb/ooU6RqPA0Z6j5okJHDSYBwxW8TP+nc+gg==
   dependencies:
     "@sveltejs/vite-plugin-svelte" "^1.0.1"
     chokidar "^3.5.3"
@@ -426,10 +426,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-vite@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-3.0.0.tgz#b4675cb9ab83ec0803b9c952ffa6519bcce033a7"
-  integrity sha512-M7phQhY3+fRZa0H+1WzI6N+/onruwPTBTMvaj7TzgZ0v2TE+N2sdLKxJOfOv9CckDWt5C4HmyQP81xB4dwRKzA==
+vite@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-3.0.3.tgz#c7b2ed9505a36a04be1d5d23aea4ea6fc028043f"
+  integrity sha512-sDIpIcl3mv1NUaSzZwiXGEy1ZoWwwC2vkxUHY6yiDacR6zf//ZFuBJrozO62gedpE43pmxnLATNR5IYUdAEkMQ==
   dependencies:
     esbuild "^0.14.47"
     postcss "^8.4.14"

@@ -1,6 +1,6 @@
 # examples/snowpack
 
-> `svelte-highlight` snowpack set-up.
+> `svelte-highlight` Snowpack set-up.
 
 ## Available Scripts
 
