@@ -84,10 +84,10 @@
   dependencies:
     tiny-glob "^0.2.9"
 
-"@sveltejs/kit@1.0.0-next.385":
-  version "1.0.0-next.385"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.385.tgz#b1b517dd0122b6d1f9ccdc14e464c6dbcadde5bc"
-  integrity sha512-KPzzagH0EG7kceDDQC7w+U9OZdQ5rV4ZOKsobGNh8Rex59dkOXGdqvthGni+4WMppR9XEsM7T1Rtese6R4Y+YA==
+"@sveltejs/kit@1.0.0-next.396":
+  version "1.0.0-next.396"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.396.tgz#f87f27bfbff9add1dc869885f4e9b6497058280b"
+  integrity sha512-bKFpuzp9QxPkOIOEIeNeedvxEMORNqBPxUmoJXDP/Se7MrSfcxYiamjBcKrG+bgGNWmV39nD3EvUox+CXno/Ig==
   dependencies:
     "@sveltejs/vite-plugin-svelte" "^1.0.1"
     chokidar "^3.5.3"
@@ -163,10 +163,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.23.tgz#3b41a6e643589ac6442bdbd7a4a3ded62f33f7da"
   integrity sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==
 
-"@types/prettier@^2.6.3":
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.6.3.tgz#68ada76827b0010d0db071f739314fa429943d0a"
-  integrity sha512-ymZk3LEC/fsut+/Q5qejp6R9O1rMxz3XaRHDV6kX8MrGAhOSPqVARbDi+EZvInBpw+BnCX3TD240byVkOfQsHg==
+"@types/prettier@^2.6.4":
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.6.4.tgz#ad899dad022bab6b5a9f0a0fe67c2f7a4a8950ed"
+  integrity sha512-fOwvpvQYStpb/zHMx0Cauwywu9yLDmzWiiQBC7gJyq5tYLUXFZvDG7VK1B7WBxxjBJNKFOZ0zLoOQn8vmATbhw==
 
 "@types/pug@^2.0.4":
   version "2.0.6"
@@ -302,17 +302,17 @@ callsites@^3.0.0:
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
-carbon-components-svelte@^0.67.1:
-  version "0.67.1"
-  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.67.1.tgz#5007273f0017f07fba5b45547e40bb924906fd7f"
-  integrity sha512-Xof9AItLnt6UTu/6GFM0HGCokaoVmivElcMainzy26KiaDCgLRP0AOuI0hpbUQAgUcLqiy2y+dBhQylMSvNn6g==
+carbon-components-svelte@^0.67.4:
+  version "0.67.4"
+  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.67.4.tgz#fd70ac920de8bf8fa1c7c91719bbe68b85ad2fcc"
+  integrity sha512-+YbPAYInOQyT6bAVPPdtZ18Zm6oTHYOl+gTzO517QebDzz+Czf+HJiyJnlAkpz9PMOf3sCAhB9JiojO+auuEMQ==
   dependencies:
     flatpickr "4.6.9"
 
-carbon-icons-svelte@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/carbon-icons-svelte/-/carbon-icons-svelte-11.1.0.tgz#d1f5dad05bac8c1e1320165fad4ac52aa29a53d7"
-  integrity sha512-yDA1aqgRCuDaY1moxYywKnkGak7rFc5U2n8/hrs8irmIpq9ebKmimLdMCVqZgV4kiZf2Udj/lkKOs/IzHixrnQ==
+carbon-icons-svelte@^11.2.0:
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/carbon-icons-svelte/-/carbon-icons-svelte-11.2.0.tgz#4b791c5cdb9b3b8b52758475a5b2e4ca96062639"
+  integrity sha512-nbqCEKoZA5EzT2Lr8vNYnfWcDl5GnFFLnbD861U32g9cNe7D7nmQKx4T+goFp5AoY60OyAgKUNJov8LwNEkhbg==
 
 carbon-preprocess-svelte@^0.9.1:
   version "0.9.1"
@@ -1542,10 +1542,10 @@ svelte-preprocess@^4.10.7:
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
 
-svelte2tsx@^0.5.12:
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/svelte2tsx/-/svelte2tsx-0.5.12.tgz#8370516748377056071eb642669484eae12c8193"
-  integrity sha512-43ayMivmh1IDCgb+4YDf54YuOJZGCUKFpp37RbfjGgNU+Pmb9HhP+zRXa1pMh4mwSTBfqZS0FbJZP3Q8CSxvvg==
+svelte2tsx@^0.5.13:
+  version "0.5.13"
+  resolved "https://registry.yarnpkg.com/svelte2tsx/-/svelte2tsx-0.5.13.tgz#5c36a6510d7121e38afbe0d8ec4610992c39ad87"
+  integrity sha512-JAwln2Gd6gQk8q/Qz91rk8msSqe4M2ABrku8YeDMsFnrqjPTWLnHYvxlXLAlHE5el1Q8sfExTePHF3xAZPh/mw==
   dependencies:
     dedent-js "^1.0.1"
     pascal-case "^3.1.1"
@@ -1655,10 +1655,10 @@ util-deprecate@^1.0.2:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vite@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-3.0.2.tgz#2a7b4642c53ae066cf724e7e581d6c1fd24e2c32"
-  integrity sha512-TAqydxW/w0U5AoL5AsD9DApTvGb2iNbGs3sN4u2VdT1GFkQVUfgUldt+t08TZgi23uIauh1TUOQJALduo9GXqw==
+vite@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-3.0.3.tgz#c7b2ed9505a36a04be1d5d23aea4ea6fc028043f"
+  integrity sha512-sDIpIcl3mv1NUaSzZwiXGEy1ZoWwwC2vkxUHY6yiDacR6zf//ZFuBJrozO62gedpE43pmxnLATNR5IYUdAEkMQ==
   dependencies:
     esbuild "^0.14.47"
     postcss "^8.4.14"
@@ -1667,10 +1667,10 @@ vite@^3.0.2:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vitest@^0.18.1:
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.18.1.tgz#33c5003fc8c4b296801897ae1a3f142f57015574"
-  integrity sha512-4F/1K/Vn4AvJwe7i2YblR02PT5vMKcw9KN4unDq2KD0YcSxX0B/6D6Qu9PJaXwVuxXMFTQ5ovd4+CQaW3bwofA==
+vitest@^0.19.1:
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.19.1.tgz#8a89f4c873132d778d4206dbfbd6791c12f6d921"
+  integrity sha512-E/ZXpFMUahn731wzhMBNzWRp4mGgiZFT0xdHa32cbNO0CSaHpE9hTfteEU247Gi2Dula8uXo5vvrNB6dtszmQA==
   dependencies:
     "@types/chai" "^4.3.1"
     "@types/chai-subset" "^1.3.3"
