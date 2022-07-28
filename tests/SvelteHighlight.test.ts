@@ -1,13 +1,14 @@
-import { test, expect, describe, afterEach } from "vitest";
+import { test, expect, describe, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
 
 describe("SvelteHighlight", () => {
   let instance: null | SvelteHighlight = null;
 
-  afterEach(() => {
+  beforeEach(() => {
     instance?.$destroy();
     instance = null;
+    document.head.innerHTML = "";
     document.body.innerHTML = "";
   });
 
