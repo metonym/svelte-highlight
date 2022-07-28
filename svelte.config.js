@@ -15,7 +15,7 @@ const CONTENT = {
 };
 
 /** @type {import('@sveltejs/kit').Config} */
-const config = {
+export default {
   preprocess: [
     preprocess(),
     optimizeImports(),
@@ -53,5 +53,3 @@ const config = {
     },
   },
 };
-
-export default config;
