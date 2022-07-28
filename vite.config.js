@@ -1,15 +1,11 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 
+const TEST = process.env.VITEST;
+
 /** @type {import('vite').UserConfig} */
-const config = {
-  plugins: [
-    process.env.VITEST
-      ? svelte({
-          hot: false,
-        })
-      : sveltekit(),
-  ],
+export default {
+  plugins: [TEST ? svelte({ hot: false }) : sveltekit()],
   optimizeDeps: {
     include: ["highlight.js", "highlight.js/lib/core"],
   },
@@ -19,9 +15,6 @@ const config = {
     },
   },
   test: {
-    globals: true,
     environment: "jsdom",
   },
 };
-
-export default config;
