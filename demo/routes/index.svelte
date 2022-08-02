@@ -309,8 +309,8 @@
   <Column xlg={9} lg={12}>
     <h3 class="mb-7">Examples</h3>
     <p class="mb-5">
-      Example set-ups – including SvelteKit, Vite, Rollup, Webpack, and Snowpack
-      – are located in the
+      Example set-ups – including SvelteKit, Vite, Rollup, and Webpack – are
+      located in the
       <Link
         inline
         size="lg"
