@@ -16,12 +16,5 @@ export default {
   },
   test: {
     environment: "jsdom",
-    deps: {
-      /**
-       * Opt out of experimental Node loader to resolve imports
-       * @see https://github.com/vitest-dev/vitest/issues/1753#issuecomment-1200436847
-       */
-      registerNodeLoader: false,
-    },
   },
 };
