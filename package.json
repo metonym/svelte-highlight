@@ -12,7 +12,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "build:lib": "node scripts",
-    "package": "svelte-kit package",
+    "package": "yarn build:lib && svelte-kit package",
     "check": "svelte-check --workspace tests",
     "test": "vitest",
     "format": "prettier --ignore-path .gitignore --write ."
