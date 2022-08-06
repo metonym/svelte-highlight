@@ -24,6 +24,10 @@
     include: ["highlight.js", "highlight.js/lib/core"],
   },
 };`;
+  const svelteHeadCdn = `<link
+  rel="stylesheet"
+  href="https://unpkg.com/svelte-highlight/styles/github.css"
+/>\n`;
 </script>
 
 <Row>
@@ -158,6 +162,16 @@
       Refer to the <Link size="lg" href="{base}/styles">Styles page</Link> for a
       list of supported styles.
     </p>
+    <p>
+      CSS StyleSheets can also be externally linked from a Content Delivery
+      Network (CDN) like <Link size="lg" href="https://unpkg.com/"
+        >unpkg.com</Link
+      >. This is best suited for prototyping and not recommended for production
+      use.
+    </p>
+  </Column>
+  <Column xlg={12}>
+    <HighlightSvelte code={svelteHeadCdn} class="atomOneDark" />
   </Column>
 </Row>
 

@@ -93,6 +93,37 @@ Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS
 <Highlight language={typescript} {code} />
 ```
 
+#### Linking from a CDN
+
+CSS StyleSheets can also be externally linked from a Content Delivery Network (CDN) like [unpkg.com](https://unpkg.com/).
+
+This is best suited for prototyping and not recommended for production use.
+
+**HTML**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/svelte-highlight/styles/github.css"
+    />
+  </head>
+</html>
+```
+
+**svelte:head**
+
+```svelte
+<svelte:head>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/svelte-highlight/styles/github.css"
+  />
+</svelte:head>
+```
+
 ## Svelte Syntax Highlighting
 
 Use the `HighlightSvelte` component for Svelte syntax highlighting.

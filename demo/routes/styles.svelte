@@ -7,6 +7,7 @@
     StructuredListRow,
     StructuredListCell,
     StructuredListBody,
+    Toggle,
   } from "carbon-components-svelte";
   import ScopedStyle from "../lib/ScopedStyle.svelte";
   import CodeSnippet from "../lib/CodeSnippet.svelte";
@@ -15,6 +16,7 @@
 
   let currentLabel = "Injected styles";
   let filtered = [];
+  let useCdnImport = false;
 
   $: useInjectedStyles = currentLabel === "Injected styles";
 </script>
@@ -28,6 +30,23 @@
   bind:currentLabel
   bind:filtered
 >
+  {#if !useInjectedStyles}
+    <Row>
+      <Column xlg={9} lg={12}>
+        <p class="mb-5">
+          CSS StyleSheets can also be externally linked from a Content Delivery
+          Network (CDN). This is best suited for prototyping and not recommended
+          for production use.
+        </p>
+        <Toggle
+          size="sm"
+          labelText="Import from UNPKG"
+          bind:toggled={useCdnImport}
+        />
+      </Column>
+    </Row>
+  {/if}
+
   {#if filtered.length > 0}
     <Row>
       <Column noGutter>
@@ -55,7 +74,7 @@
                   </div>
                 </StructuredListCell>
                 <StructuredListCell>
-                  <ScopedStyle {...style} {useInjectedStyles} />
+                  <ScopedStyle {...style} {useInjectedStyles} {useCdnImport} />
                 </StructuredListCell>
               </StructuredListRow>
             {/each}

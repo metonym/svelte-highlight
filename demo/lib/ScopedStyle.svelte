@@ -2,25 +2,31 @@
   export let name = "";
   export let moduleName = "";
   export let useInjectedStyles = true;
+  export let useCdnImport = false;
 
   import HighlightSvelte from "../../src/HighlightSvelte.svelte";
   import * as styles from "../../src/styles";
 
+  $: importStyles = useInjectedStyles
+    ? `import ${moduleName} from "svelte-highlight/styles/${name}";`
+    : `import "svelte-highlight/styles/${name}.css";`;
   $: code = `<script>
   import Highlight from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
-  ${
-    useInjectedStyles
-      ? `import ${moduleName} from "svelte-highlight/styles/${name}";`
-      : `import "svelte-highlight/styles/${name}.css";`
-  }
-
+  ${!useInjectedStyles && useCdnImport ? "" : importStyles + "\n"}
   const code = "const add = (a: number, b: number) => a + b;";
 <\/script>
 ${
-  useInjectedStyles
+  useInjectedStyles || useCdnImport
     ? `\n<svelte:head>
-  {@html ${moduleName}}
+  ${
+    useInjectedStyles
+      ? `{@html ${moduleName}}`
+      : `<link
+    rel="stylesheet"
+    href="https://unpkg.com/svelte-highlight/styles/${name}.css"
+  />`
+  }
 </svelte:head>\n`
     : ""
 }
