@@ -2,21 +2,25 @@ import svelte from "rollup-plugin-svelte";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
+import preprocess from "svelte-preprocess";
 
-const production = !process.env.ROLLUP_WATCH;
+const PROD = !process.env.ROLLUP_WATCH;
 
 export default {
-  input: "src/index.js",
+  input: "src/index.ts",
   output: {
-    sourcemap: !production,
+    sourcemap: true,
     format: "iife",
     name: "app",
     file: "public/build/bundle.js",
   },
   plugins: [
-    svelte({ compilerOptions: { dev: !production }, emitCss: false }),
-    resolve({ browser: true, dedupe: ["svelte"] }),
+    svelte({
+      emitCss: false,
+      preprocess: preprocess(),
+    }),
     commonjs(),
-    production && terser(),
+    resolve({ browser: true }),
+    PROD && terser(),
   ],
 };
