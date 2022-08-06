@@ -21,12 +21,12 @@
     "highlight.js": "11.6.0"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "1.0.0-next.38",
-    "@sveltejs/kit": "1.0.0-next.401",
+    "@sveltejs/adapter-static": "1.0.0-next.39",
+    "@sveltejs/kit": "1.0.0-next.405",
     "@testing-library/svelte": "^3.1.3",
-    "@testing-library/user-event": "^14.4.0",
-    "@types/prettier": "^2.6.4",
-    "carbon-components-svelte": "^0.67.4",
+    "@testing-library/user-event": "^14.4.2",
+    "@types/prettier": "^2.7.0",
+    "carbon-components-svelte": "^0.67.6",
     "carbon-icons-svelte": "^11.2.0",
     "carbon-preprocess-svelte": "^0.9.1",
     "jsdom": "^20.0.0",
