@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
+const preprocess = require("svelte-preprocess");
 
 const NODE_ENV = process.env.NODE_ENV || "development";
 const PROD = NODE_ENV === "production";
@@ -26,6 +27,7 @@ module.exports = {
           loader: "svelte-loader",
           options: {
             hotReload: !PROD,
+            preprocess: preprocess(),
             compilerOptions: { dev: !PROD },
           },
         },

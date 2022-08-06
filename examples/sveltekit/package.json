@@ -11,6 +11,8 @@
     "@sveltejs/kit": "1.0.0-next.396",
     "svelte": "^3.49.0",
     "svelte-highlight": "^6.2.0",
+    "svelte-preprocess": "^4.10.7",
+    "typescript": "^4.7.4",
     "vite": "^3.0.3"
   }
 }
