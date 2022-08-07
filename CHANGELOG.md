@@ -16,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add dynamic import example
 - document CDN styles usage
 - use TypeScript in all example set-ups
-- remove Sapper example as it is deprecated
 - remove Snowpack example as it is no longer maintained
 - update set-up instructions for SvelteKit/Vite
 
