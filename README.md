@@ -237,6 +237,38 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 <Highlight {language} code="..." />
 ```
 
+## Code-splitting
+
+You can use the `dynamic import` syntax to code-split code.
+
+In the example below, the `HighlightAuto` component and injected styles are dynamically loaded.
+
+```svelte
+<script>
+  import { onMount } from "svelte";
+
+  let component;
+  let styles;
+
+  onMount(async () => {
+    component = (await import("svelte-highlight")).HighlightAuto;
+    styles = (await import("svelte-highlight/styles/github")).default;
+  });
+</script>
+
+<svelte:head>
+  {#if styles}
+    {@html styles}
+  {/if}
+</svelte:head>
+
+<svelte:component
+  this={component}
+  langtag
+  code={`body {\n  padding: 0;\n  color: red;\n}`}
+/>
+```
+
 ## API
 
 ### Props
