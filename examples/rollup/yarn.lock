@@ -465,10 +465,10 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.77.2:
-  version "2.77.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.77.2.tgz#6b6075c55f9cc2040a5912e6e062151e42e2c4e3"
-  integrity sha512-m/4YzYgLcpMQbxX3NmAqDvwLATZzxt8bIegO78FZLl+lAgKJBd1DRAOeEiZcKOIOPjxE6ewHWHNgGEalFXuz1g==
+rollup@^2.77.3:
+  version "2.77.3"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.77.3.tgz#8f00418d3a2740036e15deb653bed1a90ee0cc12"
+  integrity sha512-/qxNTG7FbmefJWoeeYJFbHehJ2HNWnjkAFRKzWN/45eNBBF/r8lo992CwcJXEzyVxs5FmfId+vTSTQDb+bxA+g==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -548,10 +548,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svelte-highlight@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-6.2.0.tgz#ebd75f72c9367e5eaa88892535097dbbfa836d7a"
-  integrity sha512-OxaWIPDbHCsn3s/ztCi5aY5YIqqP0+VmLTXuV+oO5fRXbd3AAWLaTsfn8ksIppjs9vdnfYj0X6fLhe6CNmAQgg==
+svelte-highlight@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-6.2.1.tgz#940bf4519736333c0e8f38aa201cdcb2fd434f6e"
+  integrity sha512-nZoweg5atreJHAJPaB0nca+r6YhDzbEJQrtKDO2mR/muEzsRKxMeSF3Q8BV0Au+T2jMWGBPwlBzA/tqv9yG9UQ==
   dependencies:
     highlight.js "11.6.0"
 
