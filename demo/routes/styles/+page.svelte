@@ -7,41 +7,46 @@
     StructuredListRow,
     StructuredListCell,
     StructuredListBody,
+    Toggle,
   } from "carbon-components-svelte";
-  import HighlightSvelte from "../../src/HighlightSvelte.svelte";
-  import atomOneDark from "../../src/styles/atom-one-dark";
-  import ListSearch from "../lib/ListSearch.svelte";
-  import CodeSnippet from "../lib/CodeSnippet.svelte";
-  import languages from "../lib/languages.json";
+  import ScopedStyle from "../../lib/ScopedStyle.svelte";
+  import CodeSnippet from "../../lib/CodeSnippet.svelte";
+  import ListSearch from "../../lib/ListSearch.svelte";
+  import styles from "../../lib/styles.json";
 
-  let currentLabel = "Direct import";
+  let currentLabel = "Injected styles";
   let filtered = [];
+  let useCdnImport = false;
 
-  $: useDirectImport = currentLabel === "Direct import";
-
-  function formatCode(name, moduleName, useDirectImport) {
-    return `<script>
-  import Highlight from "svelte-highlight";
-  import ${
-    useDirectImport ? moduleName : `{ ${moduleName} }`
-  } from "svelte-highlight/languages${useDirectImport ? `/${name}` : ""}";
-<\/script>
-
-<Highlight language={${moduleName}} code="code" />`;
-  }
+  $: useInjectedStyles = currentLabel === "Injected styles";
 </script>
 
-<svelte:head>
-  {@html atomOneDark}
-</svelte:head>
-
 <ListSearch
-  items={languages}
-  itemName="language"
-  placeholderExample="JavaScript"
+  items={styles}
+  itemName="style"
+  labelA="CSS StyleSheet"
+  labelB="Injected styles"
+  placeholderExample="Monokai"
   bind:currentLabel
   bind:filtered
 >
+  {#if !useInjectedStyles}
+    <Row>
+      <Column xlg={9} lg={12}>
+        <p class="mb-5">
+          CSS StyleSheets can also be externally linked from a Content Delivery
+          Network (CDN). This is best suited for prototyping and not recommended
+          for production use.
+        </p>
+        <Toggle
+          size="sm"
+          labelText="Import from UNPKG"
+          bind:toggled={useCdnImport}
+        />
+      </Column>
+    </Row>
+  {/if}
+
   {#if filtered.length > 0}
     <Row>
       <Column noGutter>
@@ -55,27 +60,21 @@
             </StructuredListRow>
           </StructuredListHead>
           <StructuredListBody>
-            {#each filtered as language (language.name)}
+            {#each filtered as style (style.name)}
               <StructuredListRow>
                 <StructuredListCell>
                   <div class="mb-7">
                     <div class="label-01 mb-3">Language name</div>
-                    <CodeSnippet type="inline" code={language.name} />
+                    <CodeSnippet type="inline" code={style.name} />
                   </div>
 
                   <div class="mb-7">
                     <div class="label-01 mb-3">Module name</div>
-                    <CodeSnippet type="inline" code={language.moduleName} />
+                    <CodeSnippet type="inline" code={style.moduleName} />
                   </div>
                 </StructuredListCell>
                 <StructuredListCell>
-                  <HighlightSvelte
-                    code={formatCode(
-                      language.name,
-                      language.moduleName,
-                      useDirectImport
-                    )}
-                  />
+                  <ScopedStyle {...style} {useInjectedStyles} {useCdnImport} />
                 </StructuredListCell>
               </StructuredListRow>
             {/each}

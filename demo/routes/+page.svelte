@@ -1,4 +1,7 @@
 <script>
+  /** @type {import('./$types').PageData} */
+  export const data = null;
+
   import {
     Tabs,
     Tab,
