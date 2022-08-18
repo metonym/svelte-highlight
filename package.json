@@ -12,7 +12,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "build:lib": "node scripts",
-    "package": "yarn build:lib && svelte-kit package",
+    "package": "yarn build:lib && svelte-package",
     "check": "svelte-check --workspace tests",
     "test": "vitest",
     "format": "prettier --ignore-path .gitignore --write ."
@@ -23,6 +23,7 @@
   "devDependencies": {
     "@sveltejs/adapter-static": "1.0.0-next.39",
     "@sveltejs/kit": "1.0.0-next.420",
+    "@sveltejs/package": "^1.0.0-next.1",
     "@testing-library/svelte": "^3.1.3",
     "@testing-library/user-event": "^14.4.3",
     "@types/prettier": "^2.7.0",
