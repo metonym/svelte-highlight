@@ -19,6 +19,5 @@ jobs:
       - name: Build and test the library
         run: |
           yarn
-          yarn build:lib
-          yarn build
+          yarn package
           yarn run check & yarn test
