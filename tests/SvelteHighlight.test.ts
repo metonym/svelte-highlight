@@ -15,7 +15,7 @@ describe("SvelteHighlight", () => {
   test("SvelteHighlight", async () => {
     expect(document.head.querySelector("style")).toBeNull();
 
-    const target = document.querySelector("body")!;
+    const target = document.body;
 
     instance = new SvelteHighlight({
       target,
