@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "1.0.0-next.39",
-    "@sveltejs/kit": "1.0.0-next.420",
+    "@sveltejs/kit": "1.0.0-next.424",
     "@sveltejs/package": "^1.0.0-next.1",
     "@testing-library/svelte": "^3.1.3",
     "@testing-library/user-event": "^14.4.3",
@@ -40,7 +40,7 @@
     "svelte2tsx": "^0.5.14",
     "totalist": "^3.0.0",
     "typescript": "^4.7.4",
-    "vite": "^3.0.8",
+    "vite": "^3.0.9",
     "vitest": "^0.22.1"
   },
   "repository": {
