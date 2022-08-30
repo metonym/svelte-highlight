@@ -239,7 +239,7 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 
 ## Code-splitting
 
-You can use the `dynamic import` syntax to code-split code.
+You can use the `await import` syntax for code-splitting.
 
 In the example below, the `HighlightAuto` component and injected styles are dynamically loaded.
 
