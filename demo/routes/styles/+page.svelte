@@ -64,7 +64,7 @@
               <StructuredListRow>
                 <StructuredListCell>
                   <div class="mb-7">
-                    <div class="label-01 mb-3">Language name</div>
+                    <div class="label-01 mb-3">Style name</div>
                     <CodeSnippet type="inline" code={style.name} />
                   </div>
 
