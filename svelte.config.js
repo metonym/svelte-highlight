@@ -41,15 +41,11 @@ export default {
   ],
   kit: {
     adapter: adapter(),
-    prerender: {
-      default: true,
-    },
     files: {
       assets: "demo/static",
       lib: "src",
       routes: "demo/routes",
-      template: "demo/app.html",
-      hooks: "demo/hooks.js",
+      appTemplate: "demo/app.html",
     },
   },
 };
