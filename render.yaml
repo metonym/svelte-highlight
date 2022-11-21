@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: svelte-highlight
-    env: static
-    buildCommand: yarn build:lib; yarn build
-    staticPublishPath: build
-    pullRequestPreviewsEnabled: true
