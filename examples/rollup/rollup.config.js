@@ -11,7 +11,7 @@ export default {
   output: {
     sourcemap: true,
     format: "es",
-    dir: 'public/build',
+    dir: "public/build",
   },
   plugins: [
     svelte({

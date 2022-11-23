@@ -489,10 +489,10 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^3.2.5:
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.2.5.tgz#9452168ac083218c8212bf53d2448bdc6b8b0de7"
-  integrity sha512-/Ha7HhVVofduy+RKWOQJrxe4Qb3xyZo+chcpYiD8SoQa4AG7llhupUtyfKSSrdBM2mWJjhM8wZwmbY23NmlIYw==
+rollup@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.4.0.tgz#3f363d46474deb54e6da38d398c3af845c1b7d43"
+  integrity sha512-4g8ZrEFK7UbDvy3JF+d5bLiC8UKkS3n/27/cnVeESwB1LVPl6MoPL32/6+SCQ1vHTp6Mvp2veIHtwELhi+uXEw==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -606,10 +606,10 @@ terser@^5.0.0:
     commander "^2.20.0"
     source-map-support "~0.5.20"
 
-typescript@^4.8.4:
-  version "4.8.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
-  integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
+typescript@^4.9.3:
+  version "4.9.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.3.tgz#3aea307c1746b8c384435d8ac36b8a2e580d85db"
+  integrity sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==
 
 wrappy@1:
   version "1.0.2"

@@ -7,12 +7,12 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@sveltejs/adapter-node": "^1.0.0-next.100",
-    "@sveltejs/kit": "^1.0.0-next.543",
+    "@sveltejs/adapter-node": "^1.0.0-next.101",
+    "@sveltejs/kit": "^1.0.0-next.557",
     "svelte": "^3.53.1",
     "svelte-highlight": "^6.2.1",
     "svelte-preprocess": "^4.10.7",
-    "typescript": "^4.8.4",
-    "vite": "^3.2.3"
+    "typescript": "^4.9.3",
+    "vite": "^3.2.4"
   }
 }

@@ -8,7 +8,4 @@ export default {
       preprocess: preprocess(),
     }),
   ],
-  optimizeDeps: {
-    include: ["highlight.js", "highlight.js/lib/core"],
-  },
 };

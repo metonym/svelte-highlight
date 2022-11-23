@@ -57,20 +57,20 @@
     estree-walker "^2.0.2"
     picomatch "^2.3.1"
 
-"@sveltejs/adapter-node@^1.0.0-next.100":
-  version "1.0.0-next.100"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-1.0.0-next.100.tgz#12fbf0e440e0871869388e4d9d8a007e97d64dd6"
-  integrity sha512-XtyweoRcrnD3T/hkqv4XAlhU24VM6/QiUqR2mfs7I3Ji/KrBKWSM2GCpSptnfk3mELK193sJ0T4m6Z3x8uf47w==
+"@sveltejs/adapter-node@^1.0.0-next.101":
+  version "1.0.0-next.101"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-1.0.0-next.101.tgz#a859cfa2ad6b7d0e1f80d1987c33639c2b31929c"
+  integrity sha512-gtg/b0dbDvd5TvTRsmthFSd/q9Gd+hVuq6uP0XqYgRKKXJw0tr9kNlnDNJ8HQMueo5ccHHUmOQYGV1vGR2zG0A==
   dependencies:
     "@rollup/plugin-commonjs" "^23.0.2"
     "@rollup/plugin-json" "^5.0.1"
     "@rollup/plugin-node-resolve" "^15.0.1"
     rollup "^2.79.1"
 
-"@sveltejs/kit@^1.0.0-next.543":
-  version "1.0.0-next.543"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.543.tgz#e68bee1dbeed07bd439f81f40b2498d323c9bffc"
-  integrity sha512-aOd5SX+LPUqe8isXQV7c+XDbi/499Elw2D2igVOya51j26nISptnLmY9KsMBD48Tjl6Va3kUfsa1R1U87vZJRA==
+"@sveltejs/kit@^1.0.0-next.557":
+  version "1.0.0-next.557"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.557.tgz#606a707a2a17b57c0d1dd274840a62b9d9a66a4d"
+  integrity sha512-DtEJJMiGnTvLCnVR8UTJtHDXK8wvDvGfqtFA3s6gfCkBgZ18jnICXU4CdXlTCroTxrxcm1KOH9qfN1M/S2oL1A==
   dependencies:
     "@sveltejs/vite-plugin-svelte" "^1.1.0"
     "@types/cookie" "^0.5.1"
@@ -688,10 +688,10 @@ totalist@^3.0.0:
   resolved "https://registry.yarnpkg.com/totalist/-/totalist-3.0.0.tgz#4ef9c58c5f095255cdc3ff2a0a55091c57a3a1bd"
   integrity sha512-eM+pCBxXO/njtF7vdFsHuqb+ElbxqtI4r5EAvk6grfAFyJ6IvWlSkfZ5T9ozC6xWw3Fj1fGoSmrl0gUs46JVIw==
 
-typescript@^4.8.4:
-  version "4.8.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
-  integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
+typescript@^4.9.3:
+  version "4.9.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.3.tgz#3aea307c1746b8c384435d8ac36b8a2e580d85db"
+  integrity sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==
 
 undici@5.12.0:
   version "5.12.0"
@@ -700,10 +700,10 @@ undici@5.12.0:
   dependencies:
     busboy "^1.6.0"
 
-vite@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-3.2.3.tgz#7a68d9ef73eff7ee6dc0718ad3507adfc86944a7"
-  integrity sha512-h8jl1TZ76eGs3o2dIBSsvXDLb1m/Ec1iej8ZMdz+PsaFUsftZeWe2CZOI3qogEsMNaywc17gu0q6cQDzh/weCQ==
+vite@^3.2.4:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-3.2.4.tgz#d8c7892dd4268064e04fffbe7d866207dd24166e"
+  integrity sha512-Z2X6SRAffOUYTa+sLy3NQ7nlHFU100xwanq1WDwqaiFiCe+25zdxP1TfCS5ojPV2oDDcXudHIoPnI1Z/66B7Yw==
   dependencies:
     esbuild "^0.15.9"
     postcss "^8.4.18"
