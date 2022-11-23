@@ -7,7 +7,7 @@ const TEST = process.env.VITEST;
 export default {
   plugins: [TEST ? svelte({ hot: false }) : sveltekit()],
   optimizeDeps: {
-    include: ["highlight.js", "highlight.js/lib/core"],
+    exclude: ["carbon-components-svelte", "carbon-icons-svelte"],
   },
   server: {
     fs: {
