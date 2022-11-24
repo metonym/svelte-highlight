@@ -18,7 +18,7 @@
     "format": "prettier --ignore-path .gitignore --write ."
   },
   "dependencies": {
-    "highlight.js": "11.6.0"
+    "highlight.js": "11.7.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "1.0.0-next.48",
