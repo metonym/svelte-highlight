@@ -26,10 +26,14 @@
   let value = "";
   let currentLabel = labelB;
 
-  $: normalizedValue = value.trim().toLowerCase();
+  /** @type {(s: string) => string} */
+  const normalize = (s) =>
+    s.toLowerCase().replace(/\-/g, " ").replace(/\s+/g, " ");
+
+  $: normalizedValue = normalize(value.trim());
   $: filtered = items.filter(
     (item) =>
-      item.name.toLowerCase().includes(normalizedValue) ||
+      normalize(item.name).includes(normalizedValue) ||
       item.moduleName.toLowerCase().includes(normalizedValue)
   );
 </script>
