@@ -1,5 +1,6 @@
-import prettier from "prettier";
+// @ts-check
 import path from "path";
+import prettier from "prettier";
 import { writeFile } from "./fs.js";
 
 const { format } = prettier;

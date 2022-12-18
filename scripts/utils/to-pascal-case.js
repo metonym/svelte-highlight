@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * @type {(str: string) => string}
  * Converts a dash/period separated string into pascal case
