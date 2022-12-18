@@ -15,13 +15,9 @@
     Content,
   } from "carbon-components-svelte";
   import { LogoGithub } from "carbon-icons-svelte";
-  import { onMount, tick } from "svelte";
-  import { prefetchRoutes } from "$app/navigation";
   import { page } from "$app/stores";
   import { base } from "$app/paths";
   import Footer from "../lib/Footer.svelte";
-
-  onMount(prefetchRoutes);
 
   const routes = {
     "/": "Svelte Highlight",
