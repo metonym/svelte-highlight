@@ -1,9 +1,10 @@
 <script>
+  // @ts-check
   /** @type {{ name: string; moduleName: string; }[]} */
   export let items = [];
 
   /** @type {"language" | "style"} */
-  export let itemName = "";
+  export let itemName;
 
   export let labelA = "Base import";
 

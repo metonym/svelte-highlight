@@ -1,4 +1,5 @@
 <script>
+  // @ts-check
   import { Row, Column, Link } from "carbon-components-svelte";
 
   const HOMEPAGE = process.env.HOMEPAGE;
