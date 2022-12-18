@@ -2,16 +2,12 @@
   /** @type {{ name: string; moduleName: string; }[]} */
   export let items = [];
 
-  export let filtered = [];
-
   /** @type {"language" | "style"} */
   export let itemName = "";
 
   export let labelA = "Base import";
 
   export let labelB = "Direct import";
-
-  export let currentLabel = labelB;
 
   export let placeholderExample = "JavaScript";
 
@@ -28,6 +24,7 @@
 
   let ref = null;
   let value = "";
+  let currentLabel = labelB;
 
   $: normalizedValue = value.trim().toLowerCase();
   $: filtered = items.filter(
@@ -68,7 +65,7 @@
   </Column>
 </Row>
 
-<slot />
+<slot {filtered} {currentLabel} />
 
 {#if filtered.length === 0}
   <Row>

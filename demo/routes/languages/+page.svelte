@@ -14,11 +14,6 @@
   import CodeSnippet from "../../lib/CodeSnippet.svelte";
   import languages from "../../lib/languages.json";
 
-  let currentLabel = "Direct import";
-  let filtered = [];
-
-  $: useDirectImport = currentLabel === "Direct import";
-
   function formatCode(name, moduleName, useDirectImport) {
     return `<script>
   import Highlight from "svelte-highlight";
@@ -39,8 +34,8 @@
   items={languages}
   itemName="language"
   placeholderExample="JavaScript"
-  bind:currentLabel
-  bind:filtered
+  let:currentLabel
+  let:filtered
 >
   {#if filtered.length > 0}
     <Row>
@@ -73,7 +68,7 @@
                     code={formatCode(
                       language.name,
                       language.moduleName,
-                      useDirectImport
+                      currentLabel === "Direct import"
                     )}
                   />
                 </StructuredListCell>
