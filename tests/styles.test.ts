@@ -1,9 +1,10 @@
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 import * as styles from "../src/styles";
 
 test("Styles", () => {
   const styleNames = Object.keys(styles);
 
+  // @ts-expect-error
   expect(styles.default).toBeUndefined();
   expect(styleNames.length).toMatchInlineSnapshot("248");
   expect(styleNames).toMatchInlineSnapshot(`
