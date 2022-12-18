@@ -50,6 +50,8 @@
      * - `--hljs-radius`
      */
     langtag?: boolean;
+
+    class?: string;
   }
 
   interface $$Slots extends Slots {}

@@ -11,6 +11,7 @@
 </script>
 
 <Highlight
+  class=""
   code=""
   language={javascript || typescript || typescriptDefault || ts}
   on:highlight={(e) => {

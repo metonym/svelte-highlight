@@ -22,6 +22,7 @@
 <button on:click={() => (toggled = !toggled)}>Toggle</button>
 
 <HighlightAuto
+  class=""
   id="highlight-auto"
   code={toggled ? code : codeSvelte}
   langtag={true}
