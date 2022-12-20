@@ -28,7 +28,9 @@
 </script>
 
 <script lang="ts">
-  interface $$Props extends Partial<HTMLPreElement> {
+  import type { HTMLAttributes } from "svelte/elements";
+
+  interface $$Props extends HTMLAttributes<HTMLPreElement> {
     /**
      * Specify the source code to highlight.
      */
@@ -50,8 +52,6 @@
      * - `--hljs-radius`
      */
     langtag?: boolean;
-
-    class?: string;
   }
 
   interface $$Slots extends Slots {}
