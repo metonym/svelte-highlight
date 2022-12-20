@@ -26,7 +26,7 @@
     "@sveltejs/package": "^1.0.1",
     "@testing-library/svelte": "^3.2.2",
     "@testing-library/user-event": "^14.4.3",
-    "@types/prettier": "^2.7.1",
+    "@types/prettier": "^2.7.2",
     "carbon-components-svelte": "^0.70.13",
     "carbon-icons-svelte": "^11.4.0",
     "carbon-preprocess-svelte": "^0.9.1",
@@ -34,14 +34,14 @@
     "prettier": "^2.8.1",
     "prettier-plugin-svelte": "^2.9.0",
     "svelte": "^3.55.0",
-    "svelte-check": "^2.10.2",
+    "svelte-check": "^2.10.3",
     "svelte-focus-key": "^0.3.2",
     "svelte-preprocess": "^5.0.0",
-    "svelte2tsx": "^0.5.22",
+    "svelte2tsx": "^0.5.23",
     "totalist": "^3.0.0",
     "typescript": "^4.9.4",
     "vite": "^4.0.2",
-    "vitest": "^0.25.8"
+    "vitest": "^0.26.1"
   },
   "repository": {
     "type": "git",
