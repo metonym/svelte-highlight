@@ -3,8 +3,8 @@
   export let name = "";
   export let moduleName = "";
 
-  import HighlightAuto from "../../src/HighlightAuto.svelte";
-  import * as styles from "../../src/styles";
+  import HighlightAuto from "svelte-highlight/HighlightAuto.svelte";
+  import * as styles from "svelte-highlight/styles";
 
   $: code = `<script>
   import { HighlightAuto } from "svelte-highlight";

@@ -147,9 +147,8 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 The `HighlightAuto` component uses [highlightAuto](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) API.
 
-**Note:** auto-highlighting will result in a larger bundle size in order to infer a language.
-
-Prefer to specify a language if possible.
+> **Warning**
+> Auto-highlighting will result in a larger bundle size. Specify a language if possible.
 
 ```svelte
 <script>
@@ -247,7 +246,7 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 
 All `Highlight` components allow for a tag to be added at the top-right of the codeblock displaying the language name.
 
-The language tag can be given a custom `background` , `color` , and `border-radius` through CSS custom properties.
+Customize the language tag `background`, `color`, and `border-radius` using style props.
 
 It is recommended that you set values for `--hljs-background` and `--hljs-foreground` to ensure the langtags are readable with your theme.
 

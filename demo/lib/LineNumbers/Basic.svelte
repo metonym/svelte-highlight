@@ -2,9 +2,8 @@
   // @ts-check
   export let snippet = "<LineNumbers {highlighted} />";
 
-  import { HighlightSvelte } from "../../../src";
-  import LineNumbers from "../../../src/LineNumbers.svelte";
-  import atomOneDark from "../../../src/styles/atom-one-dark";
+  import { HighlightSvelte, LineNumbers } from "svelte-highlight";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
   const code = `<script>
   import Hightlight, { LineNumbers } from "svelte-highlight";

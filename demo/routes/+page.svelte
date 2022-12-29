@@ -2,6 +2,7 @@
   /** @type {import('./$types').PageData} */
   export const data = null;
 
+  import { base } from "$app/paths";
   import {
     Tabs,
     Tab,
@@ -11,18 +12,17 @@
     Link,
     UnorderedList,
     ListItem,
+    InlineNotification,
   } from "carbon-components-svelte";
-  import ScopedStyle from "../lib/ScopedStyle.svelte";
-  import CodeSnippet from "../lib/CodeSnippet.svelte";
-  import { base } from "$app/paths";
-  import ScopedStyleSvelte from "../lib/ScopedStyleSvelte.svelte";
-  import ScopedStyleAuto from "../lib/ScopedStyleAuto.svelte";
-  import HighlightSvelte from "../../src/HighlightSvelte.svelte";
-  import HighlightAuto from "../../src/HighlightAuto.svelte";
-  import Basic from "../lib/LineNumbers/Basic.svelte";
-  import HideBorder from "../lib/LineNumbers/HideBorder.svelte";
-  import WrapLines from "../lib/LineNumbers/WrapLines.svelte";
-  import StyleProps from "../lib/LineNumbers/StyleProps.svelte";
+  import { HighlightSvelte, HighlightAuto } from "svelte-highlight";
+  import ScopedStyle from "lib/ScopedStyle.svelte";
+  import CodeSnippet from "lib/CodeSnippet.svelte";
+  import ScopedStyleSvelte from "lib/ScopedStyleSvelte.svelte";
+  import ScopedStyleAuto from "lib/ScopedStyleAuto.svelte";
+  import Basic from "lib/LineNumbers/Basic.svelte";
+  import HideBorder from "lib/LineNumbers/HideBorder.svelte";
+  import WrapLines from "lib/LineNumbers/WrapLines.svelte";
+  import StyleProps from "lib/LineNumbers/StyleProps.svelte";
 
   const NAME = process.env.NAME;
 
@@ -136,7 +136,7 @@
       </ListItem>
     </UnorderedList>
     <p class="mb-5">
-      Languages can be found in <code class="code"
+      Import languages from <code class="code"
         >"svelte-highlight/src/languages"</code
       >.
     </p>
@@ -150,8 +150,7 @@
   </Column>
   <Column xlg={9} lg={12}>
     <p class="mb-5">
-      Styles can be imported from <code class="code"
-        >"svelte-highlight/src/styles"</code
+      Import styles from <code class="code">"svelte-highlight/src/styles"</code
       >.
     </p>
     <p class="mb-5">There are two ways to add styles:</p>
@@ -213,10 +212,13 @@
       <code class="code">highlightAuto</code>
       API from <code class="code">highlight.js</code>.
     </p>
-    <p>
-      Note that auto-highlighting will result in a larger bundle size in order
-      to infer a language. Prefer to specify a language if possible.
-    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="warning"
+      title="Note:"
+      subtitle="Auto-highlighting will result in a larger bundle size. Specify a language if possible."
+    />
   </Column>
   <Column xlg={12}>
     <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
@@ -311,9 +313,9 @@
       at the top-right of the codeblock displaying the language name.
     </p>
     <p class="mb-5">
-      The language tag can be given a custom <code class="code">background</code
-      >, <code class="code">color</code>, and
-      <code class="code">border-radius</code> through the custom properties shown.
+      Customize the language tag <code class="code">background</code>,
+      <code class="code">color</code>, and
+      <code class="code">border-radius</code> using style props.
     </p>
     <p class="mb-5">This is also compatible with custom languages.</p>
     <p class="mb-5">
