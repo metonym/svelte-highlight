@@ -147,9 +147,8 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 The `HighlightAuto` component uses [highlightAuto](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) API.
 
-**Note:** auto-highlighting will result in a larger bundle size in order to infer a language.
-
-Prefer to specify a language if possible.
+> **Warning**
+> Auto-highlighting will result in a larger bundle size. Specify a language if possible.
 
 ```svelte
 <script>

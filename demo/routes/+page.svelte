@@ -12,6 +12,7 @@
     Link,
     UnorderedList,
     ListItem,
+    InlineNotification,
   } from "carbon-components-svelte";
   import { HighlightSvelte, HighlightAuto } from "svelte-highlight";
   import ScopedStyle from "lib/ScopedStyle.svelte";
@@ -211,10 +212,13 @@
       <code class="code">highlightAuto</code>
       API from <code class="code">highlight.js</code>.
     </p>
-    <p>
-      Note that auto-highlighting will result in a larger bundle size in order
-      to infer a language. Prefer to specify a language if possible.
-    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="warning"
+      title="Note:"
+      subtitle="Auto-highlighting will result in a larger bundle size. Specify a language if possible."
+    />
   </Column>
   <Column xlg={12}>
     <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
