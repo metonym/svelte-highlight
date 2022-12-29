@@ -9,7 +9,7 @@
     /**
      * Specify the source code to highlight.
      */
-    code?: any;
+    code: any;
 
     /**
      * Set to `true` for the language name to be
@@ -44,7 +44,7 @@
 
   interface $$Events extends Events {}
 
-  export let code = undefined;
+  export let code;
 
   export let langtag = false;
 
@@ -60,9 +60,7 @@
     if (highlighted) dispatch("highlight", { highlighted });
   });
 
-  $: if (code) {
-    ({ value: highlighted, language } = hljs.highlightAuto(code));
-  }
+  $: ({ value: highlighted, language } = hljs.highlightAuto(code));
 </script>
 
 <slot {highlighted}>

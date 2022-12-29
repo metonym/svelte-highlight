@@ -55,7 +55,17 @@
 
 <HighlightSvelte id="langtag" code={codeSvelte} langtag={true} on:highlight />
 
-<Highlight2 code="123" />
+<Highlight2
+  code="123"
+  language={{
+    name: "custom-lang",
+    register: (hljs) => {
+      return {
+        contains: [],
+      };
+    },
+  }}
+/>
 
 <div id="highlighted">{highlighted}</div>
 
