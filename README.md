@@ -24,32 +24,6 @@ pnpm i -D svelte-highlight highlight.js
 
 Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js`.
 
-## SvelteKit Set-up
-
-To use this library with [SvelteKit](https://github.com/sveltejs/kit) or [Vite](https://github.com/sveltejs/vite-plugin-svelte), instruct Vite to [optimize](https://vitejs.dev/config/dep-optimization-options.html#optimizedeps-include) `highlight.js` and `highlight.js/lib/core`:
-
-```diff
-+ optimizeDeps: {
-+   include: ["highlight.js", "highlight.js/lib/core"],
-+ },
-```
-
-**vite.config.js**
-
-```js
-import { sveltekit } from "@sveltejs/kit/vite";
-
-/** @type {import('vite').UserConfig} */
-export default {
-  plugins: [sveltekit()],
-  optimizeDeps: {
-    include: ["highlight.js", "highlight.js/lib/core"],
-  },
-};
-```
-
-Refer to [examples/sveltekit](examples/sveltekit) or [examples/vite](examples/vite).
-
 ## Usage
 
 There are two ways to apply `highlight.js` styles.
