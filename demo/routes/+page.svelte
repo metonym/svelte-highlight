@@ -2,6 +2,7 @@
   /** @type {import('./$types').PageData} */
   export const data = null;
 
+  import { base } from "$app/paths";
   import {
     Tabs,
     Tab,
@@ -12,17 +13,15 @@
     UnorderedList,
     ListItem,
   } from "carbon-components-svelte";
-  import ScopedStyle from "../lib/ScopedStyle.svelte";
-  import CodeSnippet from "../lib/CodeSnippet.svelte";
-  import { base } from "$app/paths";
-  import ScopedStyleSvelte from "../lib/ScopedStyleSvelte.svelte";
-  import ScopedStyleAuto from "../lib/ScopedStyleAuto.svelte";
-  import HighlightSvelte from "../../src/HighlightSvelte.svelte";
-  import HighlightAuto from "../../src/HighlightAuto.svelte";
-  import Basic from "../lib/LineNumbers/Basic.svelte";
-  import HideBorder from "../lib/LineNumbers/HideBorder.svelte";
-  import WrapLines from "../lib/LineNumbers/WrapLines.svelte";
-  import StyleProps from "../lib/LineNumbers/StyleProps.svelte";
+  import { HighlightSvelte, HighlightAuto } from "svelte-highlight";
+  import ScopedStyle from "lib/ScopedStyle.svelte";
+  import CodeSnippet from "lib/CodeSnippet.svelte";
+  import ScopedStyleSvelte from "lib/ScopedStyleSvelte.svelte";
+  import ScopedStyleAuto from "lib/ScopedStyleAuto.svelte";
+  import Basic from "lib/LineNumbers/Basic.svelte";
+  import HideBorder from "lib/LineNumbers/HideBorder.svelte";
+  import WrapLines from "lib/LineNumbers/WrapLines.svelte";
+  import StyleProps from "lib/LineNumbers/StyleProps.svelte";
 
   const NAME = process.env.NAME;
 

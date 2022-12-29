@@ -9,11 +9,11 @@
     StructuredListCell,
     StructuredListBody,
   } from "carbon-components-svelte";
-  import HighlightSvelte from "../../../src/HighlightSvelte.svelte";
-  import atomOneDark from "../../../src/styles/atom-one-dark";
-  import ListSearch from "../../lib/ListSearch.svelte";
-  import CodeSnippet from "../../lib/CodeSnippet.svelte";
-  import languages from "../../lib/languages.json";
+  import HighlightSvelte from "svelte-highlight/HighlightSvelte.svelte";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+  import ListSearch from "lib/ListSearch.svelte";
+  import CodeSnippet from "lib/CodeSnippet.svelte";
+  import languages from "lib/languages.json";
 
   function formatCode(name, moduleName, useDirectImport) {
     return `<script>

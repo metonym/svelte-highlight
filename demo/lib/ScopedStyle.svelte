@@ -5,8 +5,8 @@
   export let useInjectedStyles = true;
   export let useCdnImport = false;
 
-  import HighlightSvelte from "../../src/HighlightSvelte.svelte";
-  import * as styles from "../../src/styles";
+  import HighlightSvelte from "svelte-highlight/HighlightSvelte.svelte";
+  import * as styles from "svelte-highlight/styles";
 
   $: importStyles = useInjectedStyles
     ? `import ${moduleName} from "svelte-highlight/styles/${name}";`
