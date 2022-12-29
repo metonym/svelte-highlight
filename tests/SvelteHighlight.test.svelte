@@ -30,6 +30,9 @@
   id="highlight-auto"
   code={toggled ? code : codeSvelte}
   langtag={true}
+  --hljs-background=""
+  --hljs-foreground=""
+  --hljs-radius=""
 />
 
 <HighlightAuto

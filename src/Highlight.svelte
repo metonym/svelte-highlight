@@ -37,8 +37,10 @@
     code?: any;
 
     /**
-     * Provide the language to highlight the code.
+     * Provide the language grammar used to highlight the code.
      * Import languages from `svelte-highlight/languages/*`.
+     * @example
+     * import typescript from "svelte-highlight/languages/typescript";
      */
     language?: Language;
 
@@ -46,12 +48,29 @@
      * Set to `true` for the language name to be
      * displayed at the top right of the code block.
      *
-     * Use CSS variables to customize styles:
+     * Use style props to customize styles:
      * - `--hljs-background`
      * - `--hljs-foreground`
      * - `--hljs-radius`
+     *
+     * @default false
      */
     langtag?: boolean;
+
+    /**
+     * Customize the background color of the langtag.
+     */
+    "--hljs-background"?: string;
+
+    /**
+     * Customize the text color of the langtag.
+     */
+    "--hljs-foreground"?: string;
+
+    /**
+     * Customize the border radius of the langtag.
+     */
+    "--hljs-radius"?: string;
   }
 
   interface $$Slots extends Slots {}
