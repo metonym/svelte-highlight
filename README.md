@@ -24,33 +24,31 @@ pnpm i -D svelte-highlight highlight.js
 
 Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js`.
 
-## SvelteKit Set-up
+## Basic Usage
 
-To use this library with [SvelteKit](https://github.com/sveltejs/kit) or [Vite](https://github.com/sveltejs/vite-plugin-svelte), instruct Vite to [optimize](https://vitejs.dev/config/dep-optimization-options.html#optimizedeps-include) `highlight.js` and `highlight.js/lib/core`:
+The `Highlight` component requires two props:
 
-```diff
-+ optimizeDeps: {
-+   include: ["highlight.js", "highlight.js/lib/core"],
-+ },
+- `code`: text to highlight
+- `language`: language grammar used to highlight the text
+
+Import languages from `svelte-highlight/languages`.
+
+See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported languages.
+
+```svelte
+<script>
+  import Highlight from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<Highlight language={typescript} {code} />
 ```
 
-**vite.config.js**
+## Styling
 
-```js
-import { sveltekit } from "@sveltejs/kit/vite";
-
-/** @type {import('vite').UserConfig} */
-export default {
-  plugins: [sveltekit()],
-  optimizeDeps: {
-    include: ["highlight.js", "highlight.js/lib/core"],
-  },
-};
-```
-
-Refer to [examples/sveltekit](examples/sveltekit) or [examples/vite](examples/vite).
-
-## Usage
+Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles.
 
 There are two ways to apply `highlight.js` styles.
 
@@ -79,7 +77,7 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 
 ### CSS StyleSheet
 
-Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS file loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
+Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS file loader. SvelteKit/Vite automatically supports this. For Webpack, refer to [examples/webpack](examples/webpack).
 
 ```svelte
 <script>
@@ -97,7 +95,8 @@ Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS
 
 CSS StyleSheets can also be externally linked from a Content Delivery Network (CDN) like [unpkg.com](https://unpkg.com/).
 
-This is best suited for prototyping and not recommended for production use.
+> **Warning**
+> Using a CDN is best suited for prototyping and not recommended for production use.
 
 **HTML**
 
@@ -133,7 +132,7 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
   import { HighlightSvelte } from "svelte-highlight";
   import github from "svelte-highlight/styles/github";
 
-  $: code = `<button on:click={() => { console.log(0); }}>Increment {count}</button>`;
+  const code = `<button on:click={() => { console.log(0); }}>Increment {count}</button>`;
 </script>
 
 <svelte:head>
@@ -155,7 +154,7 @@ The `HighlightAuto` component uses [highlightAuto](https://highlightjs.readthedo
   import { HighlightAuto } from "svelte-highlight";
   import github from "svelte-highlight/styles/github";
 
-  $: code = `body {\n  padding: 0;\n  color: red;\n}`;
+  const code = `body {\n  padding: 0;\n  color: red;\n}`;
 </script>
 
 <svelte:head>
@@ -234,7 +233,7 @@ Use `--style-props` to customize the following visual properties:
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
 
-See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
+See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
 ```css
 [data-language="css"] {
@@ -333,21 +332,23 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 />
 ```
 
-## API
+## Component API
 
-### Props
+### `Highlight`
 
-| Name                                            | Type                                           | Default value                            |
-| :---------------------------------------------- | :--------------------------------------------- | :--------------------------------------- |
-| code                                            | `any`                                          | `undefined`                              |
-| language (only required for `Highlight.svelte`) | { name: `string`; register: hljs => `object` } | { name: undefined, register: undefined } |
-| langtag                                         | `boolean`                                      | `false`                                  |
+#### Props
 
-- `$$restProps` are forwarded to the `pre` element
+| Name     | Type                                           | Default value  |
+| :------- | :--------------------------------------------- | :------------- |
+| code     | `any`                                          | N/A (required) |
+| language | { name: `string`; register: hljs => `object` } | N/A (required) |
+| langtag  | `boolean`                                      | `false`        |
 
-### Dispatched Events
+`$$restProps` are forwarded to the top-level `pre` element.
 
-- **on:highlight**: fired after code syntax is highlighted
+#### Dispatched Events
+
+- **on:highlight**: fired after `code` is highlighted
 
 ```svelte
 <Highlight
@@ -359,11 +360,65 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 />
 ```
 
-## TypeScript
+### `LineNumbers`
 
-Svelte version 3.31 or greater is required to use this component with TypeScript.
+#### Props
 
-TypeScript definitions are auto-generated by SvelteKit.
+| Name        | Type      | Default value  |
+| :---------- | :-------- | :------------- |
+| highlighted | `string`  | N/A (required) |
+| hideBorder  | `boolean` | `false`        |
+| wrapLines   | `boolean` | `false`        |
+
+`$$restProps` are forwarded to the top-level `div` element.
+
+### `HighlightSvelte`
+
+#### Props
+
+| Name    | Type      | Default value  |
+| :------ | :-------- | :------------- |
+| code    | `any`     | N/A (required) |
+| langtag | `boolean` | `false`        |
+
+`$$restProps` are forwarded to the top-level `pre` element.
+
+#### Dispatched Events
+
+- **on:highlight**: fired after `code` is highlighted
+
+```svelte
+<HighlightSvelte
+  {code}
+  on:highlight={(e) => {
+    console.log(e.detail.highlighted); // "<span>...</span>"
+  }}
+/>
+```
+
+### `HighlightAuto`
+
+#### Props
+
+| Name    | Type      | Default value  |
+| :------ | :-------- | :------------- |
+| code    | `any`     | N/A (required) |
+| langtag | `boolean` | `false`        |
+
+`$$restProps` are forwarded to the top-level `pre` element.
+
+#### Dispatched Events
+
+- **on:highlight**: fired after `code` is highlighted
+
+```svelte
+<HighlightAuto
+  {code}
+  on:highlight={(e) => {
+    console.log(e.detail.highlighted); // "<span>...</span>"
+  }}
+/>
+```
 
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
 
