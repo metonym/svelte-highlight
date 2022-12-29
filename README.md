@@ -53,7 +53,7 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 
 ### CSS StyleSheet
 
-Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS file loader. Refer to [examples/webpack](examples/webpack) for a sample set-up.
+Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS file loader. SvelteKit/Vite automatically supports this. For Webpack, refer to [examples/webpack](examples/webpack).
 
 ```svelte
 <script>
@@ -71,7 +71,8 @@ Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS
 
 CSS StyleSheets can also be externally linked from a Content Delivery Network (CDN) like [unpkg.com](https://unpkg.com/).
 
-This is best suited for prototyping and not recommended for production use.
+> **Warning**
+> Using a CDN is best suited for prototyping and not recommended for production use.
 
 **HTML**
 

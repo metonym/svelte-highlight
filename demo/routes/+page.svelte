@@ -123,9 +123,15 @@
       CSS StyleSheets can also be externally linked from a Content Delivery
       Network (CDN) like <Link size="lg" href="https://unpkg.com/"
         >unpkg.com</Link
-      >. This is best suited for prototyping and not recommended for production
-      use.
+      >.
     </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="warning"
+      title="Note:"
+      subtitle="Using a CDN is best suited for prototyping and not recommended for production use."
+    />
   </Column>
   <Column xlg={12}>
     <HighlightSvelte code={svelteHeadCdn} class="atomOneDark" />
