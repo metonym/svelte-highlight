@@ -12,6 +12,7 @@
 
   let toggled = true;
   let highlighted = "";
+  let language = "";
 
   $: code = "const add = (a: number, b: number) => a + b;";
   $: codeSvelte = "<button on:click>Click me</button>";
@@ -39,7 +40,12 @@
   id="highlight-auto-css"
   code={`body {\n  padding: 0;\n  color: red;\n}`}
   langtag={true}
+  on:highlight={(e) => {
+    language = e.detail.language;
+  }}
 />
+
+<div id="inferred-language">{language}</div>
 
 <Highlight
   language={toggled ? javascript : typescript}

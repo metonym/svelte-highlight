@@ -355,7 +355,11 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
   language={typescript}
   {code}
   on:highlight={(e) => {
-    console.log(e.detail.highlighted); // "<span>...</span>"
+    /**
+     * The highlighted HTML as a string.
+     * @example "<span>...</span>"
+     */
+    console.log(e.detail.highlighted);
   }}
 />
 ```
@@ -391,7 +395,11 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 <HighlightSvelte
   {code}
   on:highlight={(e) => {
-    console.log(e.detail.highlighted); // "<span>...</span>"
+    /**
+     * The highlighted HTML as a string.
+     * @example "<span>...</span>"
+     */
+    console.log(e.detail.highlighted);
   }}
 />
 ```
@@ -415,7 +423,17 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 <HighlightAuto
   {code}
   on:highlight={(e) => {
-    console.log(e.detail.highlighted); // "<span>...</span>"
+    /**
+     * The highlighted HTML as a string.
+     * @example "<span>...</span>"
+     */
+    console.log(e.detail.highlighted);
+
+    /**
+     * The inferred language name
+     * @example "css"
+     */
+    console.log(e.detail.language);
   }}
 />
 ```

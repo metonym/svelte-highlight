@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { HighlightedCode, Slots, Events } from "./Highlight.svelte";
+  import type { Slots } from "./Highlight.svelte";
 </script>
 
 <script lang="ts">
@@ -42,7 +42,21 @@
 
   interface $$Slots extends Slots {}
 
-  interface $$Events extends Events {}
+  interface $$Events {
+    highlight: CustomEvent<{
+      /**
+       * The highlighted HTML as a string.
+       * @example "<span>...</span>"
+       */
+      highlighted: string;
+
+      /**
+       * The inferred language name.
+       * @example "css"
+       */
+      language?: string;
+    }>;
+  }
 
   export let code;
 
@@ -53,11 +67,11 @@
 
   const dispatch = createEventDispatcher();
 
-  let highlighted: HighlightedCode = undefined;
+  let highlighted = "";
   let language = undefined;
 
   afterUpdate(() => {
-    if (highlighted) dispatch("highlight", { highlighted });
+    if (highlighted) dispatch("highlight", { highlighted, language });
   });
 
   $: ({ value: highlighted, language } = hljs.highlightAuto(code));

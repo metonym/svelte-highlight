@@ -47,6 +47,9 @@ describe("SvelteHighlight", () => {
           <span class=\\"hljs-attribute\\">color</span>: red;
         }</code></pre>"
       `);
+    expect(target.querySelector("#inferred-language")?.innerHTML).toEqual(
+      "css"
+    );
 
     await userEvent.click(target.querySelector("button")!);
 
