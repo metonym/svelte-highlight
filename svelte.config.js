@@ -1,7 +1,7 @@
 import adapter from "@sveltejs/adapter-static";
+import { optimizeImports } from "carbon-preprocess-svelte";
 import fs from "fs";
 import preprocess from "svelte-preprocess";
-import { optimizeImports } from "carbon-preprocess-svelte";
 
 const pkg = JSON.parse(
   fs.readFileSync(new URL("./package.json", import.meta.url), "utf8")
