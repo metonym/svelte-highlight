@@ -1,5 +1,9 @@
 <script lang="ts">
-  import Highlight, { HighlightAuto, HighlightSvelte } from "../src";
+  import Highlight, {
+    HighlightAuto,
+    HighlightSvelte,
+    LineNumbers,
+  } from "../src";
   import Highlight2 from "../src/Highlight.svelte";
   import { typescript } from "../src/languages";
   import javascript from "../src/languages/javascript";
@@ -51,3 +55,9 @@
 <Highlight2 code="123" />
 
 <div id="highlighted">{highlighted}</div>
+
+<div id="line-numbers">
+  <Highlight language={typescript} code="" let:highlighted>
+    <LineNumbers {highlighted} />
+  </Highlight>
+</div>

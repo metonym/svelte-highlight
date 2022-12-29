@@ -1,5 +1,5 @@
-import { test, expect, describe, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, test } from "vitest";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
 
 describe("SvelteHighlight", () => {
@@ -55,5 +55,12 @@ describe("SvelteHighlight", () => {
     ).toMatchInlineSnapshot(
       '"<code class=\\"hljs\\">&lt;<span class=\\"hljs-keyword\\">button</span> <span class=\\"hljs-keyword\\">on</span>:click&gt;Click me&lt;/<span class=\\"hljs-keyword\\">button</span>&gt;</code>"'
     );
+
+    expect(
+      target.querySelector("#line-numbers")?.innerHTML
+    ).toMatchInlineSnapshot(`
+      "<div style=\\"overflow-x: auto;\\" class=\\"svelte-1gt16c9\\"><table style=\\"width: 100%;\\"><tbody class=\\"hljs\\"><tr><td class=\\"svelte-1gt16c9 hljs\\" style=\\"position: sticky; left: 0px; text-align: right; user-select: none; padding-top: 1em; padding-bottom: 1em; width: 54px; min-width: 54px;\\"><code>1</code></td> <td class=\\"svelte-1gt16c9\\"><pre class=\\"svelte-1gt16c9\\"><code>
+      </code></pre></td> </tr></tbody></table></div>"
+    `);
   });
 });

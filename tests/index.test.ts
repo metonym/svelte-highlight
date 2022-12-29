@@ -17,6 +17,7 @@ test("API", () => {
       "Highlight",
       "HighlightAuto",
       "HighlightSvelte",
+      "LineNumbers",
     ]
   `);
 });

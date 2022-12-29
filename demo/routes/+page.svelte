@@ -19,6 +19,10 @@
   import ScopedStyleAuto from "../lib/ScopedStyleAuto.svelte";
   import HighlightSvelte from "../../src/HighlightSvelte.svelte";
   import HighlightAuto from "../../src/HighlightAuto.svelte";
+  import Basic from "../lib/LineNumbers/Basic.svelte";
+  import HideBorder from "../lib/LineNumbers/HideBorder.svelte";
+  import WrapLines from "../lib/LineNumbers/WrapLines.svelte";
+  import StyleProps from "../lib/LineNumbers/StyleProps.svelte";
 
   const NAME = process.env.NAME;
 
@@ -216,6 +220,54 @@
   </Column>
   <Column xlg={12}>
     <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
+  </Column>
+</Row>
+
+<Row>
+  <Column>
+    <h3>Line Numbers</h3>
+  </Column>
+</Row>
+
+<Row class="mb-7">
+  <Column xlg={9} lg={12}>
+    <p class="mb-5">
+      Use the <code class="code">LineNumbers</code> component to render the highlighted
+      code with line numbers.
+    </p>
+  </Column>
+  <Column xlg={12}>
+    <Basic />
+  </Column>
+  <Column xlg={9} lg={12}>
+    <p class="mb-5">
+      Set <code class="code">hideBorder</code> to <code class="code">true</code>
+      to hide the border of the line numbers column.
+    </p>
+  </Column>
+  <Column xlg={12}>
+    <HideBorder />
+  </Column>
+  <Column xlg={9} lg={12}>
+    <p class="mb-5">
+      By default, overflowing horizontal content is contained by a scrollbar.
+    </p>
+    <p class="mb-5">
+      Set <code class="code">wrapLines</code> to <code class="code">true</code>
+      to apply a <code class="code">white-space: pre-wrap</code> rule to the
+      <code class="code">pre</code> element.
+    </p>
+  </Column>
+  <Column xlg={8}>
+    <WrapLines />
+  </Column>
+  <Column xlg={9} lg={12}>
+    <p class="mb-5">
+      Use <code class="code">--style-props</code> to customize visual properties.
+    </p>
+  </Column>
+  <Column xlg={12}>
+    <StyleProps />
   </Column>
 </Row>
 
