@@ -1,8 +1,6 @@
 <script context="module" lang="ts">
   import type { LanguageFn } from "highlight.js";
 
-  export type HighlightedCode = undefined | string;
-
   export interface Language {
     name?: string;
     register: LanguageFn;
@@ -11,18 +9,20 @@
   export interface Slots {
     default: {
       /**
-       * The highlighted code.
+       * The highlighted HTML as a string.
+       * @example "<span>...</span>"
        */
-      highlighted: HighlightedCode;
+      highlighted: string;
     };
   }
 
   export interface Events {
     highlight: CustomEvent<{
       /**
-       * The highlighted code.
+       * The highlighted HTML as a string.
+       * @example "<span>...</span>"
        */
-      highlighted?: HighlightedCode;
+      highlighted: string;
     }>;
   }
 </script>
@@ -88,7 +88,7 @@
 
   const dispatch = createEventDispatcher();
 
-  let highlighted: HighlightedCode = undefined;
+  let highlighted = "";
 
   afterUpdate(() => {
     if (highlighted) dispatch("highlight", { highlighted });
