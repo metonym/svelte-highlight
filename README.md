@@ -247,7 +247,7 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 
 All `Highlight` components allow for a tag to be added at the top-right of the codeblock displaying the language name.
 
-The language tag can be given a custom `background` , `color` , and `border-radius` through CSS custom properties.
+Customize the language tag `background`, `color`, and `border-radius` using style props.
 
 It is recommended that you set values for `--hljs-background` and `--hljs-foreground` to ensure the langtags are readable with your theme.
 
