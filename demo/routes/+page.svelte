@@ -83,12 +83,12 @@
     <UnorderedList class="mb-5">
       <ListItem><code class="code">code</code>: text to highlight</ListItem>
       <ListItem>
-        <code class="code">language</code>: language used to highlight the text
+        <code class="code">language</code>: language grammar used to highlight
+        the text
       </ListItem>
     </UnorderedList>
     <p class="mb-5">
-      Import languages from <code class="code"
-        >"svelte-highlight/src/languages"</code
+      Import languages from <code class="code">svelte-highlight/languages</code
       >.
     </p>
     <p class="mb-5">
@@ -101,8 +101,7 @@
   </Column>
   <Column xlg={9} lg={12}>
     <p class="mb-5">
-      Import styles from <code class="code">"svelte-highlight/src/styles"</code
-      >.
+      Import styles from <code class="code">svelte-highlight/styles</code>.
     </p>
     <p class="mb-5">There are two ways to add styles:</p>
     <UnorderedList class="mb-5">

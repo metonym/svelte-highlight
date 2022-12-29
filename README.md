@@ -24,7 +24,31 @@ pnpm i -D svelte-highlight highlight.js
 
 Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js`.
 
-## Usage
+## Basic Usage
+
+The `Highlight` component requires two props:
+
+- `code`: text to highlight
+- `language`: language grammar used to highlight the text
+
+Import languages from `svelte-highlight/languages`.
+
+See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported languages.
+
+```svelte
+<script>
+  import Highlight from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<Highlight language={typescript} {code} />
+```
+
+## Styling
+
+Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles.
 
 There are two ways to apply `highlight.js` styles.
 
@@ -108,7 +132,7 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
   import { HighlightSvelte } from "svelte-highlight";
   import github from "svelte-highlight/styles/github";
 
-  $: code = `<button on:click={() => { console.log(0); }}>Increment {count}</button>`;
+  const code = `<button on:click={() => { console.log(0); }}>Increment {count}</button>`;
 </script>
 
 <svelte:head>
@@ -130,7 +154,7 @@ The `HighlightAuto` component uses [highlightAuto](https://highlightjs.readthedo
   import { HighlightAuto } from "svelte-highlight";
   import github from "svelte-highlight/styles/github";
 
-  $: code = `body {\n  padding: 0;\n  color: red;\n}`;
+  const code = `body {\n  padding: 0;\n  color: red;\n}`;
 </script>
 
 <svelte:head>
@@ -209,7 +233,7 @@ Use `--style-props` to customize the following visual properties:
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
 
-See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
+See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
 ```css
 [data-language="css"] {
@@ -308,25 +332,87 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 />
 ```
 
-## API
+## Component API
 
-### Props
+### `Highlight`
 
-| Name                                            | Type                                           | Default value                            |
-| :---------------------------------------------- | :--------------------------------------------- | :--------------------------------------- |
-| code                                            | `any`                                          | `undefined`                              |
-| language (only required for `Highlight.svelte`) | { name: `string`; register: hljs => `object` } | { name: undefined, register: undefined } |
-| langtag                                         | `boolean`                                      | `false`                                  |
+#### Props
 
-- `$$restProps` are forwarded to the `pre` element
+| Name     | Type                                           | Default value  |
+| :------- | :--------------------------------------------- | :------------- |
+| code     | `any`                                          | N/A (required) |
+| language | { name: `string`; register: hljs => `object` } | N/A (required) |
+| langtag  | `boolean`                                      | `false`        |
 
-### Dispatched Events
+`$$restProps` are forwarded to the top-level `pre` element.
 
-- **on:highlight**: fired after code syntax is highlighted
+#### Dispatched Events
+
+- **on:highlight**: fired after `code` is highlighted
 
 ```svelte
 <Highlight
   language={typescript}
+  {code}
+  on:highlight={(e) => {
+    console.log(e.detail.highlighted); // "<span>...</span>"
+  }}
+/>
+```
+
+### `LineNumbers`
+
+#### Props
+
+| Name        | Type      | Default value  |
+| :---------- | :-------- | :------------- |
+| highlighted | `string`  | N/A (required) |
+| hideBorder  | `boolean` | `false`        |
+| wrapLines   | `boolean` | `false`        |
+
+`$$restProps` are forwarded to the top-level `div` element.
+
+### `HighlightSvelte`
+
+#### Props
+
+| Name    | Type      | Default value  |
+| :------ | :-------- | :------------- |
+| code    | `any`     | N/A (required) |
+| langtag | `boolean` | `false`        |
+
+`$$restProps` are forwarded to the top-level `pre` element.
+
+#### Dispatched Events
+
+- **on:highlight**: fired after `code` is highlighted
+
+```svelte
+<HighlightSvelte
+  {code}
+  on:highlight={(e) => {
+    console.log(e.detail.highlighted); // "<span>...</span>"
+  }}
+/>
+```
+
+### `HighlightAuto`
+
+#### Props
+
+| Name    | Type      | Default value  |
+| :------ | :-------- | :------------- |
+| code    | `any`     | N/A (required) |
+| langtag | `boolean` | `false`        |
+
+`$$restProps` are forwarded to the top-level `pre` element.
+
+#### Dispatched Events
+
+- **on:highlight**: fired after `code` is highlighted
+
+```svelte
+<HighlightAuto
   {code}
   on:highlight={(e) => {
     console.log(e.detail.highlighted); // "<span>...</span>"
