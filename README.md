@@ -166,6 +166,71 @@ Prefer to specify a language if possible.
 <HighlightAuto {code} />
 ```
 
+## Line Numbers
+
+Use the `LineNumbers` component to render the highlighted code with line numbers.
+
+```svelte
+<script>
+  import Hightlight, { LineNumbers } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+
+  const code = "const add = (a: number, b: number) => a + b";
+</script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
+
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers {highlighted} />
+</Highlight>
+```
+
+### Hidden Border
+
+Set `hideBorder` to `true` to hide the border of the line numbers column.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers {highlighted} hideBorder />
+</Highlight>
+```
+
+### Wrapped Lines
+
+By default, overflowing horizontal content is contained by a scrollbar.
+
+Set `wrapLines` to `true` to hide the border of the line numbers column.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers {highlighted} wrapLines />
+</Highlight>
+```
+
+### Custom Styles
+
+Use `--style-props` to customize the following visual properties:
+
+- `--line-number-color`: text color of the line numbers
+- `--border-color`: color of the line numbers column
+- `--padding-left`: left padding for `td` elements
+- `--padding-right`: right padding for `td` elements
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers
+    {highlighted}
+    --line-number-color="pink"
+    --border-color="rgba(255, 255, 255, 0.2)"
+    --padding-left="0"
+    --padding-right="3em"
+  />
+</Highlight>
+```
+
 ## Language Targeting
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
