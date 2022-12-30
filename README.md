@@ -170,7 +170,7 @@ Use the `LineNumbers` component to render the highlighted code with line numbers
 
 ```svelte
 <script>
-  import Hightlight, { LineNumbers } from "svelte-highlight";
+  import Highlight, { LineNumbers } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
@@ -225,7 +225,7 @@ Use `--style-props` to customize styles.
     {highlighted}
     --line-number-color="pink"
     --border-color="rgba(255, 255, 255, 0.2)"
-    --padding-left="0"
+    --padding-left={0}
     --padding-right="3em"
   />
 </Highlight>

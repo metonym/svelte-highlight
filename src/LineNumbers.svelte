@@ -60,8 +60,8 @@
 
   export let wrapLines = false;
 
-  const DIGIT_WIDTH = 18;
-  const MIN_DIGITS = 3;
+  const DIGIT_WIDTH = 12;
+  const MIN_DIGITS = 2;
 
   $: lines = highlighted.split("\n");
   $: len_digits = lines.length.toString().length;
@@ -70,7 +70,7 @@
 </script>
 
 <div style:overflow-x="auto" {...$$restProps}>
-  <table style:width="100%">
+  <table>
     <tbody class:hljs={true}>
       {#each lines as line, i}
         {@const lineNumber = i + 1}
@@ -87,7 +87,6 @@
             style:padding-top={isFirst ? "1em" : undefined}
             style:padding-bottom={isLast ? "1em" : undefined}
             style:width={width + "px"}
-            style:min-width={width + "px"}
           >
             <code style:color="var(--line-number-color, currentColor)">
               {lineNumber}
@@ -103,6 +102,25 @@
 </div>
 
 <style>
+  pre {
+    margin: 0;
+  }
+
+  table,
+  tr,
+  td {
+    padding: 0;
+    border: 0;
+    margin: 0;
+    vertical-align: baseline;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
   td {
     padding-left: var(--padding-left, 1em);
     padding-right: var(--padding-right, 1em);
