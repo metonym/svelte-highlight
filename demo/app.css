@@ -6,13 +6,13 @@
 }
 
 [data-language="css"] {
-  --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
-  --hljs-foreground: #fff;
-  --hljs-radius: 8px;
+  --langtag-background: linear-gradient(135deg, #2996cf, 80%, white);
+  --langtag-color: #fff;
+  --langtag-border-radius: 8px;
 }
 
 [data-language="svelte"] {
-  --hljs-foreground: #fff;
+  --langtag-color: #fff;
 }
 
 .code {

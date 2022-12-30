@@ -16,9 +16,9 @@
      * displayed at the top right of the code block.
      *
      * Use style props to customize styles:
-     * - `--hljs-background`
-     * - `--hljs-foreground`
-     * - `--hljs-radius`
+     * - `--langtag-background`
+     * - `--langtag-color`
+     * - `--langtag-border-radius`
      *
      * @default false
      */
@@ -27,17 +27,17 @@
     /**
      * Customize the background color of the langtag.
      */
-    "--hljs-background"?: string;
+    "--langtag-background"?: string;
 
     /**
      * Customize the text color of the langtag.
      */
-    "--hljs-foreground"?: string;
+    "--langtag-color"?: string;
 
     /**
      * Customize the border radius of the langtag.
      */
-    "--hljs-radius"?: string;
+    "--langtag-border-radius"?: string;
   }
 
   interface $$Slots extends Slots {}
@@ -89,8 +89,8 @@
     justify-content: center;
     background: inherit;
     color: inherit;
-    background: var(--hljs-background);
-    color: var(--hljs-foreground);
-    border-radius: var(--hljs-radius);
+    background: var(--langtag-background);
+    color: var(--langtag-color);
+    border-radius: var(--langtag-border-radius);
   }
 </style>
