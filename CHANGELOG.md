@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.0.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.0.0) - 2022-12-30
+
+**Breaking Changes**
+
+- rename langtag style props
+  - `--hljs-background` -> `--langtag-background`
+  - `--hljs-foreground` -> `--langtag-color`
+  - `--hljs-radius` -> `--langtag-border-radius`
+- mark `code`, `language` as required props
+
+**Features**
+
+- include inferred `language` in `on:highlight` event detail in `HighlightAuto`
+- add `LineNumbers` component to support rendering line numbers
+- upgrade `highlight.js` to version [11.7.0](https://github.com/highlightjs/highlight.js/releases/tag/11.7.0)
+
+**Fixes**
+
+- use `HTMLAttributes` from `svelte/elements` to correctly type `$$restProps`
+
 ## [6.2.1](https://github.com/metonym/svelte-highlight/releases/tag/v6.2.1) - 2022-08-07
 
 **Fixes**
