@@ -42,7 +42,7 @@ describe("SvelteHighlight", () => {
 
     expect(target.querySelector("#highlight-auto-css")?.outerHTML)
       .toMatchInlineSnapshot(`
-        "<pre data-language=\\"css\\" id=\\"highlight-auto-css\\" class=\\"langtag svelte-4cqgwq\\"><code class=\\"hljs\\"><span class=\\"hljs-selector-tag\\">body</span> {
+        "<pre data-language=\\"css\\" id=\\"highlight-auto-css\\" class=\\"langtag svelte-d72vtw\\"><code class=\\"hljs\\"><span class=\\"hljs-selector-tag\\">body</span> {
           <span class=\\"hljs-attribute\\">padding</span>: <span class=\\"hljs-number\\">0</span>;
           <span class=\\"hljs-attribute\\">color</span>: red;
         }</code></pre>"

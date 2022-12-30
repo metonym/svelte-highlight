@@ -274,17 +274,13 @@
       <code class="code">border-radius</code> using style props.
     </p>
     <p class="mb-5">This is also compatible with custom languages.</p>
-    <p class="mb-5">
-      It is recommended that you set values for
-      <code class="code">--hljs-background</code> and
-      <code class="code">--hljs-foreground</code> to ensure the langtags remain readable
-      on any theme.
-    </p>
     <p class="mb-5">Defaults:</p>
     <UnorderedList class="mb-5">
-      <ListItem><code class="code">--hljs-background: inherit</code></ListItem>
-      <ListItem><code class="code">--hljs-foreground: inherit</code></ListItem>
-      <ListItem><code class="code">--hljs-border-radius: 0</code></ListItem>
+      <ListItem
+        ><code class="code">--langtag-background: inherit</code></ListItem
+      >
+      <ListItem><code class="code">--langtag-color: inherit</code></ListItem>
+      <ListItem><code class="code">--langtag-border-radius: 0</code></ListItem>
     </UnorderedList>
     <p class="mb-5">
       See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
@@ -303,11 +299,12 @@
       class="atomOneDark"
       langtag={true}
     />
+    <br />
     <HighlightAuto
       code={`[data-language="css"] {
-  --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
-  --hljs-foreground: #fff;
-  --hljs-radius: 8px;
+  --langtag-background: linear-gradient(135deg, #2996cf, 80%, white);
+  --langtag-color: #fff;
+  --langtag-border-radius: 8px;
 }`}
       class="atomOneDark"
       langtag={true}

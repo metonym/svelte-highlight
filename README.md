@@ -210,12 +210,14 @@ Set `wrapLines` to `true` to hide the border of the line numbers column.
 
 ### Custom Styles
 
-Use `--style-props` to customize the following visual properties:
+Use `--style-props` to customize styles.
 
-- `--line-number-color`: text color of the line numbers
-- `--border-color`: color of the line numbers column
-- `--padding-left`: left padding for `td` elements
-- `--padding-right`: right padding for `td` elements
+| Style prop          | Description                                | Default value  |
+| :------------------ | :----------------------------------------- | :------------- |
+| --line-number-color | Text color of the line numbers             | `currentColor` |
+| --border-color      | Border color of the column of line numbers | `currentColor` |
+| --padding-left      | Left padding for `td` elements             | `1em`          |
+| --padding-right     | Rightt padding for `td` elements           | `1em`          |
 
 ```svelte
 <Highlight language={typescript} {code} let:highlighted>
@@ -243,19 +245,17 @@ See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported lan
 
 ## Language Tags
 
-All `Highlight` components allow for a tag to be added at the top-right of the codeblock displaying the language name.
+Set `langtag` to `true` to display the language name in the top right corner of the code block.
 
 Customize the language tag `background`, `color`, and `border-radius` using style props.
 
-It is recommended that you set values for `--hljs-background` and `--hljs-foreground` to ensure the langtags are readable with your theme.
-
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
-Defaults:
-
-- `--hljs-background: inherit`
-- `--hljs-foreground: inherit`
-- `--hljs-border-radius: 0`
+| Style prop              | Description                     | Default value |
+| :---------------------- | :------------------------------ | :------------ |
+| --langtag-background    | Background color of the langtag | `inherit`     |
+| --langtag-color         | Text color of the langtag       | `inherit`     |
+| --langtag-border-radius | Border radius of the langtag    | `0`           |
 
 ```svelte
 <script>
@@ -269,9 +269,9 @@ Defaults:
 
 ```css
 [data-language="css"] {
-  --hljs-background: linear-gradient(135deg, #2996cf, 80%, white);
-  --hljs-foreground: #fff;
-  --hljs-radius: 8px;
+  --langtag-background: linear-gradient(135deg, #2996cf, 80%, white);
+  --langtag-color: #fff;
+  --langtag-border-radius: 8px;
 }
 ```
 
