@@ -6,7 +6,7 @@
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
   const code = `<script>
-  import Hightlight, { LineNumbers } from "svelte-highlight";
+  import Highlight, { LineNumbers } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
