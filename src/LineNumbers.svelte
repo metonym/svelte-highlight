@@ -21,7 +21,7 @@
      * Specify which starting line number should be displayed.
      * @default 1
      */
-    offset?: number;
+    startingLineNumber?: number;
 
     /**
      * Set to `true` for lines to wrap.
@@ -66,7 +66,7 @@
 
   export let wrapLines = false;
   
-  export let offset = 1;
+  export let startingLineNumber = 1;
 
   const DIGIT_WIDTH = 12;
   const MIN_DIGITS = 2;
@@ -81,7 +81,7 @@
   <table>
     <tbody class:hljs={true}>
       {#each lines as line, i}
-        {@const lineNumber = i + offset}
+        {@const lineNumber = i + startingLineNumber}
         {@const isFirst = i === 0}
         {@const isLast = i === lines.length - 1}
         <tr>
