@@ -23,6 +23,7 @@
   import HideBorder from "lib/LineNumbers/HideBorder.svelte";
   import WrapLines from "lib/LineNumbers/WrapLines.svelte";
   import StyleProps from "lib/LineNumbers/StyleProps.svelte";
+  import StartingLineNumber from "lib/LineNumbers/StartingLineNumber.svelte";
 
   const NAME = process.env.NAME;
 
@@ -226,6 +227,16 @@
   </Column>
   <Column xlg={12}>
     <StyleProps />
+  </Column>
+  <Column xlg={9} lg={12}>
+    <p class="mb-5">
+      Use <code class="code">startingLineNumber</code> to customize the starting
+      line number. By default, line numbers start at
+      <code class="code">1</code>.
+    </p>
+  </Column>
+  <Column xlg={12}>
+    <StartingLineNumber />
   </Column>
 </Row>
 

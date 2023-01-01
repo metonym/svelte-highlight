@@ -231,6 +231,16 @@ Use `--style-props` to customize styles.
 </Highlight>
 ```
 
+### Custom Starting Line Number
+
+The line number starts at `1`. Customize this via the `startingLineNumber` prop.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers {highlighted} startingLineNumber={42} />
+</Highlight>
+```
+
 ## Language Targeting
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
@@ -368,11 +378,12 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 
 #### Props
 
-| Name        | Type      | Default value  |
-| :---------- | :-------- | :------------- |
-| highlighted | `string`  | N/A (required) |
-| hideBorder  | `boolean` | `false`        |
-| wrapLines   | `boolean` | `false`        |
+| Name               | Type      | Default value  |
+| :----------------- | :-------- | :------------- |
+| highlighted        | `string`  | N/A (required) |
+| hideBorder         | `boolean` | `false`        |
+| wrapLines          | `boolean` | `false`        |
+| startingLineNumber | `number`  | `1`            |
 
 `$$restProps` are forwarded to the top-level `div` element.
 
