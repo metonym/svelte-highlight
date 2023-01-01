@@ -16,7 +16,7 @@
      * @default false
      */
     hideBorder?: boolean;
-    
+
     /**
      * Specify which starting line number should be displayed.
      * @default 1
@@ -65,7 +65,7 @@
   export let hideBorder = false;
 
   export let wrapLines = false;
-  
+
   export let startingLineNumber = 1;
 
   const DIGIT_WIDTH = 12;
@@ -82,8 +82,6 @@
     <tbody class:hljs={true}>
       {#each lines as line, i}
         {@const lineNumber = i + startingLineNumber}
-        {@const isFirst = i === 0}
-        {@const isLast = i === lines.length - 1}
         <tr>
           <td
             class:hljs={true}
@@ -92,8 +90,6 @@
             style:left="0"
             style:text-align="right"
             style:user-select="none"
-            style:padding-top={isFirst ? "1em" : undefined}
-            style:padding-bottom={isLast ? "1em" : undefined}
             style:width={width + "px"}
           >
             <code style:color="var(--line-number-color, currentColor)">
@@ -127,6 +123,14 @@
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
+  }
+
+  tr:first-of-type td {
+    padding-top: 1em;
+  }
+
+  tr:last-child td {
+    padding-bottom: 1em;
   }
 
   td {
