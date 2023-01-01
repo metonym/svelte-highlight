@@ -658,10 +658,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svelte-highlight@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-7.0.1.tgz#784a3a1abd90a2c576c3390aa83269e3d68fb046"
-  integrity sha512-3eljaPGvkghRdgNrQ6BZd2xuaOXR71zGOKEhLsOWz4U+SPfneEdcdipj9iO0W1KcjVcrXUgypjyo3SvpsfHbpg==
+svelte-highlight@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-7.1.1.tgz#320c334360ba4dc4f67b80c04c63fb0f5fe0535c"
+  integrity sha512-UJA7rlVu8lx2AlLKYtPeDAIOXAApIQr+AwxA5xhuz4iOiybm8dEtpurKPcbyMgcTV57tq9N1B1Lg57sgQ9gksg==
   dependencies:
     highlight.js "11.7.0"
 
