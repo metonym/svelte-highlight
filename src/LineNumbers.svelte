@@ -60,7 +60,7 @@
     "--padding-right"?: number | string;
   }
 
-  export let highlighted: string;
+  export let highlighted: $$Props["highlighted"];
 
   export let hideBorder = false;
 

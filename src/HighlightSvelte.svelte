@@ -1,50 +1,17 @@
 <script context="module" lang="ts">
-  import type { Slots, Events } from "./Highlight.svelte";
+  import type { Props, Slots, Events } from "./shared";
 </script>
 
 <script lang="ts">
-  import type { HTMLAttributes } from "svelte/elements";
+  import LangTag from "./LangTag.svelte";
 
-  interface $$Props extends HTMLAttributes<HTMLPreElement> {
-    /**
-     * Specify the source code to highlight.
-     */
-    code: any;
-
-    /**
-     * Set to `true` for the language name to be
-     * displayed at the top right of the code block.
-     *
-     * Use style props to customize styles:
-     * - `--langtag-background`
-     * - `--langtag-color`
-     * - `--langtag-border-radius`
-     *
-     * @default false
-     */
-    langtag?: boolean;
-
-    /**
-     * Customize the background color of the langtag.
-     */
-    "--langtag-background"?: string;
-
-    /**
-     * Customize the text color of the langtag.
-     */
-    "--langtag-color"?: string;
-
-    /**
-     * Customize the border radius of the langtag.
-     */
-    "--langtag-border-radius"?: string;
-  }
+  interface $$Props extends Omit<Props, "language"> {}
 
   interface $$Slots extends Slots {}
 
   interface $$Events extends Events {}
 
-  export let code;
+  export let code: $$Props["code"];
 
   export let langtag = false;
 
@@ -68,29 +35,11 @@
 </script>
 
 <slot {highlighted}>
-  <pre class:langtag data-language="svelte" {...$$restProps}><code class="hljs"
-      >{@html highlighted}</code
-    ></pre>
+  <LangTag
+    {...$$restProps}
+    languageName="svelte"
+    {langtag}
+    {highlighted}
+    {code}
+  />
 </slot>
-
-<style>
-  .langtag {
-    position: relative;
-  }
-
-  .langtag::after {
-    content: attr(data-language);
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 1em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: inherit;
-    color: inherit;
-    background: var(--langtag-background);
-    color: var(--langtag-color);
-    border-radius: var(--langtag-border-radius);
-  }
-</style>
