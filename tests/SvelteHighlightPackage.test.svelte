@@ -23,7 +23,7 @@
   {@html highlighted}
 </Highlight>
 
-<svelte:component this={Highlight2} />
+<svelte:component this={Highlight2} code="" language={typescript} />
 
 {github}
 {githubStyles}
