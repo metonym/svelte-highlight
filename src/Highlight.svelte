@@ -27,7 +27,7 @@
     if (highlighted) dispatch("highlight", { highlighted });
   });
 
-  $: if (language.name && language.register) {
+  $: {
     hljs.registerLanguage(language.name, language.register);
     highlighted = hljs.highlight(code, { language: language.name }).value;
   }
