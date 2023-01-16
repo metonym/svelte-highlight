@@ -1,7 +1,7 @@
 import adapter from "@sveltejs/adapter-static";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import { optimizeImports } from "carbon-preprocess-svelte";
 import fs from "fs";
-import preprocess from "svelte-preprocess";
 
 const pkg = JSON.parse(
   fs.readFileSync(new URL("./package.json", import.meta.url), "utf8")
@@ -17,7 +17,7 @@ const CONTENT = {
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   preprocess: [
-    preprocess(),
+    vitePreprocess(),
     optimizeImports(),
     {
       script: ({ content, filename }) => {
