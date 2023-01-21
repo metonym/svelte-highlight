@@ -21,13 +21,13 @@
     "highlight.js": "11.7.0"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "1.0.2",
-    "@sveltejs/kit": "1.1.0",
+    "@sveltejs/adapter-static": "1.0.5",
+    "@sveltejs/kit": "1.2.2",
     "@sveltejs/package": "^1.0.2",
     "@testing-library/svelte": "^3.2.2",
     "@testing-library/user-event": "^14.4.3",
     "@types/prettier": "^2.7.2",
-    "carbon-components-svelte": "^0.71.0",
+    "carbon-components-svelte": "^0.72.0",
     "carbon-icons-svelte": "^11.4.0",
     "carbon-preprocess-svelte": "^0.9.1",
     "jsdom": "^21.0.0",
@@ -40,7 +40,7 @@
     "totalist": "^3.0.0",
     "typescript": "^4.9.4",
     "vite": "^4.0.4",
-    "vitest": "^0.27.1"
+    "vitest": "^0.27.3"
   },
   "repository": {
     "type": "git",
