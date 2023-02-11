@@ -4,12 +4,12 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "paths": {
-      "$lib": ["src"],
-      "$lib/*": ["src/*"],
-      "lib": ["demo/lib"],
-      "lib/*": ["demo/lib/*"],
-      "svelte-highlight": ["src"],
-      "svelte-highlight/*": ["src/*"]
+      "$lib": ["./src"],
+      "$lib/*": ["./src/*"],
+      "lib": ["./demo/lib"],
+      "lib/*": ["./demo/lib/*"],
+      "svelte-highlight": ["./src"],
+      "svelte-highlight/*": ["./src/*"]
     }
   },
   "include": ["src/**/*", "demo/**/*", "tests/**/*"]
