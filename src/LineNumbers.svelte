@@ -86,6 +86,7 @@
 
   const DIGIT_WIDTH = 12;
   const MIN_DIGITS = 2;
+  const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
 
   $: lines = highlighted.split("\n");
   $: len_digits = lines.length.toString().length;
@@ -114,8 +115,7 @@
             {#if highlightedLines.includes(i)}
               <div
                 class:line-background={true}
-                style:background="var(--highlighted-background, rgba(254, 241,
-                96, 0.2))"
+                style:background="var(--highlighted-background, {HIGHLIGHTED_BACKGROUND})"
               />
             {/if}
           </td>
@@ -124,8 +124,7 @@
             {#if highlightedLines.includes(i)}
               <div
                 class:line-background={true}
-                style:background="var(--highlighted-background, rgba(254, 241,
-                96, 0.2))"
+                style:background="var(--highlighted-background, {HIGHLIGHTED_BACKGROUND})"
               />
             {/if}
           </td>
