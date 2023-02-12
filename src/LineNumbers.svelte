@@ -30,6 +30,13 @@
     wrapLines?: boolean;
 
     /**
+     * Specify the line indices to highlight.
+     * @default []
+     * @example [0, 1, 9]
+     */
+    highlightedLines?: number[];
+
+    /**
      * Specify the text color for line numbers.
      * Defaults to the current theme color applied to `.hljs code`.
      * @default currentColor
@@ -58,6 +65,13 @@
      * @example 0
      */
     "--padding-right"?: number | string;
+
+    /**
+     * Specify the background color of highlighted lines.
+     * @default "rgba(254, 241, 96, 0.2)"
+     * @example "#fff"
+     */
+    "--highlighted-background"?: string;
   }
 
   export let highlighted: $$Props["highlighted"];
@@ -67,6 +81,8 @@
   export let wrapLines = false;
 
   export let startingLineNumber = 1;
+
+  export let highlightedLines = [];
 
   const DIGIT_WIDTH = 12;
   const MIN_DIGITS = 2;
@@ -95,9 +111,23 @@
             <code style:color="var(--line-number-color, currentColor)">
               {lineNumber}
             </code>
+            {#if highlightedLines.includes(i)}
+              <div
+                class:line-background={true}
+                style:background="var(--highlighted-background, rgba(254, 241,
+                96, 0.2))"
+              />
+            {/if}
           </td>
           <td>
             <pre class:wrapLines><code>{@html line || "\n"}</code></pre>
+            {#if highlightedLines.includes(i)}
+              <div
+                class:line-background={true}
+                style:background="var(--highlighted-background, rgba(254, 241,
+                96, 0.2))"
+              />
+            {/if}
           </td>
         </tr>
       {/each}
@@ -150,5 +180,36 @@
 
   .wrapLines {
     white-space: pre-wrap;
+  }
+
+  td,
+  pre {
+    position: relative;
+  }
+
+  pre {
+    z-index: 1;
+  }
+
+  .line-background {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  tr:first-of-type td .line-background,
+  tr:last-of-type td .line-background {
+    height: calc(100% - 1em);
+  }
+
+  tr:first-of-type td .line-background {
+    top: 1em;
+  }
+
+  tr:last-of-type td .line-background {
+    bottom: 1em;
   }
 </style>

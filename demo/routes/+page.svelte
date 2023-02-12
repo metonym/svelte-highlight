@@ -24,6 +24,8 @@
   import WrapLines from "lib/LineNumbers/WrapLines.svelte";
   import StyleProps from "lib/LineNumbers/StyleProps.svelte";
   import StartingLineNumber from "lib/LineNumbers/StartingLineNumber.svelte";
+  import HighlightedLines from "lib/LineNumbers/HighlightedLines.svelte";
+  import HighlightedLinesCustomColor from "lib/LineNumbers/HighlightedLinesCustomColor.svelte";
 
   const NAME = process.env.NAME;
 
@@ -237,6 +239,24 @@
   </Column>
   <Column xlg={12}>
     <StartingLineNumber />
+  </Column>
+  <Column xlg={9} lg={12}>
+    <p class="mb-5">
+      Use <code class="code">highlightedLines</code> to highlight specific lines.
+      Indices start at zero.
+    </p>
+  </Column>
+  <Column xlg={12}>
+    <HighlightedLines />
+  </Column>
+  <Column xlg={9} lg={12}>
+    <p class="mb-5">
+      Use <code class="code">--highlighted-background</code> to customize the background
+      color of highlighted lines.
+    </p>
+  </Column>
+  <Column xlg={12}>
+    <HighlightedLinesCustomColor />
   </Column>
 </Row>
 
