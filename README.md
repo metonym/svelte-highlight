@@ -208,16 +208,43 @@ Set `wrapLines` to `true` to hide the border of the line numbers column.
 </Highlight>
 ```
 
+### Custom Starting Line Number
+
+The line number starts at `1`. Customize this via the `startingLineNumber` prop.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers {highlighted} startingLineNumber={42} />
+</Highlight>
+```
+
+### Highlighted Lines
+
+Specify the lines to highlight using the `highlightedLines` prop. Indices start at zero.
+
+Use `--highlighted-background` to customize the background color of highlighted lines.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers
+    {highlighted}
+    highlightedLines={[0, 2, 3, 14]}
+    --highlighted-background="#000"
+  />
+</Highlight>
+```
+
 ### Custom Styles
 
 Use `--style-props` to customize styles.
 
-| Style prop          | Description                                | Default value  |
-| :------------------ | :----------------------------------------- | :------------- |
-| --line-number-color | Text color of the line numbers             | `currentColor` |
-| --border-color      | Border color of the column of line numbers | `currentColor` |
-| --padding-left      | Left padding for `td` elements             | `1em`          |
-| --padding-right     | Rightt padding for `td` elements           | `1em`          |
+| Style prop               | Description                                | Default value             |
+| :----------------------- | :----------------------------------------- | :------------------------ |
+| --line-number-color      | Text color of the line numbers             | `currentColor`            |
+| --border-color           | Border color of the column of line numbers | `currentColor`            |
+| --padding-left           | Left padding for `td` elements             | `1em`                     |
+| --padding-right          | Right padding for `td` elements            | `1em`                     |
+| --highlighted-background | Background color of highlighted lines      | `rgba(254, 241, 96, 0.2)` |
 
 ```svelte
 <Highlight language={typescript} {code} let:highlighted>
@@ -227,17 +254,8 @@ Use `--style-props` to customize styles.
     --border-color="rgba(255, 255, 255, 0.2)"
     --padding-left={0}
     --padding-right="3em"
+    --highlighted-background="#000"
   />
-</Highlight>
-```
-
-### Custom Starting Line Number
-
-The line number starts at `1`. Customize this via the `startingLineNumber` prop.
-
-```svelte
-<Highlight language={typescript} {code} let:highlighted>
-  <LineNumbers {highlighted} startingLineNumber={42} />
 </Highlight>
 ```
 
@@ -378,12 +396,13 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 
 #### Props
 
-| Name               | Type      | Default value  |
-| :----------------- | :-------- | :------------- |
-| highlighted        | `string`  | N/A (required) |
-| hideBorder         | `boolean` | `false`        |
-| wrapLines          | `boolean` | `false`        |
-| startingLineNumber | `number`  | `1`            |
+| Name               | Type       | Default value  |
+| :----------------- | :--------- | :------------- |
+| highlighted        | `string`   | N/A (required) |
+| hideBorder         | `boolean`  | `false`        |
+| wrapLines          | `boolean`  | `false`        |
+| startingLineNumber | `number`   | `1`            |
+| highlightedLines   | `number[]` | `[]`           |
 
 `$$restProps` are forwarded to the top-level `div` element.
 
