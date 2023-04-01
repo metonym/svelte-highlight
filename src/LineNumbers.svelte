@@ -162,6 +162,10 @@
     padding-bottom: 1em;
   }
 
+  tr td:first-of-type {
+    z-index: 2;
+  }
+
   td {
     padding-left: var(--padding-left, 1em);
     padding-right: var(--padding-right, 1em);
