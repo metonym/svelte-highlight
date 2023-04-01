@@ -61,7 +61,7 @@ describe("SvelteHighlight", () => {
 
     expect(target.querySelector("#line-numbers")?.innerHTML)
       .toMatchInlineSnapshot(`
-        "<div style=\\"overflow-x: auto;\\" class=\\"svelte-tjkhvl\\"><table class=\\"svelte-tjkhvl\\"><tbody class=\\"hljs\\"><tr class=\\"svelte-tjkhvl\\"><td class=\\"svelte-tjkhvl hljs\\" style=\\"position: sticky; left: 0px; text-align: right; user-select: none; width: 24px;\\"><code>1</code> </td> <td class=\\"svelte-tjkhvl\\"><pre class=\\"svelte-tjkhvl\\"><code>
+        "<div style=\\"overflow-x: auto;\\" class=\\"svelte-1vh31p0\\"><table class=\\"svelte-1vh31p0\\"><tbody class=\\"hljs\\"><tr class=\\"svelte-1vh31p0\\"><td class=\\"svelte-1vh31p0 hljs\\" style=\\"position: sticky; left: 0px; text-align: right; user-select: none; width: 24px;\\"><code class=\\"svelte-1vh31p0\\">1</code> </td> <td class=\\"svelte-1vh31p0\\"><pre class=\\"svelte-1vh31p0\\"><code>
         </code></pre> </td> </tr></tbody></table></div>"
       `);
   });
