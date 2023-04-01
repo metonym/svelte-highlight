@@ -182,10 +182,12 @@
   }
 
   td,
+  td > code,
   pre {
     position: relative;
   }
 
+  td > code,
   pre {
     z-index: 1;
   }
