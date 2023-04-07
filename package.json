@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "2.0.1",
-    "@sveltejs/kit": "1.15.1",
+    "@sveltejs/kit": "1.15.2",
     "@sveltejs/package": "^1.0.2",
     "@testing-library/svelte": "^3.2.2",
     "@testing-library/user-event": "^14.4.3",
