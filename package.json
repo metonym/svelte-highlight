@@ -21,8 +21,8 @@
     "highlight.js": "11.7.0"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "2.0.1",
-    "@sveltejs/kit": "1.15.1",
+    "@sveltejs/adapter-static": "2.0.2",
+    "@sveltejs/kit": "1.15.5",
     "@sveltejs/package": "^1.0.2",
     "@testing-library/svelte": "^3.2.2",
     "@testing-library/user-event": "^14.4.3",
@@ -40,7 +40,7 @@
     "totalist": "^3.0.1",
     "typescript": "^4.9.5",
     "vite": "^4.2.1",
-    "vitest": "^0.30.0"
+    "vitest": "^0.30.1"
   },
   "repository": {
     "type": "git",
