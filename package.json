@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "2.0.2",
-    "@sveltejs/kit": "1.15.5",
+    "@sveltejs/kit": "1.15.9",
     "@sveltejs/package": "^1.0.2",
     "@testing-library/svelte": "^3.2.2",
     "@testing-library/user-event": "^14.4.3",
@@ -31,7 +31,7 @@
     "carbon-icons-svelte": "^11.4.0",
     "carbon-preprocess-svelte": "^0.9.1",
     "jsdom": "^21.1.1",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "prettier-plugin-svelte": "^2.10.0",
     "svelte": "^3.58.0",
     "svelte-check": "^3.2.0",
@@ -39,7 +39,7 @@
     "svelte2tsx": "^0.6.11",
     "totalist": "^3.0.1",
     "typescript": "^4.9.5",
-    "vite": "^4.2.1",
+    "vite": "^4.3.3",
     "vitest": "^0.30.1"
   },
   "repository": {
