@@ -3,12 +3,12 @@
     HighlightAuto,
     HighlightSvelte,
     LineNumbers,
-  } from "../src";
-  import Highlight2 from "../src/Highlight.svelte";
-  import { typescript } from "../src/languages";
-  import javascript from "../src/languages/javascript";
-  import { github, purebasic, _3024 } from "../src/styles/index";
-  import "../src/styles/3024.css";
+  } from "svelte-highlight";
+  import Highlight2 from "svelte-highlight/Highlight.svelte";
+  import { typescript } from "svelte-highlight/languages";
+  import javascript from "svelte-highlight/languages/javascript";
+  import { github, purebasic, _3024 } from "svelte-highlight/styles/index";
+  import "svelte-highlight/styles/3024.css";
 
   let toggled = true;
   let highlighted = "";
