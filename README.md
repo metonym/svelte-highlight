@@ -475,6 +475,7 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 ## Examples
 
 - [examples/rollup](examples/rollup)
+- [examples/routify](examples/routify)
 - [examples/sveltekit](examples/sveltekit)
 - [examples/vite](examples/vite)
 - [examples/webpack](examples/webpack)
