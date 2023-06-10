@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import type { SvelteComponent } from "svelte";
 
-  let component;
-  let styles;
+  let component: typeof SvelteComponent;
+  let styles: string;
 
   onMount(async () => {
     component = (await import("svelte-highlight")).HighlightAuto;

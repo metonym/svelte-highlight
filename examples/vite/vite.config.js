@@ -1,11 +1,10 @@
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-import preprocess from "svelte-preprocess";
+import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('vite').UserConfig} */
 export default {
   plugins: [
     svelte({
-      preprocess: preprocess(),
+      preprocess: vitePreprocess(),
     }),
   ],
 };

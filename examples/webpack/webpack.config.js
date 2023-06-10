@@ -7,10 +7,10 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 const PROD = NODE_ENV === "production";
 
 module.exports = {
-  entry: { "build/bundle": ["./src/index.js"] },
+  entry: { "build/bundle": ["./src/index.ts"] },
   resolve: {
     alias: { svelte: path.dirname(require.resolve("svelte/package.json")) },
-    extensions: [".mjs", ".js", ".svelte"],
+    extensions: [".mjs", ".ts", ".js", ".svelte"],
     mainFields: ["svelte", "browser", "module", "main"],
   },
   output: {
