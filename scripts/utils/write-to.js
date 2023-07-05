@@ -20,5 +20,5 @@ export async function writeTo(file, source) {
     typeof source === "string" ? source : JSON.stringify(source, null, 2);
   const parser = PARSER[path.parse(file).ext];
 
-  await writeFile(file, format(value, { parser }));
+  await writeFile(file, await format(value, { parser }));
 }
