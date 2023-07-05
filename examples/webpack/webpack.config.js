@@ -9,15 +9,19 @@ const PROD = NODE_ENV === "production";
 module.exports = {
   entry: { "build/bundle": ["./src/index.ts"] },
   resolve: {
-    alias: { svelte: path.dirname(require.resolve("svelte/package.json")) },
-    extensions: [".mjs", ".ts", ".js", ".svelte"],
+    alias: {
+      svelte: path.resolve("node_modules", "svelte/src/runtime"),
+    },
+    extensions: [".mjs", ".js", ".svelte"],
     mainFields: ["svelte", "browser", "module", "main"],
+    conditionNames: ["svelte", "browser", "import"],
   },
   output: {
     publicPath: "/",
     path: path.join(__dirname, "/public"),
     filename: PROD ? "[name].[contenthash].js" : "[name].js",
     chunkFilename: "[name].[id].js",
+    clean: true,
   },
   module: {
     rules: [
