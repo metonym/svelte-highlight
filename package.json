@@ -57,5 +57,8 @@
     "code",
     "syntax",
     "typescript"
-  ]
+  ],
+  "resolutions": {
+    "vite": "^4.3.9"
+  }
 }
