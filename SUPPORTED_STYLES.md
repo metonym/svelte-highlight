@@ -20,7 +20,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/3024.css";
+  import "svelte-highlight/styles/3024.css";
 </script>
 ```
 
@@ -42,7 +42,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/a11y-dark.css";
+  import "svelte-highlight/styles/a11y-dark.css";
 </script>
 ```
 
@@ -64,7 +64,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/a11y-light.css";
+  import "svelte-highlight/styles/a11y-light.css";
 </script>
 ```
 
@@ -86,7 +86,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/agate.css";
+  import "svelte-highlight/styles/agate.css";
 </script>
 ```
 
@@ -108,7 +108,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/an-old-hope.css";
+  import "svelte-highlight/styles/an-old-hope.css";
 </script>
 ```
 
@@ -130,7 +130,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/androidstudio.css";
+  import "svelte-highlight/styles/androidstudio.css";
 </script>
 ```
 
@@ -152,7 +152,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/apathy.css";
+  import "svelte-highlight/styles/apathy.css";
 </script>
 ```
 
@@ -174,7 +174,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/apprentice.css";
+  import "svelte-highlight/styles/apprentice.css";
 </script>
 ```
 
@@ -196,7 +196,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/arduino-light.css";
+  import "svelte-highlight/styles/arduino-light.css";
 </script>
 ```
 
@@ -218,7 +218,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/arta.css";
+  import "svelte-highlight/styles/arta.css";
 </script>
 ```
 
@@ -240,7 +240,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ascetic.css";
+  import "svelte-highlight/styles/ascetic.css";
 </script>
 ```
 
@@ -262,7 +262,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ashes.css";
+  import "svelte-highlight/styles/ashes.css";
 </script>
 ```
 
@@ -284,7 +284,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-cave.css";
+  import "svelte-highlight/styles/atelier-cave.css";
 </script>
 ```
 
@@ -306,7 +306,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-cave-light.css";
+  import "svelte-highlight/styles/atelier-cave-light.css";
 </script>
 ```
 
@@ -328,7 +328,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-dune.css";
+  import "svelte-highlight/styles/atelier-dune.css";
 </script>
 ```
 
@@ -350,7 +350,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-dune-light.css";
+  import "svelte-highlight/styles/atelier-dune-light.css";
 </script>
 ```
 
@@ -372,7 +372,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-estuary.css";
+  import "svelte-highlight/styles/atelier-estuary.css";
 </script>
 ```
 
@@ -394,7 +394,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-estuary-light.css";
+  import "svelte-highlight/styles/atelier-estuary-light.css";
 </script>
 ```
 
@@ -416,7 +416,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-forest.css";
+  import "svelte-highlight/styles/atelier-forest.css";
 </script>
 ```
 
@@ -438,7 +438,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-forest-light.css";
+  import "svelte-highlight/styles/atelier-forest-light.css";
 </script>
 ```
 
@@ -460,7 +460,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-heath.css";
+  import "svelte-highlight/styles/atelier-heath.css";
 </script>
 ```
 
@@ -482,7 +482,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-heath-light.css";
+  import "svelte-highlight/styles/atelier-heath-light.css";
 </script>
 ```
 
@@ -504,7 +504,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-lakeside.css";
+  import "svelte-highlight/styles/atelier-lakeside.css";
 </script>
 ```
 
@@ -526,7 +526,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-lakeside-light.css";
+  import "svelte-highlight/styles/atelier-lakeside-light.css";
 </script>
 ```
 
@@ -548,7 +548,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-plateau.css";
+  import "svelte-highlight/styles/atelier-plateau.css";
 </script>
 ```
 
@@ -570,7 +570,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-plateau-light.css";
+  import "svelte-highlight/styles/atelier-plateau-light.css";
 </script>
 ```
 
@@ -592,7 +592,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-savanna.css";
+  import "svelte-highlight/styles/atelier-savanna.css";
 </script>
 ```
 
@@ -614,7 +614,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-savanna-light.css";
+  import "svelte-highlight/styles/atelier-savanna-light.css";
 </script>
 ```
 
@@ -636,7 +636,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-seaside.css";
+  import "svelte-highlight/styles/atelier-seaside.css";
 </script>
 ```
 
@@ -658,7 +658,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-seaside-light.css";
+  import "svelte-highlight/styles/atelier-seaside-light.css";
 </script>
 ```
 
@@ -680,7 +680,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-sulphurpool.css";
+  import "svelte-highlight/styles/atelier-sulphurpool.css";
 </script>
 ```
 
@@ -702,7 +702,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atelier-sulphurpool-light.css";
+  import "svelte-highlight/styles/atelier-sulphurpool-light.css";
 </script>
 ```
 
@@ -724,7 +724,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atlas.css";
+  import "svelte-highlight/styles/atlas.css";
 </script>
 ```
 
@@ -746,7 +746,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atom-one-dark.css";
+  import "svelte-highlight/styles/atom-one-dark.css";
 </script>
 ```
 
@@ -768,7 +768,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atom-one-dark-reasonable.css";
+  import "svelte-highlight/styles/atom-one-dark-reasonable.css";
 </script>
 ```
 
@@ -790,7 +790,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/atom-one-light.css";
+  import "svelte-highlight/styles/atom-one-light.css";
 </script>
 ```
 
@@ -812,7 +812,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/base16-github.css";
+  import "svelte-highlight/styles/base16-github.css";
 </script>
 ```
 
@@ -834,7 +834,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/base16-ir-black.css";
+  import "svelte-highlight/styles/base16-ir-black.css";
 </script>
 ```
 
@@ -856,7 +856,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/base16-monokai.css";
+  import "svelte-highlight/styles/base16-monokai.css";
 </script>
 ```
 
@@ -878,7 +878,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/base16-nord.css";
+  import "svelte-highlight/styles/base16-nord.css";
 </script>
 ```
 
@@ -900,7 +900,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/bespin.css";
+  import "svelte-highlight/styles/bespin.css";
 </script>
 ```
 
@@ -922,7 +922,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal.css";
+  import "svelte-highlight/styles/black-metal.css";
 </script>
 ```
 
@@ -944,7 +944,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-bathory.css";
+  import "svelte-highlight/styles/black-metal-bathory.css";
 </script>
 ```
 
@@ -966,7 +966,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-burzum.css";
+  import "svelte-highlight/styles/black-metal-burzum.css";
 </script>
 ```
 
@@ -988,7 +988,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-dark-funeral.css";
+  import "svelte-highlight/styles/black-metal-dark-funeral.css";
 </script>
 ```
 
@@ -1010,7 +1010,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-gorgoroth.css";
+  import "svelte-highlight/styles/black-metal-gorgoroth.css";
 </script>
 ```
 
@@ -1032,7 +1032,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-immortal.css";
+  import "svelte-highlight/styles/black-metal-immortal.css";
 </script>
 ```
 
@@ -1054,7 +1054,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-khold.css";
+  import "svelte-highlight/styles/black-metal-khold.css";
 </script>
 ```
 
@@ -1076,7 +1076,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-marduk.css";
+  import "svelte-highlight/styles/black-metal-marduk.css";
 </script>
 ```
 
@@ -1098,7 +1098,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-mayhem.css";
+  import "svelte-highlight/styles/black-metal-mayhem.css";
 </script>
 ```
 
@@ -1120,7 +1120,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-nile.css";
+  import "svelte-highlight/styles/black-metal-nile.css";
 </script>
 ```
 
@@ -1142,7 +1142,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/black-metal-venom.css";
+  import "svelte-highlight/styles/black-metal-venom.css";
 </script>
 ```
 
@@ -1164,7 +1164,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/brewer.css";
+  import "svelte-highlight/styles/brewer.css";
 </script>
 ```
 
@@ -1186,7 +1186,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/bright.css";
+  import "svelte-highlight/styles/bright.css";
 </script>
 ```
 
@@ -1208,7 +1208,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/brogrammer.css";
+  import "svelte-highlight/styles/brogrammer.css";
 </script>
 ```
 
@@ -1230,7 +1230,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/brown-paper.css";
+  import "svelte-highlight/styles/brown-paper.css";
 </script>
 ```
 
@@ -1252,7 +1252,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/brush-trees.css";
+  import "svelte-highlight/styles/brush-trees.css";
 </script>
 ```
 
@@ -1274,7 +1274,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/brush-trees-dark.css";
+  import "svelte-highlight/styles/brush-trees-dark.css";
 </script>
 ```
 
@@ -1296,7 +1296,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/chalk.css";
+  import "svelte-highlight/styles/chalk.css";
 </script>
 ```
 
@@ -1318,7 +1318,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/circus.css";
+  import "svelte-highlight/styles/circus.css";
 </script>
 ```
 
@@ -1340,7 +1340,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/classic-dark.css";
+  import "svelte-highlight/styles/classic-dark.css";
 </script>
 ```
 
@@ -1362,7 +1362,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/classic-light.css";
+  import "svelte-highlight/styles/classic-light.css";
 </script>
 ```
 
@@ -1384,7 +1384,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/codepen-embed.css";
+  import "svelte-highlight/styles/codepen-embed.css";
 </script>
 ```
 
@@ -1406,7 +1406,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/codeschool.css";
+  import "svelte-highlight/styles/codeschool.css";
 </script>
 ```
 
@@ -1428,7 +1428,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/color-brewer.css";
+  import "svelte-highlight/styles/color-brewer.css";
 </script>
 ```
 
@@ -1450,7 +1450,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/colors.css";
+  import "svelte-highlight/styles/colors.css";
 </script>
 ```
 
@@ -1472,7 +1472,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/cupcake.css";
+  import "svelte-highlight/styles/cupcake.css";
 </script>
 ```
 
@@ -1494,7 +1494,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/cupertino.css";
+  import "svelte-highlight/styles/cupertino.css";
 </script>
 ```
 
@@ -1516,7 +1516,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/danqing.css";
+  import "svelte-highlight/styles/danqing.css";
 </script>
 ```
 
@@ -1538,7 +1538,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/darcula.css";
+  import "svelte-highlight/styles/darcula.css";
 </script>
 ```
 
@@ -1560,7 +1560,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/dark.css";
+  import "svelte-highlight/styles/dark.css";
 </script>
 ```
 
@@ -1582,7 +1582,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/dark-violet.css";
+  import "svelte-highlight/styles/dark-violet.css";
 </script>
 ```
 
@@ -1604,7 +1604,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/darkmoss.css";
+  import "svelte-highlight/styles/darkmoss.css";
 </script>
 ```
 
@@ -1626,7 +1626,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/darktooth.css";
+  import "svelte-highlight/styles/darktooth.css";
 </script>
 ```
 
@@ -1648,7 +1648,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/decaf.css";
+  import "svelte-highlight/styles/decaf.css";
 </script>
 ```
 
@@ -1670,7 +1670,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/default.css";
+  import "svelte-highlight/styles/default.css";
 </script>
 ```
 
@@ -1692,7 +1692,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/default-dark.css";
+  import "svelte-highlight/styles/default-dark.css";
 </script>
 ```
 
@@ -1714,7 +1714,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/default-light.css";
+  import "svelte-highlight/styles/default-light.css";
 </script>
 ```
 
@@ -1736,7 +1736,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/devibeans.css";
+  import "svelte-highlight/styles/devibeans.css";
 </script>
 ```
 
@@ -1758,7 +1758,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/dirtysea.css";
+  import "svelte-highlight/styles/dirtysea.css";
 </script>
 ```
 
@@ -1780,7 +1780,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/docco.css";
+  import "svelte-highlight/styles/docco.css";
 </script>
 ```
 
@@ -1802,7 +1802,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/dracula.css";
+  import "svelte-highlight/styles/dracula.css";
 </script>
 ```
 
@@ -1824,7 +1824,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/edge-dark.css";
+  import "svelte-highlight/styles/edge-dark.css";
 </script>
 ```
 
@@ -1846,7 +1846,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/edge-light.css";
+  import "svelte-highlight/styles/edge-light.css";
 </script>
 ```
 
@@ -1868,7 +1868,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/eighties.css";
+  import "svelte-highlight/styles/eighties.css";
 </script>
 ```
 
@@ -1890,7 +1890,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/embers.css";
+  import "svelte-highlight/styles/embers.css";
 </script>
 ```
 
@@ -1912,7 +1912,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/equilibrium-dark.css";
+  import "svelte-highlight/styles/equilibrium-dark.css";
 </script>
 ```
 
@@ -1934,7 +1934,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/equilibrium-gray-dark.css";
+  import "svelte-highlight/styles/equilibrium-gray-dark.css";
 </script>
 ```
 
@@ -1956,7 +1956,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/equilibrium-gray-light.css";
+  import "svelte-highlight/styles/equilibrium-gray-light.css";
 </script>
 ```
 
@@ -1978,7 +1978,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/equilibrium-light.css";
+  import "svelte-highlight/styles/equilibrium-light.css";
 </script>
 ```
 
@@ -2000,7 +2000,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/espresso.css";
+  import "svelte-highlight/styles/espresso.css";
 </script>
 ```
 
@@ -2022,7 +2022,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/eva.css";
+  import "svelte-highlight/styles/eva.css";
 </script>
 ```
 
@@ -2044,7 +2044,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/eva-dim.css";
+  import "svelte-highlight/styles/eva-dim.css";
 </script>
 ```
 
@@ -2066,7 +2066,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/far.css";
+  import "svelte-highlight/styles/far.css";
 </script>
 ```
 
@@ -2088,7 +2088,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/felipec.css";
+  import "svelte-highlight/styles/felipec.css";
 </script>
 ```
 
@@ -2110,7 +2110,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/flat.css";
+  import "svelte-highlight/styles/flat.css";
 </script>
 ```
 
@@ -2132,7 +2132,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/foundation.css";
+  import "svelte-highlight/styles/foundation.css";
 </script>
 ```
 
@@ -2154,7 +2154,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/framer.css";
+  import "svelte-highlight/styles/framer.css";
 </script>
 ```
 
@@ -2176,7 +2176,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/fruit-soda.css";
+  import "svelte-highlight/styles/fruit-soda.css";
 </script>
 ```
 
@@ -2198,7 +2198,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gigavolt.css";
+  import "svelte-highlight/styles/gigavolt.css";
 </script>
 ```
 
@@ -2220,7 +2220,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/github.css";
+  import "svelte-highlight/styles/github.css";
 </script>
 ```
 
@@ -2242,7 +2242,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/github-dark.css";
+  import "svelte-highlight/styles/github-dark.css";
 </script>
 ```
 
@@ -2264,7 +2264,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/github-dark-dimmed.css";
+  import "svelte-highlight/styles/github-dark-dimmed.css";
 </script>
 ```
 
@@ -2286,7 +2286,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gml.css";
+  import "svelte-highlight/styles/gml.css";
 </script>
 ```
 
@@ -2308,7 +2308,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/google-dark.css";
+  import "svelte-highlight/styles/google-dark.css";
 </script>
 ```
 
@@ -2330,7 +2330,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/google-light.css";
+  import "svelte-highlight/styles/google-light.css";
 </script>
 ```
 
@@ -2352,7 +2352,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/googlecode.css";
+  import "svelte-highlight/styles/googlecode.css";
 </script>
 ```
 
@@ -2374,7 +2374,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gradient-dark.css";
+  import "svelte-highlight/styles/gradient-dark.css";
 </script>
 ```
 
@@ -2396,7 +2396,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gradient-light.css";
+  import "svelte-highlight/styles/gradient-light.css";
 </script>
 ```
 
@@ -2418,7 +2418,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/grayscale.css";
+  import "svelte-highlight/styles/grayscale.css";
 </script>
 ```
 
@@ -2440,7 +2440,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/grayscale-dark.css";
+  import "svelte-highlight/styles/grayscale-dark.css";
 </script>
 ```
 
@@ -2462,7 +2462,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/grayscale-light.css";
+  import "svelte-highlight/styles/grayscale-light.css";
 </script>
 ```
 
@@ -2484,7 +2484,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/green-screen.css";
+  import "svelte-highlight/styles/green-screen.css";
 </script>
 ```
 
@@ -2506,7 +2506,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gruvbox-dark-hard.css";
+  import "svelte-highlight/styles/gruvbox-dark-hard.css";
 </script>
 ```
 
@@ -2528,7 +2528,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gruvbox-dark-medium.css";
+  import "svelte-highlight/styles/gruvbox-dark-medium.css";
 </script>
 ```
 
@@ -2550,7 +2550,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gruvbox-dark-pale.css";
+  import "svelte-highlight/styles/gruvbox-dark-pale.css";
 </script>
 ```
 
@@ -2572,7 +2572,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gruvbox-dark-soft.css";
+  import "svelte-highlight/styles/gruvbox-dark-soft.css";
 </script>
 ```
 
@@ -2594,7 +2594,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gruvbox-light-hard.css";
+  import "svelte-highlight/styles/gruvbox-light-hard.css";
 </script>
 ```
 
@@ -2616,7 +2616,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gruvbox-light-medium.css";
+  import "svelte-highlight/styles/gruvbox-light-medium.css";
 </script>
 ```
 
@@ -2638,7 +2638,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/gruvbox-light-soft.css";
+  import "svelte-highlight/styles/gruvbox-light-soft.css";
 </script>
 ```
 
@@ -2660,7 +2660,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/hardcore.css";
+  import "svelte-highlight/styles/hardcore.css";
 </script>
 ```
 
@@ -2682,7 +2682,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/harmonic16-dark.css";
+  import "svelte-highlight/styles/harmonic16-dark.css";
 </script>
 ```
 
@@ -2704,7 +2704,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/harmonic16-light.css";
+  import "svelte-highlight/styles/harmonic16-light.css";
 </script>
 ```
 
@@ -2726,7 +2726,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/heetch-dark.css";
+  import "svelte-highlight/styles/heetch-dark.css";
 </script>
 ```
 
@@ -2748,7 +2748,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/heetch-light.css";
+  import "svelte-highlight/styles/heetch-light.css";
 </script>
 ```
 
@@ -2770,7 +2770,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/helios.css";
+  import "svelte-highlight/styles/helios.css";
 </script>
 ```
 
@@ -2792,7 +2792,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/hopscotch.css";
+  import "svelte-highlight/styles/hopscotch.css";
 </script>
 ```
 
@@ -2814,7 +2814,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/horizon-dark.css";
+  import "svelte-highlight/styles/horizon-dark.css";
 </script>
 ```
 
@@ -2836,7 +2836,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/horizon-light.css";
+  import "svelte-highlight/styles/horizon-light.css";
 </script>
 ```
 
@@ -2858,7 +2858,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/humanoid-dark.css";
+  import "svelte-highlight/styles/humanoid-dark.css";
 </script>
 ```
 
@@ -2880,7 +2880,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/humanoid-light.css";
+  import "svelte-highlight/styles/humanoid-light.css";
 </script>
 ```
 
@@ -2902,7 +2902,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/hybrid.css";
+  import "svelte-highlight/styles/hybrid.css";
 </script>
 ```
 
@@ -2924,7 +2924,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ia-dark.css";
+  import "svelte-highlight/styles/ia-dark.css";
 </script>
 ```
 
@@ -2946,7 +2946,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ia-light.css";
+  import "svelte-highlight/styles/ia-light.css";
 </script>
 ```
 
@@ -2968,7 +2968,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/icy-dark.css";
+  import "svelte-highlight/styles/icy-dark.css";
 </script>
 ```
 
@@ -2990,7 +2990,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/idea.css";
+  import "svelte-highlight/styles/idea.css";
 </script>
 ```
 
@@ -3012,7 +3012,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/intellij-light.css";
+  import "svelte-highlight/styles/intellij-light.css";
 </script>
 ```
 
@@ -3034,7 +3034,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ir-black.css";
+  import "svelte-highlight/styles/ir-black.css";
 </script>
 ```
 
@@ -3056,7 +3056,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/isbl-editor-dark.css";
+  import "svelte-highlight/styles/isbl-editor-dark.css";
 </script>
 ```
 
@@ -3078,7 +3078,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/isbl-editor-light.css";
+  import "svelte-highlight/styles/isbl-editor-light.css";
 </script>
 ```
 
@@ -3100,7 +3100,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/isotope.css";
+  import "svelte-highlight/styles/isotope.css";
 </script>
 ```
 
@@ -3122,7 +3122,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/kimber.css";
+  import "svelte-highlight/styles/kimber.css";
 </script>
 ```
 
@@ -3144,7 +3144,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/kimbie-dark.css";
+  import "svelte-highlight/styles/kimbie-dark.css";
 </script>
 ```
 
@@ -3166,7 +3166,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/kimbie-light.css";
+  import "svelte-highlight/styles/kimbie-light.css";
 </script>
 ```
 
@@ -3188,7 +3188,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/lightfair.css";
+  import "svelte-highlight/styles/lightfair.css";
 </script>
 ```
 
@@ -3210,7 +3210,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/lioshi.css";
+  import "svelte-highlight/styles/lioshi.css";
 </script>
 ```
 
@@ -3232,7 +3232,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/london-tube.css";
+  import "svelte-highlight/styles/london-tube.css";
 </script>
 ```
 
@@ -3254,7 +3254,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/macintosh.css";
+  import "svelte-highlight/styles/macintosh.css";
 </script>
 ```
 
@@ -3276,7 +3276,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/magula.css";
+  import "svelte-highlight/styles/magula.css";
 </script>
 ```
 
@@ -3298,7 +3298,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/marrakesh.css";
+  import "svelte-highlight/styles/marrakesh.css";
 </script>
 ```
 
@@ -3320,7 +3320,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/materia.css";
+  import "svelte-highlight/styles/materia.css";
 </script>
 ```
 
@@ -3342,7 +3342,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/material.css";
+  import "svelte-highlight/styles/material.css";
 </script>
 ```
 
@@ -3364,7 +3364,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/material-darker.css";
+  import "svelte-highlight/styles/material-darker.css";
 </script>
 ```
 
@@ -3386,7 +3386,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/material-lighter.css";
+  import "svelte-highlight/styles/material-lighter.css";
 </script>
 ```
 
@@ -3408,7 +3408,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/material-palenight.css";
+  import "svelte-highlight/styles/material-palenight.css";
 </script>
 ```
 
@@ -3430,7 +3430,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/material-vivid.css";
+  import "svelte-highlight/styles/material-vivid.css";
 </script>
 ```
 
@@ -3452,7 +3452,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/mellow-purple.css";
+  import "svelte-highlight/styles/mellow-purple.css";
 </script>
 ```
 
@@ -3474,7 +3474,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/mexico-light.css";
+  import "svelte-highlight/styles/mexico-light.css";
 </script>
 ```
 
@@ -3496,7 +3496,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/mocha.css";
+  import "svelte-highlight/styles/mocha.css";
 </script>
 ```
 
@@ -3518,7 +3518,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/mono-blue.css";
+  import "svelte-highlight/styles/mono-blue.css";
 </script>
 ```
 
@@ -3540,7 +3540,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/monokai.css";
+  import "svelte-highlight/styles/monokai.css";
 </script>
 ```
 
@@ -3562,7 +3562,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/monokai-sublime.css";
+  import "svelte-highlight/styles/monokai-sublime.css";
 </script>
 ```
 
@@ -3584,7 +3584,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/nebula.css";
+  import "svelte-highlight/styles/nebula.css";
 </script>
 ```
 
@@ -3606,7 +3606,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/night-owl.css";
+  import "svelte-highlight/styles/night-owl.css";
 </script>
 ```
 
@@ -3628,7 +3628,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/nnfx-dark.css";
+  import "svelte-highlight/styles/nnfx-dark.css";
 </script>
 ```
 
@@ -3650,7 +3650,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/nnfx-light.css";
+  import "svelte-highlight/styles/nnfx-light.css";
 </script>
 ```
 
@@ -3672,7 +3672,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/nord.css";
+  import "svelte-highlight/styles/nord.css";
 </script>
 ```
 
@@ -3694,7 +3694,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/nova.css";
+  import "svelte-highlight/styles/nova.css";
 </script>
 ```
 
@@ -3716,7 +3716,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/obsidian.css";
+  import "svelte-highlight/styles/obsidian.css";
 </script>
 ```
 
@@ -3738,7 +3738,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ocean.css";
+  import "svelte-highlight/styles/ocean.css";
 </script>
 ```
 
@@ -3760,7 +3760,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/oceanicnext.css";
+  import "svelte-highlight/styles/oceanicnext.css";
 </script>
 ```
 
@@ -3782,7 +3782,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/one-light.css";
+  import "svelte-highlight/styles/one-light.css";
 </script>
 ```
 
@@ -3804,7 +3804,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/onedark.css";
+  import "svelte-highlight/styles/onedark.css";
 </script>
 ```
 
@@ -3826,7 +3826,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/outrun-dark.css";
+  import "svelte-highlight/styles/outrun-dark.css";
 </script>
 ```
 
@@ -3848,7 +3848,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/panda-syntax-dark.css";
+  import "svelte-highlight/styles/panda-syntax-dark.css";
 </script>
 ```
 
@@ -3870,7 +3870,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/panda-syntax-light.css";
+  import "svelte-highlight/styles/panda-syntax-light.css";
 </script>
 ```
 
@@ -3892,7 +3892,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/papercolor-dark.css";
+  import "svelte-highlight/styles/papercolor-dark.css";
 </script>
 ```
 
@@ -3914,7 +3914,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/papercolor-light.css";
+  import "svelte-highlight/styles/papercolor-light.css";
 </script>
 ```
 
@@ -3936,7 +3936,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/paraiso.css";
+  import "svelte-highlight/styles/paraiso.css";
 </script>
 ```
 
@@ -3958,7 +3958,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/paraiso-dark.css";
+  import "svelte-highlight/styles/paraiso-dark.css";
 </script>
 ```
 
@@ -3980,7 +3980,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/paraiso-light.css";
+  import "svelte-highlight/styles/paraiso-light.css";
 </script>
 ```
 
@@ -4002,7 +4002,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/pasque.css";
+  import "svelte-highlight/styles/pasque.css";
 </script>
 ```
 
@@ -4024,7 +4024,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/phd.css";
+  import "svelte-highlight/styles/phd.css";
 </script>
 ```
 
@@ -4046,7 +4046,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/pico.css";
+  import "svelte-highlight/styles/pico.css";
 </script>
 ```
 
@@ -4068,7 +4068,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/pojoaque.css";
+  import "svelte-highlight/styles/pojoaque.css";
 </script>
 ```
 
@@ -4090,7 +4090,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/pop.css";
+  import "svelte-highlight/styles/pop.css";
 </script>
 ```
 
@@ -4112,7 +4112,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/porple.css";
+  import "svelte-highlight/styles/porple.css";
 </script>
 ```
 
@@ -4134,7 +4134,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/purebasic.css";
+  import "svelte-highlight/styles/purebasic.css";
 </script>
 ```
 
@@ -4156,7 +4156,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/qtcreator-dark.css";
+  import "svelte-highlight/styles/qtcreator-dark.css";
 </script>
 ```
 
@@ -4178,7 +4178,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/qtcreator-light.css";
+  import "svelte-highlight/styles/qtcreator-light.css";
 </script>
 ```
 
@@ -4200,7 +4200,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/qualia.css";
+  import "svelte-highlight/styles/qualia.css";
 </script>
 ```
 
@@ -4222,7 +4222,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/railscasts.css";
+  import "svelte-highlight/styles/railscasts.css";
 </script>
 ```
 
@@ -4244,7 +4244,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/rainbow.css";
+  import "svelte-highlight/styles/rainbow.css";
 </script>
 ```
 
@@ -4266,7 +4266,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/rebecca.css";
+  import "svelte-highlight/styles/rebecca.css";
 </script>
 ```
 
@@ -4288,7 +4288,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ros-pine.css";
+  import "svelte-highlight/styles/ros-pine.css";
 </script>
 ```
 
@@ -4310,7 +4310,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ros-pine-dawn.css";
+  import "svelte-highlight/styles/ros-pine-dawn.css";
 </script>
 ```
 
@@ -4332,7 +4332,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/ros-pine-moon.css";
+  import "svelte-highlight/styles/ros-pine-moon.css";
 </script>
 ```
 
@@ -4354,7 +4354,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/routeros.css";
+  import "svelte-highlight/styles/routeros.css";
 </script>
 ```
 
@@ -4376,7 +4376,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/sagelight.css";
+  import "svelte-highlight/styles/sagelight.css";
 </script>
 ```
 
@@ -4398,7 +4398,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/sandcastle.css";
+  import "svelte-highlight/styles/sandcastle.css";
 </script>
 ```
 
@@ -4420,7 +4420,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/school-book.css";
+  import "svelte-highlight/styles/school-book.css";
 </script>
 ```
 
@@ -4442,7 +4442,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/seti-ui.css";
+  import "svelte-highlight/styles/seti-ui.css";
 </script>
 ```
 
@@ -4464,7 +4464,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/shades-of-purple.css";
+  import "svelte-highlight/styles/shades-of-purple.css";
 </script>
 ```
 
@@ -4486,7 +4486,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/shapeshifter.css";
+  import "svelte-highlight/styles/shapeshifter.css";
 </script>
 ```
 
@@ -4508,7 +4508,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/silk-dark.css";
+  import "svelte-highlight/styles/silk-dark.css";
 </script>
 ```
 
@@ -4530,7 +4530,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/silk-light.css";
+  import "svelte-highlight/styles/silk-light.css";
 </script>
 ```
 
@@ -4552,7 +4552,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/snazzy.css";
+  import "svelte-highlight/styles/snazzy.css";
 </script>
 ```
 
@@ -4574,7 +4574,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/solar-flare.css";
+  import "svelte-highlight/styles/solar-flare.css";
 </script>
 ```
 
@@ -4596,7 +4596,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/solar-flare-light.css";
+  import "svelte-highlight/styles/solar-flare-light.css";
 </script>
 ```
 
@@ -4618,7 +4618,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/solarized-dark.css";
+  import "svelte-highlight/styles/solarized-dark.css";
 </script>
 ```
 
@@ -4640,7 +4640,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/solarized-light.css";
+  import "svelte-highlight/styles/solarized-light.css";
 </script>
 ```
 
@@ -4662,7 +4662,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/spacemacs.css";
+  import "svelte-highlight/styles/spacemacs.css";
 </script>
 ```
 
@@ -4684,7 +4684,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/srcery.css";
+  import "svelte-highlight/styles/srcery.css";
 </script>
 ```
 
@@ -4706,7 +4706,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/stackoverflow-dark.css";
+  import "svelte-highlight/styles/stackoverflow-dark.css";
 </script>
 ```
 
@@ -4728,7 +4728,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/stackoverflow-light.css";
+  import "svelte-highlight/styles/stackoverflow-light.css";
 </script>
 ```
 
@@ -4750,7 +4750,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/summercamp.css";
+  import "svelte-highlight/styles/summercamp.css";
 </script>
 ```
 
@@ -4772,7 +4772,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/summerfruit-dark.css";
+  import "svelte-highlight/styles/summerfruit-dark.css";
 </script>
 ```
 
@@ -4794,7 +4794,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/summerfruit-light.css";
+  import "svelte-highlight/styles/summerfruit-light.css";
 </script>
 ```
 
@@ -4816,7 +4816,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/sunburst.css";
+  import "svelte-highlight/styles/sunburst.css";
 </script>
 ```
 
@@ -4838,7 +4838,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/synth-midnight-terminal-dark.css";
+  import "svelte-highlight/styles/synth-midnight-terminal-dark.css";
 </script>
 ```
 
@@ -4860,7 +4860,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/synth-midnight-terminal-light.css";
+  import "svelte-highlight/styles/synth-midnight-terminal-light.css";
 </script>
 ```
 
@@ -4882,7 +4882,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/tango.css";
+  import "svelte-highlight/styles/tango.css";
 </script>
 ```
 
@@ -4904,7 +4904,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/tender.css";
+  import "svelte-highlight/styles/tender.css";
 </script>
 ```
 
@@ -4926,7 +4926,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/tokyo-night-dark.css";
+  import "svelte-highlight/styles/tokyo-night-dark.css";
 </script>
 ```
 
@@ -4948,7 +4948,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/tokyo-night-light.css";
+  import "svelte-highlight/styles/tokyo-night-light.css";
 </script>
 ```
 
@@ -4970,7 +4970,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/tomorrow.css";
+  import "svelte-highlight/styles/tomorrow.css";
 </script>
 ```
 
@@ -4992,7 +4992,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/tomorrow-night.css";
+  import "svelte-highlight/styles/tomorrow-night.css";
 </script>
 ```
 
@@ -5014,7 +5014,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/tomorrow-night-blue.css";
+  import "svelte-highlight/styles/tomorrow-night-blue.css";
 </script>
 ```
 
@@ -5036,7 +5036,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/tomorrow-night-bright.css";
+  import "svelte-highlight/styles/tomorrow-night-bright.css";
 </script>
 ```
 
@@ -5058,7 +5058,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/twilight.css";
+  import "svelte-highlight/styles/twilight.css";
 </script>
 ```
 
@@ -5080,7 +5080,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/unikitty-dark.css";
+  import "svelte-highlight/styles/unikitty-dark.css";
 </script>
 ```
 
@@ -5102,7 +5102,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/unikitty-light.css";
+  import "svelte-highlight/styles/unikitty-light.css";
 </script>
 ```
 
@@ -5124,7 +5124,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/vs.css";
+  import "svelte-highlight/styles/vs.css";
 </script>
 ```
 
@@ -5146,7 +5146,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/vs2015.css";
+  import "svelte-highlight/styles/vs2015.css";
 </script>
 ```
 
@@ -5168,7 +5168,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/vulcan.css";
+  import "svelte-highlight/styles/vulcan.css";
 </script>
 ```
 
@@ -5190,7 +5190,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/windows-10.css";
+  import "svelte-highlight/styles/windows-10.css";
 </script>
 ```
 
@@ -5212,7 +5212,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/windows-10-light.css";
+  import "svelte-highlight/styles/windows-10-light.css";
 </script>
 ```
 
@@ -5234,7 +5234,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/windows-95.css";
+  import "svelte-highlight/styles/windows-95.css";
 </script>
 ```
 
@@ -5256,7 +5256,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/windows-95-light.css";
+  import "svelte-highlight/styles/windows-95-light.css";
 </script>
 ```
 
@@ -5278,7 +5278,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/windows-high-contrast.css";
+  import "svelte-highlight/styles/windows-high-contrast.css";
 </script>
 ```
 
@@ -5300,7 +5300,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/windows-high-contrast-light.css";
+  import "svelte-highlight/styles/windows-high-contrast-light.css";
 </script>
 ```
 
@@ -5322,7 +5322,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/windows-nt.css";
+  import "svelte-highlight/styles/windows-nt.css";
 </script>
 ```
 
@@ -5344,7 +5344,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/windows-nt-light.css";
+  import "svelte-highlight/styles/windows-nt-light.css";
 </script>
 ```
 
@@ -5366,7 +5366,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/woodland.css";
+  import "svelte-highlight/styles/woodland.css";
 </script>
 ```
 
@@ -5388,7 +5388,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/xcode.css";
+  import "svelte-highlight/styles/xcode.css";
 </script>
 ```
 
@@ -5410,7 +5410,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/xcode-dusk.css";
+  import "svelte-highlight/styles/xcode-dusk.css";
 </script>
 ```
 
@@ -5432,7 +5432,7 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/xt256.css";
+  import "svelte-highlight/styles/xt256.css";
 </script>
 ```
 
@@ -5454,6 +5454,6 @@
 
 ```html
 <script>
-  import "svelte-highlight/languages/zenburn.css";
+  import "svelte-highlight/styles/zenburn.css";
 </script>
 ```
