@@ -2,14 +2,14 @@
   "private": true,
   "scripts": {
     "dev": "webpack serve",
-    "build": "rm -rf public && NODE_ENV=production webpack"
+    "build": "NODE_ENV=production webpack"
   },
   "devDependencies": {
-    "@tsconfig/svelte": "^4.0.1",
+    "@tsconfig/svelte": "^5.0.0",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
-    "svelte": "^3.59.1",
+    "svelte": "^4.0.4",
     "svelte-highlight": "^7.3.0",
     "svelte-loader": "^3.1.9",
     "svelte-preprocess": "^5.0.4",
