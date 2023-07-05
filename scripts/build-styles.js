@@ -82,7 +82,7 @@ export async function buildStyles() {
 
 \`\`\`html
 <script>
-  import "svelte-highlight/languages/${name}.css";
+  import "svelte-highlight/styles/${name}.css";
 <\/script>
 \`\`\`\n\n`;
       })
