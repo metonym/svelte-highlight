@@ -46,13 +46,13 @@ export async function buildLanguages() {
       `src/languages/${name}.js`,
       `import register from "highlight.js/lib/languages/${name}";\n
 export const ${moduleName} = { name: "${name}", register };
-export default ${moduleName};\n`
+export default ${moduleName};\n`,
     );
 
     await writeTo(
       `src/languages/${name}.d.ts`,
       `export { ${moduleName} } from "./";
-export { ${moduleName} as default } from "./";\n`
+export { ${moduleName} as default } from "./";\n`,
     );
   });
 

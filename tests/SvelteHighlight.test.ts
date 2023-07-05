@@ -25,19 +25,19 @@ describe("SvelteHighlight", () => {
     expect(document.head.querySelector("style")?.innerHTML).toBeTruthy();
 
     expect(
-      target.querySelector("#highlighted")?.innerHTML
+      target.querySelector("#highlighted")?.innerHTML,
     ).toMatchInlineSnapshot(
-      '"&lt;span class=\\"hljs-keyword\\"&gt;const&lt;/span&gt; &lt;span class=\\"hljs-title function_\\"&gt;add&lt;/span&gt; = (&lt;span class=\\"hljs-params\\"&gt;a: number, b: number&lt;/span&gt;) =&amp;gt; a + b;"'
+      '"&lt;span class=\\"hljs-keyword\\"&gt;const&lt;/span&gt; &lt;span class=\\"hljs-title function_\\"&gt;add&lt;/span&gt; = (&lt;span class=\\"hljs-params\\"&gt;a: number, b: number&lt;/span&gt;) =&amp;gt; a + b;"',
     );
 
     expect(
-      target.querySelector("#langtag")?.getAttribute("data-language")
+      target.querySelector("#langtag")?.getAttribute("data-language"),
     ).toEqual("svelte");
 
     expect(
-      target.querySelector("#highlight-auto")?.innerHTML
+      target.querySelector("#highlight-auto")?.innerHTML,
     ).toMatchInlineSnapshot(
-      '"<code class=\\"hljs\\">const add = <span class=\\"hljs-function\\">(<span class=\\"hljs-params\\">a: <span class=\\"hljs-built_in\\">number</span>, b: <span class=\\"hljs-built_in\\">number</span></span>) =&gt;</span> a + b;</code>"'
+      '"<code class=\\"hljs\\">const add = <span class=\\"hljs-function\\">(<span class=\\"hljs-params\\">a: <span class=\\"hljs-built_in\\">number</span>, b: <span class=\\"hljs-built_in\\">number</span></span>) =&gt;</span> a + b;</code>"',
     );
 
     expect(target.querySelector("#highlight-auto-css")?.outerHTML)
@@ -48,15 +48,15 @@ describe("SvelteHighlight", () => {
         }</code></pre>"
       `);
     expect(target.querySelector("#inferred-language")?.innerHTML).toEqual(
-      "css"
+      "css",
     );
 
     await userEvent.click(target.querySelector("button")!);
 
     expect(
-      target.querySelector("#highlight-auto")?.innerHTML
+      target.querySelector("#highlight-auto")?.innerHTML,
     ).toMatchInlineSnapshot(
-      '"<code class=\\"hljs\\">&lt;<span class=\\"hljs-keyword\\">button</span> <span class=\\"hljs-keyword\\">on</span>:click&gt;Click me&lt;/<span class=\\"hljs-keyword\\">button</span>&gt;</code>"'
+      '"<code class=\\"hljs\\">&lt;<span class=\\"hljs-keyword\\">button</span> <span class=\\"hljs-keyword\\">on</span>:click&gt;Click me&lt;/<span class=\\"hljs-keyword\\">button</span>&gt;</code>"',
     );
 
     expect(target.querySelector("#line-numbers")?.innerHTML)

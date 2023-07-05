@@ -39,14 +39,14 @@ export async function buildStyles() {
       const content = await readFile(absPath, "utf-8");
       const exportee = `const ${moduleName} = \`<style>${content.replace(
         /\`/g,
-        "\\`"
+        "\\`",
       )}</style>\`;\n
       export default ${moduleName};\n`;
 
       await writeTo(`src/styles/${name}.js`, exportee);
       await writeTo(
         `src/styles/${name}.d.ts`,
-        `export { ${moduleName} as default } from "./";\n`
+        `export { ${moduleName} as default } from "./";\n`,
       );
       await writeTo(`src/styles/${name}.css`, content);
     } else {
@@ -94,7 +94,7 @@ export async function buildStyles() {
   const base = styles
     .map(
       (style) =>
-        `export { default as ${style.moduleName} } from './${style.name}';\n`
+        `export { default as ${style.moduleName} } from './${style.name}';\n`,
     )
     .join("");
 

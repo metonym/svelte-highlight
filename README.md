@@ -101,7 +101,7 @@ CSS StyleSheets can also be externally linked from a Content Delivery Network (C
 **HTML**
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <link

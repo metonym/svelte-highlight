@@ -4,7 +4,7 @@ import { optimizeImports } from "carbon-preprocess-svelte";
 import fs from "fs";
 
 const pkg = JSON.parse(
-  fs.readFileSync(new URL("./package.json", import.meta.url), "utf8")
+  fs.readFileSync(new URL("./package.json", import.meta.url), "utf8"),
 );
 const CONTENT = {
   NAME: pkg.name,
@@ -29,7 +29,7 @@ export default {
         Object.entries(CONTENT).map(([key, value]) => {
           code = code.replace(
             new RegExp("process.env." + key, "g"),
-            JSON.stringify(value)
+            JSON.stringify(value),
           );
         });
 
