@@ -84,10 +84,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@rollup/plugin-commonjs@^25.0.2":
-  version "25.0.2"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-25.0.2.tgz#7ed37d00a12fc7fdd3aadba5fa0de52f2372bbbb"
-  integrity sha512-NGTwaJxIO0klMs+WSFFtBP7b9TdTJ3K76HZkewT8/+yHzMiUGVQgaPtLQxNVYIgT5F7lxkEyVID+yS3K7bhCow==
+"@rollup/plugin-commonjs@^25.0.4":
+  version "25.0.4"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-25.0.4.tgz#a7547a0c4ec3fa79818eb313e1de0023e548f4e6"
+  integrity sha512-L92Vz9WUZXDnlQQl3EwbypJR4+DM2EbsO+/KOcEkP4Mc6Ct453EeDB2uH9lgRwj4w5yflgNpq9pHOiY8aoUXBQ==
   dependencies:
     "@rollup/pluginutils" "^5.0.1"
     commondir "^1.0.1"
@@ -575,10 +575,10 @@ rollup-plugin-terser@^7.0.2:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup@^3.26.2:
-  version "3.26.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.26.2.tgz#2e76a37606cb523fc9fef43e6f59c93f86d95e7c"
-  integrity sha512-6umBIGVz93er97pMgQO08LuH3m6PUb3jlDUUGFsNJB6VgTCUaDFpupf5JfU30529m/UKOgmiX+uY6Sx8cOYpLA==
+rollup@^3.28.0:
+  version "3.28.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.28.0.tgz#a3c70004b01934760c0cb8df717c7a1d932389a2"
+  integrity sha512-d7zhvo1OUY2SXSM6pfNjgD5+d0Nz87CUp4mt8l/GgVP3oBsPwzNvSzyu1me6BSG9JIgWNTVcafIXBIyM8yQ3yw==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -676,10 +676,10 @@ svelte-preprocess@^5.0.4:
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
 
-svelte@^4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-4.0.5.tgz#4c4f418c38c5124be081d0720fb7efecfba501cc"
-  integrity sha512-PHKPWP1wiWHBtsE57nCb8xiWB3Ht7/3Kvi3jac0XIxUM2rep8alO7YoAtgWeGD7++tFy46krilOrPW0mG3Dx+A==
+svelte@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-4.2.0.tgz#0e4304c15524450b22fba02516eb72efbd8847b6"
+  integrity sha512-kVsdPjDbLrv74SmLSUzAsBGquMs4MPgWGkGLpH+PjOYnFOziAvENVzgJmyOCV2gntxE32aNm8/sqNKD6LbIpeQ==
   dependencies:
     "@ampproject/remapping" "^2.2.1"
     "@jridgewell/sourcemap-codec" "^1.4.15"
