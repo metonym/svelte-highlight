@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 248 styles exported from highlight.js@11.8.0
+> 248 styles exported from highlight.js@11.9.0
 
 ## 3024 (`_3024`)
 

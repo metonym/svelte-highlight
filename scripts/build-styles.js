@@ -20,7 +20,13 @@ export async function buildStyles() {
   let styles = [];
 
   await totalist("node_modules/highlight.js/styles", async (file, absPath) => {
-    if (/\.(css)$/.test(file)) {
+    /**
+     * highlight.js >=v11.19.0 also ships minified
+     * CSS with the extension `.min.css`.
+     * 
+     * We only include non-minified CSS files.
+     */
+    if (/(?<!\.min)\.(css)$/.test(file)) {
       let { name, dir } = path.parse(file);
       let moduleName = toCamelCase(name);
 
@@ -50,7 +56,10 @@ export async function buildStyles() {
       );
       await writeTo(`src/styles/${name}.css`, content);
     } else {
-      await copyFile(absPath, `src/styles/${file}`);
+      // Copy over other file types, like images.
+      if (!/\.(css)$/.test(file)) {
+        await copyFile(absPath, `src/styles/${file}`);
+      }
     }
   });
 
