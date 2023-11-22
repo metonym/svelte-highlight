@@ -1,5 +1,6 @@
 .DS_Store
 .svelte-kit
+.routify
 build
 dist
 node_modules

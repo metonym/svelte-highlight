@@ -23,7 +23,7 @@ export async function buildStyles() {
     /**
      * highlight.js >=v11.19.0 also ships minified
      * CSS with the extension `.min.css`.
-     * 
+     *
      * We only include non-minified CSS files.
      */
     if (/(?<!\.min)\.(css)$/.test(file)) {
