@@ -12,7 +12,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "build:lib": "node scripts",
-    "package": "yarn build:lib && svelte-package",
+    "package": "svelte-package",
+    "postpackage": "node scripts/postpackage.js",
     "check": "svelte-check --workspace tests",
     "test": "vitest",
     "format": "prettier --ignore-path .gitignore --write ."
