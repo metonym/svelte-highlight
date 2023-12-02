@@ -2357,10 +2357,10 @@ svelte-dev-helper@^1.1.9:
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
   integrity sha512-oU+Xv7Dl4kRU2kdFjsoPLfJfnt5hUhsFUZtuzI3Ku/f2iAFZqBoEuXOqK3N9ngD4dxQOmN4OKWPHVi3NeAeAfQ==
 
-svelte-highlight@^7.4.1:
-  version "7.4.1"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-7.4.1.tgz#8e809f7edda2f01f43518c52a34b19751fa58e1f"
-  integrity sha512-ZjPUQn16bESqmzXzrQXfWKidwUabHNxysGIOUdbsxqBtDe8s33V9z6K697sszQITQ9k6hrMUpTICWLm2GIW5xQ==
+svelte-highlight@^7.4.2:
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-7.4.2.tgz#c23bacc5da043692ee36bd94522a6abc4a66f268"
+  integrity sha512-J0AGYK1bJCc5t4P8bT7NuCc0224XurJKF57YUJPxj8sqbfAYICyom5+spF2fyPHGKgZtkX8jNQLGwHgPzfCapA==
   dependencies:
     highlight.js "11.9.0"
 
@@ -2389,10 +2389,10 @@ svelte-preprocess@^5.1.1:
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
 
-svelte@^4.2.7:
-  version "4.2.7"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-4.2.7.tgz#8594fad998d11d4dd179f5a91e67d1fc04d8f6e3"
-  integrity sha512-UExR1KS7raTdycsUrKLtStayu4hpdV3VZQgM0akX8XbXgLBlosdE/Sf3crOgyh9xIjqSYB3UEBuUlIQKRQX2hg==
+svelte@^4.2.8:
+  version "4.2.8"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-4.2.8.tgz#a279d8b6646131ffb11bc692840f8839b8ae4ed1"
+  integrity sha512-hU6dh1MPl8gh6klQZwK/n73GiAHiR95IkFsesLPbMeEZi36ydaXL/ZAb4g9sayT0MXzpxyZjR28yderJHxcmYA==
   dependencies:
     "@ampproject/remapping" "^2.2.1"
     "@jridgewell/sourcemap-codec" "^1.4.15"
