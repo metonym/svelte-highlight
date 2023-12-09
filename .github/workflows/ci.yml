@@ -6,21 +6,16 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.40.0-jammy
-
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
+
       - name: Build and test the library
         run: |
           bun install
+          bun run playwright install --with-deps
           bun run build:lib
           bun run build
           bun run package
           bun run check & bun run test
-
-      - name: E2E tests
-        run: bun run test:e2e
-        env:
-          HOME: /root
+          bun run test:e2e
