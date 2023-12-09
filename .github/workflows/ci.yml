@@ -17,7 +17,9 @@ jobs:
       - name: Build and test the library
         run: |
           yarn
+          yarn playwright install --with-deps
           yarn build:lib
           yarn build
           yarn package
           yarn run check & yarn test
+          yarn test:e2e
