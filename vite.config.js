@@ -1,7 +1,6 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import path from "path";
-import { configDefaults } from "vitest/config";
 
 const TEST = process.env.VITEST;
 
@@ -21,9 +20,5 @@ export default {
     fs: {
       allow: [".."],
     },
-  },
-  test: {
-    environment: "jsdom",
-    exclude: [...configDefaults.exclude, "tests/e2e/*"],
   },
 };

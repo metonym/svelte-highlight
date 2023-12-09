@@ -15,9 +15,10 @@
     "package": "svelte-package",
     "postpackage": "node scripts/postpackage.js",
     "check": "svelte-check --workspace tests",
-    "test": "vitest",
+    "test": "bun test tests/*.ts",
     "test:e2e": "playwright test",
-    "format": "prettier --ignore-path .gitignore --write ."
+    "format": "prettier --write .",
+    "playwright": "playwright"
   },
   "dependencies": {
     "highlight.js": "11.9.0"
@@ -29,13 +30,12 @@
     "@sveltejs/kit": "1.27.7",
     "@sveltejs/package": "^1.0.2",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
-    "@testing-library/svelte": "^4.0.5",
-    "@testing-library/user-event": "^14.5.1",
+    "@types/node": "^20.10.4",
     "@types/prettier": "^3.0.0",
+    "bun-types": "latest",
     "carbon-components-svelte": "^0.82.4",
     "carbon-icons-svelte": "^12.4.0",
     "carbon-preprocess-svelte": "^0.10.0",
-    "jsdom": "^23.0.1",
     "prettier": "^3.1.0",
     "prettier-plugin-svelte": "^3.1.2",
     "svelte": "^4.2.8",
@@ -44,8 +44,7 @@
     "svelte2tsx": "^0.6.27",
     "totalist": "^3.0.1",
     "typescript": "^5.3.3",
-    "vite": "^5.0.7",
-    "vitest": "^1.0.4"
+    "vite": "^5.0.7"
   },
   "repository": {
     "type": "git",

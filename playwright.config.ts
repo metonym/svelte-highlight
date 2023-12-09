@@ -3,6 +3,7 @@ import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import path from "path";
 
 export default defineConfig({
+  testDir: "tests/e2e",
   timeout: 10_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
