@@ -11,7 +11,8 @@
       "lib/*": ["./demo/lib/*"],
       "svelte-highlight": ["./src"],
       "svelte-highlight/*": ["./src/*"]
-    }
+    },
+    "types": ["bun-types"]
   },
   "include": ["src/**/*", "demo/**/*", "tests/**/*"]
 }

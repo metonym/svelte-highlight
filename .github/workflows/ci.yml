@@ -8,16 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: oven-sh/setup-bun@v1
 
       - name: Build and test the library
         run: |
-          yarn
-          yarn build:lib
-          yarn build
-          yarn package
-          yarn run check & yarn test
+          bun install
+          bun run playwright install --with-deps
+          bun run build:lib
+          bun run build
+          bun run package
+          bun run check & bun run test
+          bun run test:e2e

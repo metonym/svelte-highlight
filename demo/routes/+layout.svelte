@@ -63,8 +63,6 @@
   <SideNavItems>
     {#each Object.entries(routes) as [href, text]}
       <SideNavLink
-        sveltekit:reload
-        sveltekit:prefetch
         href="{base}{href}"
         text={href === "/" ? "Getting Started" : text}
         isSelected={pathname === href}
