@@ -1,4 +1,5 @@
 <script>
+  // @ts-check
   import { PKG_HLJS_VERSION } from "@www/constants";
 
   /** @type {{ name: string; moduleName: string; }[]} */
@@ -22,6 +23,7 @@
   } from "carbon-components-svelte";
   import FocusKey from "svelte-focus-key";
 
+  /** @type {null | HTMLInputElement} */
   let ref = null;
   let value = "";
   let currentLabel = labelB;
@@ -33,13 +35,13 @@
   $: normalizedValue = normalize(value.trim());
   $: normalizedItems = items.map((item) => ({
     ...item,
-    name: normalize(item.name),
-    moduleName: item.moduleName.toLowerCase(),
+    normalized_name: normalize(item.name),
+    normalized_moduleName: item.moduleName.toLowerCase(),
   }));
   $: filtered = normalizedItems.filter(
     (item) =>
-      item.name.includes(normalizedValue) ||
-      item.moduleName.includes(normalizedValue)
+      item.normalized_name.includes(normalizedValue) ||
+      item.normalized_moduleName.includes(normalizedValue)
   );
   $: filteredIds = new Set(filtered.map((item) => item.name));
 </script>
