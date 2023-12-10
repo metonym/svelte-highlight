@@ -1,18 +1,11 @@
-<script context="module" lang="ts">
-  import type { Props, Slots, Events } from "./shared";
-</script>
-
-<script lang="ts">
+<script>
+  // @ts-check
   import LangTag from "./LangTag.svelte";
 
-  interface $$Props extends Omit<Props, "language"> {}
+  /** @type {any} */
+  export let code;
 
-  interface $$Slots extends Slots {}
-
-  interface $$Events extends Events {}
-
-  export let code: $$Props["code"];
-
+  /** @type {boolean} */
   export let langtag = false;
 
   import hljs from "highlight.js/lib/core";

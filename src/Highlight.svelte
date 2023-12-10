@@ -1,18 +1,13 @@
-<script context="module" lang="ts">
-  import type { Props, Slots, Events } from "./shared";
-</script>
+<script>
+  // @ts-check
 
-<script lang="ts">
-  interface $$Props extends Props {}
+  /** @type {import("./languages").LanguageType<string>} */
+  export let language;
 
-  interface $$Slots extends Slots {}
+  /** @type {any} */
+  export let code;
 
-  interface $$Events extends Events {}
-
-  export let language: $$Props["language"];
-
-  export let code: $$Props["code"];
-
+  /** @type {boolean} */
   export let langtag = false;
 
   import hljs from "highlight.js/lib/core";
@@ -21,6 +16,7 @@
 
   const dispatch = createEventDispatcher();
 
+  /** @type {string} */
   let highlighted = "";
 
   afterUpdate(() => {

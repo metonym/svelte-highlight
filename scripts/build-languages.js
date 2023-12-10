@@ -16,7 +16,7 @@ export async function buildLanguages() {
   import type { LanguageFn } from "highlight.js";
   
   interface LanguageType<TName extends string> {
-    name?: TName;
+    name: TName;
     register: LanguageFn;
   }\n\n`;
 

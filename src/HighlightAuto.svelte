@@ -1,42 +1,33 @@
-<script context="module" lang="ts">
-  import type { Props, Slots, Events, HighlightedCode } from "./shared";
-</script>
-
-<script lang="ts">
+<script>
+  // @ts-check
   import LangTag from "./LangTag.svelte";
 
-  interface $$Props extends Omit<Props, "language"> {}
+  /** @type {any} */
+  export let code;
 
-  interface $$Slots extends Slots {}
-
-  interface $$Events
-    extends Events<
-      HighlightedCode & {
-        /**
-         * The inferred language name.
-         * @example "css"
-         */
-        language?: string;
-      }
-    > {}
-
-  export let code: $$Props["code"];
-
+  /** @type {boolean} */
   export let langtag = false;
 
   import hljs from "highlight.js";
   import { createEventDispatcher, afterUpdate } from "svelte";
 
+  /**
+   * @typedef {{ highlighted: string; language: string; }} HighlightEventDetail
+   * @type {import("svelte").EventDispatcher<{ highlight: HighlightEventDetail}>}
+   */
   const dispatch = createEventDispatcher();
 
+  /** @type {string} */
   let highlighted = "";
-  let language = undefined;
+
+  /** @type {string} */
+  let language = "";
 
   afterUpdate(() => {
     if (highlighted) dispatch("highlight", { highlighted, language });
   });
 
-  $: ({ value: highlighted, language } = hljs.highlightAuto(code));
+  $: ({ value: highlighted, language = "" } = hljs.highlightAuto(code));
 </script>
 
 <slot {highlighted}>

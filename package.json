@@ -4,17 +4,12 @@
   "license": "MIT",
   "description": "Syntax Highlighting for Svelte using highlight.js",
   "author": "Eric Liu (https://github.com/metonym)",
-  "sideEffects": [
-    "src/styles/*.css"
-  ],
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "build:lib": "node scripts",
-    "package": "svelte-package",
-    "postpackage": "node scripts/postpackage.js",
-    "check": "svelte-check --workspace tests",
+    "package": "node scripts/npm-package",
     "test": "bun test tests/*.ts",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
@@ -37,9 +32,7 @@
     "prettier": "^3.1.0",
     "prettier-plugin-svelte": "^3.1.2",
     "svelte": "^4.2.8",
-    "svelte-check": "^3.6.2",
     "svelte-focus-key": "^1.0.0",
-    "svelte2tsx": "^0.6.27",
     "totalist": "^3.0.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.7"
