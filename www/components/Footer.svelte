@@ -1,18 +1,16 @@
 <script>
-  // @ts-check
+  import { PKG_HOMEPAGE, PKG_NAME } from "@www/constants";
   import { Row, Column, Link } from "carbon-components-svelte";
 
-  const HOMEPAGE = process.env.HOMEPAGE;
-  const NAME = process.env.NAME;
   const TS = process.env.TS;
 </script>
 
 <Row>
   <Column>
-    <Link class="mr-3" href={HOMEPAGE} target="_blank">GitHub</Link>
+    <Link class="mr-3" href={PKG_HOMEPAGE} target="_blank">GitHub</Link>
     <Link
       class="mr-3"
-      href="https://www.npmjs.com/package/{NAME}"
+      href="https://www.npmjs.com/package/{PKG_NAME}"
       target="_blank"
     >
       NPM

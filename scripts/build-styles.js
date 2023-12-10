@@ -11,7 +11,10 @@ import { writeTo } from "./utils/write-to.js";
  */
 
 export async function buildStyles() {
+  console.time("build styles");
   mkdir("src/styles");
+
+  let scoped_styles = "";
 
   /** @type {string[]} */
   let names = [];
@@ -55,6 +58,13 @@ export async function buildStyles() {
         `export { ${moduleName} as default } from "./";\n`,
       );
       await writeTo(`src/styles/${name}.css`, content);
+
+      const scoped_style = content
+        .replace(/\.hljs/g, `.${moduleName} .hljs`)
+        // adjust for first two rules being `code.hljs` not `.hljs`
+        .replace(/\s?code\.[_0-9a-zA-Z]+\s\.hljs/g, `.${moduleName} code.hljs`);
+
+      scoped_styles += scoped_style;
     } else {
       // Copy over other file types, like images.
       if (!/\.(css)$/.test(file)) {
@@ -110,5 +120,7 @@ export async function buildStyles() {
   await writeTo("src/styles/index.js", base);
   await writeTo("src/styles/index.d.ts", types);
   await writeTo("SUPPORTED_STYLES.md", markdown);
-  await writeTo("demo/lib/styles.json", styles);
+  await writeTo("www/data/styles.json", styles);
+  await writeTo("www/data/scoped-styles.css", scoped_styles);
+  console.timeEnd("build styles");
 }

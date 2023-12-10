@@ -1,6 +1,11 @@
 // @ts-check
 import { buildLanguages } from "./build-languages.js";
 import { buildStyles } from "./build-styles.js";
+import { mkdir } from "./utils/fs.js";
 
-await buildLanguages();
-await buildStyles();
+(async () => {
+  mkdir("www/data");
+
+  await buildLanguages();
+  await buildStyles();
+})();

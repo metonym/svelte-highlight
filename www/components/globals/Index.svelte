@@ -1,12 +1,7 @@
 <script>
-  /** @type {import('./$types').PageData} */
-  export const data = null;
-
-  import { base } from "$app/paths";
+  // @ts-check
+  import { PKG_NAME } from "@www/constants";
   import {
-    Tabs,
-    Tab,
-    TabContent,
     Row,
     Column,
     Link,
@@ -15,19 +10,17 @@
     InlineNotification,
   } from "carbon-components-svelte";
   import { HighlightSvelte, HighlightAuto } from "svelte-highlight";
-  import ScopedStyle from "lib/ScopedStyle.svelte";
-  import CodeSnippet from "lib/CodeSnippet.svelte";
-  import ScopedStyleSvelte from "lib/ScopedStyleSvelte.svelte";
-  import ScopedStyleAuto from "lib/ScopedStyleAuto.svelte";
-  import Basic from "lib/LineNumbers/Basic.svelte";
-  import HideBorder from "lib/LineNumbers/HideBorder.svelte";
-  import WrapLines from "lib/LineNumbers/WrapLines.svelte";
-  import StyleProps from "lib/LineNumbers/StyleProps.svelte";
-  import StartingLineNumber from "lib/LineNumbers/StartingLineNumber.svelte";
-  import HighlightedLines from "lib/LineNumbers/HighlightedLines.svelte";
-  import HighlightedLinesCustomColor from "lib/LineNumbers/HighlightedLinesCustomColor.svelte";
-
-  const NAME = process.env.NAME;
+  import ScopedStyle from "@components/ScopedStyle.svelte";
+  import CodeSnippet from "@components/CodeSnippet.svelte";
+  import ScopedStyleSvelte from "@components/ScopedStyleSvelte.svelte";
+  import ScopedStyleAuto from "@components/ScopedStyleAuto.svelte";
+  import Basic from "@components/LineNumbers/Basic.svelte";
+  import HideBorder from "@components/LineNumbers/HideBorder.svelte";
+  import WrapLines from "@components/LineNumbers/WrapLines.svelte";
+  import StyleProps from "@components/LineNumbers/StyleProps.svelte";
+  import StartingLineNumber from "@components/LineNumbers/StartingLineNumber.svelte";
+  import HighlightedLines from "@components/LineNumbers/HighlightedLines.svelte";
+  import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
 
   const svelteHeadCdn = `<link
   rel="stylesheet"
@@ -41,8 +34,8 @@
       Syntax Highlighting for Svelte using <Link
         inline
         style="font-size: inherit"
-        href="https://github.com/highlightjs/highlight.js">highlight.js</Link
-      >.
+        href="https://github.com/highlightjs/highlight.js">highlight.js.</Link
+      >
     </h4>
   </Column>
 </Row>
@@ -54,23 +47,16 @@
 </Row>
 
 <Row>
-  <Column xlg={9} lg={12}>
-    <Tabs>
-      <Tab label="Yarn" />
-      <Tab label="NPM" />
-      <Tab label="pnpm" />
-      <div slot="content" style="margin: 1rem -1rem">
-        <TabContent>
-          <CodeSnippet code="yarn add -D {NAME}" />
-        </TabContent>
-        <TabContent>
-          <CodeSnippet code="npm i -D {NAME}" />
-        </TabContent>
-        <TabContent>
-          <CodeSnippet code="pnpm i -D {NAME} highlight.js" />
-        </TabContent>
-      </div>
-    </Tabs>
+  <Column xlg={6} lg={12}>
+    <CodeSnippet code="yarn add -D {PKG_NAME}" /><br />
+    <CodeSnippet code="npm i -D {PKG_NAME}" /><br />
+    <CodeSnippet code="pnpm i -D {PKG_NAME} highlight.js" />
+  </Column>
+</Row>
+
+<Row>
+  <Column>
+    <hr />
   </Column>
 </Row>
 
@@ -81,7 +67,7 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">The default Highlight component requires two props:</p>
     <UnorderedList class="mb-5">
       <ListItem><code class="code">code</code>: text to highlight</ListItem>
@@ -95,14 +81,14 @@
       >.
     </p>
     <p class="mb-5">
-      See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
-      list of supported languages.
+      See the <Link size="lg" href="/languages">Languages page</Link> for a list
+      of supported languages.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <ScopedStyle name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       Import styles from <code class="code">svelte-highlight/styles</code>.
     </p>
@@ -118,8 +104,8 @@
       </ListItem>
     </UnorderedList>
     <p class="mb-5">
-      Refer to the <Link size="lg" href="{base}/styles">Styles page</Link> for a
-      list of supported styles.
+      Refer to the <Link size="lg" href="/styles">Styles page</Link> for a list of
+      supported styles.
     </p>
     <p>
       CSS StyleSheets can also be externally linked from a Content Delivery
@@ -127,6 +113,9 @@
         >unpkg.com</Link
       >.
     </p>
+  </Column>
+  <Column xlg={10}>
+    <HighlightSvelte code={svelteHeadCdn} class="atomOneDark" />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -134,9 +123,6 @@
       title="Note:"
       subtitle="Using a CDN is best suited for prototyping and not recommended for production use."
     />
-  </Column>
-  <Column xlg={12}>
-    <HighlightSvelte code={svelteHeadCdn} class="atomOneDark" />
   </Column>
 </Row>
 
@@ -147,13 +133,13 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       Use the <code class="code">HighlightSvelte</code> component for Svelte syntax
       highlighting.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <ScopedStyleSvelte name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
@@ -165,12 +151,15 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       The <code class="code">HighlightAuto</code> component invokes the
       <code class="code">highlightAuto</code>
       API from <code class="code">highlight.js</code>.
     </p>
+  </Column>
+  <Column xlg={10}>
+    <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -178,9 +167,6 @@
       title="Note:"
       subtitle="Auto-highlighting will result in a larger bundle size. Specify a language if possible."
     />
-  </Column>
-  <Column xlg={12}>
-    <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
   </Column>
 </Row>
 
@@ -191,25 +177,25 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       Use the <code class="code">LineNumbers</code> component to render the highlighted
       code with line numbers.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <Basic />
   </Column>
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       Set <code class="code">hideBorder</code> to <code class="code">true</code>
       to hide the border of the line numbers column.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <HideBorder />
   </Column>
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       By default, overflowing horizontal content is contained by a scrollbar.
     </p>
@@ -222,40 +208,40 @@
   <Column xlg={8}>
     <WrapLines />
   </Column>
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       Use <code class="code">--style-props</code> to customize visual properties.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <StyleProps />
   </Column>
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       Use <code class="code">startingLineNumber</code> to customize the starting
       line number. By default, line numbers start at
       <code class="code">1</code>.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <StartingLineNumber />
   </Column>
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       Use <code class="code">highlightedLines</code> to highlight specific lines.
       Indices start at zero.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <HighlightedLines />
   </Column>
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       Use <code class="code">--highlighted-background</code> to customize the background
       color of highlighted lines.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <HighlightedLinesCustomColor />
   </Column>
 </Row>
@@ -267,7 +253,7 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components apply a
       <code class="code">data-language</code> attribute on the codeblock containing
@@ -275,11 +261,11 @@
     </p>
     <p class="mb-5">This is also compatible with custom languages.</p>
     <p class="mb-5">
-      See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
-      list of supported languages.
+      See the <Link size="lg" href="/languages">Languages page</Link> for a list
+      of supported languages.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <HighlightAuto
       code={'[data-language="css"] {\n  /* custom style rules */\n}'}
       class="atomOneDark"
@@ -294,7 +280,7 @@
 </Row>
 
 <Row class="mb-7">
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components allow for a tag to be added
       at the top-right of the codeblock displaying the language name.
@@ -314,11 +300,11 @@
       <ListItem><code class="code">--langtag-border-radius: 0</code></ListItem>
     </UnorderedList>
     <p class="mb-5">
-      See the <Link size="lg" href="{base}/languages">Languages page</Link> for a
-      list of supported languages.
+      See the <Link size="lg" href="/languages">Languages page</Link> for a list
+      of supported languages.
     </p>
   </Column>
-  <Column xlg={12}>
+  <Column xlg={10}>
     <HighlightSvelte
       code={`<script>
   import { HighlightAuto } from "svelte-highlight";
@@ -344,26 +330,19 @@
 </Row>
 
 <Row>
-  <Column xlg={9} lg={12}>
+  <Column xlg={6} lg={12}>
     <h3 class="mb-7">Examples</h3>
     <p class="mb-5">
-      Example set-ups – including SvelteKit, Vite, Rollup, and Webpack – are
-      located in the
+      Example set-ups – including SvelteKit, Vite, Rollup, Routify, and Webpack
+      – are located in the
       <Link
         inline
         size="lg"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples"
       >
-        examples folder in the GitHub repository
-      </Link>.
+        examples folder
+      </Link> in the GitHub repository.
     </p>
-  </Column>
-</Row>
-
-<Row>
-  <Column xlg={9} lg={12}>
-    <h3 class="mb-7">License</h3>
-    <p class="mb-5">MIT</p>
   </Column>
 </Row>
 

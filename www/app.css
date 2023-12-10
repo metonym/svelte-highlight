@@ -23,8 +23,7 @@
   line-height: 1.34;
   letter-spacing: 0.32px;
   border-radius: 0.25rem;
-  background-color: #e0e0e0;
-  color: #161616;
+  background: var(--cds-ui-03);
   padding: 0 0.5rem;
 }
 
@@ -80,4 +79,12 @@ hr {
   margin-bottom: var(--cds-spacing-05);
   border: 0;
   border-bottom: 1px solid var(--cds-ui-03);
+}
+
+.hidden {
+  display: none;
+}
+
+body {
+  overflow-y: scroll;
 }
