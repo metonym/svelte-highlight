@@ -1,0 +1,28 @@
+---
+import Header from "../components/globals/Header.svelte";
+import "@www/data/scoped-styles.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" theme="g100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Syntax Highlighting for Svelte using highlight.js"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <Header pathname={Astro.url.pathname} title={title}>
+      <slot />
+    </Header>
+  </body>
+</html>

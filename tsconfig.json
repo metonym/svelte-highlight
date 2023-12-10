@@ -1,18 +1,18 @@
 {
-  "extends": "./.svelte-kit/tsconfig.json",
+  "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
+    "baseUrl": ".",
     "ignoreDeprecations": "5.0",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "paths": {
-      "$lib": ["./src"],
-      "$lib/*": ["./src/*"],
-      "lib": ["./demo/lib"],
-      "lib/*": ["./demo/lib/*"],
+      "@www/*": ["./www/*"],
+      "@layouts/*": ["./www/layouts/*"],
+      "@components/*": ["./www/components/*"],
       "svelte-highlight": ["./src"],
       "svelte-highlight/*": ["./src/*"]
     },
     "types": ["bun-types"]
   },
-  "include": ["src/**/*", "demo/**/*", "tests/**/*"]
+  "include": ["src/**/*", "www/**/*", "tests/**/*"]
 }

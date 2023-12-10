@@ -2,7 +2,7 @@
 import fs from "fs";
 import fsp from "fs/promises";
 
-/** @type {(dir: string) => void} */
+/** @type {(dir: string, noRemove?: boolean) => void} */
 export const mkdir = (dir) => {
   if (fs.existsSync(dir)) {
     fs.rmSync(dir, { recursive: true });

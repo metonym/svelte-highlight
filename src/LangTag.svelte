@@ -1,28 +1,17 @@
-<script context="module" lang="ts">
-  import type { Props } from "./shared";
-</script>
+<script>
+  // @ts-check
 
-<script lang="ts">
-  interface $$Props extends Omit<Props, "language"> {
-    /**
-     * Specify the highlighted code.
-     */
-    highlighted: string | undefined;
+  /** @type {any} */
+  export let code;
 
-    /**
-     * Specifiy the language name.
-     * @default "plaintext"
-     */
-    languageName?: string;
-  }
+  /** @type {string} */
+  export let highlighted;
 
-  export let langtag = false;
-
-  export let highlighted: $$Props["highlighted"];
-
-  export let code: $$Props["code"];
-
+  /** @type {string} */
   export let languageName = "plaintext";
+
+  /** @type {boolean} */
+  export let langtag = false;
 </script>
 
 <pre class:langtag data-language={languageName} {...$$restProps}><code

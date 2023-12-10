@@ -12,3 +12,4 @@ yarn-error.log*
 /playwright-report
 /playwright/.cache
 /test-results/
+/www/data/

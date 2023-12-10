@@ -6,6 +6,7 @@ import { toCamelCase } from "./utils/to-pascal-case.js";
 import { writeTo } from "./utils/write-to.js";
 
 export async function buildLanguages() {
+  console.time("build languages");
   mkdir("src/languages");
 
   let languages = hljs.listLanguages();
@@ -15,7 +16,7 @@ export async function buildLanguages() {
   import type { LanguageFn } from "highlight.js";
   
   interface LanguageType<TName extends string> {
-    name?: TName;
+    name: TName;
     register: LanguageFn;
   }\n\n`;
 
@@ -59,5 +60,6 @@ export { ${moduleName} as default } from "./";\n`,
   await writeTo("src/languages/index.js", base);
   await writeTo("src/languages/index.d.ts", baseTs);
   await writeTo("SUPPORTED_LANGUAGES.md", markdown);
-  await writeTo("demo/lib/languages.json", lang);
+  await writeTo("www/data/languages.json", lang);
+  console.timeEnd("build languages");
 }

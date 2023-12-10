@@ -4,7 +4,6 @@
   export let moduleName = "";
 
   import HighlightAuto from "svelte-highlight/HighlightAuto.svelte";
-  import * as styles from "svelte-highlight/styles";
 
   $: code = `<script>
   import { HighlightAuto } from "svelte-highlight";
@@ -18,16 +17,6 @@
 </svelte:head>
 
 <HighlightAuto {code} />`;
-
-  $: css = (styles[moduleName] || "")
-    // prefix all styles with a scope
-    .replace(/\.hljs/g, `.${moduleName} .hljs`)
-    // adjust for first two rules being `code.hljs` not `.hljs`
-    .replace(/\s?code\.[_0-9a-zA-Z]+\s\.hljs/g, `.${moduleName} code.hljs`);
 </script>
-
-<svelte:head>
-  {@html css}
-</svelte:head>
 
 <HighlightAuto class={moduleName} {code} />

@@ -1,19 +1,11 @@
+import type { SvelteComponentTyped } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
-import type { LanguageType } from "./languages";
 
-export interface Props extends HTMLAttributes<HTMLPreElement> {
+export type HighlightSvelteProps = HTMLAttributes<HTMLPreElement> & {
   /**
    * Specify the text to highlight.
    */
   code: any;
-
-  /**
-   * Provide the language grammar used to highlight the code.
-   * Import languages from `svelte-highlight/languages/*`.
-   * @example
-   * import typescript from "svelte-highlight/languages/typescript";
-   */
-  language: LanguageType<string>;
 
   /**
    * Set to `true` for the language name to be
@@ -42,20 +34,30 @@ export interface Props extends HTMLAttributes<HTMLPreElement> {
    * Customize the border radius of the langtag.
    */
   "--langtag-border-radius"?: string;
-}
+};
 
-export interface HighlightedCode {
-  /**
-   * The highlighted HTML as a string.
-   * @example "<span>...</span>"
-   */
-  highlighted: string;
-}
+export type HighlightSvelteEvents = {
+  highlight: CustomEvent<{
+    /**
+     * The highlighted HTML as a string.
+     * @example "<span>...</span>"
+     */
+    highlighted: string;
+  }>;
+};
 
-export interface Slots {
-  default: HighlightedCode;
-}
+export type HighlightSvelteSlots = {
+  default: {
+    /**
+     * The highlighted HTML as a string.
+     * @example "<span>...</span>"
+     */
+    highlighted: string;
+  };
+};
 
-export interface Events<THighlight = HighlightedCode> {
-  highlight: CustomEvent<THighlight>;
-}
+export default class HighlightSvelte extends SvelteComponentTyped<
+  HighlightSvelteProps,
+  HighlightSvelteEvents,
+  HighlightSvelteSlots
+> {}

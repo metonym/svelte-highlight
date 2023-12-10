@@ -1,5 +1,6 @@
 <script>
-  // @ts-check
+  import { PKG_HLJS_VERSION } from "@www/constants";
+
   /** @type {{ name: string; moduleName: string; }[]} */
   export let items = [];
 
@@ -21,8 +22,6 @@
   } from "carbon-components-svelte";
   import FocusKey from "svelte-focus-key";
 
-  const VERSION_HLJS = process.env.VERSION_HLJS;
-
   let ref = null;
   let value = "";
   let currentLabel = labelB;
@@ -32,20 +31,26 @@
     s.toLowerCase().replace(/\-/g, " ").replace(/\s+/g, " ");
 
   $: normalizedValue = normalize(value.trim());
-  $: filtered = items.filter(
+  $: normalizedItems = items.map((item) => ({
+    ...item,
+    name: normalize(item.name),
+    moduleName: item.moduleName.toLowerCase(),
+  }));
+  $: filtered = normalizedItems.filter(
     (item) =>
-      normalize(item.name).includes(normalizedValue) ||
-      item.moduleName.toLowerCase().includes(normalizedValue)
+      item.name.includes(normalizedValue) ||
+      item.moduleName.includes(normalizedValue)
   );
+  $: filteredIds = new Set(filtered.map((item) => item.name));
 </script>
 
 <FocusKey element={ref} selectText />
 
 <Row>
   <Column>
-    <p>
+    <p class="text-02">
       {items.length}
-      {itemName}s exported from <code class="code">highlight.js</code> version {VERSION_HLJS}
+      {itemName}s from highlight.js v{PKG_HLJS_VERSION}.
     </p>
   </Column>
 </Row>
@@ -70,7 +75,7 @@
   </Column>
 </Row>
 
-<slot {filtered} {currentLabel} />
+<slot {filteredIds} {currentLabel} />
 
 {#if filtered.length === 0}
   <Row>
