@@ -16,4 +16,4 @@
 <Highlight language={${moduleName}} code="code" />`;
 </script>
 
-<HighlightSvelte class="atomOneDark" {code} />
+<HighlightSvelte class="irBlack" {code} />

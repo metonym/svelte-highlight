@@ -116,7 +116,7 @@
   <Row>
     <Column>
       <p>
-        No matches found for "{value}"
+        No matches found for <strong>"{value}"</strong>
       </p>
     </Column>
   </Row>
