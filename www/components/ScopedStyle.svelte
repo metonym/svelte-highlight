@@ -1,5 +1,6 @@
 <script>
   // @ts-check
+
   export let name = "";
   export let moduleName = "";
   export let useInjectedStyles = true;

@@ -1,6 +1,10 @@
 <script>
   // @ts-check
+
+  /** @type {string} */
   export let title;
+
+  /** @type {string} */
   export let pathname;
 
   import { PKG_VERSION, PKG_HOMEPAGE } from "@www/constants";
@@ -19,8 +23,8 @@
     Content,
   } from "carbon-components-svelte";
   import LogoGithub from "@components/LogoGithub.svelte";
-  import Footer from "@components/Footer.svelte";
 
+  /** @type {Record<typeof pathname, string>} */
   const routes = {
     "/languages": "Languages",
     "/styles": "Styles",
@@ -58,7 +62,6 @@
       </Column>
     </Row>
     <slot />
-    <Footer />
   </Grid>
 </Content>
 

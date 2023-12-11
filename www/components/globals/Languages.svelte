@@ -1,5 +1,6 @@
 <script>
   // @ts-check
+
   import {
     Row,
     Column,
@@ -44,12 +45,12 @@
               class={!filteredIds.has(language.name) ? "hidden" : ""}
             >
               <StructuredListCell>
-                <div class="mb-7">
+                <div class="mb-5">
                   <div class="label-01 mb-3">Language name</div>
                   <CodeSnippet type="inline" code={language.name} />
                 </div>
 
-                <div class="mb-7">
+                <div class="mb-5">
                   <div class="label-01 mb-3">Module name</div>
                   <CodeSnippet type="inline" code={language.moduleName} />
                 </div>

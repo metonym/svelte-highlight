@@ -1,20 +1,20 @@
 <script>
   // @ts-check
+
   export let snippet = "<LineNumbers {highlighted} />";
 
   import { HighlightSvelte, LineNumbers } from "svelte-highlight";
-  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
   const code = `<script>
   import Highlight, { LineNumbers } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
-  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+  import irBlack from "svelte-highlight/styles/ir-black";
 
   const code = "const add = (a: number, b: number) => a + b";
 <\/script>
   
 <svelte:head>
-  {@html atomOneDark}
+  {@html irBlack}
 </svelte:head>
 
 <Highlight language={typescript} {code} let:highlighted>
@@ -22,10 +22,6 @@
 </Highlight>`;
 </script>
 
-<svelte:head>
-  {@html atomOneDark}
-</svelte:head>
-
 <HighlightSvelte {code} let:highlighted>
-  <LineNumbers {highlighted} {...$$restProps} />
+  <LineNumbers class="irBlack" {highlighted} {...$$restProps} />
 </HighlightSvelte>

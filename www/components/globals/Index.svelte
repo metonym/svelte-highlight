@@ -1,5 +1,6 @@
 <script>
   // @ts-check
+
   import { PKG_NAME } from "@www/constants";
   import {
     Row,
@@ -9,7 +10,7 @@
     ListItem,
     InlineNotification,
   } from "carbon-components-svelte";
-  import { HighlightSvelte, HighlightAuto } from "svelte-highlight";
+  import Highlight, { HighlightSvelte } from "svelte-highlight";
   import ScopedStyle from "@components/ScopedStyle.svelte";
   import CodeSnippet from "@components/CodeSnippet.svelte";
   import ScopedStyleSvelte from "@components/ScopedStyleSvelte.svelte";
@@ -21,6 +22,7 @@
   import StartingLineNumber from "@components/LineNumbers/StartingLineNumber.svelte";
   import HighlightedLines from "@components/LineNumbers/HighlightedLines.svelte";
   import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
+  import css from "svelte-highlight/languages/css";
 
   const svelteHeadCdn = `<link
   rel="stylesheet"
@@ -30,23 +32,20 @@
 
 <Row>
   <Column xlg={16} lg={16}>
-    <h4 class="mb-7">
-      Syntax Highlighting for Svelte using <Link
+    <p class="text-02">
+      Svelte component library for highlighting code using <Link
         inline
         style="font-size: inherit"
         href="https://github.com/highlightjs/highlight.js">highlight.js.</Link
       >
-    </h4>
+    </p>
   </Column>
 </Row>
 
 <Row>
-  <Column>
-    <h3>Installation</h3>
+  <Column xlg={12}>
+    <h4>Installation</h4>
   </Column>
-</Row>
-
-<Row>
   <Column xlg={6} lg={12}>
     <CodeSnippet code="yarn add -D {PKG_NAME}" /><br />
     <CodeSnippet code="npm i -D {PKG_NAME}" /><br />
@@ -60,13 +59,10 @@
   </Column>
 </Row>
 
-<Row>
-  <Column>
+<Row class="mb-9">
+  <Column xlg={12}>
     <h3>Usage</h3>
   </Column>
-</Row>
-
-<Row class="mb-7">
   <Column xlg={6} lg={12}>
     <p class="mb-5">The default Highlight component requires two props:</p>
     <UnorderedList class="mb-5">
@@ -86,7 +82,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyle name="atom-one-dark" moduleName="atomOneDark" />
+    <ScopedStyle name="ir-black" moduleName="irBlack" />
   </Column>
   <Column xlg={6} lg={12}>
     <p class="mb-5">
@@ -115,7 +111,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <HighlightSvelte code={svelteHeadCdn} class="atomOneDark" />
+    <HighlightSvelte code={svelteHeadCdn} class="irBlack" />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -126,13 +122,10 @@
   </Column>
 </Row>
 
-<Row>
-  <Column>
+<Row class="mb-9">
+  <Column xlg={12}>
     <h3>Svelte Syntax Highlighting</h3>
   </Column>
-</Row>
-
-<Row class="mb-7">
   <Column xlg={6} lg={12}>
     <p class="mb-5">
       Use the <code class="code">HighlightSvelte</code> component for Svelte syntax
@@ -140,17 +133,14 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyleSvelte name="atom-one-dark" moduleName="atomOneDark" />
+    <ScopedStyleSvelte name="ir-black" moduleName="irBlack" />
   </Column>
 </Row>
 
-<Row>
-  <Column>
+<Row class="mb-9">
+  <Column xlg={12}>
     <h3>Auto-highlighting</h3>
   </Column>
-</Row>
-
-<Row class="mb-7">
   <Column xlg={6} lg={12}>
     <p class="mb-5">
       The <code class="code">HighlightAuto</code> component invokes the
@@ -159,7 +149,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyleAuto name="atom-one-dark" moduleName="atomOneDark" />
+    <ScopedStyleAuto name="ir-black" moduleName="irBlack" />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -170,13 +160,10 @@
   </Column>
 </Row>
 
-<Row>
-  <Column>
+<Row class="mb-9">
+  <Column xlg={12}>
     <h3>Line Numbers</h3>
   </Column>
-</Row>
-
-<Row class="mb-7">
   <Column xlg={6} lg={12}>
     <p class="mb-5">
       Use the <code class="code">LineNumbers</code> component to render the highlighted
@@ -246,13 +233,10 @@
   </Column>
 </Row>
 
-<Row>
-  <Column>
+<Row class="mb-9">
+  <Column xlg={12}>
     <h3>Language Targeting</h3>
   </Column>
-</Row>
-
-<Row class="mb-7">
   <Column xlg={6} lg={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components apply a
@@ -266,20 +250,18 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <HighlightAuto
+    <Highlight
       code={'[data-language="css"] {\n  /* custom style rules */\n}'}
-      class="atomOneDark"
+      language={css}
+      class="irBlack"
     />
   </Column>
 </Row>
 
-<Row>
-  <Column>
+<Row class="mb-9">
+  <Column xlg={12}>
     <h3>Language Tags</h3>
   </Column>
-</Row>
-
-<Row class="mb-7">
   <Column xlg={6} lg={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components allow for a tag to be added
@@ -313,41 +295,33 @@
 <\/script>
 
 <HighlightAuto {code} langtag="{true}" \/>`}
-      class="atomOneDark"
+      class="irBlack"
       langtag={true}
     />
     <br />
-    <HighlightAuto
+    <Highlight
       code={`[data-language="css"] {
   --langtag-background: linear-gradient(135deg, #2996cf, 80%, white);
   --langtag-color: #fff;
   --langtag-border-radius: 8px;
 }`}
-      class="atomOneDark"
+      language={css}
+      class="irBlack"
       langtag={true}
     />
   </Column>
 </Row>
 
 <Row>
+  <Column xlg={12}><h3>Examples</h3></Column>
   <Column xlg={6} lg={12}>
-    <h3 class="mb-7">Examples</h3>
     <p class="mb-5">
-      Example set-ups – including SvelteKit, Vite, Rollup, Routify, and Webpack
-      – are located in the
-      <Link
+      Get started with <Link
         inline
         size="lg"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples"
-      >
-        examples folder
-      </Link> in the GitHub repository.
+        >example set-ups</Link
+      >, including SvelteKit, Vite, Rollup, Routify, and Webpack.
     </p>
-  </Column>
-</Row>
-
-<Row>
-  <Column>
-    <hr />
   </Column>
 </Row>
