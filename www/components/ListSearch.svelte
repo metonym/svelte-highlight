@@ -23,9 +23,40 @@
   } from "carbon-components-svelte";
   import FocusKey from "svelte-focus-key";
 
+  const SEARCH_PARAM = "q";
+
   /** @type {null | HTMLInputElement} */
   let ref = null;
-  let value = "";
+  let value = getSearchParamValue();
+
+  function getSearchParamValue() {
+    if (typeof window !== "undefined") {
+      const query = new URLSearchParams(window.location.search).get(
+        SEARCH_PARAM
+      );
+
+      return query ?? "";
+    }
+
+    return "";
+  }
+
+  function updateSearchParams() {
+    const searchParams = new URLSearchParams({ [SEARCH_PARAM]: value });
+
+    if (!value.trim()) {
+      searchParams.delete(SEARCH_PARAM);
+    }
+
+    let pathname = window.location.pathname;
+
+    if (searchParams.size > 0) {
+      pathname += "?" + searchParams.toString();
+    }
+
+    window.history.replaceState(null, "", pathname);
+  }
+
   let currentLabel = labelB;
 
   /** @type {(s: string) => string} */
@@ -50,7 +81,7 @@
 
 <Row>
   <Column>
-    <p class="text-02">
+    <p class="body-short-01 text-02">
       {items.length}
       {itemName}s from highlight.js v{PKG_HLJS_VERSION}.
     </p>
@@ -63,7 +94,9 @@
       bind:ref
       bind:value
       spellcheck="false"
-      placeholder={`Search ${itemName}s (e.g., "${placeholderExample}")`}
+      placeholder={`Search ${itemName}s (e.g., ${placeholderExample})`}
+      on:input={updateSearchParams}
+      on:clear={updateSearchParams}
     />
   </Column>
 </Row>
