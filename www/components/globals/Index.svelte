@@ -46,7 +46,7 @@
   <Column xlg={12}>
     <h4>Installation</h4>
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={9}>
     <CodeSnippet code="yarn add -D {PKG_NAME}" /><br />
     <CodeSnippet code="npm i -D {PKG_NAME}" /><br />
     <CodeSnippet code="pnpm i -D {PKG_NAME} highlight.js" />

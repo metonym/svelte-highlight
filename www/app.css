@@ -88,3 +88,8 @@ hr {
 body {
   overflow-y: scroll;
 }
+
+.bx--inline-notification {
+  width: 100%;
+  max-width: none;
+}
