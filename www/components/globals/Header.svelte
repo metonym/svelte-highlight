@@ -19,7 +19,6 @@
     Content,
   } from "carbon-components-svelte";
   import LogoGithub from "@components/LogoGithub.svelte";
-  import Footer from "@components/Footer.svelte";
 
   const routes = {
     "/languages": "Languages",
@@ -58,7 +57,6 @@
       </Column>
     </Row>
     <slot />
-    <Footer />
   </Grid>
 </Content>
 

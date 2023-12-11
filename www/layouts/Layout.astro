@@ -1,5 +1,6 @@
 ---
-import Header from "../components/globals/Header.svelte";
+import Header from "@components/globals/Header.svelte";
+import Footer from "@components/Footer.svelte";
 import "@www/data/scoped-styles.css";
 
 interface Props {
@@ -14,15 +15,28 @@ const { title } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta
       name="description"
       content="Syntax Highlighting for Svelte using highlight.js"
     />
     <title>{title}</title>
+    <style is:global>
+      body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+
+      .bx--content {
+        flex: 1;
+      }
+    </style>
   </head>
   <body>
     <Header pathname={Astro.url.pathname} title={title}>
       <slot />
     </Header>
+    <Footer />
   </body>
 </html>

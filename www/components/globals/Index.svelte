@@ -333,21 +333,12 @@
   <Column xlg={6} lg={12}>
     <h3 class="mb-7">Examples</h3>
     <p class="mb-5">
-      Example set-ups – including SvelteKit, Vite, Rollup, Routify, and Webpack
-      – are located in the
-      <Link
+      Get started with <Link
         inline
         size="lg"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples"
-      >
-        examples folder
-      </Link> in the GitHub repository.
+        >example set-ups</Link
+      > (SvelteKit, Vite, Rollup, Routify, and Webpack).
     </p>
-  </Column>
-</Row>
-
-<Row>
-  <Column>
-    <hr />
   </Column>
 </Row>
