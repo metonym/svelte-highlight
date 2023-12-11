@@ -9,11 +9,6 @@
 
 <footer>
   <Grid>
-    <Row>
-      <Column>
-        <hr />
-      </Column>
-    </Row>
     <Row padding>
       <Column xlg={2} lg={6}>
         <Link class="mr-3" href={PKG_HOMEPAGE} target="_blank">GitHub</Link>
