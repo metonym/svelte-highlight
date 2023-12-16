@@ -45,12 +45,8 @@
   "bugs": "https://github.com/metonym/svelte-highlight/issues",
   "keywords": [
     "svelte",
-    "svelte 3",
     "svelte components",
     "highlight.js",
-    "highlight",
-    "code",
-    "syntax",
-    "typescript"
+    "syntax highlight"
   ]
 }
