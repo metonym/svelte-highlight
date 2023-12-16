@@ -15,6 +15,7 @@ async function npmPackage() {
   // Copy source folder to package
   mkdir("./package/src");
   fs.cpSync("./src", "./package", { recursive: true });
+  fs.rmSync("./package/src", { recursive: true, force: true });
 
   const pkgJson = JSON.parse(
     fs.readFileSync("./package/package.json", "utf-8"),
@@ -23,20 +24,45 @@ async function npmPackage() {
   delete pkgJson.scripts;
   delete pkgJson.devDependencies;
 
-  pkgJson.svelte = "./index.js";
-  pkgJson.types = "./index.d.ts";
-  pkgJson.sideEffects = ["src/styles/*.css"];
-
-  pkgJson.exports = {};
+  pkgJson.exports = {
+    ".": {
+      svelte: "./index.js",
+    },
+  };
 
   const deny_list = new Set(["LICENSE", "README.md"]);
 
+  /**  {@link pkgJson.exports} already accounts for the Svelte entry point.  */
+  const skip_list = new Set(["index.js"]);
+
   await totalist("./package", (rel, abs, stats) => {
     if (stats.isFile() && !rel.endsWith(".d.ts") && !deny_list.has(rel)) {
+      if (skip_list.has(rel)) return;
+
+      if (/\//g.test(rel)) {
+        // Skip files inside of folders. A subpath is more readable.
+        return;
+      }
+
       const rel_prefix = "./" + rel;
-      pkgJson.exports[rel_prefix.replace(/\.js$/, "")] = rel_prefix;
+
+      // Remove file extension for JS files as it is the default.
+      const exports_key = rel_prefix.replace(/\.js$/, "");
+
+      pkgJson.exports[exports_key] = rel_prefix;
     }
   });
+
+  pkgJson.exports["./styles/*"] = "./styles/*";
+  pkgJson.exports["./languages/*"] = "./languages/*";
+
+  // Svelte entry point is deprecated but we preserve it for backwards compatibility.
+  pkgJson.svelte = "./index.js";
+  pkgJson.types = "./index.d.ts";
+
+  // Most modern bundlers know if standalone StyleSheets are used.
+  // We specify it here to be sure so that it will not be mistakenly tree-shaken.
+  pkgJson.sideEffects = ["src/styles/*.css"];
 
   await writeFile("./package/package.json", JSON.stringify(pkgJson, null, 2));
   console.timeEnd("package");
