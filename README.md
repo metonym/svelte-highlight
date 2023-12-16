@@ -9,6 +9,8 @@ Try it in [StackBlitz](https://stackblitz.com/edit/svelte-highlight?file=src%2Fr
 
 ## [Documentation](https://svhe.onrender.com)
 
+The Changelog is [available on GitHub](https://github.com/metonym/svelte-highlight/blob/master/CHANGELOG.md).
+
 ## Installation
 
 ```bash
