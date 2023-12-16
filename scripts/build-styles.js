@@ -3,6 +3,7 @@ import path from "path";
 import { totalist } from "totalist";
 import { createMarkdown } from "./utils/create-markdown.js";
 import { copyFile, mkdir, readFile } from "./utils/fs.js";
+import { minifyCss } from "./utils/minify-css.js";
 import { toCamelCase } from "./utils/to-pascal-case.js";
 import { writeTo } from "./utils/write-to.js";
 
@@ -46,10 +47,21 @@ export async function buildStyles() {
       styles.push({ name, moduleName });
 
       const content = await readFile(absPath, "utf-8");
-      const exportee = `const ${moduleName} = \`<style>${content.replace(
-        /\`/g,
-        "\\`",
-      )}</style>\`;\n
+      const css_minified = minifyCss(content);
+
+      // Escape backticks for JS template literal.
+      const content_css_for_js = minifyCss(content.replace(/\`/g, "\\`"), {
+        remove: (comment) => {
+          if (/(License|Author)/i.test(comment)) {
+            // Preserve license comments.
+            return false;
+          }
+
+          return true;
+        },
+      });
+
+      const exportee = `const ${moduleName} = \`<style>${content_css_for_js}</style>\`;\n
       export default ${moduleName};\n`;
 
       await writeTo(`src/styles/${name}.js`, exportee);
@@ -57,7 +69,7 @@ export async function buildStyles() {
         `src/styles/${name}.d.ts`,
         `export { ${moduleName} as default } from "./";\n`,
       );
-      await writeTo(`src/styles/${name}.css`, content);
+      await writeTo(`src/styles/${name}.css`, css_minified);
 
       const scoped_style = content
         .replace(/\.hljs/g, `.${moduleName} .hljs`)
@@ -121,6 +133,9 @@ export async function buildStyles() {
   await writeTo("src/styles/index.d.ts", types);
   await writeTo("SUPPORTED_STYLES.md", markdown);
   await writeTo("www/data/styles.json", styles);
-  await writeTo("www/data/scoped-styles.css", scoped_styles);
+  await writeTo(
+    "www/data/scoped-styles.css",
+    minifyCss(scoped_styles, { removeAll: true }),
+  );
   console.timeEnd("build styles");
 }
