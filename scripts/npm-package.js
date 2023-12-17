@@ -1,6 +1,5 @@
 // @ts-check
 import fs from "node:fs";
-import { totalist } from "totalist";
 import { copyFile, mkdir, writeFile } from "./utils/fs.js";
 
 async function npmPackage() {
@@ -26,35 +25,26 @@ async function npmPackage() {
 
   pkgJson.exports = {
     ".": {
+      types: "./index.d.ts",
       svelte: "./index.js",
     },
+    "./*": {
+      types: "./*.d.ts",
+      svelte: "./*.svelte",
+    },
+    "./styles/*.css": {
+      import: "./styles/*.css",
+    },
+    "./styles/*": {
+      types: "./styles/*.d.ts",
+      import: "./styles/*.js",
+    },
+    "./languages/*": {
+      types: "./languages/*.d.ts",
+      import: "./languages/*.js",
+    },
+    "./package.json": "./package.json",
   };
-
-  const deny_list = new Set(["LICENSE", "README.md"]);
-
-  /**  {@link pkgJson.exports} already accounts for the Svelte entry point.  */
-  const skip_list = new Set(["index.js"]);
-
-  await totalist("./package", (rel, abs, stats) => {
-    if (stats.isFile() && !rel.endsWith(".d.ts") && !deny_list.has(rel)) {
-      if (skip_list.has(rel)) return;
-
-      if (/\//g.test(rel)) {
-        // Skip files inside of folders. A subpath is more readable.
-        return;
-      }
-
-      const rel_prefix = "./" + rel;
-
-      // Remove file extension for JS files as it is the default.
-      const exports_key = rel_prefix.replace(/\.js$/, "");
-
-      pkgJson.exports[exports_key] = rel_prefix;
-    }
-  });
-
-  pkgJson.exports["./styles/*"] = "./styles/*";
-  pkgJson.exports["./languages/*"] = "./languages/*";
 
   // Svelte entry point is deprecated but we preserve it for backwards compatibility.
   pkgJson.svelte = "./index.js";
