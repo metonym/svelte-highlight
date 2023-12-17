@@ -28,7 +28,7 @@ async function npmPackage() {
       types: "./index.d.ts",
       svelte: "./index.js",
     },
-    "./*": {
+    "./*.svelte": {
       types: "./*.d.ts",
       svelte: "./*.svelte",
     },
