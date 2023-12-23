@@ -157,10 +157,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@polka/url@^1.0.0-next.20":
-  version "1.0.0-next.21"
-  resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
-  integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
+"@polka/url@^1.0.0-next.24":
+  version "1.0.0-next.24"
+  resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.24.tgz#58601079e11784d20f82d0585865bb42305c4df3"
+  integrity sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==
 
 "@rollup/plugin-commonjs@^25.0.7":
   version "25.0.7"
@@ -336,20 +336,20 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.9.0.tgz#4ea610e0c40a07a8afa2977cbf80507f41c2271c"
   integrity sha512-aPP5Q5AqNGuT0tnuEkK/g4mnt3ZhheiXrDIiSVIHN9mcN21OyXDVbEMqmXPE7e2OplNLDkcvV+ZoGJa2ZImFgw==
 
-"@sveltejs/adapter-node@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-2.0.0.tgz#6773a47301357333600fa4455b06c0fc7cdbebd6"
-  integrity sha512-js/FBTnwDhr111wCY7b+B30LD8uTUgegRVGG2q6xwzgU8qmj+8/V5E6f/kNmDbyBJH45V6tr8RTKsLvpNScK4g==
+"@sveltejs/adapter-node@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-2.0.2.tgz#c26ddd909005a9558daee8066f55a26cd6bd85f0"
+  integrity sha512-iboANjLIB7Af74+og5IEQVSPsIfaO+o9zldU/7ljCGCrBj0t2gQlINtuwUhjvwhLgw9vHgICYWWZFxLM2C0zrg==
   dependencies:
     "@rollup/plugin-commonjs" "^25.0.7"
     "@rollup/plugin-json" "^6.1.0"
     "@rollup/plugin-node-resolve" "^15.2.3"
     rollup "^4.8.0"
 
-"@sveltejs/kit@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.0.0.tgz#9cbaed71542e4fc34f96a232d3000a9d6ec40afd"
-  integrity sha512-/GFxvit+q7PztRbgGTFXhVB6jvb0fZSeWuz5f4siQ2r/5BVhxYh7++Bw3/ZUjiOuyoZFiNBmOPcRNQbkzEce0g==
+"@sveltejs/kit@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.0.6.tgz#59e5a57fb4df3aa6f681fbf44f986542a923377e"
+  integrity sha512-dnHtyjBLGXx+hrZQ9GuqLlSfTBixewJaByUVWai7LmB4dgV3FwkK155OltEgONDQW6KW64hLNS/uojdx3uC2/g==
   dependencies:
     "@types/cookie" "^0.6.0"
     cookie "^0.6.0"
@@ -357,10 +357,10 @@
     esm-env "^1.0.0"
     kleur "^4.1.5"
     magic-string "^0.30.5"
-    mrmime "^1.0.1"
+    mrmime "^2.0.0"
     sade "^1.8.1"
     set-cookie-parser "^2.6.0"
-    sirv "^2.0.3"
+    sirv "^2.0.4"
     tiny-glob "^0.2.9"
 
 "@sveltejs/vite-plugin-svelte-inspector@^2.0.0-next.0 || ^2.0.0":
@@ -668,10 +668,10 @@ mri@^1.1.0:
   resolved "https://registry.yarnpkg.com/mri/-/mri-1.2.0.tgz#6721480fec2a11a4889861115a48b6cbe7cc8f0b"
   integrity sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==
 
-mrmime@^1.0.0, mrmime@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/mrmime/-/mrmime-1.0.1.tgz#5f90c825fad4bdd41dc914eff5d1a8cfdaf24f27"
-  integrity sha512-hzzEagAgDyoU1Q6yg5uI+AorQgdvMCur3FcKf7NhMKWsaYg+RnbTyHRa/9IlLF9rf455MOCtcqqrQQ83pPP7Uw==
+mrmime@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/mrmime/-/mrmime-2.0.0.tgz#151082a6e06e59a9a39b46b3e14d5cfe92b3abb4"
+  integrity sha512-eu38+hdgojoyq63s+yTpN4XMBdt5l8HhMhc4VKLO9KM5caLIBvUm4thi7fFaxyTmCKeNnXZ5pAlBwCUnhA09uw==
 
 ms@2.1.2:
   version "2.1.2"
@@ -783,13 +783,13 @@ set-cookie-parser@^2.6.0:
   resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.6.0.tgz#131921e50f62ff1a66a461d7d62d7b21d5d15a51"
   integrity sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==
 
-sirv@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/sirv/-/sirv-2.0.3.tgz#ca5868b87205a74bef62a469ed0296abceccd446"
-  integrity sha512-O9jm9BsID1P+0HOi81VpXPoDxYP374pkOLzACAoyUQ/3OUVndNpsz6wMnY2z+yOxzbllCKZrM+9QrWsv4THnyA==
+sirv@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/sirv/-/sirv-2.0.4.tgz#5dd9a725c578e34e449f332703eb2a74e46a29b0"
+  integrity sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==
   dependencies:
-    "@polka/url" "^1.0.0-next.20"
-    mrmime "^1.0.0"
+    "@polka/url" "^1.0.0-next.24"
+    mrmime "^2.0.0"
     totalist "^3.0.0"
 
 source-map-js@^1.0.1, source-map-js@^1.0.2:
@@ -802,10 +802,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svelte-highlight@^7.4.3:
-  version "7.4.3"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-7.4.3.tgz#4471e4af3e0cd02edde128ff4c5638760e42268d"
-  integrity sha512-NAeqpzmtiF41D9RNyDQI3tuhWe9p5iQr6seKvECUR6J+PDbxWSs3p5PaPdQZyOh6rOPogMAYxZ654QG+QsPG7A==
+svelte-highlight@^7.4.6:
+  version "7.4.6"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-7.4.6.tgz#c2cd908e6a0a564078571d303c25492510f9bb32"
+  integrity sha512-kgGC8I9Rc4JoCPAzdDM3YPWzOlZXqhEYz4Ncqjxq8JraI14oivuEzFNPEz63J848k02V5kA7IC2IkDNj98Z44w==
   dependencies:
     highlight.js "11.9.0"
 
