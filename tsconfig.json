@@ -11,8 +11,7 @@
       "@components/*": ["./www/components/*"],
       "svelte-highlight": ["./src"],
       "svelte-highlight/*": ["./src/*"]
-    },
-    "types": ["bun-types"]
+    }
   },
   "include": ["src/**/*", "www/**/*", "tests/**/*"]
 }
