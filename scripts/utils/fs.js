@@ -1,6 +1,6 @@
 // @ts-check
-import fs from "fs";
-import fsp from "fs/promises";
+import fs from "node:fs";
+import fsp from "node:fs/promises";
 
 /** @type {(dir: string, noRemove?: boolean) => void} */
 export const mkdir = (dir) => {
