@@ -8,7 +8,7 @@
   export let pathname;
 
   import { PKG_VERSION, PKG_HOMEPAGE } from "@www/constants";
-  import "carbon-components-svelte/css/g100.css";
+  import "carbon-components-svelte/css/all.css";
   import "@www/app.css";
   import {
     Header,
