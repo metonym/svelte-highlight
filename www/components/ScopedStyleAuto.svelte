@@ -4,7 +4,7 @@
   export let name = "";
   export let moduleName = "";
 
-  import HighlightAuto from "svelte-highlight/HighlightAuto.svelte";
+  import HighlightSvelte from "svelte-highlight/HighlightSvelte.svelte";
 
   $: code = `<script>
   import { HighlightAuto } from "svelte-highlight";
@@ -20,4 +20,4 @@
 <HighlightAuto {code} />`;
 </script>
 
-<HighlightAuto class={moduleName} {code} />
+<HighlightSvelte class={moduleName} {code} />
