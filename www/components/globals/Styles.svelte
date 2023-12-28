@@ -41,7 +41,7 @@
     </Row>
   {/if}
 
-  <Row class={filteredIds.size === 0 ? "hidden" : ""}>
+  <Row class={filteredIds.size === 0 ? "hidden" : ""} style="overflow-x: auto">
     <Column noGutter>
       <StructuredList>
         <StructuredListHead>
