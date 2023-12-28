@@ -3,7 +3,6 @@ import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import { defineConfig } from "astro/config";
 import { optimizeImports } from "carbon-preprocess-svelte";
 
-// https://astro.build/config
 export default defineConfig({
   outDir: "build",
   trailingSlash: "never",
