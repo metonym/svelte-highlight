@@ -1,7 +1,13 @@
 <script>
   // @ts-check
+
+  /** @type {string} */
   export let name;
+
+  /** @type {string} */
   export let moduleName;
+
+  /** @type {boolean} */
   export let useDirectImport;
 
   import HighlightSvelte from "svelte-highlight/HighlightSvelte.svelte";
