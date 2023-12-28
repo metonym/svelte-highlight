@@ -30,7 +30,7 @@ export async function buildLanguages() {
     if (/-/.test(name)) moduleName = toCamelCase(name);
 
     base += `export { default as ${moduleName} } from './${name}';\n`;
-    baseTs += `export const ${moduleName}: LanguageType<"${name}">;\n`;
+    baseTs += `export declare const ${moduleName}: LanguageType<"${name}">;\n`;
     lang.push({ name, moduleName });
     markdown += `## ${name} (\`${moduleName}\`)
 

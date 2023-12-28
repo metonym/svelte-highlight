@@ -120,7 +120,7 @@ export async function buildStyles() {
       .join("");
 
   const types = styles
-    .map((style) => `export const ${style.moduleName}: string;\n`)
+    .map((style) => `export declare const ${style.moduleName}: string;\n`)
     .join("");
   const base = styles
     .map(
