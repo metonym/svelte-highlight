@@ -51,5 +51,10 @@
     "svelte components",
     "highlight.js",
     "syntax highlight"
-  ]
+  ],
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-svelte"
+    ]
+  }
 }

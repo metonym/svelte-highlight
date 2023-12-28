@@ -32,7 +32,7 @@
   function getSearchParamValue() {
     if (typeof window !== "undefined") {
       const query = new URLSearchParams(window.location.search).get(
-        SEARCH_PARAM
+        SEARCH_PARAM,
       );
 
       return query ?? "";
@@ -72,7 +72,7 @@
   $: filtered = normalizedItems.filter(
     (item) =>
       item.normalized_name.includes(normalizedValue) ||
-      item.normalized_moduleName.includes(normalizedValue)
+      item.normalized_moduleName.includes(normalizedValue),
   );
   $: filteredIds = new Set(filtered.map((item) => item.name));
 </script>
