@@ -31,4 +31,11 @@ export default defineConfig({
   ],
   srcDir: "./www",
   publicDir: "./www/public",
+  vite: {
+    optimizeDeps: {
+      // We use the `optimizeImports` preprocessor so we
+      // don't need Vite to do redundant work here.
+      exclude: ["carbon-components-svelte"],
+    },
+  },
 });
