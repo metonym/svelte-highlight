@@ -12,6 +12,10 @@ export default defineConfig({
   ],
   srcDir: "./www",
   publicDir: "./www/public",
+  prefetch: {
+    defaultStrategy: "viewport",
+    prefetchAll: true,
+  },
   vite: {
     define: {
       "process.env.TS": JSON.stringify(new Date().toLocaleString()),
