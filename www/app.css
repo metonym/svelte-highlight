@@ -1,3 +1,7 @@
+:root {
+  color-scheme: dark;
+}
+
 .hljs {
   overflow-x: auto;
   font-size: 0.875rem;
