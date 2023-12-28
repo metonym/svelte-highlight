@@ -1,5 +1,4 @@
 import svelte from "@astrojs/svelte";
-import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import { defineConfig } from "astro/config";
 import { optimizeImports } from "carbon-preprocess-svelte";
 
@@ -8,7 +7,7 @@ export default defineConfig({
   trailingSlash: "never",
   integrations: [
     svelte({
-      preprocess: [vitePreprocess(), optimizeImports()],
+      preprocess: [optimizeImports()],
     }),
   ],
   srcDir: "./www",
