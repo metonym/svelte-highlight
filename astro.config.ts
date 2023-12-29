@@ -1,6 +1,5 @@
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
-import { optimizeImports } from "carbon-preprocess-svelte";
 import pkg from "./package.json" assert { type: "json" };
 
 export default defineConfig({
@@ -8,7 +7,7 @@ export default defineConfig({
   trailingSlash: "never",
   integrations: [
     svelte({
-      preprocess: [optimizeImports()],
+      prebundleSvelteLibraries: true,
     }),
   ],
   srcDir: "./www",
@@ -24,11 +23,6 @@ export default defineConfig({
       __PKG_HOMEPAGE: JSON.stringify(pkg.homepage),
       __PKG_HLJS_VERSION: JSON.stringify(pkg.dependencies["highlight.js"]),
       __TS: JSON.stringify(new Date().toLocaleString()),
-    },
-    optimizeDeps: {
-      // We use the `optimizeImports` preprocessor so we
-      // don't need Vite to do redundant work here.
-      exclude: ["carbon-components-svelte"],
     },
   },
 });

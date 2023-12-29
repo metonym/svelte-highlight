@@ -28,7 +28,6 @@
     "@types/prettier": "^3.0.0",
     "astro": "^4.0.3",
     "carbon-components-svelte": "^0.82.7",
-    "carbon-preprocess-svelte": "^0.10.0",
     "cssnano": "^6.0.2",
     "cssnano-preset-lite": "^3.0.1",
     "postcss": "^8.4.32",
