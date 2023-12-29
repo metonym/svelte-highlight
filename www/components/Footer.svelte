@@ -1,10 +1,8 @@
 <script>
   // @ts-check
 
-  import { PKG_HOMEPAGE, PKG_NAME } from "@www/constants";
+  import { PKG_HOMEPAGE, PKG_NAME, TS } from "@www/constants";
   import { Grid, Row, Column, Link } from "carbon-components-svelte";
-
-  const TS = process.env.TS;
 </script>
 
 <footer>
