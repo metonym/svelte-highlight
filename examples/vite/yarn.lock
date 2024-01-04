@@ -438,10 +438,10 @@ source-map-js@^1.0.1, source-map-js@^1.0.2:
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
 
-svelte-highlight@^7.4.6:
-  version "7.4.6"
-  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-7.4.6.tgz#c2cd908e6a0a564078571d303c25492510f9bb32"
-  integrity sha512-kgGC8I9Rc4JoCPAzdDM3YPWzOlZXqhEYz4Ncqjxq8JraI14oivuEzFNPEz63J848k02V5kA7IC2IkDNj98Z44w==
+svelte-highlight@^7.4.7:
+  version "7.4.7"
+  resolved "https://registry.yarnpkg.com/svelte-highlight/-/svelte-highlight-7.4.7.tgz#f27a47cf190ea81ba190c95d21e75cc456e926c4"
+  integrity sha512-4PUIyfhhLkAe+iitARHLcRhWfFJJaFaszLxj9SA4Ob8CAZvM2mCuhUs04XKd44pBHYq2HK7WCNmddb5D3BuQsg==
   dependencies:
     highlight.js "11.9.0"
 
