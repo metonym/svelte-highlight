@@ -17,7 +17,7 @@ async function npmPackage() {
   fs.rmSync("./package/src", { recursive: true, force: true });
 
   const pkgJson = JSON.parse(
-    fs.readFileSync("./package/package.json", "utf-8"),
+    fs.readFileSync("./package/package.json", "utf-8")
   );
 
   delete pkgJson.scripts;
@@ -35,11 +35,27 @@ async function npmPackage() {
     "./styles/*.css": {
       import: "./styles/*.css",
     },
+    "./styles": {
+      types: "./styles/index.d.ts",
+      import: "./styles/index.js",
+    },
     "./styles/*": {
       types: "./styles/*.d.ts",
       import: "./styles/*.js",
     },
+    "./styles/*.js": {
+      types: "./styles/*.d.ts",
+      import: "./styles/*.js",
+    },
+    "./languages": {
+      types: "./languages/index.d.ts",
+      import: "./languages/index.js",
+    },
     "./languages/*": {
+      types: "./languages/*.d.ts",
+      import: "./languages/*.js",
+    },
+    "./languages/*.js": {
       types: "./languages/*.d.ts",
       import: "./languages/*.js",
     },
