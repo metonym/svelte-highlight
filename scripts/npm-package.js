@@ -17,7 +17,7 @@ async function npmPackage() {
   fs.rmSync("./package/src", { recursive: true, force: true });
 
   const pkgJson = JSON.parse(
-    fs.readFileSync("./package/package.json", "utf-8")
+    fs.readFileSync("./package/package.json", "utf-8"),
   );
 
   delete pkgJson.scripts;
