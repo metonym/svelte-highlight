@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@sveltejs/adapter-node": "^4.0.0",
+    "@sveltejs/adapter-node": "^4.0.1",
     "@sveltejs/kit": "^2.4.1",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "svelte": "^4.2.9",
