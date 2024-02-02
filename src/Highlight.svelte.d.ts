@@ -31,18 +31,27 @@ export type HighlightProps = HTMLAttributes<HTMLPreElement> & {
 
   /**
    * Customize the background color of the langtag.
+   * @default "inherit"
    */
   "--langtag-background"?: string;
 
   /**
    * Customize the text color of the langtag.
+   * @default "inherit"
    */
   "--langtag-color"?: string;
 
   /**
    * Customize the border radius of the langtag.
+   * @default 0
    */
   "--langtag-border-radius"?: string;
+
+  /**
+   * Customize the padding of the langtag.
+   * @default "1em"
+   */
+  "--langtag-padding"?: string;
 };
 
 export type HighlightEvents = {

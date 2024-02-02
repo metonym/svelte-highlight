@@ -9,4 +9,4 @@
   {@html atomOneDark}
 </svelte:head>
 
-<HighlightAuto {code} langtag={true} />
+<HighlightAuto {code} langtag />

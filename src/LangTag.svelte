@@ -29,12 +29,12 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--langtag-background, inherit);
     color: var(--langtag-color, inherit);
-    border-radius: var(--langtag-border-radius);
+    border-radius: var(--langtag-border-radius, 0);
+    padding: var(--langtag-padding, 1em);
   }
 </style>

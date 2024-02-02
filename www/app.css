@@ -10,16 +10,6 @@
   line-height: 1.6;
 }
 
-[data-language="css"] {
-  --langtag-background: linear-gradient(135deg, #2996cf, 80%, white);
-  --langtag-color: #fff;
-  --langtag-border-radius: 8px;
-}
-
-[data-language="svelte"] {
-  --langtag-color: #fff;
-}
-
 .code {
   position: relative;
   display: inline;
