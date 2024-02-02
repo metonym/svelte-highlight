@@ -286,6 +286,7 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 | --langtag-background    | Background color of the langtag | `inherit`     |
 | --langtag-color         | Text color of the langtag       | `inherit`     |
 | --langtag-border-radius | Border radius of the langtag    | `0`           |
+| --langtag-padding       | Padding of the langtag          | `1em`         |
 
 ```svelte
 <script>
@@ -297,12 +298,15 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 <HighlightAuto {code} langtag />
 ```
 
-```css
-[data-language="css"] {
-  --langtag-background: linear-gradient(135deg, #2996cf, 80%, white);
-  --langtag-color: #fff;
-  --langtag-border-radius: 8px;
-}
+```svelte
+<HighlightAuto
+  {code}
+  langtag
+  --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
+  --langtag-color="#fff"
+  --langtag-border-radius="6px"
+  --langtag-padding="0.5rem"
+/>
 ```
 
 ## Custom Language

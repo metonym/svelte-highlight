@@ -265,14 +265,11 @@
   <Column xlg={6} lg={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components allow for a tag to be added
-      at the top-right of the codeblock displaying the language name.
+      at the top-right of the codeblock displaying the language name. Customize the language tag <code class="code">background</code>,
+      <code class="code">color</code>,
+      <code class="code">border-radius</code>, and
+      <code class="code">padding</code> using style props.
     </p>
-    <p class="mb-5">
-      Customize the language tag <code class="code">background</code>,
-      <code class="code">color</code>, and
-      <code class="code">border-radius</code> using style props.
-    </p>
-    <p class="mb-5">This is also compatible with custom languages.</p>
     <p class="mb-5">Defaults:</p>
     <UnorderedList class="mb-5">
       <ListItem
@@ -280,6 +277,7 @@
       >
       <ListItem><code class="code">--langtag-color: inherit</code></ListItem>
       <ListItem><code class="code">--langtag-border-radius: 0</code></ListItem>
+      <ListItem><code class="code">--langtag-padding: 1em</code></ListItem>
     </UnorderedList>
     <p class="mb-5">
       See the <Link size="lg" href="/languages">Languages page</Link> for a list
@@ -294,20 +292,26 @@
    $: code = \`body {\n  padding: 0;\n  color: red;\n}\`;
 <\/script>
 
-<HighlightAuto {code} langtag="{true}" \/>`}
+<HighlightAuto {code} langtag \/>`}
       class="irBlack"
-      langtag={true}
+      langtag
     />
     <br />
-    <Highlight
-      code={`[data-language="css"] {
-  --langtag-background: linear-gradient(135deg, #2996cf, 80%, white);
-  --langtag-color: #fff;
-  --langtag-border-radius: 8px;
-}`}
-      language={css}
+    <HighlightSvelte
+      code={`<HighlightAuto
+  {code}
+  langtag
+  --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
+  --langtag-color="#fff"
+  --langtag-border-radius="6px"
+  --langtag-padding="0.5rem"
+/>`}
       class="irBlack"
-      langtag={true}
+      langtag
+      --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
+      --langtag-color="#fff"
+      --langtag-border-radius="6px"
+      --langtag-padding="0.5rem"
     />
   </Column>
 </Row>

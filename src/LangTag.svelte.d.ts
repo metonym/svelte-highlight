@@ -26,6 +26,7 @@ export type LangTagProps = HTMLAttributes<HTMLPreElement> & {
    * - `--langtag-background`
    * - `--langtag-color`
    * - `--langtag-border-radius`
+   * - `--langtag-padding`
    *
    * @default false
    */
