@@ -27,8 +27,8 @@
   .langtag::after {
     content: attr(data-language);
     position: absolute;
-    top: 0;
-    right: 0;
+    top: var(--langtag-top, 0);
+    right: var(--langtag-right, 0);
     display: flex;
     align-items: center;
     justify-content: center;

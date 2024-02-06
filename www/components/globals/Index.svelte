@@ -264,18 +264,17 @@
   </Column>
   <Column xlg={6} lg={12}>
     <p class="mb-5">
-      All <code class="code">Highlight</code> components allow for a tag to be
-      added at the top-right of the codeblock displaying the language name.
-      Customize the language tag <code class="code">background</code>,
-      <code class="code">color</code>,
-      <code class="code">border-radius</code>, and
-      <code class="code">padding</code> using style props.
+      All <code class="code">Highlight</code> components allow for a tag to be added
+      at the top-right of the codeblock displaying the language name. Customize the
+      language tag using style props.
     </p>
     <p class="mb-5">Defaults:</p>
     <UnorderedList class="mb-5">
-      <ListItem
-        ><code class="code">--langtag-background: inherit</code></ListItem
-      >
+      <ListItem><code class="code">--langtag-top: 0</code></ListItem>
+      <ListItem><code class="code">--langtag-right: 0</code></ListItem>
+      <ListItem>
+        <code class="code">--langtag-background: inherit</code>
+      </ListItem>
       <ListItem><code class="code">--langtag-color: inherit</code></ListItem>
       <ListItem><code class="code">--langtag-border-radius: 0</code></ListItem>
       <ListItem><code class="code">--langtag-padding: 1em</code></ListItem>
@@ -302,6 +301,8 @@
       code={`<HighlightAuto
   {code}
   langtag
+  --langtag-top="0.5rem"
+  --langtag-right="0.5rem"
   --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
   --langtag-color="#fff"
   --langtag-border-radius="6px"
@@ -309,6 +310,8 @@
 />`}
       class="irBlack"
       langtag
+      --langtag-top="0.5rem"
+      --langtag-right="0.5rem"
       --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
       --langtag-color="#fff"
       --langtag-border-radius="6px"
