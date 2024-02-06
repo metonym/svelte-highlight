@@ -264,8 +264,9 @@
   </Column>
   <Column xlg={6} lg={12}>
     <p class="mb-5">
-      All <code class="code">Highlight</code> components allow for a tag to be added
-      at the top-right of the codeblock displaying the language name. Customize the language tag <code class="code">background</code>,
+      All <code class="code">Highlight</code> components allow for a tag to be
+      added at the top-right of the codeblock displaying the language name.
+      Customize the language tag <code class="code">background</code>,
       <code class="code">color</code>,
       <code class="code">border-radius</code>, and
       <code class="code">padding</code> using style props.
