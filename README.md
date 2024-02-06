@@ -283,6 +283,8 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 
 | Style prop              | Description                     | Default value |
 | :---------------------- | :------------------------------ | :------------ |
+| --langtag-top           | Top position of the langtag     | `0`           |
+| --langtag-right         | Right position of the langtag   | `0`           |
 | --langtag-background    | Background color of the langtag | `inherit`     |
 | --langtag-color         | Text color of the langtag       | `inherit`     |
 | --langtag-border-radius | Border radius of the langtag    | `0`           |

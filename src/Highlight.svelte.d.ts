@@ -8,6 +8,8 @@ export type LangtagProps = {
    * displayed at the top right of the code block.
    *
    * Use style props to customize styles:
+   * - `--langtag-top`
+   * - `--langtag-right`
    * - `--langtag-background`
    * - `--langtag-color`
    * - `--langtag-border-radius`
@@ -16,6 +18,18 @@ export type LangtagProps = {
    * @default false
    */
   langtag?: boolean;
+
+  /**
+   * Customize the top position of the langtag.
+   * @default 0
+   */
+  "--langtag-top"?: string | number;
+
+  /**
+   * Customize the right position of the langtag.
+   * @default 0
+   */
+  "--langtag-right"?: string | number;
 
   /**
    * Customize the background color of the langtag.

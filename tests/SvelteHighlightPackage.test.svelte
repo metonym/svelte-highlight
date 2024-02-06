@@ -56,4 +56,6 @@
   --langtag-border-radius=""
   --langtag-color=""
   --langtag-padding=""
+  --langtag-top=""
+  --langtag-right=""
 />
