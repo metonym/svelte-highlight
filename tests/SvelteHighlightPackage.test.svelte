@@ -47,3 +47,13 @@
     console.log(e.detail.language);
   }}
 />
+
+<Highlight
+  code=""
+  language={javascript}
+  langtag
+  --langtag-background=""
+  --langtag-border-radius=""
+  --langtag-color=""
+  --langtag-padding=""
+/>
