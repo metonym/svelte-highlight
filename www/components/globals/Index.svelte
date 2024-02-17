@@ -82,7 +82,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyle name="ir-black" moduleName="irBlack" />
+    <ScopedStyle name="atlas" moduleName="atlas" />
   </Column>
   <Column xlg={6} lg={12}>
     <p class="mb-5">
@@ -111,7 +111,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <HighlightSvelte code={svelteHeadCdn} class="irBlack" />
+    <HighlightSvelte code={svelteHeadCdn} class="atlas" />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -133,7 +133,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyleSvelte name="ir-black" moduleName="irBlack" />
+    <ScopedStyleSvelte name="atlas" moduleName="atlas" />
   </Column>
 </Row>
 
@@ -149,7 +149,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyleAuto name="ir-black" moduleName="irBlack" />
+    <ScopedStyleAuto name="atlas" moduleName="atlas" />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -253,7 +253,7 @@
     <Highlight
       code={'[data-language="css"] {\n  /* custom style rules */\n}'}
       language={css}
-      class="irBlack"
+      class="atlas"
     />
   </Column>
 </Row>
@@ -293,7 +293,7 @@
 <\/script>
 
 <HighlightAuto {code} langtag \/>`}
-      class="irBlack"
+      class="atlas"
       langtag
     />
     <br />
@@ -308,7 +308,7 @@
   --langtag-border-radius="6px"
   --langtag-padding="0.5rem"
 />`}
-      class="irBlack"
+      class="atlas"
       langtag
       --langtag-top="0.5rem"
       --langtag-right="0.5rem"

@@ -22,4 +22,4 @@
 <Highlight language={${moduleName}} code="code" />`;
 </script>
 
-<HighlightSvelte class="irBlack" {code} />
+<HighlightSvelte class="atlas" {code} />
