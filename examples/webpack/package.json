@@ -6,16 +6,16 @@
   },
   "devDependencies": {
     "@tsconfig/svelte": "^5.0.2",
-    "css-loader": "^6.9.1",
+    "css-loader": "^6.10.0",
     "html-webpack-plugin": "^5.6.0",
-    "mini-css-extract-plugin": "^2.7.7",
-    "svelte": "^4.2.9",
-    "svelte-highlight": "^7.4.8",
+    "mini-css-extract-plugin": "^2.8.0",
+    "svelte": "^4.2.11",
+    "svelte-highlight": "^7.6.0",
     "svelte-loader": "^3.1.9",
     "svelte-preprocess": "^5.1.3",
     "typescript": "^5.3.3",
-    "webpack": "^5.90.0",
+    "webpack": "^5.90.2",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^5.0.2"
   }
 }
