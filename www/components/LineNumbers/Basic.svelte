@@ -1,4 +1,6 @@
 <script>
+  import { THEME_NAME, THEME_MODULE_NAME } from "@www/constants";
+
   // @ts-check
 
   export let snippet = "<LineNumbers {highlighted} />";
@@ -8,13 +10,13 @@
   const code = `<script>
   import Highlight, { LineNumbers } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
-  import ashes from "svelte-highlight/styles/ashes";
+  import ${THEME_MODULE_NAME} from "svelte-highlight/styles/${THEME_NAME}";
 
   const code = "const add = (a: number, b: number) => a + b";
 <\/script>
   
 <svelte:head>
-  {@html ashes}
+  {@html ${THEME_MODULE_NAME}}
 </svelte:head>
 
 <Highlight language={typescript} {code} let:highlighted>
@@ -23,5 +25,5 @@
 </script>
 
 <HighlightSvelte {code} let:highlighted>
-  <LineNumbers class="ashes" {highlighted} {...$$restProps} />
+  <LineNumbers class={THEME_MODULE_NAME} {highlighted} {...$$restProps} />
 </HighlightSvelte>

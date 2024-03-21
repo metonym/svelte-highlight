@@ -1,4 +1,6 @@
 <script>
+  import { THEME_MODULE_NAME } from "@www/constants";
+
   // @ts-check
 
   /** @type {string} */
@@ -22,4 +24,4 @@
 <Highlight language={${moduleName}} code="code" />`;
 </script>
 
-<HighlightSvelte class="ashes" {code} />
+<HighlightSvelte class={THEME_MODULE_NAME} {code} />

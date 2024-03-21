@@ -1,7 +1,7 @@
 <script>
   // @ts-check
 
-  import { PKG_NAME } from "@www/constants";
+  import { THEME_NAME, PKG_NAME, THEME_MODULE_NAME } from "@www/constants";
   import {
     Row,
     Column,
@@ -82,7 +82,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyle name="ashes" moduleName="ashes" />
+    <ScopedStyle name={THEME_NAME} moduleName={THEME_MODULE_NAME} />
   </Column>
   <Column xlg={6} lg={12}>
     <p class="mb-5">
@@ -111,7 +111,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <HighlightSvelte code={svelteHeadCdn} class="ashes" />
+    <HighlightSvelte code={svelteHeadCdn} class={THEME_MODULE_NAME} />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -133,7 +133,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyleSvelte name="ashes" moduleName="ashes" />
+    <ScopedStyleSvelte name={THEME_NAME} moduleName={THEME_MODULE_NAME} />
   </Column>
 </Row>
 
@@ -149,7 +149,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyleAuto name="ashes" moduleName="ashes" />
+    <ScopedStyleAuto name={THEME_NAME} moduleName={THEME_MODULE_NAME} />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -253,7 +253,7 @@
     <Highlight
       code={'[data-language="css"] {\n  /* custom style rules */\n}'}
       language={css}
-      class="ashes"
+      class={THEME_MODULE_NAME}
     />
   </Column>
 </Row>
@@ -293,7 +293,7 @@
 <\/script>
 
 <HighlightAuto {code} langtag \/>`}
-      class="ashes"
+      class={THEME_MODULE_NAME}
       langtag
     />
     <br />
@@ -308,7 +308,7 @@
   --langtag-border-radius="6px"
   --langtag-padding="0.5rem"
 />`}
-      class="ashes"
+      class={THEME_MODULE_NAME}
       langtag
       --langtag-top="0.5rem"
       --langtag-right="0.5rem"
