@@ -97,7 +97,7 @@ Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS
 
 CSS StyleSheets can also be externally linked from a Content Delivery Network (CDN) like [unpkg.com](https://unpkg.com/).
 
-> **Warning**
+> [!WARNING]
 > Using a CDN is best suited for prototyping and not recommended for production use.
 
 **HTML**
