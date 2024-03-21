@@ -82,7 +82,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyle name="atlas" moduleName="atlas" />
+    <ScopedStyle name="ashes" moduleName="ashes" />
   </Column>
   <Column xlg={6} lg={12}>
     <p class="mb-5">
@@ -111,7 +111,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <HighlightSvelte code={svelteHeadCdn} class="atlas" />
+    <HighlightSvelte code={svelteHeadCdn} class="ashes" />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -133,7 +133,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyleSvelte name="atlas" moduleName="atlas" />
+    <ScopedStyleSvelte name="ashes" moduleName="ashes" />
   </Column>
 </Row>
 
@@ -149,7 +149,7 @@
     </p>
   </Column>
   <Column xlg={10}>
-    <ScopedStyleAuto name="atlas" moduleName="atlas" />
+    <ScopedStyleAuto name="ashes" moduleName="ashes" />
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -253,7 +253,7 @@
     <Highlight
       code={'[data-language="css"] {\n  /* custom style rules */\n}'}
       language={css}
-      class="atlas"
+      class="ashes"
     />
   </Column>
 </Row>
@@ -293,7 +293,7 @@
 <\/script>
 
 <HighlightAuto {code} langtag \/>`}
-      class="atlas"
+      class="ashes"
       langtag
     />
     <br />
@@ -308,7 +308,7 @@
   --langtag-border-radius="6px"
   --langtag-padding="0.5rem"
 />`}
-      class="atlas"
+      class="ashes"
       langtag
       --langtag-top="0.5rem"
       --langtag-right="0.5rem"

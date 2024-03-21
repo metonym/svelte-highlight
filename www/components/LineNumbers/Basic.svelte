@@ -8,13 +8,13 @@
   const code = `<script>
   import Highlight, { LineNumbers } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
-  import atlas from "svelte-highlight/styles/atlas";
+  import ashes from "svelte-highlight/styles/ashes";
 
   const code = "const add = (a: number, b: number) => a + b";
 <\/script>
   
 <svelte:head>
-  {@html atlas}
+  {@html ashes}
 </svelte:head>
 
 <Highlight language={typescript} {code} let:highlighted>
@@ -23,5 +23,5 @@
 </script>
 
 <HighlightSvelte {code} let:highlighted>
-  <LineNumbers class="atlas" {highlighted} {...$$restProps} />
+  <LineNumbers class="ashes" {highlighted} {...$$restProps} />
 </HighlightSvelte>
