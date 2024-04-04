@@ -28,6 +28,7 @@
     "@types/prettier": "latest",
     "astro": "latest",
     "carbon-components-svelte": "latest",
+    "carbon-preprocess-svelte": "latest",
     "cssnano": "latest",
     "cssnano-preset-lite": "latest",
     "postcss": "latest",
