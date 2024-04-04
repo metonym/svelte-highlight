@@ -17,6 +17,5 @@ jobs:
           bun install
           bun run playwright install --with-deps
           bun run build:lib
-          bun run build
           bun run test
           bun run test:e2e
