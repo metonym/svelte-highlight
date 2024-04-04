@@ -6,8 +6,8 @@
   "author": "Eric Liu (https://github.com/metonym)",
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "bunx --bun astro dev",
+    "build": "bunx --bun astro build",
     "build:lib": "node scripts",
     "package": "node scripts/npm-package",
     "test": "bun test tests/*.ts",
