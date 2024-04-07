@@ -103,15 +103,12 @@ CSS StyleSheets can also be externally linked from a Content Delivery Network (C
 **HTML**
 
 ```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/svelte-highlight/styles/github.css"
-    />
-  </head>
-</html>
+<head>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/svelte-highlight/styles/github.css"
+  />
+</head>
 ```
 
 **svelte:head**
@@ -148,7 +145,7 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 The `HighlightAuto` component uses [highlightAuto](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) API.
 
-> **Warning**
+> [!WARNING]
 > Auto-highlighting will result in a larger bundle size. Specify a language if possible.
 
 ```svelte
