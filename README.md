@@ -143,7 +143,7 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 ## Auto-highlighting
 
-The `HighlightAuto` component uses [highlightAuto](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) API.
+The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) and attempts to guess what grammar to use based on the provided `code`.
 
 > [!WARNING]
 > Auto-highlighting will result in a larger bundle size. Specify a language if possible.
