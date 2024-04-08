@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "webpack serve",
     "build": "NODE_ENV=production webpack"
@@ -16,6 +17,6 @@
     "typescript": "^5.3.3",
     "webpack": "^5.90.2",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.2"
+    "webpack-dev-server": "^5.0.4"
   }
 }
