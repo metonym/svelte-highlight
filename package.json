@@ -10,7 +10,7 @@
     "build": "bunx --bun astro build",
     "build:lib": "bun scripts/index.js",
     "package": "bun scripts/npm-package.js",
-    "test": "bun test tests/*.ts",
+    "test:unit": "bun test tests/*.ts",
     "test:e2e": "playwright test",
     "format": "bunx --bun prettier --write .",
     "astro": "astro",
