@@ -22,7 +22,7 @@
   "devDependencies": {
     "@astrojs/svelte": "latest",
     "@playwright/experimental-ct-svelte": "latest",
-    "@playwright/test": "latest",
+    "@playwright/test": "1.43.0",
     "@types/bun": "latest",
     "@types/node": "latest",
     "@types/prettier": "latest",
