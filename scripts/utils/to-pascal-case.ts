@@ -1,11 +1,9 @@
-// @ts-check
 /**
- * @type {(str: string) => string}
  * Converts a dash/period separated string into pascal case
  * @example
  * "one-two-three" --> "oneTwoThree"
  */
-export const toCamelCase = (str) =>
+export const toCamelCase = (str: string) =>
   str
     .split(new RegExp(/-|\./g))
     .map((fragment, index) => {

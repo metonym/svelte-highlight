@@ -1,9 +1,7 @@
-// @ts-check
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 
-/** @type {(dir: string, noRemove?: boolean) => void} */
-export const mkdir = (dir) => {
+export const mkdir = (dir: string) => {
   if (fs.existsSync(dir)) {
     fs.rmSync(dir, { recursive: true });
   }

@@ -1,9 +1,9 @@
-// @ts-check
 import hljs from "highlight.js";
-import { createMarkdown } from "./utils/create-markdown.js";
-import { mkdir } from "./utils/fs.js";
-import { toCamelCase } from "./utils/to-pascal-case.js";
-import { writeTo } from "./utils/write-to.js";
+import { createMarkdown } from "./utils/create-markdown";
+import { mkdir } from "./utils/fs";
+import { toCamelCase } from "./utils/to-pascal-case";
+import { writeTo } from "./utils/write-to";
+import type { ModuleNames } from "./build-styles";
 
 export async function buildLanguages() {
   console.time("build languages");
@@ -20,8 +20,7 @@ export async function buildLanguages() {
     register: LanguageFn;
   }\n\n`;
 
-  /** @type {import("./build-styles").ModuleNames} */
-  let lang = [];
+  let lang: ModuleNames = [];
 
   languages.forEach(async (name) => {
     let moduleName = name;
