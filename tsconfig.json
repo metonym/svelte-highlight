@@ -13,5 +13,5 @@
       "svelte-highlight/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "www/**/*", "tests/**/*"]
+  "include": ["src/**/*", "www/**/*", "tests/**/*", "scripts/**/*"],
 }

@@ -1,15 +1,11 @@
-// @ts-check
 import fs from "node:fs";
 
 const pkg = JSON.parse(
   fs.readFileSync(new URL("../../package.json", import.meta.url), "utf8"),
 );
 
-/**
- * Creates header metadata for supported languages/styles
- * @type {(type: "Languages" | "Styles", len: number) => string}
- */
-export const createMarkdown = (type, len) =>
+/** Creates header metadata for supported languages/styles */
+export const createMarkdown = (type: "Languages" | "Styles", len: number) =>
   `
 # Supported ${type}
 

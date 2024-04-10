@@ -1,15 +1,14 @@
-// @ts-check
 import fs from "node:fs";
-import { copyFile, mkdir, writeFile } from "./utils/fs.js";
+import { mkdir, writeFile } from "./utils/fs";
 
 async function npmPackage() {
   console.time("package");
 
   mkdir("./package");
 
-  await copyFile("./package.json", "./package/package.json");
-  await copyFile("./README.md", "./package/README.md");
-  await copyFile("./LICENSE", "./package/LICENSE");
+  await Bun.write("./package/package.json", Bun.file("./package.json"));
+  await Bun.write("./package/README.md", Bun.file("./README.md"));
+  await Bun.write("./package/LICENSE", Bun.file("./LICENSE"));
 
   // Copy source folder to package
   mkdir("./package/src");

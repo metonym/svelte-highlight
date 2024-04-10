@@ -8,8 +8,8 @@
   "scripts": {
     "dev": "bunx --bun astro dev",
     "build": "bunx --bun astro build",
-    "build:lib": "bun scripts/index.js",
-    "package": "bun scripts/npm-package.js",
+    "build:lib": "bun scripts/index.ts",
+    "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "playwright test",
     "format": "bunx --bun prettier --write .",

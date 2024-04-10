@@ -1,27 +1,20 @@
-// @ts-check
-import path from "path";
+import path from "node:path";
 import { totalist } from "totalist";
-import { createMarkdown } from "./utils/create-markdown.js";
-import { copyFile, mkdir, readFile } from "./utils/fs.js";
-import { minifyCss } from "./utils/minify-css.js";
-import { toCamelCase } from "./utils/to-pascal-case.js";
-import { writeTo } from "./utils/write-to.js";
+import { createMarkdown } from "./utils/create-markdown";
+import { copyFile, mkdir, readFile } from "./utils/fs";
+import { minifyCss } from "./utils/minify-css";
+import { toCamelCase } from "./utils/to-pascal-case";
+import { writeTo } from "./utils/write-to";
 
-/**
- * @typedef {Array<{ name: string; moduleName: string; }>} ModuleNames
- */
+export type ModuleNames = Array<{ name: string; moduleName: string }>;
 
 export async function buildStyles() {
   console.time("build styles");
   mkdir("src/styles");
 
   let scoped_styles = "";
-
-  /** @type {string[]} */
-  let names = [];
-
-  /** @type {ModuleNames} */
-  let styles = [];
+  let names: string[] = [];
+  let styles: ModuleNames = [];
 
   await totalist("node_modules/highlight.js/styles", async (file, absPath) => {
     /**
