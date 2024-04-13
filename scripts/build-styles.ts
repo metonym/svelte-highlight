@@ -1,6 +1,7 @@
-import { $, Glob } from "bun";
 import path from "node:path";
+import { totalist } from "totalist";
 import { createMarkdown } from "./utils/create-markdown";
+import { copyFile, mkdir, readFile } from "./utils/fs";
 import { minifyCss } from "./utils/minify-css";
 import { toCamelCase } from "./utils/to-pascal-case";
 import { writeTo } from "./utils/write-to";
@@ -9,16 +10,19 @@ export type ModuleNames = Array<{ name: string; moduleName: string }>;
 
 export async function buildStyles() {
   console.time("build styles");
-  await $`rm -rf src/styles; mkdir src/styles`;
+  mkdir("src/styles");
 
   let scoped_styles = "";
   let names: string[] = [];
   let styles: ModuleNames = [];
 
-  const glob = new Glob("**/*");
-
-  for await (const file of glob.scan("node_modules/highlight.js/styles")) {
-    const absPath = path.resolve("node_modules/highlight.js/styles", file);
+  await totalist("node_modules/highlight.js/styles", async (file, absPath) => {
+    /**
+     * highlight.js >=v11.19.0 also ships minified
+     * CSS with the extension `.min.css`.
+     *
+     * We only include non-minified CSS files.
+     */
     if (/(?<!\.min)\.(css)$/.test(file)) {
       let { name, dir } = path.parse(file);
       let moduleName = toCamelCase(name);
@@ -35,7 +39,7 @@ export async function buildStyles() {
       names.push(name);
       styles.push({ name, moduleName });
 
-      const content = await Bun.file(absPath).text();
+      const content = await readFile(absPath, "utf-8");
       const css_minified = minifyCss(content);
 
       // Escape backticks for JS template literal.
@@ -69,10 +73,10 @@ export async function buildStyles() {
     } else {
       // Copy over other file types, like images.
       if (!/\.(css)$/.test(file)) {
-        await $`cp ${absPath} src/styles/`;
+        await copyFile(absPath, `src/styles/${file}`);
       }
     }
-  }
+  });
 
   styles = styles.sort((a, b) => {
     if (a.name > b.name) return 1;

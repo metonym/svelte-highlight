@@ -36,6 +36,7 @@
     "prettier-plugin-svelte": "latest",
     "svelte": "latest",
     "svelte-focus-key": "latest",
+    "totalist": "latest",
     "typescript": "latest",
     "vite": "latest"
   },

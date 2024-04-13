@@ -1,5 +1,6 @@
 import path from "node:path";
 import prettier, { type BuiltInParserName } from "prettier";
+import { writeFile } from "./fs";
 
 const PARSER: Record<string, BuiltInParserName> = {
   ".md": "markdown",
@@ -16,5 +17,5 @@ export async function writeTo(file: string, source: string | object) {
 
   if (!parser) throw new Error(`No parser found for ${file}`);
 
-  await Bun.write(file, await prettier.format(value, { parser }));
+  await writeFile(file, await prettier.format(value, { parser }));
 }
