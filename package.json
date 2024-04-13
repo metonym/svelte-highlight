@@ -6,13 +6,13 @@
   "author": "Eric Liu (https://github.com/metonym)",
   "type": "module",
   "scripts": {
-    "dev": "bunx --bun astro dev",
-    "build": "bunx --bun astro build",
+    "dev": "bun --bun astro dev",
+    "build": "bun --bun astro build",
     "build:lib": "bun scripts/index.ts",
     "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "playwright test",
-    "format": "bunx --bun prettier --write .",
+    "format": "bun --bun prettier --write .",
     "astro": "astro",
     "playwright": "playwright"
   },
