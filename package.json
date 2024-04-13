@@ -11,7 +11,7 @@
     "build:lib": "bun scripts/index.ts",
     "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
-    "test:e2e": "playwright test",
+    "test:e2e": "bunx playwright test",
     "format": "bun --bun prettier --write .",
     "astro": "astro",
     "playwright": "playwright"
