@@ -1,13 +1,13 @@
+import { $ } from "bun";
 import hljs from "highlight.js";
+import type { ModuleNames } from "./build-styles";
 import { createMarkdown } from "./utils/create-markdown";
-import { mkdir } from "./utils/fs";
 import { toCamelCase } from "./utils/to-pascal-case";
 import { writeTo } from "./utils/write-to";
-import type { ModuleNames } from "./build-styles";
 
 export async function buildLanguages() {
   console.time("build languages");
-  mkdir("src/languages");
+  await $`rm -rf src/styles; mkdir src/styles`;
 
   let languages = hljs.listLanguages();
   let markdown = createMarkdown("Languages", languages.length);
