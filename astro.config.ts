@@ -1,6 +1,6 @@
 import svelte from "@astrojs/svelte";
-import { optimizeCss, optimizeImports } from "carbon-preprocess-svelte";
 import { defineConfig } from "astro/config";
+import { optimizeCss, optimizeImports } from "carbon-preprocess-svelte";
 import pkg from "./package.json" assert { type: "json" };
 
 export default defineConfig({

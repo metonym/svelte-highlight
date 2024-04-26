@@ -12,7 +12,7 @@
     "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "bunx playwright test",
-    "format": "bun --bun prettier --write .",
+    "format": "bun --bun prettier --write .  --cache",
     "astro": "astro",
     "playwright": "playwright"
   },
