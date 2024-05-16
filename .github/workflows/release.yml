@@ -28,7 +28,7 @@ jobs:
         run: bun build:lib
 
       - name: Build package
-        run: bun build:package
+        run: bun package
 
       - name: Publish package
         env:
