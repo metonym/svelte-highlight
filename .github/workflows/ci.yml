@@ -9,8 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: 1.1.7
 
       - uses: actions/cache@v4
         id: playwright-cache
