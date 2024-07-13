@@ -6,17 +6,17 @@
     "build": "NODE_ENV=production webpack"
   },
   "devDependencies": {
-    "@tsconfig/svelte": "^5.0.4",
-    "css-loader": "^6.11.0",
-    "html-webpack-plugin": "^5.6.0",
-    "mini-css-extract-plugin": "^2.9.0",
-    "svelte": "^4.2.18",
-    "svelte-highlight": "^7.6.1",
-    "svelte-loader": "^3.2.3",
-    "svelte-preprocess": "^5.1.4",
-    "typescript": "^5.5.3",
-    "webpack": "^5.92.1",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "@tsconfig/svelte": "latest",
+    "css-loader": "latest",
+    "html-webpack-plugin": "latest",
+    "mini-css-extract-plugin": "latest",
+    "svelte": "latest",
+    "svelte-highlight": "latest",
+    "svelte-loader": "latest",
+    "svelte-preprocess": "latest",
+    "typescript": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "webpack-dev-server": "latest"
   }
 }
