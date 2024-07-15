@@ -1,6 +1,28 @@
 # Supported Styles
 
-> 248 styles exported from highlight.js@11.9.0
+> 249 styles exported from highlight.js@11.10.0
+
+## 1c-light (`_1cLight`)
+
+**Injected Styles**
+
+```html
+<script>
+  import _1cLight from "svelte-highlight/styles/_1cLight";
+</script>
+
+<svelte:head>
+  {@html _1cLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/1c-light.css";
+</script>
+```
 
 ## 3024 (`_3024`)
 
