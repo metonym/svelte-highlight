@@ -13,6 +13,7 @@ const pkgJson = await Bun.file("./package/package.json").json();
 
 delete pkgJson.scripts;
 delete pkgJson.devDependencies;
+delete pkgJson.prettier;
 
 pkgJson.exports = {
   ".": {
