@@ -8,8 +8,7 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-
+      - uses: oven-sh/setup-bun@v2
       - uses: actions/cache@v4
         id: playwright-cache
         with:
