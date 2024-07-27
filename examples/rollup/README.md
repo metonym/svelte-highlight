@@ -4,14 +4,14 @@
 
 ## Available Scripts
 
-### `yarn dev`
+### `bun dev`
 
 Runs the project in development mode and watches for any changes.
 
-### `yarn build`
+### `bun run build`
 
 Builds the project for production.
 
-### `yarn validate`
+### `bun run validate`
 
 Validates Svelte files using `svelte-check`.
