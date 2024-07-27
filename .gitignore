@@ -1,14 +1,13 @@
 .DS_Store
 .svelte-kit
 .routify
+.astro
 build
 dist
 node_modules
 package
 /src/styles
 /src/languages
-yarn-debug.log*
-yarn-error.log*
 /playwright-report
 /playwright/.cache
 /test-results/
