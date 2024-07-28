@@ -13,6 +13,7 @@
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "bunx playwright test",
     "format": "bun --bun prettier --write .  --cache",
+    "upgrade-examples": "bun scripts/upgrade-examples.ts",
     "astro": "astro",
     "playwright": "playwright"
   },
