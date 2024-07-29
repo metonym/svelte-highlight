@@ -21,12 +21,4 @@ export type LangTagProps = HTMLAttributes<HTMLPreElement> &
     languageName?: string;
   };
 
-export type LangTagEvents = {};
-
-export type LangTagSlots = {};
-
-export default class LangTag extends SvelteComponentTyped<
-  LangTagProps,
-  LangTagEvents,
-  LangTagSlots
-> {}
+export default class LangTag extends SvelteComponentTyped<LangTagProps> {}

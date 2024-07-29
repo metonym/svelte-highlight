@@ -382,24 +382,6 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
-#### Dispatched Events
-
-- **on:highlight**: fired after `code` is highlighted
-
-```svelte
-<Highlight
-  language={typescript}
-  {code}
-  on:highlight={(e) => {
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
-    console.log(e.detail.highlighted);
-  }}
-/>
-```
-
 ### `LineNumbers`
 
 #### Props
@@ -425,23 +407,6 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
-#### Dispatched Events
-
-- **on:highlight**: fired after `code` is highlighted
-
-```svelte
-<HighlightSvelte
-  {code}
-  on:highlight={(e) => {
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
-    console.log(e.detail.highlighted);
-  }}
-/>
-```
-
 ### `HighlightAuto`
 
 #### Props
@@ -452,29 +417,6 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 | langtag | `boolean` | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
-
-#### Dispatched Events
-
-- **on:highlight**: fired after `code` is highlighted
-
-```svelte
-<HighlightAuto
-  {code}
-  on:highlight={(e) => {
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
-    console.log(e.detail.highlighted);
-
-    /**
-     * The inferred language name
-     * @example "css"
-     */
-    console.log(e.detail.language);
-  }}
-/>
-```
 
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
 

@@ -15,9 +15,6 @@
   class=""
   code=""
   language={javascript || typescript || typescriptDefault || ts}
-  on:highlight={(e) => {
-    console.log(e.detail);
-  }}
   let:highlighted
 >
   {@html highlighted}
@@ -41,12 +38,7 @@
   />
 </Highlight>
 
-<HighlightAuto
-  code=""
-  on:highlight={(e) => {
-    console.log(e.detail.language);
-  }}
-/>
+<HighlightAuto code="" />
 
 <Highlight
   code=""

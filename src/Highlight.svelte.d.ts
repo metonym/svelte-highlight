@@ -72,16 +72,6 @@ export type HighlightProps = HTMLAttributes<HTMLPreElement> &
     language: LanguageType<string>;
   };
 
-export type HighlightEvents = {
-  highlight: CustomEvent<{
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
-    highlighted: string;
-  }>;
-};
-
 export type HighlightSlots = {
   default: {
     /**
@@ -94,6 +84,6 @@ export type HighlightSlots = {
 
 export default class Highlight extends SvelteComponentTyped<
   HighlightProps,
-  HighlightEvents,
+  {},
   HighlightSlots
 > {}
