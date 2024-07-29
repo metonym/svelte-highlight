@@ -74,12 +74,4 @@ export type LineNumbersProps = HTMLAttributes<HTMLPreElement> & {
   "--highlighted-background"?: string;
 };
 
-export type LineNumbersEvents = {};
-
-export type LineNumbersSlots = {};
-
-export default class LineNumbers extends SvelteComponentTyped<
-  LineNumbersProps,
-  LineNumbersEvents,
-  LineNumbersSlots
-> {}
+export default class LineNumbers extends SvelteComponentTyped<LineNumbersProps> {}

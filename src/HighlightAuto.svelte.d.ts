@@ -10,22 +10,6 @@ export type HighlightAutoProps = HTMLAttributes<HTMLPreElement> &
     code: any;
   };
 
-export type HighlightAutoEvents = {
-  highlight: CustomEvent<{
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
-    highlighted: string;
-
-    /**
-     * The language name inferred by `highlight.js`.
-     * @example "css"
-     */
-    language: string;
-  }>;
-};
-
 export type HighlightAutoSlots = {
   default: {
     /**
@@ -38,6 +22,6 @@ export type HighlightAutoSlots = {
 
 export default class HighlightAuto extends SvelteComponentTyped<
   HighlightAutoProps,
-  HighlightAutoEvents,
+  {},
   HighlightAutoSlots
 > {}
