@@ -59,6 +59,8 @@ export { ${moduleName} as default } from "./";\n`,
   await writeTo("src/languages/index.js", base);
   await writeTo("src/languages/index.d.ts", baseTs);
   await writeTo("SUPPORTED_LANGUAGES.md", markdown);
-  await writeTo("www/data/languages.json", lang);
+
+  // Don't format metadata used in docs.
+  await Bun.write("www/data/languages.json", JSON.stringify(lang));
   console.timeEnd("build languages");
 }

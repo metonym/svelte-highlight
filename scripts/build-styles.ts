@@ -121,10 +121,13 @@ export async function buildStyles() {
   await writeTo("src/styles/index.js", base);
   await writeTo("src/styles/index.d.ts", types);
   await writeTo("SUPPORTED_STYLES.md", markdown);
-  await writeTo("www/data/styles.json", styles);
-  await writeTo(
+
+  // Don't format metadata used in docs.
+  await Bun.write("www/data/styles.json", JSON.stringify(styles));
+  await Bun.write(
     "www/data/scoped-styles.css",
     minifyCss(scoped_styles, { removeAll: true }),
   );
+  
   console.timeEnd("build styles");
 }
