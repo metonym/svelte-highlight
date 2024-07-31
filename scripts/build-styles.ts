@@ -4,6 +4,29 @@ import { createMarkdown } from "./utils/create-markdown";
 import { minifyCss } from "./utils/minify-css";
 import { toCamelCase } from "./utils/to-pascal-case";
 import { writeTo } from "./utils/write-to";
+import postcss from "postcss";
+
+const createScopedStyles = (props: { source: string; moduleName: string }) => {
+  const { source, moduleName } = props;
+
+  return postcss([
+    {
+      postcssPlugin: "postcss-plugin:scoped-styles",
+      Once(root) {
+        root.walkRules((rule) => {
+          rule.selectors = rule.selectors.map((selector) => {
+            if (/^pre /.test(selector)) {
+              selector = `pre.${moduleName}${selector.replace(/^pre /, " ")}`;
+            } else {
+              selector = `.${moduleName} ${selector}`;
+            }
+            return selector;
+          });
+        });
+      },
+    },
+  ]).process(source).css;
+};
 
 export type ModuleNames = Array<{ name: string; moduleName: string }>;
 
@@ -60,10 +83,7 @@ export async function buildStyles() {
       );
       await writeTo(`src/styles/${name}.css`, css_minified);
 
-      const scoped_style = content
-        .replace(/\.hljs/g, `.${moduleName} .hljs`)
-        // adjust for first two rules being `code.hljs` not `.hljs`
-        .replace(/\s?code\.[_0-9a-zA-Z]+\s\.hljs/g, `.${moduleName} code.hljs`);
+      const scoped_style = createScopedStyles({ source: content, moduleName });
 
       scoped_styles += scoped_style;
     } else {
@@ -128,6 +148,6 @@ export async function buildStyles() {
     "www/data/scoped-styles.css",
     minifyCss(scoped_styles, { removeAll: true }),
   );
-  
+
   console.timeEnd("build styles");
 }
