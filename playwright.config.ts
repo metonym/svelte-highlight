@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/experimental-ct-svelte";
 import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
-import path from "path";
+import path from "node:path";
 
 export default defineConfig({
   testDir: "tests/e2e",

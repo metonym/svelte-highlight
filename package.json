@@ -22,8 +22,8 @@
   },
   "devDependencies": {
     "@astrojs/svelte": "latest",
-    "@playwright/experimental-ct-svelte": "1.45.0",
-    "@playwright/test": "1.45.0",
+    "@playwright/experimental-ct-svelte": "1.46.1",
+    "@playwright/test": "1.46.1",
     "@types/bun": "latest",
     "@types/node": "latest",
     "@types/prettier": "latest",
