@@ -1,11 +1,5 @@
-import { $, Glob } from "bun";
+import { $ } from "bun";
 
-const dirs = new Glob("*").scanSync({
-  cwd: "examples",
-  onlyFiles: false,
-  absolute: true,
-});
-
-for await (const dir of dirs) {
+for await (const dir of $`find examples -maxdepth 1 -type d`.lines()) {
   await $`cd ${dir} && bun update`;
 }
