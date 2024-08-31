@@ -15,16 +15,16 @@ The Changelog is [available on GitHub](https://github.com/metonym/svelte-highlig
 
 ```bash
 # npm
-npm i -D svelte-highlight
+npm i svelte-highlight
 
 # pnpm
-pnpm i -D svelte-highlight highlight.js
+pnpm i svelte-highlight highlight.js
 
 # Bun
-bun i -D svelte-highlight
+bun i svelte-highlight
 
 # Yarn
-yarn add -D svelte-highlight
+yarn add svelte-highlight
 ```
 
 Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js`.

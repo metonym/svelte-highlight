@@ -47,10 +47,10 @@
     <h4>Installation</h4>
   </Column>
   <Column xlg={6} lg={9}>
-    <CodeSnippet code="npm i -D {PKG_NAME}" /><br />
-    <CodeSnippet code="pnpm i -D {PKG_NAME} highlight.js" /><br />
-    <CodeSnippet code="bun add -D {PKG_NAME}" /><br />
-    <CodeSnippet code="yarn add -D {PKG_NAME}" />
+    <CodeSnippet code="npm i {PKG_NAME}" /><br />
+    <CodeSnippet code="pnpm i {PKG_NAME} highlight.js" /><br />
+    <CodeSnippet code="bun add {PKG_NAME}" /><br />
+    <CodeSnippet code="yarn add {PKG_NAME}" />
   </Column>
 </Row>
 
