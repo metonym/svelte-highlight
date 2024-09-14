@@ -18,9 +18,13 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Install Playwright binaries
+      - name: Install Playwright without cache
         run: bun playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Install Playwright with cache
+        run: bun playwright install
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
 
       - name: Build library
         run: bun build:lib
