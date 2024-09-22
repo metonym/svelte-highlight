@@ -3,6 +3,7 @@
   import typescript from "svelte-highlight/languages/typescript";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
   import DynamicImport from "$lib/DynamicImport.svelte";
+  import ScopedStyles from "$lib/ScopedStyles.svelte";
 
   const code = "const add = (a: number, b: number) => a + b;";
 </script>
@@ -14,3 +15,5 @@
 <Highlight language={typescript} {code} />
 
 <DynamicImport />
+
+<ScopedStyles />
