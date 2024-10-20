@@ -35,7 +35,7 @@
     "postcss": "latest",
     "prettier": "latest",
     "prettier-plugin-svelte": "latest",
-    "svelte": "latest",
+    "svelte": "^4.2.19",
     "svelte-focus-key": "latest",
     "typescript": "latest",
     "vite": "latest"
