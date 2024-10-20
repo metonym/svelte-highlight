@@ -1,7 +1,8 @@
 <script lang="ts">
   import Highlight from "../package";
   import Highlight2 from "../package/Highlight.svelte";
-  import { HighlightAuto, LineNumbers } from "../package";
+  import { HighlightAuto, LineNumbers, ScopedStyle } from "../package";
+  import _1cLightScoped from "../package/styles/1c-light.scoped";
   import { typescript } from "../package/languages";
   import typescriptDefault from "../package/languages/typescript";
   import { typescript as ts } from "../package/languages/typescript";
@@ -59,3 +60,7 @@
   --langtag-top=""
   --langtag-right=""
 />
+
+<ScopedStyle {..._1cLightScoped}>
+  <Highlight code="" language={javascript} />
+</ScopedStyle>
