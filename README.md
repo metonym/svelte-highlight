@@ -336,6 +336,35 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 <Highlight {language} code="..." />
 ```
 
+## Custom Plugin
+
+Additional plugin languages can be installed and used separately.
+
+This example uses the [`cURL` language plugin](https://github.com/highlightjs/highlightjs-curl).
+
+```svelte
+<script>
+  import { Highlight } from "svelte-highlight";
+  import curl from "highlightjs-curl";
+  import github from "svelte-highlight/styles/github";
+
+  const language = {
+    name: "curl", // Language name displayed in the langtag
+    register: curl,
+  };
+
+  const code = `curl -X POST "https://api.example.com/data" \\
+     -H "Content-Type: application/json" \\
+     -d '{"key": "value"}'`;
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<Highlight {language} {code} />
+```
+
 ## Code-splitting
 
 You can use the `await import` syntax for code-splitting.
