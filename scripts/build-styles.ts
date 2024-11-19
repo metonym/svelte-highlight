@@ -1,31 +1,37 @@
 import { $, Glob } from "bun";
 import path from "node:path";
+import postcss from "postcss";
 import { createMarkdown } from "./utils/create-markdown";
-import { minifyCss } from "./utils/minify-css";
+import { minifyCss, minifyPreset } from "./utils/minify-css";
+import { pluginScopedStyles } from "./utils/plugin-scoped-styles";
 import { toCamelCase } from "./utils/to-pascal-case";
 import { writeTo } from "./utils/write-to";
-import postcss from "postcss";
+
+const preserveLicenseComments = {
+  // Preserve license comments.
+  remove: (comment: string) => !/(License|Author)/i.test(comment),
+} as const;
 
 const createScopedStyles = (props: { source: string; moduleName: string }) => {
   const { source, moduleName } = props;
 
   return postcss([
-    {
-      postcssPlugin: "postcss-plugin:scoped-styles",
-      Once(root) {
-        root.walkRules((rule) => {
-          rule.selectors = rule.selectors.map((selector) => {
-            if (/^pre /.test(selector)) {
-              selector = `pre.${moduleName}${selector.replace(/^pre /, " ")}`;
-            } else {
-              selector = `.${moduleName} ${selector}`;
-            }
-            return selector;
-          });
-        });
-      },
-    },
+    pluginScopedStyles({ moduleName }),
+    ...minifyPreset(preserveLicenseComments),
   ]).process(source).css;
+};
+
+const createJsStyles = (props: { moduleName: string; content: string }) => {
+  const { moduleName, content } = props;
+
+  const css = minifyCss(
+    // Escape backticks for JS template literal.
+    content.replace(/\`/g, "\\`"),
+    preserveLicenseComments,
+  );
+
+  return `const ${moduleName} = \`<style>${css}</style>\`;\n
+      export default ${moduleName};\n`;
 };
 
 export type ModuleNames = Array<{ name: string; moduleName: string }>;
@@ -61,22 +67,10 @@ export async function buildStyles() {
       const content = await Bun.file(absPath).text();
       const css_minified = minifyCss(content);
 
-      // Escape backticks for JS template literal.
-      const content_css_for_js = minifyCss(content.replace(/\`/g, "\\`"), {
-        remove: (comment) => {
-          if (/(License|Author)/i.test(comment)) {
-            // Preserve license comments.
-            return false;
-          }
-
-          return true;
-        },
-      });
-
-      const exportee = `const ${moduleName} = \`<style>${content_css_for_js}</style>\`;\n
-      export default ${moduleName};\n`;
-
-      await writeTo(`src/styles/${name}.js`, exportee);
+      await writeTo(
+        `src/styles/${name}.js`,
+        createJsStyles({ moduleName, content }),
+      );
       await writeTo(
         `src/styles/${name}.d.ts`,
         `export { ${moduleName} as default } from "./";\n`,
@@ -84,6 +78,17 @@ export async function buildStyles() {
       await writeTo(`src/styles/${name}.css`, css_minified);
 
       const scoped_style = createScopedStyles({ source: content, moduleName });
+
+      await writeTo(
+        `src/styles/${name}.scoped.js`,
+        createJsStyles({ moduleName, content: scoped_style }),
+      );
+      await writeTo(
+        `src/styles/${name}.scoped.d.ts`,
+        `export { ${moduleName} as default } from "./";\n`,
+      );
+
+      await writeTo(`src/styles/${name}.scoped.css`, scoped_style);
 
       scoped_styles += scoped_style;
     } else {
@@ -144,6 +149,8 @@ export async function buildStyles() {
 
   // Don't format metadata used in docs.
   await Bun.write("www/data/styles.json", JSON.stringify(styles));
+
+  // For performance, a dedictated CSS file is used for scoped styles in docs.
   await Bun.write(
     "www/data/scoped-styles.css",
     minifyCss(scoped_styles, { removeAll: true }),
