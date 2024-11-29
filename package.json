@@ -12,7 +12,7 @@
     "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "bunx playwright test",
-    "format": "bun --bun prettier --write .  --cache",
+    "format": "bun --bun prettier --write . --cache",
     "upgrade-examples": "bun scripts/upgrade-examples.ts",
     "astro": "astro",
     "playwright": "playwright"
@@ -35,7 +35,7 @@
     "postcss": "latest",
     "prettier": "latest",
     "prettier-plugin-svelte": "latest",
-    "svelte": "^4.2.19",
+    "svelte": "^5.2.11",
     "svelte-focus-key": "latest",
     "typescript": "latest",
     "vite": "latest"

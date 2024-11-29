@@ -5,7 +5,9 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [
     routify({
-      ssr: { enable: false },
+      render: {
+        ssr: { enable: false },
+      },
     }),
     svelte({
       preprocess: [vitePreprocess()],
