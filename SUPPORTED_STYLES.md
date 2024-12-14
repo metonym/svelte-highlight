@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 249 styles exported from highlight.js@11.10.0
+> 256 styles exported from highlight.js@11.11.0
 
 ## 1c-light (`_1cLight`)
 
@@ -1517,6 +1517,94 @@
 ```html
 <script>
   import "svelte-highlight/styles/cupertino.css";
+</script>
+```
+
+## cybertopia-cherry (`cybertopiaCherry`)
+
+**Injected Styles**
+
+```html
+<script>
+  import cybertopiaCherry from "svelte-highlight/styles/cybertopiaCherry";
+</script>
+
+<svelte:head>
+  {@html cybertopiaCherry}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cybertopia-cherry.css";
+</script>
+```
+
+## cybertopia-dimmer (`cybertopiaDimmer`)
+
+**Injected Styles**
+
+```html
+<script>
+  import cybertopiaDimmer from "svelte-highlight/styles/cybertopiaDimmer";
+</script>
+
+<svelte:head>
+  {@html cybertopiaDimmer}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cybertopia-dimmer.css";
+</script>
+```
+
+## cybertopia-icecap (`cybertopiaIcecap`)
+
+**Injected Styles**
+
+```html
+<script>
+  import cybertopiaIcecap from "svelte-highlight/styles/cybertopiaIcecap";
+</script>
+
+<svelte:head>
+  {@html cybertopiaIcecap}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cybertopia-icecap.css";
+</script>
+```
+
+## cybertopia-saturated (`cybertopiaSaturated`)
+
+**Injected Styles**
+
+```html
+<script>
+  import cybertopiaSaturated from "svelte-highlight/styles/cybertopiaSaturated";
+</script>
+
+<svelte:head>
+  {@html cybertopiaSaturated}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cybertopia-saturated.css";
 </script>
 ```
 
@@ -4355,6 +4443,72 @@
 ```html
 <script>
   import "svelte-highlight/styles/ros-pine-moon.css";
+</script>
+```
+
+## rose-pine (`rosePine`)
+
+**Injected Styles**
+
+```html
+<script>
+  import rosePine from "svelte-highlight/styles/rosePine";
+</script>
+
+<svelte:head>
+  {@html rosePine}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/rose-pine.css";
+</script>
+```
+
+## rose-pine-dawn (`rosePineDawn`)
+
+**Injected Styles**
+
+```html
+<script>
+  import rosePineDawn from "svelte-highlight/styles/rosePineDawn";
+</script>
+
+<svelte:head>
+  {@html rosePineDawn}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/rose-pine-dawn.css";
+</script>
+```
+
+## rose-pine-moon (`rosePineMoon`)
+
+**Injected Styles**
+
+```html
+<script>
+  import rosePineMoon from "svelte-highlight/styles/rosePineMoon";
+</script>
+
+<svelte:head>
+  {@html rosePineMoon}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/rose-pine-moon.css";
 </script>
 ```
 
