@@ -3,6 +3,7 @@ import litePreset from "cssnano-preset-lite";
 import postcss from "postcss";
 import discardDuplicates from "postcss-discard-duplicates";
 import mergeRules from "postcss-merge-rules";
+import { postcssInlineCssVars } from "./postcss-inline-css-vars";
 
 export const minifyCss = (
   css: string,
@@ -11,6 +12,7 @@ export const minifyCss = (
   },
 ) => {
   return postcss([
+    postcssInlineCssVars(),
     discardDuplicates(),
     mergeRules(),
     cssnano({
