@@ -34,6 +34,8 @@
     "cssnano": "latest",
     "cssnano-preset-lite": "latest",
     "postcss": "latest",
+    "postcss-discard-duplicates": "^7.0.1",
+    "postcss-merge-rules": "^7.0.4",
     "prettier": "latest",
     "prettier-plugin-svelte": "latest",
     "svelte": "^4.2.19",
