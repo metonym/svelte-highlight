@@ -1,4 +1,4 @@
-# examples/vite@svelte-5
+# examples/vite@svelte-4
 
 > `svelte-highlight` Vite set-up.
 
