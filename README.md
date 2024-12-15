@@ -511,10 +511,13 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 
 ## Examples
 
+By default, example set-ups use Svelte 5. The exception is `examples/vite@svelte-4`, which uses Svelte 4.
+
 - [examples/rollup](examples/rollup)
 - [examples/routify](examples/routify)
 - [examples/sveltekit](examples/sveltekit)
 - [examples/vite](examples/vite)
+- [examples/vite@svelte-4](examples/vite@svelte-4)
 - [examples/webpack](examples/webpack)
 
 ## [Changelog](CHANGELOG.md)
