@@ -2,6 +2,7 @@
  * Converts a dash/period separated string into pascal case
  * @example
  * "one-two-three" --> "oneTwoThree"
+ * "one.two.three" --> "oneTwoThree"
  */
 export const toCamelCase = (str: string) =>
   str

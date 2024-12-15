@@ -3,7 +3,7 @@ import path from "node:path";
 import postcss from "postcss";
 import { createMarkdown } from "./utils/create-markdown";
 import { minifyCss } from "./utils/minify-css";
-import { toCamelCase } from "./utils/to-pascal-case";
+import { toCamelCase } from "./utils/to-camel-case";
 import { writeTo } from "./utils/write-to";
 
 const createScopedStyles = (props: { source: string; moduleName: string }) => {
