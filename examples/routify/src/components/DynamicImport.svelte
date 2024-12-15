@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SvelteComponent, onMount } from "svelte";
+  import { onMount } from "svelte";
   import type { HighlightAuto } from "svelte-highlight";
 
   let component: typeof HighlightAuto;
