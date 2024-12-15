@@ -20,7 +20,7 @@ const isCssVar = (value: string) => value.includes("var(");
  */
 export const postcssInlineCssVars = (): Plugin => {
   return {
-    postcssPlugin: "postcss-plugin:inline-css-vars",
+    postcssPlugin: "postcss-inline-css-vars",
     Once(root) {
       // Extract CSS variables from :root.
       let cssVars: Record<string, string> = {};

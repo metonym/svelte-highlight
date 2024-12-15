@@ -11,7 +11,7 @@ import type { Plugin } from "postcss";
  */
 export const postcssScopedStyles = (moduleName: string): Plugin => {
   return {
-    postcssPlugin: "postcss-plugin:scoped-styles",
+    postcssPlugin: "postcss-scoped-styles",
     Once(root) {
       root.walkRules((rule) => {
         rule.selectors = rule.selectors.map((selector) => {
