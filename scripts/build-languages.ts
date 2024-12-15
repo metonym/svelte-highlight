@@ -2,7 +2,7 @@ import { $ } from "bun";
 import hljs from "highlight.js";
 import type { ModuleNames } from "./build-styles";
 import { createMarkdown } from "./utils/create-markdown";
-import { toCamelCase } from "./utils/to-pascal-case";
+import { toCamelCase } from "./utils/to-camel-case";
 import { writeTo } from "./utils/write-to";
 
 export async function buildLanguages() {
