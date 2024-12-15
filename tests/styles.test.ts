@@ -1,4 +1,3 @@
-import { expect, test } from "bun:test";
 import * as styles from "../src/styles";
 
 test("Styles", () => {

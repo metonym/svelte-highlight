@@ -1,4 +1,3 @@
-import { expect, test } from "bun:test";
 import * as languages from "../src/languages";
 
 test("Languages", () => {

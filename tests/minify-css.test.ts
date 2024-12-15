@@ -1,4 +1,3 @@
-import { describe, expect, it } from "bun:test";
 import { minifyCss } from "../scripts/utils/minify-css";
 
 describe("minifyCss", () => {

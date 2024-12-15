@@ -26,6 +26,7 @@
     "@playwright/experimental-ct-svelte": "1.47.1",
     "@playwright/test": "1.47.1",
     "@types/bun": "latest",
+    "@types/jest": "^29.5.14",
     "@types/node": "latest",
     "@types/prettier": "latest",
     "astro": "latest",
