@@ -1,32 +1,10 @@
 import { $, Glob } from "bun";
 import path from "node:path";
-import postcss from "postcss";
 import { createMarkdown } from "./utils/create-markdown";
 import { minifyCss } from "./utils/minify-css";
+import { postcssScopedStyles } from "./utils/postcss-scoped-styles";
 import { toCamelCase } from "./utils/to-camel-case";
 import { writeTo } from "./utils/write-to";
-
-const createScopedStyles = (props: { source: string; moduleName: string }) => {
-  const { source, moduleName } = props;
-
-  return postcss([
-    {
-      postcssPlugin: "postcss-plugin:scoped-styles",
-      Once(root) {
-        root.walkRules((rule) => {
-          rule.selectors = rule.selectors.map((selector) => {
-            if (/^pre /.test(selector)) {
-              selector = `pre.${moduleName}${selector.replace(/^pre /, " ")}`;
-            } else {
-              selector = `.${moduleName} ${selector}`;
-            }
-            return selector;
-          });
-        });
-      },
-    },
-  ]).process(source).css;
-};
 
 export type ModuleNames = Array<{ name: string; moduleName: string }>;
 
@@ -78,7 +56,10 @@ export async function buildStyles() {
       );
       await writeTo(`src/styles/${name}.css`, css_minified);
 
-      const scoped_style = createScopedStyles({ source: content, moduleName });
+      const scoped_style = minifyCss(content, {
+        discardComments: "remove-all",
+        plugins: [postcssScopedStyles(moduleName)],
+      });
 
       scoped_styles += scoped_style;
     } else {
@@ -139,10 +120,7 @@ export async function buildStyles() {
 
   // Don't format metadata used in docs.
   await Bun.write("www/data/styles.json", JSON.stringify(styles));
-  await Bun.write(
-    "www/data/scoped-styles.css",
-    minifyCss(scoped_styles, { discardComments: "remove-all" }),
-  );
+  await Bun.write("www/data/scoped-styles.css", scoped_styles);
 
   console.timeEnd("build styles");
 }
