@@ -8,11 +8,12 @@
   "scripts": {
     "dev": "bun --bun astro dev",
     "build": "bun --bun astro build",
+    "preview": "bun --bun astro preview",
     "build:lib": "bun scripts/index.ts",
     "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "bunx playwright test",
-    "format": "bun --bun prettier --write .  --cache",
+    "format": "bun --bun prettier --write . --cache",
     "upgrade-examples": "bun scripts/upgrade-examples.ts",
     "astro": "astro",
     "playwright": "playwright"
