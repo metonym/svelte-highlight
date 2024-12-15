@@ -13,6 +13,14 @@ export default {
     format: "es",
     dir: "public/build",
   },
+  onwarn: (warning, warn) => {
+    if (warning.code === "CIRCULAR_DEPENDENCY") {
+      if (warning.ids.some((id) => /node_modules\/(svelte)/.test(id))) {
+        return;
+      }
+    }
+    warn(warning);
+  },
   plugins: [
     svelte({
       emitCss: false,
