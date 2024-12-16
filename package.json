@@ -36,6 +36,7 @@
     "cssnano-preset-lite": "^4.0.3",
     "postcss": "^8.4.49",
     "postcss-discard-duplicates": "^7.0.1",
+    "postcss-inline-css-vars": "^0.1.0",
     "postcss-merge-rules": "^7.0.4",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.2",
