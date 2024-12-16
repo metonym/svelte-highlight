@@ -5,7 +5,15 @@ import discardDuplicates from "postcss-discard-duplicates";
 import { inlineCssVars } from "postcss-inline-css-vars";
 import mergeRules from "postcss-merge-rules";
 
-export const minifyCss = (
+/**
+ * Raw styles from `highlight.js` are preprocessed for consistency.
+ * - Inlining CSS variables.
+ * - Discarding duplicate rules.
+ * - Merging rules.
+ * - Discarding comments (but preserving license comments).
+ * - Minifying the CSS.
+ */
+export const preprocessStyles = (
   css: string,
   options?: {
     plugins?: Plugin[];
