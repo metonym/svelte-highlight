@@ -1,6 +1,6 @@
-import { minifyCss } from "../scripts/utils/minify-css";
+import { preprocessStyles } from "../scripts/utils/preprocess-styles";
 
-describe("minifyCss", () => {
+describe("preprocessStyles", () => {
   it("should minify basic CSS", () => {
     const input = `
       .test {
@@ -8,7 +8,7 @@ describe("minifyCss", () => {
         background: blue;
       }
     `;
-    const output = minifyCss(input);
+    const output = preprocessStyles(input);
     expect(output).toBe(".test{color:red;background:blue}");
   });
 
@@ -21,7 +21,7 @@ describe("minifyCss", () => {
         color: red;
       }
     `;
-    const output = minifyCss(input);
+    const output = preprocessStyles(input);
     expect(output).toBe(".test{color:red}");
   });
 
@@ -34,7 +34,7 @@ describe("minifyCss", () => {
         background: blue;
       }
     `;
-    const output = minifyCss(input);
+    const output = preprocessStyles(input);
     expect(output).toBe(".test{color:red;background:blue}");
   });
 
@@ -57,7 +57,7 @@ describe("minifyCss", () => {
     `;
 
     it("should preserve license comments when option is set", () => {
-      const output = minifyCss(cssWithComments, {
+      const output = preprocessStyles(cssWithComments, {
         discardComments: "preserve-license",
       });
       expect(output).toContain("@license");
@@ -66,7 +66,7 @@ describe("minifyCss", () => {
     });
 
     it("should remove all comments when remove-all option is set", () => {
-      const output = minifyCss(cssWithComments, {
+      const output = preprocessStyles(cssWithComments, {
         discardComments: "remove-all",
       });
       expect(output).not.toContain("@license");

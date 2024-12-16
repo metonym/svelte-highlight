@@ -1,8 +1,8 @@
 import { $, Glob } from "bun";
 import path from "node:path";
 import { createMarkdown } from "./utils/create-markdown";
-import { minifyCss } from "./utils/minify-css";
 import { postcssScopedStyles } from "./utils/postcss-scoped-styles";
+import { preprocessStyles } from "./utils/preprocess-styles";
 import { toCamelCase } from "./utils/to-camel-case";
 import { writeTo } from "./utils/write-to";
 
@@ -37,14 +37,17 @@ export async function buildStyles() {
       styles.push({ name, moduleName });
 
       const content = await Bun.file(absPath).text();
-      const css_minified = minifyCss(content, {
+      const css_minified = preprocessStyles(content, {
         discardComments: "preserve-license",
       });
 
       // Escape backticks for JS template literal.
-      const content_css_for_js = minifyCss(content.replace(/\`/g, "\\`"), {
-        discardComments: "preserve-license",
-      });
+      const content_css_for_js = preprocessStyles(
+        content.replace(/\`/g, "\\`"),
+        {
+          discardComments: "preserve-license",
+        },
+      );
 
       const exportee = `const ${moduleName} = \`<style>${content_css_for_js}</style>\`;\n
       export default ${moduleName};\n`;
@@ -56,7 +59,7 @@ export async function buildStyles() {
       );
       await writeTo(`src/styles/${name}.css`, css_minified);
 
-      const scoped_style = minifyCss(content, {
+      const scoped_style = preprocessStyles(content, {
         discardComments: "remove-all",
         plugins: [postcssScopedStyles(moduleName)],
       });
