@@ -7,7 +7,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@roxi/routify": "^3.0.0-next.243",
+    "@roxi/routify": "^3.0.0-next.245",
     "@sveltejs/vite-plugin-svelte": "latest",
     "@tsconfig/svelte": "latest",
     "svelte": "latest",
