@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 256 styles exported from highlight.js@11.11.0
+> 256 styles exported from highlight.js@11.11.1
 
 ## 1c-light (`_1cLight`)
 
