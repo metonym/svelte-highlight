@@ -48,7 +48,7 @@
   </Column>
   <Column xlg={6} lg={9}>
     <CodeSnippet code="npm i {PKG_NAME}" /><br />
-    <CodeSnippet code="pnpm i {PKG_NAME} highlight.js" /><br />
+    <CodeSnippet code="pnpm i {PKG_NAME}" /><br />
     <CodeSnippet code="bun add {PKG_NAME}" /><br />
     <CodeSnippet code="yarn add {PKG_NAME}" />
   </Column>

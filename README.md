@@ -18,7 +18,7 @@ The Changelog is [available on GitHub](https://github.com/metonym/svelte-highlig
 npm i svelte-highlight
 
 # pnpm
-pnpm i svelte-highlight highlight.js
+pnpm i svelte-highlight
 
 # Bun
 bun i svelte-highlight
@@ -26,8 +26,6 @@ bun i svelte-highlight
 # Yarn
 yarn add svelte-highlight
 ```
-
-Note that [pnpm](https://github.com/pnpm/pnpm) users must also install `highlight.js`.
 
 ## Basic Usage
 
