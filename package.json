@@ -28,7 +28,6 @@
     "@types/bun": "^1.1.14",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
-    "@types/prettier": "latest",
     "astro": "^4.16.6",
     "carbon-components-svelte": "latest",
     "carbon-preprocess-svelte": "latest",
