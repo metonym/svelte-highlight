@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
+import LineNumbers from "./LineNumbers.test.svelte";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
-
 test.use({ viewport: { width: 1200, height: 600 } });
 
 test("Highlight", async ({ mount, page }) => {
@@ -18,10 +18,24 @@ test("Highlight", async ({ mount, page }) => {
 
 test("HighlightAuto", async ({ mount, page }) => {
   await mount(HighlightAuto);
+
+  await expect(page.locator(".hljs-selector-tag")).toHaveText("body");
+  await expect(page.locator(".hljs-attribute")).toHaveText("background");
+  await expect(page.locator(".hljs-number")).toHaveText("#000");
+
+  // Language tag
   await expect(page.locator("pre")).toHaveAttribute("data-language", "css");
 });
 
 test("SvelteHighlight", async ({ mount, page }) => {
   await mount(SvelteHighlight);
   await expect(page.locator(".hljs-attr")).toHaveText("on:click");
+});
+
+test("LineNumbers", async ({ mount, page }) => {
+  await mount(LineNumbers);
+  await expect(page.getByText("1")).toBeVisible();
+
+  await expect(page.locator(".hljs-keyword")).toHaveText("const");
+  await expect(page.locator(".hljs-title")).toHaveText("add");
 });
