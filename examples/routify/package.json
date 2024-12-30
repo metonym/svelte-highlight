@@ -6,12 +6,14 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "svelte-highlight": "^7.8.2"
+  },
   "devDependencies": {
-    "@roxi/routify": "^3.0.0-next.245",
+    "@roxi/routify": "^3.0.0-next.247",
     "@sveltejs/vite-plugin-svelte": "latest",
     "@tsconfig/svelte": "latest",
     "svelte": "latest",
-    "svelte-highlight": "latest",
     "typescript": "latest",
     "vite": "latest"
   }

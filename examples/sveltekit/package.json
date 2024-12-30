@@ -7,12 +7,14 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "svelte-highlight": "^7.8.2"
+  },
   "devDependencies": {
     "@sveltejs/adapter-node": "latest",
     "@sveltejs/kit": "latest",
     "@sveltejs/vite-plugin-svelte": "latest",
     "svelte": "latest",
-    "svelte-highlight": "latest",
     "typescript": "latest",
     "vite": "latest"
   }

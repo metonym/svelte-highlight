@@ -6,11 +6,13 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "svelte-highlight": "^7.8.2"
+  },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "latest",
     "@tsconfig/svelte": "latest",
     "svelte": "latest",
-    "svelte-highlight": "latest",
     "typescript": "latest",
     "vite": "latest"
   }

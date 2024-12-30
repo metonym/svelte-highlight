@@ -5,13 +5,15 @@
     "dev": "webpack serve",
     "build": "NODE_ENV=production webpack"
   },
+  "dependencies": {
+    "svelte-highlight": "^7.8.2"
+  },
   "devDependencies": {
     "@tsconfig/svelte": "latest",
     "css-loader": "latest",
     "html-webpack-plugin": "latest",
     "mini-css-extract-plugin": "latest",
     "svelte": "latest",
-    "svelte-highlight": "latest",
     "svelte-loader": "latest",
     "svelte-preprocess": "latest",
     "typescript": "latest",
