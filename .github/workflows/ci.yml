@@ -13,7 +13,7 @@ jobs:
         id: playwright-cache
         with:
           path: /Users/runner/Library/Caches/ms-playwright
-          key: ${{ runner.os }}-playwright-1.47.1
+          key: ${{ runner.os }}-playwright-1.50.1
 
       - name: Install dependencies
         run: bun install
