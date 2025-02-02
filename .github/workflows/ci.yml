@@ -5,14 +5,14 @@ on:
 
 jobs:
   test:
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - uses: actions/cache@v4
         id: playwright-cache
         with:
-          path: /Users/runner/Library/Caches/ms-playwright
+          path: /home/runner/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock') }}
 
       - name: Install dependencies
@@ -23,8 +23,10 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: Install Playwright with cache
-        run: bun playwright install
         if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: |
+          bun playwright install
+          bun playwright install-deps
 
       - name: Build library
         run: bun build:lib
