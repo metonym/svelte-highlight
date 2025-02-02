@@ -43,6 +43,7 @@
           {#each languages as language (language.name)}
             <StructuredListRow
               class={!filteredIds.has(language.name) ? "hidden" : ""}
+              style="content-visibility: auto; contain-intrinsic-size: 0 204px;"
             >
               <StructuredListCell>
                 <div class="mb-5">

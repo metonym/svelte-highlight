@@ -56,6 +56,7 @@
           {#each styles as style (style.name)}
             <StructuredListRow
               class={!filteredIds.has(style.name) ? "hidden" : ""}
+              style="content-visibility: auto; contain-intrinsic-size: 0 360px;"
             >
               <StructuredListCell>
                 <div class="mb-5">
