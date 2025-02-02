@@ -46,7 +46,7 @@
   <Column xlg={12}>
     <h4>Installation</h4>
   </Column>
-  <Column xlg={6} lg={9}>
+  <Column xlg={6} lg={6} md={6}>
     <CodeSnippet code="npm i {PKG_NAME}" /><br />
     <CodeSnippet code="pnpm i {PKG_NAME}" /><br />
     <CodeSnippet code="bun add {PKG_NAME}" /><br />
@@ -64,7 +64,7 @@
   <Column xlg={12}>
     <h3>Usage</h3>
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">The default Highlight component requires two props:</p>
     <UnorderedList class="mb-5">
       <ListItem><code class="code">code</code>: text to highlight</ListItem>
@@ -82,10 +82,10 @@
       of supported languages.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10}>
     <ScopedStyle name={THEME_NAME} moduleName={THEME_MODULE_NAME} />
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Import styles from <code class="code">svelte-highlight/styles</code>.
     </p>
@@ -111,7 +111,7 @@
       >.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <HighlightSvelte code={svelteHeadCdn} class={THEME_MODULE_NAME} />
     <InlineNotification
       lowContrast
@@ -127,13 +127,13 @@
   <Column xlg={12}>
     <h3>Svelte Syntax Highlighting</h3>
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use the <code class="code">HighlightSvelte</code> component for Svelte syntax
       highlighting.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <ScopedStyleSvelte name={THEME_NAME} moduleName={THEME_MODULE_NAME} />
   </Column>
 </Row>
@@ -142,14 +142,14 @@
   <Column xlg={12}>
     <h3>Auto-highlighting</h3>
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       The <code class="code">HighlightAuto</code> component invokes the
       <code class="code">highlightAuto</code>
       API from <code class="code">highlight.js</code>.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <ScopedStyleAuto name={THEME_NAME} moduleName={THEME_MODULE_NAME} />
     <InlineNotification
       lowContrast
@@ -165,25 +165,25 @@
   <Column xlg={12}>
     <h3>Line Numbers</h3>
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use the <code class="code">LineNumbers</code> component to render the highlighted
       code with line numbers.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <Basic />
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Set <code class="code">hideBorder</code> to <code class="code">true</code>
       to hide the border of the line numbers column.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <HideBorder />
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       By default, overflowing horizontal content is contained by a scrollbar.
     </p>
@@ -193,43 +193,43 @@
       <code class="code">pre</code> element.
     </p>
   </Column>
-  <Column xlg={8}>
+  <Column xlg={8} lg={8} md={12}>
     <WrapLines />
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">--style-props</code> to customize visual properties.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <StyleProps />
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">startingLineNumber</code> to customize the starting
       line number. By default, line numbers start at
       <code class="code">1</code>.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <StartingLineNumber />
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">highlightedLines</code> to highlight specific lines.
       Indices start at zero.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <HighlightedLines />
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">--highlighted-background</code> to customize the background
       color of highlighted lines.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <HighlightedLinesCustomColor />
   </Column>
 </Row>
@@ -238,7 +238,7 @@
   <Column xlg={12}>
     <h3>Language Targeting</h3>
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components apply a
       <code class="code">data-language</code> attribute on the codeblock containing
@@ -250,7 +250,7 @@
       of supported languages.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <Highlight
       code={'[data-language="css"] {\n  /* custom style rules */\n}'}
       language={css}
@@ -263,7 +263,7 @@
   <Column xlg={12}>
     <h3>Language Tags</h3>
   </Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components allow for a tag to be added
       at the top-right of the codeblock displaying the language name. Customize the
@@ -285,7 +285,7 @@
       of supported languages.
     </p>
   </Column>
-  <Column xlg={10}>
+  <Column xlg={10} lg={10} md={12}>
     <HighlightSvelte
       code={`<script>
   import { HighlightAuto } from "svelte-highlight";
@@ -323,7 +323,7 @@
 
 <Row>
   <Column xlg={12}><h3>Examples</h3></Column>
-  <Column xlg={6} lg={12}>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Get started with <Link
         inline
