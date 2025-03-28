@@ -25,9 +25,9 @@
     "@astrojs/svelte": "^5.7.3",
     "@playwright/experimental-ct-svelte": "1.50.1",
     "@playwright/test": "1.50.1",
-    "@types/bun": "^1.2.5",
+    "@types/bun": "^1.2.8",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.13.10",
+    "@types/node": "^22.13.14",
     "astro": "^4.16.18",
     "carbon-components-svelte": "latest",
     "carbon-preprocess-svelte": "latest",
@@ -42,7 +42,7 @@
     "svelte": "^4.2.19",
     "svelte-focus-key": "latest",
     "typescript": "^5.8.2",
-    "vite": "^5.4.14"
+    "vite": "^5.4.15"
   },
   "repository": {
     "type": "git",

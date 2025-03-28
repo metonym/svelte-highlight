@@ -14,6 +14,6 @@
     "@tsconfig/svelte": "latest",
     "svelte": "^4.2.19",
     "typescript": "latest",
-    "vite": "^5.4.14"
+    "vite": "^5.4.15"
   }
 }
