@@ -1,6 +1,6 @@
 {
   "name": "svelte-highlight",
-  "version": "7.8.2",
+  "version": "7.8.3",
   "license": "MIT",
   "description": "Svelte component library for highlighting code using highlight.js",
   "author": "Eric Liu (https://github.com/metonym)",
