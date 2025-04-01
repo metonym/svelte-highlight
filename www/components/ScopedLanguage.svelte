@@ -1,8 +1,6 @@
 <script>
   import { THEME_MODULE_NAME } from "@www/constants";
 
-  // @ts-check
-
   /** @type {string} */
   export let name;
 

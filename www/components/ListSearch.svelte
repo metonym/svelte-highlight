@@ -1,5 +1,4 @@
 <script>
-  // @ts-check
   import { PKG_HLJS_VERSION } from "@www/constants";
 
   /** @type {{ name: string; moduleName: string; }[]} */

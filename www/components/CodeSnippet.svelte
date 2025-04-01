@@ -1,6 +1,4 @@
 <script>
-  // @ts-check
-
   export let code = "";
 
   import { CodeSnippet } from "carbon-components-svelte";

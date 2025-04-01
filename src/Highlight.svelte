@@ -1,6 +1,4 @@
 <script>
-  // @ts-check
-
   /** @type {import("./languages").LanguageType<string>} */
   export let language;
 

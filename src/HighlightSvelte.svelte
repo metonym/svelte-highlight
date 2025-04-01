@@ -1,5 +1,4 @@
 <script>
-  // @ts-check
   import LangTag from "./LangTag.svelte";
 
   /** @type {any} */

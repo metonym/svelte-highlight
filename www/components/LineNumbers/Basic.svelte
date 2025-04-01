@@ -1,8 +1,6 @@
 <script>
   import { THEME_NAME, THEME_MODULE_NAME } from "@www/constants";
 
-  // @ts-check
-
   export let snippet = "<LineNumbers {highlighted} />";
 
   import { HighlightSvelte, LineNumbers } from "svelte-highlight";

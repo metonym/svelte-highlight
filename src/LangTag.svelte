@@ -1,6 +1,4 @@
 <script>
-  // @ts-check
-
   /** @type {any} */
   export let code;
 
