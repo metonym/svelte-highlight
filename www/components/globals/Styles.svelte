@@ -1,6 +1,4 @@
 <script>
-  // @ts-check
-
   import {
     Row,
     Column,

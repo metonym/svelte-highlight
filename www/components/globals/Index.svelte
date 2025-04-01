@@ -1,6 +1,4 @@
 <script>
-  // @ts-check
-
   import { THEME_NAME, PKG_NAME, THEME_MODULE_NAME } from "@www/constants";
   import {
     Row,

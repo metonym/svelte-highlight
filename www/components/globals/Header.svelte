@@ -1,6 +1,4 @@
 <script>
-  // @ts-check
-
   /** @type {string} */
   export let title;
 
