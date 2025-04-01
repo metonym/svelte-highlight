@@ -2,7 +2,7 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "node:path";
-import preprocess from "svelte-preprocess";
+import { sveltePreprocess } from "svelte-preprocess";
 
 /** @type {"development" | "production"} */
 const NODE_ENV =
@@ -32,7 +32,7 @@ export default {
           loader: "svelte-loader",
           options: {
             hotReload: !PROD,
-            preprocess: preprocess(),
+            preprocess: sveltePreprocess(),
             compilerOptions: { dev: !PROD },
           },
         },
