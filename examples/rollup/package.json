@@ -6,7 +6,7 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "svelte-highlight": "^7.8.2"
+    "svelte-highlight": "^7.8.3"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "latest",
