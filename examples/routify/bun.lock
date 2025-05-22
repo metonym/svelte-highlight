@@ -6,7 +6,7 @@
         "svelte-highlight": "^7.8.3",
       },
       "devDependencies": {
-        "@roxi/routify": "^3.0.0-next.269",
+        "@roxi/routify": "^3.0.0-next.281",
         "@sveltejs/vite-plugin-svelte": "latest",
         "@tsconfig/svelte": "latest",
         "svelte": "latest",
@@ -118,7 +118,7 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.40.2", "", { "os": "win32", "cpu": "x64" }, "sha512-bwspbWB04XJpeElvsp+DCylKfF4trJDa2Y9Go8O6A7YLX2LIKGcNK/CYImJN6ZP4DcuOHB4Utl3iCbnR62DudA=="],
 
-    "@roxi/routify": ["@roxi/routify@3.0.0-next.281", "", { "dependencies": { "cachewrap": "^0.0.1", "cheap-watch": "^1.0.4", "cheerio": "^1.0.0", "commander": "^7.2.0", "configent": "^3.0.0-13", "consolite": "^0.3.12", "fs-extra": "^10.0.0", "hookar": "^0.0.7", "kleur": "^4.1.4", "node-fetch": "^3.3.0", "persistable": "^0.1.2", "prompts": "^2.4.2", "scroll-into-view-if-needed": "^3.1.0" }, "peerDependencies": { "@roxi/routify": "^3.0.0-next.0", "@sveltejs/vite-plugin-svelte": "^2.4.6 || ^3.0.0 || ^4.0.0 || ^5.0.0", "dotenv-expand": "^8.0.0 || ^9.0.0 || ^10.0.0", "spank": "^2.0.0", "svelte": "^3.0.0 || ^4.0.0 || ^5.0.0", "vite": "^3.2.4 || ^4.0.0 || ^5.0.0 || ^6.0.0" }, "optionalPeers": ["@roxi/routify", "@sveltejs/vite-plugin-svelte", "spank", "vite"], "bin": { "routify": "lib/cli/index.js", "routify3": "lib/cli/index.js" } }, "sha512-wEEi4KMjkc9Ao/uDOisxe+IwAiJAbhAqUNTO3/v66VzcjsAe99OV+erW67xKPaGfLAYK027cQ6OANZVAuhkOrQ=="],
+    "@roxi/routify": ["@roxi/routify@3.0.0-next.282", "", { "dependencies": { "cachewrap": "^0.0.1", "cheap-watch": "^1.0.4", "cheerio": "^1.0.0", "commander": "^7.2.0", "configent": "^3.0.0-13", "consolite": "^0.3.12", "dotenv-expand": "^12.0.2", "fs-extra": "^10.0.0", "hookar": "^0.0.7", "kleur": "^4.1.4", "node-fetch": "^3.3.0", "persistable": "^0.1.2", "prompts": "^2.4.2", "scroll-into-view-if-needed": "^3.1.0" }, "peerDependencies": { "@roxi/routify": "^3.0.0-next.0", "@sveltejs/vite-plugin-svelte": "^2.4.6 || ^3.0.0 || ^4.0.0 || ^5.0.0", "spank": "^2.0.0", "svelte": "^3.0.0 || ^4.0.0 || ^5.0.0", "vite": "^3.2.4 || ^4.0.0 || ^5.0.0 || ^6.0.0" }, "optionalPeers": ["@roxi/routify", "@sveltejs/vite-plugin-svelte", "spank", "vite"], "bin": { "routify": "lib/cli/index.js", "routify3": "lib/cli/index.js" } }, "sha512-d1LD6X0XQCJbNswpTuNMzWQ7Icw4qtAyAZDhrRAqrXTMaLaPigZv1eEbn8dW4TDDh+ls+UwlU89PmBi+y8OFPQ=="],
 
     "@sveltejs/acorn-typescript": ["@sveltejs/acorn-typescript@1.0.5", "", { "peerDependencies": { "acorn": "^8.9.0" } }, "sha512-IwQk4yfwLdibDlrXVE04jTZYlLnwsTT2PIOQQGNLWfjavGifnk1JD1LcZjZaBTRcxZu2FfPfNLOE04DSu9lqtQ=="],
 
@@ -128,7 +128,7 @@
 
     "@tsconfig/svelte": ["@tsconfig/svelte@5.0.4", "", {}, "sha512-BV9NplVgLmSi4mwKzD8BD/NQ8erOY/nUE/GpgWe2ckx+wIQF5RyRirn/QsSSCPeulVpc3RA/iJt6DpfTIZps0Q=="],
 
-    "@types/estree": ["@types/estree@1.0.6", "", {}, "sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw=="],
+    "@types/estree": ["@types/estree@1.0.7", "", {}, "sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ=="],
 
     "acorn": ["acorn@8.14.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA=="],
 
@@ -176,7 +176,7 @@
 
     "dotenv": ["dotenv@16.4.7", "", {}, "sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ=="],
 
-    "dotenv-expand": ["dotenv-expand@10.0.0", "", {}, "sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A=="],
+    "dotenv-expand": ["dotenv-expand@12.0.2", "", { "dependencies": { "dotenv": "^16.4.5" } }, "sha512-lXpXz2ZE1cea1gL4sz2Ipj8y4PiVjytYr3Ij0SWoms1PGxIv7m2CRKuRuCRtHdVuvM/hNJPMxt5PbhboNC4dPQ=="],
 
     "encoding-sniffer": ["encoding-sniffer@0.2.0", "", { "dependencies": { "iconv-lite": "^0.6.3", "whatwg-encoding": "^3.1.1" } }, "sha512-ju7Wq1kg04I3HtiYIOrUrdfdDvkyO9s5XM8QAj/bN61Yo/Vb4vgJxy5vi4Yxk01gWHbrofpPtpxM8bKger9jhg=="],
 
@@ -256,7 +256,7 @@
 
     "source-map-js": ["source-map-js@1.2.1", "", {}, "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA=="],
 
-    "svelte": ["svelte@5.28.2", "", { "dependencies": { "@ampproject/remapping": "^2.3.0", "@jridgewell/sourcemap-codec": "^1.5.0", "@sveltejs/acorn-typescript": "^1.0.5", "@types/estree": "^1.0.5", "acorn": "^8.12.1", "aria-query": "^5.3.1", "axobject-query": "^4.1.0", "clsx": "^2.1.1", "esm-env": "^1.2.1", "esrap": "^1.4.6", "is-reference": "^3.0.3", "locate-character": "^3.0.0", "magic-string": "^0.30.11", "zimmerframe": "^1.1.2" } }, "sha512-FbWBxgWOpQfhKvoGJv/TFwzqb4EhJbwCD17dB0tEpQiw1XyUEKZJtgm4nA4xq3LLsMo7hu5UY/BOFmroAxKTMg=="],
+    "svelte": ["svelte@5.33.0", "", { "dependencies": { "@ampproject/remapping": "^2.3.0", "@jridgewell/sourcemap-codec": "^1.5.0", "@sveltejs/acorn-typescript": "^1.0.5", "@types/estree": "^1.0.5", "acorn": "^8.12.1", "aria-query": "^5.3.1", "axobject-query": "^4.1.0", "clsx": "^2.1.1", "esm-env": "^1.2.1", "esrap": "^1.4.6", "is-reference": "^3.0.3", "locate-character": "^3.0.0", "magic-string": "^0.30.11", "zimmerframe": "^1.1.2" } }, "sha512-COPJa+cxefgDShgTr3vcLKXdyBfuE96Z65D/EsuxDcU3fwqBxAN6bVjZ0LoVYyAYAShu4K96/k9BxxlAVO6fpg=="],
 
     "svelte-highlight": ["svelte-highlight@7.8.3", "", { "dependencies": { "highlight.js": "11.11.1" } }, "sha512-i4CE/6yda1fCh0ovUVATk1S1feu1y3+CV+l1brgtMPPRO9VTGq+hPpUjVEJWQkE7hPAgwgVpHccoa5M2gpKxYQ=="],
 
@@ -280,8 +280,8 @@
 
     "zimmerframe": ["zimmerframe@1.1.2", "", {}, "sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w=="],
 
-    "prompts/kleur": ["kleur@3.0.3", "", {}, "sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w=="],
+    "is-reference/@types/estree": ["@types/estree@1.0.6", "", {}, "sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw=="],
 
-    "rollup/@types/estree": ["@types/estree@1.0.7", "", {}, "sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ=="],
+    "prompts/kleur": ["kleur@3.0.3", "", {}, "sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w=="],
   }
 }
