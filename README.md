@@ -334,6 +334,22 @@ Refer to the highlight.js [language definition guide](https://highlightjs.readth
 <Highlight {language} code="..." />
 ```
 
+If you're using TypeScript, use the `LanguageType` interface to type the language.
+
+```ts
+import type { LanguageType } from "svelte-highlight";
+
+const language: LanguageType<"custom-language"> = {
+  name: "custom-language",
+  register: (hljs) => {
+    return {
+      /** custom language rules */
+      contains: [],
+    };
+  },
+};
+```
+
 ## Custom Plugin
 
 Additional plugin languages can be installed and used separately.
