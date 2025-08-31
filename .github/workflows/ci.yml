@@ -3,8 +3,28 @@ on:
   push:
     branches: [master]
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  unit-tests:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build library
+        run: bun build:lib
+
+      - name: Run unit tests
+        run: bun test:unit
+
+      - name: Run typecheck
+        run: bun test:types
+
+  e2e-tests:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
@@ -29,11 +49,5 @@ jobs:
       - name: Build library
         run: bun build:lib
 
-      - name: Run unit tests
-        run: bun test:unit
-
       - name: Run e2e tests
         run: bun test:e2e
-
-      - name: Run typecheck
-        run: bun test:types
