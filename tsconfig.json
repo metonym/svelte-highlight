@@ -2,6 +2,7 @@
   "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
     "baseUrl": ".",
+    "noEmit": true,
     "checkJs": true,
     "ignoreDeprecations": "5.0",
     "allowSyntheticDefaultImports": true,

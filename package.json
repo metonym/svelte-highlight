@@ -13,6 +13,7 @@
     "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "bunx playwright test",
+    "test:types": "bunx tsc",
     "format": "bun --bun prettier --write . --cache",
     "upgrade-examples": "bun scripts/upgrade-examples.ts",
     "astro": "astro",

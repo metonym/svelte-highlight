@@ -34,3 +34,6 @@ jobs:
 
       - name: Run e2e tests
         run: bun test:e2e
+
+      - name: Run typecheck
+        run: bun test:types
