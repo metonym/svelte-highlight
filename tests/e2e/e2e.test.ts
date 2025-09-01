@@ -6,6 +6,7 @@ import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
+import CopyButton from "./CopyButton.test.svelte";
 
 test.use({ viewport: { width: 1200, height: 600 } });
 
@@ -66,6 +67,23 @@ test("LineNumbers - custom starting number", async ({ mount, page }) => {
   await mount(LineNumbersCustomStartingLine);
 
   await expect(page.getByText("100")).toBeVisible();
+});
+
+test("CopyButton - basic functionality", async ({ mount, page }) => {
+  await mount(CopyButton);
+  
+  // Check that CopyButton is visible
+  await expect(page.getByText("Copy")).toBeVisible();
+  
+  // Check that all test sections are present
+  await expect(page.getByText("Basic CopyButton")).toBeVisible();
+  await expect(page.getByText("Custom Text CopyButton")).toBeVisible();
+  await expect(page.getByText("Custom Copy Function")).toBeVisible();
+  await expect(page.getByText("CopyButton with Custom Styling")).toBeVisible();
+  
+  // Check that copy buttons are positioned correctly
+  const copyButtons = page.locator("button");
+  await expect(copyButtons).toHaveCount(4);
 });
 
 test("Language tag styling", async ({ mount, page }) => {
