@@ -20,6 +20,9 @@
   import StartingLineNumber from "@components/LineNumbers/StartingLineNumber.svelte";
   import HighlightedLines from "@components/LineNumbers/HighlightedLines.svelte";
   import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
+  import CopyButtonBasic from "@components/CopyButton/Basic.svelte";
+  import CopyButtonSlot from "@components/CopyButton/Slot.svelte";
+  //import CopyButtonCustomFunction from "@components/CopyButton/CustomFunction.svelte";
   import css from "svelte-highlight/languages/css";
 
   const svelteHeadCdn = `<link
@@ -229,6 +232,44 @@
   </Column>
   <Column xlg={10} lg={10} md={12}>
     <HighlightedLinesCustomColor />
+  </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}>
+    <h3>Copy Button</h3>
+  </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Use the <code class="code">CopyButton</code> component to add copy-to-clipboard
+      functionality to your highlighted code blocks.
+    </p>
+    <p class="mb-5">
+      The button is positioned at the top-right of the highlight component by
+      default and shows visual feedback when copying.
+    </p>
+    <p class="mb-5">
+      You can provide custom content using the default slot, which receives an <code
+        class="code">isCopied</code
+      > boolean to help customize the display.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <CopyButtonBasic />
+  </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">Customize the button content using the default slot:</p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <CopyButtonSlot />
+  </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Provide a custom copy function to replace the default clipboard API:
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <!-- <CopyButtonCustomFunction /> -->
   </Column>
 </Row>
 
