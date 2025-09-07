@@ -7,10 +7,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "svelte-highlight": "^7.8.3"
+    "svelte-highlight": "^7.8.4"
   },
   "devDependencies": {
-    "@roxi/routify": "^3.5.3",
+    "@roxi/routify": "^3.6.3",
     "@sveltejs/vite-plugin-svelte": "latest",
     "@tsconfig/svelte": "latest",
     "svelte": "latest",
