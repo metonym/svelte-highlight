@@ -28,7 +28,7 @@
     "@playwright/test": "1.54.0",
     "@types/bun": "^1.2.21",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.3.1",
+    "@types/node": "^24.3.3",
     "astro": "^4.16.19",
     "carbon-components-svelte": "0.89.7",
     "carbon-preprocess-svelte": "latest",
@@ -43,7 +43,7 @@
     "svelte": "^4.2.20",
     "svelte-focus-key": "latest",
     "typescript": "^5.9.2",
-    "vite": "^5.4.19"
+    "vite": "^5.4.20"
   },
   "repository": {
     "type": "git",
