@@ -259,6 +259,98 @@ Use `--style-props` to customize styles.
 </Highlight>
 ```
 
+## Copy Button
+
+Use the `CopyButton` component to add copy-to-clipboard functionality to your highlighted code blocks.
+
+The button is positioned at the top-right of the highlight component by default and shows visual feedback when copying.
+
+```svelte
+<script>
+  import { Highlight, CopyButton } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<Highlight language={typescript} {code}>
+  <CopyButton code={code} />
+</Highlight>
+```
+
+### Custom Content with Slots
+
+You can provide custom content for the button using the default slot. The slot provides an `isCopied` boolean to help you customize the display:
+
+```svelte
+<CopyButton code={code}>
+  <svelte:fragment let:isCopied>
+    {#if isCopied}
+      <span class="copied-icon">✓</span> Copied!
+    {:else}
+      <span class="copy-icon">📋</span> Copy Code
+    {/if}
+  </svelte:fragment>
+</CopyButton>
+```
+
+### Custom Copy Function
+
+You can provide a custom function to handle copying, which completely replaces the default clipboard API:
+
+```svelte
+<script>
+  function customCopy(text) {
+    // Add your custom logic here
+    console.log('Copying:', text);
+    
+    // Return true for success, false for failure
+    return navigator.clipboard.writeText(text)
+      .then(() => true)
+      .catch(() => false);
+  }
+</script>
+
+<CopyButton 
+  code={code} 
+  copyFn={customCopy}
+  copyText="Custom Copy"
+  copiedText="Done!"
+  copyTimeout={3000}
+/>
+```
+
+### Customization
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `code` | `string` | `''` | The code content to copy |
+| `copyFn` | `(text: string) => Promise<boolean> \| boolean` | `undefined` | Custom function to handle copying |
+| `copyText` | `string` | `'Copy'` | Text to display when not copied (fallback if no slot content) |
+| `copiedText` | `string` | `'Copied!'` | Text to display when copied (fallback if no slot content) |
+| `copyTimeout` | `number` | `2000` | Time in milliseconds before resetting copied state |
+
+The component also supports all standard HTML button attributes like `style`, `class`, etc.
+
+### Event Handling
+
+The component dispatches a `copy` event when the copy operation completes:
+
+```svelte
+<script>
+  function handleCopy(event) {
+    const { success, text } = event.detail;
+    if (success) {
+      showToast('Code copied successfully!');
+    } else {
+      showToast('Failed to copy code');
+    }
+  }
+</script>
+
+<CopyButton code={code} on:copy={handleCopy} />
+```
+
 ## Language Targeting
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
@@ -438,8 +530,8 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
      * The highlighted HTML as a string.
      * @example "<span>...</span>"
      */
-    console.log(e.detail.highlighted);
-  }}
+     console.log(e.detail.highlighted);
+   }}
 />
 ```
 
@@ -480,8 +572,8 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
      * The highlighted HTML as a string.
      * @example "<span>...</span>"
      */
-    console.log(e.detail.highlighted);
-  }}
+     console.log(e.detail.highlighted);
+   }}
 />
 ```
 
@@ -508,14 +600,14 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
      * The highlighted HTML as a string.
      * @example "<span>...</span>"
      */
-    console.log(e.detail.highlighted);
+     console.log(e.detail.highlighted);
 
-    /**
-     * The inferred language name
-     * @example "css"
-     */
-    console.log(e.detail.language);
-  }}
+     /**
+      * The inferred language name
+      * @example "css"
+      */
+     console.log(e.detail.language);
+   }}
 />
 ```
 
