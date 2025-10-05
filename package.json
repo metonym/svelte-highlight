@@ -26,9 +26,9 @@
     "@astrojs/svelte": "^5.7.3",
     "@playwright/experimental-ct-svelte": "1.54.0",
     "@playwright/test": "1.54.0",
-    "@types/bun": "^1.2.22",
+    "@types/bun": "^1.2.23",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.5.2",
+    "@types/node": "^24.6.2",
     "astro": "^4.16.19",
     "carbon-components-svelte": "0.89.7",
     "carbon-preprocess-svelte": "latest",
@@ -42,7 +42,7 @@
     "prettier-plugin-svelte": "^3.4.0",
     "svelte": "^4.2.20",
     "svelte-focus-key": "latest",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "vite": "^5.4.20"
   },
   "repository": {
