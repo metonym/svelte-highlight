@@ -69,14 +69,7 @@ test("LineNumbers - custom starting number", async ({ mount, page }) => {
 });
 
 test("Language tag styling", async ({ mount, page }) => {
-  await mount(Highlight, {
-    props: {
-      langtag: true,
-      code: "const x = 1;",
-      language: { name: "javascript", register: () => {} },
-      style: "--langtag-background: red; --langtag-color: white;",
-    },
-  });
+  await mount(Highlight);
 
   const langTag = page.locator("[data-language]");
   await expect(langTag).toBeVisible();
@@ -84,11 +77,7 @@ test("Language tag styling", async ({ mount, page }) => {
 });
 
 test("Auto-highlighting detects language", async ({ mount, page }) => {
-  await mount(HighlightAuto, {
-    props: {
-      code: "body { color: red; }",
-    },
-  });
+  await mount(HighlightAuto);
 
   // Should detect CSS and apply appropriate highlighting
   await expect(page.locator(".hljs-selector-tag")).toBeVisible();
