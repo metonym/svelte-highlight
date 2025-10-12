@@ -1,4 +1,4 @@
-import type { SvelteComponentTyped } from "svelte";
+import type { SvelteComponent } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { LanguageType } from "./languages";
 
@@ -92,7 +92,7 @@ export type HighlightSlots = {
   };
 };
 
-export default class Highlight extends SvelteComponentTyped<
+export default class Highlight extends SvelteComponent<
   HighlightProps,
   HighlightEvents,
   HighlightSlots

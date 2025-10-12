@@ -1,4 +1,4 @@
-import type { SvelteComponentTyped } from "svelte";
+import type { SvelteComponent } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 
 export type LineNumbersProps = HTMLAttributes<HTMLPreElement> & {
@@ -78,7 +78,7 @@ export type LineNumbersEvents = {};
 
 export type LineNumbersSlots = {};
 
-export default class LineNumbers extends SvelteComponentTyped<
+export default class LineNumbers extends SvelteComponent<
   LineNumbersProps,
   LineNumbersEvents,
   LineNumbersSlots

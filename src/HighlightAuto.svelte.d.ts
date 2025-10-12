@@ -1,4 +1,4 @@
-import type { SvelteComponentTyped } from "svelte";
+import type { SvelteComponent } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { LangtagProps } from "./Highlight.svelte";
 
@@ -36,7 +36,7 @@ export type HighlightAutoSlots = {
   };
 };
 
-export default class HighlightAuto extends SvelteComponentTyped<
+export default class HighlightAuto extends SvelteComponent<
   HighlightAutoProps,
   HighlightAutoEvents,
   HighlightAutoSlots

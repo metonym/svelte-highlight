@@ -1,4 +1,4 @@
-import type { SvelteComponentTyped } from "svelte";
+import type { SvelteComponent } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { LangtagProps } from "./Highlight.svelte";
 
@@ -25,7 +25,7 @@ export type LangTagEvents = {};
 
 export type LangTagSlots = {};
 
-export default class LangTag extends SvelteComponentTyped<
+export default class LangTag extends SvelteComponent<
   LangTagProps,
   LangTagEvents,
   LangTagSlots

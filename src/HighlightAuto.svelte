@@ -1,40 +1,43 @@
 <script>
   import LangTag from "./LangTag.svelte";
-
-  /** @type {any} */
-  export let code;
-
-  /** @type {boolean} */
-  export let langtag = false;
-
   import hljs from "highlight.js";
-  import { createEventDispatcher, afterUpdate } from "svelte";
 
-  /**
-   * @typedef {{ highlighted: string; language: string; }} HighlightEventDetail
-   * @type {import("svelte").EventDispatcher<{ highlight: HighlightEventDetail}>}
-   */
-  const dispatch = createEventDispatcher();
+  let { 
+    /** @type {any} */
+    code,
+    /** @type {boolean} */
+    langtag = false,
+    /** @type {(data: { highlighted: string; language: string }) => void} */
+    onHighlight,
+    children,
+    ...restProps
+  } = $props();
 
   /** @type {string} */
-  let highlighted = "";
+  let highlighted = $state("");
 
   /** @type {string} */
-  let language = "";
+  let language = $state("");
 
-  afterUpdate(() => {
-    if (highlighted) dispatch("highlight", { highlighted, language });
+  $effect(() => {
+    const result = hljs.highlightAuto(code);
+    highlighted = result.value;
+    language = result.language || "";
+    
+    if (highlighted && onHighlight) {
+      onHighlight({ highlighted, language });
+    }
   });
-
-  $: ({ value: highlighted, language = "" } = hljs.highlightAuto(code));
 </script>
 
-<slot {highlighted}>
+{#if children}
+  {@render children({ highlighted })}
+{:else}
   <LangTag
-    {...$$restProps}
+    {...restProps}
     languageName={language}
     {langtag}
     {highlighted}
     {code}
   />
-</slot>
+{/if}

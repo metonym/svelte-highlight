@@ -1,18 +1,18 @@
 <script>
-  /** @type {any} */
-  export let code;
-
-  /** @type {string} */
-  export let highlighted;
-
-  /** @type {string} */
-  export let languageName = "plaintext";
-
-  /** @type {boolean} */
-  export let langtag = false;
+  let { 
+    /** @type {any} */
+    code,
+    /** @type {string} */
+    highlighted,
+    /** @type {string} */
+    languageName = "plaintext",
+    /** @type {boolean} */
+    langtag = false,
+    ...restProps
+  } = $props();
 </script>
 
-<pre class:langtag data-language={languageName} {...$$restProps}><code
+<pre class:langtag data-language={languageName} {...restProps}><code
     class:hljs={true}
     >{#if highlighted}{@html highlighted}{:else}{code}{/if}</code
   ></pre>
