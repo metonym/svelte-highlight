@@ -1,30 +1,29 @@
 <script>
-  /** @type {string} */
-  export let highlighted;
-
-  /** @type {boolean} */
-  export let hideBorder = false;
-
-  /** @type {boolean} */
-  export let wrapLines = false;
-
-  /** @type {number} */
-  export let startingLineNumber = 1;
-
-  /** @type {number[]} */
-  export let highlightedLines = [];
+  let { 
+    /** @type {string} */
+    highlighted,
+    /** @type {boolean} */
+    hideBorder = false,
+    /** @type {boolean} */
+    wrapLines = false,
+    /** @type {number} */
+    startingLineNumber = 1,
+    /** @type {number[]} */
+    highlightedLines = [],
+    ...restProps
+  } = $props();
 
   const DIGIT_WIDTH = 12;
   const MIN_DIGITS = 2;
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
 
-  $: lines = highlighted.split("\n");
-  $: len_digits = lines.length.toString().length;
-  $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
-  $: width = len * DIGIT_WIDTH;
+  let lines = $derived(highlighted.split("\n"));
+  let len_digits = $derived(lines.length.toString().length);
+  let len = $derived(len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits);
+  let width = $derived(len * DIGIT_WIDTH);
 </script>
 
-<div style:overflow-x="auto" {...$$restProps}>
+<div style:overflow-x="auto" {...restProps}>
   <table>
     <tbody class:hljs={true}>
       {#each lines as line, i}
