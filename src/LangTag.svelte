@@ -18,7 +18,7 @@
   ></pre>
 
 <style>
-  .langtag {
+  pre {
     position: relative;
   }
 
