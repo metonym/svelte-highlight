@@ -1,6 +1,7 @@
 import type { SvelteComponentTyped } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { LangtagProps } from "./Highlight.svelte";
+import type { LanguageName } from "./languages";
 
 export type HighlightAutoProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
@@ -8,6 +9,13 @@ export type HighlightAutoProps = HTMLAttributes<HTMLPreElement> &
      * Specify the text to highlight.
      */
     code: any;
+
+    /**
+     * Specify a subset of language names to restrict language auto-detection to.
+     * This can improve performance and accuracy.
+     * @example ["javascript", "typescript"]
+     */
+    languageNames?: (LanguageName | (string & {}))[];
   };
 
 export type HighlightAutoEvents = {
