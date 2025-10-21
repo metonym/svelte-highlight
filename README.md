@@ -164,6 +164,25 @@ The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.r
 <HighlightAuto {code} />
 ```
 
+### Limiting Language Detection
+
+You can restrict [language auto-detection](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto-value-languagesubset) to a subset using the `languageNames` prop. This can improve performance and accuracy.
+
+```svelte
+<script>
+  import { HighlightAuto } from "svelte-highlight";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const x = 42;";
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<HighlightAuto {code} languageNames={["javascript", "typescript"]} />
+```
+
 ## Line Numbers
 
 Use the `LineNumbers` component to render the highlighted code with line numbers.
@@ -489,12 +508,19 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 
 #### Props
 
-| Name    | Type      | Default value  |
-| :------ | :-------- | :------------- |
-| code    | `any`     | N/A (required) |
-| langtag | `boolean` | `false`        |
+| Name      | Type             | Default value  |
+| :-------- | :--------------- | :------------- |
+| code      | `any`            | N/A (required) |
+| languages | `LanguageName[]` | `undefined`    |
+| langtag   | `boolean`        | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
+
+**Note:** `LanguageName` is a union type of all supported language names, providing autocomplete and type safety. You can import it from `svelte-highlight`:
+
+```ts
+import type { LanguageName } from "svelte-highlight";
+```
 
 #### Dispatched Events
 
