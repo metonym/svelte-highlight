@@ -157,6 +157,30 @@
       subtitle="Auto-highlighting will result in a larger bundle size. Specify a language if possible."
     />
   </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Optionally, you can restrict language detection to a specific subset using
+      the <code class="code">languages</code> prop. This can improve performance
+      and accuracy.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <HighlightSvelte
+      code={`<script>
+  import { HighlightAuto } from "svelte-highlight";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+
+  const code = "const x = 42;";
+<\/script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
+
+<HighlightAuto {code} languages={["javascript", "typescript"]} />`}
+      class={THEME_MODULE_NAME}
+    />
+  </Column>
 </Row>
 
 <Row class="mb-9">
