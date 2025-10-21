@@ -4,6 +4,9 @@
   /** @type {any} */
   export let code;
 
+  /** @type {string[] | undefined} */
+  export let languages = undefined;
+
   /** @type {boolean} */
   export let langtag = false;
 
@@ -26,7 +29,10 @@
     if (highlighted) dispatch("highlight", { highlighted, language });
   });
 
-  $: ({ value: highlighted, language = "" } = hljs.highlightAuto(code));
+  $: ({ value: highlighted, language = "" } = hljs.highlightAuto(
+    code,
+    languages,
+  ));
 </script>
 
 <slot {highlighted}>
