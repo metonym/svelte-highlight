@@ -14,12 +14,13 @@ export async function buildLanguages() {
   let base = "";
   let baseTs = `
   import type { LanguageFn } from "highlight.js";
-  
+
   interface LanguageType<TName extends string> {
     name: TName;
     register: LanguageFn;
   }\n\n`;
 
+  let languageNamesUnion = "";
   let lang: ModuleNames = [];
 
   languages.forEach(async (name) => {
@@ -30,6 +31,7 @@ export async function buildLanguages() {
 
     base += `export { default as ${moduleName} } from './${name}';\n`;
     baseTs += `export declare const ${moduleName}: LanguageType<"${name}">;\n`;
+    languageNamesUnion += `  | "${name}"\n`;
     lang.push({ name, moduleName });
     markdown += `## ${name} (\`${moduleName}\`)
 
@@ -57,6 +59,9 @@ export { ${moduleName} as default } from "./";\n`,
   });
 
   await writeTo("src/languages/index.js", base);
+
+  baseTs += `\n\nexport type LanguageName =\n${languageNamesUnion};`;
+
   await writeTo("src/languages/index.d.ts", baseTs);
   await writeTo("SUPPORTED_LANGUAGES.md", markdown);
 
