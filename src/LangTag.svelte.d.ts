@@ -1,6 +1,7 @@
 import type { SvelteComponentTyped } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { LangtagProps } from "./Highlight.svelte";
+import type { LanguageName } from "./languages";
 
 export type LangTagProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
@@ -18,7 +19,7 @@ export type LangTagProps = HTMLAttributes<HTMLPreElement> &
      * Provide the language name.
      * @default "plaintext"
      */
-    languageName?: string;
+    languageName?: LanguageName | (string & {});
   };
 
 export type LangTagEvents = {};

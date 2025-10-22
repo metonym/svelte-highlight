@@ -5,7 +5,7 @@
   /** @type {string} */
   export let highlighted;
 
-  /** @type {string} */
+  /** @type {import('./languages').LanguageName | (string & {})} */
   export let languageName = "plaintext";
 
   /** @type {boolean} */
