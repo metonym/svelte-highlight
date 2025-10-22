@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/experimental-ct-svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
+import LangTag from "./LangTag.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
@@ -108,4 +109,19 @@ test("Auto-highlighting with language restriction", async ({ mount, page }) => {
   // Should have JavaScript highlighting
   await expect(page.locator(".hljs-keyword")).toBeVisible();
   await expect(page.locator(".hljs-number")).toHaveText("42");
+});
+
+test("LangTag", async ({ mount, page }) => {
+  await mount(LangTag);
+
+  await expect(page.locator("pre.langtag")).toBeVisible();
+  await expect(page.locator("pre")).toHaveAttribute(
+    "data-language",
+    "typescript",
+  );
+  await expect(page.locator(".hljs-keyword")).toHaveText("const");
+  await expect(page.locator(".hljs-title")).toHaveText("add");
+
+  const preElement = page.locator("pre.langtag");
+  await expect(preElement).toHaveCSS("position", "relative");
 });
