@@ -7,7 +7,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "svelte-highlight": "^7.8.4"
+    "svelte-highlight": "^7.9.0"
   },
   "devDependencies": {
     "@roxi/routify": "^3.6.4",
