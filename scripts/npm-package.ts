@@ -13,7 +13,6 @@ const pkgJson = await Bun.file("./package/package.json").json();
 
 pkgJson.scripts = undefined;
 pkgJson.devDependencies = undefined;
-pkgJson.prettier = undefined;
 
 pkgJson.exports = {
   ".": {
