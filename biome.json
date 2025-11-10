@@ -1,0 +1,174 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "formatWithErrors": true
+  },
+  "html": {
+    "formatter": {
+      "indentScriptAndStyle": true
+    }
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!!**/.*/**/*",
+      "!!**/build/**/*",
+      "!!**/dist/**/*",
+      "!!**/examples/**/*",
+      "!!**/package/**/*",
+      "!!**/test-results/**/*",
+      "!!**/playwright-report/**/*",
+      "!!**/src/styles/*.css",
+      "!!**/src/languages/*.js",
+      "!!**/src/languages/*.d.ts",
+      "!!astro.config.ts",
+      "!!www/data/**/*"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "performance": {
+        "noAccumulatingSpread": "error",
+        "noAwaitInLoops": "error",
+        "noDelete": "error",
+        "noDynamicNamespaceImportAccess": "error",
+        "noNamespaceImport": "error",
+        "noReExportAll": "error",
+        "useTopLevelRegex": "error"
+      },
+      "complexity": {
+        "noCommaOperator": "error",
+        "noForEach": "error",
+        "noUselessConstructor": "error",
+        "noUselessEmptyExport": "error",
+        "noUselessFragments": "error",
+        "noUselessLabel": "error",
+        "noUselessLoneBlockStatements": "error",
+        "noUselessRename": "error",
+        "noUselessSwitchCase": "error",
+        "noUselessTypeConstraint": "error",
+        "useArrowFunction": "error",
+        "useLiteralKeys": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noUselessEscapeInString": "off"
+      },
+      "style": {
+        "noImplicitBoolean": "error",
+        "noNegationElse": "error",
+        "noParameterAssign": "error",
+        "noRestrictedGlobals": "error",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "vitest": {
+                "message": "Vitest functions are automatically imported."
+              }
+            }
+          }
+        },
+        "noUnusedTemplateLiteral": "error",
+        "useDefaultParameterLast": "error",
+        "useExponentiationOperator": "error",
+        "useNamingConvention": "error",
+        "useNodejsImportProtocol": "error",
+        "useNumberNamespace": "error",
+        "useSingleVarDeclarator": "error",
+        "noCommonJs": "error"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.svelte"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off",
+            "noSelfAssign": "off"
+          },
+          "complexity": {
+            "noUselessUndefinedInitialization": "off"
+          },
+          "suspicious": {
+            "noAssignInExpressions": "off",
+            "noGlobalAssign": "off",
+            "noTemplateCurlyInString": "off"
+          },
+          "style": {
+            "useConst": "off",
+            "useImportType": "off",
+            "useTemplate": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.test.ts", "**/*.test.tsx"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "useTopLevelRegex": "off",
+            "noNamespaceImport": "off"
+          },
+          "complexity": {
+            "noForEach": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["www/**/*.{svelte,astro}"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          },
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["scripts/**/*.ts"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "useTopLevelRegex": "off",
+            "noDelete": "warn"
+          },
+          "complexity": {
+            "noForEach": "off"
+          },
+          "style": {
+            "noParameterAssign": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/**/*.d.ts"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noBannedTypes": "off"
+          }
+        }
+      }
+    }
+  ]
+}
