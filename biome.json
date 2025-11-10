@@ -21,8 +21,6 @@
       "!!**/test-results/**/*",
       "!!**/playwright-report/**/*",
       "!!**/src/styles/*.css",
-      "!!**/src/languages/*.js",
-      "!!**/src/languages/*.d.ts",
       "!!astro.config.ts",
       "!!www/data/**/*"
     ]
@@ -166,6 +164,19 @@
         "rules": {
           "complexity": {
             "noBannedTypes": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/languages/**"],
+      "linter": {
+        "enabled": false
+      },
+      "assist": {
+        "actions": {
+          "source": {
+            "organizeImports": "off"
           }
         }
       }
