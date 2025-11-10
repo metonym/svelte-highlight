@@ -44,8 +44,6 @@
     "postcss-discard-duplicates": "^7.0.2",
     "postcss-inline-css-vars": "^0.1.0",
     "postcss-merge-rules": "^7.0.7",
-    "prettier": "^3.6.2",
-    "prettier-plugin-svelte": "^3.4.0",
     "svelte": "^4.2.20",
     "svelte-focus-key": "latest",
     "typescript": "^5.9.3",
@@ -62,10 +60,5 @@
     "svelte components",
     "highlight.js",
     "syntax highlight"
-  ],
-  "prettier": {
-    "plugins": [
-      "prettier-plugin-svelte"
-    ]
-  }
+  ]
 }
