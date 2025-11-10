@@ -9,7 +9,7 @@
     "dev": "bun --bun astro dev",
     "build": "bun --bun astro build",
     "preview": "bun --bun astro preview",
-    "build:lib": "bun scripts/index.ts",
+    "build:lib": "bun scripts/index.ts && bun format",
     "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "bunx playwright test",
