@@ -1,5 +1,5 @@
-import { $, Glob } from "bun";
 import path from "node:path";
+import { $, Glob } from "bun";
 import { createMarkdown } from "./utils/create-markdown";
 import { postcssScopedStyles } from "./utils/postcss-scoped-styles";
 import { preprocessStyles } from "./utils/preprocess-styles";
@@ -12,8 +12,8 @@ export async function buildStyles() {
   console.time("build styles");
   await $`rm -rf src/styles; mkdir src/styles`;
 
-  let scoped_styles = "";
-  let names: string[] = [];
+  let scopedStyles = "";
+  const names: string[] = [];
   let styles: ModuleNames = [];
 
   const glob = new Glob("**/*");
@@ -37,19 +37,16 @@ export async function buildStyles() {
       styles.push({ name, moduleName });
 
       const content = await Bun.file(absPath).text();
-      const css_minified = preprocessStyles(content, {
+      const cssMinified = preprocessStyles(content, {
         discardComments: "preserve-license",
       });
 
       // Escape backticks for JS template literal.
-      const content_css_for_js = preprocessStyles(
-        content.replace(/\`/g, "\\`"),
-        {
-          discardComments: "preserve-license",
-        },
-      );
+      const contentCssForJs = preprocessStyles(content.replace(/`/g, "\\`"), {
+        discardComments: "preserve-license",
+      });
 
-      const exportee = `const ${moduleName} = \`<style>${content_css_for_js}</style>\`;\n
+      const exportee = `const ${moduleName} = \`<style>${contentCssForJs}</style>\`;\n
       export default ${moduleName};\n`;
 
       await writeTo(`src/styles/${name}.js`, exportee);
@@ -57,14 +54,14 @@ export async function buildStyles() {
         `src/styles/${name}.d.ts`,
         `export { ${moduleName} as default } from "./";\n`,
       );
-      await writeTo(`src/styles/${name}.css`, css_minified);
+      await writeTo(`src/styles/${name}.css`, cssMinified);
 
-      const scoped_style = preprocessStyles(content, {
+      const scopedStyle = preprocessStyles(content, {
         discardComments: "remove-all",
         plugins: [postcssScopedStyles(moduleName)],
       });
 
-      scoped_styles += scoped_style;
+      scopedStyles += scopedStyle;
     } else {
       // Copy over other file types, like images.
       if (!/\.(css)$/.test(file)) {
@@ -90,11 +87,11 @@ export async function buildStyles() {
 \`\`\`html
 <script>
   import ${moduleName} from "svelte-highlight/styles/${moduleName}";
-<\/script>
+</script>
 
 <svelte:head>
   {@html ${moduleName}}
-<\/svelte:head>
+</svelte:head>
 \`\`\`\n\n
 
 **CSS StyleSheet**
@@ -102,7 +99,7 @@ export async function buildStyles() {
 \`\`\`html
 <script>
   import "svelte-highlight/styles/${name}.css";
-<\/script>
+</script>
 \`\`\`\n\n`;
       })
       .join("");
@@ -123,7 +120,7 @@ export async function buildStyles() {
 
   // Don't format metadata used in docs.
   await Bun.write("www/data/styles.json", JSON.stringify(styles));
-  await Bun.write("www/data/scoped-styles.css", scoped_styles);
+  await Bun.write("www/data/scoped-styles.css", scopedStyles);
 
   console.timeEnd("build styles");
 }

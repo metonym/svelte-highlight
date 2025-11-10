@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
 import Highlight from "./Highlight.test.svelte";
-import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
+import HighlightAuto from "./HighlightAuto.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";

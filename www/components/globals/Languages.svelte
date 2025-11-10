@@ -1,18 +1,18 @@
 <script>
-  import {
-    Row,
-    Column,
-    StructuredList,
-    StructuredListHead,
-    StructuredListRow,
-    StructuredListCell,
-    StructuredListBody,
-  } from "carbon-components-svelte";
-  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
-  import ListSearch from "@components/ListSearch.svelte";
   import CodeSnippet from "@components/CodeSnippet.svelte";
+  import ListSearch from "@components/ListSearch.svelte";
   import ScopedLanguage from "@components/ScopedLanguage.svelte";
   import languages from "@www/data/languages.json";
+  import {
+    Column,
+    Row,
+    StructuredList,
+    StructuredListBody,
+    StructuredListCell,
+    StructuredListHead,
+    StructuredListRow,
+  } from "carbon-components-svelte";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 </script>
 
 <svelte:head>

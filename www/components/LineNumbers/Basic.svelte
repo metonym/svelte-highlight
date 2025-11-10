@@ -1,5 +1,5 @@
 <script>
-  import { THEME_NAME, THEME_MODULE_NAME } from "@www/constants";
+  import { THEME_MODULE_NAME, THEME_NAME } from "@www/constants";
 
   export let snippet = "<LineNumbers {highlighted} />";
 

@@ -1,18 +1,18 @@
 <script>
-  import {
-    Row,
-    Column,
-    StructuredList,
-    StructuredListHead,
-    StructuredListRow,
-    StructuredListCell,
-    StructuredListBody,
-    Toggle,
-  } from "carbon-components-svelte";
-  import ScopedStyle from "@components/ScopedStyle.svelte";
   import CodeSnippet from "@components/CodeSnippet.svelte";
   import ListSearch from "@components/ListSearch.svelte";
+  import ScopedStyle from "@components/ScopedStyle.svelte";
   import styles from "@www/data/styles.json";
+  import {
+    Column,
+    Row,
+    StructuredList,
+    StructuredListBody,
+    StructuredListCell,
+    StructuredListHead,
+    StructuredListRow,
+    Toggle,
+  } from "carbon-components-svelte";
 
   let useCdnImport = false;
 </script>

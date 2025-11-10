@@ -8,10 +8,10 @@
   export let langtag = false;
 
   import hljs from "highlight.js/lib/core";
-  import xml from "highlight.js/lib/languages/xml";
-  import javascript from "highlight.js/lib/languages/javascript";
   import css from "highlight.js/lib/languages/css";
-  import { createEventDispatcher, afterUpdate } from "svelte";
+  import javascript from "highlight.js/lib/languages/javascript";
+  import xml from "highlight.js/lib/languages/xml";
+  import { afterUpdate, createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
 
