@@ -7,7 +7,7 @@ import { writeTo } from "./utils/write-to";
 
 export async function buildLanguages() {
   console.time("build languages");
-  await $`rm -rf src/styles; mkdir src/styles`;
+  await $`rm -rf src/languages; mkdir src/languages`;
 
   const languages = hljs.listLanguages();
   let markdown = createMarkdown("Languages", languages.length);
@@ -23,7 +23,9 @@ export async function buildLanguages() {
   let languageNamesUnion = "";
   const lang: ModuleNames = [];
 
-  languages.forEach(async (name) => {
+  const files: Array<{ path: string; content: string }> = [];
+
+  for (const name of languages) {
     let moduleName = name;
 
     if (/^[0-9]/.test(name)) moduleName = `_${name}`;
@@ -44,28 +46,30 @@ export async function buildLanguages() {
   import { ${moduleName} } from "svelte-highlight/languages";
 </script>
 \`\`\`\n\n`;
-    await writeTo(
-      `src/languages/${name}.js`,
-      `import register from "highlight.js/lib/languages/${name}";\n
+
+    files.push({
+      path: `src/languages/${name}.js`,
+      content: `import register from "highlight.js/lib/languages/${name}";\n
 export const ${moduleName} = { name: "${name}", register };
 export default ${moduleName};\n`,
-    );
+    });
 
-    await writeTo(
-      `src/languages/${name}.d.ts`,
-      `export { ${moduleName} } from "./";
+    files.push({
+      path: `src/languages/${name}.d.ts`,
+      content: `export { ${moduleName} } from "./";
 export { ${moduleName} as default } from "./";\n`,
-    );
-  });
-
-  await writeTo("src/languages/index.js", base);
+    });
+  }
 
   baseTs += `\n\nexport type LanguageName =\n${languageNamesUnion};`;
 
-  await writeTo("src/languages/index.d.ts", baseTs);
-  await writeTo("SUPPORTED_LANGUAGES.md", markdown);
+  files.push({ path: "src/languages/index.js", content: base });
+  files.push({ path: "src/languages/index.d.ts", content: baseTs });
+  files.push({ path: "SUPPORTED_LANGUAGES.md", content: markdown });
 
-  // Don't format metadata used in docs.
-  await Bun.write("www/data/languages.json", JSON.stringify(lang));
+  await Promise.all([
+    ...files.map(({ path, content }) => writeTo(path, content)),
+    Bun.write("www/data/languages.json", JSON.stringify(lang)),
+  ]);
   console.timeEnd("build languages");
 }
