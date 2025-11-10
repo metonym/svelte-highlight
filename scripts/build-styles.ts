@@ -17,6 +17,15 @@ export async function buildStyles() {
   let styles: ModuleNames = [];
 
   const glob = new Glob("**/*");
+  const copyCommands: string[] = [];
+
+  const cssFiles: Array<{
+    file: string;
+    absPath: string;
+    name: string;
+    dir: string;
+    moduleName: string;
+  }> = [];
 
   for await (const file of glob.scan("node_modules/highlight.js/styles")) {
     const absPath = path.resolve("node_modules/highlight.js/styles", file);
@@ -35,39 +44,55 @@ export async function buildStyles() {
 
       names.push(name);
       styles.push({ name, moduleName });
+      cssFiles.push({ file, absPath, name, dir, moduleName });
+    } else {
+      if (!/\.(css)$/.test(file)) {
+        copyCommands.push(absPath);
+      }
+    }
+  }
 
+  if (copyCommands.length > 0) {
+    await Promise.all(
+      copyCommands.map((absPath) => $`cp ${absPath} src/styles/`),
+    );
+  }
+
+  const fileWrites = await Promise.all(
+    cssFiles.map(async ({ absPath, name, moduleName }) => {
       const content = await Bun.file(absPath).text();
+
       const cssMinified = preprocessStyles(content, {
         discardComments: "preserve-license",
       });
-
-      // Escape backticks for JS template literal.
-      const contentCssForJs = preprocessStyles(content.replace(/`/g, "\\`"), {
-        discardComments: "preserve-license",
-      });
+      const contentCssForJs = cssMinified.replace(/`/g, "\\`");
 
       const exportee = `const ${moduleName} = \`<style>${contentCssForJs}</style>\`;\n
       export default ${moduleName};\n`;
-
-      await writeTo(`src/styles/${name}.js`, exportee);
-      await writeTo(
-        `src/styles/${name}.d.ts`,
-        `export { ${moduleName} as default } from "./";\n`,
-      );
-      await writeTo(`src/styles/${name}.css`, cssMinified);
 
       const scopedStyle = preprocessStyles(content, {
         discardComments: "remove-all",
         plugins: [postcssScopedStyles(moduleName)],
       });
 
-      scopedStyles += scopedStyle;
-    } else {
-      // Copy over other file types, like images.
-      if (!/\.(css)$/.test(file)) {
-        await $`cp ${absPath} src/styles/`;
-      }
-    }
+      return {
+        writes: [
+          writeTo(`src/styles/${name}.js`, exportee),
+          writeTo(
+            `src/styles/${name}.d.ts`,
+            `export { ${moduleName} as default } from "./";\n`,
+          ),
+          writeTo(`src/styles/${name}.css`, cssMinified),
+        ],
+        scopedStyle,
+      };
+    }),
+  );
+
+  const allWrites: Promise<void>[] = [];
+  for (const { writes, scopedStyle } of fileWrites) {
+    allWrites.push(...writes);
+    scopedStyles += scopedStyle;
   }
 
   styles = styles.sort((a, b) => {
@@ -114,13 +139,17 @@ export async function buildStyles() {
     )
     .join("");
 
-  await writeTo("src/styles/index.js", base);
-  await writeTo("src/styles/index.d.ts", types);
-  await writeTo("SUPPORTED_STYLES.md", markdown);
+  allWrites.push(writeTo("src/styles/index.js", base));
+  allWrites.push(writeTo("src/styles/index.d.ts", types));
+  allWrites.push(writeTo("SUPPORTED_STYLES.md", markdown));
+  allWrites.push(
+    Bun.write("www/data/styles.json", JSON.stringify(styles)).then(() => {}),
+  );
+  allWrites.push(
+    Bun.write("www/data/scoped-styles.css", scopedStyles).then(() => {}),
+  );
 
-  // Don't format metadata used in docs.
-  await Bun.write("www/data/styles.json", JSON.stringify(styles));
-  await Bun.write("www/data/scoped-styles.css", scopedStyles);
+  await Promise.all(allWrites);
 
   console.timeEnd("build styles");
 }
