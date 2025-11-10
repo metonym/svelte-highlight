@@ -14,11 +14,11 @@
   export let placeholderExample = "JavaScript";
 
   import {
-    Row,
     Column,
-    Search,
     RadioButton,
     RadioButtonGroup,
+    Row,
+    Search,
   } from "carbon-components-svelte";
   import FocusKey from "svelte-focus-key";
 
@@ -60,7 +60,7 @@
 
   /** @type {(s: string) => string} */
   const normalize = (s) =>
-    s.toLowerCase().replace(/\-/g, " ").replace(/\s+/g, " ");
+    s.toLowerCase().replace(/-/g, " ").replace(/\s+/g, " ");
 
   $: normalizedValue = normalize(value.trim());
   $: normalizedItems = items.map((item) => ({

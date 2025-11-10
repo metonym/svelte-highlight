@@ -1,13 +1,13 @@
 <script lang="ts">
-  import Highlight from "../package";
+  import Highlight, { HighlightAuto, LineNumbers } from "../package";
   import Highlight2 from "../package/Highlight.svelte";
-  import { HighlightAuto, LineNumbers } from "../package";
   import { typescript } from "../package/languages";
-  import typescriptDefault from "../package/languages/typescript";
-  import { typescript as ts } from "../package/languages/typescript";
   import javascript from "../package/languages/javascript";
-  import { github, purebasic, _3024 } from "../package/styles/index";
+  import typescriptDefault, {
+    typescript as ts,
+  } from "../package/languages/typescript";
   import githubStyles from "../package/styles/github";
+  import { _3024, github, purebasic } from "../package/styles/index";
   import "../package/styles/3024.css";
 </script>
 

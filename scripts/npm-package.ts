@@ -11,9 +11,9 @@ await $`cp -r ./src/ ./package`;
 
 const pkgJson = await Bun.file("./package/package.json").json();
 
-delete pkgJson.scripts;
-delete pkgJson.devDependencies;
-delete pkgJson.prettier;
+pkgJson.scripts = undefined;
+pkgJson.devDependencies = undefined;
+pkgJson.prettier = undefined;
 
 pkgJson.exports = {
   ".": {

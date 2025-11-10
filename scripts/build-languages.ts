@@ -9,7 +9,7 @@ export async function buildLanguages() {
   console.time("build languages");
   await $`rm -rf src/styles; mkdir src/styles`;
 
-  let languages = hljs.listLanguages();
+  const languages = hljs.listLanguages();
   let markdown = createMarkdown("Languages", languages.length);
   let base = "";
   let baseTs = `
@@ -21,7 +21,7 @@ export async function buildLanguages() {
   }\n\n`;
 
   let languageNamesUnion = "";
-  let lang: ModuleNames = [];
+  const lang: ModuleNames = [];
 
   languages.forEach(async (name) => {
     let moduleName = name;
@@ -42,7 +42,7 @@ export async function buildLanguages() {
 
   // base import
   import { ${moduleName} } from "svelte-highlight/languages";
-<\/script>
+</script>
 \`\`\`\n\n`;
     await writeTo(
       `src/languages/${name}.js`,

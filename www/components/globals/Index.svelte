@@ -1,25 +1,25 @@
 <script>
-  import { THEME_NAME, PKG_NAME, THEME_MODULE_NAME } from "@www/constants";
-  import {
-    Row,
-    Column,
-    Link,
-    UnorderedList,
-    ListItem,
-    InlineNotification,
-  } from "carbon-components-svelte";
-  import Highlight, { HighlightSvelte } from "svelte-highlight";
-  import ScopedStyle from "@components/ScopedStyle.svelte";
   import CodeSnippet from "@components/CodeSnippet.svelte";
-  import ScopedStyleSvelte from "@components/ScopedStyleSvelte.svelte";
-  import ScopedStyleAuto from "@components/ScopedStyleAuto.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
   import HideBorder from "@components/LineNumbers/HideBorder.svelte";
-  import WrapLines from "@components/LineNumbers/WrapLines.svelte";
-  import StyleProps from "@components/LineNumbers/StyleProps.svelte";
-  import StartingLineNumber from "@components/LineNumbers/StartingLineNumber.svelte";
   import HighlightedLines from "@components/LineNumbers/HighlightedLines.svelte";
   import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
+  import StartingLineNumber from "@components/LineNumbers/StartingLineNumber.svelte";
+  import StyleProps from "@components/LineNumbers/StyleProps.svelte";
+  import WrapLines from "@components/LineNumbers/WrapLines.svelte";
+  import ScopedStyle from "@components/ScopedStyle.svelte";
+  import ScopedStyleAuto from "@components/ScopedStyleAuto.svelte";
+  import ScopedStyleSvelte from "@components/ScopedStyleSvelte.svelte";
+  import { PKG_NAME, THEME_MODULE_NAME, THEME_NAME } from "@www/constants";
+  import {
+    Column,
+    InlineNotification,
+    Link,
+    ListItem,
+    Row,
+    UnorderedList,
+  } from "carbon-components-svelte";
+  import Highlight, { HighlightSvelte } from "svelte-highlight";
   import css from "svelte-highlight/languages/css";
 
   const svelteHeadCdn = `<link

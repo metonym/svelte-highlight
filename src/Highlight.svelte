@@ -9,7 +9,7 @@
   export let langtag = false;
 
   import hljs from "highlight.js/lib/core";
-  import { createEventDispatcher, afterUpdate } from "svelte";
+  import { afterUpdate, createEventDispatcher } from "svelte";
   import LangTag from "./LangTag.svelte";
 
   const dispatch = createEventDispatcher();

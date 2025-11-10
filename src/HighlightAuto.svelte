@@ -11,7 +11,7 @@
   export let langtag = false;
 
   import hljs from "highlight.js";
-  import { createEventDispatcher, afterUpdate } from "svelte";
+  import { afterUpdate, createEventDispatcher } from "svelte";
 
   /**
    * @typedef {{ highlighted: string; language: string; }} HighlightEventDetail

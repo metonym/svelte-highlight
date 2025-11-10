@@ -5,22 +5,22 @@
   /** @type {string} */
   export let pathname;
 
-  import { PKG_VERSION, PKG_HOMEPAGE } from "@www/constants";
+  import { PKG_HOMEPAGE, PKG_VERSION } from "@www/constants";
   import "carbon-components-svelte/css/all.css";
   import "@www/app.css";
+  import LogoGithub from "@components/LogoGithub.svelte";
   import {
+    Column,
+    Content,
+    Grid,
     Header,
+    HeaderActionLink,
     HeaderNav,
     HeaderNavItem,
     HeaderUtilities,
-    HeaderActionLink,
-    SkipToContent,
-    Grid,
     Row,
-    Column,
-    Content,
+    SkipToContent,
   } from "carbon-components-svelte";
-  import LogoGithub from "@components/LogoGithub.svelte";
 
   /** @type {Record<typeof pathname, string>} */
   const routes = {

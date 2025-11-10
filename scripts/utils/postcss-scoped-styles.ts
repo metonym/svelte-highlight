@@ -12,6 +12,7 @@ import type { Plugin } from "postcss";
 export const postcssScopedStyles = (moduleName: string): Plugin => {
   return {
     postcssPlugin: "postcss-scoped-styles",
+    // biome-ignore lint/style/useNamingConvention: PostCSS plugin API requires capitalized method names
     Once(root) {
       root.walkRules((rule) => {
         rule.selectors = rule.selectors.map((selector) => {

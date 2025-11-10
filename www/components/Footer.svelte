@@ -1,6 +1,6 @@
 <script>
   import { PKG_HOMEPAGE, PKG_NAME, TS } from "@www/constants";
-  import { Grid, Row, Column, Link } from "carbon-components-svelte";
+  import { Column, Grid, Link, Row } from "carbon-components-svelte";
 </script>
 
 <footer>

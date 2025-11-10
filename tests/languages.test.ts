@@ -1,5 +1,5 @@
-import * as languages from "../src/languages";
 import type { LanguageType } from "svelte-highlight";
+import * as languages from "../src/languages";
 
 test("Languages", () => {
   const languageNames = Object.keys(languages);

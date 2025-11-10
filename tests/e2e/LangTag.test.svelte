@@ -1,8 +1,8 @@
 <script lang="ts">
-  import LangTag from "../../src/LangTag.svelte";
   import hljs from "highlight.js/lib/core";
   import typescript from "highlight.js/lib/languages/typescript";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+  import LangTag from "../../src/LangTag.svelte";
 
   hljs.registerLanguage("typescript", typescript);
 
