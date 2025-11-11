@@ -61,16 +61,6 @@
         "noNegationElse": "error",
         "noParameterAssign": "error",
         "noRestrictedGlobals": "error",
-        "noRestrictedImports": {
-          "level": "error",
-          "options": {
-            "paths": {
-              "vitest": {
-                "message": "Vitest functions are automatically imported."
-              }
-            }
-          }
-        },
         "noUnusedTemplateLiteral": "error",
         "useDefaultParameterLast": "error",
         "useExponentiationOperator": "error",
