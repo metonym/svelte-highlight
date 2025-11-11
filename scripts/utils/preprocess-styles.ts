@@ -4,6 +4,7 @@ import postcss, { type Plugin } from "postcss";
 import discardDuplicates from "postcss-discard-duplicates";
 import { inlineCssVars } from "postcss-inline-css-vars";
 import mergeRules from "postcss-merge-rules";
+import { LICENSE_OR_AUTHOR } from "./regexes";
 
 /**
  * Raw styles from `highlight.js` are preprocessed for consistency.
@@ -32,7 +33,7 @@ export const preprocessStyles = (
           options?.discardComments === "preserve-license"
             ? {
                 remove: (comment) => {
-                  if (/(License|Author)/i.test(comment)) {
+                  if (LICENSE_OR_AUTHOR.test(comment)) {
                     // Preserve license comments.
                     return false;
                   }

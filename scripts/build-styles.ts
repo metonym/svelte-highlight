@@ -3,6 +3,13 @@ import { $, Glob } from "bun";
 import { createMarkdown } from "./utils/create-markdown";
 import { postcssScopedStyles } from "./utils/postcss-scoped-styles";
 import { preprocessStyles } from "./utils/preprocess-styles";
+import {
+  BACKTICK,
+  CSS_FILE,
+  DEFAULT_STRING,
+  NON_MINIFIED_CSS,
+  STARTS_WITH_DIGIT,
+} from "./utils/regexes";
 import { toCamelCase } from "./utils/to-camel-case";
 import { writeTo } from "./utils/write-to";
 
@@ -29,11 +36,14 @@ export async function buildStyles() {
 
   for await (const file of glob.scan("node_modules/highlight.js/styles")) {
     const absPath = path.resolve("node_modules/highlight.js/styles", file);
-    if (/(?<!\.min)\.(css)$/.test(file)) {
+    if (NON_MINIFIED_CSS.test(file)) {
       let { name, dir } = path.parse(file);
       let moduleName = toCamelCase(name);
 
-      if (/^[0-9]/.test(moduleName) || /^default$/.test(moduleName)) {
+      if (
+        STARTS_WITH_DIGIT.test(moduleName) ||
+        DEFAULT_STRING.test(moduleName)
+      ) {
         moduleName = `_${moduleName}`;
       }
 
@@ -46,7 +56,7 @@ export async function buildStyles() {
       styles.push({ name, moduleName });
       cssFiles.push({ file, absPath, name, dir, moduleName });
     } else {
-      if (!/\.(css)$/.test(file)) {
+      if (!CSS_FILE.test(file)) {
         copyCommands.push(absPath);
       }
     }
@@ -65,7 +75,7 @@ export async function buildStyles() {
       const cssMinified = preprocessStyles(content, {
         discardComments: "preserve-license",
       });
-      const contentCssForJs = cssMinified.replace(/`/g, "\\`");
+      const contentCssForJs = cssMinified.replace(BACKTICK, "\\`");
 
       const exportee = `const ${moduleName} = \`<style>${contentCssForJs}</style>\`;\n
       export default ${moduleName};\n`;
