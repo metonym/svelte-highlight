@@ -1,17 +1,17 @@
 import path from "node:path";
 import { $, Glob } from "bun";
-import { createMarkdown } from "./utils/create-markdown";
-import { postcssScopedStyles } from "./utils/postcss-scoped-styles";
-import { preprocessStyles } from "./utils/preprocess-styles";
+import { createMarkdown } from "./utils/create-markdown.ts";
+import { postcssScopedStyles } from "./utils/postcss-scoped-styles.ts";
+import { preprocessStyles } from "./utils/preprocess-styles.ts";
 import {
   BACKTICK,
   CSS_FILE,
   DEFAULT_STRING,
   NON_MINIFIED_CSS,
   STARTS_WITH_DIGIT,
-} from "./utils/regexes";
-import { toCamelCase } from "./utils/to-camel-case";
-import { writeTo } from "./utils/write-to";
+} from "./utils/regexes.ts";
+import { toCamelCase } from "./utils/to-camel-case.ts";
+import { writeTo } from "./utils/write-to.ts";
 
 export type ModuleNames = Array<{ name: string; moduleName: string }>;
 

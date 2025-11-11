@@ -1,4 +1,4 @@
-import type * as styles from "../../src/styles";
+import type * as styles from "../../src/styles.ts";
 
 type KebabCase<S extends string> = S extends `${infer C}${infer T}`
   ? T extends Uncapitalize<T>

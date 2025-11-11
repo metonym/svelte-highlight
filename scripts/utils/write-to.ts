@@ -4,7 +4,7 @@ import {
   TRAILING_NEWLINES,
   TRAILING_WHITESPACE,
   WINDOWS_LINE_ENDING,
-} from "./regexes";
+} from "./regexes.ts";
 
 function formatMarkdown(content: string): string {
   // Normalize line endings

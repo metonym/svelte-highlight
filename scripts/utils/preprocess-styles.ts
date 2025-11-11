@@ -4,7 +4,7 @@ import postcss, { type Plugin } from "postcss";
 import discardDuplicates from "postcss-discard-duplicates";
 import { inlineCssVars } from "postcss-inline-css-vars";
 import mergeRules from "postcss-merge-rules";
-import { LICENSE_OR_AUTHOR } from "./regexes";
+import { LICENSE_OR_AUTHOR } from "./regexes.ts";
 
 /**
  * Raw styles from `highlight.js` are preprocessed for consistency.

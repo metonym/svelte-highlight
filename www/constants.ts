@@ -1,4 +1,4 @@
-import type { ThemeModuleName, ThemeName } from "../scripts/utils/styles";
+import type { ThemeModuleName, ThemeName } from "../scripts/utils/styles.ts";
 
 export const PKG_NAME = __PKG_NAME;
 export const PKG_VERSION = __PKG_VERSION;
