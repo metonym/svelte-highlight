@@ -2,6 +2,7 @@ import { $ } from "bun";
 import hljs from "highlight.js";
 import type { ModuleNames } from "./build-styles";
 import { createMarkdown } from "./utils/create-markdown";
+import { CONTAINS_DASH, STARTS_WITH_DIGIT } from "./utils/regexes";
 import { toCamelCase } from "./utils/to-camel-case";
 import { writeTo } from "./utils/write-to";
 
@@ -28,8 +29,8 @@ export async function buildLanguages() {
   for (const name of languages) {
     let moduleName = name;
 
-    if (/^[0-9]/.test(name)) moduleName = `_${name}`;
-    if (/-/.test(name)) moduleName = toCamelCase(name);
+    if (STARTS_WITH_DIGIT.test(name)) moduleName = `_${name}`;
+    if (CONTAINS_DASH.test(name)) moduleName = toCamelCase(name);
 
     base += `export { default as ${moduleName} } from './${name}';\n`;
     baseTs += `export declare const ${moduleName}: LanguageType<"${name}">;\n`;

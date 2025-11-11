@@ -1,4 +1,5 @@
 import type { Plugin } from "postcss";
+import { PRE_SELECTOR } from "./regexes";
 
 /**
  * Scopes CSS selectors to a given module name.
@@ -16,8 +17,8 @@ export const postcssScopedStyles = (moduleName: string): Plugin => {
     Once(root) {
       root.walkRules((rule) => {
         rule.selectors = rule.selectors.map((selector) => {
-          if (/^pre /.test(selector)) {
-            selector = `pre.${moduleName}${selector.replace(/^pre /, " ")}`;
+          if (PRE_SELECTOR.test(selector)) {
+            selector = `pre.${moduleName}${selector.replace(PRE_SELECTOR, " ")}`;
           } else {
             selector = `.${moduleName} ${selector}`;
           }
