@@ -1,10 +1,10 @@
 import { $ } from "bun";
 import hljs from "highlight.js";
-import type { ModuleNames } from "./build-styles";
-import { createMarkdown } from "./utils/create-markdown";
-import { CONTAINS_DASH, STARTS_WITH_DIGIT } from "./utils/regexes";
-import { toCamelCase } from "./utils/to-camel-case";
-import { writeTo } from "./utils/write-to";
+import type { ModuleNames } from "./build-styles.ts";
+import { createMarkdown } from "./utils/create-markdown.ts";
+import { CONTAINS_DASH, STARTS_WITH_DIGIT } from "./utils/regexes.ts";
+import { toCamelCase } from "./utils/to-camel-case.ts";
+import { writeTo } from "./utils/write-to.ts";
 
 export async function buildLanguages() {
   console.time("build languages");

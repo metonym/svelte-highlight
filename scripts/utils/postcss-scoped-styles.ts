@@ -1,5 +1,5 @@
 import type { Plugin } from "postcss";
-import { PRE_SELECTOR } from "./regexes";
+import { PRE_SELECTOR } from "./regexes.ts";
 
 /**
  * Scopes CSS selectors to a given module name.

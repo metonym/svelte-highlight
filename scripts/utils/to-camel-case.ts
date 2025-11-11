@@ -1,4 +1,4 @@
-import { DASH_OR_PERIOD } from "./regexes";
+import { DASH_OR_PERIOD } from "./regexes.ts";
 
 /**
  * Converts a dash/period separated string into pascal case
