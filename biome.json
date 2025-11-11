@@ -38,6 +38,9 @@
         "noReExportAll": "error",
         "useTopLevelRegex": "error"
       },
+      "correctness": {
+        "useImportExtensions": "error"
+      },
       "complexity": {
         "noCommaOperator": "error",
         "noForEach": "error",
@@ -86,7 +89,8 @@
           "correctness": {
             "noUnusedImports": "off",
             "noUnusedVariables": "off",
-            "noSelfAssign": "off"
+            "noSelfAssign": "off",
+            "useImportExtensions": "off"
           },
           "complexity": {
             "noUselessUndefinedInitialization": "off"
@@ -107,6 +111,9 @@
       "includes": ["**/*.test.ts", "**/*.test.tsx"],
       "linter": {
         "rules": {
+          "correctness": {
+            "useImportExtensions": "off"
+          },
           "performance": {
             "useTopLevelRegex": "off",
             "noNamespaceImport": "off"
@@ -144,6 +151,16 @@
           },
           "style": {
             "noParameterAssign": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/**/*"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useImportExtensions": "off"
           }
         }
       }
