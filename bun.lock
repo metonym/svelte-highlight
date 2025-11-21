@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "svelte-highlight",
@@ -13,10 +14,10 @@
         "@playwright/test": "1.54.0",
         "@types/bun": "^1.3.2",
         "@types/jest": "^30.0.0",
-        "@types/node": "^24.10.0",
+        "@types/node": "^24.10.1",
         "astro": "^4.16.19",
-        "carbon-components-svelte": "0.90.3",
-        "carbon-preprocess-svelte": "0.11.12",
+        "carbon-components-svelte": "0.92.0",
+        "carbon-preprocess-svelte": "0.11.13",
         "cssnano": "^7.1.2",
         "cssnano-preset-lite": "^4.0.4",
         "postcss": "^8.5.6",
@@ -329,7 +330,7 @@
 
     "@types/nlcst": ["@types/nlcst@2.0.3", "", { "dependencies": { "@types/unist": "*" } }, "sha512-vSYNSDe6Ix3q+6Z7ri9lyWqgGhJTmzRjZRqyq15N0Z/1/UnVsno9G/N40NBijoYx2seFDIl0+B2mgAb9mezUCA=="],
 
-    "@types/node": ["@types/node@24.10.0", "", { "dependencies": { "undici-types": "~7.16.0" } }, "sha512-qzQZRBqkFsYyaSWXuEHc2WR9c0a0CXwiE5FWUvn7ZM+vdy1uZLfCunD38UzhuB7YN/J11ndbDBcTmOdxJo9Q7A=="],
+    "@types/node": ["@types/node@24.10.1", "", { "dependencies": { "undici-types": "~7.16.0" } }, "sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ=="],
 
     "@types/react": ["@types/react@19.1.10", "", { "dependencies": { "csstype": "^3.0.2" } }, "sha512-EhBeSYX0Y6ye8pNebpKrwFJq7BoQ8J5SO6NlvNwwHjSj6adXJViPQrKlsyPw7hLBLvckEMO1yxeGdR82YBBlDg=="],
 
@@ -383,9 +384,9 @@
 
     "caniuse-lite": ["caniuse-lite@1.0.30001754", "", {}, "sha512-x6OeBXueoAceOmotzx3PO4Zpt4rzpeIFsSr6AAePTZxSkXiYDUmpypEl7e2+8NCd9bD7bXjqyef8CJYPC1jfxg=="],
 
-    "carbon-components-svelte": ["carbon-components-svelte@0.90.3", "", { "dependencies": { "@ibm/telemetry-js": "^1.5.0", "flatpickr": "4.6.9" } }, "sha512-DElUJZdX/0f4bkiwjzjDAhD7DPO/DExMtePKi3wwl5gKeAIBM/W6L5SiEO2KYIcMxV/1AmB5VHSgFE16rwOBHQ=="],
+    "carbon-components-svelte": ["carbon-components-svelte@0.92.0", "", { "dependencies": { "@ibm/telemetry-js": "^1.5.0", "flatpickr": "4.6.9" } }, "sha512-lldekGoZ8vFTRbIpxvvApZ4F/rvNYtCh9MiTLt3L/7I7VMuXcwMPVh1HfK6ZdBXTPnvzhKrDeix8fAqTi7D2Hw=="],
 
-    "carbon-preprocess-svelte": ["carbon-preprocess-svelte@0.11.12", "", { "dependencies": { "estree-walker": "^2.0.2", "magic-string": "^0.30.17", "postcss": "^8.5.4", "postcss-discard-empty": "^7.0.1" } }, "sha512-2zy5OOi++HK6ggsKeUo3zICblHYyDnI7mqhKBYw5Q/afWQ/iZftIO18j2WCNsvto98f7vGMRcvm/PqeGMbEH2g=="],
+    "carbon-preprocess-svelte": ["carbon-preprocess-svelte@0.11.13", "", { "dependencies": { "estree-walker": "^2.0.2", "magic-string": "^0.30.17", "postcss": "^8.5.4", "postcss-discard-empty": "^7.0.1" } }, "sha512-27//v1yfAJ140p1k23gWFBBf82FzW87uKsHodJ78FU7MGjmRu6afzIsrt5tpeVfsf7lD4JTJeysMcUiwVj16lQ=="],
 
     "ccount": ["ccount@2.0.1", "", {}, "sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg=="],
 
@@ -1066,6 +1067,8 @@
     "ansi-align/string-width": ["string-width@4.2.3", "", { "dependencies": { "emoji-regex": "^8.0.0", "is-fullwidth-code-point": "^3.0.0", "strip-ansi": "^6.0.1" } }, "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="],
 
     "astro/vite": ["vite@5.4.19", "", { "dependencies": { "esbuild": "^0.21.3", "postcss": "^8.4.43", "rollup": "^4.20.0" }, "optionalDependencies": { "fsevents": "~2.3.3" }, "peerDependencies": { "@types/node": "^18.0.0 || >=20.0.0", "less": "*", "lightningcss": "^1.21.0", "sass": "*", "sass-embedded": "*", "stylus": "*", "sugarss": "*", "terser": "^5.4.0" }, "optionalPeers": ["@types/node", "less", "lightningcss", "sass", "sass-embedded", "stylus", "sugarss", "terser"], "bin": { "vite": "bin/vite.js" } }, "sha512-qO3aKv3HoQC8QKiNSTuUM1l9o/XX3+c+VTgLHbJWHZGeTPVAg2XwazI9UWzoxjIJCGCV2zU60uqMzjeLZuULqA=="],
+
+    "bun-types/@types/node": ["@types/node@24.10.0", "", { "dependencies": { "undici-types": "~7.16.0" } }, "sha512-qzQZRBqkFsYyaSWXuEHc2WR9c0a0CXwiE5FWUvn7ZM+vdy1uZLfCunD38UzhuB7YN/J11ndbDBcTmOdxJo9Q7A=="],
 
     "caniuse-api/browserslist": ["browserslist@4.24.4", "", { "dependencies": { "caniuse-lite": "^1.0.30001688", "electron-to-chromium": "^1.5.73", "node-releases": "^2.0.19", "update-browserslist-db": "^1.1.1" }, "bin": { "browserslist": "cli.js" } }, "sha512-KDi1Ny1gSePi1vm0q4oxSF8b4DR44GF4BbmS2YdhPLOEqd8pDviZOGH/GsmRwoWJ2+5Lr085X7naowMwKHDG1A=="],
 
