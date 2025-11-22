@@ -1,6 +1,7 @@
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
 import { optimizeCss, optimizeImports } from "carbon-preprocess-svelte";
+import path from "node:path";
 import pkg from "./package.json" assert { type: "json" };
 
 export default defineConfig({
@@ -19,6 +20,14 @@ export default defineConfig({
   },
   vite: {
     plugins: [optimizeCss()],
+    resolve: {
+      alias: {
+        "@www": path.resolve("./www"),
+        "@layouts": path.resolve("./www/layouts"),
+        "@components": path.resolve("./www/components"),
+        "svelte-highlight": path.resolve("./src"),
+      },
+    },
     optimizeDeps: {
       exclude: ["carbon-components-svelte"],
     },
