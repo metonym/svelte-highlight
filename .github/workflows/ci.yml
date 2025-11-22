@@ -33,7 +33,7 @@ jobs:
         id: playwright-cache
         with:
           path: /Users/runner/Library/Caches/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/bun.lock') }}
 
       - name: Install dependencies
         run: bun ci
