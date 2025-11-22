@@ -39,7 +39,7 @@ jobs:
         run: bun ci
 
       - name: Run Biome
-        run: bunx biome ci --error-on-warnings
+        run: biome ci --error-on-warnings
 
       - name: Install Playwright without cache
         run: bun playwright install --with-deps
