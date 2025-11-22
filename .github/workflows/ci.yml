@@ -29,11 +29,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-      - uses: actions/cache@v4
-        id: playwright-cache
-        with:
-          path: /Users/runner/Library/Caches/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/bun.lock') }}
 
       - name: Install dependencies
         run: bun ci
@@ -41,13 +36,8 @@ jobs:
       - name: Run Biome
         run: bunx biome ci --error-on-warnings
 
-      - name: Install Playwright without cache
+      - name: Install Playwright
         run: bun playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-
-      - name: Install Playwright with cache
-        run: bun playwright install
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
 
       - name: Build library
         run: bun build:lib
