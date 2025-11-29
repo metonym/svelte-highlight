@@ -18,6 +18,7 @@ export default defineConfig({
         alias: {
           "svelte-highlight": path.resolve("src"),
         },
+        conditions: ["browser", "module", "import"],
       },
     },
   },
