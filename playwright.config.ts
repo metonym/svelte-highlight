@@ -17,8 +17,6 @@ export default defineConfig({
       resolve: {
         alias: {
           "svelte-highlight": path.resolve("src"),
-          "svelte-highlight/styles": path.resolve("src/styles"),
-          "svelte-highlight/languages": path.resolve("src/languages"),
         },
         conditions: ["browser", "module", "import"],
       },
