@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
 import Highlight from "./Highlight.test.svelte";
+import HighlightWithProps from "./Highlight.withProps.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
+import HighlightAutoWithProps from "./HighlightAuto.withProps.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
@@ -71,7 +73,7 @@ test("LineNumbers - custom starting number", async ({ mount, page }) => {
 });
 
 test("Language tag styling", async ({ mount, page }) => {
-  await mount(Highlight, {
+  await mount(HighlightWithProps, {
     props: {
       langtag: true,
       code: "const x = 1;",
@@ -86,7 +88,7 @@ test("Language tag styling", async ({ mount, page }) => {
 });
 
 test("Auto-highlighting detects language", async ({ mount, page }) => {
-  await mount(HighlightAuto, {
+  await mount(HighlightAutoWithProps, {
     props: {
       code: "body { color: red; }",
     },

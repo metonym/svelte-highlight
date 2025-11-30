@@ -16,9 +16,12 @@ export default defineConfig({
       plugins: [svelte({ preprocess: vitePreprocess() })],
       resolve: {
         alias: {
-          "svelte-highlight": path.resolve("src"),
-          "svelte-highlight/styles": path.resolve("src/styles"),
-          "svelte-highlight/languages": path.resolve("src/languages"),
+          "svelte-highlight/styles": path.resolve(process.cwd(), "src/styles"),
+          "svelte-highlight/languages": path.resolve(
+            process.cwd(),
+            "src/languages",
+          ),
+          "svelte-highlight": path.resolve(process.cwd(), "src"),
         },
         conditions: ["browser", "module", "import"],
       },
