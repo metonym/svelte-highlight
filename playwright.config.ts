@@ -7,7 +7,7 @@ export default defineConfig({
   timeout: 10_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 3 : undefined,
   reporter: "html",
   use: {
     trace: "on-first-retry",
