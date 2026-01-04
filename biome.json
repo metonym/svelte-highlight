@@ -89,15 +89,9 @@
           "correctness": {
             "noUnusedImports": "off",
             "noUnusedVariables": "off",
-            "noSelfAssign": "off",
             "useImportExtensions": "off"
           },
-          "complexity": {
-            "noUselessUndefinedInitialization": "off"
-          },
           "suspicious": {
-            "noAssignInExpressions": "off",
-            "noGlobalAssign": "off",
             "noTemplateCurlyInString": "off"
           },
           "style": {
