@@ -5,7 +5,7 @@
   /** @type {string} */
   export let pathname;
 
-  import { PKG_HOMEPAGE, PKG_VERSION } from "@www/constants";
+  import { PKG_REPO, PKG_VERSION } from "@www/constants";
   import "carbon-components-svelte/css/all.css";
   import "@www/app.css";
   import LogoGithub from "@components/LogoGithub.svelte";
@@ -48,7 +48,7 @@
     {/each}
   </HeaderNav>
   <HeaderUtilities>
-    <HeaderActionLink icon={LogoGithub} href={PKG_HOMEPAGE} target="_blank" />
+    <HeaderActionLink icon={LogoGithub} href={PKG_REPO} target="_blank" />
   </HeaderUtilities>
 </Header>
 

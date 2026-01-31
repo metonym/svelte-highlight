@@ -35,6 +35,7 @@ export default defineConfig({
       __PKG_NAME: JSON.stringify(pkg.name),
       __PKG_VERSION: JSON.stringify(pkg.version),
       __PKG_HOMEPAGE: JSON.stringify(pkg.homepage),
+      __PKG_REPO: JSON.stringify(pkg.repository.url.replace(/^git\+/, "").replace(/\.git$/, "")),
       __PKG_HLJS_VERSION: JSON.stringify(pkg.dependencies["highlight.js"]),
       __TS: JSON.stringify(new Date().toLocaleString()),
     },
