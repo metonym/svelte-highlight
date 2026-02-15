@@ -13,6 +13,6 @@
   {@html atomOneDark}
 </svelte:head>
 
-<button on:click={() => (toggle = !toggle)}>Toggle</button>
+<button type="button" on:click={() => (toggle = !toggle)}>Toggle</button>
 
 <Highlight langtag language={typescript} code={toggle ? code : code2} />
