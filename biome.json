@@ -57,6 +57,7 @@
       },
       "suspicious": {
         "noExplicitAny": "off",
+        "noImportCycles": "error",
         "noUselessEscapeInString": "off"
       },
       "style": {
