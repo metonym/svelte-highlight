@@ -6,7 +6,9 @@
     "formatWithErrors": true
   },
   "html": {
+    "experimentalFullSupportEnabled": true,
     "formatter": {
+      "enabled": true,
       "indentScriptAndStyle": true
     }
   },
@@ -128,6 +130,12 @@
           },
           "style": {
             "useNamingConvention": "off"
+          },
+          "complexity": {
+            "noImportantStyles": "off"
+          },
+          "a11y": {
+            "noSvgWithoutTitle": "off"
           }
         }
       }

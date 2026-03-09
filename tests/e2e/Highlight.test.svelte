@@ -9,9 +9,7 @@
   const code2 = "function hello(name: string){\n\treturn `Hello ${name}!`;\n}";
 </script>
 
-<svelte:head>
-  {@html atomOneDark}
-</svelte:head>
+<svelte:head> {@html atomOneDark} </svelte:head>
 
 <button type="button" on:click={() => (toggle = !toggle)}>Toggle</button>
 

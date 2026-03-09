@@ -5,8 +5,6 @@
   let code = "body { background: #000; }";
 </script>
 
-<svelte:head>
-  {@html atomOneDark}
-</svelte:head>
+<svelte:head> {@html atomOneDark} </svelte:head>
 
 <HighlightAuto {code} langtag />

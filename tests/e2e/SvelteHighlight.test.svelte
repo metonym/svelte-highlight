@@ -5,8 +5,6 @@
   const code = "<button on:click={() => { console.log(0); }}>Click me</button>";
 </script>
 
-<svelte:head>
-  {@html atomOneDark}
-</svelte:head>
+<svelte:head> {@html atomOneDark} </svelte:head>
 
 <HighlightSvelte {code} />

@@ -34,34 +34,29 @@
       Svelte component library for highlighting code using <Link
         inline
         style="font-size: inherit"
-        href="https://github.com/highlightjs/highlight.js">highlight.js.</Link
+        href="https://github.com/highlightjs/highlight.js"
+        >highlight.js.</Link
       >
     </p>
   </Column>
 </Row>
 
 <Row>
-  <Column xlg={12}>
-    <h4>Installation</h4>
-  </Column>
+  <Column xlg={12}> <h4>Installation</h4> </Column>
   <Column xlg={6} lg={6} md={6}>
-    <CodeSnippet code="npm i {PKG_NAME}" /><br />
-    <CodeSnippet code="pnpm i {PKG_NAME}" /><br />
-    <CodeSnippet code="bun add {PKG_NAME}" /><br />
+    <CodeSnippet code="npm i {PKG_NAME}" /><br>
+    <CodeSnippet code="pnpm i {PKG_NAME}" /><br>
+    <CodeSnippet code="bun add {PKG_NAME}" /><br>
     <CodeSnippet code="yarn add {PKG_NAME}" />
   </Column>
 </Row>
 
 <Row>
-  <Column>
-    <hr />
-  </Column>
+  <Column> <hr> </Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}>
-    <h3>Usage</h3>
-  </Column>
+  <Column xlg={12}> <h3>Usage</h3> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">The default Highlight component requires two props:</p>
     <UnorderedList class="mb-5">
@@ -72,8 +67,8 @@
       </ListItem>
     </UnorderedList>
     <p class="mb-5">
-      Import languages from <code class="code">svelte-highlight/languages</code
-      >.
+      Import languages from
+      <code class="code">svelte-highlight/languages</code>.
     </p>
     <p class="mb-5">
       See the <Link size="lg" href="/languages">Languages page</Link> for a list
@@ -99,14 +94,15 @@
       </ListItem>
     </UnorderedList>
     <p class="mb-5">
-      Refer to the <Link size="lg" href="/styles">Styles page</Link> for a list of
-      supported styles.
+      Refer to the <Link size="lg" href="/styles">Styles page</Link> for a list
+      of supported styles.
     </p>
     <p>
       CSS StyleSheets can also be externally linked from a Content Delivery
       Network (CDN) like <Link size="lg" href="https://unpkg.com/"
         >unpkg.com</Link
-      >.
+      >
+      .
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
@@ -122,13 +118,11 @@
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}>
-    <h3>Svelte Syntax Highlighting</h3>
-  </Column>
+  <Column xlg={12}> <h3>Svelte Syntax Highlighting</h3> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use the <code class="code">HighlightSvelte</code> component for Svelte syntax
-      highlighting.
+      Use the <code class="code">HighlightSvelte</code> component for Svelte
+      syntax highlighting.
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
@@ -137,9 +131,7 @@
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}>
-    <h3>Auto-highlighting</h3>
-  </Column>
+  <Column xlg={12}> <h3>Auto-highlighting</h3> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       The <code class="code">HighlightAuto</code> component invokes the
@@ -160,8 +152,8 @@
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Optionally, you can restrict language detection to a specific subset using
-      the <code class="code">languageNames</code> prop. This can improve performance
-      and accuracy.
+      the <code class="code">languageNames</code> prop. This can improve
+      performance and accuracy.
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
@@ -184,27 +176,21 @@
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}>
-    <h3>Line Numbers</h3>
-  </Column>
+  <Column xlg={12}> <h3>Line Numbers</h3> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use the <code class="code">LineNumbers</code> component to render the highlighted
-      code with line numbers.
+      Use the <code class="code">LineNumbers</code> component to render the
+      highlighted code with line numbers.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}>
-    <Basic />
-  </Column>
+  <Column xlg={10} lg={10} md={12}> <Basic /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Set <code class="code">hideBorder</code> to <code class="code">true</code>
       to hide the border of the line numbers column.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}>
-    <HideBorder />
-  </Column>
+  <Column xlg={10} lg={10} md={12}> <HideBorder /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       By default, overflowing horizontal content is contained by a scrollbar.
@@ -212,20 +198,18 @@
     <p class="mb-5">
       Set <code class="code">wrapLines</code> to <code class="code">true</code>
       to apply a <code class="code">white-space: pre-wrap</code> rule to the
-      <code class="code">pre</code> element.
+      <code class="code">pre</code>
+      element.
     </p>
   </Column>
-  <Column xlg={8} lg={8} md={12}>
-    <WrapLines />
-  </Column>
+  <Column xlg={8} lg={8} md={12}> <WrapLines /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use <code class="code">--style-props</code> to customize visual properties.
+      Use <code class="code">--style-props</code> to customize visual
+      properties.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}>
-    <StyleProps />
-  </Column>
+  <Column xlg={10} lg={10} md={12}> <StyleProps /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">startingLineNumber</code> to customize the starting
@@ -233,38 +217,30 @@
       <code class="code">1</code>.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}>
-    <StartingLineNumber />
-  </Column>
+  <Column xlg={10} lg={10} md={12}> <StartingLineNumber /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use <code class="code">highlightedLines</code> to highlight specific lines.
-      Indices start at zero.
+      Use <code class="code">highlightedLines</code> to highlight specific
+      lines. Indices start at zero.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}>
-    <HighlightedLines />
-  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightedLines /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use <code class="code">--highlighted-background</code> to customize the background
-      color of highlighted lines.
+      Use <code class="code">--highlighted-background</code> to customize the
+      background color of highlighted lines.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}>
-    <HighlightedLinesCustomColor />
-  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightedLinesCustomColor /> </Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}>
-    <h3>Language Targeting</h3>
-  </Column>
+  <Column xlg={12}> <h3>Language Targeting</h3> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components apply a
-      <code class="code">data-language</code> attribute on the codeblock containing
-      the language name.
+      <code class="code">data-language</code>
+      attribute on the codeblock containing the language name.
     </p>
     <p class="mb-5">This is also compatible with custom languages.</p>
     <p class="mb-5">
@@ -282,14 +258,12 @@
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}>
-    <h3>Language Tags</h3>
-  </Column>
+  <Column xlg={12}> <h3>Language Tags</h3> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      All <code class="code">Highlight</code> components allow for a tag to be added
-      at the top-right of the codeblock displaying the language name. Customize the
-      language tag using style props.
+      All <code class="code">Highlight</code> components allow for a tag to be
+      added at the top-right of the codeblock displaying the language name.
+      Customize the language tag using style props.
     </p>
     <p class="mb-5">Defaults:</p>
     <UnorderedList class="mb-5">
@@ -319,7 +293,7 @@
       class={THEME_MODULE_NAME}
       langtag
     />
-    <br />
+    <br>
     <HighlightSvelte
       code={`<HighlightAuto
   {code}
@@ -352,7 +326,8 @@
         size="lg"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples"
         >example set-ups</Link
-      >, including SvelteKit, Vite, Rollup, Routify, and Webpack.
+      >
+      , including SvelteKit, Vite, Rollup, Routify, and Webpack.
     </p>
   </Column>
 </Row>

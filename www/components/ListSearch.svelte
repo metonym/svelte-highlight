@@ -114,9 +114,7 @@
 {#if filtered.length === 0}
   <Row>
     <Column>
-      <p>
-        No matches found for <strong>"{value}"</strong>
-      </p>
+      <p>No matches found for <strong>"{value}"</strong></p>
     </Column>
   </Row>
 {/if}

@@ -10,8 +10,6 @@
   const highlighted = hljs.highlight(code, { language: "typescript" }).value;
 </script>
 
-<svelte:head>
-  {@html atomOneDark}
-</svelte:head>
+<svelte:head> {@html atomOneDark} </svelte:head>
 
 <LangTag {code} {highlighted} languageName="typescript" langtag />
