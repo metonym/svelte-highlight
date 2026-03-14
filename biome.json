@@ -124,10 +124,6 @@
       "includes": ["www/**/*.{svelte,astro}"],
       "linter": {
         "rules": {
-          "correctness": {
-            "noUnusedImports": "off",
-            "noUnusedVariables": "off"
-          },
           "style": {
             "useNamingConvention": "off"
           },
