@@ -28,7 +28,7 @@
     "/styles": "Styles",
   };
 
-  $: path = pathname !== "/" ? pathname.replace(/\/$/, "") : pathname;
+  $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
   $: title = routes[path] || "Svelte Highlight";
 </script>
 
