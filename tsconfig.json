@@ -5,6 +5,7 @@
     "checkJs": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "types": ["node", "bun", "jest"],
     "paths": {
       "@www/*": ["./www/*"],
       "@layouts/*": ["./www/layouts/*"],
