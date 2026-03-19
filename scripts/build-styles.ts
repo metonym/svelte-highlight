@@ -20,7 +20,7 @@ export async function buildStyles() {
   await $`rm -rf src/styles; mkdir src/styles`;
 
   let scopedStyles = "";
-  const names: string[] = [];
+  const seenNames = new Set<string>();
   let styles: ModuleNames = [];
 
   const glob = new Glob("**/*");
@@ -47,12 +47,12 @@ export async function buildStyles() {
         moduleName = `_${moduleName}`;
       }
 
-      if (names.includes(name)) {
+      if (seenNames.has(name)) {
         name = `${dir}-${name}`;
         moduleName = toCamelCase(name);
       }
 
-      names.push(name);
+      seenNames.add(name);
       styles.push({ name, moduleName });
       cssFiles.push({ file, absPath, name, dir, moduleName });
     } else {
@@ -105,11 +105,7 @@ export async function buildStyles() {
     scopedStyles += scopedStyle;
   }
 
-  styles = styles.sort((a, b) => {
-    if (a.name > b.name) return 1;
-    if (a.name < b.name) return -1;
-    return 0;
-  });
+  styles = styles.sort((a, b) => a.name.localeCompare(b.name));
 
   const markdown =
     createMarkdown("Styles", styles.length) +
