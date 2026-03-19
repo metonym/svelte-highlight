@@ -1,13 +1,31 @@
 on:
   pull_request:
+    paths-ignore:
+      - "**.md"
+      - "www/**"
+      - "examples/**"
   push:
     branches: [master]
+    paths-ignore:
+      - "**.md"
+      - "www/**"
+      - "examples/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
+  lint:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+      - run: bun ci
+      - run: bunx biome ci --error-on-warnings
+
   unit-tests:
+    needs: [lint]
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v6
@@ -25,6 +43,7 @@ jobs:
         run: bun test:types
 
   e2e-tests:
+    needs: [lint]
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v6
@@ -33,11 +52,20 @@ jobs:
       - name: Install dependencies
         run: bun ci
 
-      - name: Run Biome
-        run: bunx biome ci --error-on-warnings
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/Library/Caches/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('node_modules/@playwright/test/package.json') }}
 
-      - name: Install Playwright
-        run: bun playwright install --with-deps
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: bunx playwright install --with-deps chromium firefox webkit
+
+      - name: Install Playwright OS dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: bunx playwright install-deps chromium firefox webkit
 
       - name: Build library
         run: bun build:lib
