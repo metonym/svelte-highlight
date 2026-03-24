@@ -20,12 +20,15 @@
     Row,
     Search,
   } from "carbon-components-svelte";
-  import FocusKey from "svelte-focus-key";
 
   const SEARCH_PARAM = "q";
 
   /** @type {null | HTMLInputElement} */
   let ref = null;
+
+  const focusKeys = ["/"];
+  /** @type {string[]} */
+  let pressedKeys = [];
   let value = getSearchParamValue();
 
   function getSearchParamValue() {
@@ -76,7 +79,27 @@
   $: filteredIds = new Set(filtered.map((item) => item.name));
 </script>
 
-<FocusKey element={ref} selectText />
+<svelte:body
+  onkeydown={(e) => {
+    pressedKeys = [...pressedKeys, e.key];
+  }}
+  onkeyup={(e) => {
+    const currentKey = pressedKeys.join("+");
+
+    if (
+      focusKeys.some((k) => k === currentKey) &&
+      ref !== null &&
+      document.activeElement?.tagName === "BODY" &&
+      document.activeElement !== ref
+    ) {
+      e.preventDefault();
+      ref.focus();
+      ref.select();
+    }
+
+    pressedKeys = [];
+  }}
+/>
 
 <Row>
   <Column>
