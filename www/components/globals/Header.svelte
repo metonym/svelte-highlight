@@ -39,7 +39,7 @@
       v{PKG_VERSION}
     </span>
   </span>
-  <svelte:fragment slot="skip-to-content"> <SkipToContent /> </svelte:fragment>
+  <svelte:fragment slot="skipToContent"> <SkipToContent /> </svelte:fragment>
   <HeaderNav>
     {#each Object.entries(routes) as [ href, text ]}
       <HeaderNavItem {href} {text} isSelected={path === href} />

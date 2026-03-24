@@ -18,7 +18,7 @@
         "@types/node": "^25.5.0",
         "@typescript/native-preview": "^7.0.0-dev.20260323.1",
         "astro": "^6.0.8",
-        "carbon-components-svelte": "0.98.6",
+        "carbon-components-svelte": "^0.103.0",
         "carbon-preprocess-svelte": "^0.11.28",
         "cssnano": "^7.1.3",
         "cssnano-preset-lite": "^4.0.4",
@@ -370,7 +370,7 @@
 
     "caniuse-lite": ["caniuse-lite@1.0.30001780", "", {}, "sha512-llngX0E7nQci5BPJDqoZSbuZ5Bcs9F5db7EtgfwBerX9XGtkkiO4NwfDDIRzHTTwcYC8vC7bmeUEPGrKlR/TkQ=="],
 
-    "carbon-components-svelte": ["carbon-components-svelte@0.98.6", "", { "dependencies": { "@ibm/telemetry-js": "^1.5.0", "flatpickr": "4.6.9" } }, "sha512-Ax6UdMtFdiqgyOA+RDapoLSAR6qwDBPQ6pneQJ7RqjRcjdHLOM21DjFknGrgRQjB8pLCeXPXTB7WwDM++n9V4g=="],
+    "carbon-components-svelte": ["carbon-components-svelte@0.103.0", "", { "dependencies": { "@ibm/telemetry-js": "^1.5.0", "flatpickr": "4.6.9" } }, "sha512-fVVFBvKngQyJhDAWfdFUAFsFbuUANP1x/iygII0YnAUFtoHdt9ZA6DmxaR/42GMJfzO5lvCJUz3so85lERbp1Q=="],
 
     "carbon-preprocess-svelte": ["carbon-preprocess-svelte@0.11.28", "", {}, "sha512-fhpllh1GNexUA3JJjFR9yLHiA1DtoduhAOdUl7zGef8SkwfmE5HZKK6iwKzQjb00J3PwMherQbMmq9v+PNQ+Vw=="],
 
