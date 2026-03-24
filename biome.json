@@ -90,9 +90,7 @@
       "linter": {
         "rules": {
           "correctness": {
-            "noUnusedImports": "off",
-            "noUnusedVariables": "off",
-            "useImportExtensions": "off"
+            "noUnusedImports": "off"
           },
           "suspicious": {
             "noTemplateCurlyInString": "off"
@@ -126,9 +124,6 @@
         "rules": {
           "style": {
             "useNamingConvention": "off"
-          },
-          "complexity": {
-            "noImportantStyles": "off"
           },
           "a11y": {
             "noSvgWithoutTitle": "off"

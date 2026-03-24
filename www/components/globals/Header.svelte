@@ -61,7 +61,7 @@
 
 <style>
   :global(.bx--header__nav) {
-    display: block !important;
+    display: block;
   }
 
   :global(.bx--side-nav__overlay-active) {
