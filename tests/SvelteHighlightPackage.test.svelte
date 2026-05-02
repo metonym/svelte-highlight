@@ -9,12 +9,14 @@
   import githubStyles from "../package/styles/github";
   import { _3024, github, purebasic } from "../package/styles/index";
   import "../package/styles/3024.css";
+
+  const highlightLanguage = javascript || typescript || typescriptDefault || ts;
 </script>
 
 <Highlight
   class=""
   code=""
-  language={javascript || typescript || typescriptDefault || ts}
+  language={highlightLanguage}
   on:highlight={(e) => {
     console.log(e.detail);
   }}

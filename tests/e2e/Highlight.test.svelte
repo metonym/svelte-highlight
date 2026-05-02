@@ -6,7 +6,11 @@
   let toggle = true;
 
   const code = "const add = (a: number, b: number) => a + b;";
-  const code2 = "function hello(name: string){\n\treturn `Hello ${name}!`;\n}";
+  const code2 =
+    "function hello(name: string){\n\treturn `Hello " +
+    "$" +
+    "{name}!" +
+    "`;\n}";
 </script>
 
 <svelte:head> {@html atomOneDark} </svelte:head>
