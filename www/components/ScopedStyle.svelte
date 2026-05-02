@@ -12,7 +12,7 @@
   $: code = `<script>
   import Highlight from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
-  ${!useInjectedStyles && useCdnImport ? "" : importStyles + "\n"}
+  ${!useInjectedStyles && useCdnImport ? "" : `${importStyles}\n`}
   const code = "const add = (a: number, b: number) => a + b;";
 <\/script>
 ${

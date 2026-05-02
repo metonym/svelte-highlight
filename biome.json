@@ -86,23 +86,6 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.svelte"],
-      "linter": {
-        "rules": {
-          "correctness": {
-            "noUnusedImports": "off"
-          },
-          "suspicious": {
-            "noAssignInExpressions": "off",
-            "noTemplateCurlyInString": "off"
-          },
-          "style": {
-            "useTemplate": "off"
-          }
-        }
-      }
-    },
-    {
       "includes": ["**/*.test.ts", "**/*.test.tsx"],
       "linter": {
         "rules": {

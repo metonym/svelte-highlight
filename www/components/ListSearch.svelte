@@ -53,7 +53,7 @@
     let pathname = window.location.pathname;
 
     if (searchParams.size > 0) {
-      pathname += "?" + searchParams.toString();
+      pathname += `?${searchParams.toString()}`;
     }
 
     window.history.replaceState(null, "", pathname);

@@ -37,7 +37,7 @@
             style:left="0"
             style:text-align="right"
             style:user-select="none"
-            style:width={width + "px"}
+            style:width={`${width}px`}
           >
             <code style:color="var(--line-number-color, currentColor)">
               {lineNumber}
