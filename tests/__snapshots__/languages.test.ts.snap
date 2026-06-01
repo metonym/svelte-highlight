@@ -79,6 +79,7 @@ exports[`Languages 1`] = `
   "haskell",
   "haxe",
   "hsp",
+  "html",
   "http",
   "hy",
   "inform7",
