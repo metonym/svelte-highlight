@@ -35,7 +35,7 @@
   ));
 </script>
 
-<slot {highlighted}>
+<slot {highlighted} {langtag} languageName={language}>
   <LangTag
     {...$$restProps}
     languageName={language}

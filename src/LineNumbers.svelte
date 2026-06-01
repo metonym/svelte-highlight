@@ -14,6 +14,12 @@
   /** @type {number[]} */
   export let highlightedLines = [];
 
+  /** @type {import('./languages').LanguageName | (string & {})} */
+  export let languageName = "plaintext";
+
+  /** @type {boolean} */
+  export let langtag = false;
+
   const DIGIT_WIDTH = 12;
   const MIN_DIGITS = 2;
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
@@ -24,7 +30,12 @@
   $: width = len * DIGIT_WIDTH;
 </script>
 
-<div style:overflow-x="auto" {...$$restProps}>
+<div
+  class:langtag={langtag}
+  data-language={languageName}
+  style:overflow-x="auto"
+  {...$$restProps}
+>
   <table>
     <tbody class:hljs={true}>
       {#each lines as line, i}
@@ -65,6 +76,8 @@
 </div>
 
 <style>
+  @import "./langtag.css";
+
   pre {
     margin: 0;
   }

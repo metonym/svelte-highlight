@@ -5,6 +5,7 @@ import HighlightAuto from "./HighlightAuto.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
+import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
@@ -80,6 +81,18 @@ test("LineNumbers - custom starting number", async ({ mount, page }) => {
   await mount(LineNumbersCustomStartingLine);
 
   await expect(page.getByText("100")).toBeVisible();
+});
+
+test("LineNumbers - langtag", async ({ mount, page }) => {
+  await mount(LineNumbersLangtag);
+
+  await expect(page.locator("div.langtag")).toBeVisible();
+  await expect(page.locator("div.langtag")).toHaveAttribute(
+    "data-language",
+    "typescript",
+  );
+  await expect(page.locator("div.langtag")).toHaveCSS("position", "relative");
+  await expect(page.locator(".hljs-keyword")).toHaveText("const");
 });
 
 test("Language tag styling", async ({ mount, page }) => {

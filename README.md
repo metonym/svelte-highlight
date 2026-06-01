@@ -278,6 +278,31 @@ Use `--style-props` to customize styles.
 </Highlight>
 ```
 
+### Language Tag
+
+When using a custom slot, forward `langtag` and `languageName` from `Highlight` to `LineNumbers`.
+
+```svelte
+<Highlight
+  language={typescript}
+  {code}
+  langtag
+  let:highlighted
+  let:langtag
+  let:languageName
+>
+  <LineNumbers {highlighted} {langtag} {languageName} />
+</Highlight>
+```
+
+With `HighlightAuto`:
+
+```svelte
+<HighlightAuto {code} langtag let:highlighted let:langtag let:languageName>
+  <LineNumbers {highlighted} {langtag} {languageName} />
+</HighlightAuto>
+```
+
 ## Language Targeting
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
@@ -473,6 +498,8 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 | wrapLines          | `boolean`  | `false`        |
 | startingLineNumber | `number`   | `1`            |
 | highlightedLines   | `number[]` | `[]`           |
+| langtag            | `boolean`  | `false`        |
+| languageName       | `string`   | `"plaintext"`  |
 
 `$$restProps` are forwarded to the top-level `div` element.
 

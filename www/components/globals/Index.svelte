@@ -4,6 +4,7 @@
   import HideBorder from "@components/LineNumbers/HideBorder.svelte";
   import HighlightedLines from "@components/LineNumbers/HighlightedLines.svelte";
   import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
+  import Langtag from "@components/LineNumbers/Langtag.svelte";
   import StartingLineNumber from "@components/LineNumbers/StartingLineNumber.svelte";
   import StyleProps from "@components/LineNumbers/StyleProps.svelte";
   import WrapLines from "@components/LineNumbers/WrapLines.svelte";
@@ -23,9 +24,9 @@
   import css from "svelte-highlight/languages/css";
 
   const svelteHeadCdn = `<link
-    rel="stylesheet"
-    href="https://unpkg.com/svelte-highlight/styles/github.css"
-  />\n`;
+      rel="stylesheet"
+      href="https://unpkg.com/svelte-highlight/styles/github.css"
+    />\n`;
 </script>
 
 <Row>
@@ -232,6 +233,17 @@
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <HighlightedLinesCustomColor /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      When using a custom slot, forward <code class="code">langtag</code> and
+      <code class="code">languageName</code>
+      from
+      <code class="code">Highlight</code>
+      to
+      <code class="code">LineNumbers</code>.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <Langtag /> </Column>
 </Row>
 
 <Row class="mb-9">
@@ -263,7 +275,12 @@
     <p class="mb-5">
       All <code class="code">Highlight</code> components allow for a tag to be
       added at the top-right of the codeblock displaying the language name.
-      Customize the language tag using style props.
+      Customize the language tag using style props. With
+      <code class="code">LineNumbers</code>, forward
+      <code class="code">langtag</code>
+      and
+      <code class="code">languageName</code>
+      from the parent slot (see Line Numbers above).
     </p>
     <p class="mb-5">Defaults:</p>
     <UnorderedList class="mb-5">

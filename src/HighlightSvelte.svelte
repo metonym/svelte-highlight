@@ -26,7 +26,7 @@
   $: highlighted = hljs.highlightAuto(code).value;
 </script>
 
-<slot {highlighted}>
+<slot {highlighted} {langtag} languageName="svelte">
   <LangTag
     {...$$restProps}
     languageName="svelte"
