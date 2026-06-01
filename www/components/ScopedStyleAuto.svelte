@@ -5,17 +5,17 @@
   import HighlightSvelte from "svelte-highlight/HighlightSvelte.svelte";
 
   $: code = `<script>
-    import { HighlightAuto } from "svelte-highlight";
-    import ${moduleName} from "svelte-highlight/styles/${name}";
-    
-    const code = ".body { padding: 0; margin: 0; }";
-  <\/script>
+  import { HighlightAuto } from "svelte-highlight";
+  import ${moduleName} from "svelte-highlight/styles/${name}";
 
-  <svelte:head>
-    {@html ${moduleName}}
-  </svelte:head>
+  const code = ".body { padding: 0; margin: 0; }";
+<\/script>
 
-  <HighlightAuto {code} />`;
+<svelte:head>
+  {@html ${moduleName}}
+</svelte:head>
+
+<HighlightAuto {code} />`;
 </script>
 
 <HighlightSvelte class={moduleName} {code} />

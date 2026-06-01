@@ -24,9 +24,9 @@
   import css from "svelte-highlight/languages/css";
 
   const svelteHeadCdn = `<link
-      rel="stylesheet"
-      href="https://unpkg.com/svelte-highlight/styles/github.css"
-    />\n`;
+  rel="stylesheet"
+  href="https://unpkg.com/svelte-highlight/styles/github.css"
+/>\n`;
 </script>
 
 <Row>
@@ -303,7 +303,7 @@
       code={`<script>
   import { HighlightAuto } from "svelte-highlight";
 
-   $: code = \`body {\n  padding: 0;\n  color: red;\n}\`;
+  $: code = \`body {\n  padding: 0;\n  color: red;\n}\`;
 <\/script>
 
 <HighlightAuto {code} langtag \/>`}
