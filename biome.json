@@ -116,7 +116,7 @@
       }
     },
     {
-      "includes": ["scripts/**/*.ts"],
+      "includes": ["scripts/**/*.{ts,js}"],
       "linter": {
         "rules": {
           "performance": {
@@ -127,7 +127,8 @@
             "noForEach": "off"
           },
           "style": {
-            "noParameterAssign": "off"
+            "noParameterAssign": "off",
+            "useNamingConvention": "off"
           }
         }
       }

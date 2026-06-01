@@ -12,7 +12,13 @@ type CustomLanguage = {
   path: string;
 };
 
-const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [];
+const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
+  {
+    name: "html",
+    moduleName: "html",
+    path: `${import.meta.dir}/custom-languages/html.js`,
+  },
+];
 
 type LanguageEntry = {
   name: string;
@@ -45,12 +51,17 @@ export async function buildLanguages() {
     ),
   );
 
+  const customNames = new Set(CUSTOM_LANGUAGES.map(({ name }) => name));
+
   const entries: LanguageEntry[] = [
-    ...hljs.listLanguages().map((name) => ({
-      name,
-      moduleName: getModuleName(name),
-      kind: "hljs" as const,
-    })),
+    ...hljs
+      .listLanguages()
+      .filter((name) => !customNames.has(name))
+      .map((name) => ({
+        name,
+        moduleName: getModuleName(name),
+        kind: "hljs" as const,
+      })),
     ...CUSTOM_LANGUAGES.map(({ name, moduleName, path }) => ({
       name,
       moduleName,

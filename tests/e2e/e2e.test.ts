@@ -18,8 +18,20 @@ test("Highlight", async ({ mount, page }) => {
     "typescript",
   );
   await expect(page.locator(".hljs-title")).toHaveText("add");
-  await page.click("button");
+  await page.getByRole("button", { name: "Toggle", exact: true }).click();
   await expect(page.locator(".hljs-title")).toHaveText("hello");
+});
+
+test("Highlight - html language", async ({ mount, page }) => {
+  await mount(Highlight);
+  await page.getByRole("button", { name: "Toggle HTML" }).click();
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "html");
+  await expect(page.locator(".language-css .hljs-selector-id")).toHaveText(
+    "#content",
+  );
+  await expect(page.locator(".language-javascript .hljs-keyword")).toHaveText(
+    "const",
+  );
 });
 
 test("HighlightAuto", async ({ mount, page }) => {
