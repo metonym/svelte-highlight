@@ -31,7 +31,7 @@
 <Row>
   <Column xlg={16} lg={16}>
     <p class="text-02">
-      Svelte component library for highlighting code using <Link
+      Svelte component library for highlighting code using<Link
         inline
         style="font-size: inherit"
         href="https://github.com/highlightjs/highlight.js"
@@ -71,7 +71,7 @@
       <code class="code">svelte-highlight/languages</code>.
     </p>
     <p class="mb-5">
-      See the <Link size="lg" href="/languages">Languages page</Link> for a list
+      See the<Link size="lg" href="/languages">Languages page</Link> for a list
       of supported languages.
     </p>
   </Column>
@@ -94,12 +94,12 @@
       </ListItem>
     </UnorderedList>
     <p class="mb-5">
-      Refer to the <Link size="lg" href="/styles">Styles page</Link> for a list
+      Refer to the<Link size="lg" href="/styles">Styles page</Link> for a list
       of supported styles.
     </p>
     <p>
       CSS StyleSheets can also be externally linked from a Content Delivery
-      Network (CDN) like <Link size="lg" href="https://unpkg.com/"
+      Network (CDN) like<Link size="lg" href="https://unpkg.com/"
         >unpkg.com</Link
       >
       .
@@ -244,7 +244,7 @@
     </p>
     <p class="mb-5">This is also compatible with custom languages.</p>
     <p class="mb-5">
-      See the <Link size="lg" href="/languages">Languages page</Link> for a list
+      See the<Link size="lg" href="/languages">Languages page</Link> for a list
       of supported languages.
     </p>
   </Column>
@@ -277,7 +277,7 @@
       <ListItem><code class="code">--langtag-padding: 1em</code></ListItem>
     </UnorderedList>
     <p class="mb-5">
-      See the <Link size="lg" href="/languages">Languages page</Link> for a list
+      See the<Link size="lg" href="/languages">Languages page</Link> for a list
       of supported languages.
     </p>
   </Column>
@@ -321,7 +321,7 @@
   <Column xlg={12}><h3>Examples</h3></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Get started with <Link
+      Get started with<Link
         inline
         size="lg"
         href="https://github.com/metonym/svelte-highlight/tree/master/examples"
