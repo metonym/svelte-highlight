@@ -134,18 +134,6 @@
 </script>
 ```
 
-## xml (`xml`)
-
-```html
-<script>
-  // direct import (recommended)
-  import xml from "svelte-highlight/languages/xml";
-
-  // base import
-  import { xml } from "svelte-highlight/languages";
-</script>
-```
-
 ## asciidoc (`asciidoc`)
 
 ```html
@@ -494,18 +482,6 @@
 </script>
 ```
 
-## markdown (`markdown`)
-
-```html
-<script>
-  // direct import (recommended)
-  import markdown from "svelte-highlight/languages/markdown";
-
-  // base import
-  import { markdown } from "svelte-highlight/languages";
-</script>
-```
-
 ## dart (`dart`)
 
 ```html
@@ -662,18 +638,6 @@
 </script>
 ```
 
-## ruby (`ruby`)
-
-```html
-<script>
-  // direct import (recommended)
-  import ruby from "svelte-highlight/languages/ruby";
-
-  // base import
-  import { ruby } from "svelte-highlight/languages";
-</script>
-```
-
 ## erb (`erb`)
 
 ```html
@@ -686,18 +650,6 @@
 </script>
 ```
 
-## erlang-repl (`erlangRepl`)
-
-```html
-<script>
-  // direct import (recommended)
-  import erlangRepl from "svelte-highlight/languages/erlang-repl";
-
-  // base import
-  import { erlangRepl } from "svelte-highlight/languages";
-</script>
-```
-
 ## erlang (`erlang`)
 
 ```html
@@ -707,6 +659,18 @@
 
   // base import
   import { erlang } from "svelte-highlight/languages";
+</script>
+```
+
+## erlang-repl (`erlangRepl`)
+
+```html
+<script>
+  // direct import (recommended)
+  import erlangRepl from "svelte-highlight/languages/erlang-repl";
+
+  // base import
+  import { erlangRepl } from "svelte-highlight/languages";
 </script>
 ```
 
@@ -1262,6 +1226,18 @@
 </script>
 ```
 
+## markdown (`markdown`)
+
+```html
+<script>
+  // direct import (recommended)
+  import markdown from "svelte-highlight/languages/markdown";
+
+  // base import
+  import { markdown } from "svelte-highlight/languages";
+</script>
+```
+
 ## mathematica (`mathematica`)
 
 ```html
@@ -1343,18 +1319,6 @@
 
   // base import
   import { mizar } from "svelte-highlight/languages";
-</script>
-```
-
-## perl (`perl`)
-
-```html
-<script>
-  // direct import (recommended)
-  import perl from "svelte-highlight/languages/perl";
-
-  // base import
-  import { perl } from "svelte-highlight/languages";
 </script>
 ```
 
@@ -1535,6 +1499,18 @@
 
   // base import
   import { parser3 } from "svelte-highlight/languages";
+</script>
+```
+
+## perl (`perl`)
+
+```html
+<script>
+  // direct import (recommended)
+  import perl from "svelte-highlight/languages/perl";
+
+  // base import
+  import { perl } from "svelte-highlight/languages";
 </script>
 ```
 
@@ -1826,6 +1802,18 @@
 </script>
 ```
 
+## ruby (`ruby`)
+
+```html
+<script>
+  // direct import (recommended)
+  import ruby from "svelte-highlight/languages/ruby";
+
+  // base import
+  import { ruby } from "svelte-highlight/languages";
+</script>
+```
+
 ## ruleslanguage (`ruleslanguage`)
 
 ```html
@@ -2066,18 +2054,6 @@
 </script>
 ```
 
-## yaml (`yaml`)
-
-```html
-<script>
-  // direct import (recommended)
-  import yaml from "svelte-highlight/languages/yaml";
-
-  // base import
-  import { yaml } from "svelte-highlight/languages";
-</script>
-```
-
 ## tap (`tap`)
 
 ```html
@@ -2282,6 +2258,18 @@
 </script>
 ```
 
+## xml (`xml`)
+
+```html
+<script>
+  // direct import (recommended)
+  import xml from "svelte-highlight/languages/xml";
+
+  // base import
+  import { xml } from "svelte-highlight/languages";
+</script>
+```
+
 ## xquery (`xquery`)
 
 ```html
@@ -2291,6 +2279,18 @@
 
   // base import
   import { xquery } from "svelte-highlight/languages";
+</script>
+```
+
+## yaml (`yaml`)
+
+```html
+<script>
+  // direct import (recommended)
+  import yaml from "svelte-highlight/languages/yaml";
+
+  // base import
+  import { yaml } from "svelte-highlight/languages";
 </script>
 ```
 
