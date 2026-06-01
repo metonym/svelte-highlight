@@ -18,6 +18,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "html",
     path: `${import.meta.dir}/custom-languages/html.js`,
   },
+  {
+    name: "svelte",
+    moduleName: "svelte",
+    path: `${import.meta.dir}/custom-languages/svelte.js`,
+  },
 ];
 
 type LanguageEntry = {

@@ -8,22 +8,22 @@
   export let langtag = false;
 
   import hljs from "highlight.js/lib/core";
-  import css from "highlight.js/lib/languages/css";
-  import javascript from "highlight.js/lib/languages/javascript";
-  import xml from "highlight.js/lib/languages/xml";
   import { afterUpdate, createEventDispatcher } from "svelte";
+  import svelte from "./languages/svelte";
 
   const dispatch = createEventDispatcher();
 
-  hljs.registerLanguage("xml", xml);
-  hljs.registerLanguage("javascript", javascript);
-  hljs.registerLanguage("css", css);
+  /** @type {string} */
+  let highlighted = "";
 
   afterUpdate(() => {
     if (highlighted) dispatch("highlight", { highlighted });
   });
 
-  $: highlighted = hljs.highlightAuto(code).value;
+  $: {
+    hljs.registerLanguage(svelte.name, svelte.register);
+    highlighted = hljs.highlight(code, { language: svelte.name }).value;
+  }
 </script>
 
 <slot {highlighted} {langtag} languageName="svelte">

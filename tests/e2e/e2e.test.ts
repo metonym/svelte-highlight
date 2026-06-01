@@ -48,7 +48,10 @@ test("HighlightAuto", async ({ mount, page }) => {
 
 test("SvelteHighlight", async ({ mount, page }) => {
   await mount(SvelteHighlight);
-  await expect(page.locator(".hljs-attr")).toHaveText("on:click");
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "svelte");
+  await expect(page.locator(".hljs-variable").first()).toHaveText("on:");
+  await expect(page.locator(".language-javascript")).toBeVisible();
+  await expect(page.locator(".hljs-variable.language_")).toHaveText("console");
 });
 
 test("LineNumbers - basic functionality", async ({ mount, page }) => {
