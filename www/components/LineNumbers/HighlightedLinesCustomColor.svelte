@@ -2,10 +2,10 @@
   import Basic from "./Basic.svelte";
 
   const snippet = `<LineNumbers
-    {highlighted}
-    highlightedLines={[16]}
-    --highlighted-background="rgba(150, 203, 254, 0.2)"
-  />`;
+      {highlighted}
+      highlightedLines={[16]}
+      --highlighted-background="rgba(150, 203, 254, 0.2)"
+    />`;
 </script>
 
 <Basic

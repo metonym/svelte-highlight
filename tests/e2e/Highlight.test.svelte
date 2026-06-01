@@ -14,14 +14,14 @@
     "{name}!" +
     "`;\n}";
   const htmlCode = `<div id="content">
-  <p>Paragraph one</p>
-</div>
-<style>
-  #content { display: flex; }
-</style>
-<script>
-  const content = document.getElementById("content");
-<\/script>`;
+    <p>Paragraph one</p>
+  </div>
+  <style>
+    #content { display: flex; }
+  </style>
+  <script>
+    const content = document.getElementById("content");
+  <\/script>`;
 </script>
 
 <svelte:head> {@html atomOneDark} </svelte:head>

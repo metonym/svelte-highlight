@@ -23,9 +23,9 @@
   import css from "svelte-highlight/languages/css";
 
   const svelteHeadCdn = `<link
-  rel="stylesheet"
-  href="https://unpkg.com/svelte-highlight/styles/github.css"
-/>\n`;
+    rel="stylesheet"
+    href="https://unpkg.com/svelte-highlight/styles/github.css"
+  />\n`;
 </script>
 
 <Row>

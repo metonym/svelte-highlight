@@ -15,11 +15,9 @@
     "test:e2e": "bunx playwright test",
     "test:types": "tsgo",
     "format": "biome format --write .",
-    "format:check": "biome format .",
     "lint": "biome lint .",
-    "lint:fix": "biome lint --write .",
-    "check": "biome check .",
-    "check:fix": "biome check --write .",
+    "fix": "biome lint --write . && biome format --write .",
+    "fix:imports": "biome check --write --linter-enabled=false --formatter-enabled=false --only=assist/source/organizeImports tests/e2e/e2e.test.ts tests/*.ts scripts src",
     "upgrade-examples": "bun scripts/upgrade-examples.ts",
     "astro": "astro",
     "playwright": "playwright"
