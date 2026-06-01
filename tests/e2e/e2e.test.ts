@@ -35,6 +35,16 @@ test("Highlight - html language", async ({ mount, page }) => {
   );
 });
 
+test("Highlight - astro language", async ({ mount, page }) => {
+  await mount(Highlight);
+  await page.getByRole("button", { name: "Toggle Astro" }).click();
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "astro");
+  await expect(
+    page.locator(".language-typescript .hljs-keyword").first(),
+  ).toHaveText("export");
+  await expect(page.locator(".hljs-attr")).toHaveText("client:load");
+});
+
 test("HighlightAuto", async ({ mount, page }) => {
   await mount(HighlightAuto);
 

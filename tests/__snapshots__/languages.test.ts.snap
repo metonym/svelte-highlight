@@ -15,6 +15,7 @@ exports[`Languages 1`] = `
   "armasm",
   "asciidoc",
   "aspectj",
+  "astro",
   "autohotkey",
   "autoit",
   "avrasm",
