@@ -5,6 +5,19 @@ const RUNE_NAMES = "state|derived|effect|props|bindable|inspect|host";
 const RUNE_SUFFIXES = "raw|snapshot|by|eager";
 const SVELTE_DIRECTIVES =
   "on|bind|use|transition|in|out|animate|class|style|let";
+const TS_LANG = "(?:ts|typescript)";
+const SCRIPT_TS_BEGIN = new RegExp(
+  String.raw`<script(?=[^>]*\slang=["']${TS_LANG}["'])[^>]*>`,
+  "gm",
+);
+const SCRIPT_JS_MODULE_BEGIN = new RegExp(
+  String.raw`<script(?=[^>]*(?:\scontext=["']module["']|\smodule\b))(?![^>]*\slang=["']${TS_LANG}["'])[^>]*>`,
+  "gm",
+);
+const SCRIPT_JS_BEGIN = new RegExp(
+  String.raw`<script(?![^>]*\slang=["']${TS_LANG}["'])[^>]*>`,
+  "gm",
+);
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineSvelte(hljs) {
@@ -70,26 +83,25 @@ function defineSvelte(hljs) {
       svelteDirective,
       svelteEventAttribute,
       {
-        begin:
-          /<script(?:\s+[^>]*context=["']module["']|\s+module)(?![^>]*lang=["']ts["'])[^>]*>/gm,
-        end: /<\/script>/gm,
-        subLanguage: "javascript",
-        excludeBegin: true,
-        excludeEnd: true,
-        contains: commonPatterns,
-      },
-      {
-        begin: /<script(?!.*lang=["']ts["'])[^>]*>/gm,
-        end: /<\/script>/gm,
-        subLanguage: "javascript",
-        excludeBegin: true,
-        excludeEnd: true,
-        contains: commonPatterns,
-      },
-      {
-        begin: /<script\s+lang=["']ts["'][^>]*>/gm,
+        begin: SCRIPT_TS_BEGIN,
         end: /<\/script>/gm,
         subLanguage: "typescript",
+        excludeBegin: true,
+        excludeEnd: true,
+        contains: commonPatterns,
+      },
+      {
+        begin: SCRIPT_JS_MODULE_BEGIN,
+        end: /<\/script>/gm,
+        subLanguage: "javascript",
+        excludeBegin: true,
+        excludeEnd: true,
+        contains: commonPatterns,
+      },
+      {
+        begin: SCRIPT_JS_BEGIN,
+        end: /<\/script>/gm,
+        subLanguage: "javascript",
         excludeBegin: true,
         excludeEnd: true,
         contains: commonPatterns,
@@ -104,7 +116,7 @@ function defineSvelte(hljs) {
       {
         begin: /\{/,
         end: /\}/,
-        subLanguage: "javascript",
+        subLanguage: "typescript",
         contains: expressionPatterns,
       },
     ],

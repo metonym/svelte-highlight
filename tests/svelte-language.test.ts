@@ -39,6 +39,35 @@ const svelte5Snippet = `<script>
   <p>few</p>
 {/if}`;
 
+const moduleTypescriptSnippet = `<script lang="ts" context="module">
+  export const x: number = 1;
+</script>`;
+
+const langTypescriptSnippet = `<script lang="typescript">
+  let count: number = 0;
+</script>`;
+
+const declarationTagsSnippet = `<script lang="ts">
+  type Box = { width: number; height: number };
+
+  let boxes: Box[] = [
+    { width: 3, height: 4 },
+    { width: 5, height: 7 },
+  ];
+</script>
+
+{#each boxes as box}
+  {const area = box.width * box.height}
+  {let label: number = $state(\`\${area} square pixels\`)}
+  {const doubled: string = area * 2}
+
+  <p>{doubled === 1} {label === "large"}</p>
+  <div>
+    {const area = "nested"}
+    {area}
+  </div>
+{/each}`;
+
 test("svelte highlights embedded JavaScript, CSS, and expressions", () => {
   hljs.registerLanguage(svelte.name, svelte.register);
 
@@ -72,6 +101,43 @@ test("svelte highlights TypeScript script blocks", () => {
 
   expect(result).toContain("language-typescript");
   expect(result).toContain("hljs-keyword");
+});
+
+test("svelte highlights module TypeScript script blocks", () => {
+  hljs.registerLanguage(svelte.name, svelte.register);
+
+  const result = hljs.highlight(moduleTypescriptSnippet, {
+    language: "svelte",
+  }).value;
+
+  expect(result).toContain("language-typescript");
+  expect(result).toContain('<span class="hljs-built_in">number</span>');
+});
+
+test('svelte highlights script blocks with lang="typescript"', () => {
+  hljs.registerLanguage(svelte.name, svelte.register);
+
+  const result = hljs.highlight(langTypescriptSnippet, {
+    language: "svelte",
+  }).value;
+
+  expect(result).toContain("language-typescript");
+  expect(result).toContain('<span class="hljs-built_in">number</span>');
+});
+
+test("svelte highlights declaration tags with TypeScript in markup", () => {
+  hljs.registerLanguage(svelte.name, svelte.register);
+
+  const result = hljs.highlight(declarationTagsSnippet, {
+    language: "svelte",
+  }).value;
+
+  expect(result).toContain("language-typescript");
+  expect(result).toContain('<span class="hljs-keyword">const</span>');
+  expect(result).toContain('<span class="hljs-keyword">let</span>');
+  expect(result).toContain('<span class="hljs-keyword">$state</span>');
+  expect(result).toContain('<span class="hljs-built_in">number</span>');
+  expect(result).toContain('<span class="hljs-built_in">string</span>');
 });
 
 test("svelte highlights runes, event attributes, and block continuations", () => {
