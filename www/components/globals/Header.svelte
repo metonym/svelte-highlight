@@ -22,14 +22,19 @@
     SkipToContent,
   } from "carbon-components-svelte";
 
-  /** @type {Record<typeof pathname, string>} */
-  const routes = {
+  /** @type {Record<string, string>} */
+  const navRoutes = {
     "/languages": "Languages",
     "/styles": "Styles",
   };
 
+  /** @type {Record<string, string>} */
+  const hiddenRoutes = {
+    "/preview-svelte": "Svelte language preview",
+  };
+
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
-  $: title = routes[path] || "Svelte Highlight";
+  $: title = navRoutes[path] ?? hiddenRoutes[path] ?? "Svelte Highlight";
 </script>
 
 <Header aria-label="Navigation" platformName="Svelte Highlight" href="/">
@@ -41,7 +46,7 @@
   </span>
   <svelte:fragment slot="skipToContent"> <SkipToContent /> </svelte:fragment>
   <HeaderNav>
-    {#each Object.entries(routes) as [ href, text ]}
+    {#each Object.entries(navRoutes) as [ href, text ]}
       <HeaderNavItem {href} {text} isSelected={path === href} />
     {/each}
   </HeaderNav>
