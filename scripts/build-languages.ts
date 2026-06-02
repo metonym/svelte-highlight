@@ -19,6 +19,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     path: `${import.meta.dir}/custom-languages/html.js`,
   },
   {
+    name: "astro",
+    moduleName: "astro",
+    path: `${import.meta.dir}/custom-languages/astro.js`,
+  },
+  {
     name: "svelte",
     moduleName: "svelte",
     path: `${import.meta.dir}/custom-languages/svelte.js`,
