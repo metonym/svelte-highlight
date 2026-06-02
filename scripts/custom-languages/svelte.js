@@ -58,14 +58,9 @@ function defineSvelte(hljs) {
     },
     runePattern,
     storeSubscriptionPattern,
-    svelteDirective,
   ];
 
-  const commonPatterns = [
-    runePattern,
-    storeSubscriptionPattern,
-    svelteDirective,
-  ];
+  const commonPatterns = [runePattern, storeSubscriptionPattern];
 
   return {
     name: "Svelte",

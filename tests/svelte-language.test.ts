@@ -87,6 +87,23 @@ test("svelte highlights runes, event attributes, and block continuations", () =>
   expect(result).toContain('<span class="hljs-keyword">:else</span>');
 });
 
+test("svelte does not highlight directives inside script strings", () => {
+  hljs.registerLanguage(svelte.name, svelte.register);
+
+  const snippet = `<script>
+  const code = \`<button on:click={() => { console.log(0); }}>Click me</button>\`;
+</script>`;
+
+  const result = hljs.highlight(snippet, { language: "svelte" }).value;
+
+  expect(result).not.toMatch(
+    /<span class="hljs-string">[^<]*<\/span><span class="hljs-variable">on:<\/span>/,
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">`&lt;button on:click={() =&gt; { console.log(0); }}&gt;Click me&lt;/button&gt;`</span>',
+  );
+});
+
 test("html alone does not highlight Svelte block syntax", () => {
   const isolated = hljs.newInstance();
   isolated.registerLanguage(html.name, html.register);
