@@ -60,7 +60,7 @@ test("SvelteHighlight", async ({ mount, page }) => {
   await mount(SvelteHighlight);
   await expect(page.locator("pre")).toHaveAttribute("data-language", "svelte");
   await expect(page.locator(".hljs-variable").first()).toHaveText("on:");
-  await expect(page.locator(".language-javascript")).toBeVisible();
+  await expect(page.locator(".language-typescript")).toBeVisible();
   await expect(page.locator(".hljs-variable.language_")).toHaveText("console");
 });
 
