@@ -19,7 +19,7 @@ export default defineConfig({
     prefetchAll: true,
   },
   vite: {
-    plugins: [optimizeCss()],
+    plugins: [optimizeCss({ experimental: { strict: true }})],
     resolve: {
       alias: {
         "@www": path.resolve("./www"),
