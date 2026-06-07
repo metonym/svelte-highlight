@@ -1,11 +1,11 @@
 import path from "node:path";
 import { $, Glob } from "bun";
 import { createMarkdown } from "./utils/create-markdown.ts";
+import { inlineCssUrls } from "./utils/inline-css-urls.ts";
 import { postcssScopedStyles } from "./utils/postcss-scoped-styles.ts";
 import { preprocessStyles } from "./utils/preprocess-styles.ts";
 import {
   BACKTICK,
-  CSS_FILE,
   DEFAULT_STRING,
   NON_MINIFIED_CSS,
   STARTS_WITH_DIGIT,
@@ -24,7 +24,6 @@ export async function buildStyles() {
   let styles: ModuleNames = [];
 
   const glob = new Glob("**/*");
-  const copyCommands: string[] = [];
 
   const cssFiles: Array<{
     file: string;
@@ -55,22 +54,13 @@ export async function buildStyles() {
       seenNames.add(name);
       styles.push({ name, moduleName });
       cssFiles.push({ file, absPath, name, dir, moduleName });
-    } else {
-      if (!CSS_FILE.test(file)) {
-        copyCommands.push(absPath);
-      }
     }
-  }
-
-  if (copyCommands.length > 0) {
-    await Promise.all(
-      copyCommands.map((absPath) => $`cp ${absPath} src/styles/`),
-    );
   }
 
   const fileWrites = await Promise.all(
     cssFiles.map(async ({ absPath, name, moduleName }) => {
-      const content = await Bun.file(absPath).text();
+      const raw = await Bun.file(absPath).text();
+      const content = await inlineCssUrls(raw, path.dirname(absPath));
 
       const cssMinified = preprocessStyles(content, {
         discardComments: "preserve-license",
