@@ -107,6 +107,7 @@ exports[`Languages 1`] = `
   "lua",
   "makefile",
   "markdown",
+  "marko",
   "mathematica",
   "matlab",
   "maxima",

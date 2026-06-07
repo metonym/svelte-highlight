@@ -38,6 +38,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "mdx",
     path: `${import.meta.dir}/custom-languages/mdx.js`,
   },
+  {
+    name: "marko",
+    moduleName: "marko",
+    path: `${import.meta.dir}/custom-languages/marko.js`,
+  },
 ];
 
 type LanguageEntry = {

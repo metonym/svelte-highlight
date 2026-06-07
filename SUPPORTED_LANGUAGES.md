@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 197 languages exported from highlight.js@11.11.1
+> 198 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1263,6 +1263,20 @@
 
   // base import
   import { markdown } from "svelte-highlight/languages";
+</script>
+```
+
+## marko (`marko`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import marko from "svelte-highlight/languages/marko";
+
+  // base import
+  import { marko } from "svelte-highlight/languages";
 </script>
 ```
 
