@@ -2,21 +2,27 @@ import path from "node:path";
 
 const RELATIVE_URL = /url\(\.\/([^)]+)\)/g;
 
-const MIME_TYPES: Record<string, string> = {
+const MIME_TYPES = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".png": "image/png",
   ".gif": "image/gif",
   ".svg": "image/svg+xml",
   ".webp": "image/webp",
-};
+} as const;
+
+type ImageExtension = keyof typeof MIME_TYPES;
+
+function isImageExtension(ext: string): ext is ImageExtension {
+  return ext.toLowerCase() in MIME_TYPES;
+}
 
 export function mimeFromExt(ext: string): string {
-  const mime = MIME_TYPES[ext.toLowerCase()];
-  if (!mime) {
+  const normalized = ext.toLowerCase();
+  if (!isImageExtension(normalized)) {
     throw new Error(`Unsupported image extension: ${ext}`);
   }
-  return mime;
+  return MIME_TYPES[normalized];
 }
 
 /**
@@ -30,7 +36,13 @@ export async function inlineCssUrls(
   const matches = [...css.matchAll(RELATIVE_URL)];
   if (matches.length === 0) return css;
 
-  const uniqueFilenames = [...new Set(matches.map((match) => match[1]))];
+  const uniqueFilenames = [
+    ...new Set(
+      matches
+        .map((match) => match[1])
+        .filter((filename): filename is string => filename !== undefined),
+    ),
+  ];
   const dataUrls = await Promise.all(
     uniqueFilenames.map(async (filename) => {
       const filePath = path.join(baseDir, filename);
