@@ -31,6 +31,7 @@
   /** @type {Record<string, string>} */
   const hiddenRoutes = {
     "/preview-svelte": "Svelte language preview",
+    "/preview-vue": "Vue language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
