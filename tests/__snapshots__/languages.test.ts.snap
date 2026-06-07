@@ -189,6 +189,7 @@ exports[`Languages 1`] = `
   "verilog",
   "vhdl",
   "vim",
+  "vue",
   "wasm",
   "wren",
   "x86asm",
