@@ -1,6 +1,4 @@
 <script>
-  import { PKG_HLJS_VERSION } from "@www/constants";
-
   /** @type {{ name: string; moduleName: string; }[]} */
   export let items = [];
 
@@ -103,20 +101,11 @@
 
 <Row>
   <Column>
-    <p class="body-short-01 text-02">
-      {items.length}
-      {itemName}s from highlight.js v{PKG_HLJS_VERSION}.
-    </p>
-  </Column>
-</Row>
-
-<Row>
-  <Column>
     <Search
       bind:ref
       bind:value
       spellcheck="false"
-      placeholder={`Search ${itemName}s (e.g., ${placeholderExample})`}
+      placeholder={`Search ${items.length} ${itemName}s (e.g., ${placeholderExample})`}
       on:input={updateSearchParams}
       on:clear={updateSearchParams}
     />
