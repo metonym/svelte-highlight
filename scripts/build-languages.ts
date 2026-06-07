@@ -33,6 +33,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "vue",
     path: `${import.meta.dir}/custom-languages/vue.js`,
   },
+  {
+    name: "mdx",
+    moduleName: "mdx",
+    path: `${import.meta.dir}/custom-languages/mdx.js`,
+  },
 ];
 
 type LanguageEntry = {
