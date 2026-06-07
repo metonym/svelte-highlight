@@ -32,6 +32,7 @@
   const hiddenRoutes = {
     "/preview-svelte": "Svelte language preview",
     "/preview-vue": "Vue language preview",
+    "/preview-mdx": "MDX language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
