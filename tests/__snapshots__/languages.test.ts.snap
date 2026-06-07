@@ -110,6 +110,7 @@ exports[`Languages 1`] = `
   "mathematica",
   "matlab",
   "maxima",
+  "mdx",
   "mel",
   "mercury",
   "mipsasm",
