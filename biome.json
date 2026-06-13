@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -24,13 +24,14 @@
       "!!**/playwright-report/**/*",
       "!!**/src/styles/*.css",
       "!!astro.config.ts",
-      "!!www/data/**/*"
+      "!!www/data/**/*",
+      "!!www/public/favicon.svg"
     ]
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "performance": {
         "noAccumulatingSpread": "error",
         "noAwaitInLoops": "error",
@@ -110,7 +111,8 @@
             "useNamingConvention": "off"
           },
           "a11y": {
-            "noSvgWithoutTitle": "off"
+            "noSvgWithoutTitle": "off",
+            "noStaticElementInteractions": "off"
           }
         }
       }
