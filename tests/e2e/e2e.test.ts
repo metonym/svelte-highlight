@@ -5,6 +5,7 @@ import HighlightAuto from "./HighlightAuto.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
+import LineNumbersFocusLines from "./LineNumbers.focusLines.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
@@ -145,6 +146,26 @@ test("LineNumbers - CSS variables override container styles without !important",
 
   // --max-width is applied to the outer container
   await expect(container).toHaveCSS("max-width", "320px");
+});
+
+test("LineNumbers - focus lines dim/blur un-highlighted lines", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersFocusLines);
+
+  const rows = page.locator("tr");
+
+  // The highlighted line (index 1) is not dimmed.
+  await expect(rows.nth(1)).not.toHaveClass(/dimmed/);
+
+  // The remaining lines are dimmed and receive the opacity/filter effect.
+  await expect(rows.nth(0)).toHaveClass(/dimmed/);
+  await expect(rows.nth(2)).toHaveClass(/dimmed/);
+
+  const dimmedCode = rows.nth(0).locator("pre");
+  await expect(dimmedCode).toHaveCSS("opacity", "0.4");
+  await expect(dimmedCode).toHaveCSS("filter", "blur(2px)");
 });
 
 test("Language tag styling", async ({ mount, page }) => {

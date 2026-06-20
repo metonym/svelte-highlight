@@ -81,6 +81,22 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
      * @example "#fff"
      */
     "--highlighted-background"?: string;
+
+    /**
+     * Specify the opacity of un-highlighted lines.
+     * Only applies when `highlightedLines` is non-empty.
+     * @default 1
+     * @example 0.4
+     */
+    "--unhighlighted-opacity"?: number | string;
+
+    /**
+     * Specify a CSS filter for un-highlighted lines.
+     * Only applies when `highlightedLines` is non-empty.
+     * @default none
+     * @example "blur(2px)"
+     */
+    "--unhighlighted-filter"?: string;
   };
 
 export type LineNumbersEvents = {};
