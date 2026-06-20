@@ -1,6 +1,7 @@
 <script>
   import CodeSnippet from "@components/CodeSnippet.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
+  import ContainerStyle from "@components/LineNumbers/ContainerStyle.svelte";
   import HideBorder from "@components/LineNumbers/HideBorder.svelte";
   import HighlightedLines from "@components/LineNumbers/HighlightedLines.svelte";
   import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
@@ -213,6 +214,18 @@
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <StyleProps /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Use container-level variables like
+      <code class="code">--border-radius</code>,
+      <code class="code">--width</code>, and
+      <code class="code">--max-width</code>
+      to style the outer container without
+      <code class="code">:global</code>
+      overrides.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <ContainerStyle /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">startingLineNumber</code> to customize the starting

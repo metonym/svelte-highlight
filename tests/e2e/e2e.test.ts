@@ -3,6 +3,7 @@ import Highlight from "./Highlight.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import LangTag from "./LangTag.test.svelte";
+import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
@@ -106,6 +107,26 @@ test("LineNumbers - langtag", async ({ mount, page }) => {
   );
   await expect(page.locator("div.langtag")).toHaveCSS("position", "relative");
   await expect(page.locator(".hljs-keyword")).toHaveText("const");
+});
+
+test("LineNumbers - CSS variables override container styles without !important", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersCssVariables);
+
+  const container = page.locator("div[data-language]");
+  await expect(container).toBeVisible();
+
+  // --border-radius is applied to the outer container
+  await expect(container).toHaveCSS("border-top-left-radius", "12px");
+  await expect(container).toHaveCSS("border-bottom-right-radius", "12px");
+
+  // --overflow-x overrides the hard-coded "auto" default (resolves #280)
+  await expect(container).toHaveCSS("overflow-x", "hidden");
+
+  // --max-width is applied to the outer container
+  await expect(container).toHaveCSS("max-width", "320px");
 });
 
 test("Language tag styling", async ({ mount, page }) => {

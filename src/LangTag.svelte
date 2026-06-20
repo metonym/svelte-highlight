@@ -12,7 +12,16 @@
   export let langtag = false;
 </script>
 
-<pre class:langtag={langtag} data-language={languageName} {...$$restProps}><code
+<pre
+  class:langtag={langtag}
+  data-language={languageName}
+  style:overflow-x="var(--overflow-x, auto)"
+  style:overflow-y="var(--overflow-y, auto)"
+  style:border-radius="var(--border-radius, 0)"
+  style:width="var(--width, auto)"
+  style:max-width="var(--max-width, none)"
+  {...$$restProps}
+><code
     class:hljs={true}
     >{#if highlighted}{@html highlighted}{:else}{code}{/if}</code
   ></pre>
