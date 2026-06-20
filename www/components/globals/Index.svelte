@@ -2,6 +2,7 @@
   import CodeSnippet from "@components/CodeSnippet.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
   import ContainerStyle from "@components/LineNumbers/ContainerStyle.svelte";
+  import FocusLines from "@components/LineNumbers/FocusLines.svelte";
   import HideBorder from "@components/LineNumbers/HideBorder.svelte";
   import HighlightedLines from "@components/LineNumbers/HighlightedLines.svelte";
   import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
@@ -260,6 +261,15 @@
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <HighlightedLines /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Use <code class="code">--unhighlighted-opacity</code> or
+      <code class="code">--unhighlighted-filter</code>
+      to de-emphasize the remaining lines and focus attention on the highlighted
+      ones.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <FocusLines /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">--highlighted-background</code> to customize the

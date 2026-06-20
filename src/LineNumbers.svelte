@@ -25,6 +25,7 @@
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
 
   $: lines = highlighted.split("\n");
+  $: focusMode = highlightedLines.length > 0;
   $: len_digits = lines.length.toString().length;
   $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
   $: width = len * DIGIT_WIDTH;
@@ -44,7 +45,8 @@
     <tbody class:hljs={true}>
       {#each lines as line, i}
         {@const lineNumber = i + startingLineNumber}
-        <tr>
+        {@const isHighlighted = highlightedLines.includes(i)}
+        <tr class:dimmed={focusMode && !isHighlighted}>
           <td
             class:hljs={true}
             class:hideBorder
@@ -57,7 +59,7 @@
             <code style:color="var(--line-number-color, currentColor)">
               {lineNumber}
             </code>
-            {#if highlightedLines.includes(i)}
+            {#if isHighlighted}
               <div
                 class:line-background={true}
                 style:background="var(--highlighted-background, {HIGHLIGHTED_BACKGROUND})"
@@ -66,7 +68,7 @@
           </td>
           <td>
             <pre class:wrapLines><code>{@html line || "\n"}</code></pre>
-            {#if highlightedLines.includes(i)}
+            {#if isHighlighted}
               <div
                 class:line-background={true}
                 style:background="var(--highlighted-background, {HIGHLIGHTED_BACKGROUND})"
@@ -163,5 +165,11 @@
 
   tr:last-of-type td .line-background {
     bottom: 1em;
+  }
+
+  tr.dimmed td > code,
+  tr.dimmed pre {
+    opacity: var(--unhighlighted-opacity, 1);
+    filter: var(--unhighlighted-filter, none);
   }
 </style>

@@ -191,6 +191,8 @@ These apply to the outer container of every component (the `pre` element for `Hi
 | --line-number-color      | Text color of the line numbers                    | `currentColor`            |
 | --border-color           | Border color of the column of line numbers        | `currentColor`            |
 | --highlighted-background | Background color of highlighted lines             | `rgba(254, 241, 96, 0.2)` |
+| --unhighlighted-opacity  | Opacity of un-highlighted lines (focus mode)      | `1`                       |
+| --unhighlighted-filter   | CSS filter for un-highlighted lines (focus mode)  | `none`                    |
 | --padding                | Fallback padding for `--padding-left` / `--padding-right` | `1em`              |
 | --padding-left           | Left padding for `td` elements                    | `var(--padding, 1em)`     |
 | --padding-right          | Right padding for `td` elements                   | `var(--padding, 1em)`     |
@@ -326,6 +328,24 @@ The line number starts at `1`. Customize this via the `startingLineNumber` prop.
 
 Specify the lines to highlight using the `highlightedLines` prop. Indices start at zero.
 
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers {highlighted} highlightedLines={[0, 2, 3, 14]} />
+</Highlight>
+```
+
+Use `--unhighlighted-opacity` or `--unhighlighted-filter` to de-emphasize the remaining lines and focus attention on the highlighted ones. Both only take effect when `highlightedLines` is non-empty.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers
+    {highlighted}
+    highlightedLines={[0, 2, 3, 14]}
+    --unhighlighted-opacity="0.4"
+  />
+</Highlight>
+```
+
 Use `--highlighted-background` to customize the background color of highlighted lines.
 
 ```svelte
@@ -350,6 +370,8 @@ Use `--style-props` to customize styles.
 | --padding-left           | Left padding for `td` elements                          | `var(--padding, 1em)`     |
 | --padding-right          | Right padding for `td` elements                         | `var(--padding, 1em)`     |
 | --highlighted-background | Background color of highlighted lines                   | `rgba(254, 241, 96, 0.2)` |
+| --unhighlighted-opacity  | Opacity of un-highlighted lines (focus mode)            | `1`                       |
+| --unhighlighted-filter   | CSS filter for un-highlighted lines (focus mode)        | `none`                    |
 
 See [Styling with CSS variables](#styling-with-css-variables) for the full list, including container-level variables like `--border-radius`, `--width`, and `--overflow-x`.
 
