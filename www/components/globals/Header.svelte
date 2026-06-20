@@ -34,6 +34,7 @@
     "/preview-vue": "Vue language preview",
     "/preview-mdx": "MDX language preview",
     "/preview-marko": "Marko language preview",
+    "/preview-hcl": "HCL language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
