@@ -4,7 +4,7 @@
   "workspaces": {
     "": {
       "dependencies": {
-        "svelte-highlight": "^7.9.0",
+        "svelte-highlight": "^7.11.0",
       },
       "devDependencies": {
         "@roxi/routify": "^3.6.4",
