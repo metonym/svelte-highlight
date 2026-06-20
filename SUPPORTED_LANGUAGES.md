@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 200 languages exported from highlight.js@11.11.1
+> 201 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -2027,6 +2027,20 @@
 
   // base import
   import { sml } from "svelte-highlight/languages";
+</script>
+```
+
+## solidity (`solidity`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import solidity from "svelte-highlight/languages/solidity";
+
+  // base import
+  import { solidity } from "svelte-highlight/languages";
 </script>
 ```
 
