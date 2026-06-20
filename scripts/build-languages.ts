@@ -43,6 +43,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "marko",
     path: `${import.meta.dir}/custom-languages/marko.js`,
   },
+  {
+    name: "hcl",
+    moduleName: "hcl",
+    path: `${import.meta.dir}/custom-languages/hcl.js`,
+  },
 ];
 
 type LanguageEntry = {
