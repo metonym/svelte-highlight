@@ -48,6 +48,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "hcl",
     path: `${import.meta.dir}/custom-languages/hcl.js`,
   },
+  {
+    name: "prisma",
+    moduleName: "prisma",
+    path: `${import.meta.dir}/custom-languages/prisma.js`,
+  },
 ];
 
 type LanguageEntry = {

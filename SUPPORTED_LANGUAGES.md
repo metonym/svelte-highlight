@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 199 languages exported from highlight.js@11.11.1
+> 200 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1665,6 +1665,20 @@
 
   // base import
   import { powershell } from "svelte-highlight/languages";
+</script>
+```
+
+## prisma (`prisma`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import prisma from "svelte-highlight/languages/prisma";
+
+  // base import
+  import { prisma } from "svelte-highlight/languages";
 </script>
 ```
 
