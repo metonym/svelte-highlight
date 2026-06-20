@@ -1,9 +1,11 @@
 <script>
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
+  import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
   import hcl from "svelte-highlight/languages/hcl";
+  import prisma from "svelte-highlight/languages/prisma";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
   import dracula from "svelte-highlight/styles/dracula";
   import github from "svelte-highlight/styles/github";
@@ -11,11 +13,12 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"hcl"} */
+  /** @type {"hcl" | "prisma"} */
   export let language;
 
   const registry = {
     hcl: { lang: hcl, snippets: hclPreviewSnippets },
+    prisma: { lang: prisma, snippets: prismaPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
