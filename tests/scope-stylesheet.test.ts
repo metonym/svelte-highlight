@@ -1,12 +1,9 @@
-import postcss from "postcss";
-import { postcssScopedStyles } from "../scripts/utils/postcss-scoped-styles";
+import { scopeStylesheet } from "../scripts/utils/scope-stylesheet";
 
-describe("postcssScopedStyles", () => {
-  const process = (css: string) => {
-    return postcss([postcssScopedStyles("moduleName")]).process(css).css;
-  };
+describe("scopeStylesheet", () => {
+  const process = (css: string) => scopeStylesheet(css, "moduleName");
 
-  it("should scope regular CSS selectors", async () => {
+  it("should scope regular CSS selectors", () => {
     const input = `
       p { color: red; }
       div { background: blue; }
@@ -18,7 +15,7 @@ describe("postcssScopedStyles", () => {
     expect(process(input)).toBe(expected);
   });
 
-  it("should handle pre selectors", async () => {
+  it("should handle pre selectors", () => {
     const input = `
       pre .className { color: red; }
       pre.someClass { background: blue; }
@@ -32,7 +29,7 @@ describe("postcssScopedStyles", () => {
     expect(process(input)).toBe(expected);
   });
 
-  it("should handle complex selectors", async () => {
+  it("should handle complex selectors", () => {
     const input = `
       div > p { color: red; }
       .class1 .class2 { background: blue; }
@@ -44,5 +41,17 @@ describe("postcssScopedStyles", () => {
       .moduleName #id1 span { padding: 1em; }
     `;
     expect(process(input)).toBe(expected);
+  });
+
+  it("should scope every selector in a comma-separated list", () => {
+    expect(process(".hljs-comment,.hljs-quote{color:gray}")).toBe(
+      ".moduleName .hljs-comment,.moduleName .hljs-quote{color:gray}",
+    );
+  });
+
+  it("should scope nested rules inside @media", () => {
+    expect(process("@media screen{.hljs{color:red}}")).toBe(
+      "@media screen{.moduleName .hljs{color:red}}",
+    );
   });
 });

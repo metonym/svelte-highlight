@@ -2,7 +2,6 @@ import path from "node:path";
 import { $, Glob } from "bun";
 import { createMarkdown } from "./utils/create-markdown.ts";
 import { inlineCssUrls } from "./utils/inline-css-urls.ts";
-import { postcssScopedStyles } from "./utils/postcss-scoped-styles.ts";
 import { preprocessStyles } from "./utils/preprocess-styles.ts";
 import {
   BACKTICK,
@@ -10,6 +9,7 @@ import {
   NON_MINIFIED_CSS,
   STARTS_WITH_DIGIT,
 } from "./utils/regexes.ts";
+import { scopeStylesheet } from "./utils/scope-stylesheet.ts";
 import { toCamelCase } from "./utils/to-camel-case.ts";
 import { writeTo } from "./utils/write-to.ts";
 
@@ -70,10 +70,11 @@ export async function buildStyles() {
       const exportee = `const ${moduleName} = \`<style>${contentCssForJs}</style>\`;\n
       export default ${moduleName};\n`;
 
-      const scopedStyle = preprocessStyles(content, {
-        discardComments: "remove-all",
-        plugins: [postcssScopedStyles(moduleName)],
-      });
+      // Scope each theme for docs previews (`class={moduleName}` on the `<pre>`).
+      const scopedStyle = scopeStylesheet(
+        preprocessStyles(content, { discardComments: "remove-all" }),
+        moduleName,
+      );
 
       return {
         writes: [
