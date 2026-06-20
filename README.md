@@ -123,6 +123,39 @@ CSS StyleSheets can also be externally linked from a Content Delivery Network (C
 </svelte:head>
 ```
 
+### Scoping styles
+
+Themes target global `.hljs` selectors. Add more than one and the last injected wins. That works when every block on the page shares one theme.
+
+Reach for scoped styles when blocks on the same page need different themes: a style gallery, a side-by-side comparison, or a light snippet next to a dark one.
+
+Wrap each `Highlight` in `HighlightStyle` to keep a theme on that block:
+
+```svelte
+<script>
+  import { Highlight, HighlightStyle } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import a11yDark from "svelte-highlight/styles/a11y-dark";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<HighlightStyle theme={a11yDark}>
+  <Highlight language={typescript} {code} />
+</HighlightStyle>
+
+<HighlightStyle theme={github}>
+  <Highlight language={typescript} {code} />
+</HighlightStyle>
+```
+
+The component prefixes each selector with a scope class on the wrapper, so the theme only hits markup inside it.
+
+`theme` is required. `scopeClass` defaults to a hash of the theme string. Pass your own, or bind it (`bind:scopeClass`) / read it from the slot (`let:scopeClass`).
+
+For a page-wide theme, use `{@html theme}` as shown above.
+
 ## Styling with CSS variables
 
 Every `Highlight` variant forwards `$$restProps` to its top-level element, so you can style the component using CSS variables without resorting to `:global` overrides or `!important`.

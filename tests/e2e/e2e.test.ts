@@ -9,9 +9,27 @@ import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
+import ScopedStyle from "./ScopedStyle.test.svelte";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
 
 test.use({ viewport: { width: 1200, height: 600 } });
+
+test("Scoped styles - two themes coexist without bleed", async ({
+  mount,
+  page,
+}) => {
+  await mount(ScopedStyle);
+
+  const keywordA = page.locator(".theme-a .hljs-keyword").first();
+  const keywordB = page.locator(".theme-b .hljs-keyword").first();
+
+  await expect(keywordA).toHaveText("const");
+  await expect(keywordB).toHaveText("const");
+
+  // a11y-dark keyword is #dcc6e0; github keyword is #d73a49.
+  await expect(keywordA).toHaveCSS("color", "rgb(220, 198, 224)");
+  await expect(keywordB).toHaveCSS("color", "rgb(215, 58, 73)");
+});
 
 test("Highlight", async ({ mount, page }) => {
   await mount(Highlight);

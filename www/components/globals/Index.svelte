@@ -12,6 +12,7 @@
   import ScopedStyle from "@components/ScopedStyle.svelte";
   import ScopedStyleAuto from "@components/ScopedStyleAuto.svelte";
   import ScopedStyleSvelte from "@components/ScopedStyleSvelte.svelte";
+  import ScopedThemes from "@components/ScopedThemes.svelte";
   import { PKG_NAME, THEME_MODULE_NAME, THEME_NAME } from "@www/constants";
   import {
     Column,
@@ -118,6 +119,24 @@
       title="Note:"
       subtitle="Using a CDN is best suited for prototyping and not recommended for production use."
     />
+  </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Scoping styles</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Themes target global <code class="code">.hljs</code> selectors, so the
+      last one injected wins. That is fine when every block shares one theme.
+    </p>
+    <p class="mb-5">
+      Use <code class="code">HighlightStyle</code> when blocks on the same page
+      need different themes, like a style gallery or a light snippet next to a
+      dark one.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <ScopedThemes />
   </Column>
 </Row>
 
