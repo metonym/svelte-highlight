@@ -140,6 +140,7 @@ exports[`Languages 1`] = `
   "plaintext",
   "pony",
   "powershell",
+  "prisma",
   "processing",
   "profile",
   "prolog",
