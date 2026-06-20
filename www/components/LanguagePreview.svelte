@@ -2,10 +2,12 @@
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
+  import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
   import hcl from "svelte-highlight/languages/hcl";
   import prisma from "svelte-highlight/languages/prisma";
+  import solidity from "svelte-highlight/languages/solidity";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
   import dracula from "svelte-highlight/styles/dracula";
   import github from "svelte-highlight/styles/github";
@@ -13,12 +15,13 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"hcl" | "prisma"} */
+  /** @type {"hcl" | "prisma" | "solidity"} */
   export let language;
 
   const registry = {
     hcl: { lang: hcl, snippets: hclPreviewSnippets },
     prisma: { lang: prisma, snippets: prismaPreviewSnippets },
+    solidity: { lang: solidity, snippets: solidityPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
