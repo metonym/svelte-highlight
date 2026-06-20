@@ -123,6 +123,58 @@ CSS StyleSheets can also be externally linked from a Content Delivery Network (C
 </svelte:head>
 ```
 
+## Styling with CSS variables
+
+Every `Highlight` variant forwards `$$restProps` to its top-level element, so you can style the component using CSS variables without resorting to `:global` overrides or `!important`.
+
+```svelte
+<Highlight
+  language={typescript}
+  {code}
+  --border-radius="8px"
+  --max-width="40rem"
+/>
+```
+
+### Container variables
+
+These apply to the outer container of every component (the `pre` element for `Highlight`, `HighlightAuto`, `HighlightSvelte`, and `LangTag`; the `div` element for `LineNumbers`).
+
+| Variable        | Description                                | Default value |
+| :-------------- | :----------------------------------------- | :------------ |
+| --border-radius | Border radius of the container             | `0`           |
+| --width         | Width of the container                     | `auto`        |
+| --max-width     | Maximum width of the container             | `none`        |
+| --overflow-x    | Horizontal overflow behavior               | `auto`        |
+| --overflow-y    | Vertical overflow behavior                 | `auto`        |
+
+> [!NOTE]
+> Because the container clips its content (`overflow` is not `visible` by default), setting `--border-radius` rounds the visible corners without any extra CSS.
+
+### `LineNumbers` variables
+
+| Variable                 | Description                                       | Default value             |
+| :----------------------- | :------------------------------------------------ | :------------------------ |
+| --line-number-color      | Text color of the line numbers                    | `currentColor`            |
+| --border-color           | Border color of the column of line numbers        | `currentColor`            |
+| --highlighted-background | Background color of highlighted lines             | `rgba(254, 241, 96, 0.2)` |
+| --padding                | Fallback padding for `--padding-left` / `--padding-right` | `1em`              |
+| --padding-left           | Left padding for `td` elements                    | `var(--padding, 1em)`     |
+| --padding-right          | Right padding for `td` elements                   | `var(--padding, 1em)`     |
+
+### Language tag variables
+
+These apply when `langtag` is set to `true`.
+
+| Variable                | Description                     | Default value |
+| :---------------------- | :------------------------------ | :------------ |
+| --langtag-top           | Top position of the langtag     | `0`           |
+| --langtag-right         | Right position of the langtag   | `0`           |
+| --langtag-background    | Background color of the langtag | `inherit`     |
+| --langtag-color         | Text color of the langtag       | `inherit`     |
+| --langtag-border-radius | Border radius of the langtag    | `0`           |
+| --langtag-padding       | Padding of the langtag          | `1em`         |
+
 ## Svelte Syntax Highlighting
 
 Use the `HighlightSvelte` component for Svelte syntax highlighting.
@@ -257,13 +309,16 @@ Use `--highlighted-background` to customize the background color of highlighted 
 
 Use `--style-props` to customize styles.
 
-| Style prop               | Description                                | Default value             |
-| :----------------------- | :----------------------------------------- | :------------------------ |
-| --line-number-color      | Text color of the line numbers             | `currentColor`            |
-| --border-color           | Border color of the column of line numbers | `currentColor`            |
-| --padding-left           | Left padding for `td` elements             | `1em`                     |
-| --padding-right          | Right padding for `td` elements            | `1em`                     |
-| --highlighted-background | Background color of highlighted lines      | `rgba(254, 241, 96, 0.2)` |
+| Style prop               | Description                                              | Default value             |
+| :----------------------- | :------------------------------------------------------ | :------------------------ |
+| --line-number-color      | Text color of the line numbers                          | `currentColor`            |
+| --border-color           | Border color of the column of line numbers              | `currentColor`            |
+| --padding                | Fallback padding for `--padding-left` / `--padding-right` | `1em`                   |
+| --padding-left           | Left padding for `td` elements                          | `var(--padding, 1em)`     |
+| --padding-right          | Right padding for `td` elements                         | `var(--padding, 1em)`     |
+| --highlighted-background | Background color of highlighted lines                   | `rgba(254, 241, 96, 0.2)` |
+
+See [Styling with CSS variables](#styling-with-css-variables) for the full list, including container-level variables like `--border-radius`, `--width`, and `--overflow-x`.
 
 ```svelte
 <Highlight language={typescript} {code} let:highlighted>
@@ -274,6 +329,8 @@ Use `--style-props` to customize styles.
     --padding-left={0}
     --padding-right="3em"
     --highlighted-background="#000"
+    --border-radius="8px"
+    --max-width="40rem"
   />
 </Highlight>
 ```

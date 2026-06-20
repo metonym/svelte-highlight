@@ -33,7 +33,11 @@
 <div
   class:langtag={langtag}
   data-language={languageName}
-  style:overflow-x="auto"
+  style:overflow-x="var(--overflow-x, auto)"
+  style:overflow-y="var(--overflow-y, auto)"
+  style:border-radius="var(--border-radius, 0)"
+  style:width="var(--width, auto)"
+  style:max-width="var(--max-width, none)"
   {...$$restProps}
 >
   <table>
@@ -110,8 +114,8 @@
   }
 
   td {
-    padding-left: var(--padding-left, 1em);
-    padding-right: var(--padding-right, 1em);
+    padding-left: var(--padding-left, var(--padding, 1em));
+    padding-right: var(--padding-right, var(--padding, 1em));
   }
 
   td.hljs:not(.hideBorder):after {
