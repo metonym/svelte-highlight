@@ -53,6 +53,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "prisma",
     path: `${import.meta.dir}/custom-languages/prisma.js`,
   },
+  {
+    name: "solidity",
+    moduleName: "solidity",
+    path: `${import.meta.dir}/custom-languages/solidity.js`,
+  },
 ];
 
 type LanguageEntry = {
