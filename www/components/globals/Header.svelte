@@ -36,6 +36,7 @@
     "/preview-marko": "Marko language preview",
     "/preview-hcl": "HCL language preview",
     "/preview-prisma": "Prisma language preview",
+    "/preview-solidity": "Solidity language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
