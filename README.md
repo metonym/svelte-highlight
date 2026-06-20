@@ -197,6 +197,20 @@ These apply to the outer container of every component (the `pre` element for `Hi
 | --padding-left           | Left padding for `td` elements                    | `var(--padding, 1em)`     |
 | --padding-right          | Right padding for `td` elements                   | `var(--padding, 1em)`     |
 
+### `CopyButton` variables
+
+| Variable             | Description                          | Default value |
+| :------------------- | :----------------------------------- | :------------ |
+| --copy-top           | Top offset of the button             | `0.5em`       |
+| --copy-right         | Right offset of the button           | `0.5em`       |
+| --copy-size          | Width and height of the button       | `2em`         |
+| --copy-padding       | Inner padding of the button          | `0.5em`       |
+| --copy-background    | Background color of the button       | `inherit`     |
+| --copy-color         | Foreground color of the button       | `inherit`     |
+| --copy-border-radius | Border radius of the button          | `4px`         |
+| --copy-border        | Border of the button                 | `none`        |
+| --copy-z-index       | Stacking order of the button         | `2`           |
+
 ### Language tag variables
 
 These apply when `langtag` is set to `true`.
@@ -415,6 +429,111 @@ With `HighlightAuto`:
 </HighlightAuto>
 ```
 
+## Copy Button
+
+Compose the `CopyButton` component alongside `Highlight` to add a copy-to-clipboard button. Wrap both in a relatively-positioned container so the button can be positioned over the code block.
+
+By default, it copies the `code` using the native [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText) and shows a transient "copied" state. The button renders a copy icon that swaps to a checkmark on success; the `text` / `copiedText` props set the `aria-label` for each state. Clicks are ignored while in the "copied" state, so no duplicate copy fires.
+
+```svelte
+<script>
+  import { Highlight, CopyButton } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+
+  const code = "const add = (a: number, b: number) => a + b";
+</script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
+
+<div style="position: relative">
+  <Highlight language={typescript} {code} />
+  <CopyButton {code} />
+</div>
+```
+
+### Custom Copy Behavior
+
+Pass a `copy` function to override the default copy behavior. It receives the `code` to copy and may be async (return a promise); the "copied" state is shown only once it resolves. Clicks are ignored while a copy is in flight, so a slow async `copy` can't fire duplicates.
+
+```svelte
+<script>
+  function copy(code) {
+    navigator.clipboard.writeText(code);
+    console.log("Copied:", code);
+  }
+</script>
+
+<CopyButton {code} {copy} />
+```
+
+The component dispatches a `copy` event on success and an `error` event if the copy behavior throws.
+
+```svelte
+<CopyButton
+  {code}
+  on:copy={(e) => console.log(e.detail.code)}
+  on:error={(e) => console.error(e.detail.error)}
+/>
+```
+
+### Custom Button Content
+
+Provide custom button content using the default slot to replace the default icons. The slot exposes a `copied` boolean and a `copying` boolean (`true` while an async `copy` is in flight), so you can render a pending state for slow copy functions.
+
+```svelte
+<CopyButton {code} let:copied let:copying>
+  {#if copying}Copying…{:else if copied}Copied!{:else}Copy{/if}
+</CopyButton>
+```
+
+### Custom Styles
+
+Use `--copy-*` style props to customize the button.
+
+```svelte
+<CopyButton
+  {code}
+  --copy-background="rgba(255, 255, 255, 0.1)"
+  --copy-color="#fff"
+  --copy-border-radius="8px"
+/>
+```
+
+### With Line Numbers
+
+Compose `CopyButton` with `LineNumbers` by wrapping both in a relatively-positioned container.
+
+```svelte
+<div style="position: relative">
+  <Highlight language={typescript} {code} let:highlighted>
+    <LineNumbers {highlighted} />
+  </Highlight>
+  <CopyButton {code} />
+</div>
+```
+
+### With Language Tag
+
+When using a language tag alongside `CopyButton`, offset `--langtag-top` and `--langtag-right` so the tag sits to the left of the button (the copy button defaults to `--copy-top: 0.5em`, `--copy-right: 0.5em`, and `--copy-size: 2em`).
+
+```svelte
+<div style="position: relative">
+  <Highlight
+    language={typescript}
+    {code}
+    langtag
+    --langtag-top="0"
+    --langtag-right="3em"
+    --langtag-padding="0.25em 0.5em"
+    --langtag-font-size="0.75em"
+  />
+  <CopyButton {code} />
+</div>
+```
+
 ## Language Targeting
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
@@ -614,6 +733,33 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 | languageName       | `string`   | `"plaintext"`  |
 
 `$$restProps` are forwarded to the top-level `div` element.
+
+### `CopyButton`
+
+#### Props
+
+| Name       | Type                                       | Default value                                |
+| :--------- | :----------------------------------------- | :------------------------------------------- |
+| code       | `string`                                   | N/A (required)                               |
+| copy       | `(code: string) => void \| Promise<void>`  | `(code) => navigator.clipboard.writeText(code)` |
+| timeout    | `number`                                   | `2000`                                       |
+| text       | `string`                                   | `"Copy"`                                     |
+| copiedText | `string`                                   | `"Copied!"`                                  |
+
+`$$restProps` are forwarded to the top-level `button` element.
+
+#### Dispatched Events
+
+- **on:copy**: fired after a successful copy, with `{ code }`
+- **on:error**: fired if the copy behavior throws, with `{ error }`
+
+```svelte
+<CopyButton
+  {code}
+  on:copy={(e) => console.log(e.detail.code)}
+  on:error={(e) => console.error(e.detail.error)}
+/>
+```
 
 ### `HighlightSvelte`
 

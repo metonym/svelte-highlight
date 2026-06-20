@@ -1,5 +1,11 @@
 <script>
   import CodeSnippet from "@components/CodeSnippet.svelte";
+  import CopyButtonBasic from "@components/CopyButton/Basic.svelte";
+  import CopyButtonCustomFunction from "@components/CopyButton/CustomFunction.svelte";
+  import CopyButtonLangtag from "@components/CopyButton/Langtag.svelte";
+  import CopyButtonLineNumbers from "@components/CopyButton/LineNumbers.svelte";
+  import CopyButtonSlot from "@components/CopyButton/Slot.svelte";
+  import CopyButtonStyleProps from "@components/CopyButton/StyleProps.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
   import ContainerStyle from "@components/LineNumbers/ContainerStyle.svelte";
   import FocusLines from "@components/LineNumbers/FocusLines.svelte";
@@ -288,6 +294,64 @@
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <Langtag /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Copy Button</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Compose the <code class="code">CopyButton</code> component alongside
+      <code class="code">Highlight</code>
+      to add a copy-to-clipboard button. Position it by wrapping both in a
+      relatively-positioned container.
+    </p>
+    <p class="mb-5">
+      By default, it copies the <code class="code">code</code> using the native
+      Clipboard API and shows a transient "copied" state.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CopyButtonBasic /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Pass a <code class="code">copy</code> function to override the default
+      copy behavior—for example, to add logging or a custom toast.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CopyButtonCustomFunction /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Provide custom button content using the default slot. The slot exposes a
+      <code class="code">copied</code>
+      boolean.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CopyButtonSlot /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Use <code class="code">--copy-*</code> style props to customize the
+      offset, size, and colors of the button.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CopyButtonStyleProps /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Compose <code class="code">CopyButton</code> with
+      <code class="code">LineNumbers</code>
+      by wrapping both in a relatively-positioned container.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CopyButtonLineNumbers /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      When using a language tag alongside
+      <code class="code">CopyButton</code>, offset
+      <code class="code">--langtag-top</code>
+      and
+      <code class="code">--langtag-right</code>
+      so the tag sits to the left of the button.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CopyButtonLangtag /> </Column>
 </Row>
 
 <Row class="mb-9">

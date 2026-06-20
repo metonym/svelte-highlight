@@ -1,4 +1,7 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
+import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
+import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
+import CopyButton from "./CopyButton.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
@@ -222,4 +225,101 @@ test("LangTag", async ({ mount, page }) => {
 
   const preElement = page.locator("pre.langtag");
   await expect(preElement).toHaveCSS("position", "relative");
+});
+
+test("CopyButton - copies via the native Clipboard API", async ({
+  mount,
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName !== "chromium",
+    "Clipboard permissions are Chromium-only",
+  );
+
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+
+  const component = await mount(CopyButton);
+
+  const button = page.getByRole("button", { name: "Copy" });
+  await expect(button).toBeVisible();
+  await button.click();
+
+  const clipboard = await page.evaluate(() => navigator.clipboard.readText());
+  expect(clipboard).toBe("const add = (a: number, b: number) => a + b;");
+
+  // The "copied" state is reflected on the button, then reverts after the timeout.
+  await expect(
+    component.getByRole("button", { name: "Copied!" }),
+  ).toBeVisible();
+  await expect(component.getByRole("button", { name: "Copy" })).toBeVisible({
+    timeout: 3_000,
+  });
+});
+
+test("CopyButton - custom copy prop overrides the Clipboard API", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(CopyButtonCustomCopy);
+
+  await expect(page.getByTestId("copied")).toHaveText("");
+  const button = component.getByRole("button");
+  await button.click();
+  await expect(page.getByTestId("copied")).toHaveText(
+    "const add = (a: number, b: number) => a + b;",
+  );
+
+  // CSS custom properties customize the button without !important.
+  await expect(button).toHaveCSS("width", "60px");
+  await expect(button).toHaveCSS("z-index", "5");
+});
+
+test("CopyButton - ignores duplicate clicks while in the copied state", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(CopyButtonCustomCopy);
+
+  const button = component.getByRole("button");
+  await button.click();
+
+  // The "copied" icon is shown (aria-label reflects the copied state).
+  await expect(button).toHaveAttribute("aria-label", "Copied!");
+  await expect(page.getByTestId("count")).toHaveText("1");
+
+  // Clicking again while copied must not fire another copy...
+  await button.click();
+  await expect(page.getByTestId("count")).toHaveText("1");
+  // ...and the "copied" icon remains visible.
+  await expect(button).toHaveAttribute("aria-label", "Copied!");
+
+  // The state reverts after the configured timeout (1000ms here).
+  await expect(button).toHaveAttribute("aria-label", "Copy", {
+    timeout: 3_000,
+  });
+});
+
+test("CopyButton - dedupes clicks while an async copy is in flight", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(CopyButtonAsyncCopy);
+
+  const button = component.getByRole("button");
+  await button.click();
+
+  // The copy is in flight (slot exposes `copying`); clicking again is ignored.
+  await expect(page.getByTestId("pending")).toBeVisible();
+  await expect(page.getByTestId("count")).toHaveText("1");
+  await button.click();
+  await expect(page.getByTestId("count")).toHaveText("1");
+
+  // Once it resolves, the "copied" state is shown, then reverts.
+  await expect(button).toHaveAttribute("aria-label", "Copied!", {
+    timeout: 3_000,
+  });
+  await expect(button).toHaveAttribute("aria-label", "Copy", {
+    timeout: 3_000,
+  });
 });
