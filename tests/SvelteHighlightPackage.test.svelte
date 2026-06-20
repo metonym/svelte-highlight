@@ -1,5 +1,9 @@
 <script lang="ts">
-  import Highlight, { HighlightAuto, LineNumbers } from "../package";
+  import Highlight, {
+    CopyButton,
+    HighlightAuto,
+    LineNumbers,
+  } from "../package";
   import Highlight2 from "../package/Highlight.svelte";
   import { typescript } from "../package/languages";
   import javascript from "../package/languages/javascript";
@@ -49,6 +53,36 @@
     console.log(e.detail.language);
   }}
 />
+
+<div style="position: relative">
+  <Highlight language={typescript} code="" />
+  <CopyButton
+    code=""
+    timeout={3000}
+    text="Copy"
+    copiedText="Copied!"
+    copy={(code) => navigator.clipboard.writeText(code)}
+    on:copy={(e) => {
+      console.log(e.detail.code);
+    }}
+    on:error={(e) => {
+      console.error(e.detail.error);
+    }}
+    --copy-top="0.5em"
+    --copy-right="0.5em"
+    --copy-size="2em"
+    --copy-padding="0.5em"
+    --copy-background="inherit"
+    --copy-color="inherit"
+    --copy-border-radius="4px"
+    --copy-border="none"
+    --copy-z-index={2}
+    let:copied
+    let:copying
+  >
+    {copying ? "…" : copied ? "Copied!" : "Copy"}
+  </CopyButton>
+</div>
 
 <Highlight
   code=""
