@@ -203,5 +203,6 @@ exports[`Languages 1`] = `
   "xquery",
   "yaml",
   "zephir",
+  "zig",
 ]
 `;

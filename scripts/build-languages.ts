@@ -58,6 +58,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "solidity",
     path: `${import.meta.dir}/custom-languages/solidity.js`,
   },
+  {
+    name: "zig",
+    moduleName: "zig",
+    path: `${import.meta.dir}/custom-languages/zig.js`,
+  },
 ];
 
 type LanguageEntry = {
