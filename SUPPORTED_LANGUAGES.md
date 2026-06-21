@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 204 languages exported from highlight.js@11.11.1
+> 205 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1523,6 +1523,20 @@
 
   // base import
   import { nsis } from "svelte-highlight/languages";
+</script>
+```
+
+## nushell (`nushell`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import nushell from "svelte-highlight/languages/nushell";
+
+  // base import
+  import { nushell } from "svelte-highlight/languages";
 </script>
 ```
 

@@ -73,6 +73,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "fish",
     path: `${import.meta.dir}/custom-languages/fish.js`,
   },
+  {
+    name: "nushell",
+    moduleName: "nushell",
+    path: `${import.meta.dir}/custom-languages/nushell.js`,
+  },
 ];
 
 type LanguageEntry = {
