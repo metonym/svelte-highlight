@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 203 languages exported from highlight.js@11.11.1
+> 204 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -697,6 +697,20 @@
 
   // base import
   import { excel } from "svelte-highlight/languages";
+</script>
+```
+
+## fish (`fish`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import fish from "svelte-highlight/languages/fish";
+
+  // base import
+  import { fish } from "svelte-highlight/languages";
 </script>
 ```
 

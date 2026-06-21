@@ -68,6 +68,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "toml",
     path: `${import.meta.dir}/custom-languages/toml.js`,
   },
+  {
+    name: "fish",
+    moduleName: "fish",
+    path: `${import.meta.dir}/custom-languages/fish.js`,
+  },
 ];
 
 type LanguageEntry = {
