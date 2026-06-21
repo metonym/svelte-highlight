@@ -1,6 +1,7 @@
 <script>
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
+  import { nushellPreviewSnippets } from "@www/preview/nushell-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
@@ -10,6 +11,7 @@
   import { Highlight } from "svelte-highlight";
   import fish from "svelte-highlight/languages/fish";
   import hcl from "svelte-highlight/languages/hcl";
+  import nushell from "svelte-highlight/languages/nushell";
   import prisma from "svelte-highlight/languages/prisma";
   import solidity from "svelte-highlight/languages/solidity";
   import toml from "svelte-highlight/languages/toml";
@@ -21,7 +23,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell"} */
   export let language;
 
   const registry = {
@@ -31,6 +33,7 @@
     prisma: { lang: prisma, snippets: prismaPreviewSnippets },
     toml: { lang: toml, snippets: tomlPreviewSnippets },
     fish: { lang: fish, snippets: fishPreviewSnippets },
+    nushell: { lang: nushell, snippets: nushellPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
