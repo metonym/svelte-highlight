@@ -128,6 +128,7 @@ exports[`Languages 1`] = `
   "nix",
   "nodeRepl",
   "nsis",
+  "nushell",
   "objectivec",
   "ocaml",
   "openscad",
