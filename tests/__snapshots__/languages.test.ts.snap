@@ -184,6 +184,7 @@ exports[`Languages 1`] = `
   "tap",
   "tcl",
   "thrift",
+  "toml",
   "tp",
   "twig",
   "typescript",
