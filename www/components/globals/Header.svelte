@@ -38,6 +38,7 @@
     "/preview-prisma": "Prisma language preview",
     "/preview-solidity": "Solidity language preview",
     "/preview-zig": "Zig language preview",
+    "/preview-toml": "TOML language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
