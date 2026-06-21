@@ -102,6 +102,7 @@ exports[`Languages 1`] = `
   "ldif",
   "leaf",
   "less",
+  "liquid",
   "lisp",
   "livecodeserver",
   "livescript",

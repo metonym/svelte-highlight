@@ -83,6 +83,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "gleam",
     path: `${import.meta.dir}/custom-languages/gleam.js`,
   },
+  {
+    name: "liquid",
+    moduleName: "liquid",
+    path: `${import.meta.dir}/custom-languages/liquid.js`,
+  },
 ];
 
 type LanguageEntry = {
