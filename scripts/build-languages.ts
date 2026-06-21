@@ -88,6 +88,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "liquid",
     path: `${import.meta.dir}/custom-languages/liquid.js`,
   },
+  {
+    name: "blade",
+    moduleName: "blade",
+    path: `${import.meta.dir}/custom-languages/blade.js`,
+  },
 ];
 
 type LanguageEntry = {
