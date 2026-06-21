@@ -1,4 +1,5 @@
 <script>
+  import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
@@ -7,6 +8,7 @@
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
+  import fish from "svelte-highlight/languages/fish";
   import hcl from "svelte-highlight/languages/hcl";
   import prisma from "svelte-highlight/languages/prisma";
   import solidity from "svelte-highlight/languages/solidity";
@@ -19,7 +21,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish"} */
   export let language;
 
   const registry = {
@@ -28,6 +30,7 @@
     zig: { lang: zig, snippets: zigPreviewSnippets },
     prisma: { lang: prisma, snippets: prismaPreviewSnippets },
     toml: { lang: toml, snippets: tomlPreviewSnippets },
+    fish: { lang: fish, snippets: fishPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
