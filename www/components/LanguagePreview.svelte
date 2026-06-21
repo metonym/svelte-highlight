@@ -3,12 +3,14 @@
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
+  import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
   import hcl from "svelte-highlight/languages/hcl";
   import prisma from "svelte-highlight/languages/prisma";
   import solidity from "svelte-highlight/languages/solidity";
+  import toml from "svelte-highlight/languages/toml";
   import zig from "svelte-highlight/languages/zig";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
   import dracula from "svelte-highlight/styles/dracula";
@@ -17,7 +19,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml"} */
   export let language;
 
   const registry = {
@@ -25,6 +27,7 @@
     hcl: { lang: hcl, snippets: hclPreviewSnippets },
     zig: { lang: zig, snippets: zigPreviewSnippets },
     prisma: { lang: prisma, snippets: prismaPreviewSnippets },
+    toml: { lang: toml, snippets: tomlPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
