@@ -78,6 +78,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "nushell",
     path: `${import.meta.dir}/custom-languages/nushell.js`,
   },
+  {
+    name: "gleam",
+    moduleName: "gleam",
+    path: `${import.meta.dir}/custom-languages/gleam.js`,
+  },
 ];
 
 type LanguageEntry = {
