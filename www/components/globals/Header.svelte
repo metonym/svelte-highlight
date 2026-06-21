@@ -39,6 +39,7 @@
     "/preview-solidity": "Solidity language preview",
     "/preview-zig": "Zig language preview",
     "/preview-toml": "TOML language preview",
+    "/preview-fish": "fish language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
