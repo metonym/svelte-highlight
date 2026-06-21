@@ -69,6 +69,7 @@ exports[`Languages 1`] = `
   "gauss",
   "gcode",
   "gherkin",
+  "gleam",
   "glsl",
   "gml",
   "go",
