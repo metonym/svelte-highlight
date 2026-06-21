@@ -63,6 +63,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "zig",
     path: `${import.meta.dir}/custom-languages/zig.js`,
   },
+  {
+    name: "toml",
+    moduleName: "toml",
+    path: `${import.meta.dir}/custom-languages/toml.js`,
+  },
 ];
 
 type LanguageEntry = {

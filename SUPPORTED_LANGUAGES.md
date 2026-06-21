@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 202 languages exported from highlight.js@11.11.1
+> 203 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -2199,6 +2199,20 @@
 
   // base import
   import { thrift } from "svelte-highlight/languages";
+</script>
+```
+
+## toml (`toml`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import toml from "svelte-highlight/languages/toml";
+
+  // base import
+  import { toml } from "svelte-highlight/languages";
 </script>
 ```
 
