@@ -165,6 +165,7 @@ exports[`Languages 1`] = `
   "qml",
   "r",
   "reasonml",
+  "rescript",
   "rib",
   "roboconf",
   "routeros",
