@@ -46,6 +46,7 @@
     "/preview-jsonc": "JSONC language preview",
     "/preview-dotenv": "dotenv language preview",
     "/preview-wgsl": "WGSL language preview",
+    "/preview-cypher": "Cypher language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
