@@ -13,6 +13,7 @@
   import { jsoncPreviewSnippets } from "@www/preview/jsonc-preview-snippets";
   import { jsonnetPreviewSnippets } from "@www/preview/jsonnet-preview-snippets";
   import { movePreviewSnippets } from "@www/preview/move-preview-snippets";
+  import { nickelPreviewSnippets } from "@www/preview/nickel-preview-snippets";
   import { nushellPreviewSnippets } from "@www/preview/nushell-preview-snippets";
   import { pklPreviewSnippets } from "@www/preview/pkl-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
@@ -41,6 +42,7 @@
   import jsonc from "svelte-highlight/languages/jsonc";
   import jsonnet from "svelte-highlight/languages/jsonnet";
   import move from "svelte-highlight/languages/move";
+  import nickel from "svelte-highlight/languages/nickel";
   import nushell from "svelte-highlight/languages/nushell";
   import pkl from "svelte-highlight/languages/pkl";
   import prisma from "svelte-highlight/languages/prisma";
@@ -59,7 +61,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel"} */
   export let language;
 
   const registry = {
@@ -88,6 +90,7 @@
     jsonnet: { lang: jsonnet, snippets: jsonnetPreviewSnippets },
     dhall: { lang: dhall, snippets: dhallPreviewSnippets },
     pkl: { lang: pkl, snippets: pklPreviewSnippets },
+    nickel: { lang: nickel, snippets: nickelPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
