@@ -32,6 +32,7 @@ exports[`Languages 1`] = `
   "cal",
   "capnproto",
   "ceylon",
+  "clarity",
   "clean",
   "clojure",
   "clojureRepl",

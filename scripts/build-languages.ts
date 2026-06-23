@@ -153,6 +153,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "vyper",
     path: `${import.meta.dir}/custom-languages/vyper.js`,
   },
+  {
+    name: "clarity",
+    moduleName: "clarity",
+    path: `${import.meta.dir}/custom-languages/clarity.js`,
+  },
 ];
 
 type LanguageEntry = {
