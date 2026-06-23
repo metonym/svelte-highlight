@@ -158,6 +158,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "clarity",
     path: `${import.meta.dir}/custom-languages/clarity.js`,
   },
+  {
+    name: "cue",
+    moduleName: "cue",
+    path: `${import.meta.dir}/custom-languages/cue.js`,
+  },
 ];
 
 type LanguageEntry = {
