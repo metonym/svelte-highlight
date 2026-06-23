@@ -20,6 +20,7 @@
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
   import { promqlPreviewSnippets } from "@www/preview/promql-preview-snippets";
   import { pugPreviewSnippets } from "@www/preview/pug-preview-snippets";
+  import { razorPreviewSnippets } from "@www/preview/razor-preview-snippets";
   import { rescriptPreviewSnippets } from "@www/preview/rescript-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
@@ -49,6 +50,7 @@
   import prisma from "svelte-highlight/languages/prisma";
   import promql from "svelte-highlight/languages/promql";
   import pug from "svelte-highlight/languages/pug";
+  import razor from "svelte-highlight/languages/razor";
   import rescript from "svelte-highlight/languages/rescript";
   import solidity from "svelte-highlight/languages/solidity";
   import starlark from "svelte-highlight/languages/starlark";
@@ -63,7 +65,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor"} */
   export let language;
 
   const registry = {
@@ -94,6 +96,7 @@
     pkl: { lang: pkl, snippets: pklPreviewSnippets },
     nickel: { lang: nickel, snippets: nickelPreviewSnippets },
     pug: { lang: pug, snippets: pugPreviewSnippets },
+    razor: { lang: razor, snippets: razorPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
