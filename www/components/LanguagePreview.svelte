@@ -5,6 +5,7 @@
   import { clarityPreviewSnippets } from "@www/preview/clarity-preview-snippets";
   import { cuePreviewSnippets } from "@www/preview/cue-preview-snippets";
   import { cypherPreviewSnippets } from "@www/preview/cypher-preview-snippets";
+  import { d2PreviewSnippets } from "@www/preview/d2-preview-snippets";
   import { dhallPreviewSnippets } from "@www/preview/dhall-preview-snippets";
   import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
@@ -39,6 +40,7 @@
   import clarity from "svelte-highlight/languages/clarity";
   import cue from "svelte-highlight/languages/cue";
   import cypher from "svelte-highlight/languages/cypher";
+  import d2 from "svelte-highlight/languages/d2";
   import dhall from "svelte-highlight/languages/dhall";
   import dotenv from "svelte-highlight/languages/dotenv";
   import fish from "svelte-highlight/languages/fish";
@@ -71,7 +73,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2"} */
   export let language;
 
   const registry = {
@@ -106,6 +108,7 @@
     v: { lang: v, snippets: vPreviewSnippets },
     odin: { lang: odin, snippets: odinPreviewSnippets },
     caddy: { lang: caddy, snippets: caddyPreviewSnippets },
+    d2: { lang: d2, snippets: d2PreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
