@@ -165,6 +165,7 @@ exports[`Languages 1`] = `
   "promql",
   "properties",
   "protobuf",
+  "pug",
   "puppet",
   "purebasic",
   "python",

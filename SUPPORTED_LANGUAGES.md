@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 226 languages exported from highlight.js@11.11.1
+> 227 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -2005,6 +2005,20 @@
 
   // base import
   import { protobuf } from "svelte-highlight/languages";
+</script>
+```
+
+## pug (`pug`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import pug from "svelte-highlight/languages/pug";
+
+  // base import
+  import { pug } from "svelte-highlight/languages";
 </script>
 ```
 
