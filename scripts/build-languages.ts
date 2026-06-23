@@ -118,6 +118,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "cypher",
     path: `${import.meta.dir}/custom-languages/cypher.js`,
   },
+  {
+    name: "promql",
+    moduleName: "promql",
+    path: `${import.meta.dir}/custom-languages/promql.js`,
+  },
 ];
 
 type LanguageEntry = {
