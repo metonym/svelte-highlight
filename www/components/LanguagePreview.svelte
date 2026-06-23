@@ -4,6 +4,7 @@
   import { clarityPreviewSnippets } from "@www/preview/clarity-preview-snippets";
   import { cuePreviewSnippets } from "@www/preview/cue-preview-snippets";
   import { cypherPreviewSnippets } from "@www/preview/cypher-preview-snippets";
+  import { dhallPreviewSnippets } from "@www/preview/dhall-preview-snippets";
   import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
@@ -30,6 +31,7 @@
   import clarity from "svelte-highlight/languages/clarity";
   import cue from "svelte-highlight/languages/cue";
   import cypher from "svelte-highlight/languages/cypher";
+  import dhall from "svelte-highlight/languages/dhall";
   import dotenv from "svelte-highlight/languages/dotenv";
   import fish from "svelte-highlight/languages/fish";
   import gleam from "svelte-highlight/languages/gleam";
@@ -55,7 +57,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall"} */
   export let language;
 
   const registry = {
@@ -82,6 +84,7 @@
     clarity: { lang: clarity, snippets: clarityPreviewSnippets },
     cue: { lang: cue, snippets: cuePreviewSnippets },
     jsonnet: { lang: jsonnet, snippets: jsonnetPreviewSnippets },
+    dhall: { lang: dhall, snippets: dhallPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
