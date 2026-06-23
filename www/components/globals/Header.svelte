@@ -57,6 +57,7 @@
     "/preview-clarity": "Clarity language preview",
     "/preview-cue": "CUE language preview",
     "/preview-jsonnet": "Jsonnet language preview",
+    "/preview-dhall": "Dhall language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
