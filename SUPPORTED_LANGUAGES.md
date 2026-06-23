@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 219 languages exported from highlight.js@11.11.1
+> 220 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -2557,6 +2557,20 @@
 
   // base import
   import { vue } from "svelte-highlight/languages";
+</script>
+```
+
+## vyper (`vyper`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import vyper from "svelte-highlight/languages/vyper";
+
+  // base import
+  import { vyper } from "svelte-highlight/languages";
 </script>
 ```
 
