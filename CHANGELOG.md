@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.12.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.12.0) - 2026-06-23
+
+**Features**
+
+- add `CopyButton`
+- add focus mode to dim/blur un-highlighted lines
+- add `HighlightStyle` for scoped themes
+- expose and document container CSS variables
+- support font size style prop in `LangTag`
+- add custom `bibtex` language
+- add custom `bicep` language
+- add custom `blade` language
+- add custom `caddy` language
+- add custom `cairo` language
+- add custom `clarity` language
+- add custom `cue` language
+- add custom `cypher` language
+- add custom `d2` language
+- add custom `dhall` language
+- add custom `dotenv` language
+- add custom `fish` language
+- add custom `gleam` language
+- add custom `groq` language
+- add custom `hcl` language
+- add custom `json5` language
+- add custom `jsonc` language
+- add custom `jsonnet` language
+- add custom `liquid` language
+- add custom `move` language
+- add custom `nickel` language
+- add custom `nushell` language
+- add custom `odin` language
+- add custom `pkl` language
+- add custom `promql` language
+- add custom `prisma` language
+- add custom `pug` language
+- add custom `razor` language
+- add custom `rescript` language
+- add custom `solidity` language
+- add custom `starlark` language
+- add custom `toml` language
+- add custom `v` language
+- add custom `vyper` language
+- add custom `wgsl` language
+- add custom `zig` language
+
 ## [7.11.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.11.0) - 2026-06-07
 
 **Features**
