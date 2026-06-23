@@ -98,6 +98,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "json5",
     path: `${import.meta.dir}/custom-languages/json5.js`,
   },
+  {
+    name: "jsonc",
+    moduleName: "jsonc",
+    path: `${import.meta.dir}/custom-languages/jsonc.js`,
+  },
 ];
 
 type LanguageEntry = {

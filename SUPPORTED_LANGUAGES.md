@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 209 languages exported from highlight.js@11.11.1
+> 210 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1141,6 +1141,20 @@
 
   // base import
   import { json5 } from "svelte-highlight/languages";
+</script>
+```
+
+## jsonc (`jsonc`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import jsonc from "svelte-highlight/languages/jsonc";
+
+  // base import
+  import { jsonc } from "svelte-highlight/languages";
 </script>
 ```
 
