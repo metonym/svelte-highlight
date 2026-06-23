@@ -129,6 +129,7 @@ exports[`Languages 1`] = `
   "mojolicious",
   "monkey",
   "moonscript",
+  "move",
   "n1ql",
   "nestedtext",
   "nginx",

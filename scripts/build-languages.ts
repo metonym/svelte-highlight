@@ -138,6 +138,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "starlark",
     path: `${import.meta.dir}/custom-languages/starlark.js`,
   },
+  {
+    name: "move",
+    moduleName: "move",
+    path: `${import.meta.dir}/custom-languages/move.js`,
+  },
 ];
 
 type LanguageEntry = {

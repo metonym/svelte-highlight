@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 217 languages exported from highlight.js@11.11.1
+> 218 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1551,6 +1551,20 @@
 
   // base import
   import { moonscript } from "svelte-highlight/languages";
+</script>
+```
+
+## move (`move`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import move from "svelte-highlight/languages/move";
+
+  // base import
+  import { move } from "svelte-highlight/languages";
 </script>
 ```
 
