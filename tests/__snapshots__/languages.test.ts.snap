@@ -95,6 +95,7 @@ exports[`Languages 1`] = `
   "javascript",
   "jbossCli",
   "json",
+  "json5",
   "julia",
   "juliaRepl",
   "kotlin",

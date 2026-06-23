@@ -93,6 +93,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "blade",
     path: `${import.meta.dir}/custom-languages/blade.js`,
   },
+  {
+    name: "json5",
+    moduleName: "json5",
+    path: `${import.meta.dir}/custom-languages/json5.js`,
+  },
 ];
 
 type LanguageEntry = {
