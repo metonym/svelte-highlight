@@ -19,6 +19,7 @@
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
   import { promqlPreviewSnippets } from "@www/preview/promql-preview-snippets";
+  import { pugPreviewSnippets } from "@www/preview/pug-preview-snippets";
   import { rescriptPreviewSnippets } from "@www/preview/rescript-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
@@ -47,6 +48,7 @@
   import pkl from "svelte-highlight/languages/pkl";
   import prisma from "svelte-highlight/languages/prisma";
   import promql from "svelte-highlight/languages/promql";
+  import pug from "svelte-highlight/languages/pug";
   import rescript from "svelte-highlight/languages/rescript";
   import solidity from "svelte-highlight/languages/solidity";
   import starlark from "svelte-highlight/languages/starlark";
@@ -61,7 +63,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug"} */
   export let language;
 
   const registry = {
@@ -91,6 +93,7 @@
     dhall: { lang: dhall, snippets: dhallPreviewSnippets },
     pkl: { lang: pkl, snippets: pklPreviewSnippets },
     nickel: { lang: nickel, snippets: nickelPreviewSnippets },
+    pug: { lang: pug, snippets: pugPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
