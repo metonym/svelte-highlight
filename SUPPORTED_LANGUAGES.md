@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 232 languages exported from highlight.js@11.11.1
+> 233 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -253,6 +253,20 @@
 
   // base import
   import { basic } from "svelte-highlight/languages";
+</script>
+```
+
+## bibtex (`bibtex`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import bibtex from "svelte-highlight/languages/bibtex";
+
+  // base import
+  import { bibtex } from "svelte-highlight/languages";
 </script>
 ```
 

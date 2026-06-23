@@ -23,6 +23,7 @@ exports[`Languages 1`] = `
   "axapta",
   "bash",
   "basic",
+  "bibtex",
   "bicep",
   "blade",
   "bnf",
