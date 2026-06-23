@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 212 languages exported from highlight.js@11.11.1
+> 213 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -495,6 +495,20 @@
 
   // base import
   import { css } from "svelte-highlight/languages";
+</script>
+```
+
+## cypher (`cypher`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import cypher from "svelte-highlight/languages/cypher";
+
+  // base import
+  import { cypher } from "svelte-highlight/languages";
 </script>
 ```
 
