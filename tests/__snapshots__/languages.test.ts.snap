@@ -153,6 +153,7 @@ exports[`Languages 1`] = `
   "pgsql",
   "php",
   "phpTemplate",
+  "pkl",
   "plaintext",
   "pony",
   "powershell",
