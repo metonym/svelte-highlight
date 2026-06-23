@@ -88,6 +88,7 @@ exports[`Languages 1`] = `
   "gradle",
   "graphql",
   "groovy",
+  "groq",
   "haml",
   "handlebars",
   "haskell",

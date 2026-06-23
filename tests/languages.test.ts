@@ -6,7 +6,7 @@ test("Languages", () => {
 
   // @ts-expect-error
   expect(languages.default).toBeUndefined();
-  expect(languageNames.length).toEqual(233);
+  expect(languageNames.length).toEqual(234);
   expect(languageNames).toMatchSnapshot();
 });
 
