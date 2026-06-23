@@ -213,6 +213,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "d2",
     path: `${import.meta.dir}/custom-languages/d2.js`,
   },
+  {
+    name: "bibtex",
+    moduleName: "bibtex",
+    path: `${import.meta.dir}/custom-languages/bibtex.js`,
+  },
 ];
 
 type LanguageEntry = {
