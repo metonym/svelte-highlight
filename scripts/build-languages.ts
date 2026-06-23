@@ -208,6 +208,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "caddy",
     path: `${import.meta.dir}/custom-languages/caddy.js`,
   },
+  {
+    name: "d2",
+    moduleName: "d2",
+    path: `${import.meta.dir}/custom-languages/d2.js`,
+  },
 ];
 
 type LanguageEntry = {
