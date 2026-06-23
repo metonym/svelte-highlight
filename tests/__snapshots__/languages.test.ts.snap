@@ -146,6 +146,7 @@ exports[`Languages 1`] = `
   "nushell",
   "objectivec",
   "ocaml",
+  "odin",
   "openscad",
   "oxygene",
   "parser3",
