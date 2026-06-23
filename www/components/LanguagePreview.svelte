@@ -1,5 +1,6 @@
 <script>
   import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
+  import { caddyPreviewSnippets } from "@www/preview/caddy-preview-snippets";
   import { cairoPreviewSnippets } from "@www/preview/cairo-preview-snippets";
   import { clarityPreviewSnippets } from "@www/preview/clarity-preview-snippets";
   import { cuePreviewSnippets } from "@www/preview/cue-preview-snippets";
@@ -33,6 +34,7 @@
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
   import bicep from "svelte-highlight/languages/bicep";
+  import caddy from "svelte-highlight/languages/caddy";
   import cairo from "svelte-highlight/languages/cairo";
   import clarity from "svelte-highlight/languages/clarity";
   import cue from "svelte-highlight/languages/cue";
@@ -69,7 +71,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy"} */
   export let language;
 
   const registry = {
@@ -103,6 +105,7 @@
     razor: { lang: razor, snippets: razorPreviewSnippets },
     v: { lang: v, snippets: vPreviewSnippets },
     odin: { lang: odin, snippets: odinPreviewSnippets },
+    caddy: { lang: caddy, snippets: caddyPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
