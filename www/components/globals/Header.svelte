@@ -62,6 +62,7 @@
     "/preview-nickel": "Nickel language preview",
     "/preview-pug": "Pug language preview",
     "/preview-razor": "Razor language preview",
+    "/preview-v": "V language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
