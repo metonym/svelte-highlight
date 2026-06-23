@@ -52,6 +52,7 @@
     "/preview-rescript": "ReScript language preview",
     "/preview-starlark": "Starlark language preview",
     "/preview-move": "Move language preview",
+    "/preview-cairo": "Cairo language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");

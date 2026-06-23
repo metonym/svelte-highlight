@@ -1,5 +1,6 @@
 <script>
   import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
+  import { cairoPreviewSnippets } from "@www/preview/cairo-preview-snippets";
   import { cypherPreviewSnippets } from "@www/preview/cypher-preview-snippets";
   import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
@@ -21,6 +22,7 @@
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
   import bicep from "svelte-highlight/languages/bicep";
+  import cairo from "svelte-highlight/languages/cairo";
   import cypher from "svelte-highlight/languages/cypher";
   import dotenv from "svelte-highlight/languages/dotenv";
   import fish from "svelte-highlight/languages/fish";
@@ -45,7 +47,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo"} */
   export let language;
 
   const registry = {
@@ -67,6 +69,7 @@
     rescript: { lang: rescript, snippets: rescriptPreviewSnippets },
     starlark: { lang: starlark, snippets: starlarkPreviewSnippets },
     move: { lang: move, snippets: movePreviewSnippets },
+    cairo: { lang: cairo, snippets: cairoPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
