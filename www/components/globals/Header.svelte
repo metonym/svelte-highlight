@@ -54,6 +54,7 @@
     "/preview-move": "Move language preview",
     "/preview-cairo": "Cairo language preview",
     "/preview-vyper": "Vyper language preview",
+    "/preview-clarity": "Clarity language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
