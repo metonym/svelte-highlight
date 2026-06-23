@@ -1,4 +1,5 @@
 <script>
+  import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
@@ -12,6 +13,7 @@
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
+  import dotenv from "svelte-highlight/languages/dotenv";
   import fish from "svelte-highlight/languages/fish";
   import gleam from "svelte-highlight/languages/gleam";
   import hcl from "svelte-highlight/languages/hcl";
@@ -29,7 +31,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv"} */
   export let language;
 
   const registry = {
@@ -43,6 +45,7 @@
     gleam: { lang: gleam, snippets: gleamPreviewSnippets },
     json5: { lang: json5, snippets: json5PreviewSnippets },
     jsonc: { lang: jsonc, snippets: jsoncPreviewSnippets },
+    dotenv: { lang: dotenv, snippets: dotenvPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
