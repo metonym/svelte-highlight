@@ -143,6 +143,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "move",
     path: `${import.meta.dir}/custom-languages/move.js`,
   },
+  {
+    name: "cairo",
+    moduleName: "cairo",
+    path: `${import.meta.dir}/custom-languages/cairo.js`,
+  },
 ];
 
 type LanguageEntry = {
