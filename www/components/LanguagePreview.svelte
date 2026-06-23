@@ -15,6 +15,7 @@
   import { movePreviewSnippets } from "@www/preview/move-preview-snippets";
   import { nickelPreviewSnippets } from "@www/preview/nickel-preview-snippets";
   import { nushellPreviewSnippets } from "@www/preview/nushell-preview-snippets";
+  import { odinPreviewSnippets } from "@www/preview/odin-preview-snippets";
   import { pklPreviewSnippets } from "@www/preview/pkl-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
@@ -47,6 +48,7 @@
   import move from "svelte-highlight/languages/move";
   import nickel from "svelte-highlight/languages/nickel";
   import nushell from "svelte-highlight/languages/nushell";
+  import odin from "svelte-highlight/languages/odin";
   import pkl from "svelte-highlight/languages/pkl";
   import prisma from "svelte-highlight/languages/prisma";
   import promql from "svelte-highlight/languages/promql";
@@ -67,7 +69,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin"} */
   export let language;
 
   const registry = {
@@ -100,6 +102,7 @@
     pug: { lang: pug, snippets: pugPreviewSnippets },
     razor: { lang: razor, snippets: razorPreviewSnippets },
     v: { lang: v, snippets: vPreviewSnippets },
+    odin: { lang: odin, snippets: odinPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
