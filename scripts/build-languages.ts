@@ -193,6 +193,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "razor",
     path: `${import.meta.dir}/custom-languages/razor.js`,
   },
+  {
+    name: "v",
+    moduleName: "v",
+    path: `${import.meta.dir}/custom-languages/v.js`,
+  },
 ];
 
 type LanguageEntry = {
