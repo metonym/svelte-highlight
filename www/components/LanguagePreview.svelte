@@ -2,6 +2,7 @@
   import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
   import { cairoPreviewSnippets } from "@www/preview/cairo-preview-snippets";
   import { clarityPreviewSnippets } from "@www/preview/clarity-preview-snippets";
+  import { cuePreviewSnippets } from "@www/preview/cue-preview-snippets";
   import { cypherPreviewSnippets } from "@www/preview/cypher-preview-snippets";
   import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
@@ -26,6 +27,7 @@
   import bicep from "svelte-highlight/languages/bicep";
   import cairo from "svelte-highlight/languages/cairo";
   import clarity from "svelte-highlight/languages/clarity";
+  import cue from "svelte-highlight/languages/cue";
   import cypher from "svelte-highlight/languages/cypher";
   import dotenv from "svelte-highlight/languages/dotenv";
   import fish from "svelte-highlight/languages/fish";
@@ -51,7 +53,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue"} */
   export let language;
 
   const registry = {
@@ -76,6 +78,7 @@
     cairo: { lang: cairo, snippets: cairoPreviewSnippets },
     vyper: { lang: vyper, snippets: vyperPreviewSnippets },
     clarity: { lang: clarity, snippets: clarityPreviewSnippets },
+    cue: { lang: cue, snippets: cuePreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
