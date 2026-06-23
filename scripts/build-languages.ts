@@ -188,6 +188,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "pug",
     path: `${import.meta.dir}/custom-languages/pug.js`,
   },
+  {
+    name: "razor",
+    moduleName: "razor",
+    path: `${import.meta.dir}/custom-languages/razor.js`,
+  },
 ];
 
 type LanguageEntry = {
