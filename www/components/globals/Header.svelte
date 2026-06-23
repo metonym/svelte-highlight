@@ -49,6 +49,7 @@
     "/preview-cypher": "Cypher language preview",
     "/preview-promql": "PromQL language preview",
     "/preview-bicep": "Bicep language preview",
+    "/preview-rescript": "ReScript language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
