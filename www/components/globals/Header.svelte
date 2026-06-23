@@ -63,6 +63,7 @@
     "/preview-pug": "Pug language preview",
     "/preview-razor": "Razor language preview",
     "/preview-v": "V language preview",
+    "/preview-odin": "Odin language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
