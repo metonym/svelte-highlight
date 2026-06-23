@@ -198,6 +198,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "v",
     path: `${import.meta.dir}/custom-languages/v.js`,
   },
+  {
+    name: "odin",
+    moduleName: "odin",
+    path: `${import.meta.dir}/custom-languages/odin.js`,
+  },
 ];
 
 type LanguageEntry = {

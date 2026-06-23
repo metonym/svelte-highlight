@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 229 languages exported from highlight.js@11.11.1
+> 230 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1771,6 +1771,20 @@
 
   // base import
   import { ocaml } from "svelte-highlight/languages";
+</script>
+```
+
+## odin (`odin`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import odin from "svelte-highlight/languages/odin";
+
+  // base import
+  import { odin } from "svelte-highlight/languages";
 </script>
 ```
 
