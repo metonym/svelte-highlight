@@ -43,6 +43,7 @@ exports[`Languages 1`] = `
   "csharp",
   "csp",
   "css",
+  "cypher",
   "d",
   "dart",
   "delphi",

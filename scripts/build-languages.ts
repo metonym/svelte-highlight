@@ -113,6 +113,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "wgsl",
     path: `${import.meta.dir}/custom-languages/wgsl.js`,
   },
+  {
+    name: "cypher",
+    moduleName: "cypher",
+    path: `${import.meta.dir}/custom-languages/cypher.js`,
+  },
 ];
 
 type LanguageEntry = {
