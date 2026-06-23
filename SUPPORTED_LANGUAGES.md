@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 227 languages exported from highlight.js@11.11.1
+> 228 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -2103,6 +2103,20 @@
 
   // base import
   import { r } from "svelte-highlight/languages";
+</script>
+```
+
+## razor (`razor`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import razor from "svelte-highlight/languages/razor";
+
+  // base import
+  import { razor } from "svelte-highlight/languages";
 </script>
 ```
 
