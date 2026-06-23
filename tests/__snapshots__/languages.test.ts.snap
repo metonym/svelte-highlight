@@ -28,6 +28,7 @@ exports[`Languages 1`] = `
   "bnf",
   "brainfuck",
   "c",
+  "cairo",
   "cal",
   "capnproto",
   "ceylon",

@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 218 languages exported from highlight.js@11.11.1
+> 219 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -317,6 +317,20 @@
 
   // base import
   import { c } from "svelte-highlight/languages";
+</script>
+```
+
+## cairo (`cairo`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import cairo from "svelte-highlight/languages/cairo";
+
+  // base import
+  import { cairo } from "svelte-highlight/languages";
 </script>
 ```
 
