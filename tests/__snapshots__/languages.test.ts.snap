@@ -138,6 +138,7 @@ exports[`Languages 1`] = `
   "n1ql",
   "nestedtext",
   "nginx",
+  "nickel",
   "nim",
   "nix",
   "nodeRepl",
