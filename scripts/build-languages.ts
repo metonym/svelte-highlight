@@ -173,6 +173,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "dhall",
     path: `${import.meta.dir}/custom-languages/dhall.js`,
   },
+  {
+    name: "pkl",
+    moduleName: "pkl",
+    path: `${import.meta.dir}/custom-languages/pkl.js`,
+  },
 ];
 
 type LanguageEntry = {
