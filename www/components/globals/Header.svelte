@@ -53,6 +53,7 @@
     "/preview-starlark": "Starlark language preview",
     "/preview-move": "Move language preview",
     "/preview-cairo": "Cairo language preview",
+    "/preview-vyper": "Vyper language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
