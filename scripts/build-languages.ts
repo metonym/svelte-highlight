@@ -103,6 +103,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "jsonc",
     path: `${import.meta.dir}/custom-languages/jsonc.js`,
   },
+  {
+    name: "dotenv",
+    moduleName: "dotenv",
+    path: `${import.meta.dir}/custom-languages/dotenv.js`,
+  },
 ];
 
 type LanguageEntry = {

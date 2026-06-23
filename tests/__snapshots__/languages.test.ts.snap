@@ -51,6 +51,7 @@ exports[`Languages 1`] = `
   "dns",
   "dockerfile",
   "dos",
+  "dotenv",
   "dsconfig",
   "dts",
   "dust",
