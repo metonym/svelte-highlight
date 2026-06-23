@@ -103,6 +103,7 @@ exports[`Languages 1`] = `
   "json",
   "json5",
   "jsonc",
+  "jsonnet",
   "julia",
   "juliaRepl",
   "kotlin",

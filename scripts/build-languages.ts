@@ -163,6 +163,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "cue",
     path: `${import.meta.dir}/custom-languages/cue.js`,
   },
+  {
+    name: "jsonnet",
+    moduleName: "jsonnet",
+    path: `${import.meta.dir}/custom-languages/jsonnet.js`,
+  },
 ];
 
 type LanguageEntry = {
