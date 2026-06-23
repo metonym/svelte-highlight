@@ -108,6 +108,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "dotenv",
     path: `${import.meta.dir}/custom-languages/dotenv.js`,
   },
+  {
+    name: "wgsl",
+    moduleName: "wgsl",
+    path: `${import.meta.dir}/custom-languages/wgsl.js`,
+  },
 ];
 
 type LanguageEntry = {
