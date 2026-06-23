@@ -17,6 +17,7 @@
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
+  import { vyperPreviewSnippets } from "@www/preview/vyper-preview-snippets";
   import { wgslPreviewSnippets } from "@www/preview/wgsl-preview-snippets";
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
@@ -38,6 +39,7 @@
   import solidity from "svelte-highlight/languages/solidity";
   import starlark from "svelte-highlight/languages/starlark";
   import toml from "svelte-highlight/languages/toml";
+  import vyper from "svelte-highlight/languages/vyper";
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
@@ -47,7 +49,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper"} */
   export let language;
 
   const registry = {
@@ -70,6 +72,7 @@
     starlark: { lang: starlark, snippets: starlarkPreviewSnippets },
     move: { lang: move, snippets: movePreviewSnippets },
     cairo: { lang: cairo, snippets: cairoPreviewSnippets },
+    vyper: { lang: vyper, snippets: vyperPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
