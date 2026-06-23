@@ -10,6 +10,7 @@
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
+  import { wgslPreviewSnippets } from "@www/preview/wgsl-preview-snippets";
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
@@ -23,6 +24,7 @@
   import prisma from "svelte-highlight/languages/prisma";
   import solidity from "svelte-highlight/languages/solidity";
   import toml from "svelte-highlight/languages/toml";
+  import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
   import dracula from "svelte-highlight/styles/dracula";
@@ -31,7 +33,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl"} */
   export let language;
 
   const registry = {
@@ -46,6 +48,7 @@
     json5: { lang: json5, snippets: json5PreviewSnippets },
     jsonc: { lang: jsonc, snippets: jsoncPreviewSnippets },
     dotenv: { lang: dotenv, snippets: dotenvPreviewSnippets },
+    wgsl: { lang: wgsl, snippets: wgslPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
