@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 220 languages exported from highlight.js@11.11.1
+> 221 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -367,6 +367,20 @@
 
   // base import
   import { ceylon } from "svelte-highlight/languages";
+</script>
+```
+
+## clarity (`clarity`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import clarity from "svelte-highlight/languages/clarity";
+
+  // base import
+  import { clarity } from "svelte-highlight/languages";
 </script>
 ```
 
