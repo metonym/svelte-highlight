@@ -9,6 +9,7 @@
   import { nushellPreviewSnippets } from "@www/preview/nushell-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
+  import { promqlPreviewSnippets } from "@www/preview/promql-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
   import { wgslPreviewSnippets } from "@www/preview/wgsl-preview-snippets";
@@ -24,6 +25,7 @@
   import jsonc from "svelte-highlight/languages/jsonc";
   import nushell from "svelte-highlight/languages/nushell";
   import prisma from "svelte-highlight/languages/prisma";
+  import promql from "svelte-highlight/languages/promql";
   import solidity from "svelte-highlight/languages/solidity";
   import toml from "svelte-highlight/languages/toml";
   import wgsl from "svelte-highlight/languages/wgsl";
@@ -35,7 +37,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql"} */
   export let language;
 
   const registry = {
@@ -52,6 +54,7 @@
     dotenv: { lang: dotenv, snippets: dotenvPreviewSnippets },
     wgsl: { lang: wgsl, snippets: wgslPreviewSnippets },
     cypher: { lang: cypher, snippets: cypherPreviewSnippets },
+    promql: { lang: promql, snippets: promqlPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
