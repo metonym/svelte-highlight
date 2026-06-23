@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 213 languages exported from highlight.js@11.11.1
+> 214 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1841,6 +1841,20 @@
 
   // base import
   import { prolog } from "svelte-highlight/languages";
+</script>
+```
+
+## promql (`promql`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import promql from "svelte-highlight/languages/promql";
+
+  // base import
+  import { promql } from "svelte-highlight/languages";
 </script>
 ```
 

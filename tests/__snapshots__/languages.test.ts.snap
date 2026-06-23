@@ -153,6 +153,7 @@ exports[`Languages 1`] = `
   "processing",
   "profile",
   "prolog",
+  "promql",
   "properties",
   "protobuf",
   "puppet",
