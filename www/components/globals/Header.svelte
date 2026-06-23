@@ -48,6 +48,7 @@
     "/preview-wgsl": "WGSL language preview",
     "/preview-cypher": "Cypher language preview",
     "/preview-promql": "PromQL language preview",
+    "/preview-bicep": "Bicep language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");

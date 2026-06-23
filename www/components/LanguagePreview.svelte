@@ -1,4 +1,5 @@
 <script>
+  import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
   import { cypherPreviewSnippets } from "@www/preview/cypher-preview-snippets";
   import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
@@ -16,6 +17,7 @@
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
+  import bicep from "svelte-highlight/languages/bicep";
   import cypher from "svelte-highlight/languages/cypher";
   import dotenv from "svelte-highlight/languages/dotenv";
   import fish from "svelte-highlight/languages/fish";
@@ -37,7 +39,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep"} */
   export let language;
 
   const registry = {
@@ -55,6 +57,7 @@
     wgsl: { lang: wgsl, snippets: wgslPreviewSnippets },
     cypher: { lang: cypher, snippets: cypherPreviewSnippets },
     promql: { lang: promql, snippets: promqlPreviewSnippets },
+    bicep: { lang: bicep, snippets: bicepPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
