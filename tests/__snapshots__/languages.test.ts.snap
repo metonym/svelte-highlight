@@ -205,6 +205,7 @@ exports[`Languages 1`] = `
   "vim",
   "vue",
   "wasm",
+  "wgsl",
   "wren",
   "x86asm",
   "xl",
