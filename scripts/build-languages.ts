@@ -148,6 +148,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "cairo",
     path: `${import.meta.dir}/custom-languages/cairo.js`,
   },
+  {
+    name: "vyper",
+    moduleName: "vyper",
+    path: `${import.meta.dir}/custom-languages/vyper.js`,
+  },
 ];
 
 type LanguageEntry = {
