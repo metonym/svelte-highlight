@@ -1,4 +1,5 @@
 <script>
+  import { bibtexPreviewSnippets } from "@www/preview/bibtex-preview-snippets";
   import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
   import { caddyPreviewSnippets } from "@www/preview/caddy-preview-snippets";
   import { cairoPreviewSnippets } from "@www/preview/cairo-preview-snippets";
@@ -34,6 +35,7 @@
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
+  import bibtex from "svelte-highlight/languages/bibtex";
   import bicep from "svelte-highlight/languages/bicep";
   import caddy from "svelte-highlight/languages/caddy";
   import cairo from "svelte-highlight/languages/cairo";
@@ -73,7 +75,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex"} */
   export let language;
 
   const registry = {
@@ -109,6 +111,7 @@
     odin: { lang: odin, snippets: odinPreviewSnippets },
     caddy: { lang: caddy, snippets: caddyPreviewSnippets },
     d2: { lang: d2, snippets: d2PreviewSnippets },
+    bibtex: { lang: bibtex, snippets: bibtexPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);

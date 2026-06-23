@@ -66,6 +66,7 @@
     "/preview-odin": "Odin language preview",
     "/preview-caddy": "Caddyfile language preview",
     "/preview-d2": "D2 language preview",
+    "/preview-bibtex": "BibTeX language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
