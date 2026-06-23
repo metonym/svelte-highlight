@@ -186,6 +186,7 @@ exports[`Languages 1`] = `
   "sqf",
   "sql",
   "stan",
+  "starlark",
   "stata",
   "step21",
   "stylus",
