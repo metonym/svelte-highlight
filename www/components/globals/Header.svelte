@@ -43,6 +43,7 @@
     "/preview-nushell": "Nushell language preview",
     "/preview-gleam": "Gleam language preview",
     "/preview-json5": "JSON5 language preview",
+    "/preview-jsonc": "JSONC language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");

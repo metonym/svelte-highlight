@@ -3,6 +3,7 @@
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
   import { json5PreviewSnippets } from "@www/preview/json5-preview-snippets";
+  import { jsoncPreviewSnippets } from "@www/preview/jsonc-preview-snippets";
   import { nushellPreviewSnippets } from "@www/preview/nushell-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
@@ -15,6 +16,7 @@
   import gleam from "svelte-highlight/languages/gleam";
   import hcl from "svelte-highlight/languages/hcl";
   import json5 from "svelte-highlight/languages/json5";
+  import jsonc from "svelte-highlight/languages/jsonc";
   import nushell from "svelte-highlight/languages/nushell";
   import prisma from "svelte-highlight/languages/prisma";
   import solidity from "svelte-highlight/languages/solidity";
@@ -27,7 +29,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc"} */
   export let language;
 
   const registry = {
@@ -40,6 +42,7 @@
     nushell: { lang: nushell, snippets: nushellPreviewSnippets },
     gleam: { lang: gleam, snippets: gleamPreviewSnippets },
     json5: { lang: json5, snippets: json5PreviewSnippets },
+    jsonc: { lang: jsonc, snippets: jsoncPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
