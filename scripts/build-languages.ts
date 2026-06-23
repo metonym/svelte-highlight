@@ -133,6 +133,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "rescript",
     path: `${import.meta.dir}/custom-languages/rescript.js`,
   },
+  {
+    name: "starlark",
+    moduleName: "starlark",
+    path: `${import.meta.dir}/custom-languages/starlark.js`,
+  },
 ];
 
 type LanguageEntry = {
