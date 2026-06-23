@@ -128,6 +128,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "bicep",
     path: `${import.meta.dir}/custom-languages/bicep.js`,
   },
+  {
+    name: "rescript",
+    moduleName: "rescript",
+    path: `${import.meta.dir}/custom-languages/rescript.js`,
+  },
 ];
 
 type LanguageEntry = {
