@@ -203,6 +203,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "odin",
     path: `${import.meta.dir}/custom-languages/odin.js`,
   },
+  {
+    name: "caddy",
+    moduleName: "caddy",
+    path: `${import.meta.dir}/custom-languages/caddy.js`,
+  },
 ];
 
 type LanguageEntry = {
