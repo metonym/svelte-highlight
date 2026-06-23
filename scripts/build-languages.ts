@@ -183,6 +183,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "nickel",
     path: `${import.meta.dir}/custom-languages/nickel.js`,
   },
+  {
+    name: "pug",
+    moduleName: "pug",
+    path: `${import.meta.dir}/custom-languages/pug.js`,
+  },
 ];
 
 type LanguageEntry = {

@@ -1,0 +1,50 @@
+const PUG_KEYWORDS =
+  "if else unless case when default each for in while block extends include append prepend mixin yield";
+
+/** @param {import("highlight.js").HLJSApi} hljs */
+function definePug(hljs) {
+  const INTERPOLATION = {
+    className: "subst",
+    begin: /[#!]\{/,
+    end: /\}/,
+    relevance: 0,
+  };
+
+  const ATTRIBUTES = {
+    className: "attr",
+    begin: /\(/,
+    end: /\)/,
+    contains: [hljs.QUOTE_STRING_MODE, hljs.APOS_STRING_MODE, INTERPOLATION],
+    relevance: 0,
+  };
+
+  return {
+    name: "Pug",
+    aliases: ["pug", "jade"],
+    case_insensitive: true,
+    keywords: { keyword: PUG_KEYWORDS },
+    contains: [
+      hljs.COMMENT(/^\s*\/\/-/, /$/),
+      { className: "meta", begin: /^\s*doctype\b/, end: /$/ },
+      // tag with optional id/class shorthand at line start
+      {
+        begin: /^\s*(?=[a-zA-Z])/,
+        contains: [{ className: "selector-tag", begin: /[a-zA-Z][\w:-]*/ }],
+        relevance: 0,
+      },
+      { className: "selector-id", begin: /#[\w-]+/ },
+      { className: "selector-class", begin: /\.[\w-]+/ },
+      { className: "keyword", begin: /\+[a-zA-Z][\w-]*/ },
+      ATTRIBUTES,
+      INTERPOLATION,
+    ],
+  };
+}
+
+/** @type {import("highlight.js").LanguageFn} */
+function register(hljs) {
+  return definePug(hljs);
+}
+
+export const pug = { name: "pug", register };
+export default pug;
