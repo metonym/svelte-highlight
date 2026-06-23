@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 214 languages exported from highlight.js@11.11.1
+> 215 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -253,6 +253,20 @@
 
   // base import
   import { basic } from "svelte-highlight/languages";
+</script>
+```
+
+## bicep (`bicep`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import bicep from "svelte-highlight/languages/bicep";
+
+  // base import
+  import { bicep } from "svelte-highlight/languages";
 </script>
 ```
 

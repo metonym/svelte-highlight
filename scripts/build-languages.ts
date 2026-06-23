@@ -123,6 +123,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "promql",
     path: `${import.meta.dir}/custom-languages/promql.js`,
   },
+  {
+    name: "bicep",
+    moduleName: "bicep",
+    path: `${import.meta.dir}/custom-languages/bicep.js`,
+  },
 ];
 
 type LanguageEntry = {
