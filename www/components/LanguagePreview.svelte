@@ -11,6 +11,7 @@
   import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
+  import { groqPreviewSnippets } from "@www/preview/groq-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
   import { json5PreviewSnippets } from "@www/preview/json5-preview-snippets";
   import { jsoncPreviewSnippets } from "@www/preview/jsonc-preview-snippets";
@@ -47,6 +48,7 @@
   import dotenv from "svelte-highlight/languages/dotenv";
   import fish from "svelte-highlight/languages/fish";
   import gleam from "svelte-highlight/languages/gleam";
+  import groq from "svelte-highlight/languages/groq";
   import hcl from "svelte-highlight/languages/hcl";
   import json5 from "svelte-highlight/languages/json5";
   import jsonc from "svelte-highlight/languages/jsonc";
@@ -75,7 +77,7 @@
   import horizonDark from "svelte-highlight/styles/horizon-dark";
   import nord from "svelte-highlight/styles/nord";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex"} */
   export let language;
 
   const registry = {
@@ -90,6 +92,7 @@
     json5: { lang: json5, snippets: json5PreviewSnippets },
     jsonc: { lang: jsonc, snippets: jsoncPreviewSnippets },
     dotenv: { lang: dotenv, snippets: dotenvPreviewSnippets },
+    groq: { lang: groq, snippets: groqPreviewSnippets },
     wgsl: { lang: wgsl, snippets: wgslPreviewSnippets },
     cypher: { lang: cypher, snippets: cypherPreviewSnippets },
     promql: { lang: promql, snippets: promqlPreviewSnippets },
