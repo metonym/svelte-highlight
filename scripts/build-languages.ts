@@ -218,6 +218,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "bibtex",
     path: `${import.meta.dir}/custom-languages/bibtex.js`,
   },
+  {
+    name: "groq",
+    moduleName: "groq",
+    path: `${import.meta.dir}/custom-languages/groq.js`,
+  },
 ];
 
 type LanguageEntry = {
