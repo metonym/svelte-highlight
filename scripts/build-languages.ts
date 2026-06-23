@@ -168,6 +168,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "jsonnet",
     path: `${import.meta.dir}/custom-languages/jsonnet.js`,
   },
+  {
+    name: "dhall",
+    moduleName: "dhall",
+    path: `${import.meta.dir}/custom-languages/dhall.js`,
+  },
 ];
 
 type LanguageEntry = {

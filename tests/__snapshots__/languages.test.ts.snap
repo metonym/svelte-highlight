@@ -51,6 +51,7 @@ exports[`Languages 1`] = `
   "d",
   "dart",
   "delphi",
+  "dhall",
   "diff",
   "django",
   "dns",
