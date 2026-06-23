@@ -178,6 +178,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "pkl",
     path: `${import.meta.dir}/custom-languages/pkl.js`,
   },
+  {
+    name: "nickel",
+    moduleName: "nickel",
+    path: `${import.meta.dir}/custom-languages/nickel.js`,
+  },
 ];
 
 type LanguageEntry = {
