@@ -7,3 +7,4 @@ export { default as HighlightEditable } from "./HighlightEditable.svelte";
 export { default as HighlightStyle } from "./HighlightStyle.svelte";
 export { default as HighlightSvelte } from "./HighlightSvelte.svelte";
 export { default as LineNumbers } from "./LineNumbers.svelte";
+export { loadLanguage } from "./load-language.js";
