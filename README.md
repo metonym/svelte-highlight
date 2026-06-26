@@ -1051,6 +1051,71 @@ Set `speed` (milliseconds per character) and pause with `play`. Turn `play` back
 
 With `prefers-reduced-motion`, the full block shows immediately and `on:done` runs right away. Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
 
+## Terminal Output
+
+Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) escape codes. Colors, bold, dim, italic, and underline become styled HTML. The parser is separate from highlight.js, so reach for it with build logs, CLI output, and test runners.
+
+```svelte
+<script>
+  import { AnsiOutput } from "svelte-highlight";
+
+  // Raw program output, escape codes included.
+  const text = "\x1b[32m✓\x1b[0m build succeeded \x1b[2m(1.2s)\x1b[0m";
+</script>
+
+<AnsiOutput {text} />
+```
+
+Malformed or unsupported escape sequences are dropped. Nothing throws.
+
+### Theming the palette
+
+Pass `--ansi-*` style props to recolor the output. The 16 base colors, default foreground and background, and bold/dim weight and opacity all come from CSS variables with hex fallbacks:
+
+```svelte
+<AnsiOutput
+  {text}
+  --ansi-background="#0d1117"
+  --ansi-red="#ff7b72"
+  --ansi-green="#3fb950"
+/>
+```
+
+256-color and 24-bit truecolor codes resolve to RGB.
+
+### Readable colors
+
+With `autoContrast` on (the default), spans that set a background get a readable foreground. If the chosen text color would disappear on that background (white on white, for example), it flips to black or white, whichever reads better. Only spans with a background are adjusted. Set `autoContrast={false}` to keep the ANSI colors as-is.
+
+```svelte
+<AnsiOutput {text} autoContrast={false} />
+```
+
+### Pairing with `CodeWindow`
+
+Put `AnsiOutput` inside `CodeWindow variant="terminal"` for the prompt and title bar:
+
+```svelte
+<script>
+  import { AnsiOutput, CodeWindow } from "svelte-highlight";
+
+  const text = "\x1b[1;32m$\x1b[0m npm run build";
+</script>
+
+<CodeWindow variant="terminal" title="bash">
+  <AnsiOutput {text} />
+</CodeWindow>
+```
+
+Call `parseAnsi` directly if you need the segments yourself:
+
+```js
+import { parseAnsi } from "svelte-highlight";
+
+parseAnsi("\x1b[31merror\x1b[0m");
+// => [{ text: "error", fg: { name: "red" } }]
+```
+
 ## Component API
 
 ### `Highlight`
@@ -1136,6 +1201,17 @@ With `prefers-reduced-motion`, the full block shows immediately and `on:done` ru
 | title   | `string`                           | `""`          |
 
 `$$restProps` are forwarded to the top-level `div` element.
+
+### `AnsiOutput`
+
+#### Props
+
+| Name         | Type      | Default value  |
+| :----------- | :-------- | :------------- |
+| text         | `string`  | N/A (required) |
+| autoContrast | `boolean` | `true`         |
+
+`$$restProps` are forwarded to the top-level `pre` element.
 
 ### `HighlightSvelte`
 

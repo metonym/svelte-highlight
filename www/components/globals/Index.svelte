@@ -1,4 +1,5 @@
 <script>
+  import AnsiOutputExamples from "@components/AnsiOutput/Examples.svelte";
   import CodeSnippet from "@components/CodeSnippet.svelte";
   import CodeWindowPreview from "@components/CodeWindowPreview.svelte";
   import CopyButtonBasic from "@components/CopyButton/Basic.svelte";
@@ -514,6 +515,29 @@
     />
   </Column>
   <Column xlg={10} lg={10} md={12}> <TypewriterControls /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Terminal Output</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">AnsiOutput</code>
+      renders terminal output with ANSI SGR escape codes as styled HTML. The
+      parser is separate from highlight.js. Build logs, CLI output, and test
+      runners are the usual cases.
+    </p>
+    <p class="mb-5">
+      Standard, bright, 256-color, and 24-bit truecolor codes work, along with
+      bold, dim, italic, and underline. Bad sequences are dropped.
+    </p>
+    <p class="mb-5">
+      Theme the 16 base colors and bold/dim styling with
+      <code class="code">--ansi-*</code>
+      props. <code class="code">autoContrast</code> (default on) flips text to
+      black or white when it wouldn't read on its background.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <AnsiOutputExamples /> </Column>
 </Row>
 
 <Row class="mb-9">
