@@ -1,0 +1,381 @@
+<script>
+  /** @type {import("./languages").LanguageType<string>} */
+  export let language;
+
+  /** @type {string} */
+  export let code = "";
+
+  /** @type {number} Number of spaces inserted by the Tab key. */
+  export let tabSize = 2;
+
+  /** @type {number} Maximum number of undo snapshots retained. */
+  export let historyLimit = 200;
+
+  import hljs from "highlight.js/lib/core";
+  import { createEventDispatcher, onMount } from "svelte";
+
+  const dispatch = createEventDispatcher();
+  const TRAILING_NEWLINE = /\n$/;
+
+  /** @type {HTMLElement} */
+  let editor;
+
+  // Skip re-highlighting mid-composition; it would destroy IME input.
+  let composing = false;
+  let mounted = false;
+  let restoringSelection = false;
+
+  // Mirror of `code` so external (parent) reassignments can be told apart from
+  // our own edits and trigger a repaint.
+  let internalCode = code;
+
+  $: hljs.registerLanguage(language.name, language.register);
+  $: indentUnit = " ".repeat(tabSize);
+  $: if (mounted && code !== internalCode) syncExternal();
+
+  function getSelectionRange() {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return null;
+    const range = selection.getRangeAt(0);
+    if (!editor.contains(range.commonAncestorContainer)) return null;
+    const pre = range.cloneRange();
+    pre.selectNodeContents(editor);
+    pre.setEnd(range.startContainer, range.startOffset);
+    const start = pre.toString().length;
+    return { start, end: start + range.toString().length };
+  }
+
+  function getCaretOffset() {
+    const sel = getSelectionRange();
+    return sel ? sel.end : null;
+  }
+
+  function nodeAtOffset(offset) {
+    const walker = document.createTreeWalker(
+      editor,
+      NodeFilter.SHOW_TEXT,
+      null,
+    );
+    let count = 0;
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const next = count + node.textContent.length;
+      if (offset <= next) return { node, offset: offset - count };
+      count = next;
+    }
+    return null;
+  }
+
+  function setSelection(start, end) {
+    const from = nodeAtOffset(start);
+    if (!from) return;
+    const range = document.createRange();
+    range.setStart(from.node, from.offset);
+    const to = end != null && end !== start ? nodeAtOffset(end) : null;
+    if (to) range.setEnd(to.node, to.offset);
+    else range.collapse(true);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function paint() {
+    const html = hljs.highlight(code, { language: language.name }).value;
+    // contenteditable can't place a caret on a trailing empty line, so render a
+    // phantom newline there (stripped again when reading `innerText`).
+    editor.innerHTML = code === "" || code.endsWith("\n") ? `${html}\n` : html;
+  }
+
+  function renderAt(start, end) {
+    paint();
+    if (start == null) return;
+    restoringSelection = true;
+    setSelection(start, end);
+    restoringSelection = false;
+  }
+
+  function syncCaretToHistory() {
+    if (restoringSelection || composing || undoStack.length === 0) return;
+    const sel = getSelectionRange();
+    if (!sel) return;
+    const top = undoStack[undoStack.length - 1];
+    if (top.code !== code) return;
+    undoStack[undoStack.length - 1] = {
+      code: top.code,
+      start: sel.start,
+      end: sel.end,
+    };
+  }
+
+  /** @type {Array<{ code: string; start: number; end: number }>} */
+  let undoStack = [];
+  /** @type {Array<{ code: string; start: number; end: number }>} */
+  let redoStack = [];
+  let lastRecord = 0;
+
+  function emitHistory() {
+    const future = redoStack.slice().reverse();
+    dispatch("history", {
+      entries: [...undoStack, ...future].map((snap) => ({
+        size: snap.code.length,
+      })),
+      index: undoStack.length - 1,
+      canUndo: undoStack.length > 1,
+      canRedo: redoStack.length > 0,
+    });
+  }
+
+  // Coalesce records within 250ms into one undo step so a burst of typing is
+  // undone at once; structural edits (Enter/Tab/paste) pass coalesce=false.
+  function pushHistory(snap, coalesce) {
+    redoStack = [];
+    const now = Date.now();
+    if (coalesce && undoStack.length > 1 && now - lastRecord < 250) {
+      undoStack[undoStack.length - 1] = snap;
+    } else {
+      undoStack.push(snap);
+      const limit = Math.max(1, historyLimit);
+      if (undoStack.length > limit) {
+        undoStack.splice(0, undoStack.length - limit);
+      }
+    }
+    lastRecord = coalesce ? now : 0;
+    emitHistory();
+  }
+
+  function applySnapshot(snap) {
+    code = snap.code;
+    internalCode = snap.code;
+    dispatch("change", { code });
+    emitHistory();
+    renderAt(snap.start, snap.end);
+  }
+
+  function commit(value, start, end, coalesce) {
+    code = value;
+    internalCode = value;
+    dispatch("change", { code });
+    pushHistory({ code: value, start, end }, coalesce);
+    renderAt(start, end);
+  }
+
+  function syncExternal() {
+    internalCode = code;
+    pushHistory({ code, start: code.length, end: code.length }, false);
+    paint();
+  }
+
+  function insertText(text) {
+    const sel = getSelectionRange();
+    if (!sel) return;
+    const value = code.slice(0, sel.start) + text + code.slice(sel.end);
+    commit(value, sel.start + text.length, undefined, false);
+  }
+
+  // Indent or dedent every line the selection touches, keeping the lines
+  // selected so the action repeats. Blank lines are skipped when indenting.
+  function shiftIndent(outdent) {
+    const sel = getSelectionRange();
+    if (!sel) return;
+    const blockStart = code.lastIndexOf("\n", sel.start - 1) + 1;
+    const lines = code.slice(blockStart, sel.end).split("\n");
+
+    let firstDelta = 0;
+    let totalDelta = 0;
+    const next = lines
+      .map((line, index) => {
+        if (outdent) {
+          const leading = line.length - line.trimStart().length;
+          const remove = Math.min(tabSize, leading);
+          if (index === 0) firstDelta = -remove;
+          totalDelta -= remove;
+          return line.slice(remove);
+        }
+        if (line.length === 0) return line;
+        if (index === 0) firstDelta = tabSize;
+        totalDelta += tabSize;
+        return indentUnit + line;
+      })
+      .join("\n");
+
+    if (totalDelta === 0) return;
+    const value = code.slice(0, blockStart) + next + code.slice(sel.end);
+    const start = Math.max(blockStart, sel.start + firstDelta);
+    commit(value, start, sel.end + totalDelta, false);
+  }
+
+  function indentCommand() {
+    const sel = getSelectionRange();
+    if (sel && code.slice(sel.start, sel.end).includes("\n"))
+      shiftIndent(false);
+    else insertText(indentUnit);
+  }
+
+  function ensureFocus() {
+    if (document.activeElement === editor) return;
+    // Capture any selection that persisted from before blurring; focusing would
+    // otherwise reset the caret to the start. Fall back to the end of the code.
+    const prior = getSelectionRange();
+    editor.focus();
+    if (prior) setSelection(prior.start, prior.end);
+    else setSelection(code.length);
+    syncCaretToHistory();
+  }
+
+  export function undo() {
+    if (undoStack.length <= 1) return;
+    redoStack.push(undoStack.pop());
+    applySnapshot(undoStack[undoStack.length - 1]);
+  }
+
+  export function redo() {
+    if (redoStack.length === 0) return;
+    const snap = redoStack.pop();
+    undoStack.push(snap);
+    applySnapshot(snap);
+  }
+
+  export function focus() {
+    editor.focus();
+  }
+
+  export function selectAll() {
+    editor.focus();
+    setSelection(0, code.length);
+  }
+
+  export function insert(text) {
+    ensureFocus();
+    insertText(text);
+  }
+
+  export function indent() {
+    ensureFocus();
+    indentCommand();
+  }
+
+  export function outdent() {
+    ensureFocus();
+    shiftIndent(true);
+  }
+
+  export function setCode(value) {
+    if (value === code) return;
+    internalCode = value;
+    code = value;
+    dispatch("change", { code });
+    pushHistory({ code: value, start: value.length, end: value.length }, false);
+    paint();
+  }
+
+  export function clear() {
+    setCode("");
+  }
+
+  export function getCode() {
+    return code;
+  }
+
+  export function canUndo() {
+    return undoStack.length > 1;
+  }
+
+  export function canRedo() {
+    return redoStack.length > 0;
+  }
+
+  function onInput() {
+    if (composing) return;
+    // innerText (not textContent) preserves contenteditable line breaks.
+    code = editor.innerText.replace(TRAILING_NEWLINE, "");
+    internalCode = code;
+    const caret = getCaretOffset() ?? code.length;
+    dispatch("change", { code });
+    pushHistory({ code, start: caret, end: caret }, true);
+    renderAt(caret);
+  }
+
+  function onKeydown(event) {
+    const mod = event.metaKey || event.ctrlKey;
+
+    if (mod && event.key === "z" && !event.shiftKey) {
+      event.preventDefault();
+      undo();
+      return;
+    }
+    if (mod && (event.key === "y" || (event.key === "z" && event.shiftKey))) {
+      event.preventDefault();
+      redo();
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      insertText("\n");
+      return;
+    }
+    if (event.key === "Tab") {
+      event.preventDefault();
+      if (event.shiftKey) shiftIndent(true);
+      else indentCommand();
+    }
+  }
+
+  function onPaste(event) {
+    event.preventDefault();
+    insertText(event.clipboardData?.getData("text/plain") ?? "");
+  }
+
+  onMount(() => {
+    paint();
+    undoStack = [{ code, start: 0, end: 0 }];
+    mounted = true;
+    emitHistory();
+
+    editor.addEventListener("input", onInput);
+    editor.addEventListener("keydown", onKeydown);
+    editor.addEventListener("paste", onPaste);
+    editor.addEventListener("mouseup", syncCaretToHistory);
+    editor.addEventListener("keyup", syncCaretToHistory);
+    document.addEventListener("selectionchange", syncCaretToHistory);
+    editor.addEventListener("blur", () =>
+      dispatch("blur", { code: getCode() }),
+    );
+    editor.addEventListener("compositionstart", () => {
+      composing = true;
+    });
+    editor.addEventListener("compositionend", () => {
+      composing = false;
+      onInput();
+    });
+
+    return () => {
+      editor.removeEventListener("input", onInput);
+      editor.removeEventListener("keydown", onKeydown);
+      editor.removeEventListener("paste", onPaste);
+      editor.removeEventListener("mouseup", syncCaretToHistory);
+      editor.removeEventListener("keyup", syncCaretToHistory);
+      document.removeEventListener("selectionchange", syncCaretToHistory);
+    };
+  });
+</script>
+
+<pre
+  style:overflow-x="var(--overflow-x, auto)"
+  style:border-radius="var(--border-radius, 0)"
+  {...$$restProps}
+><code
+    bind:this={editor}
+    class:hljs={true}
+    contenteditable="true"
+    spellcheck="false"
+></code></pre>
+
+<style>
+  code {
+    outline: none;
+  }
+
+  code:focus {
+    outline: var(--outline-width, 2px) solid var(--outline-color, #4589ff);
+    outline-offset: var(--outline-offset, -2px);
+  }
+</style>

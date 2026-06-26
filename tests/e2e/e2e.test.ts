@@ -6,6 +6,8 @@ import Highlight from "./Highlight.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
+import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
+import HighlightEditable from "./HighlightEditable.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
@@ -338,4 +340,207 @@ test("CopyButton - dedupes clicks while an async copy is in flight", async ({
   await expect(button).toHaveAttribute("aria-label", "Copy", {
     timeout: 3_000,
   });
+});
+
+test("HighlightEditable - renders an editable, highlighted block", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable);
+
+  await expect(page.locator("[contenteditable='true']")).toBeVisible();
+  await expect(page.locator(".hljs-keyword").first()).toHaveText("const");
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "const a = 1;",
+  );
+  await expect(page.getByTestId("entries")).toHaveAttribute("data-value", "1");
+  await expect(page.getByTestId("can-undo")).toHaveAttribute(
+    "data-value",
+    "false",
+  );
+});
+
+test("HighlightEditable - typing updates the bound code and fires change", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable);
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowRight"); // collapse caret to end
+  await page.keyboard.type(" // ok");
+
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "const a = 1; // ok",
+  );
+  await expect(page.getByTestId("changes")).not.toHaveAttribute(
+    "data-value",
+    "0",
+  );
+});
+
+test("HighlightEditable - preserves caret position across re-highlight", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, { props: { initialCode: "abcd" } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowLeft"); // collapse caret to start
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("ArrowRight"); // caret after "ab"
+  await page.keyboard.type("XY");
+
+  // Inserted at the caret (not at the start), proving the caret survives the
+  // re-highlight that runs on each keystroke.
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "abXYcd",
+  );
+});
+
+test("HighlightEditable - Enter inserts a newline and Tab inserts indent", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, { props: { initialCode: "a" } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowRight"); // caret to end
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("b");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "a\nb");
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "a\nb  ",
+  );
+});
+
+test("HighlightEditable - Tab and Shift+Tab indent/dedent selected lines", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, { props: { initialCode: "a\nb" } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("Tab");
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "  a\n  b",
+  );
+
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("Shift+Tab");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "a\nb");
+});
+
+test("HighlightEditable - undo and redo walk the history", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable);
+
+  await page.getByTestId("insert").click();
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "const a = 1;X",
+  );
+  await expect(page.getByTestId("can-undo")).toHaveAttribute(
+    "data-value",
+    "true",
+  );
+
+  await page.getByTestId("undo").click();
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "const a = 1;",
+  );
+  await expect(page.getByTestId("can-redo")).toHaveAttribute(
+    "data-value",
+    "true",
+  );
+
+  await page.getByTestId("redo").click();
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "const a = 1;X",
+  );
+});
+
+test("HighlightEditable - undo preserves caret position", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, { props: { initialCode: "abcd" } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.type("XY");
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "abXYcd",
+  );
+
+  await page.keyboard.press("ControlOrMeta+z");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abcd");
+
+  await page.keyboard.type("Q");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abQcd");
+});
+
+test("HighlightEditable - setCode and clear replace the document", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable);
+
+  await page.getByTestId("set-code").click();
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "xyz");
+  await expect(page.getByTestId("can-undo")).toHaveAttribute(
+    "data-value",
+    "true",
+  );
+
+  await page.getByTestId("clear").click();
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "");
+});
+
+test("HighlightEditable - focus outline uses the --outline-color variable", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable);
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await expect(editor).toHaveCSS("outline-color", "rgb(255, 0, 0)");
+});
+
+test("HighlightEditable - two instances share the same bound code", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditableBinding);
+
+  const second = page.getByTestId("second").locator("[contenteditable='true']");
+  await expect(second).toHaveText("ab");
+
+  await page.getByTestId("insert-first").click();
+  await expect(second).toHaveText("abX");
 });
