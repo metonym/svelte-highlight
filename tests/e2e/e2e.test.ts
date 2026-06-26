@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
+import AnsiOutputContrast from "./AnsiOutput.contrast.test.svelte";
+import AnsiOutput from "./AnsiOutput.test.svelte";
 import CodeWindow from "./CodeWindow.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
@@ -69,6 +71,60 @@ test("CodeWindow - renders each variant wrapping a Highlight", async ({
   await expect(terminal.locator(".prompt")).toBeVisible();
   await expect(macos.locator(".prompt")).toHaveCount(0);
   await expect(plain.locator(".prompt")).toHaveCount(0);
+});
+
+test("AnsiOutput - renders styled spans inside a terminal window", async ({
+  mount,
+  page,
+}) => {
+  await mount(AnsiOutput);
+
+  const ansi = page.getByTestId("ansi");
+  await expect(ansi).toBeVisible();
+
+  // Bold + green prompt: the "$" run is bold and green.
+  const prompt = ansi.locator("span.bold").first();
+  await expect(prompt).toHaveText("$");
+  // a11y default green is #00cd00.
+  await expect(prompt).toHaveCSS("color", "rgb(0, 205, 0)");
+
+  // The "error" run is red and the "warning" run is yellow.
+  const error = ansi.getByText("error", { exact: true });
+  await expect(error).toHaveCSS("color", "rgb(205, 0, 0)");
+  const warning = ansi.getByText("warning", { exact: true });
+  await expect(warning).toHaveCSS("color", "rgb(205, 205, 0)");
+
+  // The "done" run uses a bright blue (94 -> bright-blue #5c5cff).
+  const done = ansi.getByText("done", { exact: true });
+  await expect(done).toHaveCSS("color", "rgb(92, 92, 255)");
+
+  // The reset after "$" drops bold/color: " npm run build" is unstyled text.
+  await expect(ansi).toContainText("npm run build");
+
+  // It pairs with the terminal CodeWindow chrome.
+  await expect(page.getByTestId("window").locator(".prompt")).toBeVisible();
+});
+
+test("AnsiOutput - auto-contrast keeps low-contrast spans readable", async ({
+  mount,
+  page,
+}) => {
+  await mount(AnsiOutputContrast);
+
+  const auto = page.getByTestId("auto");
+
+  // White text on a white background flips to black.
+  await expect(auto.getByText("WW")).toHaveCSS("color", "rgb(0, 0, 0)");
+  // A white background with the default foreground also flips to black.
+  await expect(auto.getByText("BG")).toHaveCSS("color", "rgb(0, 0, 0)");
+  // White on blue already contrasts, so it stays white (#e5e5e5).
+  await expect(auto.getByText("BL")).toHaveCSS("color", "rgb(229, 229, 229)");
+
+  // With autoContrast disabled, the white-on-white text is left untouched.
+  await expect(page.getByTestId("off").getByText("WW")).toHaveCSS(
+    "color",
+    "rgb(229, 229, 229)",
+  );
 });
 
 test("Highlight", async ({ mount, page }) => {
