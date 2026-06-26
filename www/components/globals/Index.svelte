@@ -6,6 +6,8 @@
   import CopyButtonLineNumbers from "@components/CopyButton/LineNumbers.svelte";
   import CopyButtonSlot from "@components/CopyButton/Slot.svelte";
   import CopyButtonStyleProps from "@components/CopyButton/StyleProps.svelte";
+  import EditableBasic from "@components/HighlightEditable/Basic.svelte";
+  import EditableCommands from "@components/HighlightEditable/Commands.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
   import ContainerStyle from "@components/LineNumbers/ContainerStyle.svelte";
   import FocusLines from "@components/LineNumbers/FocusLines.svelte";
@@ -437,6 +439,57 @@
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <CopyButtonLangtag /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Editable</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">HighlightEditable</code>
+      is a
+      <code class="code">contenteditable</code>
+      code block. It re-highlights on every edit and keeps the caret where you
+      left it.
+    </p>
+    <p class="mb-5">
+      <code class="code">bind:code</code>
+      keeps your state in sync. Try typing in the block below.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <EditableBasic /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">Enter</code>
+      inserts a newline,
+      <code class="code">Tab</code>/<code class="code">Shift+Tab</code>
+      indent the selected lines, and <code class="code">Cmd/Ctrl+Z</code> /
+      <code class="code">Shift+Z</code>
+      undo and redo. Set <code class="code">tabSize</code> and
+      <code class="code">historyLimit</code>
+      to customize.
+    </p>
+    <p class="mb-5">
+      <code class="code">bind:this</code>
+      exposes
+      <code class="code">undo()</code>, <code class="code">redo()</code>,
+      <code class="code">indent()</code>, <code class="code">insert()</code>,
+      <code class="code">setCode()</code>, and
+      <code class="code">clear()</code>.
+      <code class="code">on:history</code>
+      reports
+      <code class="code">canUndo</code>
+      and <code class="code">canRedo</code>.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <EditableCommands /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Customize the focus outline with
+      <code class="code">--outline-color</code>,
+      <code class="code">--outline-width</code>, and
+      <code class="code">--outline-offset</code>.
+    </p>
+  </Column>
 </Row>
 
 <Row class="mb-9">

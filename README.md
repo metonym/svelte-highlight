@@ -567,6 +567,80 @@ When using a language tag alongside `CopyButton`, offset `--langtag-top` and `--
 </div>
 ```
 
+## Editable
+
+`HighlightEditable` is a `contenteditable` code block. It re-highlights on every edit and keeps the caret where you left it.
+
+Use `bind:code` to keep your state in sync.
+
+```svelte
+<script>
+  import { HighlightEditable } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+
+  let code = "const add = (a: number, b: number) => a + b";
+</script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
+
+<HighlightEditable language={typescript} bind:code />
+```
+
+### Keyboard Behavior
+
+- **Enter** inserts a newline.
+- **Tab** / **Shift+Tab** indent or dedent the selected lines (or insert one indent at the caret). Set the indent size with the `tabSize` prop (default `2`).
+- **Cmd/Ctrl+Z** undo and **Shift+Cmd/Ctrl+Z** (or **Ctrl+Y**) redo. Typing bursts collapse into a single undo step; cap the retained history with the `historyLimit` prop (default `200`).
+
+### Dispatched Events
+
+`HighlightEditable` dispatches `change` (on every edit), `blur`, and `history` (whenever the undo/redo stack changes).
+
+```svelte
+<HighlightEditable
+  language={typescript}
+  bind:code
+  on:change={(e) => console.log(e.detail.code)}
+  on:blur={(e) => console.log(e.detail.code)}
+  on:history={(e) => console.log(e.detail.canUndo, e.detail.canRedo)}
+/>
+```
+
+### Imperative API
+
+Use `bind:this` to call methods on the instance.
+
+```svelte
+<script>
+  let editor;
+</script>
+
+<HighlightEditable bind:this={editor} language={typescript} bind:code />
+
+<button on:click={() => editor.undo()}>Undo</button>
+<button on:click={() => editor.redo()}>Redo</button>
+<button on:click={() => editor.indent()}>Indent</button>
+<button on:click={() => editor.clear()}>Clear</button>
+```
+
+Available methods: `undo`, `redo`, `focus`, `selectAll`, `insert`, `indent`, `outdent`, `setCode`, `clear`, `getCode`, `canUndo`, and `canRedo`.
+
+### Custom Styles
+
+Customize the focus outline with the `--outline-color`, `--outline-width`, and `--outline-offset` style props.
+
+```svelte
+<HighlightEditable
+  language={typescript}
+  bind:code
+  --outline-color="#42be65"
+  --outline-width="2px"
+/>
+```
+
 ## Language Targeting
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
@@ -890,6 +964,40 @@ import type { LanguageName } from "svelte-highlight";
      */
     console.log(e.detail.language);
   }}
+/>
+```
+
+### `HighlightEditable`
+
+#### Props
+
+| Name         | Type                                           | Default value  |
+| :----------- | :--------------------------------------------- | :------------- |
+| code         | `string`                                       | `""`           |
+| language     | { name: `string`; register: hljs => `object` } | N/A (required) |
+| tabSize      | `number`                                       | `2`            |
+| historyLimit | `number`                                       | `200`          |
+
+`$$restProps` are forwarded to the top-level `pre` element.
+
+`code` supports two-way binding (`bind:code`).
+
+#### Methods
+
+Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert(text)`, `indent()`, `outdent()`, `setCode(value)`, `clear()`, `getCode()`, `canUndo()`, or `canRedo()`.
+
+#### Dispatched Events
+
+- **on:change**: fired on every edit, with `{ code }`
+- **on:blur**: fired when the editor loses focus, with `{ code }`
+- **on:history**: fired when the undo/redo stack changes, with `{ entries, index, canUndo, canRedo }`
+
+```svelte
+<HighlightEditable
+  language={typescript}
+  bind:code
+  on:change={(e) => console.log(e.detail.code)}
+  on:history={(e) => console.log(e.detail.canUndo, e.detail.canRedo)}
 />
 ```
 
