@@ -206,6 +206,43 @@
 </Row>
 
 <Row class="mb-9">
+  <Column xlg={12}> <h3>Action</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Use the <code class="code">highlight</code> action to highlight existing
+      <code class="code">{"<pre><code>"}</code>
+      markup in place. This is useful for progressively enhancing
+      server-rendered content like Markdown without swapping in a component.
+    </p>
+    <p class="mb-5">
+      The action accepts the same <code class="code">language</code> prop as the
+      components. When <code class="code">code</code> is omitted, the element's
+      existing <code class="code">textContent</code> is highlighted. Updating
+      <code class="code">code</code>
+      re-highlights the element.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <HighlightSvelte
+      code={`<script>
+  import { highlight } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const add = (a, b) => a + b;";
+<\/script>
+
+<svelte:head>
+  {@html github}
+<\/svelte:head>
+
+<pre><code use:highlight={{ language: typescript, code }}><\/code><\/pre>`}
+      class={THEME_MODULE_NAME}
+    />
+  </Column>
+</Row>
+
+<Row class="mb-9">
   <Column xlg={12}> <h3>Line Numbers</h3> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
