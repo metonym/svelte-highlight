@@ -5,6 +5,7 @@ import CodeWindow from "./CodeWindow.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
+import FileTabs from "./FileTabs.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
@@ -666,4 +667,99 @@ test("HighlightEditable - two instances share the same bound code", async ({
 
   await page.getByTestId("insert-first").click();
   await expect(second).toHaveText("abX");
+});
+
+test("FileTabs - renders a tab per file with the first active", async ({
+  mount,
+  page,
+}) => {
+  await mount(FileTabs);
+
+  const tabs = page.getByRole("tab");
+  await expect(tabs).toHaveCount(3);
+
+  // The first file is active by default.
+  await expect(page.getByRole("tab", { name: "App.svelte" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await expect(page.getByTestId("active")).toHaveText("App.svelte");
+
+  // The active file's code is shown in the panel.
+  await expect(page.getByRole("tabpanel")).toContainText("const answer = 42;");
+});
+
+test("FileTabs - clicking a tab switches the active file and dispatches change", async ({
+  mount,
+  page,
+}) => {
+  await mount(FileTabs);
+
+  await page.getByRole("tab", { name: "index.js" }).click();
+
+  await expect(page.getByRole("tab", { name: "index.js" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await expect(page.getByRole("tab", { name: "App.svelte" })).toHaveAttribute(
+    "aria-selected",
+    "false",
+  );
+
+  // The visual `active` class follows the selected tab.
+  await expect(page.getByRole("tab", { name: "index.js" })).toHaveClass(
+    /active/,
+  );
+  await expect(page.getByRole("tab", { name: "App.svelte" })).not.toHaveClass(
+    /active/,
+  );
+
+  // The slot prop and the `change` event both reflect the new file.
+  await expect(page.getByTestId("active")).toHaveText("index.js");
+  await expect(page.getByTestId("last-change")).toHaveText("index.js");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "export default answer;",
+  );
+});
+
+test("FileTabs - arrow keys move between tabs (roving tabindex)", async ({
+  mount,
+  page,
+}) => {
+  await mount(FileTabs);
+
+  await page.getByRole("tab", { name: "App.svelte" }).focus();
+
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "index.js" })).toBeFocused();
+  await expect(page.getByTestId("active")).toHaveText("index.js");
+
+  // Wraps from the last tab back to the first.
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "vite.config.js" })).toBeFocused();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "App.svelte" })).toBeFocused();
+
+  // ArrowLeft wraps the other way.
+  await page.keyboard.press("ArrowLeft");
+  await expect(page.getByRole("tab", { name: "vite.config.js" })).toBeFocused();
+  await expect(page.getByTestId("active")).toHaveText("vite.config.js");
+});
+
+test("FileTabs - active tab background matches the highlighted code theme", async ({
+  mount,
+  page,
+}) => {
+  await mount(FileTabs);
+
+  // atom-one-dark paints `.hljs` rgb(40, 44, 52). The active tab should match.
+  const codeBackground = await page
+    .locator(".hljs")
+    .first()
+    .evaluate((node) => getComputedStyle(node).backgroundColor);
+
+  await expect(page.getByRole("tab", { selected: true })).toHaveCSS(
+    "background-color",
+    codeBackground,
+  );
 });

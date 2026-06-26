@@ -5,6 +5,7 @@ export type { AnsiColor, AnsiSegment, AnsiStyle } from "./ansi";
 export { parseAnsi } from "./ansi";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
+export { default as FileTabs } from "./FileTabs.svelte";
 export { default as Highlight, default } from "./Highlight.svelte";
 export { default as HighlightAuto } from "./HighlightAuto.svelte";
 export { default as HighlightEditable } from "./HighlightEditable.svelte";
