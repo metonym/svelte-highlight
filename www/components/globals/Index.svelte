@@ -1,5 +1,6 @@
 <script>
   import CodeSnippet from "@components/CodeSnippet.svelte";
+  import CodeWindowPreview from "@components/CodeWindowPreview.svelte";
   import CopyButtonBasic from "@components/CopyButton/Basic.svelte";
   import CopyButtonCustomFunction from "@components/CopyButton/CustomFunction.svelte";
   import CopyButtonLangtag from "@components/CopyButton/Langtag.svelte";
@@ -439,6 +440,33 @@
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <CopyButtonLangtag /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Code Window</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Wrap a code block in the <code class="code">CodeWindow</code> component to
+      frame it with window chrome. It is purely cosmetic—the default slot
+      renders your content unchanged.
+    </p>
+    <p class="mb-5">
+      Use the <code class="code">variant</code> prop to choose the chrome style:
+      <code class="code">"macos"</code>
+      (default) renders traffic-light dots,
+      <code class="code">"terminal"</code>
+      renders a prompt, and <code class="code">"plain"</code> renders just the
+      title bar. The optional <code class="code">title</code> is shown in the
+      title bar.
+    </p>
+    <p class="mb-5">
+      The chrome is themable with <code class="code">--window-*</code>,
+      <code class="code">--titlebar-*</code>, and
+      <code class="code">--dot-*</code>
+      style props.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CodeWindowPreview /> </Column>
 </Row>
 
 <Row class="mb-9">

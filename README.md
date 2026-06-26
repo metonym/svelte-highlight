@@ -257,6 +257,29 @@ These apply when `langtag` is set to `true`.
 | --langtag-border-radius | Border radius of the langtag    | `0`           |
 | --langtag-padding       | Padding of the langtag          | `1em`         |
 
+### `CodeWindow` variables
+
+| Variable              | Description                              | Default value                       |
+| :-------------------- | :--------------------------------------- | :---------------------------------- |
+| --window-background   | Background color of the window body      | `#1e1e1e`                           |
+| --window-border       | Border of the window                     | `1px solid rgba(255, 255, 255, 0.1)`|
+| --window-radius       | Corner radius of the window              | `0`                                 |
+| --titlebar-gap        | Gap between items in the title bar       | `0.5em`                             |
+| --titlebar-padding    | Padding of the title bar                 | `0.65em 1em`                        |
+| --titlebar-background | Background color of the title bar        | `#2d2d2d`                           |
+| --titlebar-border     | Bottom border of the title bar           | `1px solid rgba(255, 255, 255, 0.1)`|
+| --titlebar-color      | Text color of the title bar              | `rgba(255, 255, 255, 0.6)`          |
+| --titlebar-font-family| Font family of the title bar             | `system-ui, -apple-system, sans-serif`|
+| --titlebar-font-size  | Font size of the title bar               | `0.8125em`                          |
+| --dot-gap             | Gap between the macOS traffic-light dots | `0.5em`                             |
+| --dot-size            | Diameter of the macOS traffic-light dots | `0.75em`                            |
+| --dot-close           | Color of the "close" traffic-light dot   | `#ff5f56`                           |
+| --dot-minimize        | Color of the "minimize" traffic-light dot| `#ffbd2e`                           |
+| --dot-maximize        | Color of the "maximize" traffic-light dot| `#27c93f`                           |
+| --prompt-font-family  | Font family of the terminal prompt       | `ui-monospace, monospace`           |
+| --prompt-font-weight  | Font weight of the terminal prompt       | `700`                               |
+| --prompt-color        | Color of the terminal prompt             | `inherit`                           |
+
 ## Svelte Syntax Highlighting
 
 Use the `HighlightSvelte` component for Svelte syntax highlighting.
@@ -823,6 +846,131 @@ Omit `code` to highlight the element's existing contents:
 ></pre>
 ```
 
+## Code Window
+
+Wrap a code block in `CodeWindow` to frame it with window chrome. It's purely cosmetic; the default slot renders your content unchanged.
+
+Use the `variant` prop to choose the chrome style: `"macos"` (default) renders traffic-light dots, `"terminal"` renders a prompt, and `"plain"` renders just the title bar. The optional `title` is shown in the title bar.
+
+```svelte
+<script>
+  import Highlight, { CodeWindow } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<CodeWindow variant="macos" title="example.ts">
+  <Highlight language={typescript} {code} />
+</CodeWindow>
+```
+
+### Terminal output
+
+Pair `variant="terminal"` with a shell language to frame command-line output:
+
+```svelte
+<script>
+  import Highlight, { CodeWindow } from "svelte-highlight";
+  import bash from "svelte-highlight/languages/bash";
+  import nord from "svelte-highlight/styles/nord";
+
+  const code = `$ npm install svelte-highlight
+
+added 1 package in 1.2s`;
+</script>
+
+<svelte:head>
+  {@html nord}
+</svelte:head>
+
+<CodeWindow variant="terminal" title="bash">
+  <Highlight language={bash} {code} />
+</CodeWindow>
+```
+
+### Theming the chrome
+
+Every part of the chrome is driven by CSS variables (see [`CodeWindow` variables](#codewindow-variables)). Pass them as style props to restyle the window without `:global` overrides. For example, give the default square window rounded corners with `--window-radius`:
+
+```svelte
+<CodeWindow
+  variant="macos"
+  title="example.ts"
+  --window-radius="12px"
+  --window-background="#0d1117"
+  --window-border="1px solid #30363d"
+  --titlebar-background="#161b22"
+  --titlebar-color="#8b949e"
+>
+  <Highlight language={typescript} {code} />
+</CodeWindow>
+```
+
+The macOS traffic-light dots are themable too. Recolor them, or mute them to a single neutral color:
+
+```svelte
+<CodeWindow
+  variant="macos"
+  title="example.ts"
+  --dot-close="#888"
+  --dot-minimize="#888"
+  --dot-maximize="#888"
+>
+  <Highlight language={typescript} {code} />
+</CodeWindow>
+```
+
+The `plain` variant drops the dots and prompt for a minimal titled bar:
+
+```svelte
+<CodeWindow variant="plain" title="example.ts">
+  <Highlight language={typescript} {code} />
+</CodeWindow>
+```
+
+### Composing with other components
+
+`CodeWindow` only frames its slot, so it composes with the rest of the library. Add `LineNumbers` inside it:
+
+```svelte
+<script>
+  import Highlight, { CodeWindow, LineNumbers } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const code = `const add = (a, b) => a + b;
+const sub = (a, b) => a - b;`;
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<CodeWindow variant="macos" title="math.ts">
+  <Highlight language={typescript} {code} let:highlighted>
+    <LineNumbers {highlighted} hideBorder />
+  </Highlight>
+</CodeWindow>
+```
+
+Or layer a `CopyButton` over it by wrapping both in a relatively-positioned container:
+
+```svelte
+<div style="position: relative">
+  <CodeWindow variant="macos" title="example.ts">
+    <Highlight language={typescript} {code} />
+  </CodeWindow>
+  <!-- Offset the button so it clears the title bar. -->
+  <CopyButton {code} --copy-top="3em" />
+</div>
+```
+
 ## Component API
 
 ### `Highlight`
@@ -897,6 +1045,17 @@ Omit `code` to highlight the element's existing contents:
   on:error={(e) => console.error(e.detail.error)}
 />
 ```
+
+### `CodeWindow`
+
+#### Props
+
+| Name    | Type                               | Default value |
+| :------ | :--------------------------------- | :------------ |
+| variant | `"macos" \| "terminal" \| "plain"` | `"macos"`     |
+| title   | `string`                           | `""`          |
+
+`$$restProps` are forwarded to the top-level `div` element.
 
 ### `HighlightSvelte`
 
