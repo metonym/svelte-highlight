@@ -20,6 +20,7 @@
   import ScopedStyleAuto from "@components/ScopedStyleAuto.svelte";
   import ScopedStyleSvelte from "@components/ScopedStyleSvelte.svelte";
   import ScopedThemes from "@components/ScopedThemes.svelte";
+  import ScopedThemesDark from "@components/ScopedThemesDark.svelte";
   import { PKG_NAME, THEME_MODULE_NAME, THEME_NAME } from "@www/constants";
   import {
     Column,
@@ -144,6 +145,53 @@
   </Column>
   <Column xlg={10} lg={10} md={12}>
     <ScopedThemes />
+  </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Dark mode</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">HighlightStyle</code>
+      can emit a light and a dark theme together and switch between them. Pass
+      <code class="code">light</code>
+      and
+      <code class="code">dark</code>
+      instead of <code class="code">theme</code>.
+    </p>
+    <p class="mb-5">
+      The <code class="code">mode</code> prop controls how the two themes are
+      switched (default <code class="code">"auto"</code>):
+    </p>
+    <UnorderedList class="mb-5">
+      <ListItem>
+        <code class="code">"auto"</code>: wrap each theme in a
+        <code class="code">@media (prefers-color-scheme)</code>
+        query so the OS or browser preference decides.
+      </ListItem>
+      <ListItem>
+        <code class="code">"light"</code>
+        / <code class="code">"dark"</code>: emit only that single theme.
+      </ListItem>
+      <ListItem>
+        any other string: treated as a CSS selector that gates the dark block
+        while light stays the default—e.g.
+        <code class="code">[data-theme="dark"]</code>
+        to drive theming from a manual toggle.
+      </ListItem>
+    </UnorderedList>
+    <p class="mb-5">
+      Both themes are scoped to the wrapper, so different blocks can use
+      different theme pairs on the same page. When
+      <code class="code">light</code>
+      and <code class="code">dark</code> are both set they take precedence over
+      <code class="code">theme</code>; passing only
+      <code class="code">theme</code>
+      keeps the existing single-theme behavior unchanged.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <ScopedThemesDark />
   </Column>
 </Row>
 
