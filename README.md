@@ -1116,6 +1116,44 @@ parseAnsi("\x1b[31merror\x1b[0m");
 // => [{ text: "error", fg: { name: "red" } }]
 ```
 
+## File Tabs
+
+`FileTabs` groups code snippets behind a tab strip, like files in an editor. Pass file names as `files`, then use `let:active` in the default slot to render the matching snippet.
+
+Arrow keys move between tabs; `Home` and `End` jump to the first and last. The markup follows the WAI-ARIA tabs pattern (`role="tablist"`, `role="tab"`, `role="tabpanel"`).
+
+```svelte
+<script>
+  import Highlight, { FileTabs } from "svelte-highlight";
+  import javascript from "svelte-highlight/languages/javascript";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const sources = {
+    "App.svelte": { language: typescript, code: "const answer = 42;" },
+    "index.js": { language: javascript, code: "export default answer;" },
+  };
+
+  const files = Object.keys(sources);
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<FileTabs {files} let:active>
+  <Highlight language={sources[active].language} code={sources[active].code} />
+</FileTabs>
+```
+
+`bind:active` sets the open tab from your code. `on:change` fires when the user picks a different one.
+
+```svelte
+<FileTabs {files} bind:active on:change={(e) => console.log(e.detail.active)}>
+  <Highlight language={sources[active].language} code={sources[active].code} />
+</FileTabs>
+```
+
 ## Component API
 
 ### `Highlight`
@@ -1314,6 +1352,27 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
   on:change={(e) => console.log(e.detail.code)}
   on:history={(e) => console.log(e.detail.canUndo, e.detail.canRedo)}
 />
+```
+
+### `FileTabs`
+
+#### Props
+
+| Name   | Type       | Default value  |
+| :----- | :--------- | :------------- |
+| files  | `string[]` | N/A (required) |
+| active | `string`   | `files[0]`     |
+
+`$$restProps` are forwarded to the top-level `div` element. `active` supports `bind:active`.
+
+#### Dispatched Events
+
+- **on:change**: fired when the user picks a tab, with `{ active }`
+
+```svelte
+<FileTabs {files} on:change={(e) => console.log(e.detail.active)} let:active>
+  <Highlight language={sources[active].language} code={sources[active].code} />
+</FileTabs>
 ```
 
 ### `Typewriter`
