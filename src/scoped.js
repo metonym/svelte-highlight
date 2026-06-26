@@ -261,6 +261,55 @@ export function scopeStyle(style, scope) {
 }
 
 /**
+ * Scope `style` under `.scope`, optionally prefixing every selector with an
+ * extra `prefix` (e.g. a mode selector), and return the bare CSS with any
+ * `<style>` wrapper removed so callers can recombine it.
+ *
+ * @param {string} style Theme CSS (optionally `<style>`-wrapped).
+ * @param {string} scope Scope class name without a leading `.`.
+ * @param {string} [prefix] Selector prepended ahead of the scope class.
+ * @returns {string}
+ */
+function scopedBody(style, scope, prefix = "") {
+  const scopeSelector = prefix ? `${prefix} .${scope}` : `.${scope}`;
+  /** @type {(selector: string) => string} */
+  const transform = (selector) => `${scopeSelector} ${selector}`;
+  const match = STYLE_TAG.exec(style);
+  const css = match ? (match[2] ?? "") : style;
+  return scopeSelectors(css, transform);
+}
+
+/**
+ * Build a combined light/dark stylesheet scoped under `.scope`.
+ *
+ * - `"auto"` wraps each theme in `@media (prefers-color-scheme: …)`.
+ * - `"light"` / `"dark"` emit only that single theme.
+ * - any other string is treated as a CSS selector that gates the dark block
+ *   (light stays the default), e.g. `[data-theme="dark"]`.
+ *
+ * @param {string} light Light theme CSS (optionally `<style>`-wrapped).
+ * @param {string} dark Dark theme CSS (optionally `<style>`-wrapped).
+ * @param {string} scope Scope class name without a leading `.`.
+ * @param {string} [mode] `"auto"` | `"light"` | `"dark"` | a CSS selector.
+ * @returns {string}
+ */
+export function dualStyle(light, dark, scope, mode = "auto") {
+  let css;
+  if (mode === "light") {
+    css = scopedBody(light, scope);
+  } else if (mode === "dark") {
+    css = scopedBody(dark, scope);
+  } else if (mode === "auto") {
+    css =
+      `@media (prefers-color-scheme: light){${scopedBody(light, scope)}}` +
+      `@media (prefers-color-scheme: dark){${scopedBody(dark, scope)}}`;
+  } else {
+    css = scopedBody(light, scope) + scopedBody(dark, scope, mode);
+  }
+  return `<style>${css}</style>`;
+}
+
+/**
  * Hash of the theme string. Same theme gives the same class (SSR-safe).
  *
  * @param {string} theme

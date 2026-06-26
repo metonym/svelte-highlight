@@ -7,5 +7,17 @@ export declare function scopeSelectors(
   transform: (selector: string) => string,
 ): string;
 
+/**
+ * Build a combined light/dark stylesheet scoped under `.scope`. `mode` is
+ * `"auto"` (prefers-color-scheme media queries), `"light"`/`"dark"` (single
+ * theme), or any CSS selector that gates the dark block.
+ */
+export declare function dualStyle(
+  light: string,
+  dark: string,
+  scope: string,
+  mode?: string,
+): string;
+
 /** Hash of the theme string. Same theme gives the same class (SSR-safe). */
 export declare function scopeClassFor(theme: string, prefix?: string): string;
