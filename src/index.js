@@ -1,4 +1,6 @@
+export { default as AnsiOutput } from "./AnsiOutput.svelte";
 export { highlight } from "./action.js";
+export { parseAnsi } from "./ansi.js";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { default, default as Highlight } from "./Highlight.svelte";
