@@ -1,3 +1,5 @@
+export type { HighlightActionParameters } from "./action";
+export { highlight } from "./action";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { default as Highlight, default } from "./Highlight.svelte";
 export { default as HighlightAuto } from "./HighlightAuto.svelte";

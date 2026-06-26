@@ -3,6 +3,7 @@ import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
 import Highlight from "./Highlight.test.svelte";
+import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import LangTag from "./LangTag.test.svelte";
@@ -66,6 +67,21 @@ test("Highlight - astro language", async ({ mount, page }) => {
     page.locator(".language-typescript .hljs-keyword").first(),
   ).toHaveText("export");
   await expect(page.locator(".hljs-attr")).toHaveText("client:load");
+});
+
+test("highlight action", async ({ mount, page }) => {
+  await mount(HighlightAction);
+
+  // The action highlights the element's contents in place.
+  const code = page.locator("pre code.hljs");
+  await expect(code).toBeVisible();
+  await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
+  await expect(code.locator(".hljs-title").first()).toHaveText("add");
+
+  // Updating `code` re-highlights in place.
+  await page.getByRole("button", { name: "Update" }).click();
+  await expect(code.locator(".hljs-keyword").first()).toHaveText("function");
+  await expect(code.locator(".hljs-title").first()).toHaveText("hello");
 });
 
 test("HighlightAuto", async ({ mount, page }) => {
