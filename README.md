@@ -816,6 +816,47 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 />
 ```
 
+### Loading a language by name
+
+The example above imports a specific language as a static string, which lets the bundler split out only the grammars you reference. When the language is known only at **runtime** — a Markdown fence (` ```ts `), an API field, or a user-selected value — use the `loadLanguage` helper to import a grammar by name:
+
+```svelte
+<script>
+  import { Highlight, loadLanguage } from "svelte-highlight";
+  import github from "svelte-highlight/styles/github";
+
+  // The language name is not known until runtime.
+  export let language = "typescript";
+  export let code = "const add = (a, b) => a + b;";
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+{#await loadLanguage(language) then grammar}
+  <Highlight {code} language={grammar} />
+{:catch}
+  <pre>{code}</pre>
+{/await}
+```
+
+`loadLanguage` accepts a [supported language name](SUPPORTED_LANGUAGES.md), dynamically imports its grammar, and resolves with the language object. It rejects with an `Unknown language` error for an unrecognized name, so handle the `{:catch}` block (or `.catch`) when the name comes from untrusted input.
+
+> **Note:** Because the imported name is dynamic, the bundler cannot prune unused grammars and will emit a chunk for every language. Prefer a static `import` when the language is known ahead of time, and reach for `loadLanguage` only when it is not.
+
+A practical case is rendering Markdown, where each fenced block declares its own language:
+
+```js
+import { loadLanguage } from "svelte-highlight";
+
+// e.g. from a Markdown fence: ```ts → "typescript"
+async function highlightFence(fenceLang, code) {
+  const grammar = await loadLanguage(fenceLang);
+  return { code, language: grammar };
+}
+```
+
 ## Action
 
 Use the `highlight` action to highlight existing `<pre><code>` markup in place. This is useful for progressively enhancing server-rendered content (e.g. markdown) without swapping in a component.

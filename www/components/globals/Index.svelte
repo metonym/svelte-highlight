@@ -610,6 +610,54 @@
   </Column>
 </Row>
 
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Loading a Language by Name</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Import a language as a static string when you know it ahead of time—the
+      bundler can then split out only the grammars you reference.
+    </p>
+    <p class="mb-5">
+      When the language is known only at <strong>runtime</strong>—a Markdown
+      fence, an API field, or a user-selected value—use the
+      <code class="code">loadLanguage</code>
+      helper to import a grammar by name. It resolves with the language object
+      and rejects with an <code class="code">Unknown language</code> error for
+      an unrecognized name.
+    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="info"
+      title="Note:"
+      subtitle="Because the imported name is dynamic, the bundler emits a chunk for every language. Prefer a static import when the language is known ahead of time."
+    />
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <HighlightSvelte
+      code={`<script>
+  import { Highlight, loadLanguage } from "svelte-highlight";
+  import github from "svelte-highlight/styles/github";
+
+  // The language name is not known until runtime.
+  export let language = "typescript";
+  export let code = "const add = (a, b) => a + b;";
+<\/script>
+
+<svelte:head>
+  {@html github}
+<\/svelte:head>
+
+{#await loadLanguage(language) then grammar}
+  <Highlight {code} language={grammar} \/>
+{:catch}
+  <pre>{code}<\/pre>
+{/await}`}
+      class={THEME_MODULE_NAME}
+    />
+  </Column>
+</Row>
+
 <Row>
   <Column xlg={12}><h3>Examples</h3></Column>
   <Column xlg={6} lg={6} md={12}>
