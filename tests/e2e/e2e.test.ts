@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
+import CodeWindow from "./CodeWindow.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
@@ -36,6 +37,37 @@ test("Scoped styles - two themes coexist without bleed", async ({
   // a11y-dark keyword is #dcc6e0; github keyword is #d73a49.
   await expect(keywordA).toHaveCSS("color", "rgb(220, 198, 224)");
   await expect(keywordB).toHaveCSS("color", "rgb(215, 58, 73)");
+});
+
+test("CodeWindow - renders each variant wrapping a Highlight", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeWindow);
+
+  const macos = page.getByTestId("macos");
+  const terminal = page.getByTestId("terminal");
+  const plain = page.getByTestId("plain");
+
+  // The slotted code block is rendered inside each window.
+  await expect(macos.locator(".hljs-title")).toHaveText("add");
+  await expect(terminal.locator(".hljs-title")).toHaveText("add");
+  await expect(plain.locator(".hljs-title")).toHaveText("add");
+
+  // Titles are shown in every variant's title bar.
+  await expect(macos.locator(".title")).toHaveText("example.ts");
+  await expect(terminal.locator(".title")).toHaveText("bash");
+  await expect(plain.locator(".title")).toHaveText("plain.ts");
+
+  // macOS shows three traffic-light dots; other variants do not.
+  await expect(macos.locator(".dot")).toHaveCount(3);
+  await expect(terminal.locator(".dot")).toHaveCount(0);
+  await expect(plain.locator(".dot")).toHaveCount(0);
+
+  // Terminal shows a prompt; macOS and plain do not.
+  await expect(terminal.locator(".prompt")).toBeVisible();
+  await expect(macos.locator(".prompt")).toHaveCount(0);
+  await expect(plain.locator(".prompt")).toHaveCount(0);
 });
 
 test("Highlight", async ({ mount, page }) => {
