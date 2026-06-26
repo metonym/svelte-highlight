@@ -686,6 +686,36 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 />
 ```
 
+## Action
+
+Use the `highlight` action to highlight existing `<pre><code>` markup in place. This is useful for progressively enhancing server-rendered content (e.g. markdown) without swapping in a component.
+
+The action accepts the same `language` prop as the components. When `code` is omitted, the element's existing `textContent` is highlighted. Updating `code` re-highlights the element.
+
+```svelte
+<script>
+  import { highlight } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<pre><code use:highlight={{ language: typescript, code }}></code></pre>
+```
+
+Omit `code` to highlight the element's existing contents:
+
+```svelte
+<pre><code use:highlight={{ language: typescript }}
+  >const add = (a, b) => a + b;</code
+></pre>
+```
+
 ## Component API
 
 ### `Highlight`
