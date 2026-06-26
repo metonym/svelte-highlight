@@ -8,6 +8,7 @@
   import CopyButtonLineNumbers from "@components/CopyButton/LineNumbers.svelte";
   import CopyButtonSlot from "@components/CopyButton/Slot.svelte";
   import CopyButtonStyleProps from "@components/CopyButton/StyleProps.svelte";
+  import FileTabs from "@components/FileTabs.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
@@ -40,9 +41,9 @@
   import css from "svelte-highlight/languages/css";
 
   const svelteHeadCdn = `<link
-    rel="stylesheet"
-    href="https://unpkg.com/svelte-highlight/styles/github.css"
-  />\n`;
+      rel="stylesheet"
+      href="https://unpkg.com/svelte-highlight/styles/github.css"
+    />\n`;
 </script>
 
 <Row>
@@ -589,6 +590,32 @@
       <code class="code">--outline-offset</code>.
     </p>
   </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>File Tabs</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">FileTabs</code>
+      groups snippets behind a tab strip. Pass file names as
+      <code class="code">files</code>
+      and use
+      <code class="code">let:active</code>
+      in the default slot to render the matching
+      <code class="code">Highlight</code>
+      block.
+    </p>
+    <p class="mb-5">
+      Arrow keys move between tabs; <code class="code">Home</code> and
+      <code class="code">End</code>
+      jump to the ends.
+      <code class="code">bind:active</code>
+      sets the open tab from your code.
+      <code class="code">on:change</code>
+      fires when the user picks a different one.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <FileTabs /> </Column>
 </Row>
 
 <Row class="mb-9">
