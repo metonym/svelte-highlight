@@ -156,6 +156,39 @@ The component prefixes each selector with a scope class on the wrapper, so the t
 
 For a page-wide theme, use `{@html theme}` as shown above.
 
+### Dark mode
+
+`HighlightStyle` can emit a light and a dark theme together and switch between them. Pass `light` and `dark` instead of `theme`:
+
+```svelte
+<script>
+  import { Highlight, HighlightStyle } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+  import githubDark from "svelte-highlight/styles/github-dark";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<HighlightStyle light={github} dark={githubDark}>
+  <Highlight language={typescript} {code} />
+</HighlightStyle>
+```
+
+The `mode` prop controls how the two themes are switched (default `"auto"`):
+
+- `"auto"` — wrap each theme in a `@media (prefers-color-scheme: …)` query so the OS/browser preference decides.
+- `"light"` / `"dark"` — emit only that single theme.
+- any other string — treated as a CSS selector that gates the dark block while light stays the default. Use this to drive theming from a class or attribute on an ancestor, e.g. a manual theme toggle:
+
+```svelte
+<HighlightStyle light={github} dark={githubDark} mode={'[data-theme="dark"]'}>
+  <Highlight language={typescript} {code} />
+</HighlightStyle>
+```
+
+Both themes are scoped to the wrapper, so different blocks can use different theme pairs on the same page. When `light` and `dark` are both set they take precedence over `theme`; passing only `theme` keeps the existing single-theme behavior unchanged.
+
 ## Styling with CSS variables
 
 Every `Highlight` variant forwards `$$restProps` to its top-level element, so you can style the component using CSS variables without resorting to `:global` overrides or `!important`.
