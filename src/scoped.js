@@ -247,17 +247,9 @@ export function scopeSelectors(css, transform) {
  * @returns {string}
  */
 export function scopeStyle(style, scope) {
-  const scopeSelector = `.${scope}`;
-  /** @type {(selector: string) => string} */
-  const transform = (selector) => `${scopeSelector} ${selector}`;
+  const body = scopedBody(style, scope);
   const match = STYLE_TAG.exec(style);
-  if (match) {
-    const open = match[1] ?? "";
-    const css = match[2] ?? "";
-    const close = match[3] ?? "";
-    return `${open}${scopeSelectors(css, transform)}${close}`;
-  }
-  return scopeSelectors(style, transform);
+  return match ? `${match[1] ?? ""}${body}${match[3] ?? ""}` : body;
 }
 
 /**
