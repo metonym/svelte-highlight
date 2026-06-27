@@ -119,8 +119,8 @@
         size: snap.code.length,
       })),
       index: undoStack.length - 1,
-      canUndo: undoStack.length > 1,
-      canRedo: redoStack.length > 0,
+      canUndo: canUndo(),
+      canRedo: canRedo(),
     });
   }
 
