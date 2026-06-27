@@ -4,12 +4,12 @@ import type { LanguageType } from "./languages";
 
 export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
   /**
-   * Specify the editable code. Supports two-way binding (`bind:code`).
+   * Editable code (`bind:code`).
    */
   code?: string;
 
   /**
-   * Provide the language grammar used to highlight the code.
+   * highlight.js language module.
    * Import languages from `svelte-highlight/languages/*`.
    * @example
    * import typescript from "svelte-highlight/languages/typescript";
@@ -50,7 +50,7 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
 
 export type HighlightEditableEvents = {
   /**
-   * Fired on every edit with the current plain-text code.
+   * Fired on each edit with current plain-text code.
    */
   change: CustomEvent<{ code: string }>;
 
@@ -60,9 +60,7 @@ export type HighlightEditableEvents = {
   blur: CustomEvent<{ code: string }>;
 
   /**
-   * Fired whenever the undo/redo history changes. `entries` is the linear
-   * timeline (oldest to newest, including redoable future states) and `index`
-   * points at the current state within it.
+   * Undo/redo history. `entries` is oldest→newest; `index` is current.
    */
   history: CustomEvent<{
     entries: { size: number }[];

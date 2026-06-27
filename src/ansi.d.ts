@@ -10,9 +10,7 @@ export type AnsiColor =
   | { index: number }
   | { rgb: [number, number, number] };
 
-/**
- * The active styling state while parsing.
- */
+/** Active styling while parsing. */
 export type AnsiStyle = {
   bold?: boolean | undefined;
   dim?: boolean | undefined;
@@ -22,12 +20,9 @@ export type AnsiStyle = {
   bg?: AnsiColor | undefined;
 };
 
-/**
- * A run of text sharing the same styling. Attributes are present only when
- * active.
- */
+/** Text run with styling. Omitted fields are inactive. */
 export type AnsiSegment = {
-  /** The literal text of this run (escape codes removed). */
+  /** Literal text (escape codes stripped). */
   text: string;
   bold?: boolean;
   dim?: boolean;
@@ -37,11 +32,5 @@ export type AnsiSegment = {
   bg?: AnsiColor;
 };
 
-/**
- * Parse terminal output containing ANSI SGR escape codes into styled segments.
- * Unsupported or malformed escape sequences are dropped, not thrown.
- *
- * @param text Raw terminal output.
- * @returns Styled text segments, in order.
- */
+/** Parse ANSI SGR escape codes into styled segments. Malformed input is dropped. */
 export declare function parseAnsi(text: string): AnsiSegment[];

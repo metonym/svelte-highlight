@@ -85,8 +85,7 @@
   }
 
   .title {
-    /* Center the title across the full titlebar width, independent of the
-         leading dots/prompt, mirroring native window chrome. */
+    /* Center title across titlebar, ignoring dots/prompt. */
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -98,7 +97,7 @@
   }
 
   .plain .title {
-    /* No leading chrome, so left-align the title flush with the padding. */
+    /* Plain variant: no chrome, left-align title. */
     position: static;
     left: auto;
     transform: none;

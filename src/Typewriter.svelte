@@ -1,6 +1,6 @@
 <script>
   /**
-   * Highlighted HTML from `Highlight`'s `highlighted` slot prop.
+   * Highlighted HTML from `Highlight`'s `highlighted` slot.
    * @type {string}
    */
   export let highlighted = "";
@@ -21,7 +21,7 @@
 
   const dispatch = createEventDispatcher();
 
-  /** Captures the tag name from an opening or closing tag. */
+  /** Opening or closing tag name. */
   const TAG_NAME = /^<\/?\s*([a-zA-Z0-9-]+)/;
 
   /** @type {boolean} */
@@ -42,12 +42,7 @@
   /** @type {string | undefined} */
   let prevHighlighted;
 
-  /**
-   * Split highlighted HTML into renderable units. Tag units carry no visible
-   * weight; each text character or HTML entity counts as a single visible unit
-   * so typing advances one visible character at a time without splitting markup.
-   * @param {string} html
-   */
+  /** Split HTML into typing units (tags = 0 chars, text/entities = 1). */
   function tokenize(html) {
     /** @type {{ raw: string; visible: number; kind?: string; name?: string }[]} */
     const units = [];
@@ -60,7 +55,7 @@
       if (ch === "<") {
         const end = html.indexOf(">", i);
         if (end === -1) {
-          // Malformed tail. Treat as plain text.
+          // Unclosed tag: treat as text.
           units.push({ raw: html.slice(i), visible: 1 });
           break;
         }
@@ -75,7 +70,7 @@
         units.push({ raw, visible: 0, kind, name: match ? match[1] : "" });
         i = end + 1;
       } else if (ch === "&") {
-        // Treat an entity (e.g. `&lt;`) as one visible character.
+        // One visible char per entity.
         const end = html.indexOf(";", i);
         if (end !== -1 && end - i <= 10) {
           units.push({ raw: html.slice(i, end + 1), visible: 1 });
@@ -94,12 +89,8 @@
   }
 
   /**
-   * Split at the first `count` visible characters. `head` is what's shown;
-   * `tail` is the rest. Open tags at the cut get closed in `head` and reopened
-   * in `tail`. `tail` renders hidden but still takes up space, so layout
-   * doesn't shift as characters appear.
-   * @param {ReturnType<typeof tokenize>} list
-   * @param {number} count
+   * Split at `count` visible chars. Close open tags in `head`, reopen in `tail`.
+   * Hidden `tail` reserves space so layout doesn't jump.
    */
   function split(list, count) {
     let head = "";
@@ -121,12 +112,11 @@
       }
     }
 
-    // Close the still-open tags so `head` is well-formed...
+    // Close open tags in head, reopen them at the start of tail.
     let headClose = "";
     for (let k = open.length - 1; k >= 0; k--)
       headClose += `</${open[k].name}>`;
 
-    // ...and reopen the same tags at the start of `tail` so it is too.
     let tail = "";
     for (const tag of open) tail += tag.raw;
     for (; i < list.length; i++) tail += list[i].raw;
@@ -154,13 +144,13 @@
     }
   }
 
-  /** Start, stop, or retime the typing interval from current inputs. */
+  /** Start/stop/retime the typing interval. */
   function sync() {
     clearTimer();
     if (!mounted) return;
 
     if (reducedMotion) {
-      // With reduced motion, show everything at once.
+      // Reduced motion: show all at once.
       if (revealed !== total) revealed = total;
       fireDone();
       return;
@@ -176,7 +166,7 @@
   $: units = tokenize(highlighted);
   $: total = units.reduce((sum, unit) => sum + unit.visible, 0);
 
-  // Restart typing when the source content changes.
+  // Restart when `highlighted` changes.
   $: if (highlighted !== prevHighlighted) {
     prevHighlighted = highlighted;
     doneFired = false;
@@ -184,17 +174,13 @@
     sync();
   }
 
-  // Reconfigure (but never restart per-tick) when playback inputs change.
-  // The array makes the dependencies explicit without the comma operator.
-  // `total` is omitted: it only changes alongside `highlighted`, which already
-  // restarts above, so listing it here would fire `sync()` a redundant time.
+  // Re-sync on play/speed/mount/motion. Skip `total` (handled above).
   $: {
     void [play, speed, mounted, reducedMotion];
     sync();
   }
 
-  // Before mount (incl. SSR) render the full content so it is visible without
-  // JS; once mounted, type out character by character from `revealed`.
+  // SSR: full content. After mount, reveal from `revealed`.
   $: parts = mounted ? split(units, revealed) : { head: highlighted, tail: "" };
   $: showCaret = mounted && !reducedMotion && revealed < total;
 

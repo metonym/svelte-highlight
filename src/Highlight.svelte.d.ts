@@ -4,8 +4,7 @@ import type { LanguageType } from "./languages";
 
 export type LangtagProps = {
   /**
-   * Set to `true` for the language name to be
-   * displayed at the top right of the code block.
+   * Set to `true` to show the language name at the top right.
    *
    * Use style props to customize styles:
    * - `--langtag-top`
@@ -20,37 +19,37 @@ export type LangtagProps = {
   langtag?: boolean;
 
   /**
-   * Customize the top position of the langtag.
+   * Langtag top offset.
    * @default 0
    */
   "--langtag-top"?: string | number;
 
   /**
-   * Customize the right position of the langtag.
+   * Langtag right offset.
    * @default 0
    */
   "--langtag-right"?: string | number;
 
   /**
-   * Customize the background color of the langtag.
+   * Langtag background.
    * @default "inherit"
    */
   "--langtag-background"?: string;
 
   /**
-   * Customize the text color of the langtag.
+   * Langtag text color.
    * @default "inherit"
    */
   "--langtag-color"?: string;
 
   /**
-   * Customize the border radius of the langtag.
+   * Langtag border radius.
    * @default 0
    */
   "--langtag-border-radius"?: string;
 
   /**
-   * Customize the padding of the langtag.
+   * Langtag padding.
    * @default "1em"
    */
   "--langtag-padding"?: string;
@@ -59,12 +58,12 @@ export type LangtagProps = {
 export type HighlightProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
     /**
-     * Specify the text to highlight.
+     * Code to highlight.
      */
     code: any;
 
     /**
-     * Provide the language grammar used to highlight the code.
+     * highlight.js language module.
      * Import languages from `svelte-highlight/languages/*`.
      * @example
      * import typescript from "svelte-highlight/languages/typescript";

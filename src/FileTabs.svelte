@@ -31,7 +31,7 @@
   }
 
   /**
-   * Roving-tabindex keyboard navigation per the WAI-ARIA tabs pattern.
+   * WAI-ARIA tabs keyboard navigation.
    * @param {KeyboardEvent} event
    * @param {number} index
    */
@@ -63,9 +63,7 @@
     tabs[nextIndex]?.focus();
   }
 
-  // Copy the highlighted block's background and text color onto the active tab
-  // so it matches whatever highlight.js theme is loaded. Falls back to
-  // transparent/inherit when `.hljs` isn't painted yet (e.g. SSR).
+  // Match active tab colors to `.hljs`; transparent/inherit at SSR.
   afterUpdate(() => {
     const code = root?.querySelector(".tabpanel .hljs");
 
@@ -93,8 +91,7 @@
         aria-controls="{baseId}-panel"
         tabindex={file === active ? 0 : -1}
         {...{
-          // Spread keeps the dynamic boolean out of Biome's static
-          // `useValidAriaValues` check, which misreads templated values.
+          // Spread sidesteps Biome `useValidAriaValues` on templated booleans.
           "aria-selected": file === active,
         }}
         on:click={() => selectTab(file)}

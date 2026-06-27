@@ -2,8 +2,7 @@
   import { Column, Row, Toggle } from "carbon-components-svelte";
   import { AnsiOutput, CodeWindow, parseAnsi } from "svelte-highlight";
 
-  // Build SGR escape sequences. Keeping the raw `\x1b` out of the markup makes
-  // the examples readable.
+  // `\x1b` helper; keeps raw escapes out of markup.
   const ESC = "\x1b";
   /** @param {...(number)} codes */
   const sgr = (...codes) => `${ESC}[${codes.join(";")}m`;
@@ -20,15 +19,14 @@
     "white",
   ];
 
-  // Render a swatch of every escape code so the full palette is visible.
+  // Standard and bright foreground swatches.
   const standardFg = NAMES.map((n, i) => `${sgr(30 + i)}${n}${R}`).join("  ");
   const brightFg = NAMES.map((n, i) => `${sgr(90 + i)}${n}${R}`).join("  ");
   const backgrounds = NAMES.map((n, i) => `${sgr(40 + i, 37)} ${n} ${R}`).join(
     " ",
   );
 
-  // White text on every background swatch, including white. Shows auto-contrast
-  // against raw output.
+  // White-on-white background: tests auto-contrast.
   const lowContrast = backgrounds;
 
   const attributes = [
@@ -40,14 +38,14 @@
     `${sgr(2, 3, 36)}dim italic cyan${R}`,
   ].join("   ");
 
-  // The 6×6×6 color cube of the 256-color palette, 36 blocks per row.
+  // 256-color cube, 36 swatches per row.
   let cube = "";
   for (let i = 16; i < 232; i += 1) {
     cube += `${sgr(48, 5, i)}  ${R}`;
     if ((i - 15) % 36 === 0) cube += "\n";
   }
 
-  // The 24-step grayscale ramp (indices 232-255).
+  // Grayscale ramp (232–255).
   let grayscale = "";
   for (let i = 232; i < 256; i += 1) grayscale += `${sgr(48, 5, i)}  ${R}`;
 
@@ -73,7 +71,7 @@
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
   }
 
-  // A 24-bit truecolor rainbow built from `38;2;r;g;b` sequences.
+  // Truecolor rainbow via `38;2;r;g;b`.
   let rainbow = "";
   for (let i = 0; i <= 72; i += 1) {
     const [r, g, b] = hueToRgb((i / 72) * 360);
@@ -112,8 +110,7 @@
     " }",
   ].join("\n");
 
-  // A line that mixes unsupported (999) and unterminated escape sequences to
-  // show they are dropped rather than thrown.
+  // Unsupported and unterminated escapes (dropped, not thrown).
   const malformed = `${sgr(32)}safe${R} ${ESC}[999munknown code ignored${R} ${ESC}[1mthen unterminated${ESC}[`;
 
   const apiSample = `${sgr(1, 31)}error${R}: ${sgr(33)}deprecated${R}`;
@@ -178,7 +175,7 @@
     },
   ];
 
-  // Show the raw escape codes underneath each example.
+  // Raw escape codes under each example.
   let showRaw = false;
 
   /** @param {string} text */

@@ -7,8 +7,7 @@
   const sgr = (...codes) => `${ESC}[${codes.join(";")}m`;
   const R = sgr(0);
 
-  // Usage snippet shown above the live examples. Built as joined lines (rather
-  // than a multiline template) so the formatter leaves the indentation intact.
+  // Joined lines keep formatter indentation (multiline templates don't).
   const snippet = [
     "<script>",
     '  import { AnsiOutput } from "svelte-highlight";',
@@ -53,9 +52,7 @@
     " }",
   ].join("\n");
 
-  // The markup behind each live example, shown alongside its output. Built as
-  // joined lines so the formatter leaves the indentation intact. `text` is the
-  // captured terminal output (see the usage snippet above).
+  // Example markup beside each output (`text` = captured terminal output).
   const vitestMarkup = [
     '<CodeWindow variant="terminal" title="vitest">',
     "  <AnsiOutput {text} />",
@@ -96,10 +93,7 @@
   ].join("\n");
 
   /**
-   * Escape captured output for display inside a copy-pasteable template literal:
-   * real ESC bytes become a visible `\x1b` and template metacharacters are
-   * escaped.
-   * @param {string} text
+   * Escape captured output for a template literal (`\x1b`, backticks, `${`).
    */
   const forTemplate = (text) =>
     text
@@ -108,13 +102,7 @@
       .replaceAll("${", "\\${")
       .replaceAll(ESC, "\\x1b");
 
-  /**
-   * Assemble a complete, runnable snippet: imports, the captured `text`, and the
-   * markup that renders it.
-   * @param {string} imports
-   * @param {string} rawText
-   * @param {string} markup
-   */
+  /** Runnable snippet: imports, `text`, and markup. */
   const snippetFor = (imports, rawText, markup) =>
     [
       "<script>",

@@ -18,7 +18,7 @@ const greet = (user: User): string => {
   /** @type {"auto" | "light" | "dark" | "selector"} */
   let mode = "auto";
 
-  // For "selector" mode the dark block is gated behind `[data-theme="dark"]`.
+  // "selector" mode gates dark styles on `[data-theme="dark"]`.
   let darkSelectorOn = false;
 
   const selector = '[data-theme="dark"]';

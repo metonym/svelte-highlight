@@ -52,9 +52,7 @@ $ npm run build`;
   <Highlight language={typescript} {code} />
 </CodeWindow>`;
 
-  // Each example pairs a variant with its own language and theme. Distinct
-  // themes mean distinct scope classes, so each HighlightStyle injects its
-  // own stylesheet.
+  // Each example gets its own theme (distinct scope class per HighlightStyle).
   const examples = [
     {
       variant: "macos",

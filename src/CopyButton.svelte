@@ -3,8 +3,7 @@
   export let code;
 
   /**
-   * Override the copy behavior. Receives the `code` to copy and may
-   * return a promise. When omitted, the native Clipboard API is used.
+   * Override copy behavior. Defaults to `navigator.clipboard.writeText`.
    * @type {(code: string) => void | Promise<void>}
    */
   export let copy = (code) => navigator.clipboard.writeText(code);
@@ -32,9 +31,7 @@
   let timeoutId;
 
   async function handleClick() {
-    // Ignore clicks while a copy is in flight or the "copied" state is active,
-    // so no duplicate copy fires (even for slow async `copy` functions) and the
-    // "copied" icon stays visible until the timeout elapses.
+    // Ignore clicks while copying or showing "Copied".
     if (copying || copied) return;
 
     try {

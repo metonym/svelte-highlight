@@ -1,9 +1,9 @@
 /**
- * Scope highlight.js theme CSS under a class name.
- * Used by `HighlightStyle` and the docs styles build.
+ * Scope highlight.js theme CSS under a class.
+ * Used by HighlightStyle and the docs styles build.
  */
 
-// At-rules whose bodies contain nested style rules and must be recursed into.
+// @media, @supports, etc.: recurse into the block body.
 const GROUP_AT_RULES = new Set([
   "media",
   "supports",
@@ -18,7 +18,6 @@ const AT_RULE_NAME = /^@([a-zA-Z-]+)/;
 const WHITESPACE = /\s/;
 
 /**
- * Returns the index just past a string literal starting at `start`.
  * @param {string} css
  * @param {number} start
  */
@@ -38,8 +37,7 @@ function findStringEnd(css, start) {
 }
 
 /**
- * Returns the index of the `}` that closes the block whose contents begin at
- * `start`, accounting for nested blocks, comments and strings.
+ * Index after the `}` that closes the block starting at `start`.
  * @param {string} css
  * @param {number} start
  */
@@ -69,8 +67,7 @@ function findBlockEnd(css, start) {
 }
 
 /**
- * Splits a string on a top-level delimiter, ignoring delimiters nested inside
- * parentheses, brackets, strings or comments (e.g. commas in `:not(a, b)`).
+ * Split on `delim`, skipping nested `()`, `[]`, strings, and comments.
  * @param {string} str
  * @param {string} delim
  */
@@ -110,8 +107,6 @@ function splitTopLevel(str, delim) {
 }
 
 /**
- * Splits a single selector into leading trivia (whitespace/comments), its
- * significant core, and trailing whitespace, so a transform only sees the core.
  * @param {string} selector
  * @returns {[string, string, string]} `[leading, core, trailing]`
  */
@@ -155,7 +150,7 @@ function rewriteSelectorList(selectorList, transform) {
   return splitTopLevel(selectorList, ",")
     .map((selector) => {
       const [leading, core, trailing] = splitTrivia(selector);
-      // Empty or whitespace/comments-only. Leave untouched.
+      // Whitespace/comments only.
       if (core === "") return selector;
       return `${leading}${transform(core)}${trailing}`;
     })
@@ -173,19 +168,17 @@ function rewriteBlock(prelude, body, transform) {
     const match = AT_RULE_NAME.exec(trimmed);
     const name = match?.[1]?.toLowerCase() ?? "";
     if (GROUP_AT_RULES.has(name)) {
-      // Conditional group rule (e.g. @media): scope the nested rules.
+      // @media etc.: scope nested rules.
       return `${prelude}{${rewriteRules(body, transform)}}`;
     }
-    // @keyframes, @font-face, @page, etc. Do not scope the body.
+    // @keyframes, @font-face: leave body alone.
     return `${prelude}{${body}}`;
   }
   return `${rewriteSelectorList(prelude, transform)}{${body}}`;
 }
 
 /**
- * Walks a sequence of CSS rules, applying `transform` to each individual
- * selector of every style rule while preserving comments, strings and
- * at-rules (descending into conditional group rules like `@media`).
+ * Walk CSS rules and run `transform` on each selector.
  * @param {string} css
  * @param {(selector: string) => string} transform
  */
@@ -216,7 +209,7 @@ function rewriteRules(css, transform) {
       continue;
     }
     if (ch === ";") {
-      // Statement at-rule without a block (e.g. `@import`); emit unchanged.
+      // Blockless at-rule (@import): emit as-is.
       out += prelude + ch;
       prelude = "";
       i += 1;
@@ -253,13 +246,10 @@ export function scopeStyle(style, scope) {
 }
 
 /**
- * Scope `style` under `.scope`, optionally prefixing every selector with an
- * extra `prefix` (e.g. a mode selector), and return the bare CSS with any
- * `<style>` wrapper removed so callers can recombine it.
- *
- * @param {string} style Theme CSS (optionally `<style>`-wrapped).
- * @param {string} scope Scope class name without a leading `.`.
- * @param {string} [prefix] Selector prepended ahead of the scope class.
+ * Scope under `.scope`, strip any `<style>` wrapper, return bare CSS.
+ * @param {string} style
+ * @param {string} scope
+ * @param {string} [prefix]
  * @returns {string}
  */
 function scopedBody(style, scope, prefix = "") {

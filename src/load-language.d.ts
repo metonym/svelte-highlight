@@ -1,10 +1,8 @@
 import type { LanguageName, LanguageType } from "./languages";
 
 /**
- * Dynamically load a single highlight.js grammar by name.
- *
- * Use when the language is only known at runtime. When it is known at author
- * time, prefer a static import so the bundler can prune unused grammars.
+ * Load a highlight.js grammar by name at runtime.
+ * Prefer a static import when the language is known up front.
  */
 export declare function loadLanguage(
   name: LanguageName,

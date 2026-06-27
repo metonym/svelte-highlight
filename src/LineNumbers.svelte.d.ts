@@ -15,7 +15,7 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     highlighted: string;
 
     /**
-     * Provide the language name.
+     * Language name.
      * @default "plaintext"
      */
     languageName?: LanguageName | (string & {});
@@ -27,7 +27,7 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     hideBorder?: boolean;
 
     /**
-     * Specify which starting line number should be displayed.
+     * Starting line number.
      * @default 1
      */
     startingLineNumber?: number;
@@ -39,14 +39,14 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     wrapLines?: boolean;
 
     /**
-     * Specify the line indices to highlight.
+     * Line indices to highlight.
      * @default []
      * @example [0, 1, 9]
      */
     highlightedLines?: number[];
 
     /**
-     * Specify the text color for line numbers.
+     * Line number text color.
      * Defaults to the current theme color applied to `.hljs code`.
      * @default currentColor
      * @example "pink"
@@ -54,7 +54,7 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     "--line-number-color"?: string;
 
     /**
-     * Specify the border color.
+     * Border color.
      * Defaults to the current background color applied to `.hljs`.
      * @default currentColor
      * @example "#fff"
@@ -62,28 +62,28 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     "--border-color"?: string;
 
     /**
-     * Specify the left padding for `td` elements.
+     * Left cell padding.
      * @default 1em
      * @example 0
      */
     "--padding-left"?: number | string;
 
     /**
-     * Specify the right padding for `td` elements.
+     * Right cell padding.
      * @default 1em
      * @example 0
      */
     "--padding-right"?: number | string;
 
     /**
-     * Specify the background color of highlighted lines.
+     * Highlighted line background.
      * @default "rgba(254, 241, 96, 0.2)"
      * @example "#fff"
      */
     "--highlighted-background"?: string;
 
     /**
-     * Specify the opacity of un-highlighted lines.
+     * Un-highlighted line opacity.
      * Only applies when `highlightedLines` is non-empty.
      * @default 1
      * @example 0.4
@@ -91,7 +91,7 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     "--unhighlighted-opacity"?: number | string;
 
     /**
-     * Specify a CSS filter for un-highlighted lines.
+     * Un-highlighted line filter.
      * Only applies when `highlightedLines` is non-empty.
      * @default none
      * @example "blur(2px)"

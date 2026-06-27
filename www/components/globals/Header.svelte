@@ -107,7 +107,7 @@
   }
 
   :global(.bx--side-nav__overlay-active) {
-    z-index: calc(10 + 1); /** supersede the z-index of code snippets */
+    z-index: calc(10 + 1); /* above code snippet overlays */
   }
 
   :global(.bx--side-nav ~ .bx--content) {

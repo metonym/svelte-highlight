@@ -6,12 +6,12 @@ import type { LanguageName } from "./languages";
 export type HighlightAutoProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
     /**
-     * Specify the text to highlight.
+     * Code to highlight.
      */
     code: any;
 
     /**
-     * Specify a subset of language names to restrict language auto-detection to.
+     * Languages to consider for auto-detection.
      * This can improve performance and accuracy.
      * @example ["javascript", "typescript"]
      */

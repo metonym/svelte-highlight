@@ -25,7 +25,7 @@
 
 <style>
   footer {
-    /** Match the padding on .bx--content */
+    /* match .bx--content padding */
     padding: 0 2rem 2rem;
   }
 

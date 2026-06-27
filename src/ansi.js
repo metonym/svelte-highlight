@@ -1,10 +1,6 @@
 /**
- * Parse terminal output containing ANSI SGR (Select Graphic Rendition) escape
- * codes into a flat list of styled text segments. Separate from highlight.js.
- *
- * Supported attributes: foreground/background colors (standard, bright,
- * 256-color and 24-bit truecolor), bold, dim, italic, underline and reset.
- * Unsupported or malformed escape sequences are dropped, not thrown.
+ * Parse ANSI SGR escape codes into styled text segments.
+ * Malformed sequences are dropped, not thrown.
  */
 
 // The 8 standard color names, indexed by their SGR offset (30-37 / 40-47).
@@ -33,8 +29,7 @@ function standardName(offset) {
 }
 
 /**
- * Map a palette index (0-15) to a themable named color. Indices outside that
- * range are returned as-is so the caller can compute their RGB value.
+ * Map a 256-color index (0-15 → name, 16+ → index).
  * @param {number} index
  * @returns {AnsiColor}
  */
@@ -45,12 +40,12 @@ function paletteColor(index) {
 }
 
 /**
- * Apply one SGR sequence's parameters to the running style state.
+ * Apply SGR parameters to `style`.
  * @param {AnsiStyle} style
  * @param {number[]} params
  */
 function applySgr(style, params) {
-  // An empty parameter list (e.g. `ESC[m`) is treated as a reset.
+  // Empty params (`ESC[m`) reset everything.
   const list = params.length === 0 ? [0] : params;
 
   for (let i = 0; i < list.length; i += 1) {
@@ -58,7 +53,7 @@ function applySgr(style, params) {
     if (code === undefined) continue;
 
     if (code === 0) {
-      // Reset every attribute.
+      // Reset all attributes.
       style.bold = undefined;
       style.dim = undefined;
       style.italic = undefined;
@@ -114,13 +109,12 @@ function applySgr(style, params) {
         i += 4;
       }
     }
-    // Any other code is ignored safely.
+    // Unknown codes: ignore.
   }
 }
 
 /**
- * Snapshot the current style as a segment carrying `text`, omitting any
- * attribute that is not active so the output stays minimal.
+ * Build a segment from `text` and active fields in `style`.
  * @param {string} text
  * @param {AnsiStyle} style
  * @returns {AnsiSegment}
@@ -175,13 +169,13 @@ export function parseAnsi(text) {
       }
 
       if (j >= text.length) {
-        // Unterminated sequence: drop the remainder safely.
+        // Unterminated: drop the rest.
         break;
       }
 
       const final = text[j];
       if (final === "m") {
-        // SGR sequence: the styling applies to text that follows it.
+        // SGR applies to text that follows.
         flush();
         const body = text.slice(i + 2, j);
         const params = body

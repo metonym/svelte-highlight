@@ -24,7 +24,7 @@
   <Typewriter {highlighted} />
 </Highlight>`;
 
-  // Bump to remount and replay typing.
+  // Remount to replay typing.
   let runId = 0;
 </script>
 

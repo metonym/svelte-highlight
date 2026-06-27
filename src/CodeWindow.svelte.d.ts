@@ -3,121 +3,121 @@ import type { HTMLAttributes } from "svelte/elements";
 
 export type CodeWindowProps = HTMLAttributes<HTMLDivElement> & {
   /**
-   * Specify the window chrome style.
+   * Window chrome style.
    * @default "macos"
    */
   variant?: "macos" | "terminal" | "plain";
 
   /**
-   * Specify the title shown in the title bar.
+   * Title bar text.
    * @default ""
    */
   title?: string;
 
   /**
-   * Customize the background color of the window body.
+   * Window body background.
    * @default "#1e1e1e"
    */
   "--window-background"?: string;
 
   /**
-   * Customize the border of the window.
+   * Window border.
    * @default "1px solid rgba(255, 255, 255, 0.1)"
    */
   "--window-border"?: string;
 
   /**
-   * Customize the corner radius of the window.
+   * Window corner radius.
    * @default "0"
    */
   "--window-radius"?: string;
 
   /**
-   * Customize the gap between items in the title bar.
+   * Title bar gap.
    * @default "0.5em"
    */
   "--titlebar-gap"?: string;
 
   /**
-   * Customize the padding of the title bar.
+   * Title bar padding.
    * @default "0.65em 1em"
    */
   "--titlebar-padding"?: string;
 
   /**
-   * Customize the background color of the title bar.
+   * Title bar background.
    * @default "#2d2d2d"
    */
   "--titlebar-background"?: string;
 
   /**
-   * Customize the bottom border of the title bar.
+   * Title bar bottom border.
    * @default "1px solid rgba(255, 255, 255, 0.1)"
    */
   "--titlebar-border"?: string;
 
   /**
-   * Customize the text color of the title bar.
+   * Title bar text color.
    * @default "rgba(255, 255, 255, 0.6)"
    */
   "--titlebar-color"?: string;
 
   /**
-   * Customize the font family of the title bar.
+   * Title bar font family.
    * @default "system-ui, -apple-system, sans-serif"
    */
   "--titlebar-font-family"?: string;
 
   /**
-   * Customize the font size of the title bar.
+   * Title bar font size.
    * @default "0.8125em"
    */
   "--titlebar-font-size"?: string;
 
   /**
-   * Customize the gap between the macOS traffic-light dots.
+   * Traffic-light dot gap.
    * @default "0.5em"
    */
   "--dot-gap"?: string;
 
   /**
-   * Customize the diameter of the macOS traffic-light dots.
+   * Traffic-light dot size.
    * @default "0.75em"
    */
   "--dot-size"?: string;
 
   /**
-   * Customize the color of the "close" traffic-light dot.
+   * Close dot color.
    * @default "#ff5f56"
    */
   "--dot-close"?: string;
 
   /**
-   * Customize the color of the "minimize" traffic-light dot.
+   * Minimize dot color.
    * @default "#ffbd2e"
    */
   "--dot-minimize"?: string;
 
   /**
-   * Customize the color of the "maximize" traffic-light dot.
+   * Maximize dot color.
    * @default "#27c93f"
    */
   "--dot-maximize"?: string;
 
   /**
-   * Customize the font family of the terminal prompt.
+   * Terminal prompt font family.
    * @default "ui-monospace, monospace"
    */
   "--prompt-font-family"?: string;
 
   /**
-   * Customize the font weight of the terminal prompt.
+   * Terminal prompt font weight.
    * @default 700
    */
   "--prompt-font-weight"?: string | number;
 
   /**
-   * Customize the color of the terminal prompt.
+   * Terminal prompt color.
    * @default "inherit"
    */
   "--prompt-color"?: string;

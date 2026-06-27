@@ -6,17 +6,17 @@ import type { LanguageName } from "./languages";
 export type LangTagProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
     /**
-     * Specify the text to highlight.
+     * Code to highlight.
      */
     code: any;
 
     /**
-     * Provide the highlighted code.
+     * Highlighted HTML.
      */
     highlighted: string;
 
     /**
-     * Provide the language name.
+     * Language name.
      * @default "plaintext"
      */
     languageName?: LanguageName | (string & {});

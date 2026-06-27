@@ -15,8 +15,6 @@ export type HighlightActionParameters = {
 };
 
 /**
- * Svelte action that highlights an element's contents in place using
- * highlight.js. Useful for progressively enhancing existing `<pre><code>`
- * markup (e.g. server-rendered markdown).
+ * Highlight element contents in place with highlight.js.
  */
 export declare const highlight: Action<HTMLElement, HighlightActionParameters>;

@@ -35,7 +35,7 @@ const greet = (user: User): string => {
     { name: "nord", theme: nord },
   ];
 
-  // Mutate `code` from the outside to demonstrate external-change repaint.
+  // External `code` mutation to demo repaint.
   function sortLines() {
     code = code.split("\n").sort().join("\n");
   }

@@ -3,70 +3,69 @@ import type { HTMLAttributes } from "svelte/elements";
 
 export type FileTabsProps = HTMLAttributes<HTMLDivElement> & {
   /**
-   * Specify the file names to render as tabs.
+   * Tab labels.
    * @example ["App.svelte", "index.js"]
    */
   files: string[];
 
   /**
-   * Specify the active file. Supports `bind:active`.
+   * Active file (`bind:active`).
    * @default files[0]
    */
   active?: string;
 
   /**
-   * Customize the gap between tabs.
+   * Gap between tabs.
    * @default 0
    */
   "--file-tabs-gap"?: string | number;
 
   /**
-   * Customize the background color of the tab strip.
+   * Tab strip background.
    * @default "inherit"
    */
   "--file-tabs-background"?: string;
 
   /**
-   * Customize the padding of each tab.
+   * Tab padding.
    * @default "0.5em 1em"
    */
   "--tab-padding"?: string;
 
   /**
-   * Customize the text color of an inactive tab.
+   * Inactive tab text color.
    * @default "inherit"
    */
   "--tab-color"?: string;
 
   /**
-   * Customize the background color of an inactive tab.
+   * Inactive tab background.
    * @default "transparent"
    */
   "--tab-background"?: string;
 
   /**
-   * Customize the opacity of inactive tabs. Active and hovered tabs are
-   * always fully opaque.
+   * Inactive tab opacity. Active/hovered tabs stay opaque.
    * @default 0.55
    */
   "--tab-inactive-opacity"?: string | number;
 
   /**
-   * Customize the text color of the active tab.
+   * Active tab text color.
    * Defaults to the highlighted code block's text color.
    * @default the highlighted code's color
    */
   "--tab-active-color"?: string;
 
   /**
-   * Customize the background color of the active tab.
+   * Active tab background.
    * Defaults to the highlighted code block's background.
    * @default the highlighted code's background
    */
   "--tab-active-background"?: string;
 
   /**
-   * Customize the focus outline shown when a tab is focused via the keyboard.
+   * Keyboard focus outline.
    * @default "2px solid currentColor"
    */
   "--tab-focus-outline"?: string;

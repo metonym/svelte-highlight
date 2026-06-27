@@ -1,12 +1,6 @@
 /**
- * Dynamically load a single highlight.js grammar by name.
- *
- * Ergonomic, name-keyed wrapper over the per-language dynamic imports the
- * package already supports (`import("svelte-highlight/languages/<name>")`).
- * Use this when the language is only known at runtime (e.g. from a markdown
- * fence, an API field, or a user selection). When the language is known at
- * author time, prefer a static `import`/`await import` so the bundler can ship
- * only the grammars you reference.
+ * Load a highlight.js grammar by name at runtime.
+ * Prefer a static import when the language is known up front.
  *
  * @param {import("./languages").LanguageName} name
  * @returns {Promise<import("./languages").LanguageType<string>>}

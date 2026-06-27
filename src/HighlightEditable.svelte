@@ -20,13 +20,12 @@
   /** @type {HTMLElement} */
   let editor;
 
-  // Skip re-highlighting mid-composition; it would destroy IME input.
+  // Don't re-highlight during IME composition.
   let composing = false;
   let mounted = false;
   let restoringSelection = false;
 
-  // Mirror of `code` so external (parent) reassignments can be told apart from
-  // our own edits and trigger a repaint.
+  // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
 
   $: hljs.registerLanguage(language.name, language.register);
@@ -80,8 +79,7 @@
 
   function paint() {
     const html = hljs.highlight(code, { language: language.name }).value;
-    // contenteditable can't place a caret on a trailing empty line, so render a
-    // phantom newline there (stripped again when reading `innerText`).
+    // Trailing empty line needs a phantom `\n` for caret placement.
     editor.innerHTML = code === "" || code.endsWith("\n") ? `${html}\n` : html;
   }
 
@@ -124,8 +122,7 @@
     });
   }
 
-  // Coalesce records within 250ms into one undo step so a burst of typing is
-  // undone at once; structural edits (Enter/Tab/paste) pass coalesce=false.
+  // Coalesce typing within 250ms; Enter/Tab/paste pass coalesce=false.
   function pushHistory(snap, coalesce) {
     redoStack = [];
     const now = Date.now();
@@ -171,8 +168,7 @@
     commit(value, sel.start + text.length, undefined, false);
   }
 
-  // Indent or dedent every line the selection touches, keeping the lines
-  // selected so the action repeats. Blank lines are skipped when indenting.
+  // Indent/dedent selected lines; blank lines skipped on indent.
   function shiftIndent(outdent) {
     const sel = getSelectionRange();
     if (!sel) return;
@@ -212,8 +208,7 @@
 
   function ensureFocus() {
     if (document.activeElement === editor) return;
-    // Capture any selection that persisted from before blurring; focusing would
-    // otherwise reset the caret to the start. Fall back to the end of the code.
+    // Restore selection after focus; default caret to end.
     const prior = getSelectionRange();
     editor.focus();
     if (prior) setSelection(prior.start, prior.end);
@@ -285,7 +280,7 @@
 
   function onInput() {
     if (composing) return;
-    // innerText (not textContent) preserves contenteditable line breaks.
+    // innerText keeps contenteditable line breaks; textContent doesn't.
     code = editor.innerText.replace(TRAILING_NEWLINE, "");
     internalCode = code;
     const caret = getCaretOffset() ?? code.length;

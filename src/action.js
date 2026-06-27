@@ -1,11 +1,8 @@
 import hljs from "highlight.js/lib/core";
 
 /**
- * Svelte action that highlights an element's contents in place using
- * highlight.js. Useful for progressively enhancing existing `<pre><code>`
- * markup (e.g. server-rendered markdown) without swapping in a component.
- *
- * When `code` is omitted, the element's current `textContent` is highlighted.
+ * Highlight an element in place with highlight.js.
+ * Omits `code` to highlight existing `textContent`.
  *
  * @type {import("svelte/action").Action<HTMLElement, { language: import("./languages").LanguageType<string>; code?: string }>}
  */

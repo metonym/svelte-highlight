@@ -10,32 +10,21 @@
   export let theme = undefined;
 
   /**
-   * Light theme CSS; pair with `dark` to emit both stylesheets and switch
-   * automatically. Takes precedence over `theme` when both `light` and `dark`
-   * are provided.
+   * Light theme CSS. With `dark`, overrides `theme`.
    * @type {string | undefined}
    */
   export let light = undefined;
 
-  /**
-   * Dark theme CSS; pair with `light` to emit both stylesheets.
-   * @type {string | undefined}
-   */
+  /** Dark theme CSS; pair with `light`. */
   export let dark = undefined;
 
   /**
-   * How to switch between `light` and `dark`:
-   * `"auto"` uses `prefers-color-scheme` media queries, `"light"`/`"dark"`
-   * force a single theme, and any other string is a CSS selector that gates
-   * the dark block (e.g. `[data-theme="dark"]`).
+   * Theme switch: `"auto"` | `"light"` | `"dark"` | CSS selector for dark.
    * @type {"auto" | "light" | "dark" | string}
    */
   export let mode = "auto";
 
-  /**
-   * Wrapper class the scoped selectors target.
-   * @type {string}
-   */
+  /** Scope class for prefixed selectors. */
   export let scopeClass = scopeClassFor(theme ?? `${light}${dark}`);
 
   $: style =

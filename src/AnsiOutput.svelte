@@ -3,17 +3,14 @@
   export let text;
 
   /**
-   * Whether to flip a span's foreground to black or white when it wouldn't read
-   * on its background (e.g. white text on a white background). Only spans that
-   * set a background are adjusted.
+   * Flip foreground to black/white when contrast on a background span is too low.
    * @type {boolean}
    */
   export let autoContrast = true;
 
   import { parseAnsi } from "./ansi.js";
 
-  // The default foreground (matches `--ansi-foreground`) and the minimum
-  // contrast ratio a span's text must meet against its background.
+  // Default foreground and minimum WCAG contrast ratio against backgrounds.
   const FOREGROUND_FALLBACK = "#d4d4d4";
   const CONTRAST_TARGET = 4.5;
   /** @type {[number, number, number]} */
@@ -21,8 +18,7 @@
   /** @type {[number, number, number]} */
   const WHITE = [255, 255, 255];
 
-  // Default hex values for the 16 base colors (xterm palette). Each is exposed
-  // as a `--ansi-<name>` CSS variable so the palette is fully themable.
+  // 16-color xterm defaults, each overridable via `--ansi-<name>`.
   const DEFAULTS = {
     black: "#000000",
     red: "#cd0000",
@@ -42,13 +38,10 @@
     "bright-white": "#ffffff",
   };
 
-  // The six steps used by the 6×6×6 color cube of the 256-color palette.
+  // 256-color cube steps (6×6×6).
   const CUBE = [0, 95, 135, 175, 215, 255];
 
-  /**
-   * Resolve a 256-color palette index (16-255) to a hex string.
-   * @param {number} index
-   */
+  /** 256-color index → hex. */
   function indexedHex(index) {
     if (index >= 232) {
       const value = (index - 232) * 10 + 8;
@@ -62,11 +55,7 @@
     return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
   }
 
-  /**
-   * Convert a parsed color into a CSS color string. Named colors reference a
-   * themable CSS variable with a hex fallback.
-   * @param {import("./ansi").AnsiColor} color
-   */
+  /** Parsed color → CSS (named colors use `--ansi-*` vars). */
   function cssColor(color) {
     if ("name" in color) {
       return `var(--ansi-${color.name}, ${DEFAULTS[color.name]})`;
@@ -90,22 +79,14 @@
     ];
   }
 
-  /**
-   * Resolve a parsed color to its RGB value (using the default palette for
-   * named colors, since user theme overrides aren't known at this point).
-   * @param {import("./ansi").AnsiColor} color
-   * @returns {[number, number, number]}
-   */
+  /** Named colors use the default palette (theme overrides aren't known here). */
   function colorToRgb(color) {
     if ("name" in color) return hexToRgb(DEFAULTS[color.name] ?? "#000000");
     if ("rgb" in color) return color.rgb;
     return hexToRgb(indexedHex(color.index));
   }
 
-  /**
-   * Relative luminance per WCAG.
-   * @param {[number, number, number]} rgb
-   */
+  /** WCAG relative luminance. */
   function luminance([r, g, b]) {
     const channels = [r, g, b].map((c) => {
       const v = c / 255;
@@ -114,33 +95,21 @@
     return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
   }
 
-  /**
-   * WCAG contrast ratio between two colors.
-   * @param {[number, number, number]} a
-   * @param {[number, number, number]} b
-   */
+  /** WCAG contrast ratio. */
   function contrastRatio(a, b) {
     const la = luminance(a);
     const lb = luminance(b);
     return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
   }
 
-  /**
-   * Pick black or white, whichever reads better against `bg`.
-   * @param {[number, number, number]} bg
-   */
+  /** Black or white, whichever contrasts more with `bg`. */
   function readableForeground(bg) {
     return contrastRatio(BLACK, bg) >= contrastRatio(WHITE, bg)
       ? "#000000"
       : "#ffffff";
   }
 
-  /**
-   * Resolve a segment's foreground CSS, substituting a readable color when
-   * auto-contrast is on and the span's text would be hard to read on its
-   * background.
-   * @param {import("./ansi").AnsiSegment} segment
-   */
+  /** Foreground CSS, with auto-contrast override when needed. */
   function foregroundCss(segment) {
     if (autoContrast && segment.bg) {
       const bg = colorToRgb(segment.bg);
@@ -172,8 +141,7 @@
     return style || undefined;
   }
 
-  // Pre-resolve each segment's class/style so the template stays declarative.
-  // Parsing is kept separate so it only re-runs on `text`, not on `autoContrast`.
+  // Precompute class/style per segment. Parse only when `text` changes.
   $: parsed = parseAnsi(text);
   $: segments = parsed.map((segment) => ({
     text: segment.text,

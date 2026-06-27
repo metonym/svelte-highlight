@@ -3,7 +3,7 @@ import type { HTMLAttributes } from "svelte/elements";
 
 export type TypewriterProps = HTMLAttributes<HTMLPreElement> & {
   /**
-   * Highlighted HTML from `Highlight`'s `highlighted` slot prop.
+   * Highlighted HTML from `Highlight`'s `highlighted` slot.
    * @default ""
    */
   highlighted?: string;
@@ -53,7 +53,7 @@ export type TypewriterProps = HTMLAttributes<HTMLPreElement> & {
 
 export type TypewriterEvents = {
   /**
-   * Fires when typing finishes, or immediately when reduced motion is on.
+   * Fires when typing finishes (or immediately with reduced motion).
    */
   done: CustomEvent<null>;
 };

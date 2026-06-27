@@ -5,7 +5,7 @@ import type { LangtagProps } from "./Highlight.svelte";
 export type HighlightSvelteProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
     /**
-     * Specify the text to highlight.
+     * Code to highlight.
      */
     code: any;
   };
