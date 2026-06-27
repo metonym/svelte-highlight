@@ -186,8 +186,10 @@
 
   // Reconfigure (but never restart per-tick) when playback inputs change.
   // The array makes the dependencies explicit without the comma operator.
+  // `total` is omitted: it only changes alongside `highlighted`, which already
+  // restarts above, so listing it here would fire `sync()` a redundant time.
   $: {
-    void [play, speed, mounted, reducedMotion, total];
+    void [play, speed, mounted, reducedMotion];
     sync();
   }
 
