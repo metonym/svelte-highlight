@@ -70,9 +70,7 @@
     if ("rgb" in color) {
       return `rgb(${color.rgb[0]}, ${color.rgb[1]}, ${color.rgb[2]})`;
     }
-    return color.index < 16
-      ? `var(--ansi-${color.index}, ${indexedHex(color.index)})`
-      : indexedHex(color.index);
+    return indexedHex(color.index);
   }
 
   /**
