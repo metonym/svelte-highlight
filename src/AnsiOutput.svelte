@@ -16,6 +16,10 @@
   // contrast ratio a span's text must meet against its background.
   const FOREGROUND_FALLBACK = "#d4d4d4";
   const CONTRAST_TARGET = 4.5;
+  /** @type {[number, number, number]} */
+  const BLACK = [0, 0, 0];
+  /** @type {[number, number, number]} */
+  const WHITE = [255, 255, 255];
 
   // Default hex values for the 16 base colors (xterm palette). Each is exposed
   // as a `--ansi-<name>` CSS variable so the palette is fully themable.
@@ -126,9 +130,7 @@
    * @param {[number, number, number]} bg
    */
   function readableForeground(bg) {
-    const black = /** @type {[number, number, number]} */ ([0, 0, 0]);
-    const white = /** @type {[number, number, number]} */ ([255, 255, 255]);
-    return contrastRatio(black, bg) >= contrastRatio(white, bg)
+    return contrastRatio(BLACK, bg) >= contrastRatio(WHITE, bg)
       ? "#000000"
       : "#ffffff";
   }
