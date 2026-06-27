@@ -19,6 +19,7 @@ import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
 import ScopedStyle from "./ScopedStyle.test.svelte";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
+import Typewriter from "./Typewriter.test.svelte";
 
 test.use({ viewport: { width: 1200, height: 600 } });
 
@@ -562,6 +563,40 @@ test("HighlightEditable - focus outline uses the --outline-color variable", asyn
   const editor = page.locator("[contenteditable='true']");
   await editor.click();
   await expect(editor).toHaveCSS("outline-color", "rgb(255, 0, 0)");
+});
+
+test("Typewriter - animates then settles to the full highlighted content", async ({
+  mount,
+  page,
+}) => {
+  await mount(Typewriter);
+
+  const tw = page.getByTestId("tw");
+
+  // Mid-animation, partial splits can duplicate open tags (e.g. `add` → `a` + `dd`).
+  // Wait for `done` before asserting final highlighted structure.
+  await expect(page.getByTestId("done")).toHaveText("1");
+
+  await expect(tw.locator(".hljs-keyword").first()).toHaveText("const");
+  await expect(tw.locator(".hljs-title.function_")).toHaveText("add");
+  await expect(tw).toContainText(
+    "const add = (a: number, b: number) => a + b;",
+  );
+});
+
+test("Typewriter - reduced motion renders instantly", async ({
+  mount,
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+
+  // At speed 1000, typing would take ~44s without reduced motion. With reduced
+  // motion the full content (and `done`) must appear immediately.
+  await mount(Typewriter, { props: { speed: 1000 } });
+
+  const tw = page.getByTestId("tw");
+  await expect(page.getByTestId("done")).toHaveText("1");
+  await expect(tw.locator(".hljs-title.function_")).toHaveText("add");
 });
 
 test("HighlightEditable - two instances share the same bound code", async ({

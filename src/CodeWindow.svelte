@@ -86,7 +86,7 @@
 
   .title {
     /* Center the title across the full titlebar width, independent of the
-       leading dots/prompt, mirroring native window chrome. */
+         leading dots/prompt, mirroring native window chrome. */
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
