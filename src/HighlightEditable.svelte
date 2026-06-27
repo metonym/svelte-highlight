@@ -324,6 +324,19 @@
     insertText(event.clipboardData?.getData("text/plain") ?? "");
   }
 
+  function onBlur() {
+    dispatch("blur", { code: getCode() });
+  }
+
+  function onCompositionStart() {
+    composing = true;
+  }
+
+  function onCompositionEnd() {
+    composing = false;
+    onInput();
+  }
+
   onMount(() => {
     paint();
     undoStack = [{ code, start: 0, end: 0 }];
@@ -336,16 +349,9 @@
     editor.addEventListener("mouseup", syncCaretToHistory);
     editor.addEventListener("keyup", syncCaretToHistory);
     document.addEventListener("selectionchange", syncCaretToHistory);
-    editor.addEventListener("blur", () =>
-      dispatch("blur", { code: getCode() }),
-    );
-    editor.addEventListener("compositionstart", () => {
-      composing = true;
-    });
-    editor.addEventListener("compositionend", () => {
-      composing = false;
-      onInput();
-    });
+    editor.addEventListener("blur", onBlur);
+    editor.addEventListener("compositionstart", onCompositionStart);
+    editor.addEventListener("compositionend", onCompositionEnd);
 
     return () => {
       editor.removeEventListener("input", onInput);
@@ -354,6 +360,9 @@
       editor.removeEventListener("mouseup", syncCaretToHistory);
       editor.removeEventListener("keyup", syncCaretToHistory);
       document.removeEventListener("selectionchange", syncCaretToHistory);
+      editor.removeEventListener("blur", onBlur);
+      editor.removeEventListener("compositionstart", onCompositionStart);
+      editor.removeEventListener("compositionend", onCompositionEnd);
     };
   });
 </script>
