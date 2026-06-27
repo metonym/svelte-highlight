@@ -1012,6 +1012,45 @@ Or layer a `CopyButton` over it by wrapping both in a relatively-positioned cont
 </div>
 ```
 
+## Animation
+
+Use `Typewriter` inside `Highlight`'s default slot with the `highlighted` prop. It prints the code one character at a time, syntax highlighting included. A blinking caret marks the end of the typed text and hides when typing stops.
+
+Unrevealed text stays in the layout but invisible, so the block is full height from the start. Content below won't jump as characters appear. You don't need a `min-height` hack.
+
+```svelte
+<script>
+  import Highlight, { Typewriter } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<Highlight language={typescript} {code} let:highlighted>
+  <Typewriter {highlighted} />
+</Highlight>
+```
+
+Set `speed` (milliseconds per character) and pause with `play`. Turn `play` back on to pick up where you left off. A new `highlighted` value starts over from the first character. Fire `on:done` when the last character is visible.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <Typewriter
+    {highlighted}
+    speed={50}
+    {play}
+    on:done={() => console.log("revealed")}
+  />
+</Highlight>
+```
+
+With `prefers-reduced-motion`, the full block shows immediately and `on:done` runs right away. Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
+
 ## Component API
 
 ### `Highlight`
@@ -1199,6 +1238,28 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
   on:change={(e) => console.log(e.detail.code)}
   on:history={(e) => console.log(e.detail.canUndo, e.detail.canRedo)}
 />
+```
+
+### `Typewriter`
+
+#### Props
+
+| Name        | Type      | Default value |
+| :---------- | :-------- | :------------ |
+| highlighted | `string`  | `""`          |
+| speed       | `number`  | `30`          |
+| play        | `boolean` | `true`        |
+
+`$$restProps` are forwarded to the top-level `pre` element.
+
+#### Dispatched Events
+
+- **on:done**: fires when typing finishes, or immediately when reduced motion is on
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <Typewriter {highlighted} on:done={() => console.log("revealed")} />
+</Highlight>
 ```
 
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)

@@ -24,6 +24,8 @@
   import ScopedStyleSvelte from "@components/ScopedStyleSvelte.svelte";
   import ScopedThemes from "@components/ScopedThemes.svelte";
   import ScopedThemesDark from "@components/ScopedThemesDark.svelte";
+  import TypewriterBasic from "@components/Typewriter/Basic.svelte";
+  import TypewriterControls from "@components/Typewriter/Controls.svelte";
   import { PKG_NAME, THEME_MODULE_NAME, THEME_NAME } from "@www/constants";
   import {
     Column,
@@ -37,9 +39,9 @@
   import css from "svelte-highlight/languages/css";
 
   const svelteHeadCdn = `<link
-  rel="stylesheet"
-  href="https://unpkg.com/svelte-highlight/styles/github.css"
-/>\n`;
+    rel="stylesheet"
+    href="https://unpkg.com/svelte-highlight/styles/github.css"
+  />\n`;
 </script>
 
 <Row>
@@ -467,6 +469,51 @@
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <CodeWindowPreview /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Animation</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Use <code class="code">Typewriter</code> inside
+      <code class="code">Highlight</code>'s default slot with the
+      <code class="code">highlighted</code>
+      prop. It prints the code one character at a time, syntax highlighting
+      included. A blinking caret marks the end of the typed text and hides when
+      typing stops.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <TypewriterBasic /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Set <code class="code">speed</code> (milliseconds per character) and pause
+      with <code class="code">play</code>. Turn
+      <code class="code">play</code>
+      back on to pick up where you left off. A new
+      <code class="code">highlighted</code>
+      value starts over from the first character. Fire
+      <code class="code">on:done</code>
+      when the last character is visible.
+    </p>
+    <p class="mb-5">
+      Customize the caret with <code class="code">--caret-width</code>,
+      <code class="code">--caret-height</code>,
+      <code class="code">--caret-gap</code>,
+      <code class="code">--caret-color</code>, and
+      <code class="code">--caret-blink</code>. The demo below puts
+      <code class="code">Typewriter</code>
+      inside a
+      <code class="code">CodeWindow</code>.
+    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="info"
+      title="Reduced motion"
+      subtitle="With prefers-reduced-motion, the full block shows immediately and on:done runs right away."
+    />
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <TypewriterControls /> </Column>
 </Row>
 
 <Row class="mb-9">
