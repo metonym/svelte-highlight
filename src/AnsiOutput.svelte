@@ -170,9 +170,10 @@
     return style || undefined;
   }
 
-  // Resolve each segment to its rendered class/style up front so the helpers
-  // are referenced from the script (and the markup stays declarative).
-  $: segments = parseAnsi(text).map((segment) => ({
+  // Pre-resolve each segment's class/style so the template stays declarative.
+  // Parsing is kept separate so it only re-runs on `text`, not on `autoContrast`.
+  $: parsed = parseAnsi(text);
+  $: segments = parsed.map((segment) => ({
     text: segment.text,
     class: classNames(segment),
     style: inlineStyle(segment),
