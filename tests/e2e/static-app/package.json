@@ -1,0 +1,36 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/ensure-ready.ts",
+    "dev": "vite",
+    "prebuild": "node scripts/ensure-ready.ts",
+    "build": "bun scripts/build-all-entries.ts",
+    "preview": "vite preview",
+    "pretest": "node scripts/ensure-ready.ts",
+    "test": "bun scripts/build-all-entries.ts",
+    "dev:single-snippet-injected-style": "ENTRY=single-snippet-injected-style vite",
+    "build:single-snippet-injected-style": "ENTRY=single-snippet-injected-style vite build",
+    "preview:single-snippet-injected-style": "ENTRY=single-snippet-injected-style vite preview",
+    "dev:single-snippet-stylesheet": "ENTRY=single-snippet-stylesheet vite",
+    "build:single-snippet-stylesheet": "ENTRY=single-snippet-stylesheet vite build",
+    "preview:single-snippet-stylesheet": "ENTRY=single-snippet-stylesheet vite preview",
+    "dev:multiple-snippets-same-language": "ENTRY=multiple-snippets-same-language vite",
+    "build:multiple-snippets-same-language": "ENTRY=multiple-snippets-same-language vite build",
+    "preview:multiple-snippets-same-language": "ENTRY=multiple-snippets-same-language vite preview",
+    "dev:multiple-snippets-various-languages": "ENTRY=multiple-snippets-various-languages vite",
+    "build:multiple-snippets-various-languages": "ENTRY=multiple-snippets-various-languages vite build",
+    "preview:multiple-snippets-various-languages": "ENTRY=multiple-snippets-various-languages vite preview",
+    "dev:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite",
+    "build:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite build",
+    "preview:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite preview"
+  },
+  "dependencies": {
+    "svelte-highlight": "file:../../../package"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "svelte": "^5.56.3",
+    "vite": "^8.1.2"
+  }
+}
