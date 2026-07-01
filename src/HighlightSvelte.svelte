@@ -1,37 +1,29 @@
 <script>
+  import { createEventDispatcher } from "svelte";
+  import { highlightLanguage } from "./core.js";
+  import { createHighlighter } from "./highlighter.svelte.js";
   import LangTag from "./LangTag.svelte";
-
-  /** @type {any} */
-  export let code;
-
-  /** @type {boolean} */
-  export let langtag = false;
-
-  import hljs from "highlight.js/lib/core";
-  import { afterUpdate, createEventDispatcher } from "svelte";
   import svelte from "./languages/svelte";
+
+  /** @type {{ code: any; langtag?: boolean; [key: string]: any }} */
+  let { code, langtag = false, ...restProps } = $props();
 
   const dispatch = createEventDispatcher();
 
-  /** @type {string} */
-  let highlighted = "";
-
-  afterUpdate(() => {
-    if (highlighted) dispatch("highlight", { highlighted });
-  });
-
-  $: {
-    hljs.registerLanguage(svelte.name, svelte.register);
-    highlighted = hljs.highlight(code, { language: svelte.name }).value;
-  }
+  const core = createHighlighter(
+    () => highlightLanguage(svelte, code),
+    (highlighted) => {
+      if (highlighted) dispatch("highlight", { highlighted });
+    },
+  );
 </script>
 
-<slot {highlighted} {langtag} languageName="svelte">
+<slot highlighted={core.value} {langtag} languageName="svelte">
   <LangTag
-    {...$$restProps}
+    {...restProps}
     languageName="svelte"
     {langtag}
-    {highlighted}
+    highlighted={core.value}
     {code}
   />
 </slot>
