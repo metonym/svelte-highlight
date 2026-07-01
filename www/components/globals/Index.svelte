@@ -756,6 +756,126 @@
   </Column>
 </Row>
 
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Static Mode</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">svelte-highlight/static</code>
+      is a Svelte preprocessor. At build time it replaces
+      <code class="code">Highlight</code>
+      usages with known <code class="code">code</code> and
+      <code class="code">language</code>
+      with pre-rendered
+      <code class="code">highlight.js</code>
+      HTML, so the client never downloads
+      <code class="code">highlight.js</code>
+      or that grammar module.
+    </p>
+    <p class="mb-5">Wire it into your Vite/Svelte preprocess config:</p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <HighlightSvelte
+      code={`// vite.config.js
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { highlightStatic } from "svelte-highlight/static";
+
+export default {
+  plugins: [svelte({ preprocess: [highlightStatic()] })],
+};`}
+      class={THEME_MODULE_NAME}
+    />
+  </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      With a literal <code class="code">code</code> string and a static
+      <code class="code">language</code>
+      import, the build emits plain HTML:
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <HighlightSvelte
+      code={`<script>
+  import Highlight from "svelte-highlight";
+  import javascript from "svelte-highlight/languages/javascript";
+<\/script>
+
+<Highlight language={javascript} code="const x = 1;" />`}
+      class={THEME_MODULE_NAME}
+    />
+  </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      ...into plain HTML, with no <code class="code">highlight.js</code> or
+      grammar module shipped to the client:
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <HighlightSvelte
+      code={`<pre class="hljs" data-language="javascript"><code class="hljs"
+  ><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;</code
+></pre>`}
+      class={THEME_MODULE_NAME}
+    />
+  </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      The static transform runs only when all of these are true:
+    </p>
+    <UnorderedList class="mb-5">
+      <ListItem>
+        <code class="code">language</code>
+        is a plain identifier bound to a static import from
+        <code class="code">svelte-highlight/languages/*</code>.
+      </ListItem>
+      <ListItem>
+        <code class="code">code</code>
+        is a string literal or a template literal with no interpolated
+        expressions.
+      </ListItem>
+      <ListItem>
+        The element has no default-slot content, no spread props, and no
+        <code class="code">bind:</code>/<code class="code">on:</code>/other
+        directives.
+      </ListItem>
+      <ListItem>
+        The <code class="code">langtag</code> prop is not used. Static output
+        can't pull in <code class="code">langtag.css</code>; that only happens
+        when a runtime <code class="code">LangTag</code> is in the bundle.
+      </ListItem>
+    </UnorderedList>
+    <p class="mb-5">
+      Dynamic <code class="code">code</code> or
+      <code class="code">language</code>,
+      <code class="code">loadLanguage</code>,
+      <code class="code">HighlightAuto</code>,
+      <code class="code">HighlightSvelte</code>, and
+      <code class="code">HighlightEditable</code>
+      keep the runtime component. No warning.
+    </p>
+    <p class="mb-5">
+      If a usage looks static but fails to resolve or highlight, it falls back
+      and calls <code class="code">onWarn</code>:
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <HighlightSvelte
+      code={`highlightStatic({
+  onWarn(message, details) {
+    // defaults to a console.warn with the filename, line, and message
+  },
+});`}
+      class={THEME_MODULE_NAME}
+    />
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="info"
+      title="Note:"
+      subtitle="Scope is small on purpose: extra props on Highlight don't carry over to the emitted &lt;pre&gt;, unused imports are left for bundlers to drop, and there's no Astro/MDX fence hook yet."
+    />
+  </Column>
+</Row>
+
 <Row>
   <Column xlg={12}><h3>Examples</h3></Column>
   <Column xlg={6} lg={6} md={12}>

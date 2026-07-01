@@ -857,6 +857,60 @@ async function highlightFence(fenceLang, code) {
 }
 ```
 
+## Static mode
+
+`svelte-highlight/static` is a Svelte preprocessor. At build time it replaces `<Highlight>` usages that have known `code` and `language` with pre-rendered `highlight.js` HTML, so the client never downloads `highlight.js` or that grammar module.
+
+The biggest win is on server-rendered or statically-generated pages, since a client-only SPA still ships the pre-rendered markup as a string inside the JS bundle, just without `highlight.js` and the grammar module.
+
+```js
+// vite.config.js
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { highlightStatic } from "svelte-highlight/static";
+
+export default {
+  plugins: [svelte({ preprocess: [highlightStatic()] })],
+};
+```
+
+```svelte
+<script>
+  import Highlight from "svelte-highlight";
+  import javascript from "svelte-highlight/languages/javascript";
+</script>
+
+<Highlight language={javascript} code="const x = 1;" />
+```
+
+At build time this becomes plain HTML:
+
+```html
+<pre class="hljs" data-language="javascript"><code class="hljs"
+  ><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;</code
+></pre>
+```
+
+The static transform runs only when all of these are true:
+
+- `language` is a plain identifier from a static `import` of `svelte-highlight/languages/*`.
+- `code` is a string literal or a template literal with no `${...}` interpolation.
+- The element has no slot content, spread props, or directives (`bind:`, `on:`, etc.).
+- `langtag` is not set. Static output can't pull in `langtag.css`; that only happens when a runtime `LangTag` is in the bundle.
+
+Dynamic `code` or `language`, `loadLanguage`, `HighlightAuto`, `HighlightSvelte`, and `HighlightEditable` keep the runtime component. No warning. That's intentional.
+
+If a usage looks static but still fails (language module missing, `highlight.js` throws), it falls back to the runtime component and calls `onWarn`. Usually that's a typo or a resolution quirk, not a dynamic usage you meant to keep:
+
+```js
+highlightStatic({
+  onWarn(message, { filename, line, cause }) {
+    // defaults to `console.warn(`[svelte-highlight/static] ${filename}:${line} - ${message}`)`
+  },
+});
+```
+
+Scope is small on purpose. Extra props on `<Highlight>` don't carry over to the emitted `<pre>`. Unused `Highlight` and language imports are left in place; bundlers drop them (`sideEffects` in `package.json` is narrow enough). No Astro/MDX fence hook yet.
+
 ## Action
 
 Use the `highlight` action to highlight existing `<pre><code>` markup in place. This is useful for progressively enhancing server-rendered content (e.g. markdown) without swapping in a component.
