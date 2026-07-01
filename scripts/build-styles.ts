@@ -1,6 +1,7 @@
 import path from "node:path";
 import { $, Glob } from "bun";
 import { createMarkdown } from "./utils/create-markdown.ts";
+import { fillSimilarityGaps } from "./utils/fill-similarity-gaps.ts";
 import { inlineCssUrls } from "./utils/inline-css-urls.ts";
 import { preprocessStyles } from "./utils/preprocess-styles.ts";
 import {
@@ -10,6 +11,7 @@ import {
   STARTS_WITH_DIGIT,
 } from "./utils/regexes.ts";
 import { scopeStylesheet } from "./utils/scope-stylesheet.ts";
+import { buildGapFillProposals } from "./utils/similarity-map.ts";
 import { toCamelCase } from "./utils/to-camel-case.ts";
 import { writeTo } from "./utils/write-to.ts";
 
@@ -57,13 +59,28 @@ export async function buildStyles() {
     }
   }
 
+  // Mining gap-fill proposals needs every theme's raw CSS up front, so read
+  // it all once here rather than per-file inside the main pass below.
+  const rawContents = await Promise.all(
+    cssFiles.map(({ absPath }) => Bun.file(absPath).text()),
+  );
+  const rawCssByTheme = new Map(
+    cssFiles.map(({ name }, i) => [name, rawContents[i]]),
+  );
+  const gapFillProposals = buildGapFillProposals(rawCssByTheme);
+
   const fileWrites = await Promise.all(
-    cssFiles.map(async ({ absPath, name, moduleName }) => {
-      const raw = await Bun.file(absPath).text();
+    cssFiles.map(async ({ absPath, name, moduleName }, i) => {
+      const raw = rawContents[i];
       const content = await inlineCssUrls(raw, path.dirname(absPath));
+
+      const proposals = gapFillProposals.get(name);
+      const plugins =
+        proposals && proposals.size > 0 ? [fillSimilarityGaps(proposals)] : [];
 
       const cssMinified = preprocessStyles(content, {
         discardComments: "preserve-license",
+        plugins,
       });
       const contentCssForJs = cssMinified.replace(BACKTICK, "\\`");
 
@@ -72,7 +89,7 @@ export async function buildStyles() {
 
       // Scope each theme for docs previews (`class={moduleName}` on the `<pre>`).
       const scopedStyle = scopeStylesheet(
-        preprocessStyles(content, { discardComments: "remove-all" }),
+        preprocessStyles(content, { discardComments: "remove-all", plugins }),
         moduleName,
       );
 
