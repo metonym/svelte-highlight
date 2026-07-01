@@ -19,6 +19,14 @@ pkgJson.exports = {
     types: "./index.d.ts",
     svelte: "./index.js",
   },
+  "./static": {
+    types: "./static.d.ts",
+    import: "./static.js",
+  },
+  "./static.js": {
+    types: "./static.d.ts",
+    import: "./static.js",
+  },
   "./*.svelte": {
     types: "./*.svelte.d.ts",
     import: "./*.svelte",

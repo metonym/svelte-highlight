@@ -23,7 +23,8 @@
     "playwright": "playwright"
   },
   "dependencies": {
-    "highlight.js": "11.11.1"
+    "highlight.js": "11.11.1",
+    "magic-string": "^0.30.17"
   },
   "devDependencies": {
     "@astrojs/svelte": "^8.1.2",
