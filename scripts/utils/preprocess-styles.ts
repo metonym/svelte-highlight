@@ -5,10 +5,12 @@ import discardDuplicates from "postcss-discard-duplicates";
 import { inlineCssVars } from "postcss-inline-css-vars";
 import mergeRules from "postcss-merge-rules";
 import { LICENSE_OR_AUTHOR } from "./regexes.ts";
+import { removeDeadDeclarations } from "./remove-dead-declarations.ts";
 
 /**
  * Raw styles from `highlight.js` are preprocessed for consistency.
  * - Inlining CSS variables.
+ * - Removing declarations unconditionally overridden later in the file.
  * - Discarding duplicate rules.
  * - Merging rules.
  * - Discarding comments (but preserving license comments).
@@ -24,6 +26,7 @@ export const preprocessStyles = (
 ) => {
   return postcss([
     inlineCssVars(),
+    removeDeadDeclarations(),
     ...(options?.plugins ?? []),
     discardDuplicates(),
     mergeRules(),
