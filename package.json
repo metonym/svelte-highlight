@@ -13,6 +13,7 @@
     "package": "bun scripts/npm-package.ts",
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "bunx playwright test",
+    "test:static-app": "bun run build:lib && bun run package && cd tests/e2e/static-app && bun install && bun run test",
     "test:types": "tsgo",
     "format": "biome format --write .",
     "lint": "biome lint .",
