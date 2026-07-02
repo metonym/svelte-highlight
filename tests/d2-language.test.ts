@@ -29,3 +29,33 @@ test("d2 highlights comments", () => {
 
   expect(result).toContain('<span class="hljs-comment"># diagram</span>');
 });
+
+test("d2 highlights nested style sub-properties", () => {
+  const result = highlight("server.style.fill: red");
+
+  expect(result).toContain('<span class="hljs-keyword">.style.fill</span>');
+});
+
+test("d2 highlights hyphenated style sub-properties", () => {
+  const result = highlight("server.style.stroke-width: 2");
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">.style.stroke-width</span>',
+  );
+});
+
+test("d2 highlights the direction attribute", () => {
+  const result = highlight("x.direction: right");
+
+  expect(result).toContain('<span class="hljs-keyword">.direction</span>');
+});
+
+test("d2 recognizes layers, scenarios, and steps as keywords", () => {
+  const result = highlight(
+    "layers.detail.shape: cylinder\nscenarios.happy.shape: cylinder\nsteps.first.shape: cylinder",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">layers</span>');
+  expect(result).toContain('<span class="hljs-keyword">scenarios</span>');
+  expect(result).toContain('<span class="hljs-keyword">steps</span>');
+});

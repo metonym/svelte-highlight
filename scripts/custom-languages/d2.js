@@ -1,5 +1,5 @@
 const D2_KEYWORDS =
-  "shape style label icon near direction width height tooltip link constraint source-arrowhead target-arrowhead grid-rows grid-columns grid-gap vertical-gap horizontal-gap class classes vars";
+  "shape style label icon near direction width height tooltip link constraint source-arrowhead target-arrowhead grid-rows grid-columns grid-gap vertical-gap horizontal-gap class classes vars layers scenarios steps";
 
 const D2_VALUES =
   "rectangle square page parallelogram document cylinder queue package step callout stored_data person diamond oval circle hexagon cloud text code class sequence_diagram up down left right none triangle arrow diamond filled-diamond circle filled-circle box";
@@ -29,7 +29,7 @@ function defineD2(hljs) {
   const ATTRIBUTE = {
     className: "keyword",
     begin:
-      /\.(?:shape|style|label|icon|near|width|height|tooltip|link|class)\b/,
+      /\.(?:shape|style\.(?:fill|stroke-width|stroke|font-size|bold|italic|underline|opacity|shadow|border-radius|animated|multiple|3d)|style|label|icon|near|direction|width|height|tooltip|link|class)\b/,
     relevance: 0,
   };
 
