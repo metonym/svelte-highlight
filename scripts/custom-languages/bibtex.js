@@ -25,8 +25,8 @@ function defineBibtex(hljs) {
   };
 
   const ENTRY = {
-    className: "keyword",
-    begin: /@[a-zA-Z]+/,
+    begin: [/@[a-zA-Z]+/, /\{/, /\s*/, /[^\s,}]+/],
+    beginScope: { 1: "keyword", 4: "title" },
     relevance: 0,
   };
 

@@ -30,3 +30,10 @@ test("bibtex highlights numeric values", () => {
 
   expect(result).toContain('<span class="hljs-number">2020</span>');
 });
+
+test("bibtex highlights the citation key as a title", () => {
+  const result = highlight("@article{einstein1905, year = 1905}");
+
+  expect(result).toContain('<span class="hljs-keyword">@article</span>');
+  expect(result).toContain('<span class="hljs-title">einstein1905</span>');
+});
