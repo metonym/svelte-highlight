@@ -268,6 +268,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "hlsl",
     path: `${import.meta.dir}/custom-languages/hlsl.js`,
   },
+  {
+    name: "just",
+    moduleName: "just",
+    path: `${import.meta.dir}/custom-languages/just.js`,
+  },
 ];
 
 type LanguageEntry = {
