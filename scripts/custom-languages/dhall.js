@@ -45,6 +45,12 @@ function defineDhall(hljs) {
     relevance: 0,
   };
 
+  const OPERATOR = {
+    className: "operator",
+    begin: /\\|λ|->|→/,
+    relevance: 0,
+  };
+
   return {
     name: "Dhall",
     aliases: ["dhall"],
@@ -61,6 +67,7 @@ function defineDhall(hljs) {
       STRING,
       IMPORT,
       NUMBER,
+      OPERATOR,
     ],
   };
 }
