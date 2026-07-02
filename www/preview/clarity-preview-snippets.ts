@@ -31,4 +31,19 @@ export const clarityPreviewSnippets: ClarityPreviewSnippet[] = [
     (map-set balances tx-sender (- sender-balance amount))
     (ok true)))`,
   },
+  {
+    title: "Access control and expiry",
+    description: "contract-caller, block-height, and burn-block-height",
+    code: `(define-constant owner tx-sender)
+(define-data-var expires-at uint u0)
+
+(define-public (set-expiry (blocks uint))
+  (begin
+    (asserts! (is-eq contract-caller owner) (err u403))
+    (var-set expires-at (+ block-height blocks))
+    (ok (var-get expires-at))))
+
+(define-read-only (is-expired)
+  (> burn-block-height (var-get expires-at)))`,
+  },
 ];
