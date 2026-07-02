@@ -21,4 +21,13 @@ export const promqlPreviewSnippets: PromqlPreviewSnippet[] = [
 )
 > 0.5`,
   },
+  {
+    title: "Bare metrics and the @ modifier",
+    description: "metric names without {}, and the @ timestamp modifier",
+    code: `up offset 5m
+
+node_cpu_seconds_total @ 1609746000
+
+up @ start()`,
+  },
 ];
