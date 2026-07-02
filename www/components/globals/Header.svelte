@@ -77,6 +77,7 @@
     "/preview-rego": "Rego language preview",
     "/preview-dax": "DAX language preview",
     "/preview-typst": "Typst language preview",
+    "/preview-rst": "reStructuredText language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
