@@ -40,4 +40,14 @@ def __init__():
 def is_owner(account: address) -> bool:
     return account == owner`,
   },
+  {
+    title: "Byte strings",
+    description: 'b"..." literal prefix',
+    code: `SELECTOR: constant(bytes4) = b"\\x01\\x02\\x03\\x04"
+
+@external
+@pure
+def matches(sig: bytes4) -> bool:
+    return sig == SELECTOR`,
+  },
 ];
