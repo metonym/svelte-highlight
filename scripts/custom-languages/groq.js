@@ -44,14 +44,33 @@ function defineGroq(hljs) {
     relevance: 0,
   };
 
+  // pipe chaining idiom (*[...] | order(name) | [0...10]) and boolean
+  // operators && || ! (not the `!=` comparison operator). `||` is tried
+  // before the bare pipe so chained pipes and logical-or aren't split.
+  const OPERATOR = {
+    className: "operator",
+    begin: /&&|\|\||\||!(?!=)/,
+    relevance: 0,
+  };
+
+  // object-projection key/alias before a single `:` (not the `::` namespace
+  // separator used by calls like `pt::text()`), e.g. `"slug": slug.current`
+  const PROJECTION_KEY = {
+    className: "attr",
+    begin: /"[^"]*"(?=\s*:(?!:))|[A-Za-z_]\w*(?=\s*:(?!:))/,
+    relevance: 0,
+  };
+
   return {
     name: "GROQ",
     aliases: ["groq"],
     keywords: { keyword: GROQ_KEYWORDS, literal: GROQ_LITERALS },
     contains: [
       hljs.C_LINE_COMMENT_MODE,
+      PROJECTION_KEY,
       STRING,
       DEREFERENCE,
+      OPERATOR,
       METADATA,
       FUNCTION,
       PARAMETER,

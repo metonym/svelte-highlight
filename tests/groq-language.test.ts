@@ -57,3 +57,23 @@ test("groq highlights keywords and literals", () => {
   expect(result).toContain('<span class="hljs-keyword">match</span>');
   expect(result).toContain('<span class="hljs-literal">true</span>');
 });
+
+test("groq highlights the pipe operator", () => {
+  const result = highlight('*[_type == "post"] | order(name) | [0...10]');
+
+  expect(result).toContain('<span class="hljs-operator">|</span>');
+});
+
+test("groq highlights logical operators", () => {
+  const result = highlight("featured == true && !archived || draft");
+
+  expect(result).toContain('<span class="hljs-operator">&amp;&amp;</span>');
+  expect(result).toContain('<span class="hljs-operator">||</span>');
+  expect(result).toContain('<span class="hljs-operator">!</span>archived');
+});
+
+test("groq highlights object-projection aliases as attr", () => {
+  const result = highlight('{ title, "slug": slug.current }');
+
+  expect(result).toContain('<span class="hljs-attr">&quot;slug&quot;</span>:');
+});
