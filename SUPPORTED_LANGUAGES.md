@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 236 languages exported from highlight.js@11.11.1
+> 237 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1509,6 +1509,20 @@
 
   // base import
   import { llvm } from "svelte-highlight/languages";
+</script>
+```
+
+## logql (`logql`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import logql from "svelte-highlight/languages/logql";
+
+  // base import
+  import { logql } from "svelte-highlight/languages";
 </script>
 ```
 
