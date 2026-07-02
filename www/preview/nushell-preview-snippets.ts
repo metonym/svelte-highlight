@@ -35,4 +35,10 @@ if $enabled {
     print $"timeout is ($timeout)"
 }`,
   },
+  {
+    title: "Raw strings",
+    description: "r#'...'# strings that skip interpolation",
+    code: `let pattern = r#'C:\\Users\\(name)'#
+print $pattern`,
+  },
 ];
