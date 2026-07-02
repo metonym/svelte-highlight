@@ -56,4 +56,19 @@ const banner =
     \\\\to Zig
 ;`,
   },
+  {
+    title: "Optional types",
+    description: "?T optional prefix alongside !T error unions",
+    code: `fn find(items: []const i32, target: i32) ?usize {
+    for (items, 0..) |item, i| {
+        if (item == target) return i;
+    }
+    return null;
+}
+
+fn describe(items: []const i32, target: i32) ![]const u8 {
+    const index = find(items, target) orelse return error.NotFound;
+    return if (index == 0) "first" else "found";
+}`,
+  },
 ];
