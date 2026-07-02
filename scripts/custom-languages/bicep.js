@@ -44,6 +44,11 @@ function defineBicep(hljs) {
     relevance: 0,
   };
 
+  const DECLARATION = {
+    begin: [/\b(?:resource|module|param|output|var)\b/, /\s+/, /[A-Za-z_]\w*/],
+    beginScope: { 1: "keyword", 3: "title" },
+  };
+
   return {
     name: "Bicep",
     aliases: ["bicep"],
@@ -55,6 +60,7 @@ function defineBicep(hljs) {
     contains: [
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
+      DECLARATION,
       DECORATOR,
       RESOURCE_TYPE,
       STRING,

@@ -37,3 +37,11 @@ test("bicep highlights resource type references", () => {
     '<span class="hljs-type">&#x27;Microsoft.Storage/storageAccounts@2021-09-01&#x27;</span>',
   );
 });
+
+test("bicep highlights declaration names as title", () => {
+  const result = highlight(
+    "resource myStorage 'Microsoft.Storage/storageAccounts@2021-09-01' = {}",
+  );
+
+  expect(result).toContain('<span class="hljs-title">myStorage</span>');
+});
