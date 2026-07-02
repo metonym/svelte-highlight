@@ -34,12 +34,34 @@ function defineCue(hljs) {
         contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
       },
       {
+        begin: /'''/,
+        end: /'''/,
+        contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
+      },
+      {
         begin: /"/,
         end: /"/,
         contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
       },
+      {
+        begin: /'/,
+        end: /'/,
+        contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
+      },
       { begin: /#"/, end: /"#/ },
     ],
+  };
+
+  const OPERATOR = {
+    className: "operator",
+    begin: />=|<=|!=|=~|!~|\||&/,
+    relevance: 0,
+  };
+
+  const OPTIONAL_FIELD = {
+    className: "operator",
+    begin: /\?(?=\s*:)/,
+    relevance: 0,
   };
 
   const DEFINITION = {
@@ -63,7 +85,15 @@ function defineCue(hljs) {
       type: CUE_TYPES,
       literal: CUE_LITERALS,
     },
-    contains: [hljs.C_LINE_COMMENT_MODE, ATTRIBUTE, STRING, DEFINITION, NUMBER],
+    contains: [
+      hljs.C_LINE_COMMENT_MODE,
+      ATTRIBUTE,
+      STRING,
+      DEFINITION,
+      NUMBER,
+      OPTIONAL_FIELD,
+      OPERATOR,
+    ],
   };
 }
 
