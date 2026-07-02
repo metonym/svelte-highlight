@@ -14,6 +14,7 @@
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
   import { groqPreviewSnippets } from "@www/preview/groq-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
+  import { hlslPreviewSnippets } from "@www/preview/hlsl-preview-snippets";
   import { jqPreviewSnippets } from "@www/preview/jq-preview-snippets";
   import { json5PreviewSnippets } from "@www/preview/json5-preview-snippets";
   import { jsoncPreviewSnippets } from "@www/preview/jsonc-preview-snippets";
@@ -59,6 +60,7 @@
   import gleam from "svelte-highlight/languages/gleam";
   import groq from "svelte-highlight/languages/groq";
   import hcl from "svelte-highlight/languages/hcl";
+  import hlsl from "svelte-highlight/languages/hlsl";
   import jq from "svelte-highlight/languages/jq";
   import json5 from "svelte-highlight/languages/json5";
   import jsonc from "svelte-highlight/languages/jsonc";
@@ -87,7 +89,7 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl"} */
   export let language;
 
   const registry = {
@@ -133,6 +135,7 @@
     typst: { lang: typst, snippets: typstPreviewSnippets },
     rst: { lang: rst, snippets: rstPreviewSnippets },
     templ: { lang: templ, snippets: templPreviewSnippets },
+    hlsl: { lang: hlsl, snippets: hlslPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
