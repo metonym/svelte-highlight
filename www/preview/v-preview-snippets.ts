@@ -42,4 +42,20 @@ fn parse(s string) ?Color {
 	}
 }`,
   },
+  {
+    title: "Comptime keywords and raw strings",
+    description: "$if/$else and non-interpolating r'...' strings",
+    code: `fn describe() string {
+	$if windows {
+		return 'windows build'
+	} $else {
+		return 'other platform'
+	}
+}
+
+fn literal_path() string {
+	// raw string: \${name} is NOT interpolated here
+	return r'C:\\Users\\\${name}'
+}`,
+  },
 ];
