@@ -37,6 +37,18 @@ test("dotenv highlights quoted strings", () => {
   );
 });
 
+test("dotenv highlights parameter expansion with default/alternate values", () => {
+  const result = highlight(
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: dotenv uses literal ${VAR:-default} interpolation
+    "URL=${HOST:-localhost}\nUSER=${NAME:=guest}\nFLAG=${DEBUG:+on}",
+  );
+
+  expect(result).toContain('<span class="hljs-variable">');
+  expect(result).toContain('<span class="hljs-operator">:-</span>');
+  expect(result).toContain('<span class="hljs-operator">:=</span>');
+  expect(result).toContain('<span class="hljs-operator">:+</span>');
+});
+
 test("dotenv highlights variable references inside double quotes", () => {
   // biome-ignore lint/suspicious/noTemplateCurlyInString: dotenv uses literal ${VAR} interpolation
   const result = highlight('URL="http://${HOST}:${PORT}"');
