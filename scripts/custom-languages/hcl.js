@@ -22,7 +22,10 @@ function defineHcl(hljs) {
     begin: /[$%]\{/,
     end: /\}/,
     keywords: { keyword: HCL_KEYWORDS, literal: HCL_LITERALS },
-    contains: [{ className: "built_in", begin: /\b[a-z_][\w-]*(?=\()/ }],
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      { className: "built_in", begin: /\b[a-z_][\w-]*(?=\()/ },
+      "self",
+    ]),
   };
 
   const STRING = {
