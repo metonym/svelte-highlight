@@ -13,6 +13,7 @@
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
   import { groqPreviewSnippets } from "@www/preview/groq-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
+  import { jqPreviewSnippets } from "@www/preview/jq-preview-snippets";
   import { json5PreviewSnippets } from "@www/preview/json5-preview-snippets";
   import { jsoncPreviewSnippets } from "@www/preview/jsonc-preview-snippets";
   import { jsonnetPreviewSnippets } from "@www/preview/jsonnet-preview-snippets";
@@ -50,6 +51,7 @@
   import gleam from "svelte-highlight/languages/gleam";
   import groq from "svelte-highlight/languages/groq";
   import hcl from "svelte-highlight/languages/hcl";
+  import jq from "svelte-highlight/languages/jq";
   import json5 from "svelte-highlight/languages/json5";
   import jsonc from "svelte-highlight/languages/jsonc";
   import jsonnet from "svelte-highlight/languages/jsonnet";
@@ -71,7 +73,7 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq"} */
   export let language;
 
   const registry = {
@@ -109,6 +111,7 @@
     caddy: { lang: caddy, snippets: caddyPreviewSnippets },
     d2: { lang: d2, snippets: d2PreviewSnippets },
     bibtex: { lang: bibtex, snippets: bibtexPreviewSnippets },
+    jq: { lang: jq, snippets: jqPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
