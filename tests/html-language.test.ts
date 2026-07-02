@@ -33,6 +33,36 @@ test("html highlights basic markup", () => {
   expect(result).toContain("hljs-symbol");
 });
 
+test("html treats CDATA sections as opaque, not tags", () => {
+  hljs.registerLanguage(html.name, html.register);
+
+  const cdataSnippet = "<data><![CDATA[if (a < b) { return; }]]></data>";
+
+  const result = hljs.highlight(cdataSnippet, { language: "html" }).value;
+
+  expect(result).toContain("hljs-comment");
+  expect(result).not.toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">b</span>',
+  );
+});
+
+test("html does not tag-parse literal < inside textarea and title", () => {
+  hljs.registerLanguage(html.name, html.register);
+
+  const rawTextSnippet = "<textarea>1 < 2</textarea><title>a < b</title>";
+
+  const result = hljs.highlight(rawTextSnippet, { language: "html" }).value;
+
+  expect(result).not.toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">2</span>',
+  );
+  expect(result).not.toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">b</span>',
+  );
+  expect(result).toContain("1 &lt; 2");
+  expect(result).toContain("a &lt; b");
+});
+
 test("xml alone does not highlight embedded CSS and JavaScript", () => {
   const isolated = hljs.newInstance();
   isolated.registerLanguage(xml.name, xml.register);
