@@ -21,6 +21,12 @@ function defineZig(hljs) {
     relevance: 0,
   };
 
+  const TYPE_MODIFIER = {
+    className: "type",
+    begin: /[?!](?=[A-Za-z_*])/,
+    relevance: 0,
+  };
+
   const NAMED_TYPE = {
     className: "type",
     begin: new RegExp(String.raw`\b(?:${ZIG_TYPES.split(" ").join("|")})\b`),
@@ -78,6 +84,7 @@ function defineZig(hljs) {
       CHAR,
       BUILTIN,
       NUMBER,
+      TYPE_MODIFIER,
       INT_TYPE,
       NAMED_TYPE,
       {

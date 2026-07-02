@@ -45,3 +45,12 @@ test("zig highlights literals", () => {
   expect(result).toContain('<span class="hljs-literal">null</span>');
   expect(result).toContain('<span class="hljs-literal">undefined</span>');
 });
+
+test("zig highlights optional and error-union type modifiers", () => {
+  const result = highlight(
+    "fn foo() ?u32 {\n  return null;\n}\nfn bar() anyerror!void {\n  return;\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-type">?</span>');
+  expect(result).toContain('<span class="hljs-type">!</span>');
+});
