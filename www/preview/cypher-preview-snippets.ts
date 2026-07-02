@@ -22,4 +22,12 @@ ON CREATE SET u.created = timestamp()
 CREATE (u)-[:POSTED]->(p:Post {title: "Hello", likes: 0})
 RETURN u, p`,
   },
+  {
+    title: "Built-in functions and identifiers",
+    description: "id(), coalesce(), and `backtick` identifiers",
+    code: `MATCH (n:\`Weird Label\`)
+RETURN id(n) AS nodeId,
+       coalesce(n.\`display name\`, "unknown") AS name,
+       labels(n) AS labels`,
+  },
 ];
