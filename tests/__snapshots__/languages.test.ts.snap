@@ -113,6 +113,7 @@ exports[`Languages 1`] = `
   "julia",
   "juliaRepl",
   "kotlin",
+  "kql",
   "lasso",
   "latex",
   "ldif",
