@@ -183,6 +183,7 @@ exports[`Languages 1`] = `
   "r",
   "razor",
   "reasonml",
+  "rego",
   "rescript",
   "rib",
   "roboconf",

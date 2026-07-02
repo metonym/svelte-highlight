@@ -238,6 +238,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "logql",
     path: `${import.meta.dir}/custom-languages/logql.js`,
   },
+  {
+    name: "rego",
+    moduleName: "rego",
+    path: `${import.meta.dir}/custom-languages/rego.js`,
+  },
 ];
 
 type LanguageEntry = {
