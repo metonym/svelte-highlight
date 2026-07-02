@@ -36,4 +36,12 @@ services: {
 	}
 }`,
   },
+  {
+    title: "Byte strings and optional fields",
+    description: "'...' byte strings and the ? optional marker",
+    code: `#Config: {
+	secret?: string
+	salt:    bytes | 'default-salt'
+}`,
+  },
 ];
