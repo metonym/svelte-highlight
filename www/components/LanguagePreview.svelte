@@ -32,6 +32,7 @@
   import { razorPreviewSnippets } from "@www/preview/razor-preview-snippets";
   import { regoPreviewSnippets } from "@www/preview/rego-preview-snippets";
   import { rescriptPreviewSnippets } from "@www/preview/rescript-preview-snippets";
+  import { rstPreviewSnippets } from "@www/preview/rst-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
@@ -74,6 +75,7 @@
   import razor from "svelte-highlight/languages/razor";
   import rego from "svelte-highlight/languages/rego";
   import rescript from "svelte-highlight/languages/rescript";
+  import rst from "svelte-highlight/languages/rst";
   import solidity from "svelte-highlight/languages/solidity";
   import starlark from "svelte-highlight/languages/starlark";
   import toml from "svelte-highlight/languages/toml";
@@ -83,7 +85,7 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst"} */
   export let language;
 
   const registry = {
@@ -127,6 +129,7 @@
     rego: { lang: rego, snippets: regoPreviewSnippets },
     dax: { lang: dax, snippets: daxPreviewSnippets },
     typst: { lang: typst, snippets: typstPreviewSnippets },
+    rst: { lang: rst, snippets: rstPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
