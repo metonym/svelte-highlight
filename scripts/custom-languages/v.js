@@ -30,12 +30,20 @@ function defineV(hljs) {
     className: "string",
     variants: [
       {
-        begin: /[rc]?"/,
+        begin: /r"/,
+        end: /"/,
+      },
+      {
+        begin: /r'/,
+        end: /'/,
+      },
+      {
+        begin: /c?"/,
         end: /"/,
         contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
       },
       {
-        begin: /[rc]?'/,
+        begin: /c?'/,
         end: /'/,
         contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
       },
@@ -61,6 +69,18 @@ function defineV(hljs) {
     relevance: 0,
   };
 
+  const COMPTIME_KEYWORD = {
+    className: "keyword",
+    begin: /\$(?:if|else|for)\b/,
+    relevance: 0,
+  };
+
+  const OPTION_TYPE = {
+    className: "type",
+    begin: /\?(?=[A-Za-z_])/,
+    relevance: 0,
+  };
+
   return {
     name: "V",
     aliases: ["v", "vlang"],
@@ -72,10 +92,12 @@ function defineV(hljs) {
     contains: [
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
+      COMPTIME_KEYWORD,
       ATTRIBUTE,
       STRING,
       FUNCTION,
       TYPE,
+      OPTION_TYPE,
       NUMBER,
     ],
   };
