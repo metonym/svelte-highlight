@@ -1,0 +1,1261 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`style augmentations 1`] = `
+[
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 3,
+    "name": "1c-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "3024",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "a11y-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "a11y-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 5,
+    "name": "agate",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "an-old-hope",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 11,
+    "name": "androidstudio",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "apathy",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "apprentice",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "arduino-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 10,
+    "name": "arta",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 15,
+    "name": "ascetic",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "ashes",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-cave",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-cave-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-dune",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-dune-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-estuary",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-estuary-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-forest",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-forest-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-heath",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-heath-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-lakeside",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-lakeside-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-plateau",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-plateau-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-savanna",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-savanna-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-seaside",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-seaside-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-sulphurpool",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atelier-sulphurpool-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atlas",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atom-one-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 5,
+    "name": "atom-one-dark-reasonable",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "atom-one-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "base16-github",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "base16-ir-black",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "base16-monokai",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "base16-nord",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "bespin",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-bathory",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-burzum",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-dark-funeral",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-gorgoroth",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-immortal",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-khold",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-marduk",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-mayhem",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-nile",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "black-metal-venom",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "brewer",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "bright",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "brogrammer",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 11,
+    "name": "brown-paper",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "brush-trees",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "brush-trees-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "chalk",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "circus",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "classic-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "classic-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "codepen-embed",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "codeschool",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "color-brewer",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "colors",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "cupcake",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "cupertino",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "danqing",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "darcula",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 11,
+    "name": "dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "dark-violet",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "darkmoss",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "darktooth",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "decaf",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 9,
+    "name": "default",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "default-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "default-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 2,
+    "name": "devibeans",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "dirtysea",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 10,
+    "name": "docco",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "dracula",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "edge-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "edge-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "eighties",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "embers",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "equilibrium-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "equilibrium-gray-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "equilibrium-gray-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "equilibrium-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "espresso",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "eva",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "eva-dim",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 8,
+    "name": "far",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 2,
+    "name": "felipec",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "flat",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 8,
+    "name": "foundation",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "framer",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "fruit-soda",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gigavolt",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 4,
+    "name": "github",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 4,
+    "name": "github-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 4,
+    "name": "github-dark-dimmed",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gml",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "google-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "google-light",
+  },
+  {
+    "deadDeclarationsRemoved": 1,
+    "gapsFilled": 8,
+    "name": "googlecode",
+  },
+  {
+    "deadDeclarationsRemoved": 1,
+    "gapsFilled": 3,
+    "name": "gradient-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 1,
+    "gapsFilled": 3,
+    "name": "gradient-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 12,
+    "name": "grayscale",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "grayscale-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "grayscale-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "green-screen",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gruvbox-dark-hard",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gruvbox-dark-medium",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gruvbox-dark-pale",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gruvbox-dark-soft",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gruvbox-light-hard",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gruvbox-light-medium",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "gruvbox-light-soft",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "hardcore",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "harmonic16-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "harmonic16-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "heetch-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "heetch-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "helios",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "hopscotch",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "horizon-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "horizon-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "humanoid-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "humanoid-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 5,
+    "name": "hybrid",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "ia-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "ia-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "icy-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 13,
+    "name": "idea",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 10,
+    "name": "intellij-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 9,
+    "name": "ir-black",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "isbl-editor-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "isbl-editor-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "isotope",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "kimber",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 8,
+    "name": "kimbie-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 8,
+    "name": "kimbie-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "lightfair",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 9,
+    "name": "lioshi",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "london-tube",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "macintosh",
+  },
+  {
+    "deadDeclarationsRemoved": 1,
+    "gapsFilled": 10,
+    "name": "magula",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "marrakesh",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "materia",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "material",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "material-darker",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "material-lighter",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "material-palenight",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "material-vivid",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "mellow-purple",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "mexico-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "mocha",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 13,
+    "name": "mono-blue",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "monokai",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 5,
+    "name": "monokai-sublime",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "nebula",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 2,
+    "name": "night-owl",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 11,
+    "name": "nnfx-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 11,
+    "name": "nnfx-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 5,
+    "name": "nord",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "nova",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "obsidian",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "ocean",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "oceanicnext",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "one-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "onedark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "outrun-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 1,
+    "gapsFilled": 0,
+    "name": "panda-syntax-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "papercolor-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "papercolor-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "paraiso",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "paraiso-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "paraiso-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "pasque",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "phd",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "pico",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 9,
+    "name": "pojoaque",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "pop",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "porple",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 9,
+    "name": "purebasic",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "qtcreator-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "qtcreator-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "qualia",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "railscasts",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 8,
+    "name": "rainbow",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "rebecca",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "ros-pine",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "ros-pine-dawn",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "ros-pine-moon",
+  },
+  {
+    "deadDeclarationsRemoved": 2,
+    "gapsFilled": 0,
+    "name": "rose-pine",
+  },
+  {
+    "deadDeclarationsRemoved": 2,
+    "gapsFilled": 0,
+    "name": "rose-pine-dawn",
+  },
+  {
+    "deadDeclarationsRemoved": 2,
+    "gapsFilled": 0,
+    "name": "rose-pine-moon",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 10,
+    "name": "routeros",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "sagelight",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "sandcastle",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 14,
+    "name": "school-book",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "seti-ui",
+  },
+  {
+    "deadDeclarationsRemoved": 1,
+    "gapsFilled": 10,
+    "name": "shades-of-purple",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "shapeshifter",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "silk-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "silk-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "snazzy",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "solar-flare",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "solar-flare-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "solarized-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "solarized-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "spacemacs",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "srcery",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 5,
+    "name": "stackoverflow-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 5,
+    "name": "stackoverflow-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "summercamp",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "summerfruit-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "summerfruit-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 10,
+    "name": "sunburst",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "synth-midnight-terminal-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "synth-midnight-terminal-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "tango",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "tender",
+  },
+  {
+    "deadDeclarationsRemoved": 2,
+    "gapsFilled": 0,
+    "name": "tokyo-night-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 2,
+    "gapsFilled": 0,
+    "name": "tokyo-night-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "tomorrow",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "tomorrow-night",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "tomorrow-night-blue",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "tomorrow-night-bright",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "twilight",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "unikitty-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "unikitty-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "vs",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 5,
+    "name": "vs2015",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "vulcan",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "windows-10",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "windows-10-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "windows-95",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "windows-95-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "windows-high-contrast",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "windows-high-contrast-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "windows-nt",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "windows-nt-light",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "woodland",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 9,
+    "name": "xcode",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "xcode-dusk",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 11,
+    "name": "xt256",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
+    "name": "zenburn",
+  },
+]
+`;

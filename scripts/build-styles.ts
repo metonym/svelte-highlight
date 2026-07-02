@@ -77,12 +77,18 @@ export async function buildStyles() {
       const content = await inlineCssUrls(raw, path.dirname(absPath));
 
       const proposals = gapFillProposals.get(name);
+      const gapsFilled = proposals?.size ?? 0;
       const plugins =
-        proposals && proposals.size > 0 ? [fillSimilarityGaps(proposals)] : [];
+        proposals && gapsFilled > 0 ? [fillSimilarityGaps(proposals)] : [];
 
+      // Only the primary (preserve-license) pass reports removal stats — the
+      // scoped-preview pass below processes identical selectors/declarations,
+      // so counting both would double-count the same removals.
+      const deadDeclarationStats = { removedCount: 0 };
       const cssMinified = preprocessStyles(content, {
         discardComments: "preserve-license",
         plugins,
+        deadDeclarationStats,
       });
       const contentCssForJs = cssMinified.replace(BACKTICK, "\\`");
 
@@ -95,6 +101,12 @@ export async function buildStyles() {
         moduleName,
       );
 
+      const deadDeclarationsRemoved = deadDeclarationStats.removedCount;
+      const augmentation =
+        deadDeclarationsRemoved > 0 || gapsFilled > 0
+          ? { name, deadDeclarationsRemoved, gapsFilled }
+          : null;
+
       return {
         writes: [
           writeTo(`src/styles/${name}.js`, exportee),
@@ -105,15 +117,23 @@ export async function buildStyles() {
           writeTo(`src/styles/${name}.css`, cssMinified),
         ],
         scopedStyle,
+        augmentation,
       };
     }),
   );
 
   const allWrites: Promise<void>[] = [];
-  for (const { writes, scopedStyle } of fileWrites) {
+  const augmentations: Array<{
+    name: string;
+    deadDeclarationsRemoved: number;
+    gapsFilled: number;
+  }> = [];
+  for (const { writes, scopedStyle, augmentation } of fileWrites) {
     allWrites.push(...writes);
     scopedStyles += scopedStyle;
+    if (augmentation) augmentations.push(augmentation);
   }
+  augmentations.sort((a, b) => a.name.localeCompare(b.name));
 
   styles = styles.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -163,6 +183,12 @@ export async function buildStyles() {
   );
   allWrites.push(
     Bun.write("www/data/scoped-styles.css", scopedStyles).then(() => {}),
+  );
+  allWrites.push(
+    Bun.write(
+      "www/data/style-augmentations.json",
+      JSON.stringify(augmentations, null, 2),
+    ).then(() => {}),
   );
 
   await Promise.all(allWrites);
