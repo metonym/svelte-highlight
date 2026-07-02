@@ -48,4 +48,16 @@ enum Role {
   ADMIN
 }`,
   },
+  {
+    title: "Comments",
+    description: "// line comments and /// doc comments",
+    code: `// Core identity model
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+
+  /// The user's display name, shown in the UI
+  name String?
+}`,
+  },
 ];
