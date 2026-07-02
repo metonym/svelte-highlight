@@ -29,6 +29,7 @@
   import { promqlPreviewSnippets } from "@www/preview/promql-preview-snippets";
   import { pugPreviewSnippets } from "@www/preview/pug-preview-snippets";
   import { razorPreviewSnippets } from "@www/preview/razor-preview-snippets";
+  import { regoPreviewSnippets } from "@www/preview/rego-preview-snippets";
   import { rescriptPreviewSnippets } from "@www/preview/rescript-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
@@ -68,6 +69,7 @@
   import promql from "svelte-highlight/languages/promql";
   import pug from "svelte-highlight/languages/pug";
   import razor from "svelte-highlight/languages/razor";
+  import rego from "svelte-highlight/languages/rego";
   import rescript from "svelte-highlight/languages/rescript";
   import solidity from "svelte-highlight/languages/solidity";
   import starlark from "svelte-highlight/languages/starlark";
@@ -77,7 +79,7 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego"} */
   export let language;
 
   const registry = {
@@ -118,6 +120,7 @@
     jq: { lang: jq, snippets: jqPreviewSnippets },
     kql: { lang: kql, snippets: kqlPreviewSnippets },
     logql: { lang: logql, snippets: logqlPreviewSnippets },
+    rego: { lang: rego, snippets: regoPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
