@@ -76,3 +76,20 @@ test("markdown alone does not highlight JSX tags", () => {
   expect(result).not.toContain("language-html");
   expect(result).not.toContain("hljs-tag");
 });
+
+test("mdx highlights multi-line export statements as JavaScript", () => {
+  hljs.registerLanguage(mdx.name, mdx.register);
+
+  const multilineExport = `export const meta = {
+  title: "Kitchen sink",
+  description: "MDX grammar preview",
+};`;
+
+  const result = hljs.highlight(multilineExport, { language: "mdx" }).value;
+
+  expect(result).toContain("language-javascript");
+  expect(result).toContain('<span class="hljs-attr">title</span>');
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;Kitchen sink&quot;</span>',
+  );
+});
