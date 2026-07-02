@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 238 languages exported from highlight.js@11.11.1
+> 239 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -631,6 +631,20 @@
 
   // base import
   import { dart } from "svelte-highlight/languages";
+</script>
+```
+
+## dax (`dax`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import dax from "svelte-highlight/languages/dax";
+
+  // base import
+  import { dax } from "svelte-highlight/languages";
 </script>
 ```
 
