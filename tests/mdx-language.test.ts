@@ -93,3 +93,38 @@ test("mdx highlights multi-line export statements as JavaScript", () => {
     '<span class="hljs-string">&quot;Kitchen sink&quot;</span>',
   );
 });
+
+test("mdx highlights fenced javascript and css code blocks", () => {
+  hljs.registerLanguage(mdx.name, mdx.register);
+
+  const jsFence = [
+    "```javascript",
+    "const total = items.reduce((sum, item) => sum + item.value, 0);",
+    "```",
+  ].join("\n");
+
+  const jsResult = hljs.highlight(jsFence, { language: "mdx" }).value;
+
+  expect(jsResult).toContain("language-javascript");
+  expect(jsResult).toContain('<span class="hljs-keyword">const</span>');
+  expect(jsResult).toContain("```javascript");
+  expect(jsResult.endsWith("```")).toBe(true);
+
+  const cssFence = ["```css", ".foo { color: red; }", "```"].join("\n");
+
+  const cssResult = hljs.highlight(cssFence, { language: "mdx" }).value;
+
+  expect(cssResult).toContain("language-css");
+  expect(cssResult).toContain('<span class="hljs-selector-class">.foo</span>');
+});
+
+test("mdx falls back to plain code styling for unsupported fence languages", () => {
+  hljs.registerLanguage(mdx.name, mdx.register);
+
+  const bashFence = ["```bash", "echo hi", "```"].join("\n");
+
+  const result = hljs.highlight(bashFence, { language: "mdx" }).value;
+
+  expect(result).not.toContain("language-");
+  expect(result).toContain("echo hi");
+});
