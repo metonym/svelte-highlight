@@ -1,3 +1,5 @@
+import javascriptRegister from "highlight.js/lib/languages/javascript";
+
 const RESCRIPT_KEYWORDS =
   "and as assert async await catch constraint downto else exception external false for if in include lazy let module mutable of open private rec switch then to true try type when while with";
 
@@ -29,14 +31,77 @@ function defineReScript(hljs) {
   };
 
   const FUNCTION = {
-    begin: [/\blet\b/, /\s+/, /[a-z_]\w*/, /\s*=\s*/, /\(/],
-    beginScope: { 1: "keyword", 3: "title.function" },
+    variants: [
+      {
+        begin: [/\blet\b/, /\s+(?:rec\s+)?/, /[a-z_]\w*/, /\s*=\s*/, /\(/],
+        beginScope: { 1: "keyword", 3: "title.function" },
+      },
+      {
+        begin: [
+          /\blet\b/,
+          /\s+(?:rec\s+)?/,
+          /[a-z_]\w*/,
+          /\s*=\s*/,
+          /[a-z_]\w*/,
+          /\s*=>/,
+        ],
+        beginScope: { 1: "keyword", 3: "title.function" },
+      },
+    ],
   };
 
   const DECORATOR = {
     className: "meta",
     begin: /@@?[a-zA-Z_][\w.]*/,
     relevance: 0,
+  };
+
+  // JSX expression braces, e.g. `{text}` or `{someFn(x)}`. Embeds JavaScript
+  // for the expression body.
+  const JSX_EXPRESSION = {
+    begin: /\{/,
+    end: /\}/,
+    subLanguage: "javascript",
+    relevance: 0,
+  };
+
+  const JSX_ATTR_STRING = {
+    className: "string",
+    variants: [
+      { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
+    ],
+  };
+
+  const JSX_ATTR_NAME = {
+    className: "attr",
+    begin: /[a-zA-Z_][\w-]*(?=\s*=)/,
+    relevance: 0,
+  };
+
+  const JSX_ATTRS = {
+    endsWithParent: true,
+    relevance: 0,
+    contains: [JSX_ATTR_NAME, JSX_ATTR_STRING, JSX_EXPRESSION],
+  };
+
+  const JSX_TAG = {
+    className: "tag",
+    // `</` unambiguously starts a JSX closing tag. A bare `<` immediately
+    // preceded by a word character (e.g. `array<int>`, `option<string>`,
+    // `text<div>`) is generic-type application syntax instead, so that case
+    // is excluded with a negative lookbehind.
+    begin: /<\/(?=[A-Za-z])|(?<![\w])<(?=[A-Za-z])/,
+    end: /\/?>/,
+    relevance: 0,
+    contains: [
+      {
+        className: "name",
+        begin: /[A-Za-z][\w.-]*/,
+        relevance: 0,
+        starts: JSX_ATTRS,
+      },
+    ],
   };
 
   return {
@@ -56,6 +121,8 @@ function defineReScript(hljs) {
       DECORATOR,
       POLY_VARIANT,
       FUNCTION,
+      JSX_TAG,
+      JSX_EXPRESSION,
       CONSTRUCTOR,
       NUMBER,
     ],
@@ -64,6 +131,7 @@ function defineReScript(hljs) {
 
 /** @type {import("highlight.js").LanguageFn} */
 function register(hljs) {
+  hljs.registerLanguage("javascript", javascriptRegister);
   return defineReScript(hljs);
 }
 
