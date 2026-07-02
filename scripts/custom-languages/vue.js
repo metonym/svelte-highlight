@@ -23,9 +23,11 @@ const STYLE_CSS_BEGIN =
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineVue(hljs) {
+  // Match any `v-*` directive, not just the built-in list, so custom
+  // user-registered directives (e.g. `v-focus`, `v-tooltip`) are recognized
+  // too.
   const vueDirective = {
-    begin:
-      /\bv-(?:if|else-if|else|for|show|model|bind|on|slot|pre|once|memo|html|text|cloak)(?:\.[\w-]+)*(?==|\s|>)/,
+    begin: /\bv-[\w-]+(?:\.[\w-]+)*(?==|\s|>)/,
     className: "keyword",
     relevance: 10,
   };
