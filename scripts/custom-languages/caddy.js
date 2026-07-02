@@ -1,5 +1,5 @@
 const CADDY_DIRECTIVES =
-  "reverse_proxy file_server root encode tls header header_down header_up redir respond route handle handle_path handle_errors rewrite uri log basicauth basic_auth forward_auth php_fastcgi try_files bind import templates request_body push map vars metrics tracing acme_server abort error method bcrypt invoke";
+  "reverse_proxy file_server root encode tls header header_down header_up redir respond route handle handle_path handle_errors rewrite uri log basicauth basic_auth forward_auth php_fastcgi try_files bind import templates request_body push map vars metrics tracing acme_server abort error method bcrypt invoke to lb_policy transport insecure_skip_verify dns protocols ciphers health_uri";
 
 const CADDY_GLOBAL =
   "admin auto_https debug http_port https_port grace_period default_sni order storage acme_ca acme_dns email on_demand_tls local_certs skip_install_trust";
