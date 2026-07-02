@@ -79,6 +79,7 @@
     "/preview-typst": "Typst language preview",
     "/preview-rst": "reStructuredText language preview",
     "/preview-templ": "templ language preview",
+    "/preview-hlsl": "HLSL language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
