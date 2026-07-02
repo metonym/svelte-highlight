@@ -27,6 +27,11 @@ type Occurrence = {
   key: string;
 };
 
+/** Mutated in place so callers can tell, after processing, whether (and how
+ * much) a given theme was touched — e.g. for a test/snapshot manifest of
+ * which stylesheets were augmented. */
+export type RemoveDeadDeclarationsStats = { removedCount: number };
+
 /**
  * Highlight.js theme files occasionally declare the same simple class
  * selector's property twice (e.g. `.hljs-addition` colored once, then
@@ -39,7 +44,9 @@ type Occurrence = {
  * compounding), since specificity is then guaranteed identical and
  * declaration order alone decides the winner.
  */
-export const removeDeadDeclarations = (): Plugin => ({
+export const removeDeadDeclarations = (
+  stats?: RemoveDeadDeclarationsStats,
+): Plugin => ({
   postcssPlugin: "remove-dead-declarations",
   OnceExit(root) {
     const winner = new Map<string, { value: string; order: number }>();
@@ -104,6 +111,7 @@ export const removeDeadDeclarations = (): Plugin => ({
     }
 
     for (const [rule, deadSelectors] of deadSelectorsByRule) {
+      if (stats) stats.removedCount += deadSelectors.size;
       const remaining = rule.selectors.filter((s) => !deadSelectors.has(s));
       if (remaining.length === 0) {
         rule.remove();
