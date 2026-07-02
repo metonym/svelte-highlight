@@ -68,6 +68,9 @@
     "/preview-caddy": "Caddyfile language preview",
     "/preview-d2": "D2 language preview",
     "/preview-bibtex": "BibTeX language preview",
+    "/preview-ansi": "AnsiOutput preview",
+    "/preview-dual-theme": "Dual light/dark HighlightStyle preview",
+    "/preview-editable": "Editable highlight preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
