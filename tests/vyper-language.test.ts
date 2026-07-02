@@ -32,3 +32,21 @@ test("vyper highlights hash comments", () => {
 
   expect(result).toContain('<span class="hljs-comment"># a comment</span>');
 });
+
+test("vyper highlights byte-string literals with a b prefix", () => {
+  const result = highlight('x: bytes32 = b"\\x01\\x02"');
+
+  expect(result).toContain(
+    '<span class="hljs-string">b&quot;\\x01\\x02&quot;</span>',
+  );
+});
+
+test("vyper highlights struct, interface, and event names as titles", () => {
+  const result = highlight(
+    "struct Foo:\n    a: uint256\n\ninterface ERC20:\n    def transfer() -> bool: view\n\nevent Transfer:\n    sender: indexed(address)",
+  );
+
+  expect(result).toContain('<span class="hljs-title class_">Foo</span>');
+  expect(result).toContain('<span class="hljs-title class_">ERC20</span>');
+  expect(result).toContain('<span class="hljs-title class_">Transfer</span>');
+});
