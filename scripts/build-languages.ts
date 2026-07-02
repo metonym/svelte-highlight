@@ -223,6 +223,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "groq",
     path: `${import.meta.dir}/custom-languages/groq.js`,
   },
+  {
+    name: "jq",
+    moduleName: "jq",
+    path: `${import.meta.dir}/custom-languages/jq.js`,
+  },
 ];
 
 type LanguageEntry = {
