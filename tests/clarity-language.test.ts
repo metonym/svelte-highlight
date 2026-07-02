@@ -31,3 +31,22 @@ test("clarity highlights uint literals and comments", () => {
   expect(result).toContain('<span class="hljs-comment">;; counter</span>');
   expect(result).toContain('<span class="hljs-number">u5</span>');
 });
+
+test("clarity highlights common built-ins used in auth checks and chain-state reads", () => {
+  const result = highlight(
+    "(asserts! (is-eq tx-sender contract-caller) (err u1))\n(default-to u0 (map-get? balances tx-sender))\nblock-height\nburn-block-height\n(stx-liquid-supply)",
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">tx-sender</span>');
+  expect(result).toContain(
+    '<span class="hljs-built_in">contract-caller</span>',
+  );
+  expect(result).toContain('<span class="hljs-built_in">default-to</span>');
+  expect(result).toContain('<span class="hljs-built_in">block-height</span>');
+  expect(result).toContain(
+    '<span class="hljs-built_in">burn-block-height</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-built_in">stx-liquid-supply</span>',
+  );
+});
