@@ -33,3 +33,18 @@ test("nickel highlights strings and comments", () => {
     '<span class="hljs-string">&quot;svelte&quot;</span>',
   );
 });
+
+test("nickel highlights record field keys", () => {
+  const result = highlight("{ foo = 1, bar = 2 }");
+
+  expect(result).toContain('<span class="hljs-attr">foo</span>');
+  expect(result).toContain('<span class="hljs-attr">bar</span>');
+});
+
+test("nickel highlights multiline strings with variable %-count delimiters", () => {
+  const result = highlight('m%%"text with "% inside"%%');
+
+  expect(result).toContain(
+    '<span class="hljs-string">m%%&quot;text with &quot;% inside&quot;%%</span>',
+  );
+});
