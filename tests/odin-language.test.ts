@@ -30,3 +30,13 @@ test("odin highlights directives as meta", () => {
 
   expect(result).toContain('<span class="hljs-meta">#partial</span>');
 });
+
+test("odin highlights when and else when keywords", () => {
+  const result = highlight(
+    "when ODIN_OS == .Windows {\n    foo()\n} else when ODIN_OS == .Darwin {\n    bar()\n}",
+  );
+
+  const whenMatches = result.match(/<span class="hljs-keyword">when<\/span>/g);
+  expect(whenMatches).toHaveLength(2);
+  expect(result).toContain('<span class="hljs-keyword">else</span>');
+});
