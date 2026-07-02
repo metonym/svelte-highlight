@@ -233,6 +233,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "kql",
     path: `${import.meta.dir}/custom-languages/kql.js`,
   },
+  {
+    name: "logql",
+    moduleName: "logql",
+    path: `${import.meta.dir}/custom-languages/logql.js`,
+  },
 ];
 
 type LanguageEntry = {

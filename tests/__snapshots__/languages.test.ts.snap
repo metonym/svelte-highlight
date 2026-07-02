@@ -124,6 +124,7 @@ exports[`Languages 1`] = `
   "livecodeserver",
   "livescript",
   "llvm",
+  "logql",
   "lsl",
   "lua",
   "makefile",
