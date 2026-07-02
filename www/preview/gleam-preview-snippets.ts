@@ -45,4 +45,16 @@ const flags = 0b1010
 @external(erlang, "rand", "uniform")
 pub fn random() -> Float`,
   },
+  {
+    title: "Pipe operator",
+    description: "|> threading a value through function calls",
+    code: `import gleam/int
+import gleam/string
+
+pub fn describe(n: Int) -> String {
+  n
+  |> int.to_string
+  |> string.append("value: ", _)
+}`,
+  },
 ];
