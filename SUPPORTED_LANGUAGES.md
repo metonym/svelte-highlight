@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 234 languages exported from highlight.js@11.11.1
+> 235 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1269,6 +1269,20 @@
 
   // base import
   import { jbossCli } from "svelte-highlight/languages";
+</script>
+```
+
+## jq (`jq`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import jq from "svelte-highlight/languages/jq";
+
+  // base import
+  import { jq } from "svelte-highlight/languages";
 </script>
 ```
 
