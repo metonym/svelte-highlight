@@ -73,4 +73,19 @@ resource "aws_security_group" "this" {
   }
 }`,
   },
+  {
+    title: "Nested interpolation",
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} syntax under illustration
+    description: "${...} expressions containing their own {} literals",
+    code: `locals {
+  payload = jsonencode({
+    name = var.name
+    tags = { env = "\${var.environment}" }
+  })
+}
+
+output "encoded" {
+  value = "prefix-\${jsonencode({ a = 1 })}"
+}`,
+  },
 ];
