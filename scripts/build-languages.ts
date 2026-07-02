@@ -253,6 +253,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "typst",
     path: `${import.meta.dir}/custom-languages/typst.js`,
   },
+  {
+    name: "rst",
+    moduleName: "rst",
+    path: `${import.meta.dir}/custom-languages/rst.js`,
+  },
 ];
 
 type LanguageEntry = {
