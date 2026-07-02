@@ -35,9 +35,34 @@ function definePromQL(hljs) {
     relevance: 0,
   };
 
+  // A bare identifier that isn't a recognized keyword/aggregator/function is
+  // a metric name. The negative lookahead defers those words to the
+  // top-level `keywords` scan so `offset`, `by`, `sum`, etc. keep their own
+  // classification instead of always being tagged as a metric.
+  const RESERVED_WORDS =
+    `${PROMQL_KEYWORDS} ${PROMQL_AGGREGATORS} ${PROMQL_FUNCTIONS}`
+      .trim()
+      .split(/\s+/)
+      .join("|");
+
   const METRIC = {
     className: "built_in",
-    begin: /\b[a-zA-Z_:][a-zA-Z0-9_:]*(?=\s*\{)/,
+    begin: new RegExp(
+      `\\b(?!(?:${RESERVED_WORDS})\\b)[a-zA-Z_:][a-zA-Z0-9_:]*\\b`,
+    ),
+    relevance: 0,
+  };
+
+  const OPERATOR = {
+    className: "operator",
+    begin: /==|!=|>=|<=|=~|!~|[+\-*/%^=><]/,
+    relevance: 0,
+  };
+
+  // `@` timestamp modifier: `@ 1609746000`, `@ start()`, `@ end()`
+  const TIMESTAMP = {
+    className: "operator",
+    begin: /@/,
     relevance: 0,
   };
 
@@ -48,7 +73,15 @@ function definePromQL(hljs) {
       keyword: PROMQL_KEYWORDS,
       built_in: `${PROMQL_AGGREGATORS} ${PROMQL_FUNCTIONS}`,
     },
-    contains: [hljs.HASH_COMMENT_MODE, STRING, LABEL, METRIC, NUMBER],
+    contains: [
+      hljs.HASH_COMMENT_MODE,
+      STRING,
+      LABEL,
+      TIMESTAMP,
+      OPERATOR,
+      METRIC,
+      NUMBER,
+    ],
   };
 }
 
