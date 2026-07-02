@@ -30,3 +30,29 @@ test("cairo highlights hex numbers", () => {
 
   expect(result).toContain('<span class="hljs-number">0x1f</span>');
 });
+
+test("cairo highlights panic!/assert!/array! macros as built-ins", () => {
+  const result = highlight(
+    "panic!(\"oops\");\nassert!(x == 1, 'bad');\nlet a = array![1, 2, 3];",
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">panic!</span>');
+  expect(result).toContain('<span class="hljs-built_in">assert!</span>');
+  expect(result).toContain('<span class="hljs-built_in">array!</span>');
+});
+
+test("cairo highlights common Starknet syscalls as built-ins", () => {
+  const result = highlight(
+    "let caller = get_caller_address();\nlet addr = get_contract_address();\nlet ts = get_block_timestamp();",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-built_in">get_caller_address</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-built_in">get_contract_address</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-built_in">get_block_timestamp</span>',
+  );
+});
