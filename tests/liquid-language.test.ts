@@ -31,3 +31,15 @@ test("liquid delegates surrounding markup to xml", () => {
 
   expect(result).toContain("hljs-tag");
 });
+
+test("liquid treats comment blocks as opaque comments", () => {
+  const result = highlight(
+    "{% comment %}{% if user %}{{ title }}{% endif %}{% endcomment %}",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-comment">{% comment %}{% if user %}{{ title }}{% endif %}{% endcomment %}</span>',
+  );
+  expect(result).not.toContain("hljs-template-tag");
+  expect(result).not.toContain("hljs-template-variable");
+});

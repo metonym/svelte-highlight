@@ -28,6 +28,7 @@ function defineLiquid(hljs) {
     aliases: ["liquid"],
     subLanguage: "xml",
     contains: [
+      hljs.COMMENT(/\{%-?\s*comment\s*-?%\}/, /\{%-?\s*endcomment\s*-?%\}/),
       {
         className: "template-tag",
         begin: /\{%-?/,
