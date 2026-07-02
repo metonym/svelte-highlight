@@ -4,29 +4,7 @@
   import { sveltePreviewThemes } from "@www/preview/svelte-preview-themes";
   import { Column, Row } from "carbon-components-svelte";
   import HighlightSvelte from "svelte-highlight/HighlightSvelte.svelte";
-  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
-  import dracula from "svelte-highlight/styles/dracula";
-  import github from "svelte-highlight/styles/github";
-  import githubDark from "svelte-highlight/styles/github-dark";
-  import horizonDark from "svelte-highlight/styles/horizon-dark";
-  import nord from "svelte-highlight/styles/nord";
-
-  /** @type {Record<string, string>} */
-  const themeCss = {
-    horizonDark,
-    atomOneDark,
-    githubDark,
-    dracula,
-    nord,
-    github,
-  };
 </script>
-
-<svelte:head>
-  {#each Object.values(themeCss) as css}
-    {@html css}
-  {/each}
-</svelte:head>
 
 {#each sveltePreviewSnippets as snippet, index}
   <Row class="mb-9">
