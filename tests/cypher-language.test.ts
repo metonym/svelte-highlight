@@ -32,3 +32,20 @@ test("cypher highlights parameters and strings", () => {
   expect(result).toContain('<span class="hljs-variable">$name</span>');
   expect(result).toContain('<span class="hljs-string">&quot;ok&quot;</span>');
 });
+
+test("cypher highlights built-in function calls", () => {
+  const result = highlight(
+    "MATCH (n) RETURN id(n), labels(n), coalesce(n.a, n.b)",
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">id</span>');
+  expect(result).toContain('<span class="hljs-built_in">labels</span>');
+  expect(result).toContain('<span class="hljs-built_in">coalesce</span>');
+});
+
+test("cypher highlights backtick-quoted identifiers", () => {
+  const result = highlight("MATCH (n:`weird label`) RETURN n.`property name`");
+
+  expect(result).toContain('<span class="hljs-string">`weird label`</span>');
+  expect(result).toContain('<span class="hljs-string">`property name`</span>');
+});
