@@ -70,12 +70,6 @@
   import vyper from "svelte-highlight/languages/vyper";
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
-  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
-  import dracula from "svelte-highlight/styles/dracula";
-  import github from "svelte-highlight/styles/github";
-  import githubDark from "svelte-highlight/styles/github-dark";
-  import horizonDark from "svelte-highlight/styles/horizon-dark";
-  import nord from "svelte-highlight/styles/nord";
 
   /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex"} */
   export let language;
@@ -118,23 +112,7 @@
   };
 
   $: ({ lang, snippets } = registry[language]);
-
-  /** @type {Record<string, string>} */
-  const themeCss = {
-    horizonDark,
-    atomOneDark,
-    githubDark,
-    dracula,
-    nord,
-    github,
-  };
 </script>
-
-<svelte:head>
-  {#each Object.values(themeCss) as css}
-    {@html css}
-  {/each}
-</svelte:head>
 
 {#each snippets as snippet, index}
   <Row class="mb-9">
