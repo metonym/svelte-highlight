@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 240 languages exported from highlight.js@11.11.1
+> 241 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -2331,6 +2331,20 @@
 
   // base import
   import { rsl } from "svelte-highlight/languages";
+</script>
+```
+
+## rst (`rst`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import rst from "svelte-highlight/languages/rst";
+
+  // base import
+  import { rst } from "svelte-highlight/languages";
 </script>
 ```
 
