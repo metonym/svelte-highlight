@@ -1,3 +1,5 @@
+import javascriptRegister from "highlight.js/lib/languages/javascript";
+
 const PUG_KEYWORDS =
   "if else unless case when default each for in while block extends include append prepend mixin yield";
 
@@ -18,6 +20,22 @@ function definePug(hljs) {
     relevance: 0,
   };
 
+  // unbuffered code: `- var x = 1`
+  const UNBUFFERED_CODE = {
+    begin: /^\s*-/,
+    end: /$/,
+    excludeBegin: true,
+    subLanguage: "javascript",
+  };
+
+  // buffered/unescaped code: `= x` / `!= x`
+  const BUFFERED_CODE = {
+    begin: /^\s*!?=/,
+    end: /$/,
+    excludeBegin: true,
+    subLanguage: "javascript",
+  };
+
   return {
     name: "Pug",
     aliases: ["pug", "jade"],
@@ -25,7 +43,10 @@ function definePug(hljs) {
     keywords: { keyword: PUG_KEYWORDS },
     contains: [
       hljs.COMMENT(/^\s*\/\/-/, /$/),
+      hljs.COMMENT(/^\s*\/\/(?!-)/, /$/),
       { className: "meta", begin: /^\s*doctype\b/, end: /$/ },
+      UNBUFFERED_CODE,
+      BUFFERED_CODE,
       // tag with optional id/class shorthand at line start
       {
         begin: /^\s*(?=[a-zA-Z])/,
@@ -43,6 +64,7 @@ function definePug(hljs) {
 
 /** @type {import("highlight.js").LanguageFn} */
 function register(hljs) {
+  hljs.registerLanguage("javascript", javascriptRegister);
   return definePug(hljs);
 }
 
