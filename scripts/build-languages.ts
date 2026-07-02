@@ -258,6 +258,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "rst",
     path: `${import.meta.dir}/custom-languages/rst.js`,
   },
+  {
+    name: "templ",
+    moduleName: "templ",
+    path: `${import.meta.dir}/custom-languages/templ.js`,
+  },
 ];
 
 type LanguageEntry = {

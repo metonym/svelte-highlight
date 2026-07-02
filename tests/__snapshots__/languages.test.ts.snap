@@ -217,6 +217,7 @@ exports[`Languages 1`] = `
   "taggerscript",
   "tap",
   "tcl",
+  "templ",
   "thrift",
   "toml",
   "tp",
