@@ -32,6 +32,11 @@ export default {
 };
 </script>`;
 
+const customDirectiveSnippet = `<template>
+  <input v-focus />
+  <div v-tooltip="'Hello'"></div>
+</template>`;
+
 test("vue highlights script setup as TypeScript", () => {
   hljs.registerLanguage(vue.name, vue.register);
 
@@ -83,6 +88,17 @@ test("vue highlights plain JavaScript script blocks", () => {
 
   expect(result).toContain("language-javascript");
   expect(result).toContain("hljs-keyword");
+});
+
+test("vue highlights custom user-registered directives", () => {
+  hljs.registerLanguage(vue.name, vue.register);
+
+  const result = hljs.highlight(customDirectiveSnippet, {
+    language: "vue",
+  }).value;
+
+  expect(result).toContain('<span class="hljs-keyword">v-focus</span>');
+  expect(result).toContain('<span class="hljs-keyword">v-tooltip</span>');
 });
 
 test("html alone does not highlight vue directives or mustache expressions", () => {
