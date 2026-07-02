@@ -34,4 +34,23 @@ export const movePreviewSnippets: MovePreviewSnippet[] = [
     }
 }`,
   },
+  {
+    title: "Test-only functions",
+    description: "#[test], #[test_only], and #[expected_failure]",
+    code: `module addr::Bank {
+    #[test_only]
+    use std::unit_test;
+
+    #[test]
+    fun test_deposit() {
+        assert!(1 + 1 == 2, 0);
+    }
+
+    #[test]
+    #[expected_failure]
+    fun test_withdraw_too_much() {
+        abort 1
+    }
+}`,
+  },
 ];
