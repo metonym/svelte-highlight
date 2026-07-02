@@ -2,7 +2,7 @@ const CLARITY_KEYWORDS =
   "define-public define-private define-read-only define-map define-data-var define-constant define-fungible-token define-non-fungible-token define-trait use-trait impl-trait let begin if match map-get? map-set map-insert map-delete var-get var-set contract-call? as-contract try! unwrap! unwrap-err! unwrap-panic unwrap-err-panic asserts! ok err some none print";
 
 const CLARITY_BUILTINS =
-  "and or not is-eq is-none is-some is-ok is-err map filter fold append concat len element-at index-of list tuple get merge to-uint to-int buff-to-int-le buff-to-uint-le buff-to-int-be buff-to-uint-be hash160 sha256 sha512 keccak256 secp256k1-recover? secp256k1-verify principal-of? stx-transfer? stx-burn? stx-get-balance ft-transfer? ft-mint? ft-burn? nft-transfer? nft-mint? nft-burn? nft-get-owner?";
+  "and or not is-eq is-none is-some is-ok is-err map filter fold append concat len element-at index-of list tuple get merge to-uint to-int buff-to-int-le buff-to-uint-le buff-to-int-be buff-to-uint-be hash160 sha256 sha512 keccak256 secp256k1-recover? secp256k1-verify principal-of? stx-transfer? stx-burn? stx-get-balance ft-transfer? ft-mint? ft-burn? nft-transfer? nft-mint? nft-burn? nft-get-owner? tx-sender contract-caller block-height burn-block-height stx-liquid-supply default-to";
 
 const CLARITY_TYPES =
   "uint int bool principal buff string-ascii string-utf8 list optional response tuple";
