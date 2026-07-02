@@ -248,6 +248,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "dax",
     path: `${import.meta.dir}/custom-languages/dax.js`,
   },
+  {
+    name: "typst",
+    moduleName: "typst",
+    path: `${import.meta.dir}/custom-languages/typst.js`,
+  },
 ];
 
 type LanguageEntry = {

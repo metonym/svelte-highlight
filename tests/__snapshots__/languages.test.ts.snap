@@ -221,6 +221,7 @@ exports[`Languages 1`] = `
   "tp",
   "twig",
   "typescript",
+  "typst",
   "v",
   "vala",
   "vbnet",
