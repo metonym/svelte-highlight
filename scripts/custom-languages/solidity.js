@@ -81,7 +81,8 @@ function defineSolidity(hljs) {
         contains: [{ className: "title", begin: /[A-Za-z_]\w*/, relevance: 0 }],
       },
       {
-        beginKeywords: "function modifier event error",
+        beginKeywords:
+          "function modifier event error constructor fallback receive",
         end: /[({]/,
         excludeEnd: true,
         contains: [{ className: "title function_", begin: /[A-Za-z_]\w*/ }],

@@ -47,3 +47,17 @@ test("solidity highlights built-in globals", () => {
   expect(result).toContain('<span class="hljs-built_in">require</span>');
   expect(result).toContain('<span class="hljs-built_in">msg</span>');
 });
+
+test("solidity scopes constructor/fallback/receive with the same declaration construct as function", () => {
+  // constructor/fallback/receive now join the "function modifier event error"
+  // beginKeywords list, so they're parsed by the same title-highlighting construct
+  // as regular function/modifier/event declarations rather than falling through to
+  // plain keyword matching.
+  const result = highlight(
+    "constructor(address owner) {}\nfallback() external payable {}\nreceive() external payable {}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">constructor</span>');
+  expect(result).toContain('<span class="hljs-keyword">fallback</span>');
+  expect(result).toContain('<span class="hljs-keyword">receive</span>');
+});
