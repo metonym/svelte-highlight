@@ -40,4 +40,15 @@ routes {
   ["users"] = route("/api/users")
 }`,
   },
+  {
+    title: "Triple-quoted pound strings and annotations",
+    description: 'a #"""..."""# string and a dotted @annotation',
+    code: `@modulepath.Deprecated { message = "use v2 instead" }
+class LegacyConfig {
+  template = #"""
+    Use \\#(name) with caution.
+    Braces like {this} are literal here.
+    """#
+}`,
+  },
 ];
