@@ -65,4 +65,15 @@ export function greet(user: User): string {
 }
 \`\`\``,
   },
+  {
+    title: "Import without a trailing semicolon",
+    description: "ASI-style imports no longer swallow the rest of the file",
+    code: `import Chart from "./chart"
+export const title = "Dashboard"
+
+# {title}
+
+This heading and paragraph render normally instead of being
+absorbed into the import statement above.`,
+  },
 ];
