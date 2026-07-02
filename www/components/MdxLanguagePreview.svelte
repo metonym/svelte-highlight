@@ -5,29 +5,7 @@
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
   import mdx from "svelte-highlight/languages/mdx";
-  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
-  import dracula from "svelte-highlight/styles/dracula";
-  import github from "svelte-highlight/styles/github";
-  import githubDark from "svelte-highlight/styles/github-dark";
-  import horizonDark from "svelte-highlight/styles/horizon-dark";
-  import nord from "svelte-highlight/styles/nord";
-
-  /** @type {Record<string, string>} */
-  const themeCss = {
-    horizonDark,
-    atomOneDark,
-    githubDark,
-    dracula,
-    nord,
-    github,
-  };
 </script>
-
-<svelte:head>
-  {#each Object.values(themeCss) as css}
-    {@html css}
-  {/each}
-</svelte:head>
 
 {#each mdxPreviewSnippets as snippet, index}
   <Row class="mb-9">
