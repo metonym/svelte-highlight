@@ -40,4 +40,16 @@ local replicas = 3;
   count: std.length(self.ports),
 }`,
   },
+  {
+    title: "Hidden fields and verbatim strings",
+    description: 'field-visibility operators (::, +:) and @"..." escaping',
+    code: `local helper = @"a ""quoted"" value";
+
+{
+  visible: "shown in output",
+  hidden:: "omitted from output",
+  computed+: { extra: true },
+  note: helper,
+}`,
+  },
 ];
