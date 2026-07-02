@@ -40,6 +40,19 @@ function defineCairo(hljs) {
     beginScope: { 1: "keyword", 3: "title.function" },
   };
 
+  const MACRO = {
+    className: "built_in",
+    begin: /\b(?:panic|assert|array)!/,
+    relevance: 0,
+  };
+
+  const SYSCALL = {
+    className: "built_in",
+    begin:
+      /\b(?:get_caller_address|get_contract_address|get_block_timestamp)\b/,
+    relevance: 0,
+  };
+
   return {
     name: "Cairo",
     aliases: ["cairo"],
@@ -53,6 +66,8 @@ function defineCairo(hljs) {
       hljs.C_BLOCK_COMMENT_MODE,
       hljs.QUOTE_STRING_MODE,
       ATTRIBUTE,
+      MACRO,
+      SYSCALL,
       FUNCTION,
       TYPE,
       NUMBER,
