@@ -28,6 +28,11 @@ function defineVyper(hljs) {
     beginScope: { 1: "keyword", 3: "title.function" },
   };
 
+  const NAMED_DECLARATION = {
+    begin: [/\b(?:struct|interface|event)/, /\s+/, /[a-zA-Z_]\w*/],
+    beginScope: { 1: "keyword", 3: "title class_" },
+  };
+
   return {
     name: "Vyper",
     aliases: ["vyper"],
@@ -39,9 +44,22 @@ function defineVyper(hljs) {
     contains: [
       hljs.HASH_COMMENT_MODE,
       { className: "string", begin: /"""/, end: /"""/ },
+      {
+        className: "string",
+        begin: /b"/,
+        end: /"/,
+        contains: [hljs.BACKSLASH_ESCAPE],
+      },
+      {
+        className: "string",
+        begin: /b'/,
+        end: /'/,
+        contains: [hljs.BACKSLASH_ESCAPE],
+      },
       hljs.QUOTE_STRING_MODE,
       hljs.APOS_STRING_MODE,
       DECORATOR,
+      NAMED_DECLARATION,
       FUNCTION,
       NUMBER,
     ],
