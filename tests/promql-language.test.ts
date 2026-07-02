@@ -31,3 +31,40 @@ test("promql highlights label matchers", () => {
   expect(result).toContain('<span class="hljs-attr">code</span>');
   expect(result).toContain('<span class="hljs-string">&quot;200&quot;</span>');
 });
+
+test("promql highlights bare metric names without a label selector", () => {
+  const result = highlight("up");
+
+  expect(result).toContain('<span class="hljs-built_in">up</span>');
+});
+
+test("promql highlights a metric name followed by an offset modifier", () => {
+  const result = highlight("node_cpu_seconds_total offset 5m");
+
+  expect(result).toContain(
+    '<span class="hljs-built_in">node_cpu_seconds_total</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">offset</span>');
+});
+
+test("promql highlights binary and comparison operators", () => {
+  const result = highlight("a + b == c and d != e");
+
+  expect(result).toContain('<span class="hljs-operator">+</span>');
+  expect(result).toContain('<span class="hljs-operator">==</span>');
+  expect(result).toContain('<span class="hljs-operator">!=</span>');
+});
+
+test("promql highlights the @ timestamp modifier", () => {
+  const result = highlight("metric @ 1609746000");
+
+  expect(result).toContain('<span class="hljs-operator">@</span>');
+  expect(result).toContain('<span class="hljs-number">1609746000</span>');
+});
+
+test("promql highlights @ start() and @ end()", () => {
+  const result = highlight("metric @ start()");
+
+  expect(result).toContain('<span class="hljs-operator">@</span>');
+  expect(result).toContain('<span class="hljs-built_in">start</span>');
+});
