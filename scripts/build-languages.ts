@@ -263,6 +263,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "templ",
     path: `${import.meta.dir}/custom-languages/templ.js`,
   },
+  {
+    name: "hlsl",
+    moduleName: "hlsl",
+    path: `${import.meta.dir}/custom-languages/hlsl.js`,
+  },
 ];
 
 type LanguageEntry = {
