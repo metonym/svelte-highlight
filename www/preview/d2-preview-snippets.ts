@@ -29,4 +29,21 @@ client.shape: person`,
 
 network.web -> network.api: internal`,
   },
+  {
+    title: "Multi-board composition",
+    description: "layers, scenarios, and steps",
+    code: `title: Deployment
+
+layers: {
+  staging: {
+    web -> db
+  }
+}
+
+scenarios: {
+  outage: {
+    web -> db: down {style.stroke: red}
+  }
+}`,
+  },
 ];
