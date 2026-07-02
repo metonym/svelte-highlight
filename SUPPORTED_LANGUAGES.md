@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 241 languages exported from highlight.js@11.11.1
+> 242 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -2663,6 +2663,20 @@
 
   // base import
   import { tcl } from "svelte-highlight/languages";
+</script>
+```
+
+## templ (`templ`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import templ from "svelte-highlight/languages/templ";
+
+  // base import
+  import { templ } from "svelte-highlight/languages";
 </script>
 ```
 
