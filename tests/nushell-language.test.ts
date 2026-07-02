@@ -46,3 +46,20 @@ test("nushell highlights numbers with units", () => {
   expect(result).toContain('<span class="hljs-number">5min</span>');
   expect(result).toContain('<span class="hljs-number">1kb</span>');
 });
+
+test("nushell highlights interpolated strings", () => {
+  const result = highlight('let name = "world"\nprint $"Hello ($name)!"');
+
+  expect(result).toContain(
+    '<span class="hljs-string">$&quot;Hello <span class="hljs-subst">(<span class="hljs-variable">$name</span>)</span>!&quot;</span>',
+  );
+});
+
+test("nushell highlights raw strings without treating them as comments", () => {
+  const result = highlight("let path = r#'C:\\Users\\test'#");
+
+  expect(result).toContain(
+    '<span class="hljs-string">r#&#x27;C:\\Users\\test&#x27;#</span>',
+  );
+  expect(result).not.toContain("hljs-comment");
+});

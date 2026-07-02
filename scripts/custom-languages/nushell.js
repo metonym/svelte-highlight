@@ -34,6 +34,27 @@ function defineNushell(hljs) {
     ],
   };
 
+  const INTERP_EXPR = {
+    className: "subst",
+    begin: /\(/,
+    end: /\)/,
+    contains: [VARIABLE],
+  };
+
+  const INTERP_STRING = {
+    className: "string",
+    begin: /\$"/,
+    end: /"/,
+    contains: [hljs.BACKSLASH_ESCAPE, INTERP_EXPR],
+  };
+
+  const RAW_STRING = {
+    className: "string",
+    begin: /r#'/,
+    end: /'#/,
+    relevance: 0,
+  };
+
   const NUMBER = {
     className: "number",
     begin:
@@ -58,8 +79,10 @@ function defineNushell(hljs) {
       literal: NU_LITERALS,
     },
     contains: [
+      RAW_STRING,
       hljs.HASH_COMMENT_MODE,
       FUNCTION,
+      INTERP_STRING,
       STRING,
       VARIABLE,
       FLAG,
