@@ -30,3 +30,24 @@ test("pug highlights mixin calls", () => {
 
   expect(result).toContain('<span class="hljs-keyword">+button</span>');
 });
+
+test("pug highlights plain buffered comments", () => {
+  const result = highlight("// a plain comment");
+
+  expect(result).toContain(
+    '<span class="hljs-comment">// a plain comment</span>',
+  );
+});
+
+test("pug highlights unbuffered code lines as javascript", () => {
+  const result = highlight("- var x = 1");
+
+  expect(result).toContain("language-javascript");
+  expect(result).toContain('<span class="hljs-keyword">var</span>');
+});
+
+test("pug highlights buffered and unescaped code lines as javascript", () => {
+  const result = highlight("= x\n!= x");
+
+  expect(result).toContain("language-javascript");
+});
