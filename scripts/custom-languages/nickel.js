@@ -23,6 +23,8 @@ function defineNickel(hljs) {
   const STRING = {
     className: "string",
     variants: [
+      { begin: /m%%%"/, end: /"%%%/, contains: [INTERPOLATION] },
+      { begin: /m%%"/, end: /"%%/, contains: [INTERPOLATION] },
       { begin: /m%"/, end: /"%/, contains: [INTERPOLATION] },
       {
         begin: /"/,
@@ -44,6 +46,12 @@ function defineNickel(hljs) {
     relevance: 0,
   };
 
+  const RECORD_FIELD = {
+    begin: [/[A-Za-z_][\w-]*/, /\s*/, /=(?!=)/],
+    beginScope: { 1: "attr", 3: "operator" },
+    relevance: 0,
+  };
+
   return {
     name: "Nickel",
     aliases: ["nickel", "ncl"],
@@ -52,7 +60,14 @@ function defineNickel(hljs) {
       type: NICKEL_TYPES,
       literal: NICKEL_LITERALS,
     },
-    contains: [hljs.HASH_COMMENT_MODE, STRING, ENUM_TAG, META, NUMBER],
+    contains: [
+      hljs.HASH_COMMENT_MODE,
+      RECORD_FIELD,
+      STRING,
+      ENUM_TAG,
+      META,
+      NUMBER,
+    ],
   };
 }
 
