@@ -75,6 +75,7 @@
     "/preview-kql": "KQL language preview",
     "/preview-logql": "LogQL language preview",
     "/preview-rego": "Rego language preview",
+    "/preview-dax": "DAX language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
