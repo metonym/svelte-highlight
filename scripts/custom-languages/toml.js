@@ -51,9 +51,11 @@ function defineToml(hljs) {
     relevance: 10,
   };
 
+  const KEY_SEGMENT = /(?:[A-Za-z0-9_-]+|"(?:[^"\\]|\\.)*"|'[^']*')/.source;
+
   const ATTR = {
     className: "attr",
-    begin: /[A-Za-z0-9_-]+(?:\s*\.\s*[A-Za-z0-9_-]+)*(?=\s*=)/,
+    begin: new RegExp(`${KEY_SEGMENT}(?:\\s*\\.\\s*${KEY_SEGMENT})*(?=\\s*=)`),
     relevance: 0,
   };
 
