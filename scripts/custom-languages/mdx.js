@@ -11,7 +11,7 @@ function defineMdx(hljs) {
       hljs.COMMENT(/<!--/, /-->/, { relevance: 10 }),
       {
         begin: /^(?:import|export)\b/m,
-        end: /;?\s*$/m,
+        end: /;\s*$/m,
         subLanguage: "javascript",
         relevance: 100,
       },
