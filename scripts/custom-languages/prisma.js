@@ -41,7 +41,8 @@ function definePrisma(hljs) {
       literal: PRISMA_LITERALS,
     },
     contains: [
-      hljs.HASH_COMMENT_MODE,
+      hljs.COMMENT(/\/\/\//, /$/, { className: "doctag" }),
+      hljs.C_LINE_COMMENT_MODE,
       {
         begin: [
           new RegExp(

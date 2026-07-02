@@ -43,3 +43,17 @@ test("prisma highlights datasource and enum blocks", () => {
   expect(result).toContain('<span class="hljs-keyword">datasource</span>');
   expect(result).toContain('<span class="hljs-keyword">enum</span>');
 });
+
+test("prisma highlights line comments and doc comments, not hash comments", () => {
+  const result = highlight(
+    "// a regular comment\n/// a doc comment\nmodel User {\n  id Int // trailing\n}",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-comment">// a regular comment</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-doctag">/// a doc comment</span>',
+  );
+  expect(result).toContain('<span class="hljs-comment">// trailing</span>');
+});
