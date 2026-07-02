@@ -38,3 +38,12 @@ test("gleam highlights attributes", () => {
 
   expect(result).toContain('<span class="hljs-meta">@external</span>');
 });
+
+test("gleam highlights operators", () => {
+  const result = highlight(
+    'let greeting = "Hello, " <> name\nresult = value |> function_one |> function_two',
+  );
+
+  expect(result).toContain('<span class="hljs-operator">|&gt;</span>');
+  expect(result).toContain('<span class="hljs-operator">&lt;&gt;</span>');
+});

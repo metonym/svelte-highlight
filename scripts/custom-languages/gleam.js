@@ -33,6 +33,12 @@ function defineGleam(hljs) {
     relevance: 0,
   };
 
+  const OPERATOR = {
+    className: "operator",
+    begin: /\|>|<>/,
+    relevance: 0,
+  };
+
   const FUNCTION = {
     begin: [/\bfn/, /\s+/, /[a-z_]\w*/],
     beginScope: { 1: "keyword", 3: "title function_" },
@@ -46,6 +52,7 @@ function defineGleam(hljs) {
       hljs.COMMENT(/\/\/\/?\/?/, /$/),
       hljs.QUOTE_STRING_MODE,
       ATTRIBUTE,
+      OPERATOR,
       NUMBER,
       FUNCTION,
       LITERAL,
