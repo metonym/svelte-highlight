@@ -73,6 +73,7 @@
     "/preview-editable": "Editable highlight preview",
     "/preview-jq": "jq language preview",
     "/preview-kql": "KQL language preview",
+    "/preview-logql": "LogQL language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
