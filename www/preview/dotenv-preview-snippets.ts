@@ -32,4 +32,12 @@ export API_TOKEN="sk_live_0123456789"
 ENABLE_CACHE=true
 MAX_RETRIES=3`,
   },
+  {
+    title: "Parameter expansion defaults",
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} syntax under illustration
+    description: "${VAR:-default}, ${VAR:=default}, and ${VAR:+alt}",
+    code: `PORT=\${PORT:-3000}
+DATABASE_URL=\${DATABASE_URL:=postgres://localhost/app}
+FEATURE_FLAG=\${FEATURE_FLAG:+enabled}`,
+  },
 ];
