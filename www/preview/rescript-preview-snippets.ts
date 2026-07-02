@@ -28,4 +28,13 @@ let make = (~name) => {
   <div className="greeting"> {React.string(greeting)} </div>
 }`,
   },
+  {
+    title: "Recursive let bindings",
+    description: 'let rec correctly titles the function, not "rec"',
+    code: `let rec factorial = n =>
+  switch n {
+  | 0 => 1
+  | n => n * factorial(n - 1)
+  }`,
+  },
 ];
