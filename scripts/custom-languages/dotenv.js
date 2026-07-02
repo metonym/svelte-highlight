@@ -3,7 +3,11 @@ function defineDotenv(hljs) {
   const VARIABLE = {
     className: "variable",
     variants: [
-      { begin: /\$\{[A-Za-z_][A-Za-z0-9_]*\}/ },
+      {
+        begin: /\$\{[A-Za-z_][A-Za-z0-9_]*/,
+        end: /\}/,
+        contains: [{ className: "operator", begin: /:[-=+]/ }],
+      },
       { begin: /\$[A-Za-z_][A-Za-z0-9_]*/ },
     ],
   };
