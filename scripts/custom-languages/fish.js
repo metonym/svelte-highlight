@@ -22,6 +22,13 @@ function defineFish(hljs) {
     contains: [VARIABLE],
   };
 
+  const BARE_SUBSTITUTION = {
+    className: "subst",
+    begin: /\(/,
+    end: /\)/,
+    contains: [VARIABLE, hljs.BACKSLASH_ESCAPE],
+  };
+
   const STRING = {
     className: "string",
     begin: /"/,
@@ -54,6 +61,7 @@ function defineFish(hljs) {
       LITERAL_STRING,
       VARIABLE,
       SUBSTITUTION,
+      BARE_SUBSTITUTION,
       hljs.NUMBER_MODE,
     ],
   };

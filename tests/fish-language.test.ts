@@ -39,3 +39,12 @@ test("fish highlights strings with interpolation", () => {
   expect(result).toContain("hljs-string");
   expect(result).toContain('<span class="hljs-variable">$name</span>');
 });
+
+test("fish highlights bare command substitution", () => {
+  const result = highlight("set files (ls *.txt)\necho (count $files)");
+
+  expect(result).toContain('<span class="hljs-subst">(ls *.txt)</span>');
+  expect(result).toContain(
+    '<span class="hljs-subst">(count <span class="hljs-variable">$files</span>)</span>',
+  );
+});
