@@ -43,6 +43,12 @@ const moduleTypescriptSnippet = `<script lang="ts" context="module">
   export const x: number = 1;
 </script>`;
 
+const storeSubscriptionSnippet = `<script>
+  $count += 1;
+</script>
+
+<p>{$count} {$user.name}</p>`;
+
 const langTypescriptSnippet = `<script lang="typescript">
   let count: number = 0;
 </script>`;
@@ -151,6 +157,17 @@ test("svelte highlights runes, event attributes, and block continuations", () =>
   expect(result).toContain('<span class="hljs-keyword">@render</span>');
   expect(result).toContain('<span class="hljs-keyword">:else if</span>');
   expect(result).toContain('<span class="hljs-keyword">:else</span>');
+});
+
+test("svelte highlights bare $store subscriptions without parens", () => {
+  hljs.registerLanguage(svelte.name, svelte.register);
+
+  const result = hljs.highlight(storeSubscriptionSnippet, {
+    language: "svelte",
+  }).value;
+
+  expect(result).toContain('<span class="hljs-variable">$count</span>');
+  expect(result).toContain('<span class="hljs-variable">$user</span>');
 });
 
 test("svelte does not highlight directives inside script strings", () => {

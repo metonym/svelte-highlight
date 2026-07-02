@@ -29,16 +29,25 @@ function defineSvelte(hljs) {
     relevance: 10,
   };
 
+  // `$store` auto-subscription: Svelte treats a leading `$` on an
+  // identifier (that isn't a rune) as a store subscription, whether it's
+  // called as a function (`$store(...)`) or referenced bare, e.g. `{$count}`,
+  // `$user.name`, `$count += 1`. The bare form is the common idiom and must
+  // not require a trailing `(` to be recognized.
   const storeSubscriptionPattern = {
-    begin: new RegExp(String.raw`\$(?!${RUNE_NAMES})[a-zA-Z_][\w-]*\s*\(`),
-    className: "title function_",
-    endsWithParent: true,
     variants: [
       {
         begin: new RegExp(String.raw`\$(?!${RUNE_NAMES})[a-zA-Z_][\w-]*\s*\(`),
         end: /\(/,
+        className: "title function_",
+        endsWithParent: true,
         returnBegin: true,
         excludeEnd: true,
+        relevance: 10,
+      },
+      {
+        begin: new RegExp(String.raw`\$(?!${RUNE_NAMES})[a-zA-Z_][\w-]*\b`),
+        className: "variable",
         relevance: 10,
       },
     ],
