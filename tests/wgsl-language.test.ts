@@ -32,3 +32,17 @@ test("wgsl highlights numbers", () => {
 
   expect(result).toContain('<span class="hljs-number">1.0</span>');
 });
+
+test("wgsl highlights address-space and access-mode keywords in var<...>", () => {
+  const result = highlight("var<storage, read_write> buf: array<f32>;");
+
+  expect(result).toContain('<span class="hljs-keyword">var</span>');
+  expect(result).toContain('<span class="hljs-keyword">storage</span>');
+  expect(result).toContain('<span class="hljs-keyword">read_write</span>');
+});
+
+test("wgsl highlights builtin stage-IO identifiers", () => {
+  const result = highlight("@builtin(vertex_index) idx: u32");
+
+  expect(result).toContain('<span class="hljs-built_in">vertex_index</span>');
+});
