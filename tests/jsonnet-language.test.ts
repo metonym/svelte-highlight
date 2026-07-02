@@ -33,3 +33,23 @@ test("jsonnet highlights strings", () => {
     '<span class="hljs-string">&quot;svelte&quot;</span>',
   );
 });
+
+test("jsonnet highlights field-visibility and mixin operators", () => {
+  const result = highlight(
+    "{ hidden:: 1, forced::: 2, mixin+: 3, mixinHidden+:: 4, normal: 5 }",
+  );
+
+  expect(result).toContain('<span class="hljs-operator">::</span>');
+  expect(result).toContain('<span class="hljs-operator">:::</span>');
+  expect(result).toContain('<span class="hljs-operator">+:</span>');
+  expect(result).toContain('<span class="hljs-operator">+::</span>');
+  expect(result).toContain("normal: <span");
+});
+
+test("jsonnet highlights verbatim strings with doubled-quote escapes", () => {
+  const result = highlight('local x = @"say ""hi""";');
+
+  expect(result).toContain(
+    '<span class="hljs-string">@&quot;say &quot;&quot;hi&quot;&quot;&quot;</span>',
+  );
+});

@@ -23,8 +23,8 @@ function defineJsonnet(hljs) {
   const STRING = {
     className: "string",
     variants: [
-      { begin: /@"/, end: /"/ },
-      { begin: /@'/, end: /'/ },
+      { begin: /@"/, end: /"/, contains: [{ begin: /""/, relevance: 0 }] },
+      { begin: /@'/, end: /'/, contains: [{ begin: /''/, relevance: 0 }] },
       { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
       { begin: /'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
     ],
@@ -33,6 +33,12 @@ function defineJsonnet(hljs) {
   const FUNCTION = {
     begin: [/\blocal/, /\s+/, /[a-zA-Z_]\w*/, /\s*(?=\()/],
     beginScope: { 1: "keyword", 3: "title.function" },
+  };
+
+  const FIELD_VISIBILITY = {
+    className: "operator",
+    begin: /\+?:::|\+?::|\+:/,
+    relevance: 0,
   };
 
   return {
@@ -50,6 +56,7 @@ function defineJsonnet(hljs) {
       TEXT_BLOCK,
       STRING,
       FUNCTION,
+      FIELD_VISIBILITY,
       NUMBER,
     ],
   };
