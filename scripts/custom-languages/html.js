@@ -62,6 +62,10 @@ function defineHtml(hljs) {
         end: />/,
         relevance: 10,
       },
+      // `<![CDATA[ ... ]]>` is opaque markup, not a tag: treat it like a
+      // comment so its contents (which may contain `<` or `&`) aren't
+      // mistaken for the start of a tag or entity.
+      hljs.COMMENT(/<!\[CDATA\[/, /\]\]>/, { relevance: 10 }),
       hljs.COMMENT(/<!--/, /-->/, { relevance: 10 }),
       HtmlEntities,
       {
@@ -86,6 +90,30 @@ function defineHtml(hljs) {
           end: /<\/script>/,
           returnEnd: true,
           subLanguage: ["javascript"],
+        },
+      },
+      // `<textarea>`/`<title>` are raw-text elements: their content is not
+      // markup, so a literal `<` inside must not be parsed as a tag start.
+      {
+        className: "tag",
+        begin: /<textarea(?=\s|>)/,
+        end: />/,
+        keywords: { name: "textarea" },
+        contains: [TagInternals],
+        starts: {
+          end: /<\/textarea>/,
+          returnEnd: true,
+        },
+      },
+      {
+        className: "tag",
+        begin: /<title(?=\s|>)/,
+        end: />/,
+        keywords: { name: "title" },
+        contains: [TagInternals],
+        starts: {
+          end: /<\/title>/,
+          returnEnd: true,
         },
       },
       {
