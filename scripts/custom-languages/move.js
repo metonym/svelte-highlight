@@ -26,6 +26,24 @@ function defineMove(hljs) {
     relevance: 0,
   };
 
+  const ATTRIBUTE = {
+    className: "meta",
+    begin: /#!?\[/,
+    end: /\]/,
+    relevance: 5,
+  };
+
+  const MODULE_PATH = {
+    begin: [
+      /\bmodule\b/,
+      /\s+/,
+      /(?:0x[0-9a-fA-F]+|[A-Za-z_]\w*)/,
+      /::/,
+      /[A-Za-z_]\w*/,
+    ],
+    beginScope: { 1: "keyword", 5: "title class_" },
+  };
+
   const TYPE = {
     className: "type",
     begin: /\b[A-Z]\w*/,
@@ -55,6 +73,8 @@ function defineMove(hljs) {
         contains: [hljs.BACKSLASH_ESCAPE],
       },
       { className: "string", begin: /x"/, end: /"/ },
+      ATTRIBUTE,
+      MODULE_PATH,
       ADDRESS,
       FUNCTION,
       TYPE,
