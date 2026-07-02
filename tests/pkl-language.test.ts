@@ -33,3 +33,19 @@ test("pkl highlights strings and numbers", () => {
   );
   expect(result).toContain('<span class="hljs-number">8080</span>');
 });
+
+test("pkl highlights triple-quoted pound strings", () => {
+  const result = highlight('x = #"""hello "# world"""#');
+
+  expect(result).toContain(
+    '<span class="hljs-string">#&quot;&quot;&quot;hello &quot;# world&quot;&quot;&quot;#</span>',
+  );
+});
+
+test("pkl highlights dotted qualified annotations", () => {
+  const result = highlight("@modulepath.SomeAnnotation\nclass Foo {}");
+
+  expect(result).toContain(
+    '<span class="hljs-meta">@modulepath.SomeAnnotation</span>',
+  );
+});

@@ -34,6 +34,7 @@ function definePkl(hljs) {
         end: /"""/,
         contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
       },
+      { begin: /#"""/, end: /"""#/ },
       { begin: /#"/, end: /"#/ },
       {
         begin: /"/,
@@ -45,7 +46,7 @@ function definePkl(hljs) {
 
   const ANNOTATION = {
     className: "meta",
-    begin: /@[a-zA-Z_]\w*/,
+    begin: /@[a-zA-Z_][\w.]*/,
     relevance: 0,
   };
 
