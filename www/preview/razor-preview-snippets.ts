@@ -32,4 +32,22 @@ export const razorPreviewSnippets: RazorPreviewSnippet[] = [
 <p>You have @total @label in your cart.</p>
 <a href="/checkout">Checkout</a>`,
   },
+  {
+    title: "Nested code blocks",
+    description: "@code with nested braces, @(), and interpolated strings",
+    code: `@code {
+    private int total = 0;
+
+    private void Increment()
+    {
+        if (total < 10)
+        {
+            total += 1;
+        }
+    }
+}
+
+<p>Total: @(total * 2)</p>
+<p>@($"Current value is {total}")</p>`,
+  },
 ];
