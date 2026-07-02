@@ -30,3 +30,15 @@ test("dhall highlights literals", () => {
 
   expect(result).toContain('<span class="hljs-literal">True</span>');
 });
+
+test("dhall highlights lambda syntax operators", () => {
+  const asciiResult = highlight("\\(x : Natural) -> x");
+
+  expect(asciiResult).toContain('<span class="hljs-operator">\\</span>');
+  expect(asciiResult).toContain('<span class="hljs-operator">-&gt;</span>');
+
+  const unicodeResult = highlight("λ(x : Natural) → x");
+
+  expect(unicodeResult).toContain('<span class="hljs-operator">λ</span>');
+  expect(unicodeResult).toContain('<span class="hljs-operator">→</span>');
+});
