@@ -18,6 +18,7 @@ function defineCypher(hljs) {
     variants: [
       { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
       { begin: /'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /`/, end: /`/ },
     ],
   };
 
@@ -30,6 +31,13 @@ function defineCypher(hljs) {
   const PARAMETER = {
     className: "variable",
     begin: /\$[A-Za-z_]\w*/,
+  };
+
+  const FUNCTION = {
+    className: "built_in",
+    begin:
+      /\b(?:id|labels|type|properties|coalesce|toInteger|toString|size|collect|nodes|relationships|exists|count)(?=\s*\()/,
+    relevance: 0,
   };
 
   return {
@@ -47,6 +55,7 @@ function defineCypher(hljs) {
       STRING,
       LABEL,
       PARAMETER,
+      FUNCTION,
       NUMBER,
     ],
   };
