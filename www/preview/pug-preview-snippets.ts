@@ -29,4 +29,12 @@ html(lang="en")
 +card("Hello")
   p Posted by #{author} on #{date}`,
   },
+  {
+    title: "Comments and inline code",
+    description: "// buffered comments, and -/=/!= code lines",
+    code: `// This renders as an HTML comment
+- var year = 2024
+p= 'Copyright ' + year
+!= renderTrustedHtml()`,
+  },
 ];
