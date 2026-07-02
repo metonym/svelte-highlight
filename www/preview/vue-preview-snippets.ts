@@ -85,4 +85,18 @@ $primary: #42b883;
   padding 1rem
 </style>`,
   },
+  {
+    title: "Custom directives",
+    description: "User-defined v-* directives, not just the built-in list",
+    code: `<script setup>
+import { vFocus, vTooltip } from "./directives";
+</script>
+
+<template>
+  <input v-focus placeholder="Autofocused" />
+  <button v-tooltip="'Click me'" v-permission.admin="'edit'">
+    Save
+  </button>
+</template>`,
+  },
 ];
