@@ -28,6 +28,17 @@ test("hcl highlights interpolation as subst", () => {
   expect(result).toContain("hljs-subst");
 });
 
+test("hcl interpolation is self-nesting past inner interpolations", () => {
+  const result = highlight(`x = "\${format("\${nested}")}"`);
+
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
+  expect(result).toContain('<span class="hljs-subst">${nested}</span>');
+  expect(result).toContain(
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
+    '<span class="hljs-subst">${<span class="hljs-built_in">format</span>(&quot;<span class="hljs-subst">${nested}</span>&quot;)}</span>',
+  );
+});
+
 test("hcl highlights heredoc strings", () => {
   const result = highlight("policy = <<-EOT\n  hello\nEOT");
 
