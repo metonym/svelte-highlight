@@ -61,17 +61,19 @@ export async function buildStyles() {
 
   // Mining gap-fill proposals needs every theme's raw CSS up front, so read
   // it all once here rather than per-file inside the main pass below.
-  const rawContents = await Promise.all(
-    cssFiles.map(({ absPath }) => Bun.file(absPath).text()),
+  const cssFilesWithRaw = await Promise.all(
+    cssFiles.map(async (entry) => ({
+      ...entry,
+      raw: await Bun.file(entry.absPath).text(),
+    })),
   );
   const rawCssByTheme = new Map(
-    cssFiles.map(({ name }, i) => [name, rawContents[i]]),
+    cssFilesWithRaw.map(({ name, raw }) => [name, raw]),
   );
   const gapFillProposals = buildGapFillProposals(rawCssByTheme);
 
   const fileWrites = await Promise.all(
-    cssFiles.map(async ({ absPath, name, moduleName }, i) => {
-      const raw = rawContents[i];
+    cssFilesWithRaw.map(async ({ absPath, name, moduleName, raw }) => {
       const content = await inlineCssUrls(raw, path.dirname(absPath));
 
       const proposals = gapFillProposals.get(name);
