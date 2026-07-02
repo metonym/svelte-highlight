@@ -41,4 +41,14 @@ ssl.enabled = true
 path = "/api"
 methods = ["GET", "POST"]`,
   },
+  {
+    title: "Quoted keys",
+    description: "keys that need quoting: dots, spaces, and IPs",
+    code: `[servers]
+"127.0.0.1" = "localhost"
+"key with spaces" = true
+
+[servers."router.local"]
+enabled = true`,
+  },
 ];
