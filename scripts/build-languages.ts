@@ -243,6 +243,11 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "rego",
     path: `${import.meta.dir}/custom-languages/rego.js`,
   },
+  {
+    name: "dax",
+    moduleName: "dax",
+    path: `${import.meta.dir}/custom-languages/dax.js`,
+  },
 ];
 
 type LanguageEntry = {
