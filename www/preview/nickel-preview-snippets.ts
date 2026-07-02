@@ -30,4 +30,13 @@ export const nickelPreviewSnippets: NickelPreviewSnippet[] = [
   values = std.array.map (fun x => x * 2) [1, 2, 3],
 }`,
   },
+  {
+    title: "Multiline strings",
+    description: 'm%"..."% strings with a matching %-count delimiter',
+    code: `let template = m%"
+  Use %{host} with a literal "%" sign here.
+  "%
+in
+{ rendered = template }`,
+  },
 ];
