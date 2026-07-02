@@ -94,6 +94,31 @@ test("mdx highlights multi-line export statements as JavaScript", () => {
   );
 });
 
+test("mdx does not let a semicolon-less import statement swallow the rest of the document", () => {
+  hljs.registerLanguage(mdx.name, mdx.register);
+
+  const noSemicolonImport = `import { Chart } from "./chart"
+
+# Hello MDX
+
+Some content here.`;
+
+  const result = hljs.highlight(noSemicolonImport, { language: "mdx" }).value;
+
+  expect(result).toContain("language-javascript");
+  expect(result).toContain('<span class="hljs-section"># </span>');
+  expect(result).toContain("Hello MDX");
+  expect(result).toContain("Some content here.");
+
+  const javascriptSpanEnd = result.indexOf(
+    "</span>",
+    result.indexOf("language-javascript"),
+  );
+  const headingIndex = result.indexOf("hljs-section");
+
+  expect(javascriptSpanEnd).toBeLessThan(headingIndex);
+});
+
 test("mdx highlights fenced javascript and css code blocks", () => {
   hljs.registerLanguage(mdx.name, mdx.register);
 
@@ -116,6 +141,31 @@ test("mdx highlights fenced javascript and css code blocks", () => {
 
   expect(cssResult).toContain("language-css");
   expect(cssResult).toContain('<span class="hljs-selector-class">.foo</span>');
+});
+
+test("mdx highlights fenced typescript and tsx code blocks", () => {
+  hljs.registerLanguage(mdx.name, mdx.register);
+
+  const tsFence = [
+    "```typescript",
+    "const total: number = items.length;",
+    "```",
+  ].join("\n");
+
+  const tsResult = hljs.highlight(tsFence, { language: "mdx" }).value;
+
+  expect(tsResult).toContain("language-typescript");
+  expect(tsResult).toContain('<span class="hljs-keyword">const</span>');
+  expect(tsResult).toContain('<span class="hljs-built_in">number</span>');
+
+  const tsxFence = ["```tsx", "const el = <div>{value}</div>;", "```"].join(
+    "\n",
+  );
+
+  const tsxResult = hljs.highlight(tsxFence, { language: "mdx" }).value;
+
+  expect(tsxResult).toContain("language-typescript");
+  expect(tsxResult).toContain('<span class="hljs-keyword">const</span>');
 });
 
 test("mdx falls back to plain code styling for unsupported fence languages", () => {

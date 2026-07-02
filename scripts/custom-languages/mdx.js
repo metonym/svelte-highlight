@@ -1,5 +1,6 @@
 import cssRegister from "highlight.js/lib/languages/css";
 import javascriptRegister from "highlight.js/lib/languages/javascript";
+import typescriptRegister from "highlight.js/lib/languages/typescript";
 import html from "./html.js";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
@@ -10,8 +11,13 @@ function defineMdx(hljs) {
     contains: [
       hljs.COMMENT(/<!--/, /-->/, { relevance: 10 }),
       {
+        // ESM import/export statements often omit the trailing semicolon
+        // (ASI). Bound the match so a missing `;` can't run away and
+        // consume the rest of the document: stop at a semicolon-terminated
+        // line as before, but fall back to a blank line or the next
+        // Markdown heading, whichever comes first.
         begin: /^(?:import|export)\b/m,
-        end: /;\s*$/m,
+        end: /;\s*$|\n[ \t]*\n|(?=^#{1,6}\s)/m,
         subLanguage: "javascript",
         relevance: 100,
       },
@@ -21,6 +27,14 @@ function defineMdx(hljs) {
         excludeBegin: true,
         excludeEnd: true,
         subLanguage: "javascript",
+        relevance: 10,
+      },
+      {
+        begin: /^(\s*)```(typescript|ts|tsx)\s*$/m,
+        end: /^(\s*)```\s*$/m,
+        excludeBegin: true,
+        excludeEnd: true,
+        subLanguage: "typescript",
         relevance: 10,
       },
       {
@@ -108,6 +122,7 @@ function defineMdx(hljs) {
 function register(hljs) {
   hljs.registerLanguage("html", html.register);
   hljs.registerLanguage("javascript", javascriptRegister);
+  hljs.registerLanguage("typescript", typescriptRegister);
   hljs.registerLanguage("css", cssRegister);
   return defineMdx(hljs);
 }
