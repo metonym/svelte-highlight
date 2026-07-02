@@ -31,3 +31,17 @@ test("starlark highlights hash comments and strings", () => {
   expect(result).toContain('<span class="hljs-comment"># a comment</span>');
   expect(result).toContain('<span class="hljs-string">&quot;lib&quot;</span>');
 });
+
+test("starlark highlights the load statement as a keyword", () => {
+  const result = highlight('load("//foo:bar.bzl", "baz")');
+
+  expect(result).toContain('<span class="hljs-keyword">load</span>');
+});
+
+test("starlark highlights load statements with multiple loaded symbols", () => {
+  const result = highlight(
+    'load("@rules_python//python:defs.bzl", "py_binary")',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">load</span>');
+});
