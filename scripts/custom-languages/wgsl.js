@@ -6,6 +6,9 @@ const WGSL_TYPES =
 
 const WGSL_LITERALS = "true false";
 
+const WGSL_BUILTINS =
+  "vertex_index instance_index position frag_depth sample_index sample_mask local_invocation_id global_invocation_id workgroup_id num_workgroups front_facing";
+
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineWgsl(hljs) {
   const NUMBER = {
@@ -29,6 +32,15 @@ function defineWgsl(hljs) {
     beginScope: { 1: "keyword", 3: "title.function" },
   };
 
+  const VAR_ADDRESS_SPACE = {
+    begin: [/\bvar/, /\s*</],
+    beginScope: { 1: "keyword" },
+    end: />/,
+    keywords: {
+      keyword: "storage uniform workgroup private read write read_write",
+    },
+  };
+
   return {
     name: "WGSL",
     aliases: ["wgsl"],
@@ -36,11 +48,13 @@ function defineWgsl(hljs) {
       keyword: WGSL_KEYWORDS,
       type: WGSL_TYPES,
       literal: WGSL_LITERALS,
+      built_in: WGSL_BUILTINS,
     },
     contains: [
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
       ATTRIBUTE,
+      VAR_ADDRESS_SPACE,
       FUNCTION,
       NUMBER,
     ],
