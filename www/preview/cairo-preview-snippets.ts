@@ -33,4 +33,21 @@ mod Counter {
     }
 }`,
   },
+  {
+    title: "Macros and syscalls",
+    description: "panic!/assert!/array!, and Starknet syscalls",
+    code: `fn withdraw(ref self: ContractState, amount: u128) {
+    let caller = get_caller_address();
+    let contract = get_contract_address();
+    let now = get_block_timestamp();
+
+    assert!(amount > 0, "amount must be positive");
+
+    let mut history: Array<felt252> = array![];
+    if caller == contract {
+        panic!("cannot withdraw to self");
+    }
+    history.append(now.into());
+}`,
+  },
 ];
