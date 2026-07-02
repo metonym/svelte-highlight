@@ -102,4 +102,20 @@ export const sveltePreviewSnippets: SveltePreviewSnippet[] = [
   <span>{item.label}</span>
 </List>`,
   },
+  {
+    title: "Store auto-subscription",
+    description: "Bare $store references, not just $store() calls",
+    code: `<script>
+  import { writable } from "svelte/store";
+
+  const count = writable(0);
+
+  function increment() {
+    $count += 1;
+  }
+</script>
+
+<button on:click={increment}>{$count}</button>
+<p>{$count > 10 ? "big" : "small"}</p>`,
+  },
 ];
