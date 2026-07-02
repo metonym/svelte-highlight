@@ -114,6 +114,7 @@ exports[`Languages 1`] = `
   "jsonnet",
   "julia",
   "juliaRepl",
+  "just",
   "kotlin",
   "kql",
   "lasso",

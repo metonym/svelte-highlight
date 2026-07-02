@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 243 languages exported from highlight.js@11.11.1
+> 244 languages exported from highlight.js@11.11.1
 
 ## 1c (`_1c`)
 
@@ -1389,6 +1389,20 @@
 
   // base import
   import { juliaRepl } from "svelte-highlight/languages";
+</script>
+```
+
+## just (`just`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import just from "svelte-highlight/languages/just";
+
+  // base import
+  import { just } from "svelte-highlight/languages";
 </script>
 ```
 
