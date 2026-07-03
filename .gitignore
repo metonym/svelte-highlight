@@ -9,6 +9,6 @@ package
 /src/styles
 /src/languages
 /playwright-report
-/playwright/.cache
+/tests/e2e/playwright/.cache
 /test-results/
 /www/data/
