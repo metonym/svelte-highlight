@@ -43,6 +43,15 @@ const moduleTypescriptSnippet = `<script lang="ts" context="module">
   export const x: number = 1;
 </script>`;
 
+const runeSuffixSnippet = `<script>
+  $effect.pre(() => {});
+  $effect.tracking();
+  $effect.pending();
+  $effect.root(() => {});
+  $props.id();
+  $inspect.trace();
+</script>`;
+
 const storeSubscriptionSnippet = `<script>
   $count += 1;
 </script>
@@ -157,6 +166,23 @@ test("svelte highlights runes, event attributes, and block continuations", () =>
   expect(result).toContain('<span class="hljs-keyword">@render</span>');
   expect(result).toContain('<span class="hljs-keyword">:else if</span>');
   expect(result).toContain('<span class="hljs-keyword">:else</span>');
+});
+
+test("svelte highlights dotted rune suffixes as a single keyword", () => {
+  hljs.registerLanguage(svelte.name, svelte.register);
+
+  const result = hljs.highlight(runeSuffixSnippet, {
+    language: "svelte",
+  }).value;
+
+  expect(result).toContain('<span class="hljs-keyword">$effect.pre</span>');
+  expect(result).toContain(
+    '<span class="hljs-keyword">$effect.tracking</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">$effect.pending</span>');
+  expect(result).toContain('<span class="hljs-keyword">$effect.root</span>');
+  expect(result).toContain('<span class="hljs-keyword">$props.id</span>');
+  expect(result).toContain('<span class="hljs-keyword">$inspect.trace</span>');
 });
 
 test("svelte highlights bare $store subscriptions without parens", () => {
