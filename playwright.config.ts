@@ -12,6 +12,7 @@ export default defineConfig({
   use: {
     trace: "on-first-retry",
     ctPort: 3100,
+    ctTemplateDir: "tests/e2e/playwright",
     ctViteConfig: {
       plugins: [svelte({ preprocess: vitePreprocess() })],
       resolve: {
