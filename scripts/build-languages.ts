@@ -325,7 +325,11 @@ export async function buildLanguages() {
     })),
   ].sort((a, b) => a.name.localeCompare(b.name));
 
-  let markdown = createMarkdown("Languages", entries.length);
+  let markdown = createMarkdown(
+    "Languages",
+    entries.length,
+    CUSTOM_LANGUAGES.length,
+  );
   let base = "";
   let baseTs = `
   import type { LanguageFn } from "highlight.js";
