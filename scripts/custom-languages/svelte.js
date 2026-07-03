@@ -2,7 +2,8 @@ import typescriptRegister from "highlight.js/lib/languages/typescript";
 import html from "./html.js";
 
 const RUNE_NAMES = "state|derived|effect|props|bindable|inspect|host";
-const RUNE_SUFFIXES = "raw|snapshot|by|eager";
+const RUNE_SUFFIXES =
+  "raw|snapshot|by|eager|pre|tracking|pending|root|id|trace";
 const SVELTE_DIRECTIVES =
   "on|bind|use|transition|in|out|animate|class|style|let";
 const TS_LANG = "(?:ts|typescript)";
