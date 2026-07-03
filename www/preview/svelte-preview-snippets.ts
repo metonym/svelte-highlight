@@ -74,6 +74,26 @@ export const sveltePreviewSnippets: SveltePreviewSnippet[] = [
 {/if}`,
   },
   {
+    title: "Dotted rune suffixes",
+    description: "$effect.pre, $effect.tracking, $state.raw, and more",
+    code: `<script>
+  let count = $state.raw(0);
+  let doubled = $derived.by(() => count * 2);
+
+  $effect.pre(() => {
+    console.log("before DOM update");
+  });
+
+  $effect(() => {
+    if ($effect.tracking()) {
+      console.log("running inside a tracking context");
+    }
+  });
+
+  const id = $props.id();
+</script>`,
+  },
+  {
     title: "Legacy directives",
     description:
       "on:, bind:, class:, use:, transition:, and let: prop directives",
