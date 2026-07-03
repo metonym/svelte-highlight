@@ -5,6 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.14.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.14.0) - 2026-07-02
+
+**Features**
+
+- add zero-runtime `svelte-highlight/static` preprocessor
+- fill in unstyled scopes using a corpus-mined similarity map
+- sub-highlight fenced javascript/css/html blocks in `mdx`
+- add custom `jq` language
+- add custom `kql` language
+- add custom `logql` language
+- add custom `rego` language
+- add custom `dax` language
+- add custom `typst` language
+- add custom `rst` language
+- add custom `templ` language
+- add custom `hlsl` language
+- add custom `just` language
+
+**Fixes**
+
+- improve `fish` grammar for bare command substitution
+- improve `nushell` grammar for interpolated and raw strings
+- improve `gleam` grammar for pipe and concat operators
+- improve `v` grammar for comptime keywords and optional types
+- improve `zig` grammar for optional and error-union type prefixes
+- improve `solidity` grammar for constructor/fallback/receive
+- improve `rescript` grammar for let rec titles and JSX support
+- improve `move` grammar for test attributes and module path highlighting
+- improve `cairo` grammar for macros and starknet syscalls
+- improve `clarity` grammar for tx-sender/contract-caller/chain-state built-ins
+- improve `vyper` grammar for byte-strings and declaration names
+- improve `prisma` grammar for `//` and `///` comment syntax
+- improve `wgsl` grammar for address-space keywords and builtins
+- improve `bicep` grammar for declaration name titles
+- improve `caddy` grammar for nested sub-directive keywords
+- improve `bibtex` grammar for citation key titles
+- improve `nickel` grammar for record keys and variable-%-count strings
+- improve `pkl` grammar for triple-quoted pound strings and dotted annotations
+- improve `dhall` grammar for lambda syntax
+- improve `jsonnet` grammar for field-visibility operators and verbatim strings
+- improve `cue` grammar for constraint operators, byte strings, and optional marker
+- improve `hcl` grammar for self-nesting interpolation
+- improve `dotenv` grammar for bash-style parameter expansion defaults
+- improve `toml` grammar for quoted keys
+- improve `d2` grammar for nested style properties and multi-board keywords
+- improve `groq` grammar for pipe/logical operators and projection keys
+- improve `promql` grammar for operators, bare metrics, and `@` modifier
+- improve `cypher` grammar for built-in functions and backtick identifiers
+- improve `razor` grammar for brace-depth-aware code blocks
+- improve `pug` grammar for buffered comments and code lines
+- improve `liquid` grammar for opaque comment tags
+- improve `blade` grammar for PHP variables/strings and `@php` blocks
+- improve `mdx` grammar for multi-line import/export statements and tsx fence support
+- improve `vue` grammar for custom `v-*` directives
+- improve `svelte` grammar for bare `$store` references
+- improve `html` grammar for CDATA sections and textarea/title raw text
+- improve `marko` grammar for concise syntax and implicit bindings
+- drop CSS declarations unconditionally overridden later in the same theme
+
 ## [7.13.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.13.0) - 2026-06-26
 
 **Features**
