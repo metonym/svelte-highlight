@@ -13,7 +13,8 @@
 
   const dispatch = createEventDispatcher();
 
-  const baseId = `svelte-highlight-file-tabs-${uid++}`;
+  const baseId = `svelte-highlight-file-tabs-${uid}`;
+  uid += 1;
 
   /** @type {HTMLDivElement} */
   let root;
