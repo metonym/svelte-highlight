@@ -31,6 +31,7 @@
 
 <svelte:component this={Highlight2} code="" language={typescript} />
 
+{_3024}
 {github}
 {githubStyles}
 {purebasic}
