@@ -10,7 +10,9 @@ import CopyButtonTransform from "./CopyButton.transform.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
+import HighlightAutoCustomLanguages from "./HighlightAuto.customLanguages.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
+import HighlightAutoSecondBest from "./HighlightAuto.secondBest.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
@@ -364,6 +366,30 @@ test("Auto-highlighting with language restriction", async ({ mount, page }) => {
   // Should have JavaScript highlighting
   await expect(page.locator(".hljs-keyword")).toBeVisible();
   await expect(page.locator(".hljs-number")).toHaveText("42");
+});
+
+test("Auto-highlighting detects a custom grammar via the languages prop", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoCustomLanguages);
+
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "svelte");
+  await expect(page.getByTestId("detected-language")).toHaveText("svelte");
+
+  // Svelte-specific markup is highlighted, confirming the grammar was
+  // registered (not just guessed as a close built-in match).
+  await expect(page.getByText("$state", { exact: true })).toBeVisible();
+});
+
+test("Auto-highlighting surfaces secondBest for an ambiguous snippet", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoSecondBest);
+
+  await expect(page.getByTestId("has-second-best")).toHaveText("true");
+  await expect(page.getByTestId("second-best-language")).not.toHaveText("");
 });
 
 test("LangTag", async ({ mount, page }) => {

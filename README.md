@@ -340,6 +340,26 @@ You can restrict [language auto-detection](https://highlightjs.readthedocs.io/en
 <HighlightAuto {code} languageNames={["javascript", "typescript"]} />
 ```
 
+### Detecting Custom Grammars
+
+The 52 custom grammars shipped in `svelte-highlight/languages/*` (Svelte, Astro, Vue, Zig, Gleam, …) are otherwise invisible to `HighlightAuto` — they're only registered on `highlight.js` as a side effect of a `Highlight` component using them first. Pass them to the `languages` prop to register and consider them during detection:
+
+```svelte
+<script>
+  import { HighlightAuto } from "svelte-highlight";
+  import svelte from "svelte-highlight/languages/svelte";
+  import github from "svelte-highlight/styles/github";
+
+  const code = `{#each items as item}\n  <li>{item}</li>\n{/each}`;
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<HighlightAuto {code} languages={[svelte]} />
+```
+
 ## Line Numbers
 
 Use the `LineNumbers` component to render the highlighted code with line numbers.
@@ -1356,11 +1376,14 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 
 #### Props
 
-| Name      | Type             | Default value  |
-| :-------- | :--------------- | :------------- |
-| code      | `any`            | N/A (required) |
-| languages | `LanguageName[]` | `undefined`    |
-| langtag   | `boolean`        | `false`        |
+| Name          | Type                     | Default value  |
+| :------------ | :----------------------- | :------------- |
+| code          | `any`                    | N/A (required) |
+| languageNames | `LanguageName[]`         | `undefined`    |
+| languages     | `LanguageType<string>[]` | `undefined`    |
+| langtag       | `boolean`                | `false`        |
+
+`languageNames` restricts detection to a subset of built-in language names (see [Limiting Language Detection](#limiting-language-detection)). `languages` registers and considers custom grammar objects from `svelte-highlight/languages/*` (see [Detecting Custom Grammars](#detecting-custom-grammars)).
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
@@ -1389,6 +1412,13 @@ import type { LanguageName } from "svelte-highlight";
      * @example "css"
      */
     console.log(e.detail.language);
+
+    /**
+     * The second-best heuristically detected language, if any. Useful for
+     * building "did you mean" UX.
+     * @example { language: "typescript", relevance: 8 }
+     */
+    console.log(e.detail.secondBest);
   }}
 />
 ```
