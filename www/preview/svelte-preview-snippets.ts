@@ -94,6 +94,20 @@ export const sveltePreviewSnippets: SveltePreviewSnippet[] = [
 </script>`,
   },
   {
+    title: "Typed rune calls",
+    description: "$state<T>(...) and $derived<T>(...) with explicit generics",
+    code: `<script lang="ts">
+  type Item = { id: number; label: string };
+
+  let count = $state<number>(0);
+  let items = $derived<Item[]>(
+    Array.from({ length: count }, (_, id) => ({ id, label: \`Item \${id}\` })),
+  );
+</script>
+
+<p>{items.length} items</p>`,
+  },
+  {
     title: "Legacy directives",
     description:
       "on:, bind:, class:, use:, transition:, and let: prop directives",
