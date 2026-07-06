@@ -58,6 +58,18 @@ pkgJson.exports = {
     types: "./languages/*.d.ts",
     import: "./languages/*.js",
   },
+  "./ansi": {
+    types: "./ansi.d.ts",
+    default: "./ansi.js",
+  },
+  "./load-language": {
+    types: "./load-language.d.ts",
+    default: "./load-language.js",
+  },
+  "./scoped": {
+    types: "./scoped.d.ts",
+    default: "./scoped.js",
+  },
   "./package.json": "./package.json",
 };
 
