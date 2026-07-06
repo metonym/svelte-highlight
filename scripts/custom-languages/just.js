@@ -22,7 +22,7 @@ function defineJust(hljs) {
     end: /\]/,
     contains: [
       {
-        className: "meta-keyword",
+        className: "keyword",
         begin: /[a-zA-Z][\w-]*/,
       },
       STRING,

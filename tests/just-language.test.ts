@@ -49,8 +49,15 @@ test("just highlights attributes", () => {
   const result = highlight('[private]\n_setup:\n    echo "setup"');
 
   expect(result).toContain(
-    '<span class="hljs-meta">[<span class="hljs-meta-keyword">private</span>]</span>',
+    '<span class="hljs-meta">[<span class="hljs-keyword">private</span>]</span>',
   );
+});
+
+test("just emits v11 meta scopes for directives, not the v10 meta-keyword class", () => {
+  const result = highlight('[private]\n_setup:\n    echo "setup"');
+
+  expect(result).toContain("hljs-meta");
+  expect(result).not.toContain("hljs-meta-keyword");
 });
 
 test("just highlights comments", () => {
