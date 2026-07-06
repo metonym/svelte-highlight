@@ -36,9 +36,18 @@ export function tokenizeTypewriter(html) {
       }
       const raw = html.slice(i, end + 1);
       const kind =
-        raw[1] === "/" ? "close" : raw[raw.length - 2] === "/" ? "self" : "open";
+        raw[1] === "/"
+          ? "close"
+          : raw[raw.length - 2] === "/"
+            ? "self"
+            : "open";
       const match = TAG_NAME.exec(raw);
-      units.push({ raw, visible: 0, kind, name: match ? (match[1] ?? "") : "" });
+      units.push({
+        raw,
+        visible: 0,
+        kind,
+        name: match ? (match[1] ?? "") : "",
+      });
       i = end + 1;
     } else if (ch === "&") {
       // One visible char per entity.

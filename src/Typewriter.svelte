@@ -230,9 +230,7 @@
   });
 </script>
 
-<pre
-  {...$$restProps}
-><code class:hljs={true}
+<pre {...$$restProps}><code class:hljs={true}
   ><span class="typewriter-content" bind:this={contentEl} hidden={!useUnitReveal}
     ></span
   >{#if !useUnitReveal}{@html parts.head}{#if showCaret}<span
