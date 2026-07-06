@@ -130,9 +130,9 @@ describe("parseAnsi", () => {
   });
 
   it("terminates an OSC 8 hyperlink with a BEL", () => {
-    expect(parseAnsi(`${ESC}]8;;https://example.com\x07text${ESC}]8;;\x07`)).toEqual([
-      { text: "text", link: "https://example.com" },
-    ]);
+    expect(
+      parseAnsi(`${ESC}]8;;https://example.com\x07text${ESC}]8;;\x07`),
+    ).toEqual([{ text: "text", link: "https://example.com" }]);
   });
 
   it("strips an OSC 2 title-set sequence, leaving surrounding text intact", () => {
