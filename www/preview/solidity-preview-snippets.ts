@@ -53,6 +53,29 @@ contract Token {
 }`,
   },
   {
+    title: "Modular arithmetic builtins",
+    description: "addmod, mulmod, and keccak256 globals",
+    code: `pragma solidity ^0.8.24;
+
+contract ModExp {
+  function powMod(uint256 base, uint256 exp, uint256 m) public pure returns (uint256 result) {
+    result = 1;
+    base = base % m;
+    while (exp > 0) {
+      if (exp % 2 == 1) {
+        result = mulmod(result, base, m);
+      }
+      base = mulmod(base, base, m);
+      exp /= 2;
+    }
+  }
+
+  function commitmentHash(uint256 a, uint256 b, uint256 m) public pure returns (bytes32) {
+    return keccak256(abi.encodePacked(addmod(a, b, m)));
+  }
+}`,
+  },
+  {
     title: "Interface and library",
     description: "interface, library, is, ether, assembly",
     code: `pragma solidity ^0.8.24;
