@@ -9,22 +9,22 @@ const SVELTE_DIRECTIVES =
 const TS_LANG = "(?:ts|typescript)";
 const SCRIPT_TS_BEGIN = new RegExp(
   String.raw`<script(?=[^>]*\slang=["']${TS_LANG}["'])[^>]*>`,
-  "gm",
+  "m",
 );
 const SCRIPT_JS_MODULE_BEGIN = new RegExp(
   String.raw`<script(?=[^>]*(?:\scontext=["']module["']|\smodule\b))(?![^>]*\slang=["']${TS_LANG}["'])[^>]*>`,
-  "gm",
+  "m",
 );
 const SCRIPT_JS_BEGIN = new RegExp(
   String.raw`<script(?![^>]*\slang=["']${TS_LANG}["'])[^>]*>`,
-  "gm",
+  "m",
 );
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineSvelte(hljs) {
   const runePattern = {
     begin: new RegExp(
-      String.raw`\$(?:${RUNE_NAMES})(?:\.(?:${RUNE_SUFFIXES}))?(?=\s|\(|,|;|\)|\}|$)`,
+      String.raw`\$(?:${RUNE_NAMES})(?:\.(?:${RUNE_SUFFIXES}))?(?=\s|\(|,|;|\)|\}|<|$)`,
     ),
     className: "keyword",
     relevance: 10,
