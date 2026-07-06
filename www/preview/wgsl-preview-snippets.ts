@@ -32,4 +32,16 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>) {
   data[i] = data[i] * 2.0;
 }`,
   },
+  {
+    title: "Fragment shader",
+    description: "short vector aliases and texture builtins",
+    code: `@group(0) @binding(0) var t: texture_2d<f32>;
+@group(0) @binding(1) var samp: sampler;
+
+@fragment
+fn fs_main(@location(0) uv: vec2f) -> @location(0) vec4f {
+  let color = textureSample(t, samp, uv);
+  return color * vec4f(1.0, 1.0, 1.0, 1.0);
+}`,
+  },
 ];
