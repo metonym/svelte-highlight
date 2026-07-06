@@ -57,6 +57,19 @@ const banner =
 ;`,
   },
   {
+    title: "C interop with anyopaque",
+    description: "anyopaque, the 0.10+ replacement for c_void",
+    code: `const std = @import("std");
+
+extern fn c_alloc(size: usize) *anyopaque;
+extern fn c_free(ptr: *anyopaque) void;
+
+fn withOpaqueHandle(handle: *anyopaque) void {
+    const bytes: [*]u8 = @ptrCast(handle);
+    std.debug.print("first byte: {d}\\n", .{bytes[0]});
+}`,
+  },
+  {
     title: "Optional types",
     description: "?T optional prefix alongside !T error unions",
     code: `fn find(items: []const i32, target: i32) ?usize {
