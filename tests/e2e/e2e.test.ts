@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
 import AnsiOutputContrast from "./AnsiOutput.contrast.test.svelte";
+import AnsiOutputLink from "./AnsiOutput.link.test.svelte";
 import AnsiOutput from "./AnsiOutput.test.svelte";
 import CodeWindow from "./CodeWindow.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
@@ -126,6 +127,17 @@ test("AnsiOutput - auto-contrast keeps low-contrast spans readable", async ({
     "color",
     "rgb(229, 229, 229)",
   );
+});
+
+test("AnsiOutput - OSC 8 hyperlink renders as an anchor", async ({
+  mount,
+  page,
+}) => {
+  await mount(AnsiOutputLink);
+
+  const link = page.getByTestId("ansi").locator("a");
+  await expect(link).toHaveText("docs");
+  await expect(link).toHaveAttribute("href", "https://example.com");
 });
 
 test("Highlight", async ({ mount, page }) => {

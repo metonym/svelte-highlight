@@ -122,4 +122,70 @@ describe("parseAnsi", () => {
       { text: "x", bold: true, fg: { name: "red" } },
     ]);
   });
+
+  it("parses an OSC 8 hyperlink into a segment with a link field", () => {
+    expect(
+      parseAnsi(`${ESC}]8;;https://example.com${ESC}\\text${ESC}]8;;${ESC}\\`),
+    ).toEqual([{ text: "text", link: "https://example.com" }]);
+  });
+
+  it("terminates an OSC 8 hyperlink with a BEL", () => {
+    expect(parseAnsi(`${ESC}]8;;https://example.com\x07text${ESC}]8;;\x07`)).toEqual([
+      { text: "text", link: "https://example.com" },
+    ]);
+  });
+
+  it("strips an OSC 2 title-set sequence, leaving surrounding text intact", () => {
+    expect(parseAnsi(`before${ESC}]2;My Title${ESC}\\after`)).toEqual([
+      { text: "beforeafter" },
+    ]);
+  });
+
+  it("collapses carriage-return overwrites to the final frame", () => {
+    expect(parseAnsi("building 50%\rbuilding 100%\rdone")).toEqual([
+      { text: "done" },
+    ]);
+  });
+
+  it("treats \\r\\n as a plain newline", () => {
+    expect(parseAnsi("a\r\nb")).toEqual([{ text: "a\nb" }]);
+  });
+
+  it("applies reverse video by swapping fg/bg in the parsed segment", () => {
+    expect(parseAnsi(`${ESC}[7;31mx`)).toEqual([
+      { text: "x", bg: { name: "red" } },
+    ]);
+  });
+
+  it("clears reverse video on SGR 27", () => {
+    expect(parseAnsi(`${ESC}[7;31mA${ESC}[27mB`)).toEqual([
+      { text: "A", bg: { name: "red" } },
+      { text: "B", fg: { name: "red" } },
+    ]);
+  });
+
+  it("parses strikethrough and clears it on SGR 29", () => {
+    expect(parseAnsi(`${ESC}[9mA${ESC}[29mB`)).toEqual([
+      { text: "A", strikethrough: true },
+      { text: "B" },
+    ]);
+  });
+
+  it("parses conceal and clears it on SGR 28", () => {
+    expect(parseAnsi(`${ESC}[8mA${ESC}[28mB`)).toEqual([
+      { text: "A", conceal: true },
+      { text: "B" },
+    ]);
+  });
+
+  it("treats SGR 21 as underline", () => {
+    expect(parseAnsi(`${ESC}[21mx`)).toEqual([{ text: "x", underline: true }]);
+  });
+
+  it("drops an unterminated OSC sequence without throwing", () => {
+    expect(() => parseAnsi(`${ESC}]8;;https://example.com`)).not.toThrow();
+    expect(parseAnsi(`ok${ESC}]8;;https://example.com`)).toEqual([
+      { text: "ok" },
+    ]);
+  });
 });
