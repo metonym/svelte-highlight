@@ -79,6 +79,12 @@ test("kql highlights hyphenated tabular operators", () => {
   expect(result).toContain('<span class="hljs-keyword">mv-expand</span>');
 });
 
+test("kql highlights dotted hint keywords", () => {
+  const result = highlight("T | join hint.strategy=broadcast U");
+
+  expect(result).toContain('<span class="hljs-keyword">hint.strategy</span>');
+});
+
 test("kql highlights let statements and variables", () => {
   const result = highlight(
     "let threshold = 5;\nPerf | where CounterValue > threshold",

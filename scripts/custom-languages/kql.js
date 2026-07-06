@@ -94,6 +94,7 @@ function defineKql(hljs) {
     aliases: ["kql", "kusto"],
     case_insensitive: false,
     keywords: {
+      $pattern: "[\\w.]+",
       keyword: KQL_KEYWORDS,
       operator: KQL_OPERATORS,
       built_in: KQL_FUNCTIONS,
