@@ -18,11 +18,15 @@
   export let play = true;
 
   import { createEventDispatcher, onMount } from "svelte";
+  import { tokenizeTypewriter as tokenize } from "./typewriter-units.js";
 
   const dispatch = createEventDispatcher();
 
-  /** Opening or closing tag name. */
-  const TAG_NAME = /^<\/?\s*([a-zA-Z0-9-]+)/;
+  // Above this many visible units, per-unit spans (one element per char)
+  // stop paying for themselves; fall back to the old whole-string rebuild.
+  const UNIT_THRESHOLD = 20000;
+
+  const EMPTY_PARTS = { head: "", tail: "" };
 
   /** @type {boolean} */
   let mounted = false;
@@ -42,51 +46,20 @@
   /** @type {string | undefined} */
   let prevHighlighted;
 
-  /** Split HTML into typing units (tags = 0 chars, text/entities = 1). */
-  function tokenize(html) {
-    /** @type {{ raw: string; visible: number; kind?: string; name?: string }[]} */
-    const units = [];
-    const n = html.length;
-    let i = 0;
+  /** Container for the per-unit spans (unit-reveal path only). @type {HTMLElement} */
+  let contentEl;
 
-    while (i < n) {
-      const ch = html[i];
+  /** @type {HTMLElement[]} */
+  let unitEls = [];
 
-      if (ch === "<") {
-        const end = html.indexOf(">", i);
-        if (end === -1) {
-          // Unclosed tag: treat as text.
-          units.push({ raw: html.slice(i), visible: 1 });
-          break;
-        }
-        const raw = html.slice(i, end + 1);
-        const kind =
-          raw[1] === "/"
-            ? "close"
-            : raw[raw.length - 2] === "/"
-              ? "self"
-              : "open";
-        const match = TAG_NAME.exec(raw);
-        units.push({ raw, visible: 0, kind, name: match ? match[1] : "" });
-        i = end + 1;
-      } else if (ch === "&") {
-        // One visible char per entity.
-        const end = html.indexOf(";", i);
-        if (end !== -1 && end - i <= 10) {
-          units.push({ raw: html.slice(i, end + 1), visible: 1 });
-          i = end + 1;
-        } else {
-          units.push({ raw: ch, visible: 1 });
-          i += 1;
-        }
-      } else {
-        units.push({ raw: ch, visible: 1 });
-        i += 1;
-      }
-    }
+  /** The `units` array currently painted into `contentEl`. */
+  let paintedUnits;
 
-    return units;
-  }
+  /** How many leading units already had `typewriter-hidden` removed. */
+  let revealedInDom = 0;
+
+  /** The unit currently marked with the caret, if any. @type {HTMLElement | undefined} */
+  let caretMark;
 
   /**
    * Split at `count` visible chars. Close open tags in `head`, reopen in `tail`.
@@ -124,6 +97,52 @@
     return { head: head + headClose, tail };
   }
 
+  /** Render every unit once: tags pass through, each visible unit gets a span. */
+  function buildUnitMarkup(list) {
+    let html = "";
+    for (const unit of list) {
+      html +=
+        unit.visible === 0
+          ? unit.raw
+          : `<span class="typewriter-unit typewriter-hidden">${unit.raw}</span>`;
+    }
+    return html;
+  }
+
+  /**
+   * Bring `contentEl` in sync with `units`/`revealed` in O(1) amortized work:
+   * a fresh `units` value triggers one full (re)paint; otherwise only the
+   * units newly revealed since the last call are touched.
+   */
+  function syncUnitDom() {
+    if (!contentEl) return;
+
+    if (paintedUnits !== units) {
+      contentEl.innerHTML = buildUnitMarkup(units);
+      unitEls = Array.from(contentEl.getElementsByClassName("typewriter-unit"));
+      paintedUnits = units;
+      revealedInDom = 0;
+      caretMark = undefined;
+    }
+
+    while (revealedInDom < revealed) {
+      unitEls[revealedInDom]?.classList.remove("typewriter-hidden");
+      revealedInDom++;
+    }
+
+    if (caretMark) {
+      caretMark.classList.remove("typewriter-caret");
+      caretMark = undefined;
+    }
+    if (revealed < total) {
+      const next = unitEls[revealed];
+      if (next) {
+        next.classList.add("typewriter-caret");
+        caretMark = next;
+      }
+    }
+  }
+
   function clearTimer() {
     clearInterval(timerId);
     timerId = undefined;
@@ -136,8 +155,9 @@
     }
   }
 
-  function tick() {
+  function advance() {
     if (revealed < total) revealed += 1;
+    if (useUnitReveal) syncUnitDom();
     if (revealed >= total) {
       clearTimer();
       fireDone();
@@ -156,8 +176,10 @@
       return;
     }
 
+    if (useUnitReveal) syncUnitDom();
+
     if (play && revealed < total) {
-      timerId = setInterval(tick, Math.max(0, speed));
+      timerId = setInterval(advance, Math.max(0, speed));
     } else if (revealed >= total) {
       fireDone();
     }
@@ -165,23 +187,30 @@
 
   $: units = tokenize(highlighted);
   $: total = units.reduce((sum, unit) => sum + unit.visible, 0);
+  $: bigInput = total > UNIT_THRESHOLD;
+  $: useUnitReveal = mounted && !reducedMotion && !bigInput;
 
   // Restart when `highlighted` changes.
   $: if (highlighted !== prevHighlighted) {
     prevHighlighted = highlighted;
     doneFired = false;
     revealed = reducedMotion ? total : 0;
+    void useUnitReveal;
     sync();
   }
 
   // Re-sync on play/speed/mount/motion. Skip `total` (handled above).
   $: {
-    void [play, speed, mounted, reducedMotion];
+    void [play, speed, mounted, reducedMotion, useUnitReveal];
     sync();
   }
 
-  // SSR: full content. After mount, reveal from `revealed`.
-  $: parts = mounted ? split(units, revealed) : { head: highlighted, tail: "" };
+  // SSR / slow-path: full content up front, split() only when actually needed.
+  $: parts = useUnitReveal
+    ? EMPTY_PARTS
+    : mounted
+      ? split(units, revealed)
+      : { head: highlighted, tail: "" };
   $: showCaret = mounted && !reducedMotion && revealed < total;
 
   onMount(() => {
@@ -203,11 +232,15 @@
 
 <pre
   {...$$restProps}
-><code class:hljs={true}>{@html parts.head}{#if showCaret}<span
-      class="typewriter-caret"
-      aria-hidden="true"
-    ></span>{/if}<span class="typewriter-rest" aria-hidden="true"
-    >{@html parts.tail}</span></code></pre>
+><code class:hljs={true}
+  ><span class="typewriter-content" bind:this={contentEl} hidden={!useUnitReveal}
+    ></span
+  >{#if !useUnitReveal}{@html parts.head}{#if showCaret}<span
+        class="typewriter-caret"
+        aria-hidden="true"
+      ></span>{/if}<span class="typewriter-rest" aria-hidden="true"
+      >{@html parts.tail}</span
+    >{/if}</code></pre>
 
 <style>
   .typewriter-rest {
@@ -224,8 +257,30 @@
     animation: typewriter-blink var(--caret-blink, 1s) step-end infinite;
   }
 
+  /* `.typewriter-unit`/`.typewriter-hidden` only ever exist inside the
+     `{@html}`-free, JS-painted `contentEl`, so they're invisible to Svelte's
+     static analysis and must stay unscoped. */
+  :global(.typewriter-unit.typewriter-hidden) {
+    visibility: hidden;
+  }
+
+  /* The caret rides the next-to-reveal (still hidden) unit's ::before, so it
+     never requires moving a real DOM node -- one class add/remove per tick. */
+  :global(.typewriter-unit.typewriter-caret)::before {
+    content: "";
+    visibility: visible;
+    display: inline-block;
+    width: var(--caret-width, 0.6em);
+    height: var(--caret-height, 1.1em);
+    margin-left: var(--caret-gap, 1px);
+    vertical-align: text-bottom;
+    background: var(--caret-color, currentColor);
+    animation: typewriter-blink var(--caret-blink, 1s) step-end infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .typewriter-caret {
+    .typewriter-caret,
+    :global(.typewriter-unit.typewriter-caret)::before {
       animation: none;
     }
   }
