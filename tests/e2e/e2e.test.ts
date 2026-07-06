@@ -18,6 +18,7 @@ import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test
 import LineNumbersFocusLines from "./LineNumbers.focusLines.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
+import LineNumbersMultilineSpan from "./LineNumbers.multilineSpan.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
 import ScopedStyle from "./ScopedStyle.test.svelte";
@@ -225,6 +226,22 @@ test("LineNumbers - custom starting number", async ({ mount, page }) => {
   await mount(LineNumbersCustomStartingLine);
 
   await expect(page.getByText("100")).toBeVisible();
+});
+
+test("LineNumbers - preserves a span across a multi-line block comment", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersMultilineSpan);
+
+  const rows = page.locator("tbody > tr");
+  await expect(rows).toHaveCount(3);
+
+  await Promise.all(
+    [0, 1, 2].map((i) =>
+      expect(rows.nth(i).locator("td:last-child .hljs-comment")).toBeVisible(),
+    ),
+  );
 });
 
 test("LineNumbers - langtag", async ({ mount, page }) => {

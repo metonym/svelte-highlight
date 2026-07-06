@@ -1,4 +1,6 @@
 <script>
+  import { splitLines } from "./split-lines.js";
+
   /** @type {string} */
   export let highlighted;
 
@@ -24,7 +26,7 @@
   const MIN_DIGITS = 2;
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
 
-  $: lines = highlighted.split("\n");
+  $: lines = splitLines(highlighted);
   $: focusMode = highlightedLines.length > 0;
   $: len_digits = lines.length.toString().length;
   $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
