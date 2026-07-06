@@ -46,3 +46,61 @@ test("wgsl highlights builtin stage-IO identifiers", () => {
 
   expect(result).toContain('<span class="hljs-built_in">vertex_index</span>');
 });
+
+test("wgsl highlights short vector type aliases", () => {
+  const result = highlight("var color: vec4f;");
+
+  expect(result).toContain('<span class="hljs-type">vec4f</span>');
+});
+
+test("wgsl highlights builtin texture function calls", () => {
+  const result = highlight("let s = textureSample(t, samp, uv);");
+
+  expect(result).toContain('<span class="hljs-built_in">textureSample</span>');
+});
+
+test("wgsl highlights address-space and access-mode keywords inside ptr<...>", () => {
+  const result = highlight("fn f(p: ptr<storage, f32, read_write>)");
+
+  expect(result).toContain('<span class="hljs-keyword">storage</span>');
+  expect(result).toContain('<span class="hljs-keyword">read_write</span>');
+});
+
+test("wgsl highlights newer subgroup builtin values", () => {
+  const result = highlight("@builtin(subgroup_invocation_id) id: u32");
+
+  expect(result).toContain(
+    '<span class="hljs-built_in">subgroup_invocation_id</span>',
+  );
+});
+
+test("wgsl does not highlight identifiers named after builtin functions unless called", () => {
+  const result = highlight("let select = 1;");
+
+  expect(result).not.toContain('<span class="hljs-built_in">select</span>');
+});
+
+test("wgsl highlights a realistic compute shader with modern builtins", () => {
+  const code = `
+@group(0) @binding(0) var t: texture_2d<f32>;
+@group(0) @binding(1) var samp: sampler;
+
+@compute @workgroup_size(64)
+fn main(@builtin(global_invocation_id) gid: vec3u) {
+  let uv: vec2f = vec2f(0.5, 0.5);
+  let color: vec4f = textureSample(t, samp, uv);
+  let d = dpdx(color.x);
+  workgroupBarrier();
+}
+`;
+  const result = highlight(code);
+
+  expect(result).toContain('<span class="hljs-type">vec2f</span>');
+  expect(result).toContain('<span class="hljs-type">vec3u</span>');
+  expect(result).toContain('<span class="hljs-type">vec4f</span>');
+  expect(result).toContain('<span class="hljs-built_in">textureSample</span>');
+  expect(result).toContain('<span class="hljs-built_in">dpdx</span>');
+  expect(result).toContain(
+    '<span class="hljs-built_in">workgroupBarrier</span>',
+  );
+});
