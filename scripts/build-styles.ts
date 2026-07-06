@@ -147,7 +147,7 @@ export async function buildStyles() {
 
 \`\`\`html
 <script>
-  import ${moduleName} from "svelte-highlight/styles/${moduleName}";
+  import ${moduleName} from "svelte-highlight/styles/${name}";
 </script>
 
 <svelte:head>
