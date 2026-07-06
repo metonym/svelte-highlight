@@ -14,6 +14,13 @@ export type CopyButtonProps = HTMLButtonAttributes & {
   copy?: (code: string) => void | Promise<void>;
 
   /**
+   * Transform `code` before it is passed to `copy`. Defaults to identity.
+   * The transformed string is what `on:copy` reports in `detail.code`.
+   * @default (code) => code
+   */
+  transform?: (code: string) => string;
+
+  /**
    * How long the "copied" state lasts (ms).
    * @default 2000
    */
@@ -91,7 +98,7 @@ export type CopyButtonProps = HTMLButtonAttributes & {
 export type CopyButtonEvents = {
   copy: CustomEvent<{
     /**
-     * The code that was copied.
+     * The code that was copied, after `transform` is applied.
      */
     code: string;
   }>;

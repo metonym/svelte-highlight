@@ -3,6 +3,7 @@ export { highlight } from "./action.js";
 export { parseAnsi } from "./ansi.js";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
+export { stripDiffMarkers, stripPrompts } from "./copy-transforms.js";
 export { default as FileTabs } from "./FileTabs.svelte";
 export { default, default as Highlight } from "./Highlight.svelte";
 export { default as HighlightAuto } from "./HighlightAuto.svelte";

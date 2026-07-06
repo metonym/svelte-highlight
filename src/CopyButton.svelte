@@ -8,6 +8,13 @@
    */
   export let copy = (code) => navigator.clipboard.writeText(code);
 
+  /**
+   * Transform `code` before it is passed to `copy`. Defaults to identity.
+   * The transformed string is what `on:copy` reports in `detail.code`.
+   * @type {(code: string) => string}
+   */
+  export let transform = (code) => code;
+
   /** @type {number} */
   export let timeout = 2_000;
 
@@ -36,9 +43,10 @@
 
     try {
       copying = true;
-      await copy(code);
+      const transformed = transform(code);
+      await copy(transformed);
       copied = true;
-      dispatch("copy", { code });
+      dispatch("copy", { code: transformed });
       timeoutId = setTimeout(() => {
         copied = false;
       }, timeout);

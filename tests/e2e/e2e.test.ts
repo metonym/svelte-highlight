@@ -5,6 +5,7 @@ import CodeWindow from "./CodeWindow.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
+import CopyButtonTransform from "./CopyButton.transform.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
@@ -463,6 +464,27 @@ test("CopyButton - dedupes clicks while an async copy is in flight", async ({
   await expect(button).toHaveAttribute("aria-label", "Copy", {
     timeout: 3_000,
   });
+});
+
+test("CopyButton - transform strips decoration before copying and reporting on:copy", async ({
+  mount,
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName !== "chromium",
+    "Clipboard permissions are Chromium-only",
+  );
+
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+
+  const component = await mount(CopyButtonTransform);
+
+  await component.getByRole("button").click();
+
+  const clipboard = await page.evaluate(() => navigator.clipboard.readText());
+  expect(clipboard).toBe("npm i\nadded 1 package");
+  await expect(page.getByTestId("detail")).toHaveText("npm i\nadded 1 package");
 });
 
 test("HighlightEditable - renders an editable, highlighted block", async ({
