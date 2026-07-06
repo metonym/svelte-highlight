@@ -67,7 +67,9 @@ pkgJson.types = "./index.d.ts";
 
 // Most modern bundlers know if standalone StyleSheets are used.
 // We specify it here to be sure so that it will not be mistakenly tree-shaken.
-pkgJson.sideEffects = ["src/styles/*.css", "src/langtag.css"];
+// `cp -r ./src/ ./package` flattens src/ into the package root, so these
+// globs must match the published layout, not the source layout.
+pkgJson.sideEffects = ["styles/*.css", "langtag.css"];
 
 await Bun.write("./package/package.json", JSON.stringify(pkgJson, null, 2));
 console.timeEnd("package");
