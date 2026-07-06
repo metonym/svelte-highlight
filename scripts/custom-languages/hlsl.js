@@ -52,8 +52,12 @@ function defineHlsl(hljs) {
   };
 
   const ATTRIBUTE = {
-    className: "meta",
-    begin: /(?<![\w\]])\[[a-zA-Z_]\w*(?:\([^)]*\))\]/,
+    // A leading word character or `]` means this is array indexing (e.g.
+    // `arr[i]`, `buf[0][process(x)]`) rather than an HLSL attribute, so the
+    // guard character is matched in its own group and left unscoped
+    // instead of excluded with a negative lookbehind.
+    begin: [/(?:^|[^\w\]])/, /\[[a-zA-Z_]\w*(?:\([^)]*\))\]/],
+    beginScope: { 2: "meta" },
     relevance: 0,
   };
 
