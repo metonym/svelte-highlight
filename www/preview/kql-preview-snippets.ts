@@ -27,6 +27,17 @@ SecurityEvent
 | render columnchart`,
   },
   {
+    title: "Join hints",
+    description: "hint.strategy and hint.shufflekey on a join",
+    code: `SigninLogs
+| join hint.strategy=broadcast (
+    IdentityInfo | project AccountUPN, Department
+) on $left.UserPrincipalName == $right.AccountUPN
+| join hint.shufflekey=UserPrincipalName kind=leftouter (
+    AuditLogs | summarize LastAudit = max(TimeGenerated) by UserPrincipalName
+) on UserPrincipalName`,
+  },
+  {
     title: "Parsing and reshaping logs",
     description: "mv-expand, parse, and string functions",
     code: `Event
