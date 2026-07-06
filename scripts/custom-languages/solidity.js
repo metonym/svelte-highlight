@@ -13,7 +13,7 @@ const SOLIDITY_LITERALS =
 
 const SOLIDITY_BUILT_INS =
   "msg block tx abi require assert keccak256 sha256 ripemd160 ecrecover " +
-  "addmod mulgmod gasleft blockhash now";
+  "addmod mulmod gasleft blockhash now";
 
 const SOLIDITY_TYPE = {
   className: "type",

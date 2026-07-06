@@ -48,6 +48,12 @@ test("solidity highlights built-in globals", () => {
   expect(result).toContain('<span class="hljs-built_in">msg</span>');
 });
 
+test("solidity highlights the mulmod builtin", () => {
+  const result = highlight("mulmod(a, b, m);");
+
+  expect(result).toContain('<span class="hljs-built_in">mulmod</span>');
+});
+
 test("solidity scopes constructor/fallback/receive with the same declaration construct as function", () => {
   // constructor/fallback/receive now join the "function modifier event error"
   // beginKeywords list, so they're parsed by the same title-highlighting construct
