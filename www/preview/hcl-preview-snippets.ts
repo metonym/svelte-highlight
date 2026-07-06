@@ -74,6 +74,22 @@ resource "aws_security_group" "this" {
 }`,
   },
   {
+    title: "Heredoc with bare words in the body",
+    description:
+      "a bare word line (e.g. true) no longer closes the heredoc early",
+    code: `resource "aws_instance" "web" {
+  user_data = <<EOT
+#!/bin/bash
+ENABLE_LOGGING=true
+if $ENABLE_LOGGING; then
+  echo "logging enabled"
+fi
+true
+still inside the heredoc
+EOT
+}`,
+  },
+  {
     title: "Nested interpolation",
     // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} syntax under illustration
     description: "${...} expressions containing their own {} literals",
