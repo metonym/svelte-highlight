@@ -46,6 +46,12 @@ test("zig highlights literals", () => {
   expect(result).toContain('<span class="hljs-literal">undefined</span>');
 });
 
+test("zig highlights the anyopaque type", () => {
+  const result = highlight("fn f(p: *anyopaque) void {}");
+
+  expect(result).toContain('<span class="hljs-type">anyopaque</span>');
+});
+
 test("zig highlights optional and error-union type modifiers", () => {
   const result = highlight(
     "fn foo() ?u32 {\n  return null;\n}\nfn bar() anyerror!void {\n  return;\n}",

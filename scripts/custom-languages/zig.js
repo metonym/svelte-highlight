@@ -4,12 +4,12 @@ const ZIG_KEYWORDS =
   "error test and or orelse unreachable async await suspend resume " +
   "nosuspend export extern packed align allowzero volatile linksection " +
   "threadlocal usingnamespace asm anytype noalias callconv opaque " +
-  "anyframe fn";
+  "anyframe";
 
 const ZIG_LITERALS = "true false null undefined";
 
 const ZIG_TYPES =
-  "bool void type anyerror anytype noreturn comptime_int comptime_float " +
+  "bool void type anyerror anytype anyopaque noreturn comptime_int comptime_float " +
   "isize usize c_char c_short c_ushort c_int c_uint c_long c_ulong " +
   "c_longlong c_ulonglong c_longdouble f16 f32 f64 f80 f128";
 
