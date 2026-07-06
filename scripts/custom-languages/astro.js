@@ -16,6 +16,12 @@ function defineAstro(hljs) {
         excludeBegin: true,
         excludeEnd: true,
         relevance: 100,
+        /** @type {import("highlight.js").ModeCallback} */
+        "on:begin": (match, response) => {
+          if (match.index !== 0) {
+            response.ignoreMatch();
+          }
+        },
       },
       {
         begin: /^---\s*$/m,

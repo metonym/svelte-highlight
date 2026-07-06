@@ -28,6 +28,16 @@ const globalWildcardSnippet = `<style is:global>
 const directiveAttrsSnippet = `<div set:html={html} />
 <span class:list={["badge", { active }]}>Status</span>`;
 
+const strayFenceSnippet = `---
+export const title = "Hello";
+---
+
+<div>{title}</div>
+
+---
+
+<p>after the hr</p>`;
+
 test("astro highlights frontmatter as TypeScript", () => {
   hljs.registerLanguage(astro.name, astro.register);
 
@@ -95,6 +105,20 @@ test("astro highlights colon attributes inside tags", () => {
   expect(result).not.toContain('<span class="hljs-variable">set:html</span>');
   expect(result).not.toContain('hljs-tag">]}&gt;');
   expect(result).toContain('language-javascript">{[<span class="hljs-string">');
+});
+
+test("astro does not open a new frontmatter region at a stray --- mid-document", () => {
+  hljs.registerLanguage(astro.name, astro.register);
+
+  const result = hljs.highlight(strayFenceSnippet, {
+    language: "astro",
+  }).value;
+
+  const typescriptRegionCount = (result.match(/language-typescript/g) ?? [])
+    .length;
+
+  expect(typescriptRegionCount).toBe(1);
+  expect(result).toContain("after the hr");
 });
 
 test("html alone does not highlight Astro frontmatter or client directives", () => {
