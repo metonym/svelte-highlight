@@ -291,8 +291,34 @@
     return redoStack.length > 0;
   }
 
-  function onInput() {
+  // WebKit dispatches a second beforeinput historyUndo/historyRedo shortly
+  // after the first for a single execCommand call; without this guard the
+  // second dispatch pops an extra history entry. The reset is deferred past
+  // the current task so a genuinely separate later undo still goes through.
+  let handlingNativeHistory = false;
+  function runNativeHistory(action) {
+    if (handlingNativeHistory) return;
+    handlingNativeHistory = true;
+    action();
+    setTimeout(() => {
+      handlingNativeHistory = false;
+    }, 0);
+  }
+
+  function onInput(event) {
     if (composing) return;
+    // Some engines (e.g. Chromium's execCommand path) never dispatch a
+    // cancelable beforeinput for native undo/redo, only this input event
+    // after the DOM already mutated. Re-render from our own snapshot rather
+    // than recording the browser's mutation as new typed content.
+    if (event?.inputType === "historyUndo") {
+      runNativeHistory(undo);
+      return;
+    }
+    if (event?.inputType === "historyRedo") {
+      runNativeHistory(redo);
+      return;
+    }
     // innerText keeps contenteditable line breaks; textContent doesn't.
     code = editor.innerText.replace(TRAILING_NEWLINE, "");
     internalCode = code;
@@ -332,6 +358,18 @@
     insertText(event.clipboardData?.getData("text/plain") ?? "");
   }
 
+  // Edit-menu / execCommand undo-redo bypass onKeydown; intercept here so the
+  // browser doesn't mutate DOM that paint() has already rebuilt.
+  function onBeforeInput(event) {
+    if (event.inputType === "historyUndo") {
+      event.preventDefault();
+      runNativeHistory(undo);
+    } else if (event.inputType === "historyRedo") {
+      event.preventDefault();
+      runNativeHistory(redo);
+    }
+  }
+
   function onBlur() {
     dispatch("blur", { code: getCode() });
   }
@@ -353,6 +391,7 @@
 
     editor.addEventListener("input", onInput);
     editor.addEventListener("keydown", onKeydown);
+    editor.addEventListener("beforeinput", onBeforeInput);
     editor.addEventListener("paste", onPaste);
     editor.addEventListener("mouseup", syncCaretToHistory);
     editor.addEventListener("keyup", syncCaretToHistory);
@@ -364,6 +403,7 @@
     return () => {
       editor.removeEventListener("input", onInput);
       editor.removeEventListener("keydown", onKeydown);
+      editor.removeEventListener("beforeinput", onBeforeInput);
       editor.removeEventListener("paste", onPaste);
       editor.removeEventListener("mouseup", syncCaretToHistory);
       editor.removeEventListener("keyup", syncCaretToHistory);

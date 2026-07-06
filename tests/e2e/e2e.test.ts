@@ -610,6 +610,39 @@ test("HighlightEditable - undo preserves caret position", async ({
   await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abQcd");
 });
 
+test("HighlightEditable - native undo (execCommand) routes through the custom history", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, { props: { initialCode: "ab" } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowRight"); // collapse caret to end
+  await page.keyboard.type("X");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abX");
+
+  // Wait past the 250ms typing-coalesce window so "Y" is its own history entry.
+  await page.waitForTimeout(300);
+  await page.keyboard.type("Y");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abXY");
+
+  // The Edit-menu / execCommand path fires beforeinput historyUndo, distinct
+  // from the Ctrl/Cmd+Z keydown path already covered above.
+  await editor.evaluate(() => document.execCommand("undo"));
+
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abX");
+  await expect(page.getByTestId("can-undo")).toHaveAttribute(
+    "data-value",
+    "true",
+  );
+  await expect(page.getByTestId("can-redo")).toHaveAttribute(
+    "data-value",
+    "true",
+  );
+});
+
 test("HighlightEditable - setCode and clear replace the document", async ({
   mount,
   page,
