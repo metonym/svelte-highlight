@@ -16,6 +16,7 @@ import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
 import LineNumbersFocusLines from "./LineNumbers.focusLines.test.svelte";
+import LineNumbersGutterOverflow from "./LineNumbers.gutterOverflow.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
 import LineNumbersMultilineSpan from "./LineNumbers.multilineSpan.test.svelte";
@@ -242,6 +243,21 @@ test("LineNumbers - preserves a span across a multi-line block comment", async (
       expect(rows.nth(i).locator("td:last-child .hljs-comment")).toBeVisible(),
     ),
   );
+});
+
+test("LineNumbers - sizes the gutter by the final rendered line number", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersGutterOverflow);
+
+  const gutterCells = page.locator("td.hljs");
+  await expect(gutterCells.last()).toHaveText("1001");
+
+  const overflows = await gutterCells
+    .last()
+    .evaluate((el) => el.scrollWidth > el.clientWidth);
+  expect(overflows).toBe(false);
 });
 
 test("LineNumbers - langtag", async ({ mount, page }) => {

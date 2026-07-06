@@ -28,7 +28,7 @@
 
   $: lines = splitLines(highlighted);
   $: focusMode = highlightedLines.length > 0;
-  $: len_digits = lines.length.toString().length;
+  $: len_digits = (startingLineNumber + lines.length - 1).toString().length;
   $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
   $: width = len * DIGIT_WIDTH;
 </script>
