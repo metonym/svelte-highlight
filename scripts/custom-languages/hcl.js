@@ -35,13 +35,13 @@ function defineHcl(hljs) {
     contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
   };
 
-  const HEREDOC = {
+  const HEREDOC = hljs.END_SAME_AS_BEGIN({
     className: "string",
-    begin: /<<-?\s*(["']?)(\w+)\1/,
-    end: /^\s*\w+\s*$/,
+    begin: /<<-?\s*(\w+)\s*\n/,
+    end: /^\s*(\w+)\s*$/,
     contains: [INTERPOLATION],
     relevance: 10,
-  };
+  });
 
   return {
     name: "HCL",

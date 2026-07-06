@@ -45,6 +45,12 @@ test("hcl highlights heredoc strings", () => {
   expect(result).toContain("hljs-string");
 });
 
+test("hcl heredoc only closes at the matching delimiter", () => {
+  const result = highlight("x = <<EOT\ntrue\nstill string\nEOT");
+
+  expect(result).toContain("true\nstill string");
+});
+
 test("hcl highlights hash and slash comments", () => {
   const result = highlight("# a comment\n// another\nx = 1");
 
