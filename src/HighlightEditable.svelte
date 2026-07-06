@@ -424,7 +424,7 @@
     class:hljs={true}
     contenteditable="true"
     spellcheck="false"
-></code></pre>
+>{code}</code></pre>
 
 <style>
   code {
