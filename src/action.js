@@ -1,4 +1,4 @@
-import { highlightLanguage } from "./core.js";
+import hljs from "highlight.js/lib/core";
 
 /**
  * Highlight an element in place with highlight.js.
@@ -9,8 +9,11 @@ import { highlightLanguage } from "./core.js";
 export function highlight(node, parameters) {
   /** @param {{ language: import("./languages").LanguageType<string>; code?: string }} params */
   function apply({ language, code }) {
+    if (!hljs.getLanguage(language.name)) {
+      hljs.registerLanguage(language.name, language.register);
+    }
     const source = code ?? node.textContent ?? "";
-    node.innerHTML = highlightLanguage(language, source);
+    node.innerHTML = hljs.highlight(source, { language: language.name }).value;
     node.classList.add("hljs");
   }
 
