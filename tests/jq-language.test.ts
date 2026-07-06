@@ -65,3 +65,10 @@ test("jq highlights comments", () => {
 
   expect(result).toContain('<span class="hljs-comment"># a comment</span>');
 });
+
+test("jq highlights function definitions", () => {
+  const result = highlight("def add: . + 1;");
+
+  expect(result).toContain('<span class="hljs-keyword">def</span>');
+  expect(result).toContain('<span class="hljs-title function_">add</span>');
+});

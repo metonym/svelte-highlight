@@ -90,8 +90,9 @@ function defineReScript(hljs) {
     // `</` unambiguously starts a JSX closing tag. A bare `<` immediately
     // preceded by a word character (e.g. `array<int>`, `option<string>`,
     // `text<div>`) is generic-type application syntax instead, so that case
-    // is excluded with a negative lookbehind.
-    begin: /<\/(?=[A-Za-z])|(?<![\w])<(?=[A-Za-z])/,
+    // is excluded with `\B`, which only holds when the preceding character
+    // has the same word-ness as `<` (i.e. is not a word character).
+    begin: /<\/(?=[A-Za-z])|\B<(?=[A-Za-z])/,
     end: /\/?>/,
     relevance: 0,
     contains: [

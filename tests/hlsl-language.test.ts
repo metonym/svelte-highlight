@@ -71,3 +71,17 @@ test("hlsl highlights resource types like Texture2D and SamplerState", () => {
   expect(result).toContain('<span class="hljs-type">SamplerState</span>');
   expect(result).toContain('<span class="hljs-keyword">register</span>');
 });
+
+test("hlsl highlights numthreads attributes", () => {
+  const result = highlight("[numthreads(8,8,1)]\nvoid CSMain() {}");
+
+  expect(result).toContain(
+    '<span class="hljs-meta">[numthreads(8,8,1)]</span>',
+  );
+});
+
+test("hlsl does not mistake array indexing for an attribute", () => {
+  const result = highlight("arr[i]");
+
+  expect(result).not.toContain('<span class="hljs-meta">');
+});

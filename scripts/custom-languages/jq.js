@@ -83,8 +83,8 @@ function defineJq(hljs) {
 
   const FUNCTION_DEF = {
     // def name(params):
-    className: "title.function",
-    begin: /(?<=def\s)[a-zA-Z_]\w*/,
+    begin: [/def\s+/, /[a-zA-Z_]\w*/],
+    beginScope: { 2: "title.function" },
     relevance: 0,
   };
 

@@ -62,3 +62,16 @@ test("rescript does not mistake generic type application for a JSX tag", () => {
 
   expect(result).not.toContain('<span class="hljs-tag">');
 });
+
+test("rescript highlights self-closing JSX tags with expression attributes", () => {
+  const result = highlight("<Component prop={x} />");
+
+  expect(result).toContain('<span class="hljs-tag">');
+  expect(result).toContain('<span class="hljs-name">Component</span>');
+});
+
+test("rescript does not mistake a less-than comparison for a JSX tag", () => {
+  const result = highlight("a < b");
+
+  expect(result).not.toContain('<span class="hljs-tag">');
+});
