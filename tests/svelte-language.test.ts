@@ -62,6 +62,11 @@ const langTypescriptSnippet = `<script lang="typescript">
   let count: number = 0;
 </script>`;
 
+const typedRuneSnippet = `<script lang="ts">
+  let count = $state<number>(0);
+  let items = $derived<Item[]>([]);
+</script>`;
+
 const declarationTagsSnippet = `<script lang="ts">
   type Box = { width: number; height: number };
 
@@ -183,6 +188,17 @@ test("svelte highlights dotted rune suffixes as a single keyword", () => {
   expect(result).toContain('<span class="hljs-keyword">$effect.root</span>');
   expect(result).toContain('<span class="hljs-keyword">$props.id</span>');
   expect(result).toContain('<span class="hljs-keyword">$inspect.trace</span>');
+});
+
+test("svelte highlights typed rune calls", () => {
+  hljs.registerLanguage(svelte.name, svelte.register);
+
+  const result = hljs.highlight(typedRuneSnippet, {
+    language: "svelte",
+  }).value;
+
+  expect(result).toContain('<span class="hljs-keyword">$state</span>');
+  expect(result).toContain('<span class="hljs-keyword">$derived</span>');
 });
 
 test("svelte highlights bare $store subscriptions without parens", () => {
