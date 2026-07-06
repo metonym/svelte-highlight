@@ -28,7 +28,14 @@
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
 
-  $: hljs.registerLanguage(language.name, language.register);
+  let previousLanguageName;
+  $: {
+    hljs.registerLanguage(language.name, language.register);
+    if (mounted && language.name !== previousLanguageName) {
+      repaintForLanguageChange();
+    }
+    previousLanguageName = language.name;
+  }
   $: indentUnit = " ".repeat(tabSize);
   $: if (mounted && code !== internalCode) syncExternal();
 
@@ -89,6 +96,12 @@
     restoringSelection = true;
     setSelection(start, end);
     restoringSelection = false;
+  }
+
+  function repaintForLanguageChange() {
+    const caret = document.activeElement === editor ? getCaretOffset() : null;
+    if (caret == null) paint();
+    else renderAt(caret, caret);
   }
 
   function syncCaretToHistory() {

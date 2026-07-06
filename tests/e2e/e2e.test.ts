@@ -11,6 +11,7 @@ import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
+import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
@@ -449,6 +450,21 @@ test("HighlightEditable - renders an editable, highlighted block", async ({
     "data-value",
     "false",
   );
+});
+
+test("HighlightEditable - repaints when the language prop changes without input", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditableLanguageSwap);
+
+  // plaintext has no token spans for this code.
+  await expect(page.locator(".hljs-keyword")).toHaveCount(0);
+
+  await page.getByTestId("switch-language").click();
+
+  // typescript's grammar highlights "const" without any input event firing.
+  await expect(page.locator(".hljs-keyword").first()).toHaveText("const");
 });
 
 test("HighlightEditable - typing updates the bound code and fires change", async ({
