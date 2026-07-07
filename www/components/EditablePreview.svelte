@@ -24,14 +24,24 @@ const greet = (user: User): string => {
   let outlineColor = "#42be65";
   let outlineWidth = 2;
 
+  /** @type {"dom" | "css-highlights"} */
+  let engine = "dom";
+
   /** @type {import("svelte-highlight").HighlightEditable} */
   let editor;
 
   /** @type {{ entries: { size: number }[]; index: number; canUndo: boolean; canRedo: boolean }} */
   let historyState = { entries: [], index: 0, canUndo: false, canRedo: false };
 
+  $: resolvedEngine = editor?.resolvedEngine();
+
   const sideThemes = [
     { name: "atom-one-dark", theme: atomOneDark },
+    { name: "nord", theme: nord },
+  ];
+
+  const cssHighlightThemes = [
+    { name: "github-dark", theme: githubDark },
     { name: "nord", theme: nord },
   ];
 
@@ -105,13 +115,37 @@ const greet = (user: User): string => {
           bind:value={outlineWidth}
         />
       </div>
+      <div class="control">
+        <span class="label-01">Engine</span>
+        <div class="engine-toggle">
+          <Button
+            size="small"
+            kind={engine === "dom" ? "primary" : "tertiary"}
+            on:click={() => (engine = "dom")}
+            >dom</Button
+          >
+          <Button
+            size="small"
+            kind={engine === "css-highlights" ? "primary" : "tertiary"}
+            on:click={() => (engine = "css-highlights")}
+            >css-highlights</Button
+          >
+        </div>
+      </div>
     </div>
 
+    <!-- HighlightStyle stays mounted across engine toggles: it supplies the
+    base `.hljs`/`pre code.hljs` layout rules (display, padding, overflow)
+    for both engines. `theme` on HighlightEditable additionally generates
+    the `::highlight()` token-color rules, only consumed in css-highlights
+    mode. -->
     <HighlightStyle theme={githubDark}>
       <HighlightEditable
         bind:this={editor}
         language={typescript}
         bind:code
+        {engine}
+        theme={engine === "css-highlights" ? githubDark : undefined}
         --outline-color={outlineColor}
         --outline-width={`${outlineWidth}px`}
         on:change={(e) => (lastEvent = `change: ${e.detail.code.length} chars`)}
@@ -119,6 +153,10 @@ const greet = (user: User): string => {
         on:history={(e) => (historyState = e.detail)}
       />
     </HighlightStyle>
+
+    <p class="label-01" style="margin-top: 0.5rem">
+      resolvedEngine(): <code class="code">{resolvedEngine}</code>
+    </p>
   </Column>
 
   <Column xlg={10} lg={10} md={12} class="mb-5">
@@ -170,6 +208,33 @@ const greet = (user: User): string => {
   {/each}
 </Row>
 
+<h3 class="mb-3">
+  css-highlights engine: same <code>bind:code</code>, different themes side by
+  side
+</h3>
+<p class="label-01 mb-3">
+  Each instance registers its own <code>CSS.highlights</code> entries, so two
+  editors on the same page can run different themes without one clobbering the
+  other's colors.
+</p>
+<Row class="mb-9">
+  {#each cssHighlightThemes as { name, theme }}
+    <Column xlg={10} lg={10} md={12} class="mb-5">
+      <div class="label-01 mb-3">{name}</div>
+      <HighlightStyle {theme}>
+        <HighlightEditable
+          language={typescript}
+          bind:code
+          engine="css-highlights"
+          {theme}
+          --outline-color={outlineColor}
+          --outline-width={`${outlineWidth}px`}
+        />
+      </HighlightStyle>
+    </Column>
+  {/each}
+</Row>
+
 <h3 class="mb-3">Rendered with LineNumbers</h3>
 <Row class="mb-9">
   <Column xlg={12} class="mb-5">
@@ -209,6 +274,11 @@ const greet = (user: User): string => {
     border: none;
     background: none;
     cursor: pointer;
+  }
+
+  .engine-toggle {
+    display: flex;
+    gap: 0.25rem;
   }
 
   .history {

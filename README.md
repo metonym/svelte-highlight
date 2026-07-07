@@ -665,7 +665,7 @@ Use `bind:this` to call methods on the instance.
 <button on:click={() => editor.clear()}>Clear</button>
 ```
 
-Available methods: `undo`, `redo`, `focus`, `selectAll`, `insert`, `indent`, `outdent`, `setCode`, `clear`, `getCode`, `canUndo`, and `canRedo`.
+Available methods: `undo`, `redo`, `focus`, `selectAll`, `insert`, `indent`, `outdent`, `setCode`, `clear`, `getCode`, `canUndo`, `canRedo`, and `resolvedEngine`.
 
 ### Custom Styles
 
@@ -678,6 +678,30 @@ Customize the focus outline with the `--outline-color`, `--outline-width`, and `
   --outline-color="#42be65"
   --outline-width="2px"
 />
+```
+
+### Experimental: CSS Custom Highlight engine
+
+`engine="css-highlights"` paints tokens with the [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) (`CSS.highlights`, `::highlight()`) instead of wrapping them in `<span>`s. The editable `<code>` stays plain text (one `<span>` per line, reused from the default engine's line structure, but with no per-token spans inside), so a repaint never replaces the DOM the caret is sitting in.
+
+Requires Chrome 105+, Safari 17.2+, or Firefox 140+. Where `CSS.highlights` is unavailable, `HighlightEditable` falls back to `engine="dom"` silently; check what actually ran with `editor.resolvedEngine()`.
+
+Pass `theme` (the same theme string you'd give `HighlightStyle`) to generate `::highlight()` rules from it. Only `color`/`background-color` convert — `::highlight()` doesn't support `font-style`/`font-weight`/`text-decoration` across browsers, so bold/italic scopes render in plain color.
+
+`theme` only covers token colors — you still need `HighlightStyle` (or an injected stylesheet) for the base `.hljs` layout rules (padding, overflow, background), exactly as with the default engine.
+
+```svelte
+<script>
+  import { HighlightEditable, HighlightStyle } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  let code = "const add = (a: number, b: number) => a + b";
+</script>
+
+<HighlightStyle theme={github}>
+  <HighlightEditable language={typescript} bind:code engine="css-highlights" theme={github} />
+</HighlightStyle>
 ```
 
 ## Language Targeting

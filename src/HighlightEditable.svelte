@@ -1,3 +1,10 @@
+<script context="module">
+  let instanceCount = 0;
+  function nextInstanceId() {
+    return ++instanceCount;
+  }
+</script>
+
 <script>
   /** @type {import("./languages").LanguageType<string>} */
   export let language;
@@ -11,13 +18,35 @@
   /** @type {number} Maximum number of undo snapshots retained. */
   export let historyLimit = 200;
 
+  /**
+   * Rendering engine. `"css-highlights"` (experimental) paints tokens via
+   * the CSS Custom Highlight API over plain-text line nodes instead of
+   * wrapping them in `<span>`s, so a repaint never replaces DOM the caret
+   * could be sitting in. Falls back to `"dom"` silently where
+   * `CSS.highlights` is unavailable; check the resolved engine with the
+   * exported `resolvedEngine()` method.
+   * @type {"dom" | "css-highlights"}
+   */
+  export let engine = "dom";
+
+  /**
+   * Theme CSS from `svelte-highlight/styles/<theme>`, used only in
+   * `"css-highlights"` mode to generate `::highlight()` rules. Colors only
+   * (`color`/`background-color`); other declarations are dropped.
+   * @type {string | undefined}
+   */
+  export let theme = undefined;
+
   import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, onMount } from "svelte";
+  import { highlightRules } from "./highlight-theme.js";
   import { splitLines } from "./split-lines.js";
   import { diffText } from "./text-diff.js";
+  import { tokenize } from "./token-ranges.js";
 
   const dispatch = createEventDispatcher();
   const TRAILING_NEWLINE = /\n$/;
+  const instanceId = nextInstanceId();
 
   /** @type {HTMLElement} */
   let editor;
@@ -38,16 +67,37 @@
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
 
+  $: resolvedEngineValue =
+    engine === "css-highlights" &&
+    typeof CSS !== "undefined" &&
+    typeof CSS.highlights !== "undefined"
+      ? "css-highlights"
+      : "dom";
+
   let previousLanguageName;
+  let previousEngine;
   $: {
     hljs.registerLanguage(language.name, language.register);
-    if (mounted && language.name !== previousLanguageName) {
+    if (
+      mounted &&
+      (language.name !== previousLanguageName ||
+        resolvedEngineValue !== previousEngine)
+    ) {
+      if (previousEngine === "css-highlights") clearCssHighlights();
       repaintForLanguageChange();
     }
     previousLanguageName = language.name;
+    previousEngine = resolvedEngineValue;
   }
   $: indentUnit = " ".repeat(tabSize);
   $: if (mounted && code !== internalCode) syncExternal();
+  $: cssHighlightStyle =
+    resolvedEngineValue === "css-highlights" && theme !== undefined
+      ? `<style>${highlightRules(theme).replaceAll(
+          "::highlight(hljs-",
+          `::highlight(hljs-${instanceId}-`,
+        )}</style>`
+      : "";
 
   function getSelectionRange() {
     const selection = window.getSelection();
@@ -111,12 +161,20 @@
     return start;
   }
 
+  const setHtml = (el, line) => {
+    el.innerHTML = line;
+  };
+  const setText = (el, line) => {
+    el.textContent = line;
+  };
+
   // Patches `editor` to match `lines` (one <span> per line, joined by literal
   // "\n" text nodes so caret offset math stays identical to a flat paint).
-  // Only lines whose HTML actually changed touch the DOM. Returns the index
-  // of the single changed line when nothing else shifted (used to scope
-  // caret restoration), or null.
-  function renderLines(lines) {
+  // Only lines whose content actually changed touch the DOM (assigned via
+  // `setContent`: innerHTML for the "dom" engine, textContent for
+  // "css-highlights"). Returns the index of the single changed line when
+  // nothing else shifted (used to scope caret restoration), or null.
+  function renderLines(lines, setContent) {
     // Some browsers can place a native selection boundary just outside a
     // line's <span> (e.g. Firefox collapsing a select-all there); typing at
     // that point inserts a stray sibling text node our diffing never touches.
@@ -127,6 +185,7 @@
       lineEls = [];
       lineLengths = [];
       renderedLines = [];
+      clearCssHighlights();
     }
 
     const prevLen = lineEls.length;
@@ -137,7 +196,7 @@
     let changedCount = 0;
     for (let i = 0; i < commonLen; i++) {
       if (renderedLines[i] === lines[i]) continue;
-      lineEls[i].innerHTML = lines[i];
+      setContent(lineEls[i], lines[i]);
       lineLengths[i] = lineEls[i].textContent.length;
       changedIndex = i;
       changedCount++;
@@ -146,7 +205,7 @@
     for (let i = prevLen; i < newLen; i++) {
       if (lineEls.length > 0) editor.appendChild(document.createTextNode("\n"));
       const span = document.createElement("span");
-      span.innerHTML = lines[i];
+      setContent(span, lines[i]);
       editor.appendChild(span);
       lineEls.push(span);
       lineLengths.push(span.textContent.length);
@@ -155,6 +214,8 @@
     while (lineEls.length > newLen) {
       editor.removeChild(lineEls.pop());
       lineLengths.pop();
+      clearLineHighlights(lineHighlightRanges.length - 1);
+      lineHighlightRanges.pop();
       // Drop the separator that used to precede the removed line.
       if (lineEls.length > 0) editor.removeChild(editor.lastChild);
     }
@@ -163,11 +224,82 @@
     return prevLen === newLen && changedCount === 1 ? changedIndex : null;
   }
 
+  /** @type {Map<string, InstanceType<typeof Highlight>>} scope -> registered Highlight. */
+  let cssHighlights = new Map();
+  /** @type {{ scope: string; range: Range }[][]} Ranges registered per line. */
+  let lineHighlightRanges = [];
+
+  function cssHighlightFor(scope) {
+    let highlight = cssHighlights.get(scope);
+    if (!highlight) {
+      highlight = new Highlight();
+      cssHighlights.set(scope, highlight);
+      CSS.highlights.set(`hljs-${instanceId}-${scope}`, highlight);
+    }
+    return highlight;
+  }
+
+  function clearLineHighlights(index) {
+    const previous = lineHighlightRanges[index];
+    if (!previous) return;
+    for (const { scope, range } of previous) {
+      cssHighlights.get(scope)?.delete(range);
+    }
+  }
+
+  function clearCssHighlights() {
+    for (const scope of cssHighlights.keys()) {
+      CSS.highlights.delete(`hljs-${instanceId}-${scope}`);
+    }
+    cssHighlights = new Map();
+    lineHighlightRanges = [];
+  }
+
+  // Rebuilds only line `index`'s Highlight Range registrations from
+  // `tokenRanges` (absolute offsets into the full document); the line's text
+  // node itself is untouched by this, so it never disturbs the caret.
+  function paintLineHighlights(index, tokenRanges) {
+    clearLineHighlights(index);
+    const textNode = lineEls[index].firstChild;
+    const next = [];
+    if (textNode) {
+      const lineStart = lineStartOffset(index);
+      const lineEnd = lineStart + lineLengths[index];
+      for (const token of tokenRanges) {
+        if (token.end <= lineStart || token.start >= lineEnd) continue;
+        const start = Math.max(token.start, lineStart) - lineStart;
+        const end = Math.min(token.end, lineEnd) - lineStart;
+        if (start === end) continue;
+        const range = new Range();
+        range.setStart(textNode, start);
+        range.setEnd(textNode, end);
+        cssHighlightFor(token.scope).add(range);
+        next.push({ scope: token.scope, range });
+      }
+    }
+    lineHighlightRanges[index] = next;
+  }
+
+  function paintCssHighlights() {
+    const changedIndex = renderLines(code.split("\n"), setText);
+    const tokenRanges = tokenize(code, language.name);
+
+    if (changedIndex == null) {
+      for (let i = 0; i < lineEls.length; i++) {
+        paintLineHighlights(i, tokenRanges);
+      }
+    } else {
+      paintLineHighlights(changedIndex, tokenRanges);
+    }
+    return changedIndex;
+  }
+
   function paint() {
+    if (resolvedEngineValue === "css-highlights") return paintCssHighlights();
     const html = hljs.highlight(code, { language: language.name }).value;
     // Trailing empty line needs a phantom `\n` for caret placement.
     const paintHtml = code === "" || code.endsWith("\n") ? `${html}\n` : html;
-    return renderLines(splitLines(paintHtml));
+    return renderLines(splitLines(paintHtml), setHtml);
   }
 
   function renderAt(start, end) {
@@ -453,6 +585,11 @@
     return redoStack.length > 0;
   }
 
+  /** The engine actually in use: `engine`, or `"dom"` if it was requested but unsupported. */
+  export function resolvedEngine() {
+    return resolvedEngineValue;
+  }
+
   // WebKit dispatches a second beforeinput historyUndo/historyRedo shortly
   // after the first for a single execCommand call; without this guard the
   // second dispatch pops an extra history entry. The reset is deferred past
@@ -482,8 +619,19 @@
       return;
     }
     const previousCode = code;
-    // innerText keeps contenteditable line breaks; textContent doesn't.
-    code = editor.innerText.replace(TRAILING_NEWLINE, "");
+    // innerText keeps contenteditable line breaks that textContent drops
+    // (e.g. a browser-inserted <br> on Enter) -- but Firefox can return a
+    // stale innerText immediately after editing a text node that was last
+    // written via `textContent` (see setText in paintCssHighlights), losing
+    // the just-typed content. The css-highlights engine builds every line
+    // from a single text node with literal "\n" separators and always
+    // intercepts Enter/paste itself, so textContent is exact there and
+    // sidesteps the staleness.
+    code = (
+      resolvedEngineValue === "css-highlights"
+        ? editor.textContent
+        : editor.innerText
+    ).replace(TRAILING_NEWLINE, "");
     internalCode = code;
     const caret = getCaretOffset() ?? code.length;
     dispatch("change", { code });
@@ -598,9 +746,16 @@
       editor.removeEventListener("blur", onBlur);
       editor.removeEventListener("compositionstart", onCompositionStart);
       editor.removeEventListener("compositionend", onCompositionEnd);
+      clearCssHighlights();
     };
   });
 </script>
+
+<svelte:head
+  >{#if cssHighlightStyle}
+    {@html cssHighlightStyle}
+  {/if}</svelte:head
+>
 
 <pre
   style:overflow-x="var(--overflow-x, auto)"
