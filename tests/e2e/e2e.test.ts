@@ -689,6 +689,74 @@ test("Typewriter - reduced motion renders instantly", async ({
   await expect(tw.locator(".hljs-title.function_")).toHaveText("add");
 });
 
+test("Typewriter - revealed DOM nodes stay connected across ticks (no per-tick rebuild)", async ({
+  mount,
+  page,
+}) => {
+  await mount(Typewriter, { props: { speed: 20 } });
+
+  const tw = page.getByTestId("tw");
+  const firstUnit = tw.locator(".typewriter-unit").first();
+  await expect(firstUnit).toBeVisible();
+
+  const handle = await firstUnit.elementHandle();
+  // ~10 more ticks at 20ms each.
+  await page.waitForTimeout(200);
+
+  expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
+});
+
+test("Typewriter - pausing then resuming continues without restarting", async ({
+  mount,
+  page,
+}) => {
+  await mount(Typewriter, { props: { speed: 15 } });
+
+  const tw = page.getByTestId("tw");
+  const revealed = tw.locator(".typewriter-unit:not(.typewriter-hidden)");
+
+  await page.waitForTimeout(120);
+  await page.getByTestId("toggle-play").click(); // pause
+
+  const pausedCount = await revealed.count();
+  expect(pausedCount).toBeGreaterThan(0);
+  const firstRevealed = await revealed.first().elementHandle();
+
+  await page.waitForTimeout(150);
+  // No progress while paused.
+  expect(await revealed.count()).toBe(pausedCount);
+
+  await page.getByTestId("toggle-play").click(); // resume
+  await expect(page.getByTestId("done")).toHaveText("1");
+
+  // Same DOM node from before the pause: resume picked up where it left
+  // off instead of re-tokenizing/rebuilding.
+  expect(await firstRevealed?.evaluate((el) => el.isConnected)).toBe(true);
+});
+
+test("Typewriter - swapping `highlighted` mid-animation restarts cleanly", async ({
+  mount,
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  await mount(Typewriter, { props: { speed: 15 } });
+
+  const tw = page.getByTestId("tw");
+  await page.waitForTimeout(120); // reveal some characters of the first snippet
+  await page.getByTestId("swap-code").click();
+
+  await expect(page.getByTestId("done")).toHaveText("1");
+  await expect(tw.locator(".hljs-title.function_")).toHaveText("hello");
+  await expect(tw).toContainText("function hello(name: string) {}");
+
+  expect(errors).toEqual([]);
+});
+
 test("HighlightEditable - two instances share the same bound code", async ({
   mount,
   page,
