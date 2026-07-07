@@ -790,6 +790,62 @@ test("HighlightEditable - focus outline uses the --outline-color variable", asyn
   await expect(editor).toHaveCSS("outline-color", "rgb(255, 0, 0)");
 });
 
+test("HighlightEditable - only repaints the edited line, leaving others' DOM connected", async ({
+  mount,
+  page,
+}) => {
+  const lines = Array.from({ length: 20 }, (_, i) => `line ${i}`).join("\n");
+  await mount(HighlightEditable, { props: { initialCode: lines } });
+
+  const editor = page.locator("[contenteditable='true']");
+  const firstLine = editor.locator("> span").first();
+  const handle = await firstLine.elementHandle();
+
+  // Click directly into the last line (rather than select-all + collapse)
+  // so the caret lands inside that line's element.
+  await editor.locator("> span").last().click();
+  await page.keyboard.type("!");
+
+  const code = await page.getByTestId("code").getAttribute("data-value");
+  expect(code).toHaveLength(lines.length + 1);
+  // Line 0's element survives the edit: only the last line's DOM was
+  // touched, proving the repaint didn't rebuild the whole document.
+  expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
+});
+
+test("HighlightEditable - handles bursts of typing on a large document within budget", async ({
+  mount,
+  page,
+}) => {
+  test.slow();
+  const lines = Array.from({ length: 2000 }, (_, i) => `line ${i}`).join("\n");
+  await mount(HighlightEditable, { props: { initialCode: lines } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowRight"); // collapse caret to the end
+
+  // Dispatched in-page (not via Playwright's per-key round trip) so the
+  // measurement reflects our own repaint/caret-restore cost, not IPC
+  // overhead. This is a coarse smoke check, not a tight perf budget: it
+  // catches an O(document) regression (e.g. a full innerHTML rebuild) for a
+  // 2,000-line document without being flaky on ordinary keystroke cost.
+  const elapsed = await editor.evaluate(() => {
+    const start = performance.now();
+    for (let i = 0; i < 50; i++) {
+      document.execCommand("insertText", false, "x");
+    }
+    return performance.now() - start;
+  });
+
+  expect(elapsed).toBeLessThan(5000);
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    `${lines}${"x".repeat(50)}`,
+  );
+});
+
 test("Typewriter - animates then settles to the full highlighted content", async ({
   mount,
   page,
