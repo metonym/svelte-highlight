@@ -9,6 +9,8 @@ import CopyButton from "./CopyButton.test.svelte";
 import CopyButtonTransform from "./CopyButton.transform.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
 import Highlight from "./Highlight.test.svelte";
+import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
+import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
@@ -242,6 +244,67 @@ test("highlight action", async ({ mount, page }) => {
   await page.getByRole("button", { name: "Update" }).click();
   await expect(code.locator(".hljs-keyword").first()).toHaveText("function");
   await expect(code.locator(".hljs-title").first()).toHaveText("hello");
+});
+
+test("highlight action - idempotent when `code` is omitted", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightActionOmittedCode);
+
+  const code = page.locator("pre code.hljs");
+  await expect(code).toBeVisible();
+  await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
+
+  // Simulate the element's `textContent` drifting away from the original
+  // source, e.g. because a previous highlight pass (or unrelated DOM edit)
+  // already ran.
+  await code.evaluate((el) => {
+    el.textContent = "not the original source";
+  });
+
+  // Updating without `code` should re-highlight the snapshot captured on
+  // init, not the element's current (mutated) `textContent`.
+  const button = page.getByRole("button", { name: "Update" });
+  await button.click();
+  await expect(code).toHaveText("const s = 1;");
+  await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
+
+  await button.click();
+  await expect(code).toHaveText("const s = 1;");
+});
+
+test("highlight action - grammar errors don't escape and leave content unchanged", async ({
+  mount,
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  await mount(HighlightActionRegisterThrows);
+
+  const code = page.locator("pre code");
+  await expect(code).toHaveText("");
+  await expect(code).not.toHaveClass(/hljs/);
+  expect(errors).toEqual([]);
+});
+
+test("highlight action - destroy restores the original content", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(HighlightActionOmittedCode);
+
+  const code = page.locator("pre code.hljs");
+  await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
+  // Grab a handle before unmounting: Svelte removes the element from the
+  // DOM on unmount, so it won't be reachable via `page.locator` afterward.
+  const handle = await code.elementHandle();
+
+  await component.unmount();
+
+  expect(await handle?.evaluate((el) => el.innerHTML)).toBe("const s = 1;");
+  expect(await handle?.evaluate((el) => el.className)).toBe("");
 });
 
 test("HighlightAuto", async ({ mount, page }) => {
