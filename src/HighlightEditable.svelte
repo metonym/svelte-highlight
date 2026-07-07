@@ -200,6 +200,7 @@
   }
 
   function syncCaretToHistory() {
+    if (!editor.contains(document.activeElement)) return;
     if (restoringSelection || composing || undoStack.length === 0) return;
     const sel = getSelectionRange();
     if (!sel) return;
@@ -469,6 +470,18 @@
     dispatch("blur", { code: getCode() });
   }
 
+  // Selection changes can only affect this editor while it holds focus, so
+  // only pay for the document-wide listener (range clone + full-content
+  // toString()) during that window instead of for the component's whole
+  // lifetime.
+  function onFocusIn() {
+    document.addEventListener("selectionchange", syncCaretToHistory);
+  }
+
+  function onFocusOut() {
+    document.removeEventListener("selectionchange", syncCaretToHistory);
+  }
+
   function onCompositionStart() {
     composing = true;
   }
@@ -490,7 +503,8 @@
     editor.addEventListener("paste", onPaste);
     editor.addEventListener("mouseup", syncCaretToHistory);
     editor.addEventListener("keyup", syncCaretToHistory);
-    document.addEventListener("selectionchange", syncCaretToHistory);
+    editor.addEventListener("focusin", onFocusIn);
+    editor.addEventListener("focusout", onFocusOut);
     editor.addEventListener("blur", onBlur);
     editor.addEventListener("compositionstart", onCompositionStart);
     editor.addEventListener("compositionend", onCompositionEnd);
@@ -502,6 +516,8 @@
       editor.removeEventListener("paste", onPaste);
       editor.removeEventListener("mouseup", syncCaretToHistory);
       editor.removeEventListener("keyup", syncCaretToHistory);
+      editor.removeEventListener("focusin", onFocusIn);
+      editor.removeEventListener("focusout", onFocusOut);
       document.removeEventListener("selectionchange", syncCaretToHistory);
       editor.removeEventListener("blur", onBlur);
       editor.removeEventListener("compositionstart", onCompositionStart);
