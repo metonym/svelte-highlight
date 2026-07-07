@@ -13,6 +13,7 @@ import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
+import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
@@ -518,6 +519,21 @@ test("HighlightEditable - renders an editable, highlighted block", async ({
   );
 });
 
+test("HighlightEditable - repaints when the language prop changes without input", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditableLanguageSwap);
+
+  // plaintext has no token spans for this code.
+  await expect(page.locator(".hljs-keyword")).toHaveCount(0);
+
+  await page.getByTestId("switch-language").click();
+
+  // typescript's grammar highlights "const" without any input event firing.
+  await expect(page.locator(".hljs-keyword").first()).toHaveText("const");
+});
+
 test("HighlightEditable - typing updates the bound code and fires change", async ({
   mount,
   page,
@@ -659,6 +675,39 @@ test("HighlightEditable - undo preserves caret position", async ({
 
   await page.keyboard.type("Q");
   await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abQcd");
+});
+
+test("HighlightEditable - native undo (execCommand) routes through the custom history", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, { props: { initialCode: "ab" } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowRight"); // collapse caret to end
+  await page.keyboard.type("X");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abX");
+
+  // Wait past the 250ms typing-coalesce window so "Y" is its own history entry.
+  await page.waitForTimeout(300);
+  await page.keyboard.type("Y");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abXY");
+
+  // The Edit-menu / execCommand path fires beforeinput historyUndo, distinct
+  // from the Ctrl/Cmd+Z keydown path already covered above.
+  await editor.evaluate(() => document.execCommand("undo"));
+
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "abX");
+  await expect(page.getByTestId("can-undo")).toHaveAttribute(
+    "data-value",
+    "true",
+  );
+  await expect(page.getByTestId("can-redo")).toHaveAttribute(
+    "data-value",
+    "true",
+  );
 });
 
 test("HighlightEditable - setCode and clear replace the document", async ({

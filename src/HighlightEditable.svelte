@@ -28,7 +28,14 @@
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
 
-  $: hljs.registerLanguage(language.name, language.register);
+  let previousLanguageName;
+  $: {
+    hljs.registerLanguage(language.name, language.register);
+    if (mounted && language.name !== previousLanguageName) {
+      repaintForLanguageChange();
+    }
+    previousLanguageName = language.name;
+  }
   $: indentUnit = " ".repeat(tabSize);
   $: if (mounted && code !== internalCode) syncExternal();
 
@@ -64,13 +71,26 @@
     return null;
   }
 
+  // Firefox's contenteditable undo manager treats a boundary set exactly at
+  // a text node's start/end (setStart/setEnd with a text node + offset)
+  // differently from the equivalent boundary expressed via the parent's
+  // child index (setStartBefore/After): after our repaint rebuilds the text
+  // node, the former leaves Firefox unable to recognize a later native
+  // undo (execCommand/Edit menu), which then silently does nothing. Prefer
+  // the parent-anchored form whenever the offset lands on a node edge.
+  function setRangeBoundary(range, side, node, offset) {
+    if (offset === 0) range[`set${side}Before`](node);
+    else if (offset === node.textContent.length) range[`set${side}After`](node);
+    else range[side === "Start" ? "setStart" : "setEnd"](node, offset);
+  }
+
   function setSelection(start, end) {
     const from = nodeAtOffset(start);
     if (!from) return;
     const range = document.createRange();
-    range.setStart(from.node, from.offset);
+    setRangeBoundary(range, "Start", from.node, from.offset);
     const to = end != null && end !== start ? nodeAtOffset(end) : null;
-    if (to) range.setEnd(to.node, to.offset);
+    if (to) setRangeBoundary(range, "End", to.node, to.offset);
     else range.collapse(true);
     const selection = window.getSelection();
     selection.removeAllRanges();
@@ -89,6 +109,12 @@
     restoringSelection = true;
     setSelection(start, end);
     restoringSelection = false;
+  }
+
+  function repaintForLanguageChange() {
+    const caret = document.activeElement === editor ? getCaretOffset() : null;
+    if (caret == null) paint();
+    else renderAt(caret, caret);
   }
 
   function syncCaretToHistory() {
@@ -278,8 +304,34 @@
     return redoStack.length > 0;
   }
 
-  function onInput() {
+  // WebKit dispatches a second beforeinput historyUndo/historyRedo shortly
+  // after the first for a single execCommand call; without this guard the
+  // second dispatch pops an extra history entry. The reset is deferred past
+  // the current task so a genuinely separate later undo still goes through.
+  let handlingNativeHistory = false;
+  function runNativeHistory(action) {
+    if (handlingNativeHistory) return;
+    handlingNativeHistory = true;
+    action();
+    setTimeout(() => {
+      handlingNativeHistory = false;
+    }, 0);
+  }
+
+  function onInput(event) {
     if (composing) return;
+    // Some engines (e.g. Chromium's execCommand path) never dispatch a
+    // cancelable beforeinput for native undo/redo, only this input event
+    // after the DOM already mutated. Re-render from our own snapshot rather
+    // than recording the browser's mutation as new typed content.
+    if (event?.inputType === "historyUndo") {
+      runNativeHistory(undo);
+      return;
+    }
+    if (event?.inputType === "historyRedo") {
+      runNativeHistory(redo);
+      return;
+    }
     // innerText keeps contenteditable line breaks; textContent doesn't.
     code = editor.innerText.replace(TRAILING_NEWLINE, "");
     internalCode = code;
@@ -319,6 +371,18 @@
     insertText(event.clipboardData?.getData("text/plain") ?? "");
   }
 
+  // Edit-menu / execCommand undo-redo bypass onKeydown; intercept here so the
+  // browser doesn't mutate DOM that paint() has already rebuilt.
+  function onBeforeInput(event) {
+    if (event.inputType === "historyUndo") {
+      event.preventDefault();
+      runNativeHistory(undo);
+    } else if (event.inputType === "historyRedo") {
+      event.preventDefault();
+      runNativeHistory(redo);
+    }
+  }
+
   function onBlur() {
     dispatch("blur", { code: getCode() });
   }
@@ -340,6 +404,7 @@
 
     editor.addEventListener("input", onInput);
     editor.addEventListener("keydown", onKeydown);
+    editor.addEventListener("beforeinput", onBeforeInput);
     editor.addEventListener("paste", onPaste);
     editor.addEventListener("mouseup", syncCaretToHistory);
     editor.addEventListener("keyup", syncCaretToHistory);
@@ -351,6 +416,7 @@
     return () => {
       editor.removeEventListener("input", onInput);
       editor.removeEventListener("keydown", onKeydown);
+      editor.removeEventListener("beforeinput", onBeforeInput);
       editor.removeEventListener("paste", onPaste);
       editor.removeEventListener("mouseup", syncCaretToHistory);
       editor.removeEventListener("keyup", syncCaretToHistory);
@@ -371,7 +437,7 @@
     class:hljs={true}
     contenteditable="true"
     spellcheck="false"
-></code></pre>
+>{code}</code></pre>
 
 <style>
   code {
