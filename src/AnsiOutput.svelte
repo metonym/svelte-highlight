@@ -111,6 +111,8 @@
 
   /** Foreground CSS, with auto-contrast override when needed. */
   function foregroundCss(segment) {
+    // Concealed text is rendered transparent (layout and copy text stay).
+    if (segment.conceal) return "transparent";
     if (autoContrast && segment.bg) {
       const bg = colorToRgb(segment.bg);
       const fg = segment.fg
@@ -129,6 +131,7 @@
     if (segment.dim) names.push("dim");
     if (segment.italic) names.push("italic");
     if (segment.underline) names.push("underline");
+    if (segment.strikethrough) names.push("strikethrough");
     return names.length ? names.join(" ") : undefined;
   }
 
@@ -147,13 +150,16 @@
     text: segment.text,
     class: classNames(segment),
     style: inlineStyle(segment),
+    link: segment.link,
   }));
 </script>
 
 <pre class="ansi" {...$$restProps}><code
-    >{#each segments as segment}<span class={segment.class} style={segment.style}
+    >{#each segments as segment}{#if segment.link}<a href={segment.link} rel="noopener noreferrer" class={segment.class} style={segment.style}
+        >{segment.text}</a
+      >{:else}<span class={segment.class} style={segment.style}
         >{segment.text}</span
-      >{/each}</code
+      >{/if}{/each}</code
   ></pre>
 
 <style>
@@ -187,7 +193,20 @@
     font-style: italic;
   }
 
-  .underline {
+  .ansi a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ansi .underline {
     text-decoration: underline;
+  }
+
+  .ansi .strikethrough {
+    text-decoration: line-through;
+  }
+
+  .ansi .underline.strikethrough {
+    text-decoration: underline line-through;
   }
 </style>

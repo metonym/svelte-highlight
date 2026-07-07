@@ -16,6 +16,9 @@ export type AnsiStyle = {
   dim?: boolean | undefined;
   italic?: boolean | undefined;
   underline?: boolean | undefined;
+  reverse?: boolean | undefined;
+  strikethrough?: boolean | undefined;
+  conceal?: boolean | undefined;
   fg?: AnsiColor | undefined;
   bg?: AnsiColor | undefined;
 };
@@ -28,8 +31,14 @@ export type AnsiSegment = {
   dim?: boolean;
   italic?: boolean;
   underline?: boolean;
+  /** Strikethrough (SGR 9). */
+  strikethrough?: boolean;
+  /** Text is present for layout/copy but rendered invisible (SGR 8). */
+  conceal?: boolean;
   fg?: AnsiColor;
   bg?: AnsiColor;
+  /** OSC 8 hyperlink target for this run, if any. */
+  link?: string;
 };
 
 /** Parse ANSI SGR escape codes into styled segments. Malformed input is dropped. */

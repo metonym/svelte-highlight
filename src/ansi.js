@@ -58,6 +58,9 @@ function applySgr(style, params) {
       style.dim = undefined;
       style.italic = undefined;
       style.underline = undefined;
+      style.reverse = undefined;
+      style.strikethrough = undefined;
+      style.conceal = undefined;
       style.fg = undefined;
       style.bg = undefined;
     } else if (code === 1) {
@@ -68,6 +71,22 @@ function applySgr(style, params) {
       style.italic = true;
     } else if (code === 4) {
       style.underline = true;
+    } else if (code === 21) {
+      // Spec says "double underline"; several emitters instead use 21 as
+      // "bold off". We follow the spec and treat it as underline.
+      style.underline = true;
+    } else if (code === 7) {
+      style.reverse = true;
+    } else if (code === 27) {
+      style.reverse = undefined;
+    } else if (code === 8) {
+      style.conceal = true;
+    } else if (code === 28) {
+      style.conceal = undefined;
+    } else if (code === 9) {
+      style.strikethrough = true;
+    } else if (code === 29) {
+      style.strikethrough = undefined;
     } else if (code === 22) {
       style.bold = undefined;
       style.dim = undefined;
@@ -117,17 +136,26 @@ function applySgr(style, params) {
  * Build a segment from `text` and active fields in `style`.
  * @param {string} text
  * @param {AnsiStyle} style
+ * @param {string} [link]
  * @returns {AnsiSegment}
  */
-function toSegment(text, style) {
+function toSegment(text, style, link) {
   /** @type {AnsiSegment} */
   const segment = { text };
   if (style.bold) segment.bold = true;
   if (style.dim) segment.dim = true;
   if (style.italic) segment.italic = true;
   if (style.underline) segment.underline = true;
-  if (style.fg) segment.fg = style.fg;
-  if (style.bg) segment.bg = style.bg;
+  if (style.strikethrough) segment.strikethrough = true;
+  if (style.conceal) segment.conceal = true;
+  // Reverse video swaps fg/bg on the emitted segment. `style.fg`/`style.bg`
+  // themselves are untouched, so a later SGR 27 (reverse off) restores the
+  // original mapping for text that follows.
+  const fg = style.reverse ? style.bg : style.fg;
+  const bg = style.reverse ? style.fg : style.bg;
+  if (fg) segment.fg = fg;
+  if (bg) segment.bg = bg;
+  if (link) segment.link = link;
   return segment;
 }
 
@@ -147,11 +175,39 @@ export function parseAnsi(text) {
   /** @type {AnsiStyle} */
   const style = {};
   let buffer = "";
+  /** @type {string | undefined} */
+  let link;
 
   const flush = () => {
     if (buffer) {
-      segments.push(toSegment(buffer, style));
+      segments.push(toSegment(buffer, style, link));
       buffer = "";
+    }
+  };
+
+  /**
+   * Handle a lone `\r`: per-line overwrite semantics. Full last-write-wins
+   * per character cell is overkill for a text renderer, so we use a
+   * simplification: discard everything back to the start of the current
+   * line (the last `\n`) so that subsequent text rebuilds the line fresh.
+   */
+  const resetLine = () => {
+    const bufferBreak = buffer.lastIndexOf("\n");
+    if (bufferBreak !== -1) {
+      buffer = buffer.slice(0, bufferBreak + 1);
+      return;
+    }
+    buffer = "";
+    let last = segments.pop();
+    while (last !== undefined) {
+      const segmentBreak = last.text.lastIndexOf("\n");
+      if (segmentBreak === -1) {
+        last = segments.pop();
+        continue;
+      }
+      last.text = last.text.slice(0, segmentBreak + 1);
+      segments.push(last);
+      return;
     }
   };
 
@@ -186,6 +242,58 @@ export function parseAnsi(text) {
       }
       // Non-SGR CSI sequences (cursor moves, etc.) are skipped.
       i = j + 1;
+      continue;
+    }
+
+    if (ch === ESC && text[i + 1] === "]") {
+      // Read an OSC sequence: body up to a BEL or ST (`ESC \`) terminator.
+      let j = i + 2;
+      let terminatorLength = 0;
+      while (j < text.length) {
+        if (text[j] === "\x07") {
+          terminatorLength = 1;
+          break;
+        }
+        if (text[j] === ESC && text[j + 1] === "\\") {
+          terminatorLength = 2;
+          break;
+        }
+        j += 1;
+      }
+
+      if (terminatorLength === 0) {
+        // Unterminated: drop the rest.
+        break;
+      }
+
+      const body = text.slice(i + 2, j);
+      const firstSemi = body.indexOf(";");
+      const command = firstSemi === -1 ? body : body.slice(0, firstSemi);
+      if (command === "8" && firstSemi !== -1) {
+        // OSC 8 hyperlink: `8;params;uri`. An empty uri closes the link.
+        const rest = body.slice(firstSemi + 1);
+        const secondSemi = rest.indexOf(";");
+        if (secondSemi !== -1) {
+          flush();
+          const uri = rest.slice(secondSemi + 1);
+          link = uri || undefined;
+        }
+      }
+      // Other OSC sequences (title/icon sets, unknown commands) carry no
+      // rendered state: strip them silently.
+      i = j + terminatorLength;
+      continue;
+    }
+
+    if (ch === "\r") {
+      if (text[i + 1] === "\n") {
+        // Treat \r\n as \n.
+        buffer += "\n";
+        i += 2;
+        continue;
+      }
+      resetLine();
+      i += 1;
       continue;
     }
 
