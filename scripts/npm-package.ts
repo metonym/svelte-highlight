@@ -62,6 +62,10 @@ pkgJson.exports = {
     types: "./ansi.d.ts",
     default: "./ansi.js",
   },
+  "./copy-transforms": {
+    types: "./copy-transforms.d.ts",
+    default: "./copy-transforms.js",
+  },
   "./load-language": {
     types: "./load-language.d.ts",
     default: "./load-language.js",

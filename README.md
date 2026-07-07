@@ -535,6 +535,22 @@ The component dispatches a `copy` event on success and an `error` event if the c
 />
 ```
 
+### Transforming copied text
+
+Displayed code often carries decoration that shouldn't survive a copy -- shell prompts, REPL markers, diff signs. Pass a `transform` function to strip it before the `copy` function runs; `on:copy` reports the transformed string, not the original `code`.
+
+`stripPrompts` and `stripDiffMarkers` cover the common cases and are exported for reuse (compose them for your own `transform` when a block needs both):
+
+```svelte
+<script>
+  import { CopyButton, stripPrompts } from "svelte-highlight";
+
+  const code = "$ npm install\nadded 1 package";
+</script>
+
+<CopyButton {code} transform={stripPrompts} />
+```
+
 ### Custom Button Content
 
 Provide custom button content using the default slot to replace the default icons. The slot exposes a `copied` boolean and a `copying` boolean (`true` while an async `copy` is in flight), so you can render a pending state for slow copy functions.
@@ -1266,6 +1282,7 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 | :--------- | :----------------------------------------- | :------------------------------------------- |
 | code       | `string`                                   | N/A (required)                               |
 | copy       | `(code: string) => void \| Promise<void>`  | `(code) => navigator.clipboard.writeText(code)` |
+| transform  | `(code: string) => string`                 | `(code) => code`                             |
 | timeout    | `number`                                   | `2000`                                       |
 | text       | `string`                                   | `"Copy"`                                     |
 | copiedText | `string`                                   | `"Copied!"`                                  |
@@ -1274,7 +1291,7 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 
 #### Dispatched Events
 
-- **on:copy**: fired after a successful copy, with `{ code }`
+- **on:copy**: fired after a successful copy, with `{ code }` -- the `transform`-applied string, not the original `code` prop
 - **on:error**: fired if the copy behavior throws, with `{ error }`
 
 ```svelte
