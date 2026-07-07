@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@astrojs/svelte": "^8.1.2",
+    "@axe-core/playwright": "^4.12.1",
     "@biomejs/biome": "2.5.2",
     "@playwright/experimental-ct-svelte": "1.58.2",
     "@playwright/test": "1.61.1",
