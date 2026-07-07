@@ -14,6 +14,7 @@
   import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, onMount } from "svelte";
   import { splitLines } from "./split-lines.js";
+  import { diffText } from "./text-diff.js";
 
   const dispatch = createEventDispatcher();
   const TRAILING_NEWLINE = /\n$/;
@@ -205,17 +206,28 @@
     const sel = getSelectionRange();
     if (!sel) return;
     const top = undoStack[undoStack.length - 1];
-    if (top.code !== code) return;
+    if (top.resultLength !== code.length) return;
     undoStack[undoStack.length - 1] = {
-      code: top.code,
-      start: sel.start,
-      end: sel.end,
+      ...top,
+      selectionAfter: { start: sel.start, end: sel.end },
     };
   }
 
-  /** @type {Array<{ code: string; start: number; end: number }>} */
+  /**
+   * @typedef {{ start: number; end: number }} Selection
+   * @typedef {{
+   *   start: number;
+   *   removed: string;
+   *   inserted: string;
+   *   resultLength: number;
+   *   selectionBefore: Selection;
+   *   selectionAfter: Selection;
+   * }} HistoryEntry
+   */
+
+  /** @type {HistoryEntry[]} */
   let undoStack = [];
-  /** @type {Array<{ code: string; start: number; end: number }>} */
+  /** @type {HistoryEntry[]} */
   let redoStack = [];
   let lastRecord = 0;
 
@@ -223,7 +235,7 @@
     const future = redoStack.slice().reverse();
     dispatch("history", {
       entries: [...undoStack, ...future].map((snap) => ({
-        size: snap.code.length,
+        size: snap.resultLength,
       })),
       index: undoStack.length - 1,
       canUndo: canUndo(),
@@ -231,14 +243,46 @@
     });
   }
 
+  /** @returns {HistoryEntry} */
+  function makeEntry(before, after, selectionBefore, selectionAfter) {
+    const { start, removed, inserted } = diffText(before, after);
+    return {
+      start,
+      removed,
+      inserted,
+      resultLength: after.length,
+      selectionBefore,
+      selectionAfter,
+    };
+  }
+
+  // The code an entry transformed *from*, given the code it produced.
+  function beforeCodeOf(entry, resultCode) {
+    return (
+      resultCode.slice(0, entry.start) +
+      entry.removed +
+      resultCode.slice(entry.start + entry.inserted.length)
+    );
+  }
+
   // Coalesce typing within 250ms; Enter/Tab/paste pass coalesce=false.
-  function pushHistory(snap, coalesce) {
+  function pushHistory(previousCode, newCode, selectionAfter, coalesce) {
     redoStack = [];
     const now = Date.now();
+    const top = undoStack[undoStack.length - 1];
+
     if (coalesce && undoStack.length > 1 && now - lastRecord < 250) {
-      undoStack[undoStack.length - 1] = snap;
+      const burstStart = beforeCodeOf(top, previousCode);
+      undoStack[undoStack.length - 1] = makeEntry(
+        burstStart,
+        newCode,
+        top.selectionBefore,
+        selectionAfter,
+      );
     } else {
-      undoStack.push(snap);
+      undoStack.push(
+        makeEntry(previousCode, newCode, top.selectionAfter, selectionAfter),
+      );
       const limit = Math.max(1, historyLimit);
       if (undoStack.length > limit) {
         undoStack.splice(0, undoStack.length - limit);
@@ -248,25 +292,37 @@
     emitHistory();
   }
 
-  function applySnapshot(snap) {
-    code = snap.code;
-    internalCode = snap.code;
+  function applyHistoryMove(newCode, selection) {
+    code = newCode;
+    internalCode = newCode;
     dispatch("change", { code });
     emitHistory();
-    renderAt(snap.start, snap.end);
+    renderAt(selection.start, selection.end);
   }
 
   function commit(value, start, end, coalesce) {
+    const previousCode = code;
     code = value;
     internalCode = value;
     dispatch("change", { code });
-    pushHistory({ code: value, start, end }, coalesce);
+    pushHistory(
+      previousCode,
+      value,
+      { start, end: end == null ? start : end },
+      coalesce,
+    );
     renderAt(start, end);
   }
 
   function syncExternal() {
+    const previousCode = internalCode;
     internalCode = code;
-    pushHistory({ code, start: code.length, end: code.length }, false);
+    pushHistory(
+      previousCode,
+      code,
+      { start: code.length, end: code.length },
+      false,
+    );
     paint();
   }
 
@@ -327,15 +383,20 @@
 
   export function undo() {
     if (undoStack.length <= 1) return;
-    redoStack.push(undoStack.pop());
-    applySnapshot(undoStack[undoStack.length - 1]);
+    const entry = undoStack.pop();
+    redoStack.push(entry);
+    applyHistoryMove(beforeCodeOf(entry, code), entry.selectionBefore);
   }
 
   export function redo() {
     if (redoStack.length === 0) return;
-    const snap = redoStack.pop();
-    undoStack.push(snap);
-    applySnapshot(snap);
+    const entry = redoStack.pop();
+    const nextCode =
+      code.slice(0, entry.start) +
+      entry.inserted +
+      code.slice(entry.start + entry.removed.length);
+    undoStack.push(entry);
+    applyHistoryMove(nextCode, entry.selectionAfter);
   }
 
   export function focus() {
@@ -364,10 +425,16 @@
 
   export function setCode(value) {
     if (value === code) return;
+    const previousCode = code;
     internalCode = value;
     code = value;
     dispatch("change", { code });
-    pushHistory({ code: value, start: value.length, end: value.length }, false);
+    pushHistory(
+      previousCode,
+      value,
+      { start: value.length, end: value.length },
+      false,
+    );
     paint();
   }
 
@@ -415,12 +482,13 @@
       runNativeHistory(redo);
       return;
     }
+    const previousCode = code;
     // innerText keeps contenteditable line breaks; textContent doesn't.
     code = editor.innerText.replace(TRAILING_NEWLINE, "");
     internalCode = code;
     const caret = getCaretOffset() ?? code.length;
     dispatch("change", { code });
-    pushHistory({ code, start: caret, end: caret }, true);
+    pushHistory(previousCode, code, { start: caret, end: caret }, true);
     renderAt(caret);
   }
 
@@ -493,7 +561,16 @@
 
   onMount(() => {
     paint();
-    undoStack = [{ code, start: 0, end: 0 }];
+    undoStack = [
+      {
+        start: 0,
+        removed: "",
+        inserted: code,
+        resultLength: code.length,
+        selectionBefore: { start: 0, end: 0 },
+        selectionAfter: { start: 0, end: 0 },
+      },
+    ];
     mounted = true;
     emitHistory();
 
