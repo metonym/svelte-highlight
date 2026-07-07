@@ -15,6 +15,9 @@ import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
+import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
+import HighlightStyleNoTheme from "./HighlightStyle.noTheme.test.svelte";
+import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
@@ -46,6 +49,55 @@ test("Scoped styles - two themes coexist without bleed", async ({
   // a11y-dark keyword is #dcc6e0; github keyword is #d73a49.
   await expect(keywordA).toHaveCSS("color", "rgb(220, 198, 224)");
   await expect(keywordB).toHaveCSS("color", "rgb(215, 58, 73)");
+});
+
+test("HighlightStyle - recomputes scope class when theme changes at runtime", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStyleThemeSwitch);
+
+  const scopeA = await page.getByTestId("a-scope").textContent();
+  const scopeBeforeSwitch = await page.getByTestId("b-scope").textContent();
+  expect(scopeA).toBe(scopeBeforeSwitch);
+
+  await page.getByTestId("switch-theme").click();
+
+  const scopeAfterSwitch = await page.getByTestId("b-scope").textContent();
+  expect(scopeAfterSwitch).not.toBe(scopeA);
+
+  const a = page.getByTestId("a").locator(".hljs").first();
+  const b = page.getByTestId("b").locator(".hljs").first();
+
+  // a11y-dark background is #2b2b2b; github background is #ffffff.
+  await expect(a).toHaveCSS("background-color", "rgb(43, 43, 43)");
+  await expect(b).toHaveCSS("background-color", "rgb(255, 255, 255)");
+});
+
+test("HighlightStyle - dedupes head injection for instances sharing a theme", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(HighlightStyleDedupe);
+
+  await expect(page.locator("style")).toHaveCount(1);
+
+  await component.unmount();
+
+  await expect(page.locator("style")).toHaveCount(0);
+});
+
+test("HighlightStyle - renders nothing when no theme is provided", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStyleNoTheme);
+
+  const headText = await page
+    .locator("head")
+    .evaluate((head) => head.textContent ?? "");
+  expect(headText).not.toContain("undefined");
+  await expect(page.locator("style")).toHaveCount(0);
 });
 
 test("CodeWindow - renders each variant wrapping a Highlight", async ({
