@@ -1123,6 +1123,50 @@ With `prefers-reduced-motion`, the full block shows immediately and `on:done` ru
 
 Each tick reveals one already-rendered unit rather than re-rendering the block, so animating stays smooth up to tens of thousands of characters; past that it falls back to the coarser whole-block reveal.
 
+## Streaming
+
+Rendering LLM chat output is the dominant new syntax-highlighting use case: code arrives in arbitrary-sized chunks, mid-token and mid-line, and you don't know the full content up front. `HighlightStream` is built for that -- unlike `Typewriter`, which animates a complete, already-highlighted string and restarts whenever it changes, `HighlightStream` accepts a growing `code` buffer and re-highlights it as chunks arrive.
+
+Append to `code` as chunks come in; set `done` once the stream ends.
+
+```svelte
+<script>
+  import { HighlightStream } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  let code = "";
+  let done = false;
+
+  // Wire this up to your streaming source (fetch, WebSocket, SSE, ...).
+  async function stream() {
+    for (const chunk of chunks) {
+      code += chunk;
+      await new Promise((r) => setTimeout(r, 30));
+    }
+    done = true;
+  }
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<HighlightStream language={typescript} {code} {done} />
+```
+
+Multiple chunks appended within the same animation frame coalesce into a single highlight pass. Already-rendered lines are diffed and left untouched in the DOM; only lines whose content actually changed are repainted, so a fast-scrolling response only touches its changed suffix (typically the last line). A multi-line construct left open mid-stream -- an unterminated template literal or block comment -- re-tokenizes the lines it spans once the closing delimiter arrives, with no special-casing needed: it falls out of re-highlighting the full buffer on every update.
+
+A blinking caret marks the end of output while `!done`; setting `done` hides it and performs one final full highlight, so the finished output matches what `Highlight` would render for the same code. `on:done` fires right after that final highlight. Customize the caret with the same `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink` variables as `Typewriter`.
+
+Set `autoScroll` to keep the container pinned to the bottom as output grows -- it stops auto-scrolling as soon as you scroll up, and resumes once you scroll back to the bottom.
+
+```svelte
+<HighlightStream language={typescript} {code} {done} autoScroll style="max-height: 20em; overflow-y: auto;" />
+```
+
+This is O(buffer) per highlighted frame and DOM updates proportional to the changed lines -- fine for chat-sized output up to a few thousand lines, not a virtualized log viewer.
+
 ## Terminal Output
 
 Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) escape codes. Colors, bold, dim, italic, and underline become styled HTML, along with OSC 8 hyperlinks, carriage-return overwrites, and reverse/strikethrough. The parser is separate from highlight.js, so reach for it with build logs, CLI output, and test runners.
@@ -1424,6 +1468,35 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
   bind:code
   on:change={(e) => console.log(e.detail.code)}
   on:history={(e) => console.log(e.detail.canUndo, e.detail.canRedo)}
+/>
+```
+
+### `HighlightStream`
+
+#### Props
+
+| Name       | Type                                           | Default value  |
+| :--------- | :--------------------------------------------- | :------------- |
+| code       | `string`                                       | `""`           |
+| language   | { name: `string`; register: hljs => `object` } | N/A (required) |
+| done       | `boolean`                                      | `false`        |
+| caret      | `boolean`                                      | `true`         |
+| autoScroll | `boolean`                                      | `false`        |
+
+`$$restProps` are forwarded to the top-level `pre` element.
+
+#### Dispatched Events
+
+- **on:highlight**: fired after each highlight pass, with `{ highlighted }`
+- **on:done**: fired after the final full highlight once `done` is set
+
+```svelte
+<HighlightStream
+  language={typescript}
+  {code}
+  {done}
+  on:highlight={(e) => console.log(e.detail.highlighted)}
+  on:done={() => console.log("stream finished")}
 />
 ```
 
