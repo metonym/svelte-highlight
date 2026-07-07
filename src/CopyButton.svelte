@@ -34,6 +34,9 @@
   /** @type {boolean} */
   let copying = false;
 
+  /** Message shown in the visually-hidden live region on copy failure. @type {string} */
+  let errorMessage = "";
+
   /** @type {ReturnType<typeof setTimeout> | undefined} */
   let timeoutId;
 
@@ -43,6 +46,7 @@
 
     try {
       copying = true;
+      errorMessage = "";
       const transformed = transform(code);
       await copy(transformed);
       copied = true;
@@ -51,6 +55,7 @@
         copied = false;
       }, timeout);
     } catch (error) {
+      errorMessage = error instanceof Error ? error.message : "Copy failed";
       dispatch("error", { error });
     } finally {
       copying = false;
@@ -100,9 +105,28 @@
       </svg>
     {/if}
   </slot>
+  <span class="visually-hidden" role="status" aria-live="polite">
+    {#if copied}
+      {copiedText}
+    {:else if errorMessage}
+      {errorMessage}
+    {/if}
+  </span>
 </button>
 
 <style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   button {
     position: absolute;
     top: var(--copy-top, 0.5em);
