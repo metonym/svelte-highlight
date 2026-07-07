@@ -166,8 +166,7 @@
   function paint() {
     const html = hljs.highlight(code, { language: language.name }).value;
     // Trailing empty line needs a phantom `\n` for caret placement.
-    const paintHtml =
-      code === "" || code.endsWith("\n") ? `${html}\n` : html;
+    const paintHtml = code === "" || code.endsWith("\n") ? `${html}\n` : html;
     return renderLines(splitLines(paintHtml));
   }
 

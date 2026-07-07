@@ -39,7 +39,11 @@ describe("diffText", () => {
     const after = "a\u{1F605}";
     const diff = diffText(before, after);
 
-    expect(diff).toEqual({ start: 1, removed: "\u{1F600}", inserted: "\u{1F605}" });
+    expect(diff).toEqual({
+      start: 1,
+      removed: "\u{1F600}",
+      inserted: "\u{1F605}",
+    });
     expect(before.slice(diff.start, diff.start + diff.removed.length)).toBe(
       "\u{1F600}",
     );
@@ -63,9 +67,9 @@ describe("diffText", () => {
     const after = "const abc = 12;";
     const { start, removed, inserted } = diffText(before, after);
 
-    expect(before.slice(0, start) + removed + before.slice(start + removed.length)).toBe(
-      before,
-    );
+    expect(
+      before.slice(0, start) + removed + before.slice(start + removed.length),
+    ).toBe(before);
     expect(
       before.slice(0, start) + inserted + before.slice(start + removed.length),
     ).toBe(after);
