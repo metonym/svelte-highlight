@@ -11,6 +11,7 @@
   import FileTabs from "@components/FileTabs.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
+  import EditableCssHighlights from "@components/HighlightEditable/CssHighlights.svelte";
   import HighlightStreamBasic from "@components/HighlightStream/Basic.svelte";
   import HighlightStreamControls from "@components/HighlightStream/Controls.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
@@ -642,6 +643,35 @@
       <code class="code">--outline-offset</code>.
     </p>
   </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <strong>Experimental:</strong>
+      set
+      <code class="code">engine="css-highlights"</code>
+      to paint tokens with the{" "}
+      <Link
+        inline
+        style="font-size: inherit"
+        href="https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API"
+        >CSS Custom Highlight API</Link
+      >
+      instead of wrapping them in <code class="code">{"<span>"}</code>s. The
+      editable block never replaces DOM the caret is sitting in on repaint.
+      Requires Chrome 105+, Safari 17.2+, or Firefox 140+; falls back to
+      <code class="code">"dom"</code>
+      silently otherwise—check what ran with
+      <code class="code">resolvedEngine()</code>.
+    </p>
+    <p class="mb-5">
+      Pass <code class="code">theme</code> (the same string you'd give
+      <code class="code">HighlightStyle</code>) to generate
+      <code class="code">::highlight()</code>
+      rules from it. Only <code class="code">color</code>/
+      <code class="code">background-color</code>
+      convert; bold and italic scopes render plain in this mode.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <EditableCssHighlights /> </Column>
 </Row>
 
 <Row class="mb-9">

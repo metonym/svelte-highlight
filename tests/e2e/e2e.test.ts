@@ -15,6 +15,7 @@ import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
+import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
 import HighlightStreamStability from "./HighlightStream.stability.test.svelte";
@@ -910,6 +911,88 @@ test("HighlightEditable - handles bursts of typing on a large document within bu
     "data-value",
     `${lines}${"x".repeat(50)}`,
   );
+});
+
+test("HighlightEditable css-highlights engine - paints tokens with no nested per-token spans", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightEditableCssHighlights);
+
+  await expect(page.getByTestId("resolved-engine")).toHaveAttribute(
+    "data-value",
+    "css-highlights",
+  );
+
+  const editor = page.locator("[contenteditable='true']");
+  // One <span> per line (reused from the DOM engine's line structure), but
+  // no nested per-token spans: tokens are painted as CSS.highlights ranges.
+  await expect(editor.locator("> span")).toHaveCount(1);
+  await expect(editor.locator("span span")).toHaveCount(0);
+
+  const keywordPainted = await page.evaluate(() => {
+    const name = [...CSS.highlights.keys()].find((key) =>
+      key.endsWith("-keyword"),
+    );
+    const highlight = name && CSS.highlights.get(name);
+    return highlight ? [...highlight].length > 0 : false;
+  });
+  expect(keywordPainted).toBe(true);
+});
+
+test("HighlightEditable css-highlights engine - unrelated lines stay connected across edits", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const lines = Array.from({ length: 5 }, (_, i) => `line ${i}`).join("\n");
+  await mount(HighlightEditableCssHighlights, {
+    props: { initialCode: lines },
+  });
+
+  const editor = page.locator("[contenteditable='true']");
+  const firstLine = editor.locator("> span").first();
+  const handle = await firstLine.elementHandle();
+
+  // Click (rather than press End, whose landing offset differs across
+  // browsers for this structure) and type from wherever the click lands --
+  // the assertion below only cares that the edit was recorded and that
+  // unrelated lines were never touched, not the exact caret offset.
+  await editor.locator("> span").last().click();
+  await page.keyboard.type("x".repeat(20));
+
+  const code = await page.getByTestId("code").getAttribute("data-value");
+  expect(code).toHaveLength(lines.length + 20);
+  expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
+});
+
+test("HighlightEditable css-highlights engine - falls back to the DOM engine without CSS.highlights", async ({
+  mount,
+  page,
+}) => {
+  // No page navigation happens between CT mounts, so deleting the API
+  // directly (rather than via an init script, which only fires on
+  // navigation) is what actually takes effect before the component reads it.
+  await page.evaluate(() => {
+    Reflect.deleteProperty(CSS, "highlights");
+  });
+
+  await mount(HighlightEditableCssHighlights);
+
+  await expect(page.getByTestId("resolved-engine")).toHaveAttribute(
+    "data-value",
+    "dom",
+  );
+  await expect(page.locator(".hljs-keyword").first()).toHaveText("const");
 });
 
 test("HighlightStream - streaming chunks (split mid-keyword and mid-template-literal) settle to Highlight's output", async ({

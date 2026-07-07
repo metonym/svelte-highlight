@@ -30,6 +30,31 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
   historyLimit?: number;
 
   /**
+   * Rendering engine. `"css-highlights"` (experimental) paints tokens via
+   * the CSS Custom Highlight API (`CSS.highlights`) over plain-text line
+   * nodes instead of wrapping them in `<span>`s, so a repaint never
+   * replaces DOM the caret could be sitting in. Falls back to `"dom"`
+   * silently where `CSS.highlights` is unavailable (Chrome 105+,
+   * Safari 17.2+, Firefox 140+); check what was actually used with the
+   * `resolvedEngine()` method.
+   *
+   * Colors only: `::highlight()` doesn't support `font-style`/
+   * `font-weight`/`text-decoration` across browsers, so bold/italic scopes
+   * render plain in this mode.
+   * @default "dom"
+   */
+  engine?: "dom" | "css-highlights";
+
+  /**
+   * Theme CSS from `svelte-highlight/styles/<theme>`, used only in
+   * `"css-highlights"` mode to generate `::highlight()` rules. Colors only
+   * (`color`/`background-color`); other declarations are dropped.
+   * @example
+   * import a11yDark from "svelte-highlight/styles/a11y-dark";
+   */
+  theme?: string;
+
+  /**
    * Color of the focus outline.
    * @default "#4589ff"
    */
@@ -110,4 +135,10 @@ export default class HighlightEditable extends SvelteComponentTyped<
 
   /** Whether a redo step is available. */
   canRedo(): boolean;
+
+  /**
+   * The engine actually in use: `engine`, or `"dom"` if `"css-highlights"`
+   * was requested but `CSS.highlights` is unavailable.
+   */
+  resolvedEngine(): "dom" | "css-highlights";
 }
