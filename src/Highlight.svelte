@@ -23,7 +23,8 @@
 
   $: {
     hljs.registerLanguage(language.name, language.register);
-    highlighted = hljs.highlight(code, { language: language.name }).value;
+    const source = typeof code === "string" ? code : String(code ?? "");
+    highlighted = hljs.highlight(source, { language: language.name }).value;
   }
 </script>
 
