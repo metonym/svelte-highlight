@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.14.1](https://github.com/metonym/svelte-highlight/releases/tag/v7.14.1) - 2026-07-06
+
+**Fixes**
+
+- revert shared highlighter implementation
+- fix published `sideEffects` globs to match the packaged file layout
+- export pure JavaScript modules with a default condition
+- preserve multi-line highlight spans in `LineNumbers`
+- size the `LineNumbers` gutter using the final line number
+- remove lookbehind regexes for older-engine compatibility
+- improve `svelte` grammar for dotted and typed rune calls
+- improve `solidity` grammar for the `mulmod` builtin
+- improve `kql` grammar for dotted hint keywords
+- improve `zig` grammar for `anyopaque` and duplicate `fn` handling
+- improve `just` grammar to emit v11 scopes for directives
+- improve `astro` grammar by anchoring frontmatter to the document start
+- improve `hcl` grammar by matching heredoc delimiters exactly
+
 ## [7.14.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.14.0) - 2026-07-02
 
 **Features**
