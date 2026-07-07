@@ -619,19 +619,15 @@
       return;
     }
     const previousCode = code;
-    // innerText keeps contenteditable line breaks that textContent drops
-    // (e.g. a browser-inserted <br> on Enter) -- but Firefox can return a
-    // stale innerText immediately after editing a text node that was last
-    // written via `textContent` (see setText in paintCssHighlights), losing
-    // the just-typed content. The css-highlights engine builds every line
-    // from a single text node with literal "\n" separators and always
-    // intercepts Enter/paste itself, so textContent is exact there and
-    // sidesteps the staleness.
-    code = (
-      resolvedEngineValue === "css-highlights"
-        ? editor.textContent
-        : editor.innerText
-    ).replace(TRAILING_NEWLINE, "");
+    // textContent (not innerText): innerText forces a synchronous layout
+    // and Firefox can return a stale value immediately after editing a text
+    // node last written via `textContent` (see setText in
+    // paintCssHighlights), losing the just-typed content. The `<pre>`
+    // wrapper's `white-space: pre` means every native text-insertion path
+    // (typing, execCommand insertText, paste/drop as plain text) already
+    // uses literal "\n" characters rather than <br> elements, so
+    // textContent loses nothing textContent would have kept anyway.
+    code = editor.textContent.replace(TRAILING_NEWLINE, "");
     internalCode = code;
     const caret = getCaretOffset() ?? code.length;
     dispatch("change", { code });
