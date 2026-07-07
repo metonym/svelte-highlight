@@ -21,6 +21,12 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     languageName?: LanguageName | (string & {});
 
     /**
+     * Accessible name for the scrollable code region.
+     * @default "Code with line numbers"
+     */
+    label?: string;
+
+    /**
      * Set to `true` to hide the border of the line numbers column.
      * @default false
      */

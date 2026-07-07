@@ -1226,6 +1226,14 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 </FileTabs>
 ```
 
+## Accessibility
+
+- **Keyboard-focusable code regions**: overflowing code containers (`Highlight`/`HighlightAuto`/`HighlightSvelte` via the shared `LangTag` wrapper, `LineNumbers`, `AnsiOutput`, `CodeWindow`) are reachable by keyboard (`tabindex="0"`, `role="region"`) and expose an accessible name through a `label` prop. Defaults: `"Code"` for the plain code wrapper and `CodeWindow` (overridden by `CodeWindow`'s `title` prop when set), `"Code with line numbers"` for `LineNumbers`, `"Terminal output"` for `AnsiOutput`.
+- **Copy announcements**: `CopyButton` includes a visually-hidden `role="status"` live region that announces `copiedText` when a copy succeeds, and an error message if it fails, since screen readers don't announce `aria-label` changes on their own.
+- **Editable labelling**: `HighlightEditable` exposes `role="textbox"` and `aria-multiline="true"`. Pass a `label` prop so the editor has an accessible name -- it isn't inferred automatically.
+- **Reduced motion**: `Typewriter` renders its animated layer as `aria-hidden`, with a visually-hidden copy of the full plain-text code so assistive tech gets stable, complete content immediately. It also honors `prefers-reduced-motion` by skipping the animation.
+- **`FileTabs`** already follows the WAI-ARIA tabs pattern (roving `tabindex`, arrow/Home/End keys, `aria-selected`) -- see [File Tabs](#file-tabs).
+
 ## Component API
 
 ### `Highlight`
@@ -1271,6 +1279,7 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 | highlightedLines   | `number[]` | `[]`           |
 | langtag            | `boolean`  | `false`        |
 | languageName       | `string`   | `"plaintext"`  |
+| label              | `string`   | `"Code with line numbers"` |
 
 `$$restProps` are forwarded to the top-level `div` element.
 
@@ -1310,17 +1319,19 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 | :------ | :--------------------------------- | :------------ |
 | variant | `"macos" \| "terminal" \| "plain"` | `"macos"`     |
 | title   | `string`                           | `""`          |
+| label   | `string`                           | `"Code"`      |
 
-`$$restProps` are forwarded to the top-level `div` element.
+`$$restProps` are forwarded to the top-level `div` element. `label` names the scrollable content region; `title`, when set, is used instead.
 
 ### `AnsiOutput`
 
 #### Props
 
-| Name         | Type      | Default value  |
-| :----------- | :-------- | :------------- |
-| text         | `string`  | N/A (required) |
-| autoContrast | `boolean` | `true`         |
+| Name         | Type      | Default value      |
+| :----------- | :-------- | :------------------ |
+| text         | `string`  | N/A (required)      |
+| autoContrast | `boolean` | `true`              |
+| label        | `string`  | `"Terminal output"` |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
@@ -1403,10 +1414,13 @@ import type { LanguageName } from "svelte-highlight";
 | language     | { name: `string`; register: hljs => `object` } | N/A (required) |
 | tabSize      | `number`                                       | `2`            |
 | historyLimit | `number`                                       | `200`          |
+| label        | `string`                                       | `undefined`    |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
 `code` supports two-way binding (`bind:code`).
+
+Pass `label` to give the editable region an accessible name (`aria-label`) -- it isn't inferred automatically, since its content is highlighted markup rather than a plain-text value.
 
 #### Methods
 

@@ -10,9 +10,18 @@
 
   /** @type {boolean} */
   export let langtag = false;
+
+  /** @type {string} */
+  export let label = "Code";
+
+  // WCAG 2.1.1 scrollable-region-focusable: a static tabindex + region role
+  // on the scrollable pre. Spread sidesteps Biome a11y rules that assume
+  // tabindex/role only ever belong on interactive elements.
+  $: regionAttrs = { tabindex: "0", role: "region", "aria-label": label };
 </script>
 
 <pre
+  {...regionAttrs}
   class:langtag={langtag}
   data-language={languageName}
   style:overflow-x="var(--overflow-x, auto)"

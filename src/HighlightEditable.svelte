@@ -11,6 +11,18 @@
   /** @type {number} Maximum number of undo snapshots retained. */
   export let historyLimit = 200;
 
+  /** @type {string | undefined} Accessible name for the editable region. */
+  export let label = undefined;
+
+  // Textbox semantics on the contenteditable element. Spread sidesteps
+  // Biome a11y rules that assume `code`/non-interactive elements can't
+  // validly carry an interactive role.
+  $: textboxAttrs = {
+    role: "textbox",
+    "aria-multiline": "true",
+    "aria-label": label,
+  };
+
   import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, onMount } from "svelte";
 
@@ -436,6 +448,9 @@
     bind:this={editor}
     class:hljs={true}
     contenteditable="true"
+    {...textboxAttrs}
+    autocapitalize="off"
+    autocorrect="off"
     spellcheck="false"
 >{code}</code></pre>
 

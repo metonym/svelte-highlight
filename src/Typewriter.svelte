@@ -28,6 +28,19 @@
 
   const EMPTY_PARTS = { head: "", tail: "" };
 
+  // Strip highlight.js markup down to plain text for the screen-reader copy.
+  // highlight.js only ever escapes `&`, `<`, and `>` in its output.
+  const TAG_RE = /<[^>]*>/g;
+  const ENTITY_RE = /&(lt|gt|amp);/g;
+  const ENTITIES = { lt: "<", gt: ">", amp: "&" };
+
+  /** @param {string} html */
+  function stripHtml(html) {
+    return html
+      .replace(TAG_RE, "")
+      .replace(ENTITY_RE, (_match, name) => ENTITIES[name]);
+  }
+
   /** @type {boolean} */
   let mounted = false;
 
@@ -213,6 +226,10 @@
       : { head: highlighted, tail: "" };
   $: showCaret = mounted && !reducedMotion && revealed < total;
 
+  // Stable, complete text for assistive tech; the animated layer is
+  // aria-hidden since it churns on every tick.
+  $: plainText = stripHtml(highlighted);
+
   onMount(() => {
     mounted = true;
 
@@ -230,7 +247,7 @@
   });
 </script>
 
-<pre {...$$restProps}><code class:hljs={true}
+<pre {...$$restProps}><code class:hljs={true} aria-hidden="true"
   ><span class="typewriter-content" bind:this={contentEl} hidden={!useUnitReveal}
     ></span
   >{#if !useUnitReveal}{@html parts.head}{#if showCaret}<span
@@ -238,9 +255,21 @@
         aria-hidden="true"
       ></span>{/if}<span class="typewriter-rest" aria-hidden="true"
       >{@html parts.tail}</span
-    >{/if}</code></pre>
+    >{/if}</code><code class="visually-hidden">{plainText}</code></pre>
 
 <style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .typewriter-rest {
     visibility: hidden;
   }

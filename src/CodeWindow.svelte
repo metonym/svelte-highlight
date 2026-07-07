@@ -4,6 +4,20 @@
 
   /** @type {string} */
   export let title = "";
+
+  /** @type {string} */
+  export let label = "Code";
+
+  $: contentLabel = title || label;
+
+  // WCAG 2.1.1 scrollable-region-focusable: a static tabindex + region role
+  // on the scrollable content. Spread sidesteps Biome a11y rules that assume
+  // tabindex/role only ever belong on interactive elements.
+  $: contentRegionAttrs = {
+    tabindex: "0",
+    role: "region",
+    "aria-label": contentLabel,
+  };
 </script>
 
 <div class="code-window {variant}" {...$$restProps}>
@@ -23,7 +37,7 @@
     {/if}
   </div>
 
-  <div class="content">
+  <div class="content" {...contentRegionAttrs}>
     <slot />
   </div>
 </div>

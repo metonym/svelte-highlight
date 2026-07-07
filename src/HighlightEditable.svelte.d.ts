@@ -30,6 +30,13 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
   historyLimit?: number;
 
   /**
+   * Accessible name for the editable region (`aria-label`). Required for the
+   * editor to have an accessible name, since its content is highlighted
+   * markup rather than a plain-text value.
+   */
+  label?: string;
+
+  /**
    * Color of the focus outline.
    * @default "#4589ff"
    */

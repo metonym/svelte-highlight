@@ -18,6 +18,7 @@
   language={typescript}
   bind:code
   tabSize={2}
+  label="Editable TypeScript example"
   --outline-color="rgb(255, 0, 0)"
   on:change={() => (changes += 1)}
   on:history={(e) => (historyState = e.detail)}
