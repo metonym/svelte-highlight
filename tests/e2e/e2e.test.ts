@@ -17,6 +17,9 @@ import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
+import HighlightStreamStability from "./HighlightStream.stability.test.svelte";
+import HighlightStreamTemplateLiteral from "./HighlightStream.templateLiteral.test.svelte";
+import HighlightStream from "./HighlightStream.test.svelte";
 import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
 import HighlightStyleNoTheme from "./HighlightStyle.noTheme.test.svelte";
 import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte";
@@ -907,6 +910,86 @@ test("HighlightEditable - handles bursts of typing on a large document within bu
     "data-value",
     `${lines}${"x".repeat(50)}`,
   );
+});
+
+test("HighlightStream - streaming chunks (split mid-keyword and mid-template-literal) settle to Highlight's output", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStream);
+
+  const appendChunk = page.getByTestId("append-chunk");
+  const highlightCount = page.getByTestId("highlight-count");
+
+  // Each chunk must trigger at least one `on:highlight`, even though bursts
+  // within a single frame coalesce into fewer highlight passes.
+  let previousCount = (await highlightCount.textContent()) ?? "0";
+  for (let sent = 1; sent <= 5; sent++) {
+    // biome-ignore lint/performance/noAwaitInLoops: each chunk's effect on-screen must be observed before the next chunk is sent
+    await appendChunk.click();
+    await expect(highlightCount).not.toHaveText(previousCount);
+    previousCount = (await highlightCount.textContent()) ?? previousCount;
+  }
+
+  await page.getByTestId("finish").click();
+
+  const stream = page.getByTestId("stream").locator("code");
+  const reference = page.getByTestId("reference").locator("code");
+  await expect(stream).toHaveText("const greet = () => `Hello, world!`;");
+  expect(await stream.innerHTML()).toBe(await reference.innerHTML());
+});
+
+test("HighlightStream - stable line elements are not recreated as more lines stream in", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamStability);
+
+  const firstLine = page
+    .getByTestId("stream")
+    .locator("[data-line='0']")
+    .first();
+  await expect(firstLine).toBeVisible();
+  const handle = await firstLine.elementHandle();
+
+  await page.getByTestId("append-lines").click();
+  await expect(page.getByTestId("stream").locator("[data-line]")).toHaveCount(
+    51,
+  );
+
+  expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
+});
+
+test("HighlightStream - closing a multi-line template literal re-tokenizes the earlier line", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamTemplateLiteral);
+
+  const secondLine = page.getByTestId("stream").locator("[data-line='1']");
+  await expect(secondLine).toHaveText("line two");
+  await expect(secondLine.locator(".hljs-string")).toHaveText("line two");
+
+  await page.getByTestId("close-template-literal").click();
+
+  await expect(secondLine).toHaveText("line two done`;");
+  await expect(secondLine.locator(".hljs-string")).toHaveText("line two done`");
+});
+
+test("HighlightStream - `done` hides the caret and fires on:done", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStream);
+
+  const stream = page.getByTestId("stream");
+  await page.getByTestId("append-chunk").click();
+  await expect(stream.locator(".highlight-stream-caret")).toBeVisible();
+  await expect(page.getByTestId("done-count")).toHaveText("0");
+
+  await page.getByTestId("finish").click();
+  await expect(stream.locator(".highlight-stream-caret")).toHaveCount(0);
+  await expect(page.getByTestId("done-count")).toHaveText("1");
 });
 
 test("Typewriter - animates then settles to the full highlighted content", async ({
