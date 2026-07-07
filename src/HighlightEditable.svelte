@@ -71,13 +71,26 @@
     return null;
   }
 
+  // Firefox's contenteditable undo manager treats a boundary set exactly at
+  // a text node's start/end (setStart/setEnd with a text node + offset)
+  // differently from the equivalent boundary expressed via the parent's
+  // child index (setStartBefore/After): after our repaint rebuilds the text
+  // node, the former leaves Firefox unable to recognize a later native
+  // undo (execCommand/Edit menu), which then silently does nothing. Prefer
+  // the parent-anchored form whenever the offset lands on a node edge.
+  function setRangeBoundary(range, side, node, offset) {
+    if (offset === 0) range[`set${side}Before`](node);
+    else if (offset === node.textContent.length) range[`set${side}After`](node);
+    else range[side === "Start" ? "setStart" : "setEnd"](node, offset);
+  }
+
   function setSelection(start, end) {
     const from = nodeAtOffset(start);
     if (!from) return;
     const range = document.createRange();
-    range.setStart(from.node, from.offset);
+    setRangeBoundary(range, "Start", from.node, from.offset);
     const to = end != null && end !== start ? nodeAtOffset(end) : null;
-    if (to) range.setEnd(to.node, to.offset);
+    if (to) setRangeBoundary(range, "End", to.node, to.offset);
     else range.collapse(true);
     const selection = window.getSelection();
     selection.removeAllRanges();
