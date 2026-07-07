@@ -17,9 +17,11 @@ async function compileForServer() {
     filename: "HighlightEditable.svelte",
   });
 
+  // Written alongside the component (not in tests/) so its relative
+  // imports (e.g. "./split-lines.js") resolve.
   const outPath = path.join(
     import.meta.dir,
-    ".tmp-highlight-editable.server.js",
+    "../src/.tmp-highlight-editable.server.js",
   );
   fs.writeFileSync(outPath, js.code);
   try {

@@ -13,6 +13,7 @@
 
   import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, onMount } from "svelte";
+  import { splitLines } from "./split-lines.js";
 
   const dispatch = createEventDispatcher();
   const TRAILING_NEWLINE = /\n$/;
@@ -24,6 +25,14 @@
   let composing = false;
   let mounted = false;
   let restoringSelection = false;
+
+  // One <span> per line, painted incrementally (see `renderLines`).
+  /** @type {HTMLSpanElement[]} */
+  let lineEls = [];
+  /** @type {number[]} Rendered (plain-text) length of each line element. */
+  let lineLengths = [];
+  /** @type {string[]} Line HTML currently reflected in `lineEls`. */
+  let renderedLines = [];
 
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
@@ -56,12 +65,8 @@
     return sel ? sel.end : null;
   }
 
-  function nodeAtOffset(offset) {
-    const walker = document.createTreeWalker(
-      editor,
-      NodeFilter.SHOW_TEXT,
-      null,
-    );
+  function nodeAtOffset(offset, root = editor) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
     let count = 0;
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       const next = count + node.textContent.length;
@@ -84,12 +89,12 @@
     else range[side === "Start" ? "setStart" : "setEnd"](node, offset);
   }
 
-  function setSelection(start, end) {
-    const from = nodeAtOffset(start);
+  function setSelection(start, end, root = editor) {
+    const from = nodeAtOffset(start, root);
     if (!from) return;
     const range = document.createRange();
     setRangeBoundary(range, "Start", from.node, from.offset);
-    const to = end != null && end !== start ? nodeAtOffset(end) : null;
+    const to = end != null && end !== start ? nodeAtOffset(end, root) : null;
     if (to) setRangeBoundary(range, "End", to.node, to.offset);
     else range.collapse(true);
     const selection = window.getSelection();
@@ -97,16 +102,93 @@
     selection.addRange(range);
   }
 
+  // Character offset (in the same space as getSelectionRange/setSelection)
+  // where line `index` starts.
+  function lineStartOffset(index) {
+    let start = index; // one "\n" separator per preceding line
+    for (let i = 0; i < index; i++) start += lineLengths[i];
+    return start;
+  }
+
+  // Patches `editor` to match `lines` (one <span> per line, joined by literal
+  // "\n" text nodes so caret offset math stays identical to a flat paint).
+  // Only lines whose HTML actually changed touch the DOM. Returns the index
+  // of the single changed line when nothing else shifted (used to scope
+  // caret restoration), or null.
+  function renderLines(lines) {
+    // Some browsers can place a native selection boundary just outside a
+    // line's <span> (e.g. Firefox collapsing a select-all there); typing at
+    // that point inserts a stray sibling text node our diffing never touches.
+    // Detect the drift by child count and self-heal with a full rebuild.
+    const expectedChildren = lineEls.length === 0 ? 0 : lineEls.length * 2 - 1;
+    if (editor.childNodes.length !== expectedChildren) {
+      editor.textContent = "";
+      lineEls = [];
+      lineLengths = [];
+      renderedLines = [];
+    }
+
+    const prevLen = lineEls.length;
+    const newLen = lines.length;
+    const commonLen = Math.min(prevLen, newLen);
+
+    let changedIndex = null;
+    let changedCount = 0;
+    for (let i = 0; i < commonLen; i++) {
+      if (renderedLines[i] === lines[i]) continue;
+      lineEls[i].innerHTML = lines[i];
+      lineLengths[i] = lineEls[i].textContent.length;
+      changedIndex = i;
+      changedCount++;
+    }
+
+    for (let i = prevLen; i < newLen; i++) {
+      if (lineEls.length > 0) editor.appendChild(document.createTextNode("\n"));
+      const span = document.createElement("span");
+      span.innerHTML = lines[i];
+      editor.appendChild(span);
+      lineEls.push(span);
+      lineLengths.push(span.textContent.length);
+    }
+
+    while (lineEls.length > newLen) {
+      editor.removeChild(lineEls.pop());
+      lineLengths.pop();
+      // Drop the separator that used to precede the removed line.
+      if (lineEls.length > 0) editor.removeChild(editor.lastChild);
+    }
+
+    renderedLines = lines;
+    return prevLen === newLen && changedCount === 1 ? changedIndex : null;
+  }
+
   function paint() {
     const html = hljs.highlight(code, { language: language.name }).value;
     // Trailing empty line needs a phantom `\n` for caret placement.
-    editor.innerHTML = code === "" || code.endsWith("\n") ? `${html}\n` : html;
+    const paintHtml =
+      code === "" || code.endsWith("\n") ? `${html}\n` : html;
+    return renderLines(splitLines(paintHtml));
   }
 
   function renderAt(start, end) {
-    paint();
+    const changedIndex = paint();
     if (start == null) return;
     restoringSelection = true;
+    if (changedIndex != null) {
+      const lineStart = lineStartOffset(changedIndex);
+      const lineEnd = lineStart + lineLengths[changedIndex];
+      const inLine = (offset) =>
+        offset == null || (offset >= lineStart && offset <= lineEnd);
+      if (start >= lineStart && start <= lineEnd && inLine(end)) {
+        setSelection(
+          start - lineStart,
+          end == null ? end : end - lineStart,
+          lineEls[changedIndex],
+        );
+        restoringSelection = false;
+        return;
+      }
+    }
     setSelection(start, end);
     restoringSelection = false;
   }
