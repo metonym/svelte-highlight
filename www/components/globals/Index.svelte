@@ -11,6 +11,8 @@
   import FileTabs from "@components/FileTabs.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
+  import HighlightStreamBasic from "@components/HighlightStream/Basic.svelte";
+  import HighlightStreamControls from "@components/HighlightStream/Controls.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
   import ContainerStyle from "@components/LineNumbers/ContainerStyle.svelte";
   import FocusLines from "@components/LineNumbers/FocusLines.svelte";
@@ -516,6 +518,56 @@
     />
   </Column>
   <Column xlg={10} lg={10} md={12}> <TypewriterControls /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Streaming</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Rendering LLM chat output is the dominant new syntax-highlighting use
+      case: code arrives in arbitrary-sized chunks, mid-token and mid-line, and
+      you don't know the full content up front.
+      <code class="code">HighlightStream</code>
+      is built for that—unlike <code class="code">Typewriter</code>, which
+      animates a complete, already-highlighted string, it accepts a growing
+      <code class="code">code</code>
+      buffer and re-highlights it as chunks arrive.
+    </p>
+    <p class="mb-5">
+      Append to <code class="code">code</code> as chunks come in; set
+      <code class="code">done</code>
+      once the stream ends. A blinking caret marks the end of output while
+      <code class="code">!done</code>; finishing hides it and performs one final
+      full highlight, so the output matches what
+      <code class="code">Highlight</code>
+      would render for the same code.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightStreamBasic /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Already-rendered lines are diffed and left untouched in the DOM—only lines
+      whose content actually changed are repainted, so a fast-streaming response
+      only touches its changed suffix. An open multi-line construct—an
+      unterminated template literal or block comment—re-tokenizes the lines it
+      spans once the closing delimiter arrives, with no special-casing needed.
+    </p>
+    <p class="mb-5">
+      Set <code class="code">autoScroll</code> to keep the container pinned to
+      the bottom as output grows. It stops as soon as you scroll up, and resumes
+      once you scroll back down. Customize the caret with the same
+      <code class="code">--caret-*</code>
+      variables as <code class="code">Typewriter</code>.
+    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="info"
+      title="Performance"
+      subtitle="O(buffer) per highlighted frame, DOM updates proportional to changed lines—fine for chat-sized output up to a few thousand lines, not a virtualized log viewer."
+    />
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightStreamControls /> </Column>
 </Row>
 
 <Row class="mb-9">
