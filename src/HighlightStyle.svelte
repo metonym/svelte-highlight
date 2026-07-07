@@ -1,31 +1,29 @@
 <script context="module">
+  import { writable } from "svelte/store";
+
   const isBrowser = typeof document !== "undefined";
 
-  /** @type {Map<string, number>} */
-  const refCounts = new Map();
+  // Instances sharing a key queue up in registration order; only the oldest
+  // still-mounted instance renders the `<style>`. A store (rather than a
+  // plain ref count) means that when that instance unmounts, the remaining
+  // subscribers reactively re-derive a new owner instead of the tag being
+  // dropped while siblings still need it.
+  /** @type {Map<string, import("svelte/store").Writable<symbol[]>>} */
+  const registries = new Map();
 
   /** @param {string} key */
-  function acquire(key) {
-    if (!isBrowser) return true;
-    const count = refCounts.get(key) ?? 0;
-    refCounts.set(key, count + 1);
-    return count === 0;
-  }
-
-  /** @param {string | undefined} key */
-  function release(key) {
-    if (!isBrowser || key === undefined) return;
-    const count = refCounts.get(key) ?? 0;
-    if (count <= 1) {
-      refCounts.delete(key);
-    } else {
-      refCounts.set(key, count - 1);
+  function registryFor(key) {
+    let registry = registries.get(key);
+    if (!registry) {
+      registry = writable([]);
+      registries.set(key, registry);
     }
+    return registry;
   }
 </script>
 
 <script>
-  import { onMount } from "svelte";
+  import { onDestroy } from "svelte";
   import { dualStyle, scopeClassFor, scopeStyle } from "./scoped.js";
 
   /**
@@ -71,19 +69,29 @@
       : scopeStyle(theme, scopeClass)
     : "";
 
+  const token = Symbol();
   let registeredKey;
-  let shouldRender = false;
+  /** @type {import("svelte/store").Writable<symbol[]> | undefined} */
+  let registry;
+
+  function unregister() {
+    registry?.update((owners) => owners.filter((owner) => owner !== token));
+  }
 
   $: {
     const key = style ? `${scopeClass}::${style}` : undefined;
     if (key !== registeredKey) {
-      release(registeredKey);
+      unregister();
       registeredKey = key;
-      shouldRender = key !== undefined && acquire(key);
+      registry = isBrowser && key !== undefined ? registryFor(key) : undefined;
+      registry?.update((owners) => [...owners, token]);
     }
   }
 
-  onMount(() => () => release(registeredKey));
+  $: owners = $registry ?? [];
+  $: shouldRender = !isBrowser || owners[0] === token;
+
+  onDestroy(unregister);
 </script>
 
 <svelte:head
