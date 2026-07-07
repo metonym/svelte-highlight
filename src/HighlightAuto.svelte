@@ -30,7 +30,7 @@
   });
 
   $: ({ value: highlighted, language = "" } = hljs.highlightAuto(
-    code,
+    typeof code === "string" ? code : String(code ?? ""),
     languageNames,
   ));
 </script>

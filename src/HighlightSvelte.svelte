@@ -22,7 +22,8 @@
 
   $: {
     hljs.registerLanguage(svelte.name, svelte.register);
-    highlighted = hljs.highlight(code, { language: svelte.name }).value;
+    const source = typeof code === "string" ? code : String(code ?? "");
+    highlighted = hljs.highlight(source, { language: svelte.name }).value;
   }
 </script>
 
