@@ -15,6 +15,13 @@ export type CodeWindowProps = HTMLAttributes<HTMLDivElement> & {
   title?: string;
 
   /**
+   * Accessible name for the scrollable content region. Overridden by `title`
+   * when set.
+   * @default "Code"
+   */
+  label?: string;
+
+  /**
    * Window body background.
    * @default "#1e1e1e"
    */

@@ -14,6 +14,12 @@ export type AnsiOutputProps = HTMLAttributes<HTMLPreElement> & {
   autoContrast?: boolean;
 
   /**
+   * Accessible name for the scrollable output region.
+   * @default "Terminal output"
+   */
+  label?: string;
+
+  /**
    * Output block padding.
    * @default "1em"
    */

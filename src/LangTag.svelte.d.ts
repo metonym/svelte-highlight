@@ -20,6 +20,12 @@ export type LangTagProps = HTMLAttributes<HTMLPreElement> &
      * @default "plaintext"
      */
     languageName?: LanguageName | (string & {});
+
+    /**
+     * Accessible name for the scrollable code region.
+     * @default "Code"
+     */
+    label?: string;
   };
 
 export type LangTagEvents = {};

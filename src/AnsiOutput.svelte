@@ -8,6 +8,14 @@
    */
   export let autoContrast = true;
 
+  /** @type {string} */
+  export let label = "Terminal output";
+
+  // WCAG 2.1.1 scrollable-region-focusable: a static tabindex + region role
+  // on the scrollable pre. Spread sidesteps Biome a11y rules that assume
+  // tabindex/role only ever belong on interactive elements.
+  $: regionAttrs = { tabindex: "0", role: "region", "aria-label": label };
+
   import { parseAnsi } from "./ansi.js";
 
   // Default foreground and minimum WCAG contrast ratio against backgrounds.
@@ -154,7 +162,7 @@
   }));
 </script>
 
-<pre class="ansi" {...$$restProps}><code
+<pre class="ansi" {...regionAttrs} {...$$restProps}><code
     >{#each segments as segment}{#if segment.link}<a href={segment.link} rel="noopener noreferrer" class={segment.class} style={segment.style}
         >{segment.text}</a
       >{:else}<span class={segment.class} style={segment.style}
