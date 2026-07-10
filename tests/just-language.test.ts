@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import just from "../src/languages/just";
 
-hljs.registerLanguage(just.name, just.register);
+const registry = createRegistry();
+
+registry.register(just.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "just" }).value;
+  registry.highlight(code, { language: "just" }).value;
 
 test("just highlights a recipe with dependencies", () => {
   const result = highlight("test: build\n    cargo test");

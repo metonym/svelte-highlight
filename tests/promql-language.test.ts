@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import promql from "../src/languages/promql";
 
-hljs.registerLanguage(promql.name, promql.register);
+const registry = createRegistry();
+
+registry.register(promql.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "promql" }).value;
+  registry.highlight(code, { language: "promql" }).value;
 
 test("promql highlights functions and aggregators", () => {
   const result = highlight("sum(rate(x[5m]))");

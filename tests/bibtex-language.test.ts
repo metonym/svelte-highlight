@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import bibtex from "../src/languages/bibtex";
 
-hljs.registerLanguage(bibtex.name, bibtex.register);
+const registry = createRegistry();
+
+registry.register(bibtex.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "bibtex" }).value;
+  registry.highlight(code, { language: "bibtex" }).value;
 
 test("bibtex highlights entry types as keywords", () => {
   const result = highlight("@article{key, year = 2020}");

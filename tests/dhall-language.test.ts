@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import dhall from "../src/languages/dhall";
 
-hljs.registerLanguage(dhall.name, dhall.register);
+const registry = createRegistry();
+
+registry.register(dhall.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "dhall" }).value;
+  registry.highlight(code, { language: "dhall" }).value;
 
 test("dhall highlights let/in keywords", () => {
   const result = highlight("let x = 1 in x");

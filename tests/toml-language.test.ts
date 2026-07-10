@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import toml from "../src/languages/toml";
 
-hljs.registerLanguage(toml.name, toml.register);
+const registry = createRegistry();
+
+registry.register(toml.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "toml" }).value;
+  registry.highlight(code, { language: "toml" }).value;
 
 test("toml highlights tables and array-of-tables", () => {
   const result = highlight("[server]\n\n[[products]]");

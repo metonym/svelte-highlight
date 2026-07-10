@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import rst from "../src/languages/rst";
 
-hljs.registerLanguage(rst.name, rst.register);
+const registry = createRegistry();
+
+registry.register(rst.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "rst" }).value;
+  registry.highlight(code, { language: "rst" }).value;
 
 test("rst highlights section title underlines", () => {
   const result = highlight("Title\n=====\n\nBody text.");

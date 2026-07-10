@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import prisma from "../src/languages/prisma";
 
-hljs.registerLanguage(prisma.name, prisma.register);
+const registry = createRegistry();
+
+registry.register(prisma.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "prisma" }).value;
+  registry.highlight(code, { language: "prisma" }).value;
 
 test("prisma highlights block keywords and names", () => {
   const result = highlight("model User {\n  id Int\n}");

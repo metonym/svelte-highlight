@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import logql from "../src/languages/logql";
 
-hljs.registerLanguage(logql.name, logql.register);
+const registry = createRegistry();
+
+registry.register(logql.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "logql" }).value;
+  registry.highlight(code, { language: "logql" }).value;
 
 test("logql highlights stream selector label matchers", () => {
   const result = highlight('{job="app", env=~"prod|staging"}');

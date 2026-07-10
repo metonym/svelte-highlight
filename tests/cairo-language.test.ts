@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import cairo from "../src/languages/cairo";
 
-hljs.registerLanguage(cairo.name, cairo.register);
+const registry = createRegistry();
+
+registry.register(cairo.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "cairo" }).value;
+  registry.highlight(code, { language: "cairo" }).value;
 
 test("cairo highlights fn declarations", () => {
   const result = highlight("fn main() {}");

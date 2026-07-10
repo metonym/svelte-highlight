@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import hcl from "../src/languages/hcl";
 
-hljs.registerLanguage(hcl.name, hcl.register);
+const registry = createRegistry();
+
+registry.register(hcl.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "hcl" }).value;
+  registry.highlight(code, { language: "hcl" }).value;
 
 test("hcl highlights block type keywords", () => {
   const result = highlight(`resource "aws_instance" "web" {}`);

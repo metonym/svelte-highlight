@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import caddy from "../src/languages/caddy";
 
-hljs.registerLanguage(caddy.name, caddy.register);
+const registry = createRegistry();
+
+registry.register(caddy.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "caddy" }).value;
+  registry.highlight(code, { language: "caddy" }).value;
 
 test("caddy highlights directives", () => {
   const result = highlight("example.com {\n\treverse_proxy localhost:8080\n}");

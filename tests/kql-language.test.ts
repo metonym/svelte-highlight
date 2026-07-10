@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import kql from "../src/languages/kql";
 
-hljs.registerLanguage(kql.name, kql.register);
+const registry = createRegistry();
+
+registry.register(kql.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "kql" }).value;
+  registry.highlight(code, { language: "kql" }).value;
 
 test("kql highlights tabular operators and the pipe", () => {
   const result = highlight(

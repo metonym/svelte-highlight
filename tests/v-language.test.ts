@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import v from "../src/languages/v";
 
-hljs.registerLanguage(v.name, v.register);
+const registry = createRegistry();
+
+registry.register(v.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "v" }).value;
+  registry.highlight(code, { language: "v" }).value;
 
 test("v highlights fn declarations", () => {
   const result = highlight("fn main() {}");

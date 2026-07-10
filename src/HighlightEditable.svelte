@@ -37,12 +37,16 @@
    */
   export let theme = undefined;
 
-  import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, onMount } from "svelte";
+  import { renderHtml, toRanges } from "./engine.js";
   import { highlightRules } from "./highlight-theme.js";
+  import {
+    parseIncremental,
+    reparseIncremental,
+  } from "./incremental-tokenize.js";
+  import { ensureRegistered, registry } from "./registry.js";
   import { splitLines } from "./split-lines.js";
   import { diffText } from "./text-diff.js";
-  import { tokenize } from "./token-ranges.js";
 
   const dispatch = createEventDispatcher();
   const TRAILING_NEWLINE = /\n$/;
@@ -67,6 +71,18 @@
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
 
+  // Incremental re-tokenize via incremental-tokenize.js; reuses tail on
+  // convergence. getEvents() full-parses on first call and language change.
+  /** @type {import("./incremental-tokenize.js").IncrementalParse | undefined} */
+  let incrementalParse;
+
+  function getEvents() {
+    incrementalParse = incrementalParse
+      ? reparseIncremental(registry, language.name, incrementalParse, code)
+      : parseIncremental(registry, language.name, code);
+    return incrementalParse.events;
+  }
+
   $: resolvedEngineValue =
     engine === "css-highlights" &&
     typeof CSS !== "undefined" &&
@@ -77,7 +93,7 @@
   let previousLanguageName;
   let previousEngine;
   $: {
-    hljs.registerLanguage(language.name, language.register);
+    ensureRegistered(language);
     if (
       mounted &&
       (language.name !== previousLanguageName ||
@@ -282,7 +298,7 @@
 
   function paintCssHighlights() {
     const changedIndex = renderLines(code.split("\n"), setText);
-    const tokenRanges = tokenize(code, language.name);
+    const tokenRanges = toRanges(getEvents());
 
     if (changedIndex == null) {
       for (let i = 0; i < lineEls.length; i++) {
@@ -296,7 +312,7 @@
 
   function paint() {
     if (resolvedEngineValue === "css-highlights") return paintCssHighlights();
-    const html = hljs.highlight(code, { language: language.name }).value;
+    const html = renderHtml(getEvents());
     // Trailing empty line needs a phantom `\n` for caret placement.
     const paintHtml = code === "" || code.endsWith("\n") ? `${html}\n` : html;
     return renderLines(splitLines(paintHtml), setHtml);

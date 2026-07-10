@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import jq from "../src/languages/jq";
 
-hljs.registerLanguage(jq.name, jq.register);
+const registry = createRegistry();
+
+registry.register(jq.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "jq" }).value;
+  registry.highlight(code, { language: "jq" }).value;
 
 test("jq highlights field access and the pipe operator", () => {
   const result = highlight(".users | map(select(.active)) | length");

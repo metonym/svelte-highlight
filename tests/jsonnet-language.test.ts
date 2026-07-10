@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import jsonnet from "../src/languages/jsonnet";
 
-hljs.registerLanguage(jsonnet.name, jsonnet.register);
+const registry = createRegistry();
+
+registry.register(jsonnet.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "jsonnet" }).value;
+  registry.highlight(code, { language: "jsonnet" }).value;
 
 test("jsonnet highlights local function declarations", () => {
   const result = highlight("local f(x) = x;");

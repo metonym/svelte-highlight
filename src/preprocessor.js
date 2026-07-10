@@ -1,8 +1,8 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import hljs from "highlight.js/lib/core";
 import MagicString from "magic-string";
 import { parse } from "svelte/compiler";
+import { ensureRegistered, registry } from "./registry.js";
 
 // Bare specifiers resolve via this package's own subpath exports (Node self-reference).
 // Relative paths are only for this repo's own internal dev/testing.
@@ -242,10 +242,8 @@ function escapeSvelteBraces(html) {
  * @param {string} code
  */
 function renderStatic(language, code) {
-  if (!hljs.getLanguage(language.name)) {
-    hljs.registerLanguage(language.name, language.register);
-  }
-  const { value } = hljs.highlight(code, { language: language.name });
+  ensureRegistered(language);
+  const { value } = registry.highlight(code, { language: language.name });
   return escapeSvelteBraces(
     `<pre class="hljs" data-language="${escapeAttribute(language.name)}" ` +
       `style="overflow-x:var(--overflow-x, auto);overflow-y:var(--overflow-y, auto);` +

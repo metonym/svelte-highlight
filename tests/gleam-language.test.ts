@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import gleam from "../src/languages/gleam";
 
-hljs.registerLanguage(gleam.name, gleam.register);
+const registry = createRegistry();
+
+registry.register(gleam.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "gleam" }).value;
+  registry.highlight(code, { language: "gleam" }).value;
 
 test("gleam highlights keywords", () => {
   const result = highlight("pub fn main() {\n  let x = 0\n}");

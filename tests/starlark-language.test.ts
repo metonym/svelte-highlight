@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import starlark from "../src/languages/starlark";
 
-hljs.registerLanguage(starlark.name, starlark.register);
+const registry = createRegistry();
+
+registry.register(starlark.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "starlark" }).value;
+  registry.highlight(code, { language: "starlark" }).value;
 
 test("starlark highlights def declarations", () => {
   const result = highlight("def my_rule(name):\n    pass");

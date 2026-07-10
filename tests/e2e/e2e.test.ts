@@ -1003,20 +1003,30 @@ test("HighlightStream - streaming chunks (split mid-keyword and mid-template-lit
 
   const appendChunk = page.getByTestId("append-chunk");
   const highlightCount = page.getByTestId("highlight-count");
+  const stream = page.getByTestId("stream").locator("code");
 
   // Each chunk must trigger at least one `on:highlight`, even though bursts
-  // within a single frame coalesce into fewer highlight passes.
+  // within a single frame coalesce into fewer highlight passes. The chunks
+  // (see HighlightStream.test.svelte) never contain a newline until the
+  // stream finishes, so the visible text growing after every chunk -  not
+  // just once at the end - also guards against a provisional render that
+  // only shows *complete lines*: an in-progress line would otherwise stay
+  // invisible until its "\n" arrives instead of updating as chunks stream
+  // in (see CHANGELOG for the regression this caught).
   let previousCount = (await highlightCount.textContent()) ?? "0";
+  let previousLength = 0;
   for (let sent = 1; sent <= 5; sent++) {
     // biome-ignore lint/performance/noAwaitInLoops: each chunk's effect on-screen must be observed before the next chunk is sent
     await appendChunk.click();
     await expect(highlightCount).not.toHaveText(previousCount);
     previousCount = (await highlightCount.textContent()) ?? previousCount;
+    const text = (await stream.textContent()) ?? "";
+    expect(text.length).toBeGreaterThan(previousLength);
+    previousLength = text.length;
   }
 
   await page.getByTestId("finish").click();
 
-  const stream = page.getByTestId("stream").locator("code");
   const reference = page.getByTestId("reference").locator("code");
   await expect(stream).toHaveText("const greet = () => `Hello, world!`;");
   expect(await stream.innerHTML()).toBe(await reference.innerHTML());

@@ -1,8 +1,6 @@
-import hljs from "highlight.js/lib/core";
 import type { LanguageType } from "svelte-highlight";
+import { createRegistry } from "../src/engine.js";
 import * as languages from "../src/languages";
-
-const STRIP_RELEVANCE_SCORE = /\|\d+$/;
 
 // A grammar with no keyword table (diff, json, markdown, ...) relies entirely
 // on its `contains` rules, so it's probed with generic literal syntax instead.
@@ -20,34 +18,16 @@ const SAMPLE_PREFIXES: Record<string, string> = {
   "erlang-repl": "1> ",
 };
 
-function extractKeywords(compiledKeywords: unknown): string[] {
-  if (!compiledKeywords) return [];
-
-  if (typeof compiledKeywords === "string") {
-    return compiledKeywords.split(/\s+/).filter(Boolean);
-  }
-
-  if (Array.isArray(compiledKeywords)) {
-    return compiledKeywords.map(String);
-  }
-
-  const tokens: string[] = [];
-
-  for (const [category, value] of Object.entries(
-    compiledKeywords as Record<string, unknown>,
-  )) {
-    // `$pattern` configures the identifier regex, not a keyword list.
-    if (category === "$pattern") continue;
-
-    const list = typeof value === "string" ? value.split(/\s+/) : value;
-    if (!Array.isArray(list)) continue;
-
-    for (const token of list) {
-      tokens.push(String(token).replace(STRIP_RELEVANCE_SCORE, ""));
-    }
-  }
-
-  return tokens;
+// The IR's root state (states[0], the top-level language definition - see
+// convertLanguage's initial `visit(language)` call) stores the grammar's own
+// keyword table pre-parsed (word -> [kind, relevance]), the same table
+// `hljs.getLanguage(name).keywords` exposed before. Deeper states can carry
+// their own highly contextual keyword tables (e.g. hljs's html grammar
+// matches "style"/"script" as tag names only inside an opening tag); those
+// aren't representative standalone samples, so only the root table is used.
+function extractKeywords(language: LanguageType<string>): string[] {
+  const rootKeywords = language.register.states[0]?.keywords;
+  return rootKeywords ? Object.keys(rootKeywords) : [];
 }
 
 // The grammar's own compiled keyword table doubles as a canonical sample:
@@ -64,17 +44,18 @@ const sortedLanguages = (
   Object.values(languages) as LanguageType<string>[]
 ).sort((a, b) => a.name.localeCompare(b.name));
 
+const registry = createRegistry();
+for (const language of sortedLanguages) registry.register(language.register);
+
 for (const language of sortedLanguages) {
   test(`golden snapshot: ${language.name}`, () => {
-    hljs.registerLanguage(language.name, language.register);
-
-    const compiled = hljs.getLanguage(language.name);
-    const keywords = extractKeywords(compiled?.keywords);
+    const keywords = extractKeywords(language);
     const sample = buildCanonicalSample(language.name, keywords);
 
-    const result = hljs.highlight(sample, {
+    // The engine's render path always ignores `illegal` (matches hljs's
+    // ignoreIllegals: true default; see src/engine.js).
+    const result = registry.highlight(sample, {
       language: language.name,
-      ignoreIllegals: true,
     }).value;
 
     // Hard gate: if the grammar declares keywords, highlighting a sample

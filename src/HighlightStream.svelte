@@ -28,8 +28,9 @@
    */
   export let autoScroll = false;
 
-  import hljs from "highlight.js/lib/core";
   import { createEventDispatcher, onMount, tick } from "svelte";
+  import { extendLines } from "./engine.js";
+  import { ensureRegistered, registry } from "./registry.js";
   import { splitLines } from "./split-lines.js";
 
   const dispatch = createEventDispatcher();
@@ -56,10 +57,83 @@
   // Stick to bottom until the user scrolls away from it.
   let stickToBottom = true;
 
+  /** @type {ReturnType<typeof registry.createSession> | undefined} */
+  let session;
+  let sessionLanguageName = "";
+  // Prefix of `code` already fed to `session`. If `code` stops starting with
+  // this, treat it as a restart (new stream or language change).
+  let fedCode = "";
+
+  // Incremental line rendering via extendLines. finalizedLines is append-only;
+  // the keyed each-block below does not touch completed lines on repaint.
+  /** @type {string[]} */
+  let finalizedLines = [];
+  let finalizedPendingHtml = "";
+  /** @type {string[]} */
+  let finalizedOpenScopes = [];
+  let renderedCommittedCount = 0;
+
+  function ensureSession() {
+    if (
+      session &&
+      sessionLanguageName === language.name &&
+      code.startsWith(fedCode)
+    ) {
+      return;
+    }
+    ensureRegistered(language);
+    session = registry.createSession(language.name);
+    sessionLanguageName = language.name;
+    fedCode = "";
+    finalizedLines = [];
+    finalizedPendingHtml = "";
+    finalizedOpenScopes = [];
+    renderedCommittedCount = 0;
+  }
+
   function repaint() {
-    hljs.registerLanguage(language.name, language.register);
-    highlighted = hljs.highlight(code, { language: language.name }).value;
-    lines = splitLines(highlighted);
+    ensureSession();
+    if (code.length > fedCode.length) {
+      session.append(code.slice(fedCode.length));
+      fedCode = code;
+    }
+
+    if (done) {
+      // Full re-parse for multi-line lookahead (heredocs, etc.).
+      highlighted = session.finish({ canonicalize: true }).value;
+      lines = splitLines(highlighted);
+    } else {
+      // Newly committed events (append only tokenizes complete lines).
+      const committed = session.events();
+      if (committed.length > renderedCommittedCount) {
+        const result = extendLines(
+          committed.slice(renderedCommittedCount),
+          finalizedOpenScopes,
+          finalizedPendingHtml,
+        );
+        finalizedLines = [...finalizedLines, ...result.completedLines];
+        finalizedPendingHtml = result.pendingHtml;
+        finalizedOpenScopes = result.openScopes;
+        renderedCommittedCount = committed.length;
+      }
+
+      // Staged tail: current line still streaming in, not newline-terminated.
+      const snapshot = session.snapshot();
+      let previewLines = [finalizedPendingHtml];
+      if (snapshot.pos < fedCode.length) {
+        const preview = registry.resume(fedCode, sessionLanguageName, snapshot);
+        const result = extendLines(
+          preview.events,
+          finalizedOpenScopes,
+          finalizedPendingHtml,
+        );
+        previewLines = [...result.completedLines, result.pendingHtml];
+      }
+
+      lines = [...finalizedLines, ...previewLines];
+      highlighted = lines.join("\n");
+    }
+
     dispatch("highlight", { highlighted });
 
     if (autoScroll) {
@@ -87,9 +161,7 @@
     }
   }
 
-  // Coalesce a burst of chunks within one frame into a single highlight
-  // pass; the tab going hidden just pauses the (already-scheduled) frame
-  // rather than queuing more work.
+  // Coalesce chunk bursts into one highlight pass per frame.
   function scheduleRepaint() {
     if (frame != null) return;
     frame = requestAnimationFrame(() => {
@@ -105,8 +177,7 @@
       doneDispatched = false;
       scheduleRepaint();
     } else {
-      // SSR / first paint before mount, and the final full highlight once
-      // the stream finishes: both render synchronously, no rAF involved.
+      // SSR, pre-mount, and final done pass: synchronous, no rAF.
       cancelFrame();
       repaint();
       if (mounted && !doneDispatched) {

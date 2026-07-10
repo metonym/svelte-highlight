@@ -756,61 +756,60 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 
 ## Custom Language
 
-For custom language highlighting, pass a `name` and `register` function to the language prop.
+A `language` is `{ name, register }`, where `register` is a plain-JSON grammar — the same format every `svelte-highlight/languages/*` module ships, produced by converting an [hljs-format grammar](https://highlightjs.readthedocs.io/en/latest/language-guide.html) at build time.
 
-Refer to the highlight.js [language definition guide](https://highlightjs.readthedocs.io/en/latest/language-guide.html) for guidance.
+The easiest way to author one is with `svelte-highlight/compat`'s `fromHighlightJs`: write your grammar exactly as the hljs guide describes (a `register(hljs)` function returning a mode object), and convert it at runtime — no build step, no bundled hljs code.
 
 ```svelte
 <script>
   import { Highlight } from "svelte-highlight";
-  import hljs from "highlight.js";
+  import { fromHighlightJs } from "svelte-highlight/compat";
 
-  const language = {
-    name: "custom-language",
-    register: (hljs) => {
-      return {
-        /** custom language rules */
-        contains: [],
-      };
-    },
-  };
+  function defineCustomLanguage(hljs) {
+    return {
+      /** custom language rules */
+      contains: [],
+    };
+  }
+
+  const languagePromise = fromHighlightJs("custom-language", defineCustomLanguage);
 </script>
 
-<Highlight {language} code="..." />
+{#await languagePromise then language}
+  <Highlight {language} code="..." />
+{/await}
 ```
+
+`fromHighlightJs` needs `highlight.js` itself, which svelte-highlight does not bundle — install it as your own dependency (`npm install highlight.js`). It's only imported the first time you call `fromHighlightJs`, so pages that never use it don't pay for it.
 
 If you're using TypeScript, use the `LanguageType` interface to type the language.
 
 ```ts
 import type { LanguageType } from "svelte-highlight";
+import { fromHighlightJs } from "svelte-highlight/compat";
 
-const language: LanguageType<"custom-language"> = {
-  name: "custom-language",
-  register: (hljs) => {
-    return {
-      /** custom language rules */
-      contains: [],
-    };
-  },
-};
+const language: LanguageType<"custom-language"> = await fromHighlightJs(
+  "custom-language",
+  (hljs) => ({ contains: [] }),
+);
 ```
+
+Building a package for others to install? Ship the converted grammar directly instead of calling `fromHighlightJs` at runtime — see [`scripts/convert-grammars.ts`](scripts/convert-grammars.ts) for the converter this package's own bundled languages go through.
 
 ## Custom Plugin
 
-Additional plugin languages can be installed and used separately.
+Third-party hljs language plugins work the same way: pass their `register(hljs)` export to `fromHighlightJs`.
 
 This example uses the [`cURL` language plugin](https://github.com/highlightjs/highlightjs-curl).
 
 ```svelte
 <script>
   import { Highlight } from "svelte-highlight";
+  import { fromHighlightJs } from "svelte-highlight/compat";
   import curl from "highlightjs-curl";
   import github from "svelte-highlight/styles/github";
 
-  const language = {
-    name: "curl", // Language name displayed in the langtag
-    register: curl,
-  };
+  const languagePromise = fromHighlightJs("curl", curl);
 
   const code = `curl -X POST "https://api.example.com/data" \\
      -H "Content-Type: application/json" \\
@@ -821,7 +820,9 @@ This example uses the [`cURL` language plugin](https://github.com/highlightjs/hi
   {@html github}
 </svelte:head>
 
-<Highlight {language} {code} />
+{#await languagePromise then language}
+  <Highlight {language} {code} />
+{/await}
 ```
 
 ## Code-splitting
@@ -1303,7 +1304,7 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 | Name     | Type                                           | Default value  |
 | :------- | :--------------------------------------------- | :------------- |
 | code     | `any`                                          | N/A (required) |
-| language | { name: `string`; register: hljs => `object` } | N/A (required) |
+| language | { name: `string`; register: `object` } | N/A (required) |
 | langtag  | `boolean`                                      | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
@@ -1468,7 +1469,7 @@ import type { LanguageName } from "svelte-highlight";
 | Name         | Type                                           | Default value  |
 | :----------- | :--------------------------------------------- | :------------- |
 | code         | `string`                                       | `""`           |
-| language     | { name: `string`; register: hljs => `object` } | N/A (required) |
+| language     | { name: `string`; register: `object` } | N/A (required) |
 | tabSize      | `number`                                       | `2`            |
 | historyLimit | `number`                                       | `200`          |
 
@@ -1502,7 +1503,7 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
 | Name       | Type                                           | Default value  |
 | :--------- | :--------------------------------------------- | :------------- |
 | code       | `string`                                       | `""`           |
-| language   | { name: `string`; register: hljs => `object` } | N/A (required) |
+| language   | { name: `string`; register: `object` } | N/A (required) |
 | done       | `boolean`                                      | `false`        |
 | caret      | `boolean`                                      | `true`         |
 | autoScroll | `boolean`                                      | `false`        |
@@ -1587,6 +1588,8 @@ By default, example set-ups use Svelte 5. The exception is `examples/vite@svelte
 ## License
 
 [MIT](LICENSE)
+
+Grammars and themes are derived from [highlight.js](https://github.com/highlightjs/highlight.js), used under its [BSD-3-Clause license](LICENSE.highlight.txt). The highlighting engine itself is original code under this package's MIT license — no highlight.js source is included in it.
 
 [npm]: https://img.shields.io/npm/v/svelte-highlight.svg?style=for-the-badge&color=%23ff3e00
 [npm-url]: https://npmjs.com/package/svelte-highlight

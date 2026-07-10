@@ -1,6 +1,8 @@
-import hljs from "highlight.js/lib/core";
 import html from "svelte-highlight/languages/html";
+import { createRegistry, registerAll } from "../src/engine.js";
 import svelte from "../src/languages/svelte";
+
+const registry = createRegistry();
 
 const embeddedBlocksSnippet = `<script>
   let count = 0;
@@ -89,9 +91,9 @@ const declarationTagsSnippet = `<script lang="ts">
 {/each}`;
 
 test("svelte highlights embedded JavaScript, CSS, and expressions", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(embeddedBlocksSnippet, {
+  const result = registry.highlight(embeddedBlocksSnippet, {
     language: "svelte",
   }).value;
 
@@ -103,9 +105,11 @@ test("svelte highlights embedded JavaScript, CSS, and expressions", () => {
 });
 
 test("svelte highlights markup, directives, and block syntax", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(markupSnippet, { language: "svelte" }).value;
+  const result = registry.highlight(markupSnippet, {
+    language: "svelte",
+  }).value;
 
   expect(result).toContain("hljs-tag");
   expect(result).toContain("hljs-variable");
@@ -113,9 +117,9 @@ test("svelte highlights markup, directives, and block syntax", () => {
 });
 
 test("svelte highlights TypeScript script blocks", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(typescriptSnippet, {
+  const result = registry.highlight(typescriptSnippet, {
     language: "svelte",
   }).value;
 
@@ -124,9 +128,9 @@ test("svelte highlights TypeScript script blocks", () => {
 });
 
 test("svelte highlights module TypeScript script blocks", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(moduleTypescriptSnippet, {
+  const result = registry.highlight(moduleTypescriptSnippet, {
     language: "svelte",
   }).value;
 
@@ -135,9 +139,9 @@ test("svelte highlights module TypeScript script blocks", () => {
 });
 
 test('svelte highlights script blocks with lang="typescript"', () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(langTypescriptSnippet, {
+  const result = registry.highlight(langTypescriptSnippet, {
     language: "svelte",
   }).value;
 
@@ -146,9 +150,9 @@ test('svelte highlights script blocks with lang="typescript"', () => {
 });
 
 test("svelte highlights declaration tags with TypeScript in markup", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(declarationTagsSnippet, {
+  const result = registry.highlight(declarationTagsSnippet, {
     language: "svelte",
   }).value;
 
@@ -161,9 +165,11 @@ test("svelte highlights declaration tags with TypeScript in markup", () => {
 });
 
 test("svelte highlights runes, event attributes, and block continuations", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(svelte5Snippet, { language: "svelte" }).value;
+  const result = registry.highlight(svelte5Snippet, {
+    language: "svelte",
+  }).value;
 
   expect(result).toContain('<span class="hljs-keyword">$state</span>');
   expect(result).toContain('<span class="hljs-keyword">$derived</span>');
@@ -174,9 +180,9 @@ test("svelte highlights runes, event attributes, and block continuations", () =>
 });
 
 test("svelte highlights dotted rune suffixes as a single keyword", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(runeSuffixSnippet, {
+  const result = registry.highlight(runeSuffixSnippet, {
     language: "svelte",
   }).value;
 
@@ -191,9 +197,9 @@ test("svelte highlights dotted rune suffixes as a single keyword", () => {
 });
 
 test("svelte highlights typed rune calls", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(typedRuneSnippet, {
+  const result = registry.highlight(typedRuneSnippet, {
     language: "svelte",
   }).value;
 
@@ -202,9 +208,9 @@ test("svelte highlights typed rune calls", () => {
 });
 
 test("svelte highlights bare $store subscriptions without parens", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
-  const result = hljs.highlight(storeSubscriptionSnippet, {
+  const result = registry.highlight(storeSubscriptionSnippet, {
     language: "svelte",
   }).value;
 
@@ -213,13 +219,13 @@ test("svelte highlights bare $store subscriptions without parens", () => {
 });
 
 test("svelte does not highlight directives inside script strings", () => {
-  hljs.registerLanguage(svelte.name, svelte.register);
+  registerAll(registry, svelte);
 
   const snippet = `<script>
   const code = \`<button on:click={() => { console.log(0); }}>Click me</button>\`;
 </script>`;
 
-  const result = hljs.highlight(snippet, { language: "svelte" }).value;
+  const result = registry.highlight(snippet, { language: "svelte" }).value;
 
   expect(result).not.toMatch(
     /<span class="hljs-string">[^<]*<\/span><span class="hljs-variable">on:<\/span>/,
@@ -230,8 +236,8 @@ test("svelte does not highlight directives inside script strings", () => {
 });
 
 test("html alone does not highlight Svelte block syntax", () => {
-  const isolated = hljs.newInstance();
-  isolated.registerLanguage(html.name, html.register);
+  const isolated = createRegistry();
+  registerAll(isolated, html);
 
   const result = isolated.highlight(markupSnippet, { language: "html" }).value;
 

@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import json5 from "../src/languages/json5";
 
-hljs.registerLanguage(json5.name, json5.register);
+const registry = createRegistry();
+
+registry.register(json5.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "json5" }).value;
+  registry.highlight(code, { language: "json5" }).value;
 
 test("json5 highlights line and block comments", () => {
   const result = highlight("{\n  // line\n  /* block */\n}");

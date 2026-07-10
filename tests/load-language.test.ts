@@ -4,7 +4,7 @@ describe("loadLanguage", () => {
   it("loads a known language", async () => {
     const language = await loadLanguage("typescript");
     expect(language.name).toBe("typescript");
-    expect(typeof language.register).toBe("function");
+    expect(Array.isArray(language.register.states)).toBe(true);
   });
 
   it("rejects an unknown language", async () => {

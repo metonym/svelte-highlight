@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import hlsl from "../src/languages/hlsl";
 
-hljs.registerLanguage(hlsl.name, hlsl.register);
+const registry = createRegistry();
+
+registry.register(hlsl.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "hlsl" }).value;
+  registry.highlight(code, { language: "hlsl" }).value;
 
 test("hlsl highlights builtin types", () => {
   const result = highlight("float4 main(float2 uv) {}");

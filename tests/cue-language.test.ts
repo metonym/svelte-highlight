@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import cue from "../src/languages/cue";
 
-hljs.registerLanguage(cue.name, cue.register);
+const registry = createRegistry();
+
+registry.register(cue.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "cue" }).value;
+  registry.highlight(code, { language: "cue" }).value;
 
 test("cue highlights package and import keywords", () => {
   const result = highlight("package config");

@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import rego from "../src/languages/rego";
 
-hljs.registerLanguage(rego.name, rego.register);
+const registry = createRegistry();
+
+registry.register(rego.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "rego" }).value;
+  registry.highlight(code, { language: "rego" }).value;
 
 test("rego highlights package and import declarations", () => {
   const result = highlight("package authz\n\nimport future.keywords.if");

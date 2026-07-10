@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry, registerAll } from "../src/engine.js";
+
 import rescript from "../src/languages/rescript";
 
-hljs.registerLanguage(rescript.name, rescript.register);
+const registry = createRegistry();
+
+registerAll(registry, rescript);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "rescript" }).value;
+  registry.highlight(code, { language: "rescript" }).value;
 
 test("rescript highlights let bindings as functions", () => {
   const result = highlight("let greet = (name) => name");

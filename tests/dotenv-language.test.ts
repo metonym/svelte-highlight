@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import dotenv from "../src/languages/dotenv";
 
-hljs.registerLanguage(dotenv.name, dotenv.register);
+const registry = createRegistry();
+
+registry.register(dotenv.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "dotenv" }).value;
+  registry.highlight(code, { language: "dotenv" }).value;
 
 test("dotenv highlights hash comments", () => {
   const result = highlight("# a comment\nKEY=value");

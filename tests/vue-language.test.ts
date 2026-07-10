@@ -1,6 +1,8 @@
-import hljs from "highlight.js/lib/core";
 import html from "svelte-highlight/languages/html";
+import { createRegistry, registerAll } from "../src/engine.js";
 import vue from "../src/languages/vue";
+
+const registry = createRegistry();
 
 const scriptSetupSnippet = `<script setup lang="ts">
 const count = ref(0);
@@ -38,9 +40,9 @@ const customDirectiveSnippet = `<template>
 </template>`;
 
 test("vue highlights script setup as TypeScript", () => {
-  hljs.registerLanguage(vue.name, vue.register);
+  registerAll(registry, vue);
 
-  const result = hljs.highlight(scriptSetupSnippet, {
+  const result = registry.highlight(scriptSetupSnippet, {
     language: "vue",
   }).value;
 
@@ -50,9 +52,9 @@ test("vue highlights script setup as TypeScript", () => {
 });
 
 test("vue highlights template directives and mustache expressions", () => {
-  hljs.registerLanguage(vue.name, vue.register);
+  registerAll(registry, vue);
 
-  const result = hljs.highlight(templateSnippet, { language: "vue" }).value;
+  const result = registry.highlight(templateSnippet, { language: "vue" }).value;
 
   expect(result).toContain("language-html");
   expect(result).toContain("hljs-tag");
@@ -61,20 +63,23 @@ test("vue highlights template directives and mustache expressions", () => {
 });
 
 test("vue highlights mustache expressions in templates", () => {
-  hljs.registerLanguage(vue.name, vue.register);
+  registerAll(registry, vue);
 
-  const result = hljs.highlight("<template><p>{{ message }}</p></template>", {
-    language: "vue",
-  }).value;
+  const result = registry.highlight(
+    "<template><p>{{ message }}</p></template>",
+    {
+      language: "vue",
+    },
+  ).value;
 
   expect(result).toContain("language-javascript");
   expect(result).toContain("{{ message }}");
 });
 
 test("vue highlights scss style blocks", () => {
-  hljs.registerLanguage(vue.name, vue.register);
+  registerAll(registry, vue);
 
-  const result = hljs.highlight(styleSnippet, { language: "vue" }).value;
+  const result = registry.highlight(styleSnippet, { language: "vue" }).value;
 
   expect(result).toContain("language-scss");
   expect(result).toContain("hljs-selector-class");
@@ -82,18 +87,20 @@ test("vue highlights scss style blocks", () => {
 });
 
 test("vue highlights plain JavaScript script blocks", () => {
-  hljs.registerLanguage(vue.name, vue.register);
+  registerAll(registry, vue);
 
-  const result = hljs.highlight(javascriptSnippet, { language: "vue" }).value;
+  const result = registry.highlight(javascriptSnippet, {
+    language: "vue",
+  }).value;
 
   expect(result).toContain("language-javascript");
   expect(result).toContain("hljs-keyword");
 });
 
 test("vue highlights custom user-registered directives", () => {
-  hljs.registerLanguage(vue.name, vue.register);
+  registerAll(registry, vue);
 
-  const result = hljs.highlight(customDirectiveSnippet, {
+  const result = registry.highlight(customDirectiveSnippet, {
     language: "vue",
   }).value;
 
@@ -102,8 +109,8 @@ test("vue highlights custom user-registered directives", () => {
 });
 
 test("html alone does not highlight vue directives or mustache expressions", () => {
-  const isolated = hljs.newInstance();
-  isolated.registerLanguage(html.name, html.register);
+  const isolated = createRegistry();
+  registerAll(isolated, html);
 
   const result = isolated.highlight(templateSnippet, {
     language: "html",

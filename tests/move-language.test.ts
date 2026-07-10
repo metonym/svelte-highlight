@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import move from "../src/languages/move";
 
-hljs.registerLanguage(move.name, move.register);
+const registry = createRegistry();
+
+registry.register(move.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "move" }).value;
+  registry.highlight(code, { language: "move" }).value;
 
 test("move highlights module and fun declarations", () => {
   const result = highlight("module addr::Coin { public fun mint() {} }");

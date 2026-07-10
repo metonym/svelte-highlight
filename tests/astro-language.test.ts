@@ -1,6 +1,8 @@
-import hljs from "highlight.js/lib/core";
 import html from "svelte-highlight/languages/html";
+import { createRegistry, registerAll } from "../src/engine.js";
 import astro from "../src/languages/astro";
+
+const registry = createRegistry();
 
 const frontmatterSnippet = `---
 export const title = "Hello";
@@ -39,9 +41,9 @@ export const title = "Hello";
 <p>after the hr</p>`;
 
 test("astro highlights frontmatter as TypeScript", () => {
-  hljs.registerLanguage(astro.name, astro.register);
+  registerAll(registry, astro);
 
-  const result = hljs.highlight(frontmatterSnippet, {
+  const result = registry.highlight(frontmatterSnippet, {
     language: "astro",
   }).value;
 
@@ -55,9 +57,11 @@ test("astro highlights frontmatter as TypeScript", () => {
 });
 
 test("astro highlights template markup and expressions", () => {
-  hljs.registerLanguage(astro.name, astro.register);
+  registerAll(registry, astro);
 
-  const result = hljs.highlight(templateSnippet, { language: "astro" }).value;
+  const result = registry.highlight(templateSnippet, {
+    language: "astro",
+  }).value;
 
   expect(result).toContain("language-html");
   expect(result).toContain("hljs-tag");
@@ -69,9 +73,9 @@ test("astro highlights template markup and expressions", () => {
 });
 
 test("astro highlights style blocks as CSS", () => {
-  hljs.registerLanguage(astro.name, astro.register);
+  registerAll(registry, astro);
 
-  const result = hljs.highlight(styleSnippet, { language: "astro" }).value;
+  const result = registry.highlight(styleSnippet, { language: "astro" }).value;
 
   expect(result).toContain("language-css");
   expect(result).toContain("hljs-selector-class");
@@ -79,9 +83,9 @@ test("astro highlights style blocks as CSS", () => {
 });
 
 test("astro highlights is:global and CSS universal selector", () => {
-  hljs.registerLanguage(astro.name, astro.register);
+  registerAll(registry, astro);
 
-  const result = hljs.highlight(globalWildcardSnippet, {
+  const result = registry.highlight(globalWildcardSnippet, {
     language: "astro",
   }).value;
 
@@ -94,9 +98,9 @@ test("astro highlights is:global and CSS universal selector", () => {
 });
 
 test("astro highlights colon attributes inside tags", () => {
-  hljs.registerLanguage(astro.name, astro.register);
+  registerAll(registry, astro);
 
-  const result = hljs.highlight(directiveAttrsSnippet, {
+  const result = registry.highlight(directiveAttrsSnippet, {
     language: "astro",
   }).value;
 
@@ -108,9 +112,9 @@ test("astro highlights colon attributes inside tags", () => {
 });
 
 test("astro does not open a new frontmatter region at a stray --- mid-document", () => {
-  hljs.registerLanguage(astro.name, astro.register);
+  registerAll(registry, astro);
 
-  const result = hljs.highlight(strayFenceSnippet, {
+  const result = registry.highlight(strayFenceSnippet, {
     language: "astro",
   }).value;
 
@@ -122,8 +126,8 @@ test("astro does not open a new frontmatter region at a stray --- mid-document",
 });
 
 test("html alone does not highlight Astro frontmatter or client directives", () => {
-  const isolated = hljs.newInstance();
-  isolated.registerLanguage(html.name, html.register);
+  const isolated = createRegistry();
+  registerAll(isolated, html);
 
   const result = isolated.highlight(frontmatterSnippet, {
     language: "html",

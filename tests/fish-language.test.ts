@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import fish from "../src/languages/fish";
 
-hljs.registerLanguage(fish.name, fish.register);
+const registry = createRegistry();
+
+registry.register(fish.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "fish" }).value;
+  registry.highlight(code, { language: "fish" }).value;
 
 test("fish highlights keywords", () => {
   const result = highlight("if test -f file\n  echo found\nend");

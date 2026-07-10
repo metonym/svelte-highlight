@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import d2 from "../src/languages/d2";
 
-hljs.registerLanguage(d2.name, d2.register);
+const registry = createRegistry();
+
+registry.register(d2.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "d2" }).value;
+  registry.highlight(code, { language: "d2" }).value;
 
 test("d2 highlights connection operators", () => {
   const result = highlight("a -> b: request");

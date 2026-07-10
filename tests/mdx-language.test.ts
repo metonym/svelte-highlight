@@ -1,6 +1,8 @@
-import hljs from "highlight.js/lib/core";
 import markdown from "svelte-highlight/languages/markdown";
+import { createRegistry, registerAll } from "../src/engine.js";
 import mdx from "../src/languages/mdx";
+
+const registry = createRegistry();
 
 const importSnippet = `import { Chart } from "./chart";
 
@@ -25,9 +27,9 @@ const listSnippet = `- first item
 2. list`;
 
 test("mdx highlights import statements as JavaScript", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
-  const result = hljs.highlight(importSnippet, { language: "mdx" }).value;
+  const result = registry.highlight(importSnippet, { language: "mdx" }).value;
 
   expect(result).toContain("language-javascript");
   expect(result).toContain("hljs-keyword");
@@ -36,9 +38,9 @@ test("mdx highlights import statements as JavaScript", () => {
 });
 
 test("mdx highlights markdown headings and inline formatting", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
-  const result = hljs.highlight(headingSnippet, { language: "mdx" }).value;
+  const result = registry.highlight(headingSnippet, { language: "mdx" }).value;
 
   expect(result).toContain('<span class="hljs-section"># </span>');
   expect(result).toContain("Title");
@@ -47,9 +49,9 @@ test("mdx highlights markdown headings and inline formatting", () => {
 });
 
 test("mdx highlights JSX and embedded JavaScript expressions", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
-  const result = hljs.highlight(jsxSnippet, { language: "mdx" }).value;
+  const result = registry.highlight(jsxSnippet, { language: "mdx" }).value;
 
   expect(result).toContain("language-html");
   expect(result).toContain("hljs-tag");
@@ -57,17 +59,17 @@ test("mdx highlights JSX and embedded JavaScript expressions", () => {
 });
 
 test("mdx highlights markdown lists", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
-  const result = hljs.highlight(listSnippet, { language: "mdx" }).value;
+  const result = registry.highlight(listSnippet, { language: "mdx" }).value;
 
   expect(result).toContain('<span class="hljs-bullet">');
   expect(result).toContain('<span class="hljs-number">');
 });
 
 test("markdown alone does not highlight JSX tags", () => {
-  const isolated = hljs.newInstance();
-  isolated.registerLanguage(markdown.name, markdown.register);
+  const isolated = createRegistry();
+  registerAll(isolated, markdown);
 
   const result = isolated.highlight(jsxSnippet, {
     language: "markdown",
@@ -78,14 +80,14 @@ test("markdown alone does not highlight JSX tags", () => {
 });
 
 test("mdx highlights multi-line export statements as JavaScript", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
   const multilineExport = `export const meta = {
   title: "Kitchen sink",
   description: "MDX grammar preview",
 };`;
 
-  const result = hljs.highlight(multilineExport, { language: "mdx" }).value;
+  const result = registry.highlight(multilineExport, { language: "mdx" }).value;
 
   expect(result).toContain("language-javascript");
   expect(result).toContain('<span class="hljs-attr">title</span>');
@@ -95,7 +97,7 @@ test("mdx highlights multi-line export statements as JavaScript", () => {
 });
 
 test("mdx does not let a semicolon-less import statement swallow the rest of the document", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
   const noSemicolonImport = `import { Chart } from "./chart"
 
@@ -103,7 +105,9 @@ test("mdx does not let a semicolon-less import statement swallow the rest of the
 
 Some content here.`;
 
-  const result = hljs.highlight(noSemicolonImport, { language: "mdx" }).value;
+  const result = registry.highlight(noSemicolonImport, {
+    language: "mdx",
+  }).value;
 
   expect(result).toContain("language-javascript");
   expect(result).toContain('<span class="hljs-section"># </span>');
@@ -120,7 +124,7 @@ Some content here.`;
 });
 
 test("mdx highlights fenced javascript and css code blocks", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
   const jsFence = [
     "```javascript",
@@ -128,7 +132,7 @@ test("mdx highlights fenced javascript and css code blocks", () => {
     "```",
   ].join("\n");
 
-  const jsResult = hljs.highlight(jsFence, { language: "mdx" }).value;
+  const jsResult = registry.highlight(jsFence, { language: "mdx" }).value;
 
   expect(jsResult).toContain("language-javascript");
   expect(jsResult).toContain('<span class="hljs-keyword">const</span>');
@@ -137,14 +141,14 @@ test("mdx highlights fenced javascript and css code blocks", () => {
 
   const cssFence = ["```css", ".foo { color: red; }", "```"].join("\n");
 
-  const cssResult = hljs.highlight(cssFence, { language: "mdx" }).value;
+  const cssResult = registry.highlight(cssFence, { language: "mdx" }).value;
 
   expect(cssResult).toContain("language-css");
   expect(cssResult).toContain('<span class="hljs-selector-class">.foo</span>');
 });
 
 test("mdx highlights fenced typescript and tsx code blocks", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
   const tsFence = [
     "```typescript",
@@ -152,7 +156,7 @@ test("mdx highlights fenced typescript and tsx code blocks", () => {
     "```",
   ].join("\n");
 
-  const tsResult = hljs.highlight(tsFence, { language: "mdx" }).value;
+  const tsResult = registry.highlight(tsFence, { language: "mdx" }).value;
 
   expect(tsResult).toContain("language-typescript");
   expect(tsResult).toContain('<span class="hljs-keyword">const</span>');
@@ -162,18 +166,18 @@ test("mdx highlights fenced typescript and tsx code blocks", () => {
     "\n",
   );
 
-  const tsxResult = hljs.highlight(tsxFence, { language: "mdx" }).value;
+  const tsxResult = registry.highlight(tsxFence, { language: "mdx" }).value;
 
   expect(tsxResult).toContain("language-typescript");
   expect(tsxResult).toContain('<span class="hljs-keyword">const</span>');
 });
 
 test("mdx falls back to plain code styling for unsupported fence languages", () => {
-  hljs.registerLanguage(mdx.name, mdx.register);
+  registerAll(registry, mdx);
 
   const bashFence = ["```bash", "echo hi", "```"].join("\n");
 
-  const result = hljs.highlight(bashFence, { language: "mdx" }).value;
+  const result = registry.highlight(bashFence, { language: "mdx" }).value;
 
   expect(result).not.toContain("language-");
   expect(result).toContain("echo hi");

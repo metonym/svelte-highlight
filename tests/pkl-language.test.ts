@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import pkl from "../src/languages/pkl";
 
-hljs.registerLanguage(pkl.name, pkl.register);
+const registry = createRegistry();
+
+registry.register(pkl.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "pkl" }).value;
+  registry.highlight(code, { language: "pkl" }).value;
 
 test("pkl highlights function declarations", () => {
   const result = highlight("function add(x) = x");

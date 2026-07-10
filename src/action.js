@@ -1,10 +1,12 @@
-import hljs from "highlight.js/lib/core";
+import { ensureRegistered, registry } from "./registry.js";
 
 /**
  * Highlight an element in place with highlight.js.
  * Omits `code` to highlight existing `textContent`.
  *
- * @type {import("svelte/action").Action<HTMLElement, { language: import("./languages").LanguageType<string>; code?: string }>}
+ * @param {HTMLElement} node
+ * @param {{ language: import("./languages").LanguageType<string>; code?: string }} parameters
+ * @returns {ReturnType<import("svelte/action").Action<HTMLElement, { language: import("./languages").LanguageType<string>; code?: string }>>}
  */
 export function highlight(node, parameters) {
   // Snapshot the pre-action source once: updates that omit `code` fall back
@@ -18,10 +20,8 @@ export function highlight(node, parameters) {
     let value;
 
     try {
-      if (!hljs.getLanguage(language.name)) {
-        hljs.registerLanguage(language.name, language.register);
-      }
-      value = hljs.highlight(source, { language: language.name }).value;
+      ensureRegistered(language);
+      value = registry.highlight(source, { language: language.name }).value;
     } catch (error) {
       if (import.meta.env?.DEV) {
         console.warn(

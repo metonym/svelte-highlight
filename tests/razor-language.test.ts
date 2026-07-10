@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import razor from "../src/languages/razor";
 
-hljs.registerLanguage(razor.name, razor.register);
+const registry = createRegistry();
+
+registry.register(razor.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "razor" }).value;
+  registry.highlight(code, { language: "razor" }).value;
 
 test("razor highlights directives as meta", () => {
   const result = highlight("@page\n@model Foo");

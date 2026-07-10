@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import odin from "../src/languages/odin";
 
-hljs.registerLanguage(odin.name, odin.register);
+const registry = createRegistry();
+
+registry.register(odin.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "odin" }).value;
+  registry.highlight(code, { language: "odin" }).value;
 
 test("odin highlights proc keyword", () => {
   const result = highlight("main :: proc() {}");

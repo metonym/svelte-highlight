@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry, registerAll } from "../src/engine.js";
+
 import liquid from "../src/languages/liquid";
 
-hljs.registerLanguage(liquid.name, liquid.register);
+const registry = createRegistry();
+
+registerAll(registry, liquid);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "liquid" }).value;
+  registry.highlight(code, { language: "liquid" }).value;
 
 test("liquid highlights output objects", () => {
   const result = highlight("{{ product.title }}");

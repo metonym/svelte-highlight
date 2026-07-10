@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import vyper from "../src/languages/vyper";
 
-hljs.registerLanguage(vyper.name, vyper.register);
+const registry = createRegistry();
+
+registry.register(vyper.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "vyper" }).value;
+  registry.highlight(code, { language: "vyper" }).value;
 
 test("vyper highlights def declarations", () => {
   const result = highlight("def transfer():\n    pass");
