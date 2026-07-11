@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.15.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.15.0) - 2026-07-10
+
+**Features**
+
+- add `HighlightStream` for incrementally streamed code
+- add experimental CSS Custom Highlight engine for `HighlightEditable`
+- add `transform` hook to `CopyButton`
+- handle OSC, carriage returns, and more SGR in `parseAnsi`
+
+**Fixes**
+
+- make the `highlight` action idempotent and reversible
+- coerce non-string `code` before highlighting
+- recompute `HighlightStyle` scope class on theme change
+- re-highlight `HighlightEditable` when language changes
+- hand off `HighlightStyle`'s `<style>` tag when its owner unmounts
+- modernize WGSL grammar for the current spec
+
+**Performance**
+
+- reveal `Typewriter` units without per-tick retokenization
+- repaint only changed lines in `HighlightEditable`
+- track selection only while `HighlightEditable` is focused
+- store `HighlightEditable` history as slice diffs
+- read `HighlightEditable`'s code via `textContent`, not `innerText`
+
 ## [7.14.1](https://github.com/metonym/svelte-highlight/releases/tag/v7.14.1) - 2026-07-06
 
 **Fixes**
