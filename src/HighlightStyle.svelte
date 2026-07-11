@@ -25,49 +25,86 @@
 <script>
   import { onDestroy } from "svelte";
   import { dualStyle, scopeClassFor, scopeStyle } from "./scoped.js";
+  import { dualPaletteStyle, paletteStyle } from "./theme-style.js";
 
   /**
-   * Theme CSS from `svelte-highlight/styles/<theme>`.
+   * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
+   * from `svelte-highlight/themes/<theme>` — the latter is applied by
+   * inlining `--shl-*` vars on the wrapper element instead of injecting a
+   * scoped `<style>` tag.
    * @example
    * import a11yDark from "svelte-highlight/styles/a11y-dark";
-   * @type {string}
+   * @example
+   * import atomOneDark from "svelte-highlight/themes/atom-one-dark";
+   * @type {string | import("./theme.d.ts").ThemePalette}
    */
   export let theme = undefined;
 
   /**
-   * Light theme CSS. With `dark`, overrides `theme`.
-   * @type {string | undefined}
+   * Light theme CSS/palette. With `dark`, overrides `theme`. Must be the
+   * same type (string or `ThemePalette`) as `dark`.
+   * @type {string | import("./theme.d.ts").ThemePalette | undefined}
    */
   export let light = undefined;
 
-  /** Dark theme CSS; pair with `light`. */
+  /**
+   * Dark theme CSS/palette; pair with `light`.
+   * @type {string | import("./theme.d.ts").ThemePalette | undefined}
+   */
   export let dark = undefined;
 
   /**
    * Theme switch: `"auto"` | `"light"` | `"dark"` | CSS selector for dark.
+   * On the `ThemePalette` path this controls the inlined `color-scheme`
+   * (`"auto"` -> `light dark`); any other string is treated as the legacy
+   * app-controlled mode, and no `color-scheme` is inlined — set it on your
+   * own selector instead (e.g. `[data-theme="dark"] { color-scheme: dark }`).
    * @type {"auto" | "light" | "dark" | string}
    */
   export let mode = "auto";
 
-  /** Scope class for prefixed selectors. */
+  /** Scope class for prefixed selectors. Inert on the `ThemePalette` path
+   * (kept for back-compat / slot access), since there's no scoped
+   * `<style>` tag to match against. */
   export let scopeClass = undefined;
 
   // Captured once: a consumer-supplied scopeClass is honored for the
   // lifetime of the instance instead of being overwritten by the hash below.
   const hasOwnScopeClass = scopeClass !== undefined;
 
-  $: hasTheme =
-    theme !== undefined || (light !== undefined && dark !== undefined);
+  $: usingPair = light !== undefined && dark !== undefined;
+  $: usingObjectPair =
+    usingPair && typeof light === "object" && typeof dark === "object";
+  $: usingObjectTheme =
+    !usingPair && theme !== undefined && typeof theme === "object";
+  $: usingObjectPalette = usingObjectPair || usingObjectTheme;
+
+  $: hasTheme = theme !== undefined || usingPair;
 
   $: if (!hasOwnScopeClass) {
-    scopeClass = scopeClassFor(theme ?? `${light}${dark}`);
+    scopeClass = usingObjectPair
+      ? scopeClassFor(`${light.name}::${dark.name}`)
+      : usingObjectTheme
+        ? scopeClassFor(theme.name)
+        : scopeClassFor(theme ?? `${light}${dark}`);
   }
 
-  $: style = hasTheme
-    ? light !== undefined && dark !== undefined
-      ? dualStyle(light, dark, scopeClass, mode)
-      : scopeStyle(theme, scopeClass)
-    : "";
+  // The scoped-<style> path's content; empty (nothing rendered) on the
+  // object path, which never touches <svelte:head> or the ownership store.
+  $: style =
+    hasTheme && !usingObjectPalette
+      ? usingPair
+        ? dualStyle(light, dark, scopeClass, mode)
+        : scopeStyle(theme, scopeClass)
+      : "";
+
+  // Inline vars applied to the wrapper element; undefined (no `style`
+  // attribute) on the legacy scoped-<style> path.
+  $: inlineStyle = usingObjectPair
+    ? dualPaletteStyle(light, dark, mode)
+    : usingObjectTheme
+      ? paletteStyle(theme)
+      : undefined;
 
   const token = Symbol();
   let registeredKey;
@@ -100,6 +137,6 @@
   {/if}</svelte:head
 >
 
-<div class={scopeClass} {...$$restProps}>
+<div class={scopeClass} style={inlineStyle} {...$$restProps}>
   <slot {scopeClass} />
 </div>
