@@ -23,6 +23,7 @@
       "!!**/test-results/**/*",
       "!!**/playwright-report/**/*",
       "!!**/src/styles/*.css",
+      "!!**/src/themes/*.css",
       "!!astro.config.ts",
       "!!www/data/**/*",
       "!!www/public/favicon.svg"

@@ -10,9 +10,47 @@
  * and are dropped too; only single-class `.hljs-<scope>` selectors convert.
  */
 
+import { SHL_FALLBACKS } from "./themes/_shl-fallbacks.js";
+
 const STYLE_TAG = /^(\s*<style>)([\s\S]*?)(<\/style>\s*)$/;
 const SIMPLE_SCOPE_SELECTOR = /^\.hljs-([\w-]+)$/;
 const SUPPORTED_PROPERTIES = new Set(["color", "background-color"]);
+
+/** `--shl-*` names with no scope segment at all (the base `.hljs` rule) —
+ * not a scope selector, same as `.hljs` itself in the string path below. */
+const BASE_VAR_NAMES = new Set([
+  "--shl-fg",
+  "--shl-bg",
+  "--shl-font-style",
+  "--shl-font-weight",
+  "--shl-text-decoration",
+]);
+
+/** @type {Array<[string, string]>} */
+const SUFFIX_PROPERTY = [
+  ["-bg", "background-color"],
+  ["-font-style", "font-style"],
+  ["-font-weight", "font-weight"],
+  ["-text-decoration", "text-decoration"],
+];
+
+const VAR_PREFIX_LENGTH = "--shl-".length;
+
+/**
+ * Inverts the build-time `varName()` derivation for a single-scope var.
+ * @param {string} shlVarName
+ */
+function decomposeSingleScopeVar(shlVarName) {
+  for (const [suffix, property] of SUFFIX_PROPERTY) {
+    if (suffix && shlVarName.endsWith(suffix)) {
+      return {
+        scope: shlVarName.slice(VAR_PREFIX_LENGTH, -suffix.length),
+        property,
+      };
+    }
+  }
+  return { scope: shlVarName.slice(VAR_PREFIX_LENGTH), property: "color" };
+}
 
 /**
  * @param {string} css
@@ -171,6 +209,45 @@ export function highlightRules(theme) {
     }
     prelude += ch;
     i += 1;
+  }
+  return out;
+}
+
+/**
+ * `ThemePalette` counterpart to `highlightRules`: turns single-scope
+ * `--shl-<scope>`/`--shl-<scope>-bg` vars into `::highlight(hljs-<scope>)`
+ * rules. Multi-scope (compound/descendant) vars have no `::highlight()`
+ * equivalent — same limitation as the string path above — and are
+ * skipped; detected via `SHL_FALLBACKS`, the same generated data
+ * `themes/base.css`'s fallback chains come from, so "is this a single
+ * scope" never drifts from what the structural stylesheet encodes.
+ * @param {import("./theme.d.ts").ThemePalette} palette
+ * @returns {string} Converted `::highlight()` rules, concatenated.
+ */
+export function highlightRulesFromPalette(palette) {
+  /** @type {Map<string, Record<string, string>>} */
+  const byScope = new Map();
+
+  for (const [key, value] of Object.entries(palette.vars)) {
+    if (BASE_VAR_NAMES.has(key) || key in SHL_FALLBACKS) continue;
+
+    const { scope, property } = decomposeSingleScopeVar(key);
+    if (!SUPPORTED_PROPERTIES.has(property)) continue;
+
+    let decls = byScope.get(scope);
+    if (!decls) {
+      decls = {};
+      byScope.set(scope, decls);
+    }
+    decls[property] = value;
+  }
+
+  let out = "";
+  for (const [scope, decls] of byScope) {
+    const decl = Object.entries(decls)
+      .map(([prop, value]) => `${prop}:${value}`)
+      .join(";");
+    out += `::highlight(hljs-${scope}){${decl}}`;
   }
   return out;
 }

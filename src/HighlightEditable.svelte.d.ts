@@ -1,6 +1,7 @@
 import type { SvelteComponentTyped } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { LanguageType } from "./languages";
+import type { ThemePalette } from "./theme.d.ts";
 
 export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
   /**
@@ -46,13 +47,16 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
   engine?: "dom" | "css-highlights";
 
   /**
-   * Theme CSS from `svelte-highlight/styles/<theme>`, used only in
+   * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
+   * from `svelte-highlight/themes/<theme>`, used only in
    * `"css-highlights"` mode to generate `::highlight()` rules. Colors only
    * (`color`/`background-color`); other declarations are dropped.
    * @example
    * import a11yDark from "svelte-highlight/styles/a11y-dark";
+   * @example
+   * import atomOneDark from "svelte-highlight/themes/atom-one-dark";
    */
-  theme?: string;
+  theme?: string | ThemePalette;
 
   /**
    * Color of the focus outline.

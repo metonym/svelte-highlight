@@ -17,7 +17,9 @@ import { writeTo } from "./utils/write-to.ts";
 
 export type ModuleNames = Array<{ name: string; moduleName: string }>;
 
-export async function buildStyles() {
+export type ThemeInput = { name: string; moduleName: string; css: string };
+
+export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
   console.time("build styles");
   await $`rm -rf src/styles; mkdir src/styles`;
 
@@ -118,6 +120,7 @@ export async function buildStyles() {
         ],
         scopedStyle,
         augmentation,
+        themeInput: { name, moduleName, css: cssMinified },
       };
     }),
   );
@@ -128,10 +131,12 @@ export async function buildStyles() {
     deadDeclarationsRemoved: number;
     gapsFilled: number;
   }> = [];
-  for (const { writes, scopedStyle, augmentation } of fileWrites) {
+  const themeInputs: ThemeInput[] = [];
+  for (const { writes, scopedStyle, augmentation, themeInput } of fileWrites) {
     allWrites.push(...writes);
     scopedStyles += scopedStyle;
     if (augmentation) augmentations.push(augmentation);
+    themeInputs.push(themeInput);
   }
   augmentations.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -194,4 +199,6 @@ export async function buildStyles() {
   await Promise.all(allWrites);
 
   console.timeEnd("build styles");
+
+  return { themeInputs };
 }

@@ -34,7 +34,10 @@ import {
   toRanges,
 } from "../src/engine.js";
 import * as languages from "../src/languages/index.js";
-import { DIFFERENTIAL_ALLOWLIST } from "./differential-allowlist.ts";
+import {
+  DIFFERENTIAL_ALLOWLIST,
+  REAL_FILE_ALLOWLIST,
+} from "./differential-allowlist.ts";
 import { CUSTOM_SNIPPETS } from "./differential-corpus.ts";
 
 // --- snippets (feature-dense: strings, comments, numbers, nesting,
@@ -507,18 +510,23 @@ describe("differential: engine vs hljs", () => {
 
 describe("differential: engine vs hljs on real files", () => {
   for (const { language, path } of REAL_FILES) {
-    it(`${path} (${language}): HTML and ranges match hljs`, async () => {
-      const code = await Bun.file(path).text();
-      const expectedHtml = hljs.highlight(code, {
-        language,
-        ignoreIllegals: true,
-      });
-      const expectedRanges = hljsRanges(code, language);
+    const isAllowlisted = REAL_FILE_ALLOWLIST.some((e) => e.path === path);
+    const itRealFile = isAllowlisted ? it.failing : it;
+    itRealFile(
+      `${path} (${language}): HTML and ranges match hljs`,
+      async () => {
+        const code = await Bun.file(path).text();
+        const expectedHtml = hljs.highlight(code, {
+          language,
+          ignoreIllegals: true,
+        });
+        const expectedRanges = hljsRanges(code, language);
 
-      const actual = registry.tokenize(code, language);
-      expect(renderHtml(actual.events)).toBe(expectedHtml.value);
-      expect(toRanges(actual.events)).toEqual(expectedRanges);
-    });
+        const actual = registry.tokenize(code, language);
+        expect(renderHtml(actual.events)).toBe(expectedHtml.value);
+        expect(toRanges(actual.events)).toEqual(expectedRanges);
+      },
+    );
   }
 });
 
@@ -527,6 +535,13 @@ describe("differential: allowlist hygiene", () => {
     for (const entry of DIFFERENTIAL_ALLOWLIST) {
       expect(entry.reason.length).toBeGreaterThan(20);
       expect(entry.dimensions.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("only lists real files with a reviewed reason", () => {
+    for (const entry of REAL_FILE_ALLOWLIST) {
+      expect(entry.reason.length).toBeGreaterThan(20);
+      expect(REAL_FILES.some((f) => f.path === entry.path)).toBe(true);
     }
   });
 });

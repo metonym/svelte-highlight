@@ -30,16 +30,20 @@
   export let engine = "dom";
 
   /**
-   * Theme CSS from `svelte-highlight/styles/<theme>`, used only in
+   * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
+   * from `svelte-highlight/themes/<theme>` — used only in
    * `"css-highlights"` mode to generate `::highlight()` rules. Colors only
    * (`color`/`background-color`); other declarations are dropped.
-   * @type {string | undefined}
+   * @type {string | import("./theme.d.ts").ThemePalette | undefined}
    */
   export let theme = undefined;
 
   import { createEventDispatcher, onMount } from "svelte";
   import { renderHtml, toRanges } from "./engine.js";
-  import { highlightRules } from "./highlight-theme.js";
+  import {
+    highlightRules,
+    highlightRulesFromPalette,
+  } from "./highlight-theme.js";
   import {
     parseIncremental,
     reparseIncremental,
@@ -109,7 +113,11 @@
   $: if (mounted && code !== internalCode) syncExternal();
   $: cssHighlightStyle =
     resolvedEngineValue === "css-highlights" && theme !== undefined
-      ? `<style>${highlightRules(theme).replaceAll(
+      ? `<style>${(
+          typeof theme === "object"
+            ? highlightRulesFromPalette(theme)
+            : highlightRules(theme)
+        ).replaceAll(
           "::highlight(hljs-",
           `::highlight(hljs-${instanceId}-`,
         )}</style>`

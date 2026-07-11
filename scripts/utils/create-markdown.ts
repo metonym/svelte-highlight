@@ -4,7 +4,7 @@ import { version as hljsVersion } from "highlight.js/package.json" with {
 
 /** Creates header metadata for supported languages/styles */
 export const createMarkdown = (
-  type: "Languages" | "Styles",
+  type: "Languages" | "Styles" | "Themes",
   len: number,
   customCount = 0,
 ) => {

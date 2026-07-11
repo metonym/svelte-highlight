@@ -50,6 +50,24 @@ pkgJson.exports = {
     types: "./styles/*.d.ts",
     import: "./styles/*.js",
   },
+  "./themes": {
+    types: "./themes/index.d.ts",
+    import: "./themes/index.js",
+  },
+  "./themes/*": {
+    types: "./themes/*.d.ts",
+    import: "./themes/*.js",
+  },
+  "./themes/*.js": {
+    types: "./themes/*.d.ts",
+    import: "./themes/*.js",
+  },
+  "./themes/*.css": {
+    import: "./themes/*.css",
+  },
+  "./theme": {
+    types: "./theme.d.ts",
+  },
   "./languages": {
     types: "./languages/index.d.ts",
     import: "./languages/index.js",
@@ -97,7 +115,7 @@ pkgJson.types = "./index.d.ts";
 // We specify it here to be sure so that it will not be mistakenly tree-shaken.
 // `cp -r ./src/ ./package` flattens src/ into the package root, so these
 // globs must match the published layout, not the source layout.
-pkgJson.sideEffects = ["styles/*.css", "langtag.css"];
+pkgJson.sideEffects = ["styles/*.css", "themes/*.css", "langtag.css"];
 
 await Bun.write("./package/package.json", JSON.stringify(pkgJson, null, 2));
 console.timeEnd("package");

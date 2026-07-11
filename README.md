@@ -49,9 +49,119 @@ See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported lan
 <Highlight language={typescript} {code} />
 ```
 
+## Theming
+
+Every `highlight.js` theme is also compiled into a **`ThemePalette`**: a typed object of `--shl-*` CSS custom properties plus a shared structural stylesheet (`svelte-highlight/themes/base.css`) that maps `.hljs*` classes to those variables. This is the recommended way to theme new projects — themes are data, scoping is an inline `style` attribute (SSR-safe by construction), and any token is overridable with one CSS line or a Svelte style prop. See [SUPPORTED_THEMES.md](SUPPORTED_THEMES.md) for a list of compiled themes.
+
+The legacy string-theme path (`svelte-highlight/styles`, below) keeps working unchanged and is unaffected by any of this.
+
+**Global theme, CSS only (no JS in the bundle for theming):**
+
+```svelte
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/atom-one-dark.css";
+</script>
+```
+
+**Scoped themes — multiple themes coexisting, zero runtime cost:**
+
+```svelte
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/github.css";
+  import "svelte-highlight/themes/atom-one-dark.css";
+</script>
+
+<div data-shl-theme="github"><Highlight ... /></div>
+<div data-shl-theme="atom-one-dark"><Highlight ... /></div>
+```
+
+**Component-driven scoping via palette objects** (replaces the scoped-`<style>` machinery described under [Scoping styles](#scoping-styles) below — no injected `<style>` tag, no runtime CSS parsing):
+
+```svelte
+<script>
+  import { Highlight, HighlightStyle } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import atomOneDark from "svelte-highlight/themes/atom-one-dark";
+  import "svelte-highlight/themes/base.css";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<HighlightStyle theme={atomOneDark}>
+  <Highlight language={typescript} {code} />
+</HighlightStyle>
+```
+
+This renders SSR-identical output — no `<svelte:head>`, no `<style>` tag, just inline vars on the wrapper:
+
+```html
+<div style="--shl-fg:#abb2bf;--shl-bg:#282c34;--shl-keyword:#c678dd;...">...</div>
+```
+
+**Dual light/dark via [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark):**
+
+```svelte
+<HighlightStyle light={atomOneLight} dark={atomOneDark} mode="auto">
+  <Highlight language={typescript} {code} />
+</HighlightStyle>
+```
+
+This renders `--shl-keyword: light-dark(#a626a4, #c678dd)` (etc.) plus `color-scheme: light dark`. `mode="light"` / `mode="dark"` force `color-scheme: light` / `dark`. Any other `mode` string (the legacy "CSS selector" mode) omits `color-scheme` inline — set it on your own selector for app-controlled switching, e.g. `[data-theme="dark"] { color-scheme: dark }`.
+
+**One-line customization — any token, no theme forking:**
+
+```css
+[data-shl-theme="atom-one-dark"] {
+  --shl-comment: #7f8c98;
+}
+```
+
+**Per-instance customization via Svelte style props** (works automatically since every themed value routes through a var):
+
+```svelte
+<Highlight --shl-keyword="hotpink" --shl-bg="#111" language={typescript} {code} />
+```
+
+**Themes are data** — derive a variant with a plain object spread:
+
+```js
+const custom = {
+  ...atomOneDark,
+  vars: { ...atomOneDark.vars, "--shl-keyword": "#ff79c6" },
+};
+```
+
+**`HighlightEditable`'s `"css-highlights"` engine accepts palettes too:**
+
+```svelte
+<HighlightEditable engine="css-highlights" theme={atomOneDark} language={typescript} bind:code />
+```
+
+### The `--shl-*` variable contract
+
+Variable names are derived mechanically from the selectors found in `highlight.js` themes. `color` is unsuffixed (it dominates — ~90% of declarations); every other supported property gets a suffix.
+
+| Theme selector | Custom property |
+| --- | --- |
+| `.hljs` color | `--shl-fg` |
+| `.hljs` background / background-color | `--shl-bg` |
+| `.hljs-keyword` color | `--shl-keyword` |
+| `.hljs-keyword` background(-color) | `--shl-keyword-bg` |
+| `.hljs-keyword` font-style | `--shl-keyword-font-style` |
+| `.hljs-keyword` font-weight | `--shl-keyword-font-weight` |
+| `.hljs-keyword` text-decoration | `--shl-keyword-text-decoration` |
+| Compound `.hljs-title.class_` | `--shl-title-class_` (scope names joined with `-`; hljs's trailing underscores are kept) |
+| Descendant `.hljs-meta .hljs-keyword` | `--shl-meta-keyword` |
+
+`themes/base.css` wraps a multi-scope (compound/descendant) variable in a fallback to its subject scope's variable — e.g. `.hljs-meta .hljs-string { color: var(--shl-meta-string, var(--shl-string)); }` — so a theme that never styles that specific combination still falls through to the plain scope color instead of rendering unstyled. Declarations that don't fit the var contract (gradients, borders, `::selection`, etc.) ship as an opaque `extras` string on the palette, applied only via the `.css` artifact.
+
+`base.css` assumes the default `hljs-` class prefix; projects using a custom `classPrefix` should stay on the legacy string path below.
+
 ## Styling
 
-Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles.
+Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility.
 
 There are two ways to apply `highlight.js` styles.
 
