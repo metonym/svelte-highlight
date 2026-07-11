@@ -88,6 +88,14 @@ pkgJson.exports = {
     types: "./engine.d.ts",
     default: "./engine.js",
   },
+  "./tokenized-document": {
+    types: "./tokenized-document.d.ts",
+    default: "./tokenized-document.js",
+  },
+  "./tokenized-document.js": {
+    types: "./tokenized-document.d.ts",
+    default: "./tokenized-document.js",
+  },
   "./registry": {
     types: "./registry.d.ts",
     default: "./registry.js",

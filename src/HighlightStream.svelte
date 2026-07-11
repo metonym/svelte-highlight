@@ -31,7 +31,12 @@
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { extendLines } from "./engine.js";
   import { ensureRegistered, registry } from "./registry.js";
-  import { splitLines } from "./split-lines.js";
+
+  // Lines between sealed chunks. Once a chunk fills, its line spans are
+  // joined into one immutable HTML string and never touched again - keyed
+  // reconciliation for `{#each sealedChunks}` below only ever diffs the
+  // (constant-size) unsealed tail, not the whole stream.
+  const SEAL_CHUNK_LINES = 256;
 
   const dispatch = createEventDispatcher();
 
@@ -40,9 +45,6 @@
 
   /** @type {string} */
   let highlighted = "";
-
-  /** @type {string[]} */
-  let lines = [];
 
   /** @type {ReturnType<typeof requestAnimationFrame> | undefined} */
   let frame;
@@ -64,14 +66,29 @@
   // this, treat it as a restart (new stream or language change).
   let fedCode = "";
 
-  // Incremental line rendering via extendLines. finalizedLines is append-only;
-  // the keyed each-block below does not touch completed lines on repaint.
-  /** @type {string[]} */
-  let finalizedLines = [];
+  // Incremental line rendering via extendLines.
   let finalizedPendingHtml = "";
   /** @type {string[]} */
   let finalizedOpenScopes = [];
   let renderedCommittedCount = 0;
+
+  // Sealed (finished, immutable) chunks of `SEAL_CHUNK_LINES` line spans
+  // each, pre-joined into one HTML string apiece - `sealedChunks` is never
+  // mutated in place, only appended to, and past entries are never rebuilt.
+  // `sealedHtml` mirrors the same sealed prefix as plain (wrapper-free) HTML,
+  // appended once per sealed chunk, so `highlighted` below is O(tail) per
+  // repaint instead of rejoining every line streamed so far.
+  /** @type {string[]} */
+  let sealedChunks = [];
+  let sealedHtml = "";
+  let sealedLineCount = 0;
+  // Completed lines not yet folded into a sealed chunk - bounded by
+  // `SEAL_CHUNK_LINES`, so touching it every repaint stays O(1).
+  /** @type {string[]} */
+  let unsealedLines = [];
+  // unsealedLines + the live preview line(s); rendered by the tail each-block.
+  /** @type {string[]} */
+  let tailLines = [];
 
   function ensureSession() {
     if (
@@ -85,10 +102,34 @@
     session = registry.createSession(language.name);
     sessionLanguageName = language.name;
     fedCode = "";
-    finalizedLines = [];
     finalizedPendingHtml = "";
     finalizedOpenScopes = [];
     renderedCommittedCount = 0;
+    sealedChunks = [];
+    sealedHtml = "";
+    sealedLineCount = 0;
+    unsealedLines = [];
+    tailLines = [];
+  }
+
+  // Folds the first SEAL_CHUNK_LINES entries of `unsealedLines` into one new
+  // sealed chunk. Called in a loop, so a single repaint that completes many
+  // lines at once (a burst of chunks coalesced into one frame) still seals
+  // as many full chunks as are ready.
+  function sealChunk() {
+    const chunkLines = unsealedLines.slice(0, SEAL_CHUNK_LINES);
+    let domHtml = "";
+    let plainHtml = "";
+    for (let li = 0; li < chunkLines.length; li++) {
+      const i = sealedLineCount + li;
+      const sep = i > 0 ? "\n" : "";
+      domHtml += `${sep}<span class="highlight-stream-line" data-line="${i}">${chunkLines[li]}</span>`;
+      plainHtml += sep + chunkLines[li];
+    }
+    sealedChunks = [...sealedChunks, domHtml];
+    sealedHtml += plainHtml;
+    sealedLineCount += chunkLines.length;
+    unsealedLines = unsealedLines.slice(SEAL_CHUNK_LINES);
   }
 
   function repaint() {
@@ -101,7 +142,6 @@
     if (done) {
       // Full re-parse for multi-line lookahead (heredocs, etc.).
       highlighted = session.finish({ canonicalize: true }).value;
-      lines = splitLines(highlighted);
     } else {
       // Newly committed events (append only tokenizes complete lines).
       const committed = session.events();
@@ -111,7 +151,10 @@
           finalizedOpenScopes,
           finalizedPendingHtml,
         );
-        finalizedLines = [...finalizedLines, ...result.completedLines];
+        if (result.completedLines.length > 0) {
+          unsealedLines = unsealedLines.concat(result.completedLines);
+          while (unsealedLines.length >= SEAL_CHUNK_LINES) sealChunk();
+        }
         finalizedPendingHtml = result.pendingHtml;
         finalizedOpenScopes = result.openScopes;
         renderedCommittedCount = committed.length;
@@ -130,8 +173,9 @@
         previewLines = [...result.completedLines, result.pendingHtml];
       }
 
-      lines = [...finalizedLines, ...previewLines];
-      highlighted = lines.join("\n");
+      tailLines = [...unsealedLines, ...previewLines];
+      highlighted =
+        sealedHtml + (sealedLineCount > 0 ? "\n" : "") + tailLines.join("\n");
     }
 
     dispatch("highlight", { highlighted });
@@ -198,7 +242,7 @@
 
 <pre bind:this={container} on:scroll={onScroll} {...$$restProps}><code
   class:hljs={true}
->{#if useSplitRendering}{#each lines as line, i (i)}{#if i > 0}{"\n"}{/if}<span class="highlight-stream-line" data-line={i}>{@html line}</span>{/each}{#if showCaret}<span class="highlight-stream-caret" aria-hidden="true"></span>{/if}{:else}{@html highlighted}{/if}</code></pre>
+>{#if useSplitRendering}{#each sealedChunks as chunk, c (c)}{@html chunk}{/each}{#each tailLines as line, li (sealedLineCount + li)}{#if sealedLineCount + li > 0}{"\n"}{/if}<span class="highlight-stream-line" data-line={sealedLineCount + li}>{@html line}</span>{/each}{#if showCaret}<span class="highlight-stream-caret" aria-hidden="true"></span>{/if}{:else}{@html highlighted}{/if}</code></pre>
 
 <style>
   .highlight-stream-caret {

@@ -1300,7 +1300,42 @@ Set `autoScroll` to keep the container pinned to the bottom as output grows -- i
 <HighlightStream language={typescript} {code} {done} autoScroll style="max-height: 20em; overflow-y: auto;" />
 ```
 
-This is O(buffer) per highlighted frame and DOM updates proportional to the changed lines -- fine for chat-sized output up to a few thousand lines, not a virtualized log viewer.
+Per-chunk work is O(tail), not O(stream length so far): finished output is sealed into immutable chunks the DOM never re-diffs, so a response that's ten times longer doesn't cost ten times more per repaint. DOM updates stay proportional to the changed lines -- fine for chat-sized output up to very long responses, not a substitute for `HighlightVirtual` below if you also need to *scroll* through a huge, already-complete document.
+
+## Large documents
+
+`HighlightVirtual` renders only the visible lines of a huge document (plus a small overscan margin) inside its own scroll container -- a 100k-line file costs a couple dozen DOM line nodes, not one per line. It exploits the same engine checkpoint/resume primitive `HighlightStream` uses for streaming, but for *random-access* windows into a static document instead of a growing tail.
+
+```svelte
+<script>
+  import { HighlightVirtual } from "svelte-highlight";
+  import json from "svelte-highlight/languages/json";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+</script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
+
+<HighlightVirtual language={json} code={hugeLogDump} style="height: 480px" />
+```
+
+The rendered `<pre>` is the scroll container itself -- size it with `style`/`class`/`$$restProps`, same as `Highlight`. Content doesn't wrap (uniform line height is a v1 constraint, measured once from a rendered probe line). `overscan` (default `12`) controls how many extra lines render above/below the viewport; `checkpointInterval` (default `100`) controls how often the engine snapshots its parse state, trading a little memory for cheaper random access. Server-rendered output is the full document as plain escaped text (predictable cost for huge documents); the windowed, highlighted view takes over after hydration.
+
+For custom virtualization, servers, or tests, `svelte-highlight/tokenized-document` exposes the same windowing primitive headlessly:
+
+```js
+import { createTokenizedDocument } from "svelte-highlight/tokenized-document";
+import typescript from "svelte-highlight/languages/typescript";
+
+const doc = createTokenizedDocument({ language: typescript });
+doc.setCode(bigFile);
+doc.lineCount(); // cheap -- never triggers tokenization
+doc.lineRange(50_000, 50_040); // 40 highlighted lines in O(window + interval)
+doc.append(moreCode); // streaming growth, no re-tokenization
+```
+
+`lineRange` tokenizes lazily and caches the most recently resolved window, so scrolling through even a huge document only ever pays for the lines actually requested. Its output matches `HighlightStream`'s live (non-canonicalized) parse: constructs needing multi-line lookahead across a window's edge can render slightly differently than `registry.highlight()`'s canonical output, the same tradeoff streaming already makes. `TokenizedDocument` doesn't support mid-document edits -- `append` and full `setCode` resets only.
 
 ## Terminal Output
 
@@ -1647,6 +1682,25 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
   on:done={() => console.log("stream finished")}
 />
 ```
+
+### `HighlightVirtual`
+
+#### Props
+
+| Name              | Type                                           | Default value  |
+| :---------------- | :--------------------------------------------- | :------------- |
+| code               | `any`                                          | N/A (required) |
+| language           | { name: `string`; register: `object` } | N/A (required) |
+| overscan           | `number`                                       | `12`           |
+| checkpointInterval | `number`                                       | `100`          |
+
+`$$restProps` are forwarded to the top-level `pre` element (the scroll container -- size it with `style`/`class`).
+
+```svelte
+<HighlightVirtual language={json} code={hugeLogDump} style="height: 480px" />
+```
+
+See [Large documents](#large-documents) above.
 
 ### `FileTabs`
 
