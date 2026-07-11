@@ -11,23 +11,32 @@
   import svelte from "./languages/svelte";
   import { ensureRegistered, registry } from "./registry.js";
 
+  /**
+   * @typedef {{ highlighted: string; events: import("./engine.d.ts").ScopeEvent[] }} HighlightEventDetail
+   * @type {import("svelte").EventDispatcher<{ highlight: HighlightEventDetail }>}
+   */
   const dispatch = createEventDispatcher();
 
   /** @type {string} */
   let highlighted = "";
 
+  /** @type {import("./engine.d.ts").ScopeEvent[]} */
+  let events = [];
+
   afterUpdate(() => {
-    if (highlighted) dispatch("highlight", { highlighted });
+    if (highlighted) dispatch("highlight", { highlighted, events });
   });
 
   $: {
     ensureRegistered(svelte);
     const source = typeof code === "string" ? code : String(code ?? "");
-    highlighted = registry.highlight(source, { language: svelte.name }).value;
+    const result = registry.highlight(source, { language: svelte.name });
+    highlighted = result.value;
+    events = result.events;
   }
 </script>
 
-<slot {highlighted} {langtag} languageName="svelte">
+<slot {highlighted} {langtag} languageName="svelte" {events}>
   <LangTag
     {...$$restProps}
     languageName="svelte"

@@ -1433,6 +1433,13 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
      * @example "<span>...</span>"
      */
     console.log(e.detail.highlighted);
+
+    /**
+     * The scope-event stream behind `highlighted`. See "Headless usage"
+     * below for consuming it directly (tokenLines, toRanges, custom
+     * renderers) instead of re-parsing the HTML.
+     */
+    console.log(e.detail.events);
   }}
 />
 ```
@@ -1527,6 +1534,9 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
      * @example "<span>...</span>"
      */
     console.log(e.detail.highlighted);
+
+    /** The scope-event stream behind `highlighted`. See "Headless usage" below. */
+    console.log(e.detail.events);
   }}
 />
 ```
@@ -1568,6 +1578,9 @@ import type { LanguageName } from "svelte-highlight";
      * @example "css"
      */
     console.log(e.detail.language);
+
+    /** The scope-event stream behind `highlighted`. See "Headless usage" below. */
+    console.log(e.detail.events);
   }}
 />
 ```
@@ -1676,6 +1689,92 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
 <Highlight language={typescript} {code} let:highlighted>
   <Typewriter {highlighted} on:done={() => console.log("revealed")} />
 </Highlight>
+```
+
+## Headless usage
+
+The highlighting engine's output is a flat scope-event stream (`ScopeEvent[]`): a sequence of `TEXT`/`OPEN`/`CLOSE` events that `renderHtml`, `toRanges`, and `tokenLines` each render differently. Every `<Highlight>`-family component exposes this stream (as `events`, in the default slot and the `highlight` event detail — see [Component API](#component-api) above), and `svelte-highlight/engine` + `svelte-highlight/registry` expose it directly, so highlighting can be consumed headlessly: server routes, build pipelines, tests, or any non-component context. `svelte-highlight/engine` has zero Svelte dependency and works in any JS runtime.
+
+### Stability tiers
+
+- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume.
+- **Generated data, versioned with the library:** `GrammarIR`/`GrammarState`. These come from the build pipeline and are consumed by `registerAll`; treat them as opaque payloads whose field-level structure may change in any minor release. Always load grammars from the same package version as the engine.
+
+### Headless highlighting, isolated registry
+
+Use `createRegistry()` when you want an instance isolated from the components' shared registry (SSR request isolation, tests):
+
+```js
+import { createRegistry, registerAll, renderHtml, tokenLines } from "svelte-highlight/engine";
+import typescript from "svelte-highlight/languages/typescript";
+
+const registry = createRegistry();
+registerAll(registry, typescript);
+
+const { events, value } = registry.highlight(code, { language: "typescript" });
+// value: same HTML the <Highlight> component renders
+// events: the scope-event stream — one tokenization, any number of consumers
+const lines = tokenLines(events); // [[{ text: "const", scopes: ["keyword"] }, …], …]
+```
+
+### Joining the components' shared registry
+
+Use `svelte-highlight/registry` when a language registered here should also be visible to `<Highlight>` (and vice versa):
+
+```js
+import { registry, ensureRegistered } from "svelte-highlight/registry";
+import typescript from "svelte-highlight/languages/typescript";
+
+ensureRegistered(typescript);
+const ranges = registry.tokenizeRanges(code, { language: "typescript" });
+```
+
+### Streaming, headless
+
+The same primitives `HighlightStream` uses:
+
+```js
+import { registry } from "svelte-highlight/registry";
+
+const session = registry.createSession("typescript");
+session.append(chunk); // repeat as chunks arrive
+const snapshot = session.snapshot(); // JSON-serializable checkpoint
+const { value } = session.finish();
+```
+
+### Reaching the stream from a component — no HTML re-parsing
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted let:events>
+  <pre><code>{@html highlighted}</code></pre>
+  <TokenMinimap {events} />
+</Highlight>
+
+<Highlight language={typescript} {code} on:highlight={(e) => analyze(e.detail.events)} />
+```
+
+### A third-party render target
+
+`Renderer<Out>` names the contract that `renderHtml`, `toRanges`, and `tokenLines` (via `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`) all conform to — implement it to plug a custom render target into the same pipeline:
+
+```js
+import { TEXT, OPEN, CLOSE } from "svelte-highlight/engine";
+
+/** @type {import("svelte-highlight/engine").Renderer<MyOutput>} */
+const myRenderer = {
+  render(events) {
+    for (const ev of events) {
+      if (ev.t === TEXT) {
+        /* ev.v */
+      } else if (ev.t === OPEN) {
+        /* ev.s */
+      } else {
+        /* CLOSE */
+      }
+    }
+    return out;
+  },
+};
 ```
 
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)

@@ -1,6 +1,29 @@
 /**
+ * Stability tiers for this module's exports:
+ *
+ * - **Stable (semver-governed):** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`,
+ *   `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`,
+ *   `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`,
+ *   `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`,
+ *   `Registry` and all its methods, `createRegistry`, `registerAll`,
+ *   `StreamSession`, `Snapshot` (see its own doc comment for a narrower
+ *   guarantee).
+ * - **Generated data (structure versioned with the library):** `GrammarIR`,
+ *   `GrammarState` (see their doc comment).
+ *
+ * Event grammar: a well-formed `ScopeEvent[]` stream is balanced (every
+ * `OPEN` has a matching later `CLOSE`, properly nested) and its `TEXT`
+ * values, concatenated in order, equal the tokenized source.
+ */
+
+/**
  * Grammar IR produced by `scripts/utils/convert-language.ts` at build time.
  * Plain JSON: no functions, no highlight.js code.
+ *
+ * Generated data, not a hand-authored API: produced by the build pipeline
+ * (`scripts/convert-grammars.ts`) and consumed by `registerAll`. Treat as an
+ * opaque payload - field-level structure may change in any minor release.
+ * Grammars should always come from the same package version as the engine.
  */
 export interface GrammarState {
   /** Omitted when it's the default (1) - see convert-language.ts's compaction. */
@@ -31,6 +54,7 @@ export interface GrammarState {
   starts?: number;
 }
 
+/** Generated data - see `GrammarState`'s doc comment for the stability caveat. */
 // biome-ignore lint/style/useNamingConvention: "IR" (intermediate representation) is an established term throughout this codebase's docs
 export interface GrammarIR {
   name: string;
@@ -70,6 +94,35 @@ export function extendLines(
 
 export function toRanges(events: ScopeEvent[]): TokenRange[];
 
+export interface LineToken {
+  /** Token text; never contains a line break. */
+  text: string;
+  /** Open scope stack, outermost first, e.g. ["keyword"] or ["meta", "string"]. */
+  scopes: string[];
+}
+
+/**
+ * Line-indexed `{ text, scopes }` tokens - the structured alternative to
+ * re-splitting `renderHtml`'s output (see `src/split-lines.js`). Splits
+ * solely on LF; see `tokenLines`'s JSDoc in `engine.js` for the exact
+ * newline and edge-case semantics (CRLF, trailing newline, empty input),
+ * which are chosen to match `splitLines` line-for-line.
+ */
+export function tokenLines(events: ScopeEvent[]): LineToken[][];
+
+/** A conforming render target over a `ScopeEvent[]` stream. */
+export interface Renderer<Out> {
+  render(events: ScopeEvent[]): Out;
+}
+
+export function createHtmlRenderer(options?: {
+  classPrefix?: string;
+}): Renderer<string>;
+
+export function createRangeRenderer(): Renderer<TokenRange[]>;
+
+export function createLineRenderer(): Renderer<LineToken[][]>;
+
 export interface HighlightResult {
   language: string | undefined;
   relevance: number;
@@ -78,7 +131,14 @@ export interface HighlightResult {
   secondBest?: { language: string | undefined; relevance: number };
 }
 
-/** Serializable parse checkpoint; JSON round-trips (see `Registry#resume`). */
+/**
+ * Serializable parse checkpoint; JSON round-trips (see `Registry#resume`)
+ * within one installed library version. Not guaranteed stable across
+ * versions: a snapshot produced by an older or newer version of this
+ * package may be rejected on resume. Callers that persist snapshots across
+ * deploys (windowing, long-lived streaming sessions) should pin the engine
+ * version or be prepared to discard stale snapshots.
+ */
 export interface Snapshot {
   pos: number;
   buffer: string;

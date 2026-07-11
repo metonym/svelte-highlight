@@ -18,7 +18,7 @@
   import { registry } from "./registry.js";
 
   /**
-   * @typedef {{ highlighted: string; language: string; }} HighlightEventDetail
+   * @typedef {{ highlighted: string; language: string; events: import("./engine.d.ts").ScopeEvent[] }} HighlightEventDetail
    * @type {import("svelte").EventDispatcher<{ highlight: HighlightEventDetail}>}
    */
   const dispatch = createEventDispatcher();
@@ -38,21 +38,25 @@
   /** @type {string} */
   let language = "";
 
+  /** @type {import("./engine.d.ts").ScopeEvent[]} */
+  let events = [];
+
   afterUpdate(() => {
-    if (highlighted) dispatch("highlight", { highlighted, language });
+    if (highlighted) dispatch("highlight", { highlighted, language, events });
   });
 
   $: {
     ensureAllRegistered();
     const source = typeof code === "string" ? code : String(code ?? "");
-    ({ value: highlighted, language = "" } = registry.highlightAuto(
-      source,
-      languageNames,
-    ));
+    ({
+      value: highlighted,
+      language = "",
+      events,
+    } = registry.highlightAuto(source, languageNames));
   }
 </script>
 
-<slot {highlighted} {langtag} languageName={language}>
+<slot {highlighted} {langtag} languageName={language} {events}>
   <LangTag
     {...$$restProps}
     languageName={language}

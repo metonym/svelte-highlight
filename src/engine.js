@@ -2,14 +2,23 @@
  * Highlighting engine (MIT, no highlight.js code). Runs a serializable
  * grammar IR built from hljs grammars by scripts/convert-grammars.ts.
  *
- * Output is a flat scope-event stream. HTML and CSS Custom Highlight ranges
- * are two renderers over the same events. Tokenizer state is serializable so
- * parses can checkpoint, resume, and stream. Callback behavior from hljs
- * grammars becomes declarative IR flags (endSameAsBegin, onlyAtInputStart,
+ * Output is a flat scope-event stream. HTML, CSS Custom Highlight ranges, and
+ * line-indexed tokens (`renderHtml`, `toRanges`, `tokenLines`) are three
+ * renderers over the same events - see the `Renderer` interface exported
+ * from engine.d.ts. Tokenizer state is serializable so parses can
+ * checkpoint, resume, and stream. Callback behavior from hljs grammars
+ * becomes declarative IR flags (endSameAsBegin, onlyAtInputStart,
  * notAfterDot).
  *
+ * A well-formed event stream is balanced: every OPEN has a matching later
+ * CLOSE, properly nested, and the TEXT values, concatenated in order, equal
+ * the tokenized source. All renderers in this module assume this invariant.
+ *
  * Scope names stay on hljs's vocabulary (`hljs-*` classes) so existing themes
- * and the CSS-Highlight theme converter keep working.
+ * and the CSS-Highlight theme converter keep working. Scope names as they
+ * appear in events/tokenLines are the raw, unprefixed strings (e.g.
+ * "keyword", "title.class_"); the `hljs-` prefix and multi-class expansion
+ * are `renderHtml`'s concern (see `scopeToCssClass`).
  */
 
 /**
@@ -17,6 +26,7 @@
  * @typedef {import("./engine.d.ts").GrammarState} GrammarState
  * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
  * @typedef {import("./engine.d.ts").TokenRange} TokenRange
+ * @typedef {import("./engine.d.ts").LineToken} LineToken
  * @typedef {import("./engine.d.ts").HighlightResult} HighlightResult
  * @typedef {import("./engine.d.ts").StreamSession} StreamSession
  * @typedef {import("./engine.d.ts").Registry} Registry
@@ -883,6 +893,92 @@ export function toRanges(events) {
     }
   }
   return ranges;
+}
+
+/**
+ * Line-indexed `{ text, scopes }` tokens - the structured alternative to
+ * re-splitting `renderHtml`'s output. A single pass over `events`, maintaining
+ * the open-scope stack (like `toRanges`) and splitting `TEXT` values on line
+ * breaks (like `extendLines`'s HTML splitting).
+ *
+ * Splits solely on LF (`\n`, code point 10), matching `splitLines`'s behavior
+ * on `renderHtml` output (escaping never touches `\n`). CR (`\r`) is not
+ * treated specially - for CRLF input, the `\r` lands as the last character of
+ * the preceding line's trailing token, exactly where `splitLines` leaves it
+ * in the HTML string. A trailing newline in the source yields a trailing
+ * empty line, and an empty `events` array yields one empty line - both to
+ * match `splitLines("")` / `splitLines`'s unconditional final push.
+ * @param {ScopeEvent[]} events
+ * @returns {LineToken[][]}
+ */
+export function tokenLines(events) {
+  /** @type {LineToken[][]} */
+  const lines = [];
+  /** @type {LineToken[]} */
+  let line = [];
+  /** @type {string[]} */
+  const stack = [];
+  // Recomputed only on OPEN/CLOSE, so adjacent text on the same nesting
+  // level (even across separate TEXT events) shares one array reference and
+  // can be merged by identity below.
+  /** @type {string[]} */
+  let scopes = [];
+  /** @type {LineToken | null} */
+  let lastToken = null;
+
+  /** @param {string} text */
+  const pushText = (text) => {
+    if (text === "") return;
+    if (lastToken && lastToken.scopes === scopes) {
+      lastToken.text += text;
+    } else {
+      lastToken = { text, scopes };
+      line.push(lastToken);
+    }
+  };
+
+  for (const event of events) {
+    if (event.t === OPEN) {
+      stack.push(event.s);
+      scopes = stack.slice();
+    } else if (event.t === CLOSE) {
+      stack.pop();
+      scopes = stack.slice();
+    } else {
+      const text = event.v;
+      let start = 0;
+      for (let i = 0; i < text.length; i++) {
+        if (text.charCodeAt(i) === 10) {
+          pushText(text.slice(start, i));
+          lines.push(line);
+          line = [];
+          lastToken = null;
+          start = i + 1;
+        }
+      }
+      pushText(text.slice(start));
+    }
+  }
+  lines.push(line);
+  return lines;
+}
+
+/**
+ * @param {{ classPrefix?: string }} [options]
+ * @returns {import("./engine.d.ts").Renderer<string>}
+ */
+export function createHtmlRenderer(options) {
+  return { render: (events) => renderHtml(events, options) };
+}
+
+/** @returns {import("./engine.d.ts").Renderer<TokenRange[]>} */
+export function createRangeRenderer() {
+  return { render: toRanges };
+}
+
+/** @returns {import("./engine.d.ts").Renderer<LineToken[][]>} */
+export function createLineRenderer() {
+  return { render: tokenLines };
 }
 
 /**

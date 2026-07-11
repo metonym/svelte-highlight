@@ -8,10 +8,12 @@ import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
 import CopyButtonTransform from "./CopyButton.transform.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
+import HighlightEvents from "./Highlight.events.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
+import HighlightAutoEvents from "./HighlightAuto.events.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
@@ -24,6 +26,7 @@ import HighlightStream from "./HighlightStream.test.svelte";
 import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
 import HighlightStyleNoTheme from "./HighlightStyle.noTheme.test.svelte";
 import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte";
+import HighlightSvelteEvents from "./HighlightSvelte.events.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
@@ -320,6 +323,42 @@ test("HighlightAuto", async ({ mount, page }) => {
 
   // Language tag
   await expect(page.locator("pre")).toHaveAttribute("data-language", "css");
+});
+
+test("Highlight - exposes the scope-event stream via slot prop and on:highlight detail", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEvents);
+
+  const expected = await page.getByTestId("expected-events").textContent();
+  expect(expected).not.toBe("");
+  await expect(page.getByTestId("slot-events")).toHaveText(expected ?? "");
+  await expect(page.getByTestId("dispatch-events")).toHaveText(expected ?? "");
+});
+
+test("HighlightAuto - exposes the scope-event stream via slot prop and on:highlight detail", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoEvents);
+
+  const expected = await page.getByTestId("expected-events").textContent();
+  expect(expected).not.toBe("");
+  await expect(page.getByTestId("slot-events")).toHaveText(expected ?? "");
+  await expect(page.getByTestId("dispatch-events")).toHaveText(expected ?? "");
+});
+
+test("HighlightSvelte - exposes the scope-event stream via slot prop and on:highlight detail", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightSvelteEvents);
+
+  const expected = await page.getByTestId("expected-events").textContent();
+  expect(expected).not.toBe("");
+  await expect(page.getByTestId("slot-events")).toHaveText(expected ?? "");
+  await expect(page.getByTestId("dispatch-events")).toHaveText(expected ?? "");
 });
 
 test("SvelteHighlight", async ({ mount, page }) => {
