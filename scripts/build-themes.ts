@@ -1,7 +1,7 @@
 import type { Declaration } from "postcss";
 import postcss from "postcss";
-import type { ThemeInput } from "./build-styles.ts";
 import { scopeSelectors } from "../src/scoped.js";
+import type { ThemeInput } from "./build-styles.ts";
 import { createMarkdown } from "./utils/create-markdown.ts";
 import {
   canonicalizeProperty,

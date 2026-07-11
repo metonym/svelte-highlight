@@ -60,12 +60,20 @@
  * frame's end-pattern scan (see `cachedMatch`); it's per-frame rather than
  * per-state because `endSameAsBegin`'s guard depends on this frame's own
  * `beginMatch`, and two frames can share the same state (recursive nesting).
- * @typedef {{ idx: number, state: CompiledState, beginMatch: string | undefined, endCache?: MatchCache }} Frame
+ * `beginPos` is this frame's begin match's position in `this.code` (see
+ * `subContinuations` below).
+ * @typedef {{ idx: number, state: CompiledState, beginMatch: string | undefined, beginPos: number, endCache?: MatchCache }} Frame
  */
 
 /**
  * Serializable snapshot of a stack frame (see `Tokenizer#snapshot`).
- * @typedef {{ idx: number, beginMatch: string | undefined }} FrameSnapshot
+ * @typedef {{ idx: number, beginMatch: string | undefined, beginPos: number }} FrameSnapshot
+ */
+
+/**
+ * A sub-language's carried continuation, scoped to one embedding
+ * occurrence (see `subContinuations`).
+ * @typedef {{ beginPos: number, frames: FrameSnapshot[] }} SubContinuation
  */
 
 /**
@@ -168,13 +176,21 @@ class Tokenizer {
         // ir.states 1:1, and every grammar has a root state.
         state: /** @type {CompiledState} */ (program.states[0]),
         beginMatch: undefined,
+        beginPos: 0,
       },
     ];
     this.aborted = false;
     this.iterations = 0;
     /**
-     * Embedded-language parse state, carried across segments by name.
-     * @type {Record<string, FrameSnapshot[]>}
+     * Embedded-language parse state, carried across segments by name - but
+     * only for the *same* embedding occurrence (matched by `beginPos`, the
+     * code position where that occurrence's frame began). Without the
+     * `beginPos` guard, a later, textually unrelated occurrence of the same
+     * sub-language name would incorrectly resume from an earlier, already-
+     * closed occurrence's leftover frames instead of starting fresh (e.g.
+     * two independent markdown fenced blocks that both embed "xml": the
+     * second would wrongly inherit the first's still-open-tag state).
+     * @type {Record<string, SubContinuation>}
      */
     this.subContinuations = Object.create(null);
     /**
@@ -307,11 +323,15 @@ class Tokenizer {
         this.text(text);
         return;
       }
-      // Later segments of the same embedded language resume where the
+      // Later segments of the *same* embedding occurrence resume where the
       // previous segment's parse left off (e.g. still inside an open tag).
+      // Guarded by beginPos: a record left by a different, already-closed
+      // occurrence of this sub-language must not leak into this one.
+      const beginPos = this.top.beginPos;
       const sub = new Tokenizer(this.registry, program);
       sub.code = text;
-      const carried = this.subContinuations[subLanguage];
+      const record = this.subContinuations[subLanguage];
+      const carried = record?.beginPos === beginPos ? record.frames : undefined;
       if (carried) {
         sub.frames = carried.map((f) => ({
           idx: f.idx,
@@ -319,6 +339,7 @@ class Tokenizer {
           // it's always a valid index into program.states.
           state: /** @type {CompiledState} */ (program.states[f.idx]),
           beginMatch: f.beginMatch,
+          beginPos: f.beginPos,
         }));
         for (const frame of sub.frames) {
           if (frame.idx !== 0 && frame.state.scope) sub.open(frame.state.scope);
@@ -326,10 +347,14 @@ class Tokenizer {
       }
       sub.run();
       const finished = sub.finish();
-      this.subContinuations[subLanguage] = sub.frames.map((f) => ({
-        idx: f.idx,
-        beginMatch: f.beginMatch,
-      }));
+      this.subContinuations[subLanguage] = {
+        beginPos,
+        frames: sub.frames.map((f) => ({
+          idx: f.idx,
+          beginMatch: f.beginMatch,
+          beginPos: f.beginPos,
+        })),
+      };
       result = {
         language: subLanguage,
         relevance: finished.relevance,
@@ -545,6 +570,7 @@ class Tokenizer {
       idx,
       state,
       beginMatch: state.endSameAsBegin ? match[1] : undefined,
+      beginPos: match.index,
     });
   }
 
@@ -700,13 +726,21 @@ class Tokenizer {
       frames: this.frames.map((f) => ({
         idx: f.idx,
         beginMatch: f.beginMatch,
+        beginPos: f.beginPos,
       })),
       openScopes: this.openScopes,
       eventCount: this.events.length,
       subContinuations: Object.fromEntries(
-        Object.entries(this.subContinuations).map(([name, frames]) => [
+        Object.entries(this.subContinuations).map(([name, record]) => [
           name,
-          frames.map((f) => ({ idx: f.idx, beginMatch: f.beginMatch })),
+          {
+            beginPos: record.beginPos,
+            frames: record.frames.map((f) => ({
+              idx: f.idx,
+              beginMatch: f.beginMatch,
+              beginPos: f.beginPos,
+            })),
+          },
         ]),
       ),
     };
@@ -724,6 +758,7 @@ class Tokenizer {
       // so it's always a valid index into program.states.
       state: /** @type {CompiledState} */ (this.program.states[f.idx]),
       beginMatch: f.beginMatch,
+      beginPos: f.beginPos,
     }));
     this.openScopes = snap.openScopes;
     this.events = [];

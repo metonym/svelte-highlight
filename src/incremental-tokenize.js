@@ -66,9 +66,18 @@ function stateConverges(a, b) {
   const bSubs = Object.keys(b.subContinuations);
   if (aSubs.length !== bSubs.length) return false;
   for (const name of aSubs) {
-    const aFrames = a.subContinuations[name];
-    const bFrames = b.subContinuations[name];
-    if (!aFrames || !bFrames || aFrames.length !== bFrames.length) return false;
+    const aRecord = a.subContinuations[name];
+    const bRecord = b.subContinuations[name];
+    if (!aRecord || !bRecord) return false;
+    // beginPos is deliberately not compared here: it's an absolute code
+    // position, so it legitimately differs between the old parse and a
+    // resumed-after-edit one even when their *future* behavior is
+    // identical (the carry decision it gates is relative to whichever
+    // parse is asking, and stays consistent once frames/buffer/openScopes
+    // - already compared above and below - agree).
+    const aFrames = aRecord.frames;
+    const bFrames = bRecord.frames;
+    if (aFrames.length !== bFrames.length) return false;
     for (let i = 0; i < aFrames.length; i++) {
       const af =
         /** @type {{ idx: number, beginMatch: string | undefined }} */ (
