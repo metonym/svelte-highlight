@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import nushell from "../src/languages/nushell";
 
-hljs.registerLanguage(nushell.name, nushell.register);
+const registry = createRegistry();
+
+registry.register(nushell.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "nushell" }).value;
+  registry.highlight(code, { language: "nushell" }).value;
 
 test("nushell highlights keywords", () => {
   const result = highlight("let x = 1\nmut y = 2");

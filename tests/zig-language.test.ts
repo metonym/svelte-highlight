@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import zig from "../src/languages/zig";
 
-hljs.registerLanguage(zig.name, zig.register);
+const registry = createRegistry();
+
+registry.register(zig.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "zig" }).value;
+  registry.highlight(code, { language: "zig" }).value;
 
 test("zig highlights keywords", () => {
   const result = highlight("pub fn main() !void {\n  const x = 0;\n}");

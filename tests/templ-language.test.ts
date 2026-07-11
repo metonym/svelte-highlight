@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry, registerAll } from "../src/engine.js";
+
 import templ from "../src/languages/templ";
 
-hljs.registerLanguage(templ.name, templ.register);
+const registry = createRegistry();
+
+registerAll(registry, templ);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "templ" }).value;
+  registry.highlight(code, { language: "templ" }).value;
 
 test("templ highlights package declarations as Go", () => {
   const result = highlight("package main");

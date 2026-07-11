@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import typst from "../src/languages/typst";
 
-hljs.registerLanguage(typst.name, typst.register);
+const registry = createRegistry();
+
+registry.register(typst.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "typst" }).value;
+  registry.highlight(code, { language: "typst" }).value;
 
 test("typst highlights #let code-mode keyword and string value", () => {
   const result = highlight('#let name = "World"');

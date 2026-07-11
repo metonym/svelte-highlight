@@ -5,6 +5,10 @@ await $`rm -rf package; mkdir package`;
 await Bun.write("./package/package.json", Bun.file("./package.json"));
 await Bun.write("./package/README.md", Bun.file("./README.md"));
 await Bun.write("./package/LICENSE", Bun.file("./LICENSE"));
+await Bun.write(
+  "./package/LICENSE.highlight.txt",
+  Bun.file("./LICENSE.highlight.txt"),
+);
 
 // Copy source folder to package
 await $`cp -r ./src/ ./package`;
@@ -73,6 +77,14 @@ pkgJson.exports = {
   "./scoped": {
     types: "./scoped.d.ts",
     default: "./scoped.js",
+  },
+  "./compat": {
+    types: "./compat.d.ts",
+    default: "./compat.js",
+  },
+  "./compat.js": {
+    types: "./compat.d.ts",
+    default: "./compat.js",
   },
   "./package.json": "./package.json",
 };

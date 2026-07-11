@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import clarity from "../src/languages/clarity";
 
-hljs.registerLanguage(clarity.name, clarity.register);
+const registry = createRegistry();
+
+registry.register(clarity.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "clarity" }).value;
+  registry.highlight(code, { language: "clarity" }).value;
 
 test("clarity highlights hyphenated define keywords", () => {
   const result = highlight("(define-public (go) (ok true))");

@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry, registerAll } from "../src/engine.js";
+
 import blade from "../src/languages/blade";
 
-hljs.registerLanguage(blade.name, blade.register);
+const registry = createRegistry();
+
+registerAll(registry, blade);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "blade" }).value;
+  registry.highlight(code, { language: "blade" }).value;
 
 test("blade highlights directives", () => {
   const result = highlight("@if($user)\n@endif");

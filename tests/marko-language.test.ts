@@ -1,6 +1,8 @@
-import hljs from "highlight.js/lib/core";
 import html from "svelte-highlight/languages/html";
+import { createRegistry, registerAll } from "../src/engine.js";
 import marko from "../src/languages/marko";
+
+const registry = createRegistry();
 
 const expressionSnippet = `<div class=input.className>
   Hello \${input.name}!
@@ -51,9 +53,9 @@ const conciseParentSnippet = `div
   span -- Subtitle`;
 
 test("marko highlights dollar-brace expressions as JavaScript", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(expressionSnippet, {
+  const result = registry.highlight(expressionSnippet, {
     language: "marko",
   }).value;
 
@@ -63,18 +65,18 @@ test("marko highlights dollar-brace expressions as JavaScript", () => {
 });
 
 test("marko highlights script blocks as JavaScript", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(scriptSnippet, { language: "marko" }).value;
+  const result = registry.highlight(scriptSnippet, { language: "marko" }).value;
 
   expect(result).toContain("language-javascript");
   expect(result).toContain("hljs-title function_");
 });
 
 test("marko highlights style blocks as CSS", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(styleSnippet, { language: "marko" }).value;
+  const result = registry.highlight(styleSnippet, { language: "marko" }).value;
 
   expect(result).toContain("language-css");
   expect(result).toContain("hljs-selector-class");
@@ -82,9 +84,9 @@ test("marko highlights style blocks as CSS", () => {
 });
 
 test("marko highlights control flow keywords", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(controlFlowSnippet, {
+  const result = registry.highlight(controlFlowSnippet, {
     language: "marko",
   }).value;
 
@@ -94,9 +96,9 @@ test("marko highlights control flow keywords", () => {
 });
 
 test("marko highlights class components and event attributes", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(classComponentSnippet, {
+  const result = registry.highlight(classComponentSnippet, {
     language: "marko",
   }).value;
 
@@ -106,9 +108,9 @@ test("marko highlights class components and event attributes", () => {
 });
 
 test("marko highlights concise-mode tag names and attributes", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(conciseTagSnippet, {
+  const result = registry.highlight(conciseTagSnippet, {
     language: "marko",
   }).value;
 
@@ -121,9 +123,9 @@ test("marko highlights concise-mode tag names and attributes", () => {
 });
 
 test("marko highlights event handler arguments and dollar-brace expressions on concise tags", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(conciseTagSnippet, {
+  const result = registry.highlight(conciseTagSnippet, {
     language: "marko",
   }).value;
 
@@ -138,9 +140,9 @@ test("marko highlights event handler arguments and dollar-brace expressions on c
 });
 
 test("marko classifies the top-level class keyword as JavaScript", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(classComponentSnippet, {
+  const result = registry.highlight(classComponentSnippet, {
     language: "marko",
   }).value;
 
@@ -150,9 +152,9 @@ test("marko classifies the top-level class keyword as JavaScript", () => {
 });
 
 test("marko highlights input/state/out as implicit template variables", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(conciseTagSnippet, {
+  const result = registry.highlight(conciseTagSnippet, {
     language: "marko",
   }).value;
 
@@ -161,9 +163,9 @@ test("marko highlights input/state/out as implicit template variables", () => {
 });
 
 test("marko highlights a bare concise tag with indented children", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(conciseParentSnippet, {
+  const result = registry.highlight(conciseParentSnippet, {
     language: "marko",
   }).value;
 
@@ -173,9 +175,9 @@ test("marko highlights a bare concise tag with indented children", () => {
 });
 
 test("marko does not mistake plain text inside a full <tag> for a concise tag", () => {
-  hljs.registerLanguage(marko.name, marko.register);
+  registerAll(registry, marko);
 
-  const result = hljs.highlight(expressionSnippet, {
+  const result = registry.highlight(expressionSnippet, {
     language: "marko",
   }).value;
 
@@ -184,8 +186,8 @@ test("marko does not mistake plain text inside a full <tag> for a concise tag", 
 });
 
 test("html alone does not highlight marko expressions", () => {
-  const isolated = hljs.newInstance();
-  isolated.registerLanguage(html.name, html.register);
+  const isolated = createRegistry();
+  registerAll(isolated, html);
 
   const result = isolated.highlight(expressionSnippet, {
     language: "html",

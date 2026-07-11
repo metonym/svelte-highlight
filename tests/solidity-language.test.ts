@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import solidity from "../src/languages/solidity";
 
-hljs.registerLanguage(solidity.name, solidity.register);
+const registry = createRegistry();
+
+registry.register(solidity.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "solidity" }).value;
+  registry.highlight(code, { language: "solidity" }).value;
 
 test("solidity highlights pragma and contract keywords", () => {
   const result = highlight("pragma solidity ^0.8.24;\ncontract Token {}");

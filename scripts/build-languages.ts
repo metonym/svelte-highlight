@@ -12,7 +12,7 @@ type CustomLanguage = {
   path: string;
 };
 
-const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
+export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
   {
     name: "html",
     moduleName: "html",
@@ -275,7 +275,7 @@ const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
   },
 ];
 
-type LanguageEntry = {
+export type LanguageEntry = {
   name: string;
   moduleName: string;
   kind: "custom" | "hljs";
@@ -289,6 +289,31 @@ function getModuleName(name: string) {
   if (CONTAINS_DASH.test(name)) moduleName = toCamelCase(name);
 
   return moduleName;
+}
+
+/**
+ * Shipped language list: hljs built-ins not shadowed by a custom grammar,
+ * plus customs, sorted by name. Shared with convert-grammars.ts.
+ */
+export function buildLanguageEntries(): LanguageEntry[] {
+  const customNames = new Set(CUSTOM_LANGUAGES.map(({ name }) => name));
+
+  return [
+    ...hljs
+      .listLanguages()
+      .filter((name) => !customNames.has(name))
+      .map((name) => ({
+        name,
+        moduleName: getModuleName(name),
+        kind: "hljs" as const,
+      })),
+    ...CUSTOM_LANGUAGES.map(({ name, moduleName, path }) => ({
+      name,
+      moduleName,
+      kind: "custom" as const,
+      customPath: path,
+    })),
+  ].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export async function buildLanguages() {
@@ -306,24 +331,7 @@ export async function buildLanguages() {
     ),
   );
 
-  const customNames = new Set(CUSTOM_LANGUAGES.map(({ name }) => name));
-
-  const entries: LanguageEntry[] = [
-    ...hljs
-      .listLanguages()
-      .filter((name) => !customNames.has(name))
-      .map((name) => ({
-        name,
-        moduleName: getModuleName(name),
-        kind: "hljs" as const,
-      })),
-    ...CUSTOM_LANGUAGES.map(({ name, moduleName, path }) => ({
-      name,
-      moduleName,
-      kind: "custom" as const,
-      customPath: path,
-    })),
-  ].sort((a, b) => a.name.localeCompare(b.name));
+  const entries = buildLanguageEntries();
 
   let markdown = createMarkdown(
     "Languages",
@@ -332,11 +340,14 @@ export async function buildLanguages() {
   );
   let base = "";
   let baseTs = `
-  import type { LanguageFn } from "highlight.js";
+  import type { GrammarIR } from "../engine.d.ts";
 
   interface LanguageType<TName extends string> {
     name: TName;
-    register: LanguageFn;
+    aliases?: string[];
+    register: GrammarIR;
+    /** Grammars this one embeds via \`subLanguage\` (e.g. astro -> html/typescript/css/javascript). */
+    dependencies?: LanguageType<string>[];
   }\n\n`;
 
   let languageNamesUnion = "";
@@ -403,6 +414,21 @@ export { ${moduleName} as default } from "./";\n`,
   files.push({ path: "src/languages/index.js", content: base });
   files.push({ path: "src/languages/index.d.ts", content: baseTs });
   files.push({ path: "SUPPORTED_LANGUAGES.md", content: markdown });
+
+  // all.js: every grammar as a plain array for HighlightAuto default detect.
+  // Avoids `import *` (biome noNamespaceImport) and can be code-split later.
+  const allImports = entries
+    .map((entry) => `import ${entry.moduleName} from "./${entry.name}.js";`)
+    .join("\n");
+  const allNames = entries.map((entry) => entry.moduleName).join(", ");
+  files.push({
+    path: "src/languages/all.js",
+    content: `${allImports}\n\nexport default [${allNames}];\n`,
+  });
+  files.push({
+    path: "src/languages/all.d.ts",
+    content: `import type { LanguageType } from "./index.d.ts";\n\ndeclare const languages: LanguageType<string>[];\nexport default languages;\n`,
+  });
 
   await Promise.all([
     ...files.map(({ path, content }) => writeTo(path, content)),

@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import dax from "../src/languages/dax";
 
-hljs.registerLanguage(dax.name, dax.register);
+const registry = createRegistry();
+
+registry.register(dax.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "dax" }).value;
+  registry.highlight(code, { language: "dax" }).value;
 
 test("dax highlights function calls", () => {
   const result = highlight("Total Sales = CALCULATE(SUM(Sales[Amount]))");

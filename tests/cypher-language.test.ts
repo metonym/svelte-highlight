@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import cypher from "../src/languages/cypher";
 
-hljs.registerLanguage(cypher.name, cypher.register);
+const registry = createRegistry();
+
+registry.register(cypher.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "cypher" }).value;
+  registry.highlight(code, { language: "cypher" }).value;
 
 test("cypher highlights clause keywords", () => {
   const result = highlight("MATCH (n) RETURN n");

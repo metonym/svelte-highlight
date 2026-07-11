@@ -256,14 +256,14 @@
   }
 
   /* `.typewriter-unit`/`.typewriter-hidden` only ever exist inside the
-     `{@html}`-free, JS-painted `contentEl`, so they're invisible to Svelte's
-     static analysis and must stay unscoped. */
+       `{@html}`-free, JS-painted `contentEl`, so they're invisible to Svelte's
+       static analysis and must stay unscoped. */
   :global(.typewriter-unit.typewriter-hidden) {
     visibility: hidden;
   }
 
   /* The caret rides the next-to-reveal (still hidden) unit's ::before, so it
-     never requires moving a real DOM node -- one class add/remove per tick. */
+       never requires moving a real DOM node -- one class add/remove per tick. */
   :global(.typewriter-unit.typewriter-caret)::before {
     content: "";
     visibility: visible;

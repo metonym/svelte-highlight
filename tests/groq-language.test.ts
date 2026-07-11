@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import groq from "../src/languages/groq";
 
-hljs.registerLanguage(groq.name, groq.register);
+const registry = createRegistry();
+
+registry.register(groq.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "groq" }).value;
+  registry.highlight(code, { language: "groq" }).value;
 
 test("groq highlights line comments", () => {
   const result = highlight('// recent posts\n*[_type == "post"]');

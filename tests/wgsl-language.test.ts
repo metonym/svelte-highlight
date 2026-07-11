@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import wgsl from "../src/languages/wgsl";
 
-hljs.registerLanguage(wgsl.name, wgsl.register);
+const registry = createRegistry();
+
+registry.register(wgsl.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "wgsl" }).value;
+  registry.highlight(code, { language: "wgsl" }).value;
 
 test("wgsl highlights fn declarations and keywords", () => {
   const result = highlight("fn main() { return; }");

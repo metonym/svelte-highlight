@@ -13,15 +13,12 @@ test("Languages", () => {
 test("LanguageType", () => {
   const language: LanguageType<"custom-language"> = {
     name: "custom-language",
-    register: () => {
-      return {
-        contains: [],
-        tokenize: () => {
-          return {
-            tokens: [],
-          };
-        },
-      };
+    register: {
+      name: "custom-language",
+      caseInsensitive: false,
+      unicode: false,
+      disableAutodetect: false,
+      states: [{ relevance: 1, rules: [] }],
     },
   };
 

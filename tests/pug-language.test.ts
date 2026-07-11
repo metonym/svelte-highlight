@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry, registerAll } from "../src/engine.js";
+
 import pug from "../src/languages/pug";
 
-hljs.registerLanguage(pug.name, pug.register);
+const registry = createRegistry();
+
+registerAll(registry, pug);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "pug" }).value;
+  registry.highlight(code, { language: "pug" }).value;
 
 test("pug highlights doctype as meta", () => {
   const result = highlight("doctype html");

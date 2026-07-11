@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import bicep from "../src/languages/bicep";
 
-hljs.registerLanguage(bicep.name, bicep.register);
+const registry = createRegistry();
+
+registry.register(bicep.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "bicep" }).value;
+  registry.highlight(code, { language: "bicep" }).value;
 
 test("bicep highlights declaration keywords", () => {
   const result = highlight("param location string");

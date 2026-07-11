@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import nickel from "../src/languages/nickel";
 
-hljs.registerLanguage(nickel.name, nickel.register);
+const registry = createRegistry();
+
+registry.register(nickel.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "nickel" }).value;
+  registry.highlight(code, { language: "nickel" }).value;
 
 test("nickel highlights let/in keywords", () => {
   const result = highlight("let x = 1 in x");

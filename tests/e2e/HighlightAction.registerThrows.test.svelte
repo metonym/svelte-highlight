@@ -1,20 +1,24 @@
 <script>
-  import hljs from "highlight.js/lib/core";
   import { highlight } from "svelte-highlight";
-
-  // highlight.js swallows registration errors in its default "safe mode" and
-  // falls back to a plaintext grammar. Disable that so a broken grammar
-  // actually throws, proving the action's own guard - not hljs's internal
-  // safety net - is what keeps the element intact.
-  hljs.debugMode();
 
   const source = "const s = 1;";
 
+  // An unbalanced regex source (`"("`) throws a SyntaxError from `new
+  // RegExp(...)` when the engine compiles this IR, proving the action's own
+  // try/catch guard - not any grammar-level safety net - keeps the element
+  // intact.
   /** @type {import("svelte-highlight/languages").LanguageType<string>} */
   const broken = {
     name: "broken-grammar",
-    register: () => {
-      throw new Error("broken grammar");
+    register: {
+      name: "broken-grammar",
+      caseInsensitive: false,
+      unicode: false,
+      disableAutodetect: false,
+      states: [
+        { relevance: 1, rules: [1] },
+        { relevance: 1, rules: [], scope: "broken", begin: "(" },
+      ],
     },
   };
 </script>

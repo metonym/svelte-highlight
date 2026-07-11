@@ -1,10 +1,13 @@
-import hljs from "highlight.js/lib/core";
+import { createRegistry } from "../src/engine.js";
+
 import jsonc from "../src/languages/jsonc";
 
-hljs.registerLanguage(jsonc.name, jsonc.register);
+const registry = createRegistry();
+
+registry.register(jsonc.register);
 
 const highlight = (code: string) =>
-  hljs.highlight(code, { language: "jsonc" }).value;
+  registry.highlight(code, { language: "jsonc" }).value;
 
 test("jsonc highlights line and block comments", () => {
   const result = highlight('{\n  // line\n  /* block */\n  "a": 1\n}');

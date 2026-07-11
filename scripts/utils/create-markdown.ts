@@ -1,4 +1,6 @@
-import { dependencies } from "../../package.json";
+import { version as hljsVersion } from "highlight.js/package.json" with {
+  type: "json",
+};
 
 /** Creates header metadata for supported languages/styles */
 export const createMarkdown = (
@@ -6,7 +8,6 @@ export const createMarkdown = (
   len: number,
   customCount = 0,
 ) => {
-  const hljsVersion = dependencies["highlight.js"];
   const summary =
     customCount > 0
       ? `> ${len} ${type.toLowerCase()}: ${

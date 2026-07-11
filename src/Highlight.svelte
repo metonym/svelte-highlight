@@ -8,9 +8,9 @@
   /** @type {boolean} */
   export let langtag = false;
 
-  import hljs from "highlight.js/lib/core";
   import { afterUpdate, createEventDispatcher } from "svelte";
   import LangTag from "./LangTag.svelte";
+  import { ensureRegistered, registry } from "./registry.js";
 
   const dispatch = createEventDispatcher();
 
@@ -22,9 +22,9 @@
   });
 
   $: {
-    hljs.registerLanguage(language.name, language.register);
+    ensureRegistered(language);
     const source = typeof code === "string" ? code : String(code ?? "");
-    highlighted = hljs.highlight(source, { language: language.name }).value;
+    highlighted = registry.highlight(source, { language: language.name }).value;
   }
 </script>
 
