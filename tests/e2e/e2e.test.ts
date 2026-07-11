@@ -20,6 +20,7 @@ import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
+import HighlightStreamSealing from "./HighlightStream.sealing.test.svelte";
 import HighlightStreamStability from "./HighlightStream.stability.test.svelte";
 import HighlightStreamTemplateLiteral from "./HighlightStream.templateLiteral.test.svelte";
 import HighlightStream from "./HighlightStream.test.svelte";
@@ -27,6 +28,7 @@ import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
 import HighlightStyleNoTheme from "./HighlightStyle.noTheme.test.svelte";
 import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte";
 import HighlightSvelteEvents from "./HighlightSvelte.events.test.svelte";
+import HighlightVirtual from "./HighlightVirtual.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
@@ -1122,6 +1124,296 @@ test("HighlightStream - `done` hides the caret and fires on:done", async ({
   await page.getByTestId("finish").click();
   await expect(stream.locator(".highlight-stream-caret")).toHaveCount(0);
   await expect(page.getByTestId("done-count")).toHaveText("1");
+});
+
+test("HighlightStream sealing - text content stays byte-correct across sealed chunk boundaries", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamSealing);
+
+  const streamRoot = page.getByTestId("stream");
+  const stream = streamRoot.locator("code");
+
+  await page.getByTestId("append-first").click(); // 300 lines: seals chunk 0 (lines 0-255)
+  await expect(page.getByTestId("lines-sent")).toHaveText("300");
+  await expect(streamRoot.locator("[data-line='299']")).toBeVisible();
+
+  const expectedLine = (i: number) => `const x${i} = ${i}; // line ${i}`;
+  const textAfterFirst = (await stream.textContent()) ?? "";
+  const linesAfterFirst = textAfterFirst.split("\n");
+  for (const i of [0, 1, 255, 256, 299]) {
+    expect(linesAfterFirst[i]).toBe(expectedLine(i));
+  }
+
+  await page.getByTestId("append-second").click(); // 600 lines: seals chunk 1 (lines 256-511)
+  await expect(page.getByTestId("lines-sent")).toHaveText("600");
+  await expect(streamRoot.locator("[data-line='599']")).toBeVisible();
+
+  const textAfterSecond = (await stream.textContent()) ?? "";
+  const linesAfterSecond = textAfterSecond.split("\n");
+  for (const i of [0, 255, 256, 511, 512, 599]) {
+    expect(linesAfterSecond[i]).toBe(expectedLine(i));
+  }
+});
+
+test("HighlightStream sealing - data-line indices are globally correct across sealed and unsealed regions", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamSealing);
+
+  await page.getByTestId("append-first").click();
+  await page.getByTestId("append-second").click();
+  await expect(page.getByTestId("lines-sent")).toHaveText("600");
+
+  const stream = page.getByTestId("stream");
+  for (const i of [0, 100, 255, 256, 400, 511, 512, 599]) {
+    // biome-ignore lint/performance/noAwaitInLoops: each assertion is independent and cheap; sequential is clearer here
+    await expect(stream.locator(`[data-line='${i}']`)).toHaveText(
+      `const x${i} = ${i}; // line ${i}`,
+    );
+  }
+  // 600 committed lines plus one trailing empty preview line (code ends in "\n").
+  await expect(stream.locator("[data-line]")).toHaveCount(601);
+});
+
+test("HighlightStream sealing - sealed chunk DOM nodes are never replaced by later streaming", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamSealing);
+
+  const stream = page.getByTestId("stream");
+
+  // Still unsealed (only 1 line sent) - not a meaningful stability claim yet.
+  await expect(stream.locator("[data-line='0']")).toBeVisible();
+
+  await page.getByTestId("append-first").click(); // seals chunk 0 (lines 0-255)
+  await expect(page.getByTestId("lines-sent")).toHaveText("300");
+  await expect(stream.locator("[data-line='10']")).toBeVisible();
+
+  // Capture the DOM node for a line inside the now-sealed first chunk.
+  const sealedLine = stream.locator("[data-line='10']");
+  const handle = await sealedLine.elementHandle();
+  expect(await handle?.evaluate((el) => el.textContent)).toBe(
+    "const x10 = 10; // line 10",
+  );
+
+  await page.getByTestId("append-second").click(); // seals chunk 1 (lines 256-511)
+  await expect(page.getByTestId("lines-sent")).toHaveText("600");
+
+  // The line-10 element from before the second seal is untouched.
+  expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
+  expect(await handle?.evaluate((el) => el.textContent)).toBe(
+    "const x10 = 10; // line 10",
+  );
+});
+
+test("HighlightStream sealing - `done` still swaps to the canonical full render", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamSealing);
+
+  await page.getByTestId("append-first").click();
+  await page.getByTestId("append-second").click();
+  await expect(page.getByTestId("lines-sent")).toHaveText("600");
+
+  await page.getByTestId("finish").click();
+
+  const stream = page.getByTestId("stream").locator("code");
+  const reference = page.getByTestId("reference").locator("code");
+  await expect(stream).toHaveText((await reference.textContent()) ?? "");
+  expect(await stream.innerHTML()).toBe(await reference.innerHTML());
+  // The split-rendering markup (sealed chunks/data-line spans) is gone.
+  expect(await page.getByTestId("stream").locator("[data-line]").count()).toBe(
+    0,
+  );
+});
+
+test("HighlightStream sealing - dispatched `highlight` payload matches Highlight's output for the same code", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamSealing);
+
+  await page.getByTestId("append-first").click();
+  await page.getByTestId("append-second").click();
+  await expect(page.getByTestId("lines-sent")).toHaveText("600");
+  // The `highlight` dispatch for the last line is synchronous with the same
+  // repaint that renders it, so waiting for the line to appear guarantees
+  // the snapshot below reflects that repaint (not a stale, earlier one).
+  await expect(
+    page.getByTestId("stream").locator("[data-line='599']"),
+  ).toBeVisible();
+
+  const streamedHighlighted = await page
+    .getByTestId("highlighted-snapshot")
+    .textContent();
+  const referenceHighlighted = await page
+    .getByTestId("reference-highlighted-snapshot")
+    .textContent();
+
+  // Pre-`done`, `highlighted` is the streaming (non-canonicalized) parse -
+  // for this snippet (no multi-line lookahead constructs) it already
+  // matches Highlight's canonical output byte-for-byte. Comparing the raw
+  // dispatched strings (rather than rendered innerHTML) sidesteps Svelte's
+  // own internal block-boundary comment markers, which differ between the
+  // two components' unrelated template structures.
+  expect(streamedHighlighted).toBe(referenceHighlighted);
+});
+
+test("HighlightVirtual - renders a bounded number of line nodes for a 5,000-line document", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  const renderedLines = virtual.locator("[data-line]");
+  await expect(renderedLines.first()).toBeVisible();
+
+  const count = await renderedLines.count();
+  // viewport (300px) / a typical monospace line-height + 2*overscan(5) +
+  // slack - nowhere near the 5,000 total lines, which is the point.
+  expect(count).toBeGreaterThan(0);
+  expect(count).toBeLessThan(200);
+
+  await expect(virtual.locator("[data-line='0']")).toHaveText(
+    "const x0 = 0; // line 0",
+  );
+});
+
+test("HighlightVirtual - shows correct content at top, middle, and bottom of the scroll range", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+  await expect(virtual.locator("[data-line='0']")).toHaveText(
+    "const x0 = 0; // line 0",
+  );
+
+  await virtual.evaluate((el) => {
+    el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
+  });
+  await expect(async () => {
+    const total = await virtual.locator("[data-line]").count();
+    expect(total).toBeGreaterThan(0);
+  }).toPass();
+  const middleLineHandle = virtual.locator("[data-line]").first();
+  const middleLine = await middleLineHandle.getAttribute("data-line");
+  const middleIndex = Number(middleLine);
+  expect(middleIndex).toBeGreaterThan(100);
+  expect(middleIndex).toBeLessThan(4900);
+  await expect(virtual.locator(`[data-line='${middleIndex}']`)).toHaveText(
+    `const x${middleIndex} = ${middleIndex}; // line ${middleIndex}`,
+  );
+
+  await virtual.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(virtual.locator("[data-line='4999']")).toHaveText(
+    "const x4999 = 4999; // line 4999",
+  );
+});
+
+test("HighlightVirtual - sizer height matches lineCount * measured line height", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+
+  const { sizerHeight, lineHeight } = await virtual.evaluate((el) => {
+    const sizer = el.querySelector(".shl-virtual-sizer");
+    const line = el.querySelector("[data-line]");
+    if (!sizer || !line) throw new Error("expected sizer and line elements");
+    return {
+      sizerHeight: sizer.getBoundingClientRect().height,
+      lineHeight: line.getBoundingClientRect().height,
+    };
+  });
+
+  expect(sizerHeight).toBeGreaterThan(0);
+  expect(lineHeight).toBeGreaterThan(0);
+  // Within 1px/line of rounding across 5,000 lines.
+  expect(Math.abs(sizerHeight - 5000 * lineHeight)).toBeLessThan(5000);
+});
+
+test("HighlightVirtual - the scroll container carries the theme background across the whole scrollable area", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+  await expect(virtual).toHaveClass(/hljs/);
+
+  // atom-one-dark's `.hljs` background is #282c34.
+  const bgAtTop = await virtual.evaluate(
+    (el) => getComputedStyle(el).backgroundColor,
+  );
+  expect(bgAtTop).toBe("rgb(40, 44, 52)");
+
+  await virtual.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(virtual.locator("[data-line='4999']")).toBeVisible();
+  const bgAfterScroll = await virtual.evaluate(
+    (el) => getComputedStyle(el).backgroundColor,
+  );
+  expect(bgAfterScroll).toBe(bgAtTop);
+});
+
+test("HighlightVirtual - visible lines are separated by real newlines (selection/copy yields line breaks)", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+
+  const windowText = await virtual.locator(".shl-virtual-window").textContent();
+  expect(windowText ?? "").toContain(
+    "const x0 = 0; // line 0\nconst x1 = 1; // line 1\n",
+  );
+});
+
+test("HighlightVirtual - rebuilds and clamps scroll when `code` shrinks", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+
+  await virtual.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(virtual.locator("[data-line='4999']")).toBeVisible();
+
+  let shortCode = "";
+  for (let i = 0; i < 20; i++) shortCode += `const y${i} = ${i};\n`;
+  await component.update({ props: { code: shortCode } });
+
+  await expect(virtual.locator("[data-line='19']")).toBeVisible();
+  // 20 lines of content plus one trailing empty line (shortCode ends in "\n").
+  await expect(virtual.locator("[data-line]")).toHaveCount(21);
+  const scrollTop = await virtual.evaluate((el) => el.scrollTop);
+  const scrollHeight = await virtual.evaluate((el) => el.scrollHeight);
+  const clientHeight = await virtual.evaluate((el) => el.clientHeight);
+  expect(scrollTop).toBeLessThanOrEqual(
+    Math.max(0, scrollHeight - clientHeight),
+  );
 });
 
 test("Typewriter - animates then settles to the full highlighted content", async ({
