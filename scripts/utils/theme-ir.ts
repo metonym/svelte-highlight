@@ -9,22 +9,21 @@
  * - `.hljs-<a>.<b>[.<c>...]` — compound (no combinator between parts; the
  *   first part must be `hljs-`-prefixed, later parts may or may not be).
  * - `.hljs-<a> .hljs-<b>` — descendant (exactly two levels).
+ *
+ * The `--shl-*` var-name derivation itself (`varName`, `colorSchemeFor`,
+ * ...) lives in `src/theme-vars.js`, shared with the runtime
+ * theme-authoring API (`src/theme.js`) — re-exported here so existing
+ * importers of this module are unaffected.
  */
 
-const SHL_PREFIX = "--shl-";
+import {
+  SUPPORTED_PROPERTIES,
+  colorSchemeFor,
+  parseColorToRgb,
+  varName,
+} from "../../src/theme-vars.js";
 
-/** CSS property -> `--shl-*` name suffix. `""` means no suffix (color is
- * the dominant, unsuffixed case). Only these properties fit the var
- * contract; anything else is routed to extras. */
-const PROP_SUFFIX: Record<string, string> = {
-  color: "",
-  "background-color": "bg",
-  "font-style": "font-style",
-  "font-weight": "font-weight",
-  "text-decoration": "text-decoration",
-};
-
-export const SUPPORTED_PROPERTIES = new Set(Object.keys(PROP_SUFFIX));
+export { colorSchemeFor, parseColorToRgb, varName, SUPPORTED_PROPERTIES };
 
 /** `background` is normalized to `background-color` — one property per
  * rule in the IR, regardless of which shorthand/longhand a theme used. */
@@ -91,18 +90,6 @@ export function subjectScope(shape: SelectorShape): string[] | null {
   return null;
 }
 
-/** `null` when `property` isn't part of the var contract. */
-export function varName(scopes: string[], property: string): string | null {
-  const suffix = PROP_SUFFIX[property];
-  if (suffix === undefined) return null;
-  if (scopes.length === 0) {
-    const base = suffix === "" ? "fg" : suffix === "bg" ? "bg" : suffix;
-    return `${SHL_PREFIX}${base}`;
-  }
-  const joined = scopes.join("-");
-  return `${SHL_PREFIX}${suffix === "" ? joined : `${joined}-${suffix}`}`;
-}
-
 const SIMPLE_COLOR_VALUE =
   /^(#[0-9a-fA-F]{3,8}|rgba?\([^()]*\)|hsla?\([^()]*\)|[a-zA-Z]+)$/;
 
@@ -114,59 +101,4 @@ const SIMPLE_COLOR_VALUE =
  */
 export function isSimpleColorValue(value: string): boolean {
   return SIMPLE_COLOR_VALUE.test(value.trim());
-}
-
-const NAMED_COLORS: Record<string, [number, number, number]> = {
-  black: [0, 0, 0],
-  white: [255, 255, 255],
-  gold: [255, 215, 0],
-  navy: [0, 0, 128],
-};
-
-/** Best-effort color parse for `colorScheme` inference; not a general CSS
- * color parser (hex + rgb()/rgba() + the handful of named colors themes
- * actually use are all that's needed here). */
-export function parseColorToRgb(
-  value: string,
-): [number, number, number] | null {
-  const v = value.trim().toLowerCase();
-  const named = NAMED_COLORS[v];
-  if (named) return named;
-
-  const hex3 = /^#([0-9a-f]{3})$/.exec(v);
-  if (hex3?.[1]) {
-    const digits = hex3[1];
-    return [0, 1, 2].map((i) => {
-      const ch = digits[i] as string;
-      return Number.parseInt(ch + ch, 16);
-    }) as [number, number, number];
-  }
-
-  const hex6 = /^#([0-9a-f]{6})[0-9a-f]{0,2}$/.exec(v);
-  if (hex6?.[1]) {
-    const hex = hex6[1];
-    return [0, 2, 4].map((i) => Number.parseInt(hex.slice(i, i + 2), 16)) as [
-      number,
-      number,
-      number,
-    ];
-  }
-
-  const rgb = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/.exec(v);
-  if (rgb?.[1] && rgb[2] && rgb[3]) {
-    return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])];
-  }
-
-  return null;
-}
-
-/** Falls back to `"light"` when `bgValue` is missing or unparseable — a
- * theme whose background never resolved to a var (e.g. a gradient) still
- * needs *some* metadata value. */
-export function colorSchemeFor(bgValue: string | undefined): "light" | "dark" {
-  const rgb = bgValue ? parseColorToRgb(bgValue) : null;
-  if (!rgb) return "light";
-  const [r, g, b] = rgb;
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.5 ? "light" : "dark";
 }

@@ -159,6 +159,85 @@ Variable names are derived mechanically from the selectors found in `highlight.j
 
 `base.css` assumes the default `hljs-` class prefix; projects using a custom `classPrefix` should stay on the legacy string path below.
 
+### Creating themes
+
+`svelte-highlight/theme` exports a typed, programmatic way to build or derive `ThemePalette` objects, instead of hand-writing `--shl-*` vars against the full scope vocabulary.
+
+**`defineTheme()`** builds a complete palette from a small typed definition: a ~14-key **semantic role** layer (pick a dozen colors, get a full theme) plus optional per-scope precision overrides.
+
+```js
+import { defineTheme } from "svelte-highlight/theme";
+
+const midnight = defineTheme({
+  name: "midnight",
+  roles: {
+    background: "#0b1021",
+    foreground: "#d6deeb",
+    comment: { color: "#637777", fontStyle: "italic" },
+    keyword: "#c792ea",
+    string: "#ecc48d",
+    literal: "#f78c6c",
+    function: "#82aaff",
+    type: "#ffcb8b",
+    variable: "#addb67",
+    tag: "#7fdbca",
+  },
+  scopes: {
+    "title.class_": "#ffd700", // per-scope precision on top of roles
+    "meta keyword": "#5f7e97",
+  },
+});
+```
+
+```svelte
+<HighlightStyle theme={midnight}>
+  <Highlight language={typescript} {code} />
+</HighlightStyle>
+```
+
+`roles` are `foreground`, `background`, `comment`, `keyword`, `string`, `literal`, `function`, `type`, `variable`, `property`, `tag`, `punctuation`, `meta`, `addition`, `deletion` — each expands to a documented set of `--shl-*` scope vars. A bare string is shorthand for `{ color: string }`; both roles and `scopes` also accept a `{ color, background, fontStyle, fontWeight, textDecoration }` object. Precedence is `extends` palette vars → `roles` → `scopes` (later layers win per-var, not per-role). `foreground`/`background` are required unless `extends` is given.
+
+**`extendTheme()`** derives a new palette from any shipped or user palette with role- or scope-level overrides:
+
+```js
+import atomOneDark from "svelte-highlight/themes/atom-one-dark";
+import { extendTheme } from "svelte-highlight/theme";
+
+const branded = extendTheme(atomOneDark, {
+  name: "atom-one-dark-branded",
+  roles: { keyword: "#ff79c6" },
+});
+```
+
+**`paletteToCss()`** emits any palette as a CSS string — for build-time/global CSS instead of the `HighlightStyle` component:
+
+```js
+import { paletteToCss } from "svelte-highlight/theme";
+
+writeFileSync("public/midnight.css", paletteToCss(midnight));
+```
+
+`defineTheme` output is a plain `ThemePalette` — spreadable, serializable, diffable, and valid everywhere shipped palettes work, per [Themes are data](#theming) above.
+
+### Importing VS Code themes
+
+`svelte-highlight/theme/textmate` imports VS Code / TextMate theme JSON (thousands of existing editor themes) into a `ThemePalette`:
+
+```js
+import { fromTextMate } from "svelte-highlight/theme/textmate";
+import nightOwl from "./night-owl-color-theme.json" with { type: "json" };
+
+const palette = fromTextMate(nightOwl);
+```
+
+`fromTextMate` accepts a **parsed object** only — VS Code themes are often JSONC, so parsing is the caller's job. The scope mapping is best-effort: TextMate scope selectors are matched against a starter table by segment-prefix (`"entity.name.function"` matches `"entity.name.function.method.ts"`), with the most specific (longest) match winning ties broken by the later `tokenColors` entry — the same specificity semantics VS Code itself uses. Entries that don't map to anything are never silently dropped; pass `onWarn` to observe them:
+
+```js
+const palette = fromTextMate(nightOwl, {
+  onWarn: (message) => console.warn(message),
+});
+```
+
 ## Styling
 
 Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility.

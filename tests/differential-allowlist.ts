@@ -40,10 +40,4 @@ export interface RealFileAllowlistEntry {
   reason: string;
 }
 
-export const REAL_FILE_ALLOWLIST: RealFileAllowlistEntry[] = [
-  {
-    path: "README.md",
-    reason:
-      "Nested xml-embedding depth mismatch for inline HTML that appears inside a markdown heading whose emphasis span never closes (e.g. a heading with a `` `--shl-*` `` code span, per tests/markdown-embedded-sublanguage-leak.test.ts's header comment): hljs and this engine agree on the outer section/emphasis nesting but disagree on how many times the inline-HTML-embeds-as-xml rule re-applies within it. This is a markdown grammar-conversion fidelity gap (src/languages/markdown.js's rule set for that nested context), not the Tokenizer.subContinuations cross-occurrence leak fixed alongside this entry - that leak is what previously caused *this same* README divergence for a different reason; the heading/emphasis gap is a separate, still-open issue newly exposed by (not caused by) added README content. Root-cause fix belongs in the markdown grammar conversion, out of scope here.",
-  },
-];
+export const REAL_FILE_ALLOWLIST: RealFileAllowlistEntry[] = [];

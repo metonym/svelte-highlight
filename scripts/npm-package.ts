@@ -67,6 +67,11 @@ pkgJson.exports = {
   },
   "./theme": {
     types: "./theme.d.ts",
+    default: "./theme.js",
+  },
+  "./theme/textmate": {
+    types: "./textmate-theme.d.ts",
+    default: "./textmate-theme.js",
   },
   "./languages": {
     types: "./languages/index.d.ts",
