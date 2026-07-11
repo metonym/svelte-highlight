@@ -84,12 +84,23 @@ export interface Snapshot {
   buffer: string;
   relevance: number;
   kwHits: Record<string, number>;
-  frames: { idx: number; beginMatch: string | undefined }[];
+  frames: { idx: number; beginMatch: string | undefined; beginPos: number }[];
   openScopes: number;
   eventCount: number;
+  /** Per sub-language name, the carried continuation - scoped to the
+   * embedding occurrence that began at `beginPos` (see `Tokenizer`'s
+   * `subContinuations` field). A later occurrence of the same name that
+   * began elsewhere starts fresh rather than inheriting this state. */
   subContinuations: Record<
     string,
-    { idx: number; beginMatch: string | undefined }[]
+    {
+      beginPos: number;
+      frames: {
+        idx: number;
+        beginMatch: string | undefined;
+        beginPos: number;
+      }[];
+    }
   >;
 }
 

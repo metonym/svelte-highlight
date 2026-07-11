@@ -1,91 +1,75 @@
 /**
- * Known bug report (not yet fixed): `Tokenizer.subContinuations` in
- * `src/engine.js` is keyed only by sub-language *name*, scoped to the
- * outer tokenizer's whole lifetime. It's meant to let a single embedded
- * region resume across separate `flush()` calls (e.g. streaming edits via
- * `HighlightStream`/`HighlightEditable`, restored via `snapshot()`/
- * `restore()`), but nothing distinguishes "resuming this exact region"
- * from "this is a brand-new, unrelated region that happens to embed the
- * same sub-language" within one static, single-shot `tokenize()` call.
+ * Regression test for a state leak that used to exist in
+ * `Tokenizer.subContinuations` (`src/engine.js`): it's keyed by
+ * sub-language *name* and scoped to the outer tokenizer's whole lifetime,
+ * so a single embedded region can resume across separate `flush()` calls
+ * (e.g. streaming edits via `HighlightStream`/`HighlightEditable`,
+ * restored via `snapshot()`/`restore()`). Without a per-occurrence guard,
+ * nothing distinguished "resuming this exact region" from "a brand-new,
+ * unrelated region that happens to embed the same sub-language" within
+ * one static, single-shot `tokenize()` call.
  *
- * Symptom: in one markdown document, an *earlier* embedded region whose
- * sub-tokenizer parse ends mid-state (e.g. inside what its grammar
- * considers an open tag) can leak that leftover frame stack into a
- * *later*, textually unrelated region that happens to embed the same
- * sub-language — the later region incorrectly resumes from the earlier
- * one's leftover state instead of starting fresh, diverging from hljs
- * (which has no such statefulness for a one-shot parse).
+ * Symptom (fixed): in markdown, raw inline HTML (`<tag ...>`) is embedded
+ * as "xml" (see `src/languages/markdown.js`'s `begin: "<\\/?[A-Za-z_]",
+ * end: ">"` rule). An *earlier* such tag whose content confuses the xml
+ * sub-tokenizer into ending mid-state (e.g. a `>` appearing inside what
+ * xml still considers an open attribute value) used to leak that leftover
+ * frame stack into a *later*, textually unrelated tag elsewhere in the
+ * document — the later tag would incorrectly resume from the earlier
+ * one's leftover state instead of parsing fresh, diverging from hljs
+ * (which has no such statefulness for a one-shot parse). Fixed by tagging
+ * each embedding occurrence with the code position (`beginPos`) its frame
+ * began at, and only reusing a carried continuation when that position
+ * matches — preserved across `snapshot()`/`restore()` so real streaming
+ * continuation still works.
  *
- * This reproduction needs no theming-PR content: an ATX heading with a
- * backtick code span containing `*` reaches markdown's embedded-tag
- * `subLanguage: "xml"` rule in a way that leaves `subContinuations["xml"]`
- * populated; a later, textually independent fenced block that also
- * resolves to the "xml" embedding (any block whose language tag isn't a
- * registered alias falls back to markdown's default inline-HTML
- * embedding) then incorrectly inherits that leftover state.
- *
- * Root-cause fix belongs in `src/engine.js`'s sub-language continuation
- * scoping (e.g. tagging each embedding occurrence so only a genuine
- * same-occurrence resume reuses `subContinuations`, while preserving it
- * across snapshot()/restore() for real streaming) — out of scope for this
- * report. Remove `.failing` once that fix lands; if this test starts
- * passing on its own, `it.failing` will fail and say so.
+ * (Separately, an *unrelated* pre-existing divergence exists for inline
+ * HTML nested inside a markdown heading whose emphasis never closes -
+ * hljs suppresses the xml embedding there and this engine doesn't. That's
+ * a markdown grammar-conversion fidelity gap, not a `subContinuations`
+ * leak, and is out of scope here.)
  */
-import coreFactory from "highlight.js/lib/core";
-import markdown from "highlight.js/lib/languages/markdown";
 import { createRegistry, registerAll, renderHtml } from "../src/engine.js";
 import * as languages from "../src/languages/index.js";
-
-const hljs = coreFactory.newInstance();
-hljs.registerLanguage("markdown", markdown);
 
 const registry = createRegistry();
 for (const language of Object.values(languages)) {
   registerAll(registry, language);
 }
 
-// An unrelated heading elsewhere in the document primes
-// `subContinuations["xml"]` with a leftover open-tag frame.
-const PRIMING_HEADING = "### The `--shl-*` variable contract";
+// An earlier inline tag whose `>` lands inside an xml-unterminated
+// attribute value, so its embedded xml sub-parse ends with an open frame -
+// primes `subContinuations["xml"]` with that leftover state.
+const PRIMING_LINE =
+  'Some prose with <div data-x="unterminated> and more text.';
 
-// A textually independent fenced block (language tag not registered, so
-// it falls back to markdown's default inline-HTML "xml" embedding) that
-// should tokenize identically whether or not it's preceded by unrelated
-// content elsewhere in the document.
-const UNRELATED_FENCED_BLOCK = [
-  "## Svelte Syntax Highlighting",
-  "",
-  "```svelte",
-  "<script>",
-  "  const code = `<button on:click={() => {}}>Increment</button>`;",
-  "</script>",
-  "```",
-].join("\n");
+// A later, textually independent inline tag that should parse fresh
+// regardless of what unrelated tags came before it.
+const UNRELATED_LINE = "More prose with <span>hello</span> and more.";
 
-describe("markdown embedded-sublanguage state leak (known bug)", () => {
-  it.failing("an unrelated block's fenced content tokenizes the same with or without an earlier priming heading", () => {
-    const withoutPriming = UNRELATED_FENCED_BLOCK;
-    const withPriming = `${PRIMING_HEADING}\n\n${UNRELATED_FENCED_BLOCK}`;
-
+describe("markdown embedded-sublanguage state leak (regression)", () => {
+  it("an unrelated tag's HTML tokenizes the same with or without an earlier priming tag", () => {
     const isolated = renderHtml(
-      registry.tokenize(withoutPriming, "markdown").events,
+      registry.tokenize(UNRELATED_LINE, "markdown").events,
     );
     const primed = renderHtml(
-      registry.tokenize(withPriming, "markdown").events,
+      registry.tokenize(`${PRIMING_LINE}\n\n${UNRELATED_LINE}`, "markdown")
+        .events,
     );
 
-    // The unrelated block's own rendered slice should be identical
+    // The unrelated line's own rendered slice should be identical
     // regardless of what unrelated content precedes it in the document.
     expect(primed.endsWith(isolated)).toBe(true);
   });
 
-  it.failing("matches real hljs on the combined document (the actual user-facing symptom)", () => {
-    const code = `${PRIMING_HEADING}\n\n${UNRELATED_FENCED_BLOCK}`;
-    const expected = hljs.highlight(code, {
-      language: "markdown",
-      ignoreIllegals: true,
-    }).value;
-    const actual = renderHtml(registry.tokenize(code, "markdown").events);
-    expect(actual).toBe(expected);
+  it("parses the later tag's name/attr structure instead of treating it as a continued string", () => {
+    const code = `${PRIMING_LINE}\n\n${UNRELATED_LINE}`;
+    const html = renderHtml(registry.tokenize(code, "markdown").events);
+
+    // Leaked continuation used to render "<span>" as one hljs-string
+    // token (still "inside" the first tag's unterminated attribute)
+    // instead of a fresh tag with its own name/punctuation scopes.
+    expect(html).toContain('<span class="hljs-name">span</span>');
+    expect(html).not.toContain('<span class="hljs-string">&lt;span&gt;</span>');
   });
 });

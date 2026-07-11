@@ -22,5 +22,5 @@ export {
   scopeSelectors,
   scopeStyle,
 } from "./scoped";
-export type { ThemePalette } from "./theme";
 export { default as Typewriter } from "./Typewriter.svelte";
+export type { ThemePalette } from "./theme";
