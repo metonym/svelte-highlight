@@ -1,6 +1,7 @@
 import type { Declaration } from "postcss";
 import postcss from "postcss";
 import { scopeSelectors } from "../src/scoped.js";
+import { serializeVars } from "../src/theme-vars.js";
 import type { ThemeInput } from "./build-styles.ts";
 import { createMarkdown } from "./utils/create-markdown.ts";
 import {
@@ -59,13 +60,6 @@ type ThemeReportEntry = {
 
 function declText(decls: Declaration[]): string {
   return decls.map((d) => `${d.prop}:${d.value}`).join(";");
-}
-
-function serializeVars(vars: Map<string, string>): string {
-  return [...vars.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => `${key}:${value}`)
-    .join(";");
 }
 
 function processTheme(
