@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import postcss from "postcss";
-import { defineTheme, extendTheme, paletteToCss } from "../src/theme.js";
 import type { ThemeDefinition, ThemePalette } from "../src/theme.d.ts";
+import { defineTheme, extendTheme, paletteToCss } from "../src/theme.js";
 
 const THEME_VAR_GRAMMAR = /^--shl-[\w-]+$/;
 

@@ -17,13 +17,13 @@
  */
 
 import {
-  SUPPORTED_PROPERTIES,
   colorSchemeFor,
   parseColorToRgb,
+  SUPPORTED_PROPERTIES,
   varName,
 } from "../../src/theme-vars.js";
 
-export { colorSchemeFor, parseColorToRgb, varName, SUPPORTED_PROPERTIES };
+export { colorSchemeFor, parseColorToRgb, SUPPORTED_PROPERTIES, varName };
 
 /** `background` is normalized to `background-color` — one property per
  * rule in the IR, regardless of which shorthand/longhand a theme used. */
