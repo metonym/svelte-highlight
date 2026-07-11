@@ -13,8 +13,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { ROLE_SCOPES, parseScopeKey, varName } from "../src/theme-vars.js";
 import type { ThemePalette } from "../src/theme.d.ts";
+import { parseScopeKey, ROLE_SCOPES, varName } from "../src/theme-vars.js";
 
 const THEMES_DIR = path.join(import.meta.dir, "../src/themes");
 

@@ -11,10 +11,10 @@
  */
 
 import {
-  ROLE_SCOPES,
   applyTokenStyle,
   colorSchemeFor,
   parseScopeKey,
+  ROLE_SCOPES,
   serializeVars,
   varName,
 } from "./theme-vars.js";
