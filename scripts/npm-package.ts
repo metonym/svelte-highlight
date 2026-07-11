@@ -80,6 +80,22 @@ pkgJson.exports = {
     types: "./languages/*.d.ts",
     import: "./languages/*.js",
   },
+  "./engine": {
+    types: "./engine.d.ts",
+    default: "./engine.js",
+  },
+  "./engine.js": {
+    types: "./engine.d.ts",
+    default: "./engine.js",
+  },
+  "./registry": {
+    types: "./registry.d.ts",
+    default: "./registry.js",
+  },
+  "./registry.js": {
+    types: "./registry.d.ts",
+    default: "./registry.js",
+  },
   "./ansi": {
     types: "./ansi.d.ts",
     default: "./ansi.js",
