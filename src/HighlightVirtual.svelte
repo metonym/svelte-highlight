@@ -185,7 +185,7 @@
 
 <pre
   bind:this={container}
-  class="shl-virtual"
+  class:shl-virtual={true}
   class:hljs={true}
   on:scroll={onScroll}
   {...$$restProps}
@@ -198,6 +198,7 @@
 <style>
   .shl-virtual {
     display: block;
+    position: relative;
     overflow: auto;
     white-space: pre;
     margin: 0;

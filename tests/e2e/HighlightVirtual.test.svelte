@@ -23,4 +23,5 @@
   {overscan}
   data-testid="virtual"
   style="height: 300px; width: 600px;"
+  {...$$restProps}
 />

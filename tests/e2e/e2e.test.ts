@@ -1372,6 +1372,32 @@ test("HighlightVirtual - the scroll container carries the theme background acros
   expect(bgAfterScroll).toBe(bgAtTop);
 });
 
+test("HighlightVirtual - a consumer-provided `class` merges with (not replaces) the component's own scoped styles", async ({
+  mount,
+  page,
+}) => {
+  // Regression test: a static `class="shl-virtual"` attribute combined with
+  // both a `class:hljs` directive and `{...$$restProps}` was silently
+  // dropped by Svelte's class-merging, which meant *any* consumer passing
+  // `class` (the normal way to theme/size the component) lost the
+  // component's own layout CSS entirely (overflow, white-space, sizer/
+  // window positioning) despite `hljs` itself surviving.
+  await mount(HighlightVirtual, { props: { class: "consumer-class" } });
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+  await expect(virtual).toHaveClass(/consumer-class/);
+  await expect(virtual).toHaveClass(/hljs/);
+  await expect(virtual).toHaveClass(/shl-virtual/);
+
+  const { overflow, whiteSpace } = await virtual.evaluate((el) => {
+    const style = getComputedStyle(el);
+    return { overflow: style.overflow, whiteSpace: style.whiteSpace };
+  });
+  expect(overflow).toBe("auto");
+  expect(whiteSpace).toBe("pre");
+});
+
 test("HighlightVirtual - visible lines are separated by real newlines (selection/copy yields line breaks)", async ({
   mount,
   page,
@@ -1414,6 +1440,38 @@ test("HighlightVirtual - rebuilds and clamps scroll when `code` shrinks", async 
   expect(scrollTop).toBeLessThanOrEqual(
     Math.max(0, scrollHeight - clientHeight),
   );
+});
+
+test("HighlightVirtual - the sizer's huge intrinsic height never inflates the surrounding page's scroll height", async ({
+  mount,
+  page,
+}) => {
+  // Regression test: the hidden line-height probe is `position: absolute`
+  // with no `top`/`left` set, so it falls back to a "static position" -
+  // computed from unclipped document flow. Without `position: relative` on
+  // the component's own `<pre>`, the probe's containing block escaped past
+  // it (which correctly clips *visually* via `overflow: auto`) all the way
+  // up to the initial containing block, landing the probe near the sizer's
+  // full, un-clipped-for-this-purpose height and inflating
+  // `document.documentElement.scrollHeight` by the same amount - even
+  // though `document.body.scrollHeight` stayed small and correct.
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+
+  const documentElementScrollHeight = await page.evaluate(
+    () => document.documentElement.scrollHeight,
+  );
+
+  // `documentElement.scrollHeight` is legitimately >= the viewport height
+  // even when actual content is shorter (nothing to do with this bug), so
+  // this isn't compared for exact equality against body.scrollHeight - the
+  // meaningful assertion is the bound: the leak this test guards against
+  // inflates it to roughly the sizer's full height (5,000 lines * a
+  // per-line height that would need to be in the thousands of pixels to
+  // reach this bound), many orders of magnitude past any real viewport.
+  expect(documentElementScrollHeight).toBeLessThan(20_000);
 });
 
 test("Typewriter - animates then settles to the full highlighted content", async ({
