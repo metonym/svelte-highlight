@@ -1061,9 +1061,13 @@ test("HighlightStream - streaming chunks (split mid-keyword and mid-template-lit
     await appendChunk.click();
     await expect(highlightCount).not.toHaveText(previousCount);
     previousCount = (await highlightCount.textContent()) ?? previousCount;
-    const text = (await stream.textContent()) ?? "";
-    expect(text.length).toBeGreaterThan(previousLength);
-    previousLength = text.length;
+    // `highlightCount`'s DOM update landing doesn't guarantee `stream`'s own
+    // (larger, differently-structured) DOM update has landed in the same
+    // paint, so poll this instead of a one-shot read.
+    await expect
+      .poll(async () => (await stream.textContent())?.length ?? 0)
+      .toBeGreaterThan(previousLength);
+    previousLength = (await stream.textContent())?.length ?? 0;
   }
 
   await page.getByTestId("finish").click();
@@ -1300,14 +1304,19 @@ test("HighlightVirtual - shows correct content at top, middle, and bottom of the
   await virtual.evaluate((el) => {
     el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
   });
+  // `[data-line]` elements exist even before scrolling, so waiting on their
+  // count alone would pass immediately without ever observing the
+  // scroll-triggered repaint. Poll the first rendered index itself until it
+  // reflects the new scroll position.
+  let middleIndex = 0;
   await expect(async () => {
-    const total = await virtual.locator("[data-line]").count();
-    expect(total).toBeGreaterThan(0);
+    const middleLine = await virtual
+      .locator("[data-line]")
+      .first()
+      .getAttribute("data-line");
+    middleIndex = Number(middleLine);
+    expect(middleIndex).toBeGreaterThan(100);
   }).toPass();
-  const middleLineHandle = virtual.locator("[data-line]").first();
-  const middleLine = await middleLineHandle.getAttribute("data-line");
-  const middleIndex = Number(middleLine);
-  expect(middleIndex).toBeGreaterThan(100);
   expect(middleIndex).toBeLessThan(4900);
   await expect(virtual.locator(`[data-line='${middleIndex}']`)).toHaveText(
     `const x${middleIndex} = ${middleIndex}; // line ${middleIndex}`,
