@@ -83,6 +83,11 @@ export async function convertGrammars() {
   let minifiedBytes = 0;
   const warningsByLanguage: [string, string[]][] = [];
   const failed: [string, string][] = [];
+  // Final (post-stripDefaults) IR per language, keyed by name - handed to
+  // buildDetectIndex() directly so it scores the exact IR just written to
+  // disk, without re-importing (and hitting the ESM module cache for) the
+  // files this function just overwrote.
+  const irByName = new Map<string, GrammarIR>();
 
   const files = entries
     .map((entry) => {
@@ -96,6 +101,7 @@ export async function convertGrammars() {
         return null;
       }
       stripDefaults(ir);
+      irByName.set(entry.name, ir);
 
       if (warnings.length === 0) clean++;
       else warningsByLanguage.push([entry.name, warnings]);
@@ -184,4 +190,5 @@ MIT license.
   }
 
   console.timeEnd("convert grammars");
+  return irByName;
 }

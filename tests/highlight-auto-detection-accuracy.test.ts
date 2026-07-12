@@ -9,7 +9,7 @@ for (const language of allLanguages) registerAll(registry, language);
 // against the FULL unrestricted candidate pool (all 244 registered grammars)
 // via `highlightAuto` - the scenario a consumer gets by default, without
 // restricting `languageNames`.
-const SAMPLES: Record<string, string> = {
+export const SAMPLES: Record<string, string> = {
   solidity: `pragma solidity ^0.8.0;
 
 contract Token {

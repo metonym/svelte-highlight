@@ -490,10 +490,10 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 ## Auto-highlighting
 
-The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) and attempts to guess what grammar to use based on the provided `code`.
+`HighlightAuto` guesses what grammar to use from the provided `code`, using a tiered pipeline instead of shipping every grammar to every browser:
 
-> [!WARNING]
-> Auto-highlighting will result in a larger bundle size. Specify a language if possible.
+1. **Tier 0** - a generated fingerprint table (kilobytes, no grammars) scores the raw code and picks a handful of candidate languages.
+2. **Tier 1** - only those candidate grammars are dynamically imported, and the real relevance competition runs among them plus anything already registered (so a custom grammar you've registered elsewhere still competes).
 
 ```svelte
 <script>
@@ -510,9 +510,42 @@ The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.r
 <HighlightAuto {code} />
 ```
 
+### The tradeoff: async, plain-text-first by default
+
+Without a `languages` prop, `HighlightAuto` costs the fingerprint table instead of every grammar - but detection is no longer synchronous:
+
+- **SSR renders plain escaped text.** Dynamic import can't run in Svelte's synchronous SSR.
+- **Browser first paint is plain text**, upgraded to highlighted output once the winning grammar finishes loading (typically one dynamic import round-trip). The `on:highlight` event fires after that async completion, not synchronously.
+
+If you need the old synchronous, SSR-highlighted guarantee, use one of the two escape hatches below.
+
+### Escape hatch: the `languages` prop
+
+Pass explicit language modules to detect among. This is synchronous everywhere (SSR included), and your bundle contains exactly the grammars you import - nothing more:
+
+```svelte
+<script>
+  import { HighlightAuto } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import python from "svelte-highlight/languages/python";
+  import rust from "svelte-highlight/languages/rust";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const x = 42;";
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<HighlightAuto {code} languages={[typescript, python, rust]} />
+```
+
+**Migration note:** if you're upgrading and relied on the old default's synchronous, all-grammars behavior for a known set of languages, pass `languages={[...]}` with that set - this restores the previous guarantees with a deterministic bundle. For a single known language, `Highlight` with an explicit `language` is usually a better fit than `HighlightAuto` altogether.
+
 ### Limiting Language Detection
 
-You can restrict [language auto-detection](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto-value-languagesubset) to a subset using the `languageNames` prop. This can improve performance and accuracy.
+`languageNames` further restricts which languages are considered, and combines with `languages` (further filtering that pool) or works standalone against the default async pipeline (skipping tier 0 and loading exactly those names as candidates):
 
 ```svelte
 <script>
@@ -527,6 +560,20 @@ You can restrict [language auto-detection](https://highlightjs.readthedocs.io/en
 </svelte:head>
 
 <HighlightAuto {code} languageNames={["javascript", "typescript"]} />
+```
+
+### Headless usage
+
+`svelte-highlight/auto-detect` exposes the same tiered pipeline outside of a component, for detecting a language without rendering anything:
+
+```js
+import { detectCandidates, detectLanguage } from "svelte-highlight/auto-detect";
+
+// Tier 0 only: sync, no grammars loaded.
+detectCandidates(snippet); // ["python", "ruby", ...] - top candidates, best first
+
+// Tier 0 + tier 1: loads and registers the winning grammar.
+const { language, relevance } = await detectLanguage(snippet);
 ```
 
 ## Line Numbers
@@ -1659,11 +1706,12 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 
 #### Props
 
-| Name      | Type             | Default value  |
-| :-------- | :--------------- | :------------- |
-| code      | `any`            | N/A (required) |
-| languages | `LanguageName[]` | `undefined`    |
-| langtag   | `boolean`        | `false`        |
+| Name          | Type                                | Default value  |
+| :------------ | :----------------------------------- | :------------- |
+| code          | `any`                                 | N/A (required) |
+| languages     | `LanguageType<string>[]`              | `undefined`    |
+| languageNames | `(LanguageName \| string)[]`          | `undefined`    |
+| langtag       | `boolean`                             | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
@@ -1673,9 +1721,11 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 import type { LanguageName } from "svelte-highlight";
 ```
 
+Without `languages`, detection is asynchronous - see [The tradeoff: async, plain-text-first by default](#the-tradeoff-async-plain-text-first-by-default). With `languages`, detection is synchronous and SSR-highlighted, exactly like `Highlight`, restricted to that pool.
+
 #### Dispatched Events
 
-- **on:highlight**: fired after `code` is highlighted
+- **on:highlight**: fired after `code` is highlighted. In the default (no `languages`) path, this fires once, after tier-0/tier-1 detection resolves - not for the plain-text interim render.
 
 ```svelte
 <HighlightAuto
