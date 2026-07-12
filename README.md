@@ -49,6 +49,32 @@ See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported lan
 <Highlight language={typescript} {code} />
 ```
 
+## CSS Custom Highlight engine
+
+`engine="css-highlights"` paints tokens with the [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) (`CSS.highlights`, `::highlight()`) instead of wrapping each one in a `<span>`. `Highlight` renders the code as a single text node plus painted ranges — a 5,000-token file adds zero extra elements, instead of thousands of `<span>`s.
+
+Requires Chrome 105+, Safari 17.2+, or Firefox 140+. There is no `CSS.highlights` on the server, so SSR always renders the same span markup as `engine="dom"`; once hydrated in a supporting browser, the client swaps to the single-text-node rendering. Where `CSS.highlights` is unavailable, `Highlight` falls back to `engine="dom"` silently — check what actually ran with `highlight.resolvedEngine()`.
+
+Pass `theme` (a theme string, or a `ThemePalette` from `svelte-highlight/themes`) to generate `::highlight()` rules from it. Only `color`/`background-color` convert — `::highlight()` doesn't support `font-style`/`font-weight`/`text-decoration` across browsers, so bold/italic scopes render in plain color. `theme` only covers token colors — you still need `HighlightStyle` (or an injected stylesheet) for the base `.hljs` layout rules (padding, overflow, background), exactly as with the default engine.
+
+```svelte
+<script>
+  import { Highlight, HighlightStyle } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import atomOneDark from "svelte-highlight/themes/atom-one-dark";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+</script>
+
+<HighlightStyle theme={atomOneDark}>
+  <Highlight language={typescript} {code} engine="css-highlights" theme={atomOneDark} />
+</HighlightStyle>
+```
+
+This only takes effect when `Highlight` renders its own default markup — a custom default slot (e.g. to feed `LineNumbers`) has no `Highlight`-owned `<code>` element to paint into, so `engine` has no effect there; consume the slot's `events` prop directly (see [Headless usage](#headless-usage)) to build a custom renderer instead.
+
+`HighlightEditable` has the same engine, with the same theme/color-only rules — see [Experimental: CSS Custom Highlight engine](#experimental-css-custom-highlight-engine) for its editable-specific behavior (per-line painting, caret preservation).
+
 ## Theming
 
 Every `highlight.js` theme is also compiled into a **`ThemePalette`**: a typed object of `--shl-*` CSS custom properties plus a shared structural stylesheet (`svelte-highlight/themes/base.css`) that maps `.hljs*` classes to those variables. This is the recommended way to theme new projects — themes are data, scoping is an inline `style` attribute (SSR-safe by construction), and any token is overridable with one CSS line or a Svelte style prop. See [SUPPORTED_THEMES.md](SUPPORTED_THEMES.md) for a list of compiled themes.

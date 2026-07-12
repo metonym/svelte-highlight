@@ -20,6 +20,11 @@ export type LangTagProps = HTMLAttributes<HTMLPreElement> &
      * @default "plaintext"
      */
     languageName?: LanguageName | (string & {});
+
+    /**
+     * Bindable reference to the rendered `<code>` element.
+     */
+    codeElement?: HTMLElement;
   };
 
 export type LangTagEvents = {};
