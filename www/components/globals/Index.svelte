@@ -14,6 +14,9 @@
   import EditableCssHighlights from "@components/HighlightEditable/CssHighlights.svelte";
   import HighlightStreamBasic from "@components/HighlightStream/Basic.svelte";
   import HighlightStreamControls from "@components/HighlightStream/Controls.svelte";
+  import HighlightVirtualBasic from "@components/HighlightVirtual/Basic.svelte";
+  import HighlightVirtualControls from "@components/HighlightVirtual/Controls.svelte";
+  import HighlightVirtualHeadless from "@components/HighlightVirtual/Headless.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
   import ContainerStyle from "@components/LineNumbers/ContainerStyle.svelte";
   import FocusLines from "@components/LineNumbers/FocusLines.svelte";
@@ -565,10 +568,67 @@
       hideCloseButton
       kind="info"
       title="Performance"
-      subtitle="O(buffer) per highlighted frame, DOM updates proportional to changed lines—fine for chat-sized output up to a few thousand lines, not a virtualized log viewer."
+      subtitle="Per-chunk work is O(tail), not O(stream length so far): finished output is sealed into immutable chunks the DOM never re-diffs. Fine for very long responses, but not a substitute for HighlightVirtual below if you also need to scroll through a huge, already-complete document."
     />
   </Column>
   <Column xlg={10} lg={10} md={12}> <HighlightStreamControls /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Large Documents</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">HighlightVirtual</code>
+      renders only the visible lines of a huge document (plus a small
+      <code class="code">overscan</code>
+      margin) inside its own scroll container—a 100k-line file costs a couple
+      dozen DOM line nodes, not one per line. It reuses the same engine
+      checkpoint/resume primitive
+      <code class="code">HighlightStream</code>
+      uses for streaming, but for random-access windows into a static document
+      instead of a growing tail.
+    </p>
+    <p class="mb-5">
+      The rendered <code class="code">pre</code> is the scroll container
+      itself—size it with <code class="code">style</code>/
+      <code class="code">class</code>/other props, same as
+      <code class="code">Highlight</code>. Content doesn't wrap (uniform line
+      height is a v1 constraint, measured once from a rendered probe line).
+      Server-rendered output is the full document as plain escaped text; the
+      windowed, highlighted view takes over after hydration.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightVirtualBasic /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">overscan</code>
+      (default <code class="code">12</code>) controls how many extra lines
+      render above/below the viewport;
+      <code class="code">checkpointInterval</code>
+      (default <code class="code">100</code>) controls how often the engine
+      snapshots its parse state, trading a little memory for cheaper random
+      access. Try jumping to a distant line below.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightVirtualControls /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      For custom virtualization, servers, or tests,
+      <code class="code">svelte-highlight/tokenized-document</code>
+      exposes the same windowing primitive headlessly via
+      <code class="code">createTokenizedDocument</code>
+      and its <code class="code">lineRange(start, end)</code> method, which
+      tokenizes lazily and caches the most recently resolved window.
+    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="info"
+      title="Note:"
+      subtitle="Output matches HighlightStream's live (non-canonicalized) parse: constructs needing multi-line lookahead across a window's edge can render slightly differently than Highlight's canonical output. No mid-document edits—append and full setCode resets only."
+    />
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightVirtualHeadless /> </Column>
 </Row>
 
 <Row class="mb-9">

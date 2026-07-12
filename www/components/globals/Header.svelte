@@ -72,6 +72,7 @@
     "/preview-dual-theme": "Dual light/dark HighlightStyle preview",
     "/preview-editable": "Editable highlight preview",
     "/preview-highlight-stream": "HighlightStream preview",
+    "/preview-virtual": "HighlightVirtual preview",
     "/preview-jq": "jq language preview",
     "/preview-kql": "KQL language preview",
     "/preview-logql": "LogQL language preview",
