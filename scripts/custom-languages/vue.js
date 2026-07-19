@@ -27,7 +27,10 @@ function defineVue(hljs) {
   // user-registered directives (e.g. `v-focus`, `v-tooltip`) are recognized
   // too.
   const vueDirective = {
-    begin: /\bv-[\w-]+(?:\.[\w-]+)*(?==|\s|>)/,
+    // Longhand directives may carry an explicit argument (`v-bind:href`,
+    // `v-on:click`, `v-slot:name`, including the dynamic-argument form
+    // `v-bind:[key]`) followed by any number of `.modifier`s.
+    begin: /\bv-[\w-]+(?::(?:[\w-]+|\[[\w-]+\]))?(?:\.[\w-]+)*(?==|\s|>)/,
     className: "keyword",
     relevance: 10,
   };

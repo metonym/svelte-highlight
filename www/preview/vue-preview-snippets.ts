@@ -55,6 +55,19 @@ export default {
 </template>`,
   },
   {
+    title: "Longhand directive arguments",
+    description: "v-bind:href, v-on:click, and v-slot:name",
+    code: `<template>
+  <a v-bind:href="url" v-on:click.prevent="track">
+    <base-layout>
+      <template v-slot:header="{ title }">
+        <h1>{{ title }}</h1>
+      </template>
+    </base-layout>
+  </a>
+</template>`,
+  },
+  {
     title: "Scoped SCSS styles",
     description: '<style scoped lang="scss">',
     code: `<style scoped lang="scss">
