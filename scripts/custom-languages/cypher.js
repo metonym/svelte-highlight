@@ -40,6 +40,32 @@ function defineCypher(hljs) {
     relevance: 0,
   };
 
+  const MAP_KEY = {
+    className: "attr",
+    begin: /[A-Za-z_]\w*(?=\s*:)/,
+    relevance: 0,
+  };
+
+  // A map literal's `{key: value}` syntax collides with LABEL's bare
+  // `:identifier` pattern whenever a value is itself an identifier
+  // expression, e.g. `{name: n.name}` -- `:n` would otherwise be
+  // misdetected as a node label. Give map-literal content its own scope
+  // (keyed by MAP_KEY, not LABEL) so `(n:Person:Employee)`-style label
+  // chains elsewhere are unaffected.
+  const MAP_LITERAL = {
+    begin: /\{/,
+    end: /\}/,
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      MAP_KEY,
+      STRING,
+      PARAMETER,
+      FUNCTION,
+      NUMBER,
+      "self",
+    ]),
+    relevance: 0,
+  };
+
   return {
     name: "Cypher",
     aliases: ["cypher"],
@@ -53,6 +79,7 @@ function defineCypher(hljs) {
       hljs.COMMENT(/\/\//, /$/),
       hljs.C_BLOCK_COMMENT_MODE,
       STRING,
+      MAP_LITERAL,
       LABEL,
       PARAMETER,
       FUNCTION,
