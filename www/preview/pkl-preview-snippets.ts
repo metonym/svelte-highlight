@@ -41,6 +41,13 @@ routes {
 }`,
   },
   {
+    title: "Interpolation with nested calls",
+    description: "a \\(...) interpolation containing its own function call",
+    code: `local tags = List("core", "docs", "themes")
+
+summary = "tags: \\(tags.join(", "))"`,
+  },
+  {
     title: "Triple-quoted pound strings and annotations",
     description: 'a #"""..."""# string and a dotted @annotation',
     code: `@modulepath.Deprecated { message = "use v2 instead" }

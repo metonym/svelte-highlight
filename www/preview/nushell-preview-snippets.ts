@@ -36,6 +36,15 @@ if $enabled {
 }`,
   },
   {
+    title: "Nested interpolation",
+    description: 'a $"..." interpolation containing its own nested parens',
+    code: `let a = 1
+let b = 2
+let c = 3
+
+print $"Sum: (a + (b * c))"`,
+  },
+  {
     title: "Raw strings",
     description: "r#'...'# strings that skip interpolation",
     code: `let pattern = r#'C:\\Users\\(name)'#

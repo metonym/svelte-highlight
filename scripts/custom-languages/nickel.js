@@ -13,11 +13,27 @@ function defineNickel(hljs) {
     relevance: 0,
   };
 
+  // Balances a bare `{...}` record literal nested inside an interpolation,
+  // e.g. `%{ {name = "Bob"}.name }`. Without this, INTERPOLATION's own
+  // `end: /\}/` would match the record literal's closing brace instead of
+  // the interpolation's.
+  const NESTED_BRACES = {
+    begin: /\{/,
+    end: /\}/,
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      "self",
+    ]),
+  };
+
   const INTERPOLATION = {
     className: "subst",
     begin: /%\{/,
     end: /\}/,
     keywords: { keyword: NICKEL_KEYWORDS, literal: NICKEL_LITERALS },
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      NESTED_BRACES,
+      "self",
+    ]),
   };
 
   const STRING = {

@@ -31,6 +31,13 @@ export const nickelPreviewSnippets: NickelPreviewSnippet[] = [
 }`,
   },
   {
+    title: "Interpolation with a nested record",
+    description: "a %{...} interpolation containing a bare {..} record literal",
+    code: `let user = { name = "Bob", age = 30 } in
+
+{ greeting = "Hello, %{ {name = user.name}.name }!" }`,
+  },
+  {
     title: "Multiline strings",
     description: 'm%"..."% strings with a matching %-count delimiter',
     code: `let template = m%"

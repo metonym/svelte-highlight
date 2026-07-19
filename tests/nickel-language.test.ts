@@ -44,6 +44,14 @@ test("nickel highlights record field keys", () => {
   expect(result).toContain('<span class="hljs-attr">bar</span>');
 });
 
+test("nickel interpolation balances a nested record literal", () => {
+  const result = highlight('"%{ {name = "Bob"}.name }"');
+
+  expect(result).toContain(
+    '<span class="hljs-subst">%{ {name = &quot;Bob&quot;}.name }</span>',
+  );
+});
+
 test("nickel highlights multiline strings with variable %-count delimiters", () => {
   const result = highlight('m%%"text with "% inside"%%');
 

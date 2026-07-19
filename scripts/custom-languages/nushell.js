@@ -38,7 +38,13 @@ function defineNushell(hljs) {
     className: "subst",
     begin: /\(/,
     end: /\)/,
-    contains: [VARIABLE],
+    // "self" balances nested parens, e.g. `$"Sum: (1 + (2 * 3))"` — without
+    // it, `end: /\)/` would match the inner call's closing paren instead of
+    // the interpolation's.
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      VARIABLE,
+      "self",
+    ]),
   };
 
   const INTERP_STRING = {
