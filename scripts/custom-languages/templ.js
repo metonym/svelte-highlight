@@ -213,6 +213,21 @@ function defineTempl(hljs) {
     starts: {
       end: /\}/,
       subLanguage: "javascript",
+      // Balances nested `{...}` in the JS body (e.g. an `if`/function
+      // block) so the outer `end` doesn't match the nested block's own
+      // closing brace and cut the script body short. `subLanguage` must be
+      // repeated here (and again via "self" for deeper nesting): a nested
+      // `contains` mode doesn't inherit the parent's subLanguage, so
+      // without it the nested block's own content would fall back to
+      // templ's (mostly empty) rules instead of JS tokenization.
+      contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+        {
+          begin: /\{/,
+          end: /\}/,
+          subLanguage: "javascript",
+          contains: ["self"],
+        },
+      ]),
       relevance: 0,
     },
   };
