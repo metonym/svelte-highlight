@@ -22,6 +22,13 @@ export const promqlPreviewSnippets: PromqlPreviewSnippet[] = [
 > 0.5`,
   },
   {
+    title: "Multi-label grouping and subqueries",
+    description: "by (a, b) with multiple labels, and [range:resolution]",
+    code: `max_over_time(
+  (sum by (job, instance) (rate(cpu_usage_seconds_total[5m])))[1h:5m]
+)`,
+  },
+  {
     title: "Bare metrics and the @ modifier",
     description: "metric names without {}, and the @ timestamp modifier",
     code: `up offset 5m

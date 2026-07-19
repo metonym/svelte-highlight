@@ -22,6 +22,28 @@ test("promql highlights aggregation keywords", () => {
   expect(result).toContain('<span class="hljs-keyword">by</span>');
 });
 
+test("promql highlights grouping-clause labels as attrs, not metrics", () => {
+  const result = highlight("sum by (job, instance) (up)");
+
+  expect(result).toContain('<span class="hljs-attr">job</span>');
+  expect(result).toContain('<span class="hljs-attr">instance</span>');
+  expect(result).not.toContain('<span class="hljs-built_in">job</span>');
+  expect(result).not.toContain('<span class="hljs-built_in">instance</span>');
+});
+
+test("promql highlights subquery resolution as part of the duration", () => {
+  const result = highlight("rate(cpu_usage[5m:30s])");
+
+  expect(result).toContain('<span class="hljs-number">5m:30s</span>');
+  expect(result).not.toContain('<span class="hljs-built_in">:30s</span>');
+});
+
+test("promql highlights subquery with resolution omitted", () => {
+  const result = highlight("rate(cpu_usage[5m:])");
+
+  expect(result).toContain('<span class="hljs-number">5m:</span>');
+});
+
 test("promql highlights durations as numbers", () => {
   const result = highlight("rate(x[5m])");
 
