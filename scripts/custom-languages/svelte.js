@@ -36,9 +36,12 @@ function defineSvelte(hljs) {
   // `$user.name`, `$count += 1`. The bare form is the common idiom and must
   // not require a trailing `(` to be recognized.
   const storeSubscriptionPattern = {
+    // JS/TS identifiers can't contain `-`, so the name itself uses `\w*`
+    // (not `[\w-]*`); without this, `{$count-1}` (no spaces) was swallowed
+    // whole as a single `$count-1` variable instead of `$count`, `-`, `1`.
     variants: [
       {
-        begin: new RegExp(String.raw`\$(?!${RUNE_NAMES})[a-zA-Z_][\w-]*\s*\(`),
+        begin: new RegExp(String.raw`\$(?!${RUNE_NAMES})[a-zA-Z_]\w*\s*\(`),
         end: /\(/,
         className: "title function_",
         endsWithParent: true,
@@ -47,7 +50,7 @@ function defineSvelte(hljs) {
         relevance: 10,
       },
       {
-        begin: new RegExp(String.raw`\$(?!${RUNE_NAMES})[a-zA-Z_][\w-]*\b`),
+        begin: new RegExp(String.raw`\$(?!${RUNE_NAMES})[a-zA-Z_]\w*\b`),
         className: "variable",
         relevance: 10,
       },

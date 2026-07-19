@@ -150,6 +150,7 @@ export const sveltePreviewSnippets: SveltePreviewSnippet[] = [
 </script>
 
 <button on:click={increment}>{$count}</button>
-<p>{$count > 10 ? "big" : "small"}</p>`,
+<p>{$count > 10 ? "big" : "small"}</p>
+<p>Previous value: {$count-1}</p>`,
   },
 ];

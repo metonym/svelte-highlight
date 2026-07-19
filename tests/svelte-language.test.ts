@@ -218,6 +218,17 @@ test("svelte highlights bare $store subscriptions without parens", () => {
   expect(result).toContain('<span class="hljs-variable">$user</span>');
 });
 
+test("svelte does not swallow a trailing hyphen into a store subscription", () => {
+  registerAll(registry, svelte);
+
+  const result = registry.highlight("<p>{$count-1}</p>", {
+    language: "svelte",
+  }).value;
+
+  expect(result).toContain('<span class="hljs-variable">$count</span>');
+  expect(result).not.toContain('<span class="hljs-variable">$count-1</span>');
+});
+
 test("svelte does not highlight directives inside script strings", () => {
   registerAll(registry, svelte);
 
