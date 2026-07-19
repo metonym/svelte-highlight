@@ -91,6 +91,18 @@ test("templ highlights script component blocks as JavaScript", () => {
   );
 });
 
+test("templ script blocks balance nested braces in the JS body", () => {
+  const result = highlight(
+    'script greet(name string) {\n\tif (name) { alert("Hi " + name) }\n}',
+  );
+
+  // content after the nested `}` but before the true closing `}` must
+  // still be recognized as JavaScript, proving the block didn't end
+  // prematurely at the `if`'s own closing brace
+  expect(result).toContain('<span class="hljs-title function_">alert</span>');
+  expect(result).toContain('<span class="hljs-string">&quot;Hi &quot;</span>');
+});
+
 test("templ highlights line comments", () => {
   const result = highlight("// a comment\ntempl X() {\n\t<div></div>\n}");
 

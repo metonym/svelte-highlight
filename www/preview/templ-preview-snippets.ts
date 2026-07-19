@@ -32,6 +32,15 @@ templ Footer() {
 }`,
   },
   {
+    title: "Script component",
+    description: "a legacy script block with a nested if statement",
+    code: `script confirmDelete(name string) {
+	if (confirm("Delete " + name + "?")) {
+		fetch("/delete/" + name, { method: "POST" });
+	}
+}`,
+  },
+  {
     title: "CSS component",
     description: "type-safe inline styles with Go expression interpolation",
     code: `css cardStyle(active bool) {
