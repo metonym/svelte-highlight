@@ -16,7 +16,11 @@ build target=target:
 
 # run tests after building
 test: build
-	cargo test`,
+	cargo test
+
+# a function call as an inline parameter default
+serve port=env_var_or_default("PORT", "8080"):
+	python3 -m http.server {{port}}`,
   },
   {
     title: "Interpolation and attributes",

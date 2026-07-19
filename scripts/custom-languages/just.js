@@ -46,11 +46,15 @@ function defineJust(hljs) {
     relevance: 0,
   };
 
-  // Recipe header: `name:`, `name: dep1 dep2`, or `name param="default":`
+  // Recipe header: `name:`, `name: dep1 dep2`, or `name param="default":`.
+  // A default value can also be a function call, e.g.
+  // `port=env_var_or_default("PORT", "8080"):` -- without that
+  // alternative, the whole lookahead fails at the unhandled `(` and the
+  // recipe name/params never get title/params styling at all.
   const RECIPE_HEADER = {
     className: "title.function",
     begin:
-      /^@?[a-zA-Z_][\w-]*(?=(?:\s+[+*]?[a-zA-Z_][\w-]*(?:[+*]?=(?:"[^"]*"|'[^']*'|[a-zA-Z_][\w-]*))?)*\s*:(?!=))/,
+      /^@?[a-zA-Z_][\w-]*(?=(?:\s+[+*]?[a-zA-Z_][\w-]*(?:[+*]?=(?:"[^"]*"|'[^']*'|[a-zA-Z_][\w-]*\([^)]*\)|[a-zA-Z_][\w-]*))?)*\s*:(?!=))/,
     end: /(?=:(?!=))/,
     returnBegin: true,
     contains: [
