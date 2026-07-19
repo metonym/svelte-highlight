@@ -16,6 +16,13 @@ test("nickel highlights let/in keywords", () => {
   expect(result).toContain('<span class="hljs-keyword">in</span>');
 });
 
+test("nickel does not mistag a let-bound name as a record field", () => {
+  const result = highlight("let x = 5 in x + 1");
+
+  expect(result).toContain('<span class="hljs-variable">x</span>');
+  expect(result).not.toContain('<span class="hljs-attr">x</span>');
+});
+
 test("nickel highlights fun keyword", () => {
   const result = highlight("let f = fun x => x in f");
 
