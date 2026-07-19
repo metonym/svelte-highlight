@@ -11,6 +11,7 @@
   import { dhallPreviewSnippets } from "@www/preview/dhall-preview-snippets";
   import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
+  import { gdscriptPreviewSnippets } from "@www/preview/gdscript-preview-snippets";
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
   import { groqPreviewSnippets } from "@www/preview/groq-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
@@ -58,6 +59,7 @@
   import dhall from "svelte-highlight/languages/dhall";
   import dotenv from "svelte-highlight/languages/dotenv";
   import fish from "svelte-highlight/languages/fish";
+  import gdscript from "svelte-highlight/languages/gdscript";
   import gleam from "svelte-highlight/languages/gleam";
   import groq from "svelte-highlight/languages/groq";
   import hcl from "svelte-highlight/languages/hcl";
@@ -91,7 +93,7 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript"} */
   export let language;
 
   const registry = {
@@ -103,6 +105,7 @@
     fish: { lang: fish, snippets: fishPreviewSnippets },
     nushell: { lang: nushell, snippets: nushellPreviewSnippets },
     gleam: { lang: gleam, snippets: gleamPreviewSnippets },
+    gdscript: { lang: gdscript, snippets: gdscriptPreviewSnippets },
     json5: { lang: json5, snippets: json5PreviewSnippets },
     jsonc: { lang: jsonc, snippets: jsoncPreviewSnippets },
     dotenv: { lang: dotenv, snippets: dotenvPreviewSnippets },
