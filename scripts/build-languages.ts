@@ -283,6 +283,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "heex",
     path: `${import.meta.dir}/custom-languages/heex.js`,
   },
+  {
+    name: "sparql",
+    moduleName: "sparql",
+    path: `${import.meta.dir}/custom-languages/sparql.js`,
+  },
 ];
 
 export type LanguageEntry = {
