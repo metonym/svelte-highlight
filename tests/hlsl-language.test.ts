@@ -23,6 +23,14 @@ test("hlsl highlights semantics after a colon", () => {
   expect(result).toContain('<span class="hljs-attr">SV_TARGET</span>');
 });
 
+test("hlsl does not mistake a ternary's colon for a semantic", () => {
+  const result = highlight(
+    "result = useAlpha ? colorWithAlpha : colorWithoutAlpha;",
+  );
+
+  expect(result).not.toContain('<span class="hljs-attr">');
+});
+
 test("hlsl highlights intrinsic functions", () => {
   const result = highlight("return saturate(lerp(a, b, mul(m, v).x));");
 
