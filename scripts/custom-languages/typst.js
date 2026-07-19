@@ -149,8 +149,10 @@ function defineTypst(hljs) {
   // Code mode: activated after `#`, covers keywords, function calls,
   // strings, numbers, comments, and nested blocks/parens/brackets. Ends
   // at a blank line, a markup-only boundary character, or end of input.
+  // The lookahead also allows a bare `{`/`(`/`[` (not just an identifier),
+  // since `#{ let x = 5 }`-style code blocks omit a leading keyword/call.
   const CODE_MODE = {
-    begin: /#(?=[a-zA-Z_])/,
+    begin: /#(?=[a-zA-Z_{([])/,
     end: /$|(?=[;,])/,
     returnEnd: true,
     relevance: 5,
