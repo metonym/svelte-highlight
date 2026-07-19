@@ -28,6 +28,12 @@ test("solidity highlights an inheritance list without tagging 'is' as a title", 
   expect(result).not.toContain('<span class="hljs-title">is</span>');
 });
 
+test("solidity highlights hex literals with underscore digit separators", () => {
+  const result = highlight("uint256 x = 0x1234_5678;");
+
+  expect(result).toContain('<span class="hljs-number">0x1234_5678</span>');
+});
+
 test("solidity highlights elementary value types", () => {
   const result = highlight(
     "mapping(address => uint256) balances;\nbytes32 salt;\nuint8 decimals;",
