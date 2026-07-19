@@ -18,6 +18,13 @@ test("typst highlights #let code-mode keyword and string value", () => {
   );
 });
 
+test("typst highlights a bare #{ } code block", () => {
+  const result = highlight("#{ let x = 5 }");
+
+  expect(result).toContain('<span class="hljs-keyword">let</span>');
+  expect(result).toContain('<span class="hljs-number">5</span>');
+});
+
 test("typst highlights #set code-mode keyword, function call, and unit number", () => {
   const result = highlight("#set text(size: 12pt)");
 

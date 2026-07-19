@@ -54,6 +54,12 @@ More info at <intro>.`,
   ]
 }
 
-#summary(75%)`,
+#summary(75%)
+
+#{
+  let total = 100
+  let passed = 82
+  [Pass rate: #(passed / total * 100)%]
+}`,
   },
 ];
