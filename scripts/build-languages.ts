@@ -278,6 +278,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "gdscript",
     path: `${import.meta.dir}/custom-languages/gdscript.js`,
   },
+  {
+    name: "heex",
+    moduleName: "heex",
+    path: `${import.meta.dir}/custom-languages/heex.js`,
+  },
 ];
 
 export type LanguageEntry = {
