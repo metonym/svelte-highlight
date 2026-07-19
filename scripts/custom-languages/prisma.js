@@ -44,9 +44,15 @@ function definePrisma(hljs) {
       hljs.COMMENT(/\/\/\//, /$/, { className: "doctag" }),
       hljs.C_LINE_COMMENT_MODE,
       {
+        // Anchored to column 0: without it, this also matched an ordinary
+        // field named "type" (a common discriminator/field name) followed
+        // by whitespace and its own type, e.g. `type   String` inside a
+        // model body -- identical surface syntax to `type Address { ... }`.
+        // Real top-level declarations are never indented; field lines
+        // (which share the same "word words" shape) always are.
         begin: [
           new RegExp(
-            String.raw`\b(?:${PRISMA_KEYWORDS.split(" ").join("|")})\b`,
+            String.raw`^(?:${PRISMA_KEYWORDS.split(" ").join("|")})\b`,
           ),
           /\s+/,
           /[A-Za-z_]\w*/,

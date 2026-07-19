@@ -19,11 +19,12 @@ generator client {
   },
   {
     title: "Model fields",
-    description: "scalar types, ?, [], and @attributes",
+    description: "scalar types, ?, [], @attributes, and a field named type",
     code: `model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   name      String?
+  type      String
   role      Role     @default(USER)
   posts     Post[]
   createdAt DateTime @default(now())
