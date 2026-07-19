@@ -48,6 +48,14 @@ test("typst highlights strong and emphasis markup", () => {
   expect(result).toContain('<span class="hljs-emphasis">_emphasis_</span>');
 });
 
+test("typst does not close strong/emphasis on a whitespace-preceded delimiter", () => {
+  const result = highlight("*bold word * still bold*");
+
+  expect(result).toContain(
+    '<span class="hljs-strong">*bold word * still bold*</span>',
+  );
+});
+
 test("typst highlights line and block comments", () => {
   const result = highlight("// a comment\n/* block */");
 

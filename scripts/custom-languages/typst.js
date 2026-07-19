@@ -69,16 +69,22 @@ function defineTypst(hljs) {
     relevance: 10,
   };
 
+  // `end` must not close on a delimiter preceded by whitespace (Typst only
+  // treats "word*" as a valid close, not "word *"). Lookbehind isn't an
+  // option, so the preceding character is required as part of the match
+  // itself (previously `(?!\s)\*`, a no-op: the lookahead and the literal
+  // both anchor to the same position, and `*` is never whitespace, so it
+  // always passed regardless of what came before).
   const STRONG = {
     className: "strong",
     begin: /\*(?!\s)/,
-    end: /(?!\s)\*/,
+    end: /[^\s*]\*/,
   };
 
   const EMPHASIS = {
     className: "emphasis",
     begin: /_(?!\s)/,
-    end: /(?!\s)_/,
+    end: /[^\s_]_/,
   };
 
   const LIST_MARKER = {
