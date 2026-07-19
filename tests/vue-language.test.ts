@@ -108,6 +108,23 @@ test("vue highlights custom user-registered directives", () => {
   expect(result).toContain('<span class="hljs-keyword">v-tooltip</span>');
 });
 
+test("vue highlights longhand directives with an explicit argument", () => {
+  registerAll(registry, vue);
+
+  const result = registry.highlight(
+    `<template>
+  <a v-bind:href="url" v-on:click="handler">
+    <slot v-slot:name></slot>
+  </a>
+</template>`,
+    { language: "vue" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-keyword">v-bind:href</span>');
+  expect(result).toContain('<span class="hljs-keyword">v-on:click</span>');
+  expect(result).toContain('<span class="hljs-keyword">v-slot:name</span>');
+});
+
 test("html alone does not highlight vue directives or mustache expressions", () => {
   const isolated = createRegistry();
   registerAll(isolated, html);
