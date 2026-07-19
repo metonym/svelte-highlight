@@ -14,7 +14,12 @@ function defineAstro(hljs) {
         end: /^---\s*$|^\.\.\.\s*$/m,
         subLanguage: "typescript",
         excludeBegin: true,
-        excludeEnd: true,
+        // `returnEnd` (not `excludeEnd`): the closing fence must be handed
+        // back unconsumed so the sibling "meta" rule below gets a chance to
+        // match and style it. `excludeEnd` would also hide it from this
+        // mode's own span, but it still advances past the text, leaving
+        // nothing for that sibling rule to ever see -- dead code.
+        returnEnd: true,
         relevance: 100,
         /** @type {import("highlight.js").ModeCallback} */
         "on:begin": (match, response) => {
@@ -24,7 +29,7 @@ function defineAstro(hljs) {
         },
       },
       {
-        begin: /^---\s*$/m,
+        begin: /^---\s*$|^\.\.\.\s*$/m,
         className: "meta",
         relevance: 50,
       },

@@ -40,6 +40,16 @@ export const title = "Hello";
 
 <p>after the hr</p>`;
 
+test("astro highlights the closing frontmatter fence as meta", () => {
+  registerAll(registry, astro);
+
+  const result = registry.highlight(frontmatterSnippet, {
+    language: "astro",
+  }).value;
+
+  expect(result).toContain('<span class="hljs-meta">---');
+});
+
 test("astro highlights frontmatter as TypeScript", () => {
   registerAll(registry, astro);
 

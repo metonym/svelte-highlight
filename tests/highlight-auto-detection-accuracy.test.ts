@@ -262,7 +262,6 @@ fn main(@location(0) pos: vec3<f32>) -> @builtin(position) vec4<f32> {
 // disappearing from FAIL here (without being removed from this set) will
 // fail loudly instead of silently improving unnoticed.
 const KNOWN_AUTO_DETECT_GAPS = new Set([
-  "astro",
   "prisma",
   "hcl",
   "bibtex",
