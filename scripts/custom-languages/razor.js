@@ -2,7 +2,7 @@ const RAZOR_DIRECTIVES =
   "page model using inject inherits implements layout namespace section functions code attribute preservewhitespace addTagHelper removeTagHelper tagHelperPrefix rendermode typeparam";
 
 const RAZOR_CSHARP_KEYWORDS =
-  "if else for foreach while do switch case default try catch finally return await async var new using lock";
+  "if else for foreach in while do switch case default try catch finally return await async var new using lock";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineRazor(hljs) {
@@ -103,6 +103,48 @@ function defineRazor(hljs) {
     relevance: 0,
   };
 
+  // The `{ ... }` body of an implicit control-flow block mixes markup with
+  // C#, unlike `@{ }`'s pure-C# body -- so it needs TAG/EXPRESSION handling,
+  // not CSHARP_BODY_CONTAINS. Nested `{...}` (e.g. a nested `if`) recurses
+  // via "self".
+  const IMPLICIT_CONTROL_BODY = {
+    begin: /\{/,
+    end: /\}/,
+    excludeBegin: true,
+    excludeEnd: true,
+    keywords: { keyword: RAZOR_CSHARP_KEYWORDS },
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+      CSHARP_STRING,
+      { className: "number", begin: /\b\d+(?:\.\d+)?\b/ },
+      EXPLICIT_EXPRESSION,
+      EXPRESSION,
+      TAG,
+      "self",
+    ]),
+    relevance: 0,
+  };
+
+  // Implicit control-flow blocks: `@if (...) { ... }`, `@foreach (...) { ... }`,
+  // `@for (...) { ... }`, `@while (...) { ... }`, `@switch (...) { ... }`,
+  // `@else`. These are Razor's single most common construct for mixing C#
+  // control flow with markup, but previously only the explicit `@{ }` /
+  // `@code { }` / `@functions { }` forms were wired up to C# tokenization.
+  const IMPLICIT_CONTROL_KEYWORD = {
+    begin: [/@(?:if|else\s+if|else|for|foreach|while|do|switch)\b/],
+    beginScope: { 1: "keyword" },
+    end: /(?=\{)/,
+    keywords: { keyword: RAZOR_CSHARP_KEYWORDS },
+    contains: [
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+      CSHARP_STRING,
+      { className: "number", begin: /\b\d+(?:\.\d+)?\b/ },
+    ],
+    relevance: 10,
+  };
+
   return {
     name: "Razor",
     aliases: ["razor", "cshtml"],
@@ -112,6 +154,10 @@ function defineRazor(hljs) {
       NAMED_CODE_BLOCK,
       DIRECTIVE,
       CODE_BLOCK,
+      // Must precede EXPRESSION: both match `@identifier`, but this one is
+      // the more specific control-flow-keyword form.
+      IMPLICIT_CONTROL_KEYWORD,
+      IMPLICIT_CONTROL_BODY,
       EXPLICIT_EXPRESSION,
       EXPRESSION,
       TAG,
