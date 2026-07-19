@@ -23,6 +23,12 @@ CREATE (u)-[:POSTED]->(p:Post {title: "Hello", likes: 0})
 RETURN u, p`,
   },
   {
+    title: "Map literals with identifier values",
+    description: "{key: value} maps, not to be confused with node labels",
+    code: `MATCH (n:Person)
+RETURN {name: n.name, age: n.age, active: true}`,
+  },
+  {
     title: "Built-in functions and identifiers",
     description: "id(), coalesce(), and `backtick` identifiers",
     code: `MATCH (n:\`Weird Label\`)

@@ -29,6 +29,22 @@ test("cypher highlights node labels", () => {
   expect(result).toContain('<span class="hljs-type">:Person</span>');
 });
 
+test("cypher highlights chained multi-labels and relationship types", () => {
+  const result = highlight("MATCH (n:Person:Employee)-[:KNOWS]->(m) RETURN n");
+
+  expect(result).toContain('<span class="hljs-type">:Person</span>');
+  expect(result).toContain('<span class="hljs-type">:Employee</span>');
+  expect(result).toContain('<span class="hljs-type">:KNOWS</span>');
+});
+
+test("cypher does not mistake a map-literal identifier value for a label", () => {
+  const result = highlight("RETURN {name: n.name, age: 30}");
+
+  expect(result).toContain('<span class="hljs-attr">name</span>');
+  expect(result).toContain('<span class="hljs-attr">age</span>');
+  expect(result).not.toContain('<span class="hljs-type">:n</span>');
+});
+
 test("cypher highlights parameters and strings", () => {
   const result = highlight('MATCH (n) WHERE n.name = $name RETURN "ok"');
 
