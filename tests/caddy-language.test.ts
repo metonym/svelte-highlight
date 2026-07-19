@@ -21,6 +21,27 @@ test("caddy highlights the site address", () => {
   expect(result).toContain('<span class="hljs-attr">example.com</span>');
 });
 
+test("caddy highlights multiple addresses on one site header", () => {
+  const result = highlight(
+    "example.com www.example.com {\n\treverse_proxy localhost:8080\n}",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-attr">example.com www.example.com</span>',
+  );
+});
+
+test("caddy does not mistake an indented directive with an argument for a site address", () => {
+  const result = highlight(
+    "example.com {\n\ttransport http {\n\t\ttls\n\t}\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">transport</span>');
+  expect(result).not.toContain(
+    '<span class="hljs-attr">\ttransport http</span>',
+  );
+});
+
 test("caddy highlights named matchers", () => {
   const result = highlight("@api path /api/*");
 

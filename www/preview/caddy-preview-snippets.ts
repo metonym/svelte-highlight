@@ -19,6 +19,13 @@ export const caddyPreviewSnippets: CaddyPreviewSnippet[] = [
 }`,
   },
   {
+    title: "Multiple addresses on one site block",
+    description: "one site header covering several hostnames",
+    code: `www.example.com example.com {
+	redir https://example.com{uri} permanent
+}`,
+  },
+  {
     title: "Matchers and static files",
     description: "named matchers, snippets, and file serving",
     code: `# shared TLS config
