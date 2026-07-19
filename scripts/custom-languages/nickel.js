@@ -68,6 +68,17 @@ function defineNickel(hljs) {
     relevance: 0,
   };
 
+  // `let x = ...` uses the same `identifier = value` surface syntax as a
+  // record field, so RECORD_FIELD above can't tell them apart on its own.
+  // Matching `let` together with the bound name (starting earlier than
+  // RECORD_FIELD's own match on just the name) lets this mode claim the
+  // name first, styling it as a binding rather than a record key.
+  const LET_BINDING = {
+    begin: [/\blet\b/, /\s+/, /[A-Za-z_][\w-]*/],
+    beginScope: { 1: "keyword", 3: "variable" },
+    relevance: 0,
+  };
+
   return {
     name: "Nickel",
     aliases: ["nickel", "ncl"],
@@ -78,6 +89,7 @@ function defineNickel(hljs) {
     },
     contains: [
       hljs.HASH_COMMENT_MODE,
+      LET_BINDING,
       RECORD_FIELD,
       STRING,
       ENUM_TAG,
