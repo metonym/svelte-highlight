@@ -20,9 +20,12 @@ function defineLogQL(hljs) {
     relevance: 0,
   };
 
+  // The unit segment repeats (`+`) so compound durations like
+  // `[1h30m]` (two number+unit segments back to back) match as a single
+  // token, not just a single `[5m]`-style duration.
   const DURATION = {
     className: "number",
-    begin: /\[\s*\d+(?:\.\d+)?(?:ms|[smhdwy])\s*\]/,
+    begin: /\[\s*(?:\d+(?:\.\d+)?(?:ms|[smhdwy]))+\s*\]/,
     relevance: 10,
   };
 

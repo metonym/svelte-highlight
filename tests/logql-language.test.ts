@@ -67,6 +67,12 @@ test("logql highlights duration literals as numbers", () => {
   expect(result).toContain('<span class="hljs-number">[5m]</span>');
 });
 
+test("logql highlights compound durations as a single number token", () => {
+  const result = highlight('rate({job="app"}[1h30m])');
+
+  expect(result).toContain('<span class="hljs-number">[1h30m]</span>');
+});
+
 test("logql highlights comments", () => {
   const result = highlight('# comment line\n{job="app"}');
 
