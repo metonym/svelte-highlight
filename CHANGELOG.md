@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.16.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.16.0) - 2026-07-19
+
+**Features**
+
+- replace highlight.js runtime with an original highlight engine
+- compile themes to palettes with CSS-variable theming
+- expose the scope-event stream as a public API
+- add `HighlightVirtual` for windowed rendering of huge documents
+- add `defineTheme`, `extendTheme`, and a TextMate importer
+- add custom `gdscript` language
+- add custom `heex` language
+- add custom `sparql` language
+
+**Fixes**
+
+- stop `HighlightVirtual`'s class and sizer from leaking
+- scope sub-language continuation state to its own occurrence
+- balance nested delimiters in string interpolation
+- recognize Vue longhand directive arguments
+- highlight Zig function names and bound fn-name matches
+- highlight WGSL unsigned-integer number suffixes
+- don't shadow Pug control-flow keywords with the tag rule
+- recognize Razor implicit control-flow blocks
+- recognize Marko concise class/id shorthand and `else-if` hyphen form
+- don't mistake email addresses for Blade directives
+- handle escaped quotes in Blade strings
+- recognize Rego function-style rule heads
+- fix PromQL grouping labels and subquery resolution
+- don't mistag Nickel let-bound names as record fields
+- don't mistake Cypher map values for node labels
+- don't tag Solidity inheritance lists as titles
+- highlight Solidity hex literals with underscores
+- don't swallow a trailing hyphen into Svelte stores
+- highlight parameterless HLSL attributes
+- stop HLSL semantics matching ternary/switch colons
+- make Typst strong/emphasis respect the whitespace rule
+- recognize bare Typst `#{ }` code blocks
+- balance nested braces in Templ legacy script blocks
+- recognize Just recipe params with function-call defaults
+- style Astro's closing frontmatter fence
+- highlight Caddy multi-address site headers
+- stop Nushell `def-env` from corrupting the title match
+- highlight compound LogQL durations
+- keep MDX JSX tags open through a `>` inside `{...}`
+- don't mistake a Prisma field named `type` for a declaration
+
 ## [7.15.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.15.0) - 2026-07-10
 
 **Features**
