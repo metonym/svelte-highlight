@@ -273,6 +273,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "just",
     path: `${import.meta.dir}/custom-languages/just.js`,
   },
+  {
+    name: "gdscript",
+    moduleName: "gdscript",
+    path: `${import.meta.dir}/custom-languages/gdscript.js`,
+  },
 ];
 
 export type LanguageEntry = {
