@@ -55,8 +55,10 @@ function defineHlsl(hljs) {
     // A leading word character or `]` means this is array indexing (e.g.
     // `arr[i]`, `buf[0][process(x)]`) rather than an HLSL attribute, so the
     // guard character is matched in its own group and left unscoped
-    // instead of excluded with a negative lookbehind.
-    begin: [/(?:^|[^\w\]])/, /\[[a-zA-Z_]\w*(?:\([^)]*\))\]/],
+    // instead of excluded with a negative lookbehind. The `(...)` argument
+    // list is optional: parameterless attributes like [unroll]/[loop]/
+    // [branch]/[flatten]/[earlydepthstencil] are common too.
+    begin: [/(?:^|[^\w\]])/, /\[[a-zA-Z_]\w*(?:\([^)]*\))?\]/],
     beginScope: { 2: "meta" },
     relevance: 0,
   };

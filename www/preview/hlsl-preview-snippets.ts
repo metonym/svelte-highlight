@@ -55,7 +55,11 @@ RWStructuredBuffer<float> data : register(u0);
 [numthreads(THREADS, 1, 1)]
 void main(uint3 id : SV_DispatchThreadID) {
   uint i = id.x;
-  data[i] = saturate(data[i] * 2.0f);
+
+  [unroll]
+  for (uint j = 0; j < 4; j++) {
+    data[i + j] = saturate(data[i + j] * 2.0f);
+  }
 }`,
   },
 ];
