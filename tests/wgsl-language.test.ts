@@ -36,6 +36,13 @@ test("wgsl highlights numbers", () => {
   expect(result).toContain('<span class="hljs-number">1.0</span>');
 });
 
+test("wgsl highlights unsigned integer number suffixes", () => {
+  const result = highlight("let x = 42u;\nlet y = 0u;");
+
+  expect(result).toContain('<span class="hljs-number">42u</span>');
+  expect(result).toContain('<span class="hljs-number">0u</span>');
+});
+
 test("wgsl highlights address-space and access-mode keywords in var<...>", () => {
   const result = highlight("var<storage, read_write> buf: array<f32>;");
 
