@@ -75,9 +75,17 @@ function defineMdx(hljs) {
         relevance: 100,
       },
       {
+        // A `{...}` attribute expression containing a bare `>` (e.g. a JS
+        // comparison, `highlight={value > threshold}`) would otherwise
+        // match `end` first, closing the tag mid-attribute. Only intervene
+        // for that specific case (matching the whole `{...}` in one shot,
+        // no separate `end`) -- the common case (`data={data}`, no `>`
+        // inside) needs no special handling and keeps its normal
+        // continuous HTML styling untouched.
         begin: /<(?=[A-Za-z/!])/,
         end: />|\/>/,
         subLanguage: "html",
+        contains: [{ begin: /\{[^{}]*>[^{}]*\}/, subLanguage: "html" }],
         relevance: 10,
       },
       {

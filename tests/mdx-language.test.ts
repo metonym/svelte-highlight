@@ -58,6 +58,24 @@ test("mdx highlights JSX and embedded JavaScript expressions", () => {
   expect(result).toContain("language-javascript");
 });
 
+test("mdx does not close a JSX tag early on a > inside a brace expression", () => {
+  registerAll(registry, mdx);
+
+  const result = registry.highlight(
+    "<Chart data={data} highlight={value > threshold} />",
+    { language: "mdx" },
+  ).value;
+
+  // the tag name and first attribute must still render with full HTML
+  // tag/attr/string styling (no regression for the common case)
+  expect(result).toContain('<span class="hljs-name">Chart</span>');
+  expect(result).toContain('<span class="hljs-attr">data</span>');
+  expect(result).toContain('<span class="hljs-string">{data}</span>');
+  // the closing "/>" must stay inside the tag, not fall outside it as
+  // plain text after the tag mode ended early at the embedded ">"
+  expect(result).toContain(" /&gt;</span>");
+});
+
 test("mdx highlights markdown lists", () => {
   registerAll(registry, mdx);
 
