@@ -21,6 +21,22 @@ export const razorPreviewSnippets: RazorPreviewSnippet[] = [
 </ul>`,
   },
   {
+    title: "Implicit if/else blocks",
+    description: "@if/@else with embedded markup, not just @{ } blocks",
+    code: `@if (Model.IsActive)
+{
+    <p class="status-active">Active</p>
+}
+@else if (Model.IsPending)
+{
+    <p class="status-pending">Pending</p>
+}
+@else
+{
+    <p class="status-inactive">Inactive</p>
+}`,
+  },
+  {
     title: "Code blocks and comments",
     description: "@{ } blocks and @* *@ comments",
     code: `@* product summary section *@

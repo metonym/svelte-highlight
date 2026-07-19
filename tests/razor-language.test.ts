@@ -61,6 +61,30 @@ test("razor highlights @functions blocks with nested braces as C#", () => {
   expect(result).toContain('<span class="hljs-keyword">return</span>');
 });
 
+test("razor highlights implicit @foreach blocks with embedded markup", () => {
+  const result = highlight(
+    "@foreach (var item in Model.Items)\n{\n    <li>@item.Name</li>\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">@foreach</span>');
+  expect(result).toContain('<span class="hljs-keyword">var</span>');
+  expect(result).toContain('<span class="hljs-keyword">in</span>');
+  expect(result).toContain('<span class="hljs-tag">&lt;li&gt;</span>');
+  expect(result).toContain(
+    '<span class="hljs-template-variable">@item.Name</span>',
+  );
+});
+
+test("razor highlights implicit @if/@else blocks with embedded markup", () => {
+  const result = highlight(
+    "@if (Model.IsActive)\n{\n    <p>Active</p>\n}\n@else\n{\n    <p>Inactive</p>\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">@if</span>');
+  expect(result).toContain('<span class="hljs-keyword">@else</span>');
+  expect(result).toContain('<span class="hljs-tag">&lt;p&gt;</span>');
+});
+
 test("razor highlights explicit @(...) expressions", () => {
   const result = highlight("@(model.Value + 1)");
 
