@@ -13,6 +13,14 @@ const SCRIPT_JS_BEGIN = new RegExp(
   "gm",
 );
 
+// A concise-tag name, optionally followed by `.class`/`#id` shorthand
+// segments (`div.container`, `input#email.required`).
+const MARKO_TAG_NAME = String.raw`[a-zA-Z][\w-]*(?:[.#][\w-]+)*`;
+const MARKO_CONCISE_TAG_BEGIN = new RegExp(
+  String.raw`^[ \t]*(?=${MARKO_TAG_NAME}(?:[ \t]*(?:$|--|\/[ \t]*$)|[ \t]+.*[=(]))`,
+  "m",
+);
+
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineMarko(hljs) {
   const markoControlFlow = {
@@ -86,14 +94,13 @@ function defineMarko(hljs) {
 
   const markoConciseTag = {
     className: "tag",
-    begin:
-      /^[ \t]*(?=[a-zA-Z][\w-]*(?:[ \t]*(?:$|--|\/[ \t]*$)|[ \t]+.*[=(]))/m,
+    begin: MARKO_CONCISE_TAG_BEGIN,
     end: /(?=--|\/[ \t]*$|$)/m,
     relevance: 0,
     contains: [
       {
         className: "name",
-        begin: /[a-zA-Z][\w-]*/,
+        begin: new RegExp(MARKO_TAG_NAME),
         relevance: 0,
         starts: {
           endsWithParent: true,
