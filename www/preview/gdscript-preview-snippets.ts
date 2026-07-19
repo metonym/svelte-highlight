@@ -1,10 +1,10 @@
-export type GDScriptPreviewSnippet = {
+export type GdscriptPreviewSnippet = {
   title: string;
   description?: string;
   code: string;
 };
 
-export const gdscriptPreviewSnippets: GDScriptPreviewSnippet[] = [
+export const gdscriptPreviewSnippets: GdscriptPreviewSnippet[] = [
   {
     title: "Player controller",
     description: "annotations, signals, typed properties, and control flow",

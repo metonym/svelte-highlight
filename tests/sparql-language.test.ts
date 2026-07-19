@@ -54,14 +54,16 @@ test("sparql highlights blank nodes distinctly from prefixed names", () => {
 });
 
 test("sparql highlights built-in functions", () => {
-  const result = highlight("FILTER (LANG(?name) = \"en\" || !BOUND(?email))");
+  const result = highlight('FILTER (LANG(?name) = "en" || !BOUND(?email))');
 
   expect(result).toContain('<span class="hljs-built_in">LANG</span>');
   expect(result).toContain('<span class="hljs-built_in">BOUND</span>');
 });
 
 test("sparql highlights strings, comments, and numbers", () => {
-  const result = highlight('# a comment\nSELECT ?s WHERE { ?s ?p "value" } LIMIT 10');
+  const result = highlight(
+    '# a comment\nSELECT ?s WHERE { ?s ?p "value" } LIMIT 10',
+  );
 
   expect(result).toContain('<span class="hljs-comment"># a comment</span>');
   expect(result).toContain(
@@ -87,8 +89,6 @@ test("sparql highlights a lang-tagged and a datatype-tagged literal", () => {
   expect(result).toContain(
     '<span class="hljs-string">&quot;Alice&quot;</span><span class="hljs-meta">@en</span>',
   );
-  expect(result).toContain(
-    '<span class="hljs-string">&quot;30&quot;</span>',
-  );
+  expect(result).toContain('<span class="hljs-string">&quot;30&quot;</span>');
   expect(result).toContain('<span class="hljs-symbol">xsd:integer</span>');
 });

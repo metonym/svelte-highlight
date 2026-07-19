@@ -36,7 +36,8 @@ WHERE {
   },
   {
     title: "Property paths and typed literals",
-    description: "a property path expression and a lang/datatype-tagged literal",
+    description:
+      "a property path expression and a lang/datatype-tagged literal",
     code: `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
