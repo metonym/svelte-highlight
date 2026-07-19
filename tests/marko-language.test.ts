@@ -162,6 +162,23 @@ test("marko highlights input/state/out as implicit template variables", () => {
   expect(result).toContain('<span class="hljs-built_in">state</span>');
 });
 
+test("marko highlights concise class/id shorthand on tag names", () => {
+  registerAll(registry, marko);
+
+  const result = registry.highlight(
+    `div.container
+  span.title -- Hello
+  input#email.required type="email"`,
+    { language: "marko" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-name">div.container</span>');
+  expect(result).toContain('<span class="hljs-name">span.title</span>');
+  expect(result).toContain(
+    '<span class="hljs-name">input#email.required</span>',
+  );
+});
+
 test("marko highlights a bare concise tag with indented children", () => {
   registerAll(registry, marko);
 

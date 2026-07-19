@@ -42,6 +42,14 @@ export function formatItem(item: Item): string {
 </script>`,
   },
   {
+    title: "Concise mode with class/id shorthand",
+    description: "tagname.class and tagname#id, without angle brackets",
+    code: `div.container
+  h1#title.large -- \${input.title}
+  input#email.required type="email" value=input.email
+  button.btn.btn-primary on-click("submit") -- Submit`,
+  },
+  {
     title: "Control flow",
     description: "if / else blocks in Marko templates",
     code: `<div>
