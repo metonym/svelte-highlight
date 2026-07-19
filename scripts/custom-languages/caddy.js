@@ -18,9 +18,23 @@ function defineCaddy(hljs) {
     relevance: 0,
   };
 
+  // A site header can declare more than one address on the same line,
+  // separated by whitespace (and optionally commas), e.g.
+  // `example.com www.example.com {`. Without the repeating group, the
+  // lookahead for `{` failed right after the first address (next up was
+  // another address, not `{`), so the whole line got no styling at all.
+  //
+  // Anchored to column 0 (no leading whitespace): site headers are always
+  // unindented, while nested directive lines like `transport http {` are
+  // always indented -- without that distinction, the repeating group would
+  // also swallow a directive followed by a bare-word argument, since both
+  // are just "word(s) {" and the address-token class allows bare words too.
+  const ADDRESS_TOKEN = String.raw`(?:https?:\/\/)?[a-zA-Z0-9*.-]+(?::\d+)?`;
   const SITE_ADDRESS = {
     className: "attr",
-    begin: /^\s*(?:https?:\/\/)?(?:[a-zA-Z0-9*.-]+)(?::\d+)?(?=\s*\{)/,
+    begin: new RegExp(
+      String.raw`^${ADDRESS_TOKEN}(?:,?\s+${ADDRESS_TOKEN})*(?=\s*\{)`,
+    ),
     relevance: 0,
   };
 
