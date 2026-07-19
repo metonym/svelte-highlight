@@ -12,8 +12,8 @@ function defineBlade(hljs) {
   const STRING = {
     className: "string",
     variants: [
-      { begin: /"/, end: /"/ },
-      { begin: /'/, end: /'/ },
+      { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
     ],
   };
 
