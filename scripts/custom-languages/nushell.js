@@ -69,7 +69,11 @@ function defineNushell(hljs) {
   };
 
   const FUNCTION = {
-    beginKeywords: "def def-env extern",
+    // "def-env" must precede "def" in this list: regex alternation tries
+    // alternatives in order and isn't longest-match, so "def" would win the
+    // tie first and leave "-env" to be swallowed by the nested title regex
+    // below (which allows hyphens) as if it were part of the function name.
+    beginKeywords: "def-env def extern",
     end: /[[{(]/,
     excludeEnd: true,
     contains: [{ className: "title function_", begin: /[\w-]+/ }],
