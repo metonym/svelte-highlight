@@ -42,6 +42,20 @@ test("just highlights recipe parameters with defaults", () => {
   );
 });
 
+test("just highlights recipe parameters with function-call defaults", () => {
+  const result = highlight(
+    'serve port=env_var_or_default("PORT", "8080"):\n    echo {{port}}',
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-title function_ invoke__">serve</span>',
+  );
+  expect(result).toContain('<span class="hljs-params">port</span>');
+  expect(result).toContain('<span class="hljs-string">&quot;PORT&quot;</span>');
+  expect(result).toContain('<span class="hljs-string">&quot;8080&quot;</span>');
+  expect(result).toContain('<span class="hljs-subst">{{port}}</span>');
+});
+
 test("just highlights interpolation in recipe bodies", () => {
   const result = highlight("build target:\n    cargo build --{{target}}");
 
