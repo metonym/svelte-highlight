@@ -45,11 +45,15 @@ test("heex highlights a multi-line <%= if %> / <% end %> block spanning markup",
 test("heex highlights {expr} interpolation in text position", () => {
   const result = highlight("<p>{@count} items</p>");
 
-  expect(result).toContain('<span class="language-elixir">{<span class="hljs-variable">@count</span>}</span>');
+  expect(result).toContain(
+    '<span class="language-elixir">{<span class="hljs-variable">@count</span>}</span>',
+  );
 });
 
 test("heex highlights {expr} interpolation in an attribute value", () => {
-  const result = highlight('<div class={@highlighted && "border-blue-500"}>hi</div>');
+  const result = highlight(
+    '<div class={@highlighted && "border-blue-500"}>hi</div>',
+  );
 
   expect(result).toContain('<span class="hljs-attr">class</span>');
   expect(result).toContain('<span class="hljs-variable">@highlighted</span>');
@@ -95,13 +99,11 @@ test("heex highlights slots with a leading-colon tag name", () => {
 });
 
 test("heex highlights :if/:for special attributes", () => {
-  const result = highlight('<p :if={@user.bio}>{@user.bio}</p>');
+  const result = highlight("<p :if={@user.bio}>{@user.bio}</p>");
 
   expect(result).toContain('<span class="hljs-keyword">:if</span>');
 
-  const forResult = highlight(
-    '<li :for={item <- @items}>{item}</li>',
-  );
+  const forResult = highlight("<li :for={item <- @items}>{item}</li>");
   expect(forResult).toContain('<span class="hljs-keyword">:for</span>');
 });
 
