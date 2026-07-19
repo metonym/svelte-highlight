@@ -53,14 +53,25 @@ function defineRego(hljs) {
 
   const RULE_HEAD = {
     className: "title.function",
+    // The optional group anticipates a partial-set rule's `[...]` key or a
+    // function-style rule's `(...)` params, e.g. `is_valid_user(u) { ... }`.
     begin:
-      /^[a-z_][a-zA-Z0-9_]*(?=(?:\[[^\]]*\])?(?:\s*:=|\s*=(?!=)|\s+(?:if|contains)\b|\s*\{))/,
+      /^[a-z_][a-zA-Z0-9_]*(?=(?:\[[^\]]*\]|\([^)]*\))?(?:\s*:=|\s*=(?!=)|\s+(?:if|contains)\b|\s*\{))/,
     relevance: 0,
   };
 
+  // Restricted to actual REGO_BUILTINS names (escaping the literal `.` in
+  // dotted names like `object.get`) -- otherwise this matched *any*
+  // call-like identifier, including user-defined rules, misleadingly
+  // implying they're language builtins.
   const BUILT_IN_CALL = {
     className: "built_in",
-    begin: /\b[a-z][a-zA-Z0-9_]*(?:\.[a-z][a-zA-Z0-9_]*)*(?=\()/,
+    begin: new RegExp(
+      String.raw`\b(?:${REGO_BUILTINS.trim()
+        .split(/\s+/)
+        .map((name) => name.replace(/\./g, "\\."))
+        .join("|")})(?=\()`,
+    ),
     relevance: 0,
   };
 
