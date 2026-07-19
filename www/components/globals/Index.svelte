@@ -45,11 +45,26 @@
   } from "carbon-components-svelte";
   import Highlight, { HighlightSvelte } from "svelte-highlight";
   import css from "svelte-highlight/languages/css";
+  import javascript from "svelte-highlight/languages/javascript";
 
   const svelteHeadCdn = `<link
-      rel="stylesheet"
-      href="https://unpkg.com/svelte-highlight/styles/github.css"
-    />\n`;
+  rel="stylesheet"
+  href="https://unpkg.com/svelte-highlight/styles/github.css"
+/>\n`;
+
+  const viteConfigSnippet = `// vite.config.js
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { highlightStatic } from "svelte-highlight/static";
+
+export default {
+  plugins: [svelte({ preprocess: [highlightStatic()] })],
+};`;
+
+  const highlightStaticOnWarnSnippet = `highlightStatic({
+  onWarn(message, details) {
+    // defaults to a console.warn with the filename, line, and message
+  },
+});`;
 </script>
 
 <Row>
@@ -916,14 +931,9 @@
     <p class="mb-5">Wire it into your Vite/Svelte preprocess config:</p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={`// vite.config.js
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { highlightStatic } from "svelte-highlight/static";
-
-export default {
-  plugins: [svelte({ preprocess: [highlightStatic()] })],
-};`}
+    <Highlight
+      code={viteConfigSnippet}
+      language={javascript}
       class={THEME_MODULE_NAME}
     />
   </Column>
@@ -1000,12 +1010,9 @@ export default {
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={`highlightStatic({
-  onWarn(message, details) {
-    // defaults to a console.warn with the filename, line, and message
-  },
-});`}
+    <Highlight
+      code={highlightStaticOnWarnSnippet}
+      language={javascript}
       class={THEME_MODULE_NAME}
     />
     <InlineNotification

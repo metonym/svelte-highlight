@@ -14,26 +14,26 @@
   const files = Object.keys(sources);
 
   const snippet = `<script>
-    import Highlight, { FileTabs } from "svelte-highlight";
-    import javascript from "svelte-highlight/languages/javascript";
-    import typescript from "svelte-highlight/languages/typescript";
-    import github from "svelte-highlight/styles/github";
+  import Highlight, { FileTabs } from "svelte-highlight";
+  import javascript from "svelte-highlight/languages/javascript";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
 
-    const sources = {
-      "App.svelte": { language: typescript, code: "const answer = 42;" },
-      "index.js": { language: javascript, code: "export default answer;" },
-    };
+  const sources = {
+    "App.svelte": { language: typescript, code: "const answer = 42;" },
+    "index.js": { language: javascript, code: "export default answer;" },
+  };
 
-    const files = Object.keys(sources);
-  <\/script>
+  const files = Object.keys(sources);
+<\/script>
 
-  <svelte:head>
-    {@html github}
-  </svelte:head>
+<svelte:head>
+  {@html github}
+</svelte:head>
 
-  <FileTabs {files} let:active>
-    <Highlight language={sources[active].language} code={sources[active].code} />
-  </FileTabs>`;
+<FileTabs {files} let:active>
+  <Highlight language={sources[active].language} code={sources[active].code} />
+</FileTabs>`;
 </script>
 
 <div class="mb-5">

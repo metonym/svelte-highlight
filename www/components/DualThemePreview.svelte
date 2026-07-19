@@ -1,4 +1,5 @@
 <script>
+  import { Toggle } from "carbon-components-svelte";
   import Highlight, { HighlightStyle } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
   import github from "svelte-highlight/styles/github";
@@ -43,10 +44,13 @@ const greet = (user: User): string => {
   </fieldset>
 
   {#if mode === "selector"}
-    <label class="toggle">
-      <input type="checkbox" bind:checked={darkSelectorOn}>
-      apply <code>{selector}</code>
-    </label>
+    <Toggle
+      bind:toggled={darkSelectorOn}
+      labelText={`apply ${selector}`}
+      labelA="Off"
+      labelB="On"
+      size="sm"
+    />
   {/if}
 </div>
 
@@ -93,13 +97,6 @@ const greet = (user: User): string => {
     letter-spacing: 0.05em;
   }
 
-  label {
-    display: inline-flex;
-    gap: 0.25rem;
-    align-items: center;
-    cursor: pointer;
-  }
-
   .mode-button {
     cursor: pointer;
     border: 1px solid var(--cds-ui-04, #8d8d8d);
@@ -115,10 +112,6 @@ const greet = (user: User): string => {
     background: var(--cds-interactive-01, #0f62fe);
     border-color: var(--cds-interactive-01, #0f62fe);
     color: var(--cds-text-04, #ffffff);
-  }
-
-  .toggle {
-    font-size: 0.875rem;
   }
 
   .hint {
