@@ -53,6 +53,11 @@ The total is {items.length} items.
 </ul>`,
   },
   {
+    title: "Comparison inside a JSX attribute",
+    description: "A > operator inside a {...} attribute expression",
+    code: "<Chart data={data} highlight={value > threshold} />",
+  },
+  {
     title: "Fenced code block",
     description: "Triple-backtick code fences in MDX",
     code: `# Example
