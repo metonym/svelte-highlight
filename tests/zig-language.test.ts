@@ -17,6 +17,12 @@ test("zig highlights keywords", () => {
   expect(result).toContain('<span class="hljs-keyword">const</span>');
 });
 
+test("zig highlights function names", () => {
+  const result = highlight("fn add(a: i32, b: i32) i32 {\n  return a + b;\n}");
+
+  expect(result).toContain('<span class="hljs-title function_">add</span>');
+});
+
 test("zig highlights @builtins", () => {
   const result = highlight(`const std = @import("std");`);
 

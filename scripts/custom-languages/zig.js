@@ -88,8 +88,12 @@ function defineZig(hljs) {
       INT_TYPE,
       NAMED_TYPE,
       {
+        // `end` must wait for the opening paren (not just whitespace):
+        // Zig always writes a space between `fn` and the name
+        // (`fn add(...)`), so ending on whitespace closed this mode before
+        // the nested title matcher ever got a chance to run.
         beginKeywords: "fn",
-        end: /[(\s]/,
+        end: /\(/,
         excludeEnd: true,
         contains: [{ className: "title function_", begin: /[A-Za-z_]\w*/ }],
       },
