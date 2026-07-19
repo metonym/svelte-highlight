@@ -16,6 +16,16 @@ test("prisma highlights block keywords and names", () => {
   expect(result).toContain('<span class="hljs-title class_">User</span>');
 });
 
+test("prisma does not mistake a field named type for a type declaration", () => {
+  const result = highlight(
+    "model Payment {\n  id     Int    @id\n  type   String\n  amount Float\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">type</span>');
+  expect(result).toContain('<span class="hljs-type">String</span>');
+  expect(result).not.toContain('<span class="hljs-title class_">String</span>');
+});
+
 test("prisma highlights scalar types", () => {
   const result = highlight("name String\ncount Int\nactive Boolean");
 
