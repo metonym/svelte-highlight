@@ -30,6 +30,21 @@ html(lang="en")
   p Posted by #{author} on #{date}`,
   },
   {
+    title: "Control flow",
+    description: "if/else, each, and case/when as keywords",
+    code: `each item in items
+  if item.inStock
+    p= item.name
+  else
+    p Out of stock
+
+case item.status
+  when "active"
+    p Active
+  default
+    p Unknown`,
+  },
+  {
     title: "Comments and inline code",
     description: "// buffered comments, and -/=/!= code lines",
     code: `// This renders as an HTML comment

@@ -21,6 +21,19 @@ test("pug highlights tags", () => {
   expect(result).toContain('<span class="hljs-selector-tag">h1</span>');
 });
 
+test("pug highlights control-flow keywords, not tag names", () => {
+  const result = highlight(
+    "if user.authenticated\n  p Welcome\nelse\n  p Log in\neach item in items\n  li= item",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">if</span>');
+  expect(result).toContain('<span class="hljs-keyword">else</span>');
+  expect(result).toContain('<span class="hljs-keyword">each</span>');
+  expect(result).not.toContain('<span class="hljs-selector-tag">if</span>');
+  expect(result).not.toContain('<span class="hljs-selector-tag">else</span>');
+  expect(result).not.toContain('<span class="hljs-selector-tag">each</span>');
+});
+
 test("pug highlights id and class shorthand", () => {
   const result = highlight("h1#title.big Hello");
 
