@@ -47,6 +47,17 @@ function definePug(hljs) {
       { className: "meta", begin: /^\s*doctype\b/, end: /$/ },
       UNBUFFERED_CODE,
       BUFFERED_CODE,
+      // Control-flow keywords must be checked before the generic tag rule
+      // below: both match a line-initial word, and the tag rule's lookahead
+      // has no way to defer to keywords, so it would otherwise render
+      // `if`/`else`/`each` etc. as tag names instead of keywords.
+      {
+        className: "keyword",
+        begin: new RegExp(
+          String.raw`^\s*(?:${PUG_KEYWORDS.split(" ").join("|")})\b`,
+        ),
+        relevance: 0,
+      },
       // tag with optional id/class shorthand at line start
       {
         begin: /^\s*(?=[a-zA-Z])/,
