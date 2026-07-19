@@ -83,6 +83,15 @@ test("hlsl highlights numthreads attributes", () => {
   );
 });
 
+test("hlsl highlights parameterless attributes like [unroll] and [loop]", () => {
+  const result = highlight("[unroll]\nfor (int i = 0; i < 4; i++) {}");
+
+  expect(result).toContain('<span class="hljs-meta">[unroll]</span>');
+
+  const loopResult = highlight("[loop]\nwhile (x > 0) {}");
+  expect(loopResult).toContain('<span class="hljs-meta">[loop]</span>');
+});
+
 test("hlsl does not mistake array indexing for an attribute", () => {
   const result = highlight("arr[i]");
 
