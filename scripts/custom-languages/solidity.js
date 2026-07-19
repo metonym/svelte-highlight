@@ -33,7 +33,7 @@ function defineSolidity(hljs) {
   const NUMBER = {
     className: "number",
     variants: [
-      { begin: /\b0[xX][0-9a-fA-F]+\b/ },
+      { begin: /\b0[xX][0-9a-fA-F_]+\b/ },
       { begin: /\b\d[\d_]*(?:\.[\d_]+)?(?:[eE][+-]?\d+)?\b/ },
     ],
     relevance: 0,

@@ -33,6 +33,7 @@ contract Counter {
 contract Token {
   mapping(address => uint256) private _balances;
   uint8 public constant decimals = 18;
+  bytes32 public constant MAGIC = 0x1234_5678;
   bytes32 public immutable salt;
   address payable public owner;
 
