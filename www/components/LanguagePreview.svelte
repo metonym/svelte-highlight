@@ -15,6 +15,7 @@
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
   import { groqPreviewSnippets } from "@www/preview/groq-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
+  import { heexPreviewSnippets } from "@www/preview/heex-preview-snippets";
   import { hlslPreviewSnippets } from "@www/preview/hlsl-preview-snippets";
   import { jqPreviewSnippets } from "@www/preview/jq-preview-snippets";
   import { json5PreviewSnippets } from "@www/preview/json5-preview-snippets";
@@ -63,6 +64,7 @@
   import gleam from "svelte-highlight/languages/gleam";
   import groq from "svelte-highlight/languages/groq";
   import hcl from "svelte-highlight/languages/hcl";
+  import heex from "svelte-highlight/languages/heex";
   import hlsl from "svelte-highlight/languages/hlsl";
   import jq from "svelte-highlight/languages/jq";
   import json5 from "svelte-highlight/languages/json5";
@@ -93,12 +95,13 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex"} */
   export let language;
 
   const registry = {
     solidity: { lang: solidity, snippets: solidityPreviewSnippets },
     hcl: { lang: hcl, snippets: hclPreviewSnippets },
+    heex: { lang: heex, snippets: heexPreviewSnippets },
     zig: { lang: zig, snippets: zigPreviewSnippets },
     prisma: { lang: prisma, snippets: prismaPreviewSnippets },
     toml: { lang: toml, snippets: tomlPreviewSnippets },
