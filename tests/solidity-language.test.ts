@@ -16,6 +16,18 @@ test("solidity highlights pragma and contract keywords", () => {
   expect(result).toContain('<span class="hljs-keyword">contract</span>');
 });
 
+test("solidity highlights an inheritance list without tagging 'is' as a title", () => {
+  const result = highlight("contract Foo is Ownable, ReentrancyGuard {\n}");
+
+  expect(result).toContain('<span class="hljs-title">Foo</span>');
+  expect(result).toContain('<span class="hljs-keyword">is</span>');
+  expect(result).toContain('<span class="hljs-title class_">Ownable</span>');
+  expect(result).toContain(
+    '<span class="hljs-title class_">ReentrancyGuard</span>',
+  );
+  expect(result).not.toContain('<span class="hljs-title">is</span>');
+});
+
 test("solidity highlights elementary value types", () => {
   const result = highlight(
     "mapping(address => uint256) balances;\nbytes32 salt;\nuint8 decimals;",

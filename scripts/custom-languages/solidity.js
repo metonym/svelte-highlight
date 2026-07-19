@@ -74,11 +74,27 @@ function defineSolidity(hljs) {
       NUMBER,
       SOLIDITY_TYPE,
       {
-        beginKeywords: "contract interface library",
+        // Only the contract/interface/library's own name is captured here
+        // (via the bounded 3-part begin); an unconditional nested `title`
+        // matcher previously kept re-firing for the rest of the header,
+        // tagging the `is` keyword and every inherited contract name in
+        // `contract Foo is Ownable, ReentrancyGuard {` as `title` too.
+        begin: [/\b(?:contract|interface|library)\b/, /\s+/, /[A-Za-z_]\w*/],
+        beginScope: { 1: "keyword", 3: "title" },
         end: /\{/,
         excludeEnd: true,
-        keywords: "contract interface library is abstract",
-        contains: [{ className: "title", begin: /[A-Za-z_]\w*/, relevance: 0 }],
+        // Same keyword table as the top level: if `end` never finds a `{`
+        // (malformed/partial input -- every real declaration has a body),
+        // this mode never closes, but keyword coloring for the rest of the
+        // document still degrades gracefully instead of going dark.
+        keywords: {
+          keyword: SOLIDITY_KEYWORDS,
+          literal: SOLIDITY_LITERALS,
+          built_in: SOLIDITY_BUILT_INS,
+        },
+        contains: [
+          { className: "title class_", begin: /\b[A-Z]\w*/, relevance: 0 },
+        ],
       },
       {
         beginKeywords:
