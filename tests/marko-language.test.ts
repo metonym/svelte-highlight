@@ -95,6 +95,17 @@ test("marko highlights control flow keywords", () => {
   expect(result).toContain("else</span>");
 });
 
+test("marko highlights the else-if hyphen form as one keyword", () => {
+  registerAll(registry, marko);
+
+  const result = registry.highlight(
+    "if (input.count > 0)\n  p -- Some\nelse-if (input.count === 0)\n  p -- None",
+    { language: "marko" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-keyword">else-if</span>');
+});
+
 test("marko highlights class components and event attributes", () => {
   registerAll(registry, marko);
 

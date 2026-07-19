@@ -24,7 +24,10 @@ const MARKO_CONCISE_TAG_BEGIN = new RegExp(
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineMarko(hljs) {
   const markoControlFlow = {
-    begin: /^\s*(?:if|else if|else|for|while)\b/m,
+    // Marko's tag is `else-if` (hyphen), not `else if` (space). This must be
+    // tried before the bare `else` alternative below it, or `else-if(...)`
+    // would only match the `else` prefix and leave `-if(...)` uncolored.
+    begin: /^\s*(?:if|else-if|else|for|while)\b/m,
     className: "keyword",
     relevance: 10,
   };
