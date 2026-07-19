@@ -53,7 +53,15 @@ test("jq highlights string interpolation", () => {
   const result = highlight('"Hello, \\(.name)!"');
 
   expect(result).toContain(
-    '<span class="hljs-string">&quot;Hello, \\(.name)!&quot;</span>',
+    '<span class="hljs-string">&quot;Hello, <span class="hljs-subst">\\(.name)</span>!&quot;</span>',
+  );
+});
+
+test("jq interpolation balances nested parens", () => {
+  const result = highlight('"\\(.tags | join(","))"');
+
+  expect(result).toContain(
+    '<span class="hljs-subst">\\(.tags | <span class="hljs-built_in">join</span>(&quot;,&quot;))</span>',
   );
 });
 

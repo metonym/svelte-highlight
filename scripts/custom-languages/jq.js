@@ -22,6 +22,18 @@ function defineJq(hljs) {
     relevance: 0,
   };
 
+  // Balances a plain `(...)` call nested inside an interpolation, e.g.
+  // `\(.tags | join(","))`. Without this, INTERPOLATION's own `end: /\)/`
+  // would match the nested call's closing paren instead of the
+  // interpolation's.
+  const NESTED_PARENS = {
+    begin: /\(/,
+    end: /\)/,
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      "self",
+    ]),
+  };
+
   const INTERPOLATION = {
     className: "subst",
     begin: /\\\(/,
@@ -31,13 +43,19 @@ function defineJq(hljs) {
       literal: JQ_LITERALS,
       built_in: JQ_BUILT_INS,
     },
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      NESTED_PARENS,
+    ]),
   };
 
   const STRING = {
     className: "string",
     begin: /"/,
     end: /"/,
-    contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
+    // INTERPOLATION must come first: its begin (`\(`) is a strict subset of
+    // BACKSLASH_ESCAPE's generic `\<anything>`, so listing the escape mode
+    // first would always win the tie and interpolation would never fire.
+    contains: [INTERPOLATION, hljs.BACKSLASH_ESCAPE],
   };
 
   const NUMBER = {

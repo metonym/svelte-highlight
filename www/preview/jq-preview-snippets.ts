@@ -37,4 +37,13 @@ export const jqPreviewSnippets: JqPreviewSnippet[] = [
   | @csv
 ) catch "error: \\(.)"`,
   },
+  {
+    title: "Nested interpolation",
+    description: "a \\(...) interpolation containing its own function call",
+    code: `.items
+| map({
+    name: .name,
+    summary: "\\(.name): \\(.tags | join(", "))"
+  })`,
+  },
 ];

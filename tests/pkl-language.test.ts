@@ -37,6 +37,12 @@ test("pkl highlights strings and numbers", () => {
   expect(result).toContain('<span class="hljs-number">8080</span>');
 });
 
+test("pkl highlights string interpolation and balances nested parens", () => {
+  const result = highlight('message = "Count: \\(items.size())"');
+
+  expect(result).toContain('<span class="hljs-subst">\\(items.size())</span>');
+});
+
 test("pkl highlights triple-quoted pound strings", () => {
   const result = highlight('x = #"""hello "# world"""#');
 

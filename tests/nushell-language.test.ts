@@ -58,6 +58,14 @@ test("nushell highlights interpolated strings", () => {
   );
 });
 
+test("nushell interpolation balances nested parens", () => {
+  const result = highlight('let x = $"Sum: (1 + (2 * 3))"');
+
+  expect(result).toContain(
+    '<span class="hljs-subst">(1 + <span class="hljs-subst">(2 * 3)</span>)</span>',
+  );
+});
+
 test("nushell highlights raw strings without treating them as comments", () => {
   const result = highlight("let path = r#'C:\\Users\\test'#");
 

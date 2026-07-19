@@ -19,11 +19,26 @@ function definePkl(hljs) {
     relevance: 0,
   };
 
+  // Balances a plain `(...)` call/group nested inside an interpolation,
+  // e.g. `\(items.size())`. Without this, INTERPOLATION's own `end: /\)/`
+  // would match the nested call's closing paren instead of the
+  // interpolation's.
+  const NESTED_PARENS = {
+    begin: /\(/,
+    end: /\)/,
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      "self",
+    ]),
+  };
+
   const INTERPOLATION = {
     className: "subst",
     begin: /\\\(/,
     end: /\)/,
     keywords: { keyword: PKL_KEYWORDS, literal: PKL_LITERALS },
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      NESTED_PARENS,
+    ]),
   };
 
   const STRING = {
@@ -32,14 +47,18 @@ function definePkl(hljs) {
       {
         begin: /"""/,
         end: /"""/,
-        contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
+        // INTERPOLATION must come first: its begin (`\(`) is a strict
+        // subset of BACKSLASH_ESCAPE's generic `\<anything>`, so listing
+        // the escape mode first would always win the tie and interpolation
+        // would never fire.
+        contains: [INTERPOLATION, hljs.BACKSLASH_ESCAPE],
       },
       { begin: /#"""/, end: /"""#/ },
       { begin: /#"/, end: /"#/ },
       {
         begin: /"/,
         end: /"/,
-        contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
+        contains: [INTERPOLATION, hljs.BACKSLASH_ESCAPE],
       },
     ],
   };

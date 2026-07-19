@@ -17,6 +17,18 @@ function defineHcl(hljs) {
     relevance: 0,
   };
 
+  // Balances a bare (non `$`/`%`-prefixed) `{...}` object/map literal nested
+  // inside an interpolation, e.g. `${merge(local.tags, { Name = "x" })}`.
+  // Without this, INTERPOLATION's own `end: /\}/` would match the literal's
+  // closing brace instead of the interpolation's.
+  const NESTED_BRACES = {
+    begin: /\{/,
+    end: /\}/,
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      "self",
+    ]),
+  };
+
   const INTERPOLATION = {
     className: "subst",
     begin: /[$%]\{/,
@@ -24,6 +36,7 @@ function defineHcl(hljs) {
     keywords: { keyword: HCL_KEYWORDS, literal: HCL_LITERALS },
     contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
       { className: "built_in", begin: /\b[a-z_][\w-]*(?=\()/ },
+      NESTED_BRACES,
       "self",
     ]),
   };
