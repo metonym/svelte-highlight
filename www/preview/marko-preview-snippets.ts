@@ -51,12 +51,14 @@ export function formatItem(item: Item): string {
   },
   {
     title: "Control flow",
-    description: "if / else blocks in Marko templates",
+    description: "if / else-if / else blocks in Marko templates",
     code: `<div>
-  if (condition)
-    p -- Yes
+  if (input.count > 0)
+    p -- Positive
+  else-if (input.count === 0)
+    p -- Zero
   else
-    p -- No
+    p -- Negative
 </div>`,
   },
   {
