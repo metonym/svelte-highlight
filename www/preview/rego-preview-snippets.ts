@@ -56,6 +56,21 @@ deny contains msg if {
 }`,
   },
   {
+    title: "Function-style rule heads",
+    description: "helper functions with (params), not just partial sets",
+    code: `package authz
+
+is_valid_user(u) {
+	u.age >= 18
+	u.status == "active"
+}
+
+allow if {
+	is_valid_user(input.user)
+	count(input.user.roles) > 0
+}`,
+  },
+  {
     title: "Data references and built-ins",
     description: "object, string, and aggregate built-in functions",
     code: `package rbac

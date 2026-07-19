@@ -57,6 +57,25 @@ test("rego highlights dotted built-ins like object.get and json.marshal", () => 
   expect(result).toContain('<span class="hljs-built_in">object.get</span>');
 });
 
+test("rego recognizes function-style rule heads, not just partial sets", () => {
+  const result = highlight("is_valid_user(u) {\n  u.age > 18\n}");
+
+  expect(result).toContain(
+    '<span class="hljs-title function_">is_valid_user</span>',
+  );
+});
+
+test("rego does not tag user-defined function calls as built-ins", () => {
+  const result = highlight(
+    "is_valid_user(u) {\n  u.age > 18\n}\n\nallow {\n  is_valid_user(input.user)\n}",
+  );
+
+  expect(result).not.toContain(
+    '<span class="hljs-built_in">is_valid_user</span>',
+  );
+  expect(result).toContain('<span class="hljs-built_in">input</span>');
+});
+
 test("rego highlights strings and numbers", () => {
   const result = highlight('numbers := [1, 2, 3.5, -4]\nname := "OPA"');
 
