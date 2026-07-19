@@ -12,7 +12,14 @@ function definePromQL(hljs) {
   const NUMBER = {
     className: "number",
     variants: [
-      { begin: /\b\d+(?:\.\d+)?(?:ms|[smhdwy])\b/ },
+      // Duration, optionally followed by a subquery `:resolution` (which
+      // may itself be a bare `:` with the resolution omitted, e.g.
+      // `metric[5m:]`). Consuming it here keeps METRIC below from matching
+      // the leading `:` as if it were a (colon-prefixed) metric name.
+      {
+        begin:
+          /\b\d+(?:\.\d+)?(?:ms|[smhdwy])(?::(?:\d+(?:\.\d+)?(?:ms|[smhdwy]))?)?/,
+      },
       { begin: /\b0[xX][0-9a-fA-F]+\b/ },
       { begin: /\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b/ },
       { begin: /\b(?:Inf|NaN)\b/ },
@@ -44,6 +51,18 @@ function definePromQL(hljs) {
       .trim()
       .split(/\s+/)
       .join("|");
+
+  // Grouping-clause labels, e.g. `sum by (job, instance) (up)`. Without
+  // this, `job`/`instance` fall through to METRIC below and get tagged as
+  // metric names, since they're bare identifiers with no `=`/`=~` operator
+  // to mark them as labels.
+  const GROUPING_LABELS = {
+    begin: /\b(?:by|without|on|ignoring|group_left|group_right)\s*\(/,
+    end: /\)/,
+    keywords: { keyword: PROMQL_KEYWORDS },
+    contains: [{ className: "attr", begin: /[a-zA-Z_]\w*/, relevance: 0 }],
+    relevance: 0,
+  };
 
   const METRIC = {
     className: "built_in",
@@ -77,6 +96,7 @@ function definePromQL(hljs) {
       hljs.HASH_COMMENT_MODE,
       STRING,
       LABEL,
+      GROUPING_LABELS,
       TIMESTAMP,
       OPERATOR,
       METRIC,
