@@ -38,6 +38,7 @@
   import { rescriptPreviewSnippets } from "@www/preview/rescript-preview-snippets";
   import { rstPreviewSnippets } from "@www/preview/rst-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
+  import { sparqlPreviewSnippets } from "@www/preview/sparql-preview-snippets";
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
   import { templPreviewSnippets } from "@www/preview/templ-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
@@ -86,6 +87,7 @@
   import rescript from "svelte-highlight/languages/rescript";
   import rst from "svelte-highlight/languages/rst";
   import solidity from "svelte-highlight/languages/solidity";
+  import sparql from "svelte-highlight/languages/sparql";
   import starlark from "svelte-highlight/languages/starlark";
   import templ from "svelte-highlight/languages/templ";
   import toml from "svelte-highlight/languages/toml";
@@ -95,11 +97,12 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql"} */
   export let language;
 
   const registry = {
     solidity: { lang: solidity, snippets: solidityPreviewSnippets },
+    sparql: { lang: sparql, snippets: sparqlPreviewSnippets },
     hcl: { lang: hcl, snippets: hclPreviewSnippets },
     heex: { lang: heex, snippets: heexPreviewSnippets },
     zig: { lang: zig, snippets: zigPreviewSnippets },
