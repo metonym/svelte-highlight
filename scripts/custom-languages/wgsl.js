@@ -21,8 +21,8 @@ function defineWgsl(hljs) {
     className: "number",
     variants: [
       { begin: /\b0[xX][0-9a-fA-F]+[iuhf]?\b/ },
-      { begin: /\b\d+(?:\.\d*)?(?:[eE][+-]?\d+)?[ifh]?\b/ },
-      { begin: /\.\d+(?:[eE][+-]?\d+)?[ifh]?\b/ },
+      { begin: /\b\d+(?:\.\d*)?(?:[eE][+-]?\d+)?[iufh]?\b/ },
+      { begin: /\.\d+(?:[eE][+-]?\d+)?[iufh]?\b/ },
     ],
     relevance: 0,
   };

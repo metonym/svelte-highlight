@@ -26,9 +26,11 @@ fn vs_main(@location(0) pos: vec2<f32>) -> VertexOutput {
     description: "bindings and workgroups",
     code: `@group(0) @binding(0) var<storage, read_write> data: array<f32>;
 
+const stride: u32 = 1u;
+
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) id: vec3<u32>) {
-  let i = id.x;
+  let i = id.x * stride;
   data[i] = data[i] * 2.0;
 }`,
   },
