@@ -90,7 +90,7 @@ library Math {
   }
 }
 
-contract Vault is IERC20 {
+contract Vault is IERC20, Ownable {
   using Math for uint256;
 
   uint256 public totalSupply = 1_000 ether;
