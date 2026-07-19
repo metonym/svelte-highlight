@@ -23,6 +23,14 @@ test("blade highlights echo statements", () => {
   expect(result).toContain('<span class="hljs-variable">$user</span>');
 });
 
+test("blade strings don't end early on an escaped quote", () => {
+  const result = highlight('{{ "Say \\"hi\\" to me" }}');
+
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;Say \\&quot;hi\\&quot; to me&quot;</span>',
+  );
+});
+
 test("blade highlights raw echo statements", () => {
   const result = highlight("{!! $html !!}");
 
