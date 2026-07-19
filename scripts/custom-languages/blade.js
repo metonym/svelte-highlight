@@ -17,9 +17,14 @@ function defineBlade(hljs) {
     ],
   };
 
+  // A directive only counts if the `@` isn't glued to a preceding word
+  // character -- otherwise plain markup text containing an email address
+  // (`foo@example.com`) gets its domain mistaken for a directive. Lookbehind
+  // isn't an option, so the preceding character is captured and consumed
+  // (but left unstyled) instead of asserted with a zero-width check.
   const DIRECTIVE = {
-    className: "keyword",
-    begin: /@[a-zA-Z]\w*/,
+    begin: [/(?:^|[^\w@])/, /@[a-zA-Z]\w*/],
+    beginScope: { 2: "keyword" },
     relevance: 10,
   };
 
@@ -53,9 +58,14 @@ function defineBlade(hljs) {
   // `@php ... @endphp` embeds a real PHP statement block. Highlight the
   // body with the full `php` grammar and hand `@endphp` back to DIRECTIVE
   // so it's styled the same as every other Blade directive.
+  //
+  // Must consume the same optional prefix character as DIRECTIVE below: both
+  // match `@php`, so without this, DIRECTIVE's match (which starts one
+  // character earlier whenever `@php` isn't at the very start of the file)
+  // would win by earliest-start-position and this mode would never fire.
   const PHP_BLOCK = {
-    className: "keyword",
-    begin: /@php\b/,
+    begin: [/(?:^|[^\w@])/, /@php\b/],
+    beginScope: { 2: "keyword" },
     starts: {
       end: /(?=@endphp\b)/,
       subLanguage: "php",

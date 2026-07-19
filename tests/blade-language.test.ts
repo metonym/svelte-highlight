@@ -75,3 +75,24 @@ test("blade treats @{{ }} as an escaped literal, not a real echo", () => {
   expect(result).not.toContain("hljs-template-variable");
   expect(result).toContain('<span class="hljs-meta">@{{ raw }}</span>');
 });
+
+test("blade does not mistake an email address for a directive", () => {
+  const result = highlight(
+    "Contact us at foo@example.com\n@if($user)\nHi\n@endif",
+  );
+
+  expect(result).toContain("foo@example.com");
+  expect(result).not.toContain(
+    '<span class="hljs-keyword">@example.com</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">@if</span>');
+  expect(result).toContain('<span class="hljs-keyword">@endif</span>');
+});
+
+test("blade highlights @php blocks as PHP even when not at the start of the file", () => {
+  const result = highlight("<div>\n@php\n  $total = 1 + 2;\n@endphp\n</div>");
+
+  expect(result).toContain("language-php");
+  expect(result).toContain('<span class="hljs-keyword">@php</span>');
+  expect(result).toContain('<span class="hljs-keyword">@endphp</span>');
+});
