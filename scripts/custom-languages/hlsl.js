@@ -45,8 +45,13 @@ function defineHlsl(hljs) {
     ],
   };
 
+  // A bare `: identifier` scan can't structurally tell a semantic apart
+  // from a ternary (`cond ? a : b`) or switch/case colon without deeper
+  // parsing, so it leans on a real HLSL convention instead: semantics are
+  // always ALL_CAPS (POSITION, TEXCOORD0, SV_TARGET, ...), while ternary/
+  // case values are ordinary (usually camelCase) identifiers.
   const SEMANTIC = {
-    begin: [/:/, /\s*/, /(?!register\b|packoffset\b)[a-zA-Z_]\w*/],
+    begin: [/:/, /\s*/, /(?!register\b|packoffset\b)[A-Z][A-Z0-9_]*/],
     beginScope: { 3: "attr" },
     relevance: 0,
   };
