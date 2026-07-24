@@ -8,6 +8,8 @@ import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
 import CopyButtonTransform from "./CopyButton.transform.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
+import HighlightCssHighlights from "./Highlight.cssHighlights.test.svelte";
+import HighlightCssHighlightsTwoInstances from "./Highlight.cssHighlights.twoInstances.test.svelte";
 import HighlightEvents from "./Highlight.events.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
@@ -337,6 +339,157 @@ test("Highlight - exposes the scope-event stream via slot prop and on:highlight 
   expect(expected).not.toBe("");
   await expect(page.getByTestId("slot-events")).toHaveText(expected ?? "");
   await expect(page.getByTestId("dispatch-events")).toHaveText(expected ?? "");
+});
+
+test("Highlight css-highlights engine - code renders as a single text node with no per-token spans", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightCssHighlights);
+
+  await expect(page.getByTestId("resolved-engine")).toHaveAttribute(
+    "data-value",
+    "css-highlights",
+  );
+
+  const code = page.locator("code.hljs");
+  await expect(code.locator("span")).toHaveCount(0);
+
+  const textNodeInfo = await code.evaluate((el) => ({
+    childCount: el.childNodes.length,
+    isText: el.firstChild?.nodeType === Node.TEXT_NODE,
+    text: el.textContent,
+  }));
+  expect(textNodeInfo).toEqual({
+    childCount: 1,
+    isText: true,
+    text: "const a = 1;",
+  });
+});
+
+test("Highlight css-highlights engine - registered ranges match toRanges(events) exactly", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightCssHighlights);
+
+  type TokenRange = { start: number; end: number; scope: string };
+
+  const expectedRanges: TokenRange[] = JSON.parse(
+    (await page.getByTestId("expected-ranges").getAttribute("data-value")) ??
+      "[]",
+  );
+  expect(expectedRanges.length).toBeGreaterThan(0);
+
+  const actualRanges: TokenRange[] = await page.evaluate(() => {
+    const out: TokenRange[] = [];
+    for (const [name, highlight] of CSS.highlights) {
+      const match = /^hljs-\d+-(.+)$/.exec(name);
+      const scope = match?.[1];
+      if (!scope) continue;
+      for (const range of highlight) {
+        out.push({ start: range.startOffset, end: range.endOffset, scope });
+      }
+    }
+    return out;
+  });
+
+  const sortKey = (r: TokenRange) => `${r.start}:${r.end}:${r.scope}`;
+  actualRanges.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+  expectedRanges.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+  expect(actualRanges).toEqual(expectedRanges);
+});
+
+test("Highlight css-highlights engine - theme/code/language changes repaint without leaking registrations", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightCssHighlights);
+
+  const instanceEntryCount = () =>
+    page.evaluate(
+      () =>
+        [...CSS.highlights.keys()].filter((k) => /^hljs-\d+-/.test(k)).length,
+    );
+
+  const initialCount = await instanceEntryCount();
+  expect(initialCount).toBeGreaterThan(0);
+
+  await page.getByTestId("switch-theme").click();
+  expect(await instanceEntryCount()).toBe(initialCount);
+
+  await page.getByTestId("toggle-code").click();
+  await page.getByTestId("toggle-code").click();
+  expect(await instanceEntryCount()).toBe(initialCount);
+
+  await page.getByTestId("switch-language").click();
+  await page.getByTestId("toggle-code").click();
+  expect(await instanceEntryCount()).toBeGreaterThan(0);
+});
+
+test("Highlight css-highlights engine - CSS.highlights entries are gone after unmount", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const component = await mount(HighlightCssHighlights);
+
+  const beforeCount = await page.evaluate(() => CSS.highlights.size);
+  expect(beforeCount).toBeGreaterThan(0);
+
+  await component.unmount();
+
+  const afterCount = await page.evaluate(() => CSS.highlights.size);
+  expect(afterCount).toBe(0);
+});
+
+test("Highlight css-highlights engine - two instances with different themes don't cross-contaminate", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightCssHighlightsTwoInstances);
+
+  const { names, distinctHighlights } = await page.evaluate(() => {
+    const keywordEntries = [...CSS.highlights].filter(([name]) =>
+      name.endsWith("-keyword"),
+    );
+    return {
+      names: keywordEntries.map(([name]) => name),
+      distinctHighlights: new Set(keywordEntries.map(([, h]) => h)).size,
+    };
+  });
+
+  expect(names).toHaveLength(2);
+  expect(new Set(names).size).toBe(2);
+  expect(distinctHighlights).toBe(2);
+
+  const styleText = (await page.locator("style").allTextContents()).join("");
+  expect(styleText).toContain("color:#d73a49"); // github's keyword color
+  expect(styleText).toContain("color:#c678dd"); // atom-one-dark's keyword color
 });
 
 test("HighlightAuto - exposes the scope-event stream via slot prop and on:highlight detail", async ({

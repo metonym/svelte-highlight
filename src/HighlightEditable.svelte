@@ -1,10 +1,3 @@
-<script context="module">
-  let instanceCount = 0;
-  function nextInstanceId() {
-    return ++instanceCount;
-  }
-</script>
-
 <script>
   /** @type {import("./languages").LanguageType<string>} */
   export let language;
@@ -39,11 +32,13 @@
   export let theme = undefined;
 
   import { createEventDispatcher, onMount } from "svelte";
-  import { renderHtml, toRanges } from "./engine.js";
   import {
-    highlightRules,
-    highlightRulesFromPalette,
-  } from "./highlight-theme.js";
+    createHighlightPainter,
+    instanceHighlightRules,
+    nextInstanceId,
+    resolveEngine,
+  } from "./css-highlights.js";
+  import { renderHtml, toRanges } from "./engine.js";
   import {
     parseIncremental,
     reparseIncremental,
@@ -87,12 +82,7 @@
     return incrementalParse.events;
   }
 
-  $: resolvedEngineValue =
-    engine === "css-highlights" &&
-    typeof CSS !== "undefined" &&
-    typeof CSS.highlights !== "undefined"
-      ? "css-highlights"
-      : "dom";
+  $: resolvedEngineValue = resolveEngine(engine);
 
   let previousLanguageName;
   let previousEngine;
@@ -113,14 +103,7 @@
   $: if (mounted && code !== internalCode) syncExternal();
   $: cssHighlightStyle =
     resolvedEngineValue === "css-highlights" && theme !== undefined
-      ? `<style>${(
-          typeof theme === "object"
-            ? highlightRulesFromPalette(theme)
-            : highlightRules(theme)
-        ).replaceAll(
-          "::highlight(hljs-",
-          `::highlight(hljs-${instanceId}-`,
-        )}</style>`
+      ? `<style>${instanceHighlightRules(theme, instanceId)}</style>`
       : "";
 
   function getSelectionRange() {
@@ -248,34 +231,20 @@
     return prevLen === newLen && changedCount === 1 ? changedIndex : null;
   }
 
-  /** @type {Map<string, InstanceType<typeof Highlight>>} scope -> registered Highlight. */
-  let cssHighlights = new Map();
+  const painter = createHighlightPainter(instanceId);
   /** @type {{ scope: string; range: Range }[][]} Ranges registered per line. */
   let lineHighlightRanges = [];
-
-  function cssHighlightFor(scope) {
-    let highlight = cssHighlights.get(scope);
-    if (!highlight) {
-      highlight = new Highlight();
-      cssHighlights.set(scope, highlight);
-      CSS.highlights.set(`hljs-${instanceId}-${scope}`, highlight);
-    }
-    return highlight;
-  }
 
   function clearLineHighlights(index) {
     const previous = lineHighlightRanges[index];
     if (!previous) return;
     for (const { scope, range } of previous) {
-      cssHighlights.get(scope)?.delete(range);
+      painter.highlightFor(scope).delete(range);
     }
   }
 
   function clearCssHighlights() {
-    for (const scope of cssHighlights.keys()) {
-      CSS.highlights.delete(`hljs-${instanceId}-${scope}`);
-    }
-    cssHighlights = new Map();
+    painter.clear();
     lineHighlightRanges = [];
   }
 
@@ -285,23 +254,14 @@
   function paintLineHighlights(index, tokenRanges) {
     clearLineHighlights(index);
     const textNode = lineEls[index].firstChild;
-    const next = [];
-    if (textNode) {
-      const lineStart = lineStartOffset(index);
-      const lineEnd = lineStart + lineLengths[index];
-      for (const token of tokenRanges) {
-        if (token.end <= lineStart || token.start >= lineEnd) continue;
-        const start = Math.max(token.start, lineStart) - lineStart;
-        const end = Math.min(token.end, lineEnd) - lineStart;
-        if (start === end) continue;
-        const range = new Range();
-        range.setStart(textNode, start);
-        range.setEnd(textNode, end);
-        cssHighlightFor(token.scope).add(range);
-        next.push({ scope: token.scope, range });
-      }
-    }
-    lineHighlightRanges[index] = next;
+    lineHighlightRanges[index] = textNode
+      ? painter.paintNode(
+          textNode,
+          tokenRanges,
+          lineStartOffset(index),
+          lineLengths[index],
+        )
+      : [];
   }
 
   function paintCssHighlights() {

@@ -2,6 +2,7 @@ import type { SvelteComponentTyped } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { ScopeEvent } from "./engine.d.ts";
 import type { LanguageType } from "./languages";
+import type { ThemePalette } from "./theme.d.ts";
 
 export type LangtagProps = {
   /**
@@ -70,6 +71,39 @@ export type HighlightProps = HTMLAttributes<HTMLPreElement> &
      * import typescript from "svelte-highlight/languages/typescript";
      */
     language: LanguageType<string>;
+
+    /**
+     * Rendering engine. `"css-highlights"` paints tokens via the CSS
+     * Custom Highlight API (`CSS.highlights`) over a single text node
+     * instead of wrapping each token in a `<span>`, so a highlighted
+     * block never grows a `<span>` per token. Falls back to `"dom"`
+     * silently where `CSS.highlights` is unavailable (SSR, or a browser
+     * without support); check what was actually used with the
+     * `resolvedEngine()` method.
+     *
+     * Only takes effect when this component renders its own default
+     * markup — a custom default slot (e.g. to feed `LineNumbers`) has no
+     * `Highlight`-owned `<code>` element to paint into, so this prop has
+     * no effect in that case.
+     *
+     * Colors only: `::highlight()` doesn't support `font-style`/
+     * `font-weight`/`text-decoration` across browsers, so bold/italic
+     * scopes render plain in this mode.
+     * @default "dom"
+     */
+    engine?: "dom" | "css-highlights";
+
+    /**
+     * Theme CSS from `svelte-highlight/styles/<theme>`, or a
+     * `ThemePalette` from `svelte-highlight/themes/<theme>`, used only in
+     * `"css-highlights"` mode to generate `::highlight()` rules. Colors
+     * only (`color`/`background-color`); other declarations are dropped.
+     * @example
+     * import a11yDark from "svelte-highlight/styles/a11y-dark";
+     * @example
+     * import atomOneDark from "svelte-highlight/themes/atom-one-dark";
+     */
+    theme?: string | ThemePalette;
   };
 
 export type HighlightEvents = {
@@ -110,4 +144,10 @@ export default class Highlight extends SvelteComponentTyped<
   HighlightProps,
   HighlightEvents,
   HighlightSlots
-> {}
+> {
+  /**
+   * The engine actually in use: `engine`, or `"dom"` if `"css-highlights"`
+   * was requested but `CSS.highlights` is unavailable.
+   */
+  resolvedEngine(): "dom" | "css-highlights";
+}
