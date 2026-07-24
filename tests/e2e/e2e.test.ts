@@ -13,8 +13,10 @@ import Highlight from "./Highlight.test.svelte";
 import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
+import HighlightAutoAsyncUpgrade from "./HighlightAuto.asyncUpgrade.test.svelte";
 import HighlightAutoEvents from "./HighlightAuto.events.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
+import HighlightAutoStaleRace from "./HighlightAuto.staleRace.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
@@ -319,12 +321,13 @@ test("highlight action - destroy restores the original content", async ({
 test("HighlightAuto", async ({ mount, page }) => {
   await mount(HighlightAuto);
 
-  await expect(page.locator(".hljs-selector-tag")).toHaveText("body");
-  await expect(page.locator(".hljs-attribute")).toHaveText("background");
-  await expect(page.locator(".hljs-number")).toHaveText("#000");
+  // Default path upgrades from plain text to highlighted asynchronously;
+  // locator assertions auto-wait/retry, so this covers the upgrade too.
+  await expect(page.locator(".hljs-keyword").first()).toHaveText("package");
+  await expect(page.locator(".hljs-string").first()).toHaveText('"fmt"');
 
   // Language tag
-  await expect(page.locator("pre")).toHaveAttribute("data-language", "css");
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "go");
 });
 
 test("Highlight - exposes the scope-event stream via slot prop and on:highlight detail", async ({
@@ -504,13 +507,13 @@ test("Language tag styling", async ({ mount, page }) => {
 test("Auto-highlighting detects language", async ({ mount, page }) => {
   await mount(HighlightAuto, {
     props: {
-      code: "body { color: red; }",
+      code: 'package main\n\nimport "fmt"\n\nfunc main() {\n\tfmt.Println("hello world")\n}\n',
     },
   });
 
-  // Should detect CSS and apply appropriate highlighting
-  await expect(page.locator(".hljs-selector-tag")).toBeVisible();
-  await expect(page.locator("pre")).toHaveAttribute("data-language", "css");
+  // Should detect go and apply appropriate highlighting
+  await expect(page.locator(".hljs-keyword").first()).toBeVisible();
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "go");
 });
 
 test("Auto-highlighting with language restriction", async ({ mount, page }) => {
@@ -525,6 +528,40 @@ test("Auto-highlighting with language restriction", async ({ mount, page }) => {
   // Should have JavaScript highlighting
   await expect(page.locator(".hljs-keyword")).toBeVisible();
   await expect(page.locator(".hljs-number")).toHaveText("42");
+});
+
+test("HighlightAuto - default path upgrades from plain text to highlighted after mount, dispatches highlight once", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(HighlightAutoAsyncUpgrade);
+
+  // Plain-text-first, then upgraded: assert the eventual highlighted state
+  // (locators auto-wait/retry, so this alone covers the upgrade happening).
+  await expect(page.locator(".hljs-keyword").first()).toHaveText("package");
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "go");
+
+  // Exactly one `highlight` dispatch for the whole lifecycle - not a second
+  // one for the plain-text interim render.
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await expect(page.getByTestId("last-language")).toHaveText("go");
+
+  await component.unmount();
+});
+
+test("HighlightAuto - a code change mid-detection applies only the latest result", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoStaleRace);
+
+  await page.getByTestId("trigger-race").click();
+
+  // The first (bash) detection's eventual result must never apply - only
+  // the second (go), later-initiated one, regardless of resolution order.
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "go");
+  await expect(page.getByTestId("last-language")).toHaveText("go");
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
 });
 
 test("LangTag", async ({ mount, page }) => {
