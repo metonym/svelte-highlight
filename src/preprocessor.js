@@ -307,7 +307,10 @@ export function highlightStatic(options = {}) {
 
       const htmlByMatch = await Promise.all(
         matches.map(async (match) => {
-          const line = locate(content, match.element.start).line;
+          // Only ever read by the warn() paths below, and locate() scans
+          // `content` from the start, so resolve it lazily: computing it up
+          // front made the happy path O(content length) per match.
+          const line = () => locate(content, match.element.start).line;
 
           /** @type {import("./languages").LanguageType<string>} */
           let language;
@@ -322,7 +325,7 @@ export function highlightStatic(options = {}) {
               `could not resolve language module "${match.languageSource}"`,
               {
                 filename,
-                line,
+                line: line(),
                 cause,
               },
             );
@@ -336,7 +339,7 @@ export function highlightStatic(options = {}) {
               `highlight.js failed to highlight the code (language "${language.name}")`,
               {
                 filename,
-                line,
+                line: line(),
                 cause,
               },
             );
