@@ -409,16 +409,18 @@ class Tokenizer {
   }
 
   /**
-   * Memoized `execValid(re, this.pos, guard)`. Without this, every token
+   * Memoized `execValid(re, this.pos, guardFn())`. Without this, every token
    * boundary re-scans every rule's pattern from scratch. A cached match stays
    * valid until `this.pos` passes it; a cached miss stays valid until the
-   * code grows (streaming append).
+   * code grows (streaming append). `guardFn` is only called on a cache miss,
+   * so guarded rules don't allocate a fresh guard closure on every call once
+   * their match is cached.
    * @param {RegExp} re
-   * @param {((m: RegExpExecArray) => boolean) | null} guard
+   * @param {() => ((m: RegExpExecArray) => boolean) | null} guardFn
    * @param {MatchCache | undefined} cache
    * @returns {MatchCache}
    */
-  cachedMatch(re, guard, cache) {
+  cachedMatch(re, guardFn, cache) {
     if (cache) {
       if (cache.match !== null && cache.match.index >= this.pos) return cache;
       if (cache.match === null && cache.codeLen === this.code.length)
@@ -426,7 +428,7 @@ class Tokenizer {
     }
     return {
       codeLen: this.code.length,
-      match: this.execValid(re, this.pos, guard),
+      match: this.execValid(re, this.pos, guardFn()),
     };
   }
 
@@ -515,7 +517,7 @@ class Tokenizer {
       const cache = this.cachedMatch(
         // Every state referenced from a `rules` list has a `begin` pattern.
         /** @type {RegExp} */ (child.beginRe),
-        this.beginGuard(child),
+        () => this.beginGuard(child),
         this.beginCache[ruleIdx],
       );
       this.beginCache[ruleIdx] = cache;
@@ -527,12 +529,12 @@ class Tokenizer {
       // d ranges over [1, frames.length - 1], always in bounds.
       const frame = /** @type {Frame} */ (this.frames[d]);
       if (frame.state.endRe) {
-        const guard = frame.state.endSameAsBegin
-          ? (/** @type {RegExpExecArray} */ m) => m[1] === frame.beginMatch
-          : null;
         const cache = this.cachedMatch(
           frame.state.endRe,
-          guard,
+          () =>
+            frame.state.endSameAsBegin
+              ? (/** @type {RegExpExecArray} */ m) => m[1] === frame.beginMatch
+              : null,
           frame.endCache,
         );
         frame.endCache = cache;
