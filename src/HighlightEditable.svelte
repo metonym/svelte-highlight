@@ -123,16 +123,96 @@
         )}</style>`
       : "";
 
+  // Sum of textContent.length for el's first `count` children — the
+  // character width, within el, of a boundary expressed as a child index.
+  function sumChildLengths(el, count) {
+    let total = 0;
+    for (let i = 0; i < count && i < el.childNodes.length; i++) {
+      total += el.childNodes[i].textContent.length;
+    }
+    return total;
+  }
+
+  // Character offset (same coordinate space as lineStartOffset/setSelection)
+  // of the boundary (container, offsetInContainer) from a live Selection
+  // Range, computed from integers instead of serializing the document.
+  // Exploits the fixed editor structure — one <span> per line (lineEls)
+  // joined by literal "\n" text nodes — so a boundary's line is derived
+  // from its child position rather than a document-wide walk. Returns null
+  // whenever that structure doesn't hold (DOM drifted from lineEls/
+  // lineLengths ahead of renderLines' self-heal, or an unrecognized node),
+  // so the caller can fall back to the exact cloneRange/toString behavior.
+  function offsetOfBoundary(container, offsetInContainer) {
+    const expectedChildren = lineEls.length === 0 ? 0 : lineEls.length * 2 - 1;
+    if (editor.childNodes.length !== expectedChildren) return null;
+
+    if (container === editor) {
+      if (lineEls.length === 0) return offsetInContainer === 0 ? 0 : null;
+      const lineIndex = offsetInContainer >> 1;
+      if (lineIndex >= lineEls.length) return null;
+      return offsetInContainer % 2 === 0
+        ? lineStartOffset(lineIndex)
+        : lineStartOffset(lineIndex) + lineLengths[lineIndex];
+    }
+
+    // Walk up to the top-level child of `editor` containing the boundary.
+    let node = container;
+    while (node.parentNode !== editor) {
+      node = node.parentNode;
+      if (!node) return null;
+    }
+
+    let childIndex = 0;
+    for (let sib = node.previousSibling; sib; sib = sib.previousSibling) {
+      childIndex++;
+    }
+    const lineIndex = childIndex >> 1;
+
+    if (childIndex % 2 === 1) {
+      // The "\n" separator following line `lineIndex`; it has no children,
+      // so `container` must be the separator itself.
+      if (container !== node || lineIndex >= lineLengths.length) return null;
+      return (
+        lineStartOffset(lineIndex) + lineLengths[lineIndex] + offsetInContainer
+      );
+    }
+
+    const span = node;
+    if (lineIndex >= lineEls.length || lineEls[lineIndex] !== span) return null;
+
+    // Character offset of (container, offsetInContainer) within `span`,
+    // walking only its ancestors up to `span` (bounded by that line's size).
+    let charOffset =
+      container.nodeType === Node.TEXT_NODE
+        ? offsetInContainer
+        : sumChildLengths(container, offsetInContainer);
+    let n = container;
+    while (n !== span) {
+      for (let sib = n.previousSibling; sib; sib = sib.previousSibling) {
+        charOffset += sib.textContent.length;
+      }
+      n = n.parentNode;
+      if (!n) return null;
+    }
+    return lineStartOffset(lineIndex) + charOffset;
+  }
+
   function getSelectionRange() {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return null;
     const range = selection.getRangeAt(0);
     if (!editor.contains(range.commonAncestorContainer)) return null;
+    const start = offsetOfBoundary(range.startContainer, range.startOffset);
+    const end = offsetOfBoundary(range.endContainer, range.endOffset);
+    if (start != null && end != null) return { start, end };
     const pre = range.cloneRange();
     pre.selectNodeContents(editor);
     pre.setEnd(range.startContainer, range.startOffset);
-    const start = pre.toString().length;
-    return { start, end: start + range.toString().length };
+    const fallbackStart = pre.toString().length;
+    return {
+      start: fallbackStart,
+      end: fallbackStart + range.toString().length,
+    };
   }
 
   function getCaretOffset() {
