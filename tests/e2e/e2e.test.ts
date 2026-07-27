@@ -25,6 +25,7 @@ import HighlightStreamSealing from "./HighlightStream.sealing.test.svelte";
 import HighlightStreamStability from "./HighlightStream.stability.test.svelte";
 import HighlightStreamTemplateLiteral from "./HighlightStream.templateLiteral.test.svelte";
 import HighlightStream from "./HighlightStream.test.svelte";
+import HighlightStreamVirtualize from "./HighlightStream.virtualize.test.svelte";
 import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
 import HighlightStyleNoTheme from "./HighlightStyle.noTheme.test.svelte";
 import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte";
@@ -1306,6 +1307,107 @@ test("HighlightStream sealing - dispatched `highlight` payload matches Highlight
   // own internal block-boundary comment markers, which differ between the
   // two components' unrelated template structures.
   expect(streamedHighlighted).toBe(referenceHighlighted);
+});
+
+test("HighlightStream virtualize - renders a bounded number of line nodes for a long-running stream", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamVirtualize);
+
+  const stream = page.getByTestId("stream");
+  await page.getByTestId("append-many").click();
+
+  const renderedLines = stream.locator("[data-line]");
+  await expect(renderedLines.first()).toBeVisible();
+
+  const count = await renderedLines.count();
+  // Same bound as HighlightVirtual's equivalent test: nowhere near the 2,000
+  // (+1 trailing) lines streamed in, which is the point.
+  expect(count).toBeGreaterThan(0);
+  expect(count).toBeLessThan(200);
+});
+
+test("HighlightStream virtualize - shows correct content at a scrolled position", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamVirtualize);
+
+  const stream = page.getByTestId("stream");
+  await page.getByTestId("append-many").click();
+  await expect(stream.locator("[data-line='0']")).toHaveText(
+    "const x0 = 0; // line 0",
+  );
+
+  await stream.evaluate((el) => {
+    el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
+  });
+
+  let middleIndex = 0;
+  await expect(async () => {
+    const middleLine = await stream
+      .locator("[data-line]")
+      .first()
+      .getAttribute("data-line");
+    middleIndex = Number(middleLine);
+    expect(middleIndex).toBeGreaterThan(100);
+  }).toPass();
+
+  await expect(stream.locator(`[data-line='${middleIndex}']`)).toHaveText(
+    `const x${middleIndex} = ${middleIndex}; // line ${middleIndex}`,
+  );
+});
+
+test("HighlightStream virtualize - the caret only renders once the window reaches the live tail", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamVirtualize);
+
+  const stream = page.getByTestId("stream");
+  await page.getByTestId("append-many").click();
+  await expect(stream.locator("[data-line]").first()).toBeVisible();
+
+  // Scrolled to the top (default): the window doesn't reach the still-
+  // streaming last line, so no caret renders anywhere.
+  await expect(stream.locator(".highlight-stream-caret")).toHaveCount(0);
+
+  await stream.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(stream.locator(".highlight-stream-caret")).toBeVisible();
+});
+
+test("HighlightStream virtualize - autoScroll keeps the window pinned to the growing tail", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamVirtualize, { props: { autoScroll: true } });
+
+  const stream = page.getByTestId("stream");
+  await page.getByTestId("append-many").click();
+
+  // The most recently completed line is visible without any manual
+  // scrolling, and the caret (which only renders at the live tail) shows too.
+  await expect(stream.locator("[data-line='1999']")).toBeVisible();
+  await expect(stream.locator(".highlight-stream-caret")).toBeVisible();
+});
+
+test("HighlightStream virtualize - `done` hides the caret and fires on:done", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamVirtualize);
+
+  const stream = page.getByTestId("stream");
+  await page.getByTestId("append-few").click();
+  await expect(stream.locator(".highlight-stream-caret")).toBeVisible();
+  await expect(page.getByTestId("done-count")).toHaveText("0");
+
+  await page.getByTestId("finish").click();
+  await expect(stream.locator(".highlight-stream-caret")).toHaveCount(0);
+  await expect(page.getByTestId("done-count")).toHaveText("1");
 });
 
 test("HighlightVirtual - renders a bounded number of line nodes for a 5,000-line document", async ({

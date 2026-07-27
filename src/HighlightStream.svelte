@@ -28,10 +28,39 @@
    */
   export let autoScroll = false;
 
+  /**
+   * Render only the lines within the scrolled viewport (plus `overscan`)
+   * instead of the whole growing buffer, so a long-running stream costs a
+   * bounded number of DOM nodes instead of one per line. Backed by
+   * `createTokenizedDocument` rather than the default sealed-chunk session,
+   * so output always reflects the streaming (non-canonicalized) parse, even
+   * once `done` - the same tradeoff `HighlightVirtual` makes. `on:highlight`
+   * is not dispatched in this mode, since materializing the full HTML on
+   * every repaint would defeat the point of windowing.
+   * @type {boolean}
+   */
+  export let virtualize = false;
+
+  /**
+   * Extra lines rendered above and below the viewport when `virtualize` is
+   * set.
+   * @type {number}
+   */
+  export let overscan = 12;
+
+  /**
+   * Lines between engine checkpoints when `virtualize` is set (forwarded to
+   * `createTokenizedDocument`).
+   * @type {number}
+   */
+  export let checkpointInterval = 100;
+
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { extendLines } from "./engine.js";
   import { ensureRegistered, registry } from "./registry.js";
   import { createCompletedHtmlBuffer } from "./stream-highlighted.js";
+  import { createTokenizedDocument } from "./tokenized-document.js";
+  import { watchLineHeight, windowRange } from "./virtual-window.js";
 
   // Lines between sealed chunks. Once a chunk fills, its line spans are
   // joined into one immutable HTML string and never touched again - keyed
@@ -59,6 +88,28 @@
 
   // Stick to bottom until the user scrolls away from it.
   let stickToBottom = true;
+
+  // `virtualize` state: a random-access tokenized document (rather than the
+  // sealed-chunk session above) windowed the same way `HighlightVirtual`
+  // windows a static document.
+  /** @type {HTMLElement} */
+  let probe;
+  let vLineHeight = 16;
+  let vScrollTop = 0;
+  let vClientHeight = 0;
+  /** @type {ReturnType<typeof requestAnimationFrame> | undefined} */
+  let vFrame;
+  /** @type {ResizeObserver | undefined} */
+  let resizeObserver;
+  /** @type {ReturnType<typeof createTokenizedDocument> | undefined} */
+  let vdoc;
+  let vdocLanguageName = "";
+  let vdocCheckpointInterval;
+  let vLineCount = 0;
+  let vStart = 0;
+  let vEnd = 0;
+  /** @type {string[]} */
+  let vVisibleLines = [];
 
   /** @type {ReturnType<typeof registry.createSession> | undefined} */
   let session;
@@ -204,6 +255,7 @@
     const gap =
       container.scrollHeight - container.scrollTop - container.clientHeight;
     stickToBottom = gap <= 4;
+    if (virtualize) scheduleVirtualRepaint();
   }
 
   function cancelFrame() {
@@ -222,10 +274,94 @@
     });
   }
 
+  function ensureVirtualDoc() {
+    if (
+      vdoc &&
+      vdocLanguageName === language.name &&
+      vdocCheckpointInterval === checkpointInterval
+    ) {
+      return;
+    }
+    vdoc = createTokenizedDocument({ language, checkpointInterval });
+    vdocLanguageName = language.name;
+    vdocCheckpointInterval = checkpointInterval;
+  }
+
+  function computeVirtualWindow() {
+    if (!vdoc) return;
+    const total = vdoc.lineCount();
+    vLineCount = total;
+    ({ start: vStart, end: vEnd } = windowRange({
+      scrollTop: vScrollTop,
+      clientHeight: vClientHeight,
+      lineHeight: vLineHeight,
+      overscan,
+      total,
+    }));
+    vVisibleLines = vdoc.lineRange(vStart, vEnd);
+  }
+
+  // Mirrors `scrollToBottom`/the shrink-clamp in `HighlightVirtual`, merged:
+  // while streaming with `autoScroll`, stick to the (growing) bottom; once
+  // the user scrolls away, just keep the scroll position in bounds.
+  async function syncVirtualFromContainer() {
+    await tick();
+    if (!container) return;
+    if (autoScroll && stickToBottom) {
+      container.scrollTop = container.scrollHeight;
+    } else {
+      const maxScrollTop = Math.max(
+        0,
+        container.scrollHeight - container.clientHeight,
+      );
+      if (container.scrollTop > maxScrollTop) {
+        container.scrollTop = maxScrollTop;
+      }
+    }
+    vScrollTop = container.scrollTop;
+    vClientHeight = container.clientHeight;
+  }
+
+  function cancelVirtualFrame() {
+    if (vFrame != null) {
+      cancelAnimationFrame(vFrame);
+      vFrame = undefined;
+    }
+  }
+
+  // Coalesce scroll bursts into one window recompute per frame.
+  function scheduleVirtualRepaint() {
+    if (vFrame != null) return;
+    vFrame = requestAnimationFrame(() => {
+      vFrame = undefined;
+      if (container) vScrollTop = container.scrollTop;
+    });
+  }
+
+  function measureVirtualLineHeight() {
+    return watchLineHeight(
+      () => probe,
+      () => vLineHeight,
+      (height) => (vLineHeight = height),
+    );
+  }
+
   $: {
     void code;
     void language;
-    if (mounted && !done) {
+    if (virtualize) {
+      // Content/window updates are handled by the virtualize-specific
+      // reactive blocks below; this block only tracks `done` dispatch so
+      // both modes share the same guard/reset semantics.
+      if (mounted && done) {
+        if (!doneDispatched) {
+          doneDispatched = true;
+          dispatch("done");
+        }
+      } else {
+        doneDispatched = false;
+      }
+    } else if (mounted && !done) {
       doneDispatched = false;
       scheduleRepaint();
     } else {
@@ -239,20 +375,99 @@
     }
   }
 
+  // Rebuilds/updates the virtualized document whenever its content or shape
+  // changes. Deliberately separate from the scroll-driven block below, same
+  // reasoning as `HighlightVirtual`.
+  $: if (virtualize && mounted) {
+    void code;
+    void language;
+    void checkpointInterval;
+    ensureVirtualDoc();
+    vdoc.setCode(code);
+    vLineCount = vdoc.lineCount();
+    computeVirtualWindow();
+    syncVirtualFromContainer();
+  }
+
+  // Scroll/resize/overscan/lineHeight-driven window recompute.
+  $: if (virtualize && mounted) {
+    void overscan;
+    void vLineHeight;
+    void vScrollTop;
+    void vClientHeight;
+    void vLineCount;
+    computeVirtualWindow();
+  }
+
   $: useSplitRendering = mounted && !done;
   $: showCaret = useSplitRendering && caret;
 
   onMount(() => {
     mounted = true;
-    return cancelFrame;
+    if (virtualize) {
+      measureVirtualLineHeight();
+      syncVirtualFromContainer();
+      if (typeof ResizeObserver !== "undefined" && container) {
+        resizeObserver = new ResizeObserver(() => {
+          if (container) vClientHeight = container.clientHeight;
+        });
+        resizeObserver.observe(container);
+      }
+    }
+    return () => {
+      cancelFrame();
+      cancelVirtualFrame();
+      resizeObserver?.disconnect();
+    };
   });
 </script>
 
-<pre bind:this={container} on:scroll={onScroll} {...$$restProps}><code
+{#if virtualize}
+  <pre
+    bind:this={container}
+    class:hljs={true}
+    class:shl-virtual={true}
+    on:scroll={onScroll}
+    {...$$restProps}
+  ><code>{#if !mounted}{code}{:else}<span class="shl-virtual-sizer" style="height: {vLineCount * vLineHeight}px;"><span class="shl-virtual-window" style="transform: translateY({vStart * vLineHeight}px);">{#each vVisibleLines as line, i (vStart + i)}<span class="highlight-stream-line" data-line={vStart + i}>{@html line}</span>{#if showCaret && vEnd === vLineCount && i === vVisibleLines.length - 1}<span class="highlight-stream-caret" aria-hidden="true"></span>{/if}{"\n"}{/each}</span></span>{/if}</code><span
+  bind:this={probe}
+  class="shl-virtual-probe highlight-stream-line"
+  aria-hidden="true"
+>&nbsp;</span></pre>
+{:else}
+  <pre bind:this={container} on:scroll={onScroll} {...$$restProps}><code
   class:hljs={true}
 >{#if useSplitRendering}{#each sealedChunks as chunk, c (c)}{@html chunk}{/each}{#each tailLines as line, li (sealedLineCount + li)}{#if sealedLineCount + li > 0}{"\n"}{/if}<span class="highlight-stream-line" data-line={sealedLineCount + li}>{@html line}</span>{/each}{#if showCaret}<span class="highlight-stream-caret" aria-hidden="true"></span>{/if}{:else}{@html highlighted}{/if}</code></pre>
+{/if}
 
 <style>
+  .shl-virtual {
+    display: block;
+    position: relative;
+    overflow: auto;
+    white-space: pre;
+    margin: 0;
+  }
+
+  .shl-virtual-sizer {
+    display: block;
+    position: relative;
+  }
+
+  .shl-virtual-window {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .shl-virtual-probe {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .highlight-stream-caret {
     display: inline-block;
     width: var(--caret-width, 0.6em);
