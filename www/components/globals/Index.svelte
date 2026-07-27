@@ -14,6 +14,7 @@
   import EditableCssHighlights from "@components/HighlightEditable/CssHighlights.svelte";
   import HighlightStreamBasic from "@components/HighlightStream/Basic.svelte";
   import HighlightStreamControls from "@components/HighlightStream/Controls.svelte";
+  import HighlightStreamVirtualize from "@components/HighlightStream/Virtualize.svelte";
   import HighlightVirtualBasic from "@components/HighlightVirtual/Basic.svelte";
   import HighlightVirtualControls from "@components/HighlightVirtual/Controls.svelte";
   import HighlightVirtualHeadless from "@components/HighlightVirtual/Headless.svelte";
@@ -587,6 +588,24 @@ export default {
     />
   </Column>
   <Column xlg={10} lg={10} md={12}> <HighlightStreamControls /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Set <code class="code">virtualize</code> to render only the lines within
+      the scrolled viewport (plus <code class="code">overscan</code>) instead of
+      the whole growing buffer, so a long-running stream costs a bounded number
+      of DOM nodes instead of one per line—the same windowing
+      <code class="code">HighlightVirtual</code>
+      does for static documents.
+    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="info"
+      title="Note:"
+      subtitle="Backed by the same TokenizedDocument used below, so output stays the streaming (non-canonicalized) parse even once done. on:highlight isn't dispatched in this mode; on:done, the caret, and autoScroll all keep working."
+    />
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightStreamVirtualize /> </Column>
 </Row>
 
 <Row class="mb-9">

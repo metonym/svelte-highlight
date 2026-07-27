@@ -5,6 +5,7 @@
   import Controls from "@components/HighlightStream/Controls.svelte";
   import Retokenize from "@components/HighlightStream/Retokenize.svelte";
   import Stepper from "@components/HighlightStream/Stepper.svelte";
+  import Virtualize from "@components/HighlightStream/Virtualize.svelte";
   import { Column, Row } from "carbon-components-svelte";
 </script>
 
@@ -36,4 +37,9 @@
 <Row class="mb-9">
   <Column xlg={12}> <h3>Custom caret</h3> </Column>
   <Column xlg={12} lg={12} md={12}> <Caret /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Virtualized (windowed) streaming</h3> </Column>
+  <Column xlg={12} lg={12} md={12}> <Virtualize /> </Column>
 </Row>
