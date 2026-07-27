@@ -18,7 +18,10 @@
   export let play = true;
 
   import { createEventDispatcher, onMount } from "svelte";
-  import { tokenizeTypewriter as tokenize } from "./typewriter-units.js";
+  import {
+    tokenizeTypewriter as tokenize,
+    createTypewriterSplitter,
+  } from "./typewriter-units.js";
 
   const dispatch = createEventDispatcher();
 
@@ -60,42 +63,6 @@
 
   /** The unit currently marked with the caret, if any. @type {HTMLElement | undefined} */
   let caretMark;
-
-  /**
-   * Split at `count` visible chars. Close open tags in `head`, reopen in `tail`.
-   * Hidden `tail` reserves space so layout doesn't jump.
-   */
-  function split(list, count) {
-    let head = "";
-    let shown = 0;
-    /** @type {{ raw: string; name: string }[]} */
-    const open = [];
-    let i = 0;
-
-    for (; i < list.length; i++) {
-      const unit = list[i];
-      if (shown >= count) break;
-      head += unit.raw;
-      if (unit.visible === 0) {
-        if (unit.kind === "open")
-          open.push({ raw: unit.raw, name: unit.name ?? "" });
-        else if (unit.kind === "close") open.pop();
-      } else {
-        shown += unit.visible;
-      }
-    }
-
-    // Close open tags in head, reopen them at the start of tail.
-    let headClose = "";
-    for (let k = open.length - 1; k >= 0; k--)
-      headClose += `</${open[k].name}>`;
-
-    let tail = "";
-    for (const tag of open) tail += tag.raw;
-    for (; i < list.length; i++) tail += list[i].raw;
-
-    return { head: head + headClose, tail };
-  }
 
   /** Render every unit once: tags pass through, each visible unit gets a span. */
   function buildUnitMarkup(list) {
@@ -186,6 +153,10 @@
   }
 
   $: units = tokenize(highlighted);
+  // `splitter` must be rebuilt whenever `units` does, from the same
+  // `highlighted` string `units` was tokenized from -- both are recomputed
+  // together in the same reactive flush whenever `highlighted` changes.
+  $: splitter = createTypewriterSplitter(units, highlighted);
   $: total = units.reduce((sum, unit) => sum + unit.visible, 0);
   $: bigInput = total > UNIT_THRESHOLD;
   $: useUnitReveal = mounted && !reducedMotion && !bigInput;
@@ -205,11 +176,11 @@
     sync();
   }
 
-  // SSR / slow-path: full content up front, split() only when actually needed.
+  // SSR / slow-path: full content up front, splitter only when actually needed.
   $: parts = useUnitReveal
     ? EMPTY_PARTS
     : mounted
-      ? split(units, revealed)
+      ? splitter.splitAt(revealed)
       : { head: highlighted, tail: "" };
   $: showCaret = mounted && !reducedMotion && revealed < total;
 

@@ -11,3 +11,17 @@ export interface TypewriterUnit {
  * unit (a surrogate pair or an HTML entity counts as a single char).
  */
 export declare function tokenizeTypewriter(html: string): TypewriterUnit[];
+
+export interface TypewriterSplitter {
+  splitAt(count: number): { head: string; tail: string };
+}
+
+/**
+ * Stateful incremental splitter: repeated `splitAt(count)` calls with a
+ * non-decreasing `count` cost O(n) total instead of O(n^2). A `count` lower
+ * than the last one served resets and replays from the start.
+ */
+export declare function createTypewriterSplitter(
+  units: TypewriterUnit[],
+  html: string,
+): TypewriterSplitter;
