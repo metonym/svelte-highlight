@@ -71,3 +71,72 @@ export function tokenizeTypewriter(html) {
 
   return units;
 }
+
+/**
+ * @typedef {Object} TypewriterSplitter
+ * @property {(count: number) => { head: string; tail: string }} splitAt
+ */
+
+/**
+ * Stateful incremental version of the old `split(units, count)`: since
+ * `units[i].raw` are contiguous, non-overlapping slices exactly partitioning
+ * `html` (see `tokenizeTypewriter`), the concatenation of `units[0..i).raw`
+ * equals `html.slice(0, rawOffset)` for the matching `rawOffset`, so `head`
+ * can be built with a single slice instead of repeated concatenation. A
+ * cursor (`i`, `shown`, `rawOffset`, open-tag stack) is kept between calls
+ * and only ever advances, so a monotonically increasing sequence of
+ * `splitAt(count)` calls costs O(n) total instead of O(n^2). A `count` lower
+ * than the last one served resets the cursor and replays from zero.
+ * @param {TypewriterUnit[]} units
+ * @param {string} html
+ * @returns {TypewriterSplitter}
+ */
+export function createTypewriterSplitter(units, html) {
+  let i = 0;
+  let shown = 0;
+  let rawOffset = 0;
+  /** @type {{ raw: string; name: string }[]} */
+  let open = [];
+  let lastCount = 0;
+
+  function reset() {
+    i = 0;
+    shown = 0;
+    rawOffset = 0;
+    open = [];
+  }
+
+  /**
+   * @param {number} count
+   * @returns {{ head: string; tail: string }}
+   */
+  function splitAt(count) {
+    if (count < lastCount) reset();
+    lastCount = count;
+
+    for (; i < units.length; i++) {
+      const unit = /** @type {TypewriterUnit} */ (units[i]);
+      if (shown >= count) break;
+      rawOffset += unit.raw.length;
+      if (unit.visible === 0) {
+        if (unit.kind === "open")
+          open.push({ raw: unit.raw, name: unit.name ?? "" });
+        else if (unit.kind === "close") open.pop();
+      } else {
+        shown += unit.visible;
+      }
+    }
+
+    let headClose = "";
+    for (let k = open.length - 1; k >= 0; k--)
+      headClose += `</${/** @type {{ raw: string; name: string }} */ (open[k]).name}>`;
+
+    let tail = "";
+    for (const tag of open) tail += tag.raw;
+    tail += html.slice(rawOffset);
+
+    return { head: html.slice(0, rawOffset) + headClose, tail };
+  }
+
+  return { splitAt };
+}
