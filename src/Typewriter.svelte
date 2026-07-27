@@ -19,8 +19,8 @@
 
   import { createEventDispatcher, onMount } from "svelte";
   import {
-    tokenizeTypewriter as tokenize,
     createTypewriterSplitter,
+    tokenizeTypewriter as tokenize,
   } from "./typewriter-units.js";
 
   const dispatch = createEventDispatcher();
