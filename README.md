@@ -1379,7 +1379,13 @@ Set `autoScroll` to keep the container pinned to the bottom as output grows -- i
 <HighlightStream language={typescript} {code} {done} autoScroll style="max-height: 20em; overflow-y: auto;" />
 ```
 
-Per-chunk work is O(tail), not O(stream length so far): finished output is sealed into immutable chunks the DOM never re-diffs, so a response that's ten times longer doesn't cost ten times more per repaint. DOM updates stay proportional to the changed lines -- fine for chat-sized output up to very long responses, not a substitute for `HighlightVirtual` below if you also need to *scroll* through a huge, already-complete document.
+Per-chunk work is O(tail), not O(stream length so far): finished output is sealed into immutable chunks the DOM never re-diffs, so a response that's ten times longer doesn't cost ten times more per repaint. DOM updates stay proportional to the changed lines -- fine for chat-sized output up to very long responses, but every line ever streamed still stays in the DOM; for a stream that runs long enough to *scroll* through, set `virtualize` to bound that too.
+
+```svelte
+<HighlightStream language={typescript} {code} {done} virtualize style="height: 20em;" />
+```
+
+`virtualize` renders only the lines within the scrolled viewport (plus `overscan`), the same windowing `HighlightVirtual` does for static documents -- a stream that runs to tens of thousands of lines still costs a couple dozen DOM nodes. It swaps the sealed-chunk session for `TokenizedDocument` (see [Large documents](#large-documents) below), so output always reflects the streaming (non-canonicalized) parse, even once `done` -- unlike the default mode, which upgrades to a canonical final render. `on:highlight` isn't dispatched in this mode, since materializing the full HTML on every repaint would defeat the point of windowing; `on:done`, the caret, and `autoScroll` all keep working.
 
 ## Large documents
 
@@ -1737,19 +1743,22 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
 
 #### Props
 
-| Name       | Type                                           | Default value  |
-| :--------- | :--------------------------------------------- | :------------- |
-| code       | `string`                                       | `""`           |
-| language   | { name: `string`; register: `object` } | N/A (required) |
-| done       | `boolean`                                      | `false`        |
-| caret      | `boolean`                                      | `true`         |
-| autoScroll | `boolean`                                      | `false`        |
+| Name               | Type                                    | Default value  |
+| :----------------- | :-------------------------------------- | :------------- |
+| code               | `string`                                | `""`           |
+| language           | { name: `string`; register: `object` }  | N/A (required) |
+| done               | `boolean`                               | `false`        |
+| caret              | `boolean`                               | `true`         |
+| autoScroll         | `boolean`                               | `false`        |
+| virtualize         | `boolean`                               | `false`        |
+| overscan           | `number`                                | `12`           |
+| checkpointInterval | `number`                                | `100`          |
 
-`$$restProps` are forwarded to the top-level `pre` element.
+`$$restProps` are forwarded to the top-level `pre` element. `overscan` and `checkpointInterval` only apply when `virtualize` is set.
 
 #### Dispatched Events
 
-- **on:highlight**: fired after each highlight pass, with `{ highlighted }`
+- **on:highlight**: fired after each highlight pass, with `{ highlighted }` -- not dispatched when `virtualize` is set
 - **on:done**: fired after the final full highlight once `done` is set
 
 ```svelte

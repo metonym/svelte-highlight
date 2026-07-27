@@ -38,6 +38,31 @@ export type HighlightStreamProps = HTMLAttributes<HTMLPreElement> & {
   autoScroll?: boolean;
 
   /**
+   * Render only the lines within the scrolled viewport (plus `overscan`)
+   * instead of the whole growing buffer, so a long-running stream costs a
+   * bounded number of DOM nodes instead of one per line. Backed by
+   * `createTokenizedDocument` rather than the sealed-chunk session used
+   * otherwise, so output always reflects the streaming (non-canonicalized)
+   * parse, even once `done` -- the same tradeoff `HighlightVirtual` makes.
+   * `on:highlight` is not dispatched in this mode.
+   * @default false
+   */
+  virtualize?: boolean;
+
+  /**
+   * Extra lines rendered above and below the viewport when `virtualize` is set.
+   * @default 12
+   */
+  overscan?: number;
+
+  /**
+   * Lines between engine checkpoints when `virtualize` is set (forwarded to
+   * `createTokenizedDocument`).
+   * @default 100
+   */
+  checkpointInterval?: number;
+
+  /**
    * Width of the blinking caret.
    * @default "0.6em"
    */

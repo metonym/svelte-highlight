@@ -23,6 +23,7 @@
 
   import { onMount, tick } from "svelte";
   import { createTokenizedDocument } from "./tokenized-document.js";
+  import { watchLineHeight, windowRange } from "./virtual-window.js";
 
   /** @type {HTMLElement} */
   let container;
@@ -78,13 +79,13 @@
     if (!doc) return;
     const total = doc.lineCount();
     lineCount = total;
-    const first = Math.max(0, Math.floor(scrollTop / lineHeight) - overscan);
-    const last = Math.min(
+    ({ start, end } = windowRange({
+      scrollTop,
+      clientHeight,
+      lineHeight,
+      overscan,
       total,
-      Math.ceil((scrollTop + clientHeight) / lineHeight) + overscan,
-    );
-    start = Math.min(first, total);
-    end = Math.max(start, last);
+    }));
     visibleLines = doc.lineRange(start, end);
   }
 
@@ -124,20 +125,12 @@
     scheduleRepaint();
   }
 
-  async function measureLineHeight() {
-    await tick();
-    if (probe) {
-      const height = probe.getBoundingClientRect().height;
-      if (height > 0) lineHeight = height;
-    }
-    if (typeof document !== "undefined" && document.fonts?.ready) {
-      document.fonts.ready.then(async () => {
-        await tick();
-        if (!probe) return;
-        const height = probe.getBoundingClientRect().height;
-        if (height > 0 && height !== lineHeight) lineHeight = height;
-      });
-    }
+  function measureLineHeight() {
+    return watchLineHeight(
+      () => probe,
+      () => lineHeight,
+      (height) => (lineHeight = height),
+    );
   }
 
   // Rebuilds/updates the document whenever its content or shape changes.
