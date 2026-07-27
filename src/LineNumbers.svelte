@@ -27,6 +27,7 @@
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
 
   $: lines = splitLines(highlighted);
+  $: highlightedLineSet = new Set(highlightedLines);
   $: focusMode = highlightedLines.length > 0;
   $: len_digits = (startingLineNumber + lines.length - 1).toString().length;
   $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
@@ -47,7 +48,7 @@
     <tbody class:hljs={true}>
       {#each lines as line, i}
         {@const lineNumber = i + startingLineNumber}
-        {@const isHighlighted = highlightedLines.includes(i)}
+        {@const isHighlighted = highlightedLineSet.has(i)}
         <tr class:dimmed={focusMode && !isHighlighted}>
           <td
             class:hljs={true}
