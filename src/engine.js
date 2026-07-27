@@ -211,6 +211,13 @@ class Tokenizer {
      * @type {(MatchCache | undefined)[]}
      */
     this.beginCache = [];
+    /**
+     * Tag names with no `</name` at or after the recorded position. See
+     * `hasClosingTag`.
+     * @type {Map<string, number>}
+     */
+    this.noClosingTag = new Map();
+    this.noClosingTagCodeLen = 0;
   }
 
   /** @returns {Frame} */
@@ -450,6 +457,35 @@ class Tokenizer {
   }
 
   /**
+   * Whether `</name` occurs at or after `from`.
+   *
+   * Misses are memoized per tag name, which makes the common "generic, not a
+   * tag" verdict cheap: absence from `from` implies absence from every later
+   * position, so one scan settles all of that name's later occurrences. Code
+   * dense in generics (`Modify<T>`, `Array<T>`) otherwise rescans the whole
+   * remaining source per occurrence, which is quadratic in file size.
+   *
+   * Keyed on `code.length` like `beginCache`: a tokenizer's `code` only ever
+   * grows, so an unchanged length means unchanged content, and appended code
+   * can supply a closing tag that was legitimately absent before.
+   *
+   * @param {string} name
+   * @param {number} from
+   * @returns {boolean}
+   */
+  hasClosingTag(name, from) {
+    if (this.noClosingTagCodeLen !== this.code.length) {
+      this.noClosingTag.clear();
+      this.noClosingTagCodeLen = this.code.length;
+    }
+    const absentFrom = this.noClosingTag.get(name);
+    if (absentFrom !== undefined && from >= absentFrom) return false;
+    if (this.code.indexOf(`</${name}`, from) !== -1) return true;
+    this.noClosingTag.set(name, from);
+    return false;
+  }
+
+  /**
    * hljs javascript/typescript JSX-vs-generic disambiguation for a `<Foo`
    * match. Re-evaluated when more code arrives so a streaming closing tag
    * still resolves it. See Tokenizer#isTrulyOpeningTag.
@@ -462,10 +498,7 @@ class Tokenizer {
     // `Array<Array<number>>`, `<T, A extends keyof T, V>`
     if (nextChar === "<" || nextChar === ",") return false;
     // `<something>` - only a tag if a matching closing tag exists later on.
-    if (
-      nextChar === ">" &&
-      this.code.indexOf(`</${match[0].slice(1)}`, afterIdx) === -1
-    ) {
+    if (nextChar === ">" && !this.hasClosingTag(match[0].slice(1), afterIdx)) {
       return false;
     }
     const after = this.code.slice(afterIdx);
