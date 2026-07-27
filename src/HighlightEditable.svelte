@@ -304,14 +304,54 @@
     lineHighlightRanges[index] = next;
   }
 
+  // Repaints every line from `tokenRanges` in a single forward sweep rather
+  // than rescanning the full (document-sized) range array per line: since
+  // `toRanges` emits ranges sorted by, and disjoint on, document offset,
+  // `tokenIndex` only ever advances, so total work is O(lines + tokens)
+  // instead of O(lines * tokens).
+  function paintAllLineHighlights(tokenRanges) {
+    let tokenIndex = 0;
+    let lineStart = 0;
+    for (let i = 0; i < lineEls.length; i++) {
+      clearLineHighlights(i);
+      const lineEnd = lineStart + lineLengths[i];
+      const textNode = lineEls[i].firstChild;
+      const next = [];
+      if (textNode) {
+        while (
+          tokenIndex < tokenRanges.length &&
+          tokenRanges[tokenIndex].end <= lineStart
+        ) {
+          tokenIndex++;
+        }
+        for (
+          let j = tokenIndex;
+          j < tokenRanges.length && tokenRanges[j].start < lineEnd;
+          j++
+        ) {
+          const token = tokenRanges[j];
+          if (token.end <= lineStart) continue;
+          const start = Math.max(token.start, lineStart) - lineStart;
+          const end = Math.min(token.end, lineEnd) - lineStart;
+          if (start === end) continue;
+          const range = new Range();
+          range.setStart(textNode, start);
+          range.setEnd(textNode, end);
+          cssHighlightFor(token.scope).add(range);
+          next.push({ scope: token.scope, range });
+        }
+      }
+      lineHighlightRanges[i] = next;
+      lineStart = lineEnd + 1; // +1 for the "\n" separator
+    }
+  }
+
   function paintCssHighlights() {
     const changedIndex = renderLines(code.split("\n"), setText);
     const tokenRanges = toRanges(getEvents());
 
     if (changedIndex == null) {
-      for (let i = 0; i < lineEls.length; i++) {
-        paintLineHighlights(i, tokenRanges);
-      }
+      paintAllLineHighlights(tokenRanges);
     } else {
       paintLineHighlights(changedIndex, tokenRanges);
     }
