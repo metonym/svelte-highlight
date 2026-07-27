@@ -289,8 +289,23 @@
     if (textNode) {
       const lineStart = lineStartOffset(index);
       const lineEnd = lineStart + lineLengths[index];
-      for (const token of tokenRanges) {
-        if (token.end <= lineStart || token.start >= lineEnd) continue;
+      // `tokenRanges` is sorted by, and disjoint on, `start` (see the
+      // comment on `paintAllLineHighlights`), so `end` is monotonically
+      // increasing too. Binary-search the first range that can possibly
+      // intersect the line instead of scanning the whole document.
+      let lo = 0;
+      let hi = tokenRanges.length;
+      while (lo < hi) {
+        const mid = (lo + hi) >>> 1;
+        if (tokenRanges[mid].end <= lineStart) lo = mid + 1;
+        else hi = mid;
+      }
+      for (
+        let j = lo;
+        j < tokenRanges.length && tokenRanges[j].start < lineEnd;
+        j++
+      ) {
+        const token = tokenRanges[j];
         const start = Math.max(token.start, lineStart) - lineStart;
         const end = Math.min(token.end, lineEnd) - lineStart;
         if (start === end) continue;
