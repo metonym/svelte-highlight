@@ -871,17 +871,29 @@ export function extendLines(
   const stack = [...openScopes];
   /** @type {string[]} */
   const completedLines = [];
-  const reopenTags = () =>
-    stack
-      .map((scope) => `<span class="${scopeToCssClass(scope, classPrefix)}">`)
-      .join("");
+  // Cache the concatenated open/close tag strings for the current stack so a
+  // run of newlines between OPEN/CLOSE events reuses them instead of
+  // re-joining the whole stack per line break.
+  /** @type {string[]} */
+  const tags = stack.map(
+    (scope) => `<span class="${scopeToCssClass(scope, classPrefix)}">`,
+  );
+  let reopen = tags.join("");
+  let closeAll = "</span>".repeat(stack.length);
   let current = pendingHtml;
   for (const event of newEvents) {
     if (event.t === OPEN) {
       stack.push(event.s);
-      current += `<span class="${scopeToCssClass(event.s, classPrefix)}">`;
+      const tag = `<span class="${scopeToCssClass(event.s, classPrefix)}">`;
+      tags.push(tag);
+      reopen += tag;
+      closeAll += "</span>";
+      current += tag;
     } else if (event.t === CLOSE) {
       stack.pop();
+      const tag = /** @type {string} */ (tags.pop());
+      reopen = reopen.slice(0, reopen.length - tag.length);
+      closeAll = closeAll.slice(0, closeAll.length - "</span>".length);
       current += "</span>";
     } else {
       const text = event.v;
@@ -889,9 +901,9 @@ export function extendLines(
       for (let i = 0; i < text.length; i++) {
         if (text.charCodeAt(i) === 10) {
           current += escapeHtml(text.slice(start, i));
-          current += "</span>".repeat(stack.length);
+          current += closeAll;
           completedLines.push(current);
-          current = reopenTags();
+          current = reopen;
           start = i + 1;
         }
       }
