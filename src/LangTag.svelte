@@ -10,6 +10,14 @@
 
   /** @type {boolean} */
   export let langtag = false;
+
+  /**
+   * Bindable reference to the rendered `<code>` element, for callers (e.g.
+   * `Highlight`'s "css-highlights" engine) that need to manage its DOM
+   * imperatively after mount without duplicating this markup.
+   * @type {HTMLElement | undefined}
+   */
+  export let codeElement = undefined;
 </script>
 
 <pre
@@ -22,6 +30,7 @@
   style:max-width="var(--max-width, none)"
   {...$$restProps}
 ><code
+    bind:this={codeElement}
     class:hljs={true}
     >{#if highlighted}{@html highlighted}{:else}{code}{/if}</code
   ></pre>

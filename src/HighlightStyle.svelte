@@ -23,7 +23,7 @@
 </script>
 
 <script>
-  import { onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { dualStyle, scopeClassFor, scopeStyle } from "./scoped.js";
   import { dualPaletteStyle, paletteStyle } from "./theme-style.js";
 
@@ -128,7 +128,7 @@
   $: owners = $registry ?? [];
   $: shouldRender = !isBrowser || owners[0] === token;
 
-  onDestroy(unregister);
+  onMount(() => unregister);
 </script>
 
 <svelte:head
