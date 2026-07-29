@@ -39,7 +39,8 @@
   export let theme = undefined;
 
   import { createEventDispatcher, onMount } from "svelte";
-  import { renderHtml, toRanges } from "./engine.js";
+  import { createDomLinePainter } from "./editable-dom-paint.js";
+  import { toRanges } from "./engine.js";
   import {
     highlightRules,
     highlightRulesFromPalette,
@@ -49,7 +50,6 @@
     reparseIncremental,
   } from "./incremental-tokenize.js";
   import { ensureRegistered, registry } from "./registry.js";
-  import { splitLines } from "./split-lines.js";
   import { diffText } from "./text-diff.js";
 
   const dispatch = createEventDispatcher();
@@ -79,6 +79,10 @@
   // convergence. getEvents() full-parses on first call and language change.
   /** @type {import("./incremental-tokenize.js").IncrementalParse | undefined} */
   let incrementalParse;
+
+  // DOM-engine line HTML: pure appends feed a stream session so renderHtml is
+  // not re-run over the whole document on every keystroke.
+  const domLinePainter = createDomLinePainter({ registry });
 
   function getEvents() {
     incrementalParse = incrementalParse
@@ -455,10 +459,11 @@
 
   function paint() {
     if (resolvedEngineValue === "css-highlights") return paintCssHighlights();
-    const html = renderHtml(getEvents());
-    // Trailing empty line needs a phantom `\n` for caret placement.
-    const paintHtml = code === "" || code.endsWith("\n") ? `${html}\n` : html;
-    return renderLines(splitLines(paintHtml), setHtml);
+    const events = getEvents();
+    return renderLines(
+      domLinePainter.paint(events, code, language.name),
+      setHtml,
+    );
   }
 
   function renderAt(start, end) {
@@ -485,6 +490,8 @@
   }
 
   function repaintForLanguageChange() {
+    incrementalParse = undefined;
+    domLinePainter.reset();
     const caret = document.activeElement === editor ? getCaretOffset() : null;
     if (caret == null) paint();
     else renderAt(caret, caret);
