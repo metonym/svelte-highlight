@@ -31,6 +31,7 @@
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { extendLines } from "./engine.js";
   import { ensureRegistered, registry } from "./registry.js";
+  import { pushSealedChunk } from "./stream-sealed-chunks.js";
 
   // Lines between sealed chunks. Once a chunk fills, its line spans are
   // joined into one immutable HTML string and never touched again - keyed
@@ -126,7 +127,7 @@
       domHtml += `${sep}<span class="highlight-stream-line" data-line="${i}">${chunkLines[li]}</span>`;
       plainHtml += sep + chunkLines[li];
     }
-    sealedChunks = [...sealedChunks, domHtml];
+    sealedChunks = pushSealedChunk(sealedChunks, domHtml);
     sealedHtml += plainHtml;
     sealedLineCount += chunkLines.length;
     unsealedLines = unsealedLines.slice(SEAL_CHUNK_LINES);
