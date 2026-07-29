@@ -254,3 +254,32 @@ describe("incremental re-tokenization survives a realistic mixed editing session
     ]);
   });
 });
+
+describe("parseIncremental checkpoint density", () => {
+  /** Build N one-statement lines of javascript. */
+  function manyLines(n: number): string {
+    let code = "";
+    for (let i = 0; i < n; i++) code += `const v${i} = ${i};\n`;
+    return code;
+  }
+
+  it("stores O(lines / interval) checkpoints, not one per line", () => {
+    const lineCount = 320;
+    const code = manyLines(lineCount);
+    const state = parseIncremental(registry, "javascript", code);
+    // Start checkpoint + one per interval + final (if not already on boundary).
+    // With interval 32: 320/32 = 10 interior boundaries → at most ~12 checkpoints,
+    // never one per line (321).
+    expect(state.checkpoints.length).toBeLessThan(lineCount / 4);
+    expect(state.checkpoints.length).toBeGreaterThan(2);
+    // Still ends at the document end so resume can reach the tail.
+    const last = state.checkpoints[state.checkpoints.length - 1];
+    expect(last?.pos).toBe(code.length);
+  });
+
+  it("reparse after a mid-document edit still matches a full re-parse", () => {
+    const code = manyLines(100);
+    const edited = code.replace("const v50 = 50;", "const v50 = 500;");
+    assertEditSequenceMatchesOneShot("javascript", [code, edited]);
+  });
+});
