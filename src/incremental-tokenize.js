@@ -197,10 +197,13 @@ export function reparseIncremental(registry, language, previous, code) {
     session.append(/** @type {string} */ (newLines[li]));
     const snap = session.snapshot();
     linesSinceCheckpoint++;
-    // Check every line for convergence against previous (interval-aligned)
-    // checkpoints; only *store* at interval / end / converge so density
-    // stays O(lines / interval).
-    let shouldStore = linesSinceCheckpoint >= CHECKPOINT_INTERVAL;
+    // Check every line for convergence against previous checkpoints.
+    // Store every line for a window right after the edit (typing tends to
+    // stay near the cursor, so a follow-up edit here resumes in O(1)
+    // instead of walking to the next interval boundary), then fall back to
+    // the sparse interval so density doesn't stay O(lines) further out.
+    let shouldStore =
+      li < CHECKPOINT_INTERVAL || linesSinceCheckpoint >= CHECKPOINT_INTERVAL;
     if (snap.pos >= newSuffixStart) {
       const targetOldPos = snap.pos - posOffset;
       while (

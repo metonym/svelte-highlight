@@ -5,6 +5,7 @@ import {
   toRanges,
 } from "../src/engine.js";
 import {
+  CHECKPOINT_INTERVAL,
   parseIncremental,
   reparseIncremental,
 } from "../src/incremental-tokenize.js";
@@ -281,5 +282,39 @@ describe("parseIncremental checkpoint density", () => {
     const code = manyLines(100);
     const edited = code.replace("const v50 = 50;", "const v50 = 500;");
     assertEditSequenceMatchesOneShot("javascript", [code, edited]);
+  });
+
+  it("follow-up edit near a prior edit converges in O(1) appended lines", () => {
+    const code = manyLines(320);
+    let state = parseIncremental(registry, "javascript", code);
+
+    const edit1 = code.replace("const v50 = 50;", "const v50 = 500;");
+    state = reparseIncremental(registry, "javascript", state, edit1);
+    expect(render(state.events)).toEqual(oneShotRender(edit1, "javascript"));
+
+    // First mid-doc edit densifies a pocket; the second edit on the same
+    // line must resume from that pocket and converge without walking a
+    // full CHECKPOINT_INTERVAL of sparse boundaries.
+    let appendCount = 0;
+    const createSession = registry.createSession.bind(registry);
+    registry.createSession = ((...args: Parameters<typeof createSession>) => {
+      const session = createSession(...args);
+      const append = session.append.bind(session);
+      session.append = (chunk: string) => {
+        appendCount++;
+        return append(chunk);
+      };
+      return session;
+    }) as typeof registry.createSession;
+
+    try {
+      const edit2 = edit1.replace("const v50 = 500;", "const v50 = 5000;");
+      state = reparseIncremental(registry, "javascript", state, edit2);
+      expect(render(state.events)).toEqual(oneShotRender(edit2, "javascript"));
+      expect(appendCount).toBeLessThan(CHECKPOINT_INTERVAL);
+      expect(appendCount).toBeLessThan(4);
+    } finally {
+      registry.createSession = createSession;
+    }
   });
 });
