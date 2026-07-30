@@ -20,6 +20,7 @@ import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
+import HighlightStreamMidLineHighlight from "./HighlightStream.midLineHighlight.test.svelte";
 import HighlightStreamSealing from "./HighlightStream.sealing.test.svelte";
 import HighlightStreamStability from "./HighlightStream.stability.test.svelte";
 import HighlightStreamTemplateLiteral from "./HighlightStream.templateLiteral.test.svelte";
@@ -1075,6 +1076,45 @@ test("HighlightStream - streaming chunks (split mid-keyword and mid-template-lit
   const reference = page.getByTestId("reference").locator("code");
   await expect(stream).toHaveText("const greet = () => `Hello, world!`;");
   expect(await stream.innerHTML()).toBe(await reference.innerHTML());
+});
+
+test("HighlightStream - mid-line chunks keep on:highlight payload growing without newlines", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamMidLineHighlight);
+
+  const appendChunk = page.getByTestId("append-chunk");
+  const lengthsEl = page.getByTestId("payload-lengths");
+
+  let previousLength = 0;
+  for (let sent = 1; sent <= 4; sent++) {
+    // biome-ignore lint/performance/noAwaitInLoops: each chunk's highlight payload must be observed before the next append
+    await appendChunk.click();
+    // Mount / empty-code passes may push 0-length payloads first; assert on
+    // the latest length after this append so mid-line growth is what we check.
+    await expect
+      .poll(async () => {
+        const lengths = JSON.parse(
+          (await lengthsEl.textContent()) ?? "[]",
+        ) as number[];
+        return lengths[lengths.length - 1] ?? 0;
+      })
+      .toBeGreaterThan(previousLength);
+    const lengths = JSON.parse(
+      (await lengthsEl.textContent()) ?? "[]",
+    ) as number[];
+    previousLength = lengths[lengths.length - 1] ?? 0;
+    expect(previousLength).toBeGreaterThan(0);
+  }
+
+  await page.getByTestId("finish").click();
+  await expect(
+    page.getByTestId("reference-highlighted-snapshot"),
+  ).toBeVisible();
+  expect(await page.getByTestId("highlighted-snapshot").textContent()).toBe(
+    await page.getByTestId("reference-highlighted-snapshot").textContent(),
+  );
 });
 
 test("HighlightStream - stable line elements are not recreated as more lines stream in", async ({
