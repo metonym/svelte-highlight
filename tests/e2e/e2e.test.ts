@@ -1538,12 +1538,19 @@ test("Typewriter - pausing then resuming continues without restarting", async ({
   mount,
   page,
 }) => {
+  // Under CI parallel load Firefox's setInterval can run well slower than
+  // `speed`, so a fixed 5s post-resume wait is enough to flake. Give the
+  // remaining ticks room, and poll for progress instead of sleeping.
+  test.setTimeout(20_000);
+
   await mount(Typewriter, { props: { speed: 15 } });
 
   const tw = page.getByTestId("tw");
   const revealed = tw.locator(".typewriter-unit:not(.typewriter-hidden)");
+  const done = page.getByTestId("done");
 
-  await page.waitForTimeout(120);
+  await expect.poll(async () => revealed.count()).toBeGreaterThan(0);
+  await expect(done).toHaveText("0");
   await page.getByTestId("toggle-play").click(); // pause
 
   const pausedCount = await revealed.count();
@@ -1555,7 +1562,8 @@ test("Typewriter - pausing then resuming continues without restarting", async ({
   expect(await revealed.count()).toBe(pausedCount);
 
   await page.getByTestId("toggle-play").click(); // resume
-  await expect(page.getByTestId("done")).toHaveText("1");
+  await expect.poll(async () => revealed.count()).toBeGreaterThan(pausedCount);
+  await expect(done).toHaveText("1", { timeout: 15_000 });
 
   // Same DOM node from before the pause: resume picked up where it left
   // off instead of re-tokenizing/rebuilding.
