@@ -5,6 +5,7 @@ import {
   toRanges,
 } from "../src/engine.js";
 import {
+  CHECKPOINT_INTERVAL,
   parseIncremental,
   reparseIncremental,
 } from "../src/incremental-tokenize.js";
@@ -252,5 +253,68 @@ describe("incremental re-tokenization survives a realistic mixed editing session
       htmlDoc.replace("color: red", "color: blue"),
       htmlDoc.replace("const x = 1", "const x = 2"),
     ]);
+  });
+});
+
+describe("parseIncremental checkpoint density", () => {
+  /** Build N one-statement lines of javascript. */
+  function manyLines(n: number): string {
+    let code = "";
+    for (let i = 0; i < n; i++) code += `const v${i} = ${i};\n`;
+    return code;
+  }
+
+  it("stores O(lines / interval) checkpoints, not one per line", () => {
+    const lineCount = 320;
+    const code = manyLines(lineCount);
+    const state = parseIncremental(registry, "javascript", code);
+    // Start checkpoint + one per interval + final (if not already on boundary).
+    // With interval 32: 320/32 = 10 interior boundaries → at most ~12 checkpoints,
+    // never one per line (321).
+    expect(state.checkpoints.length).toBeLessThan(lineCount / 4);
+    expect(state.checkpoints.length).toBeGreaterThan(2);
+    // Still ends at the document end so resume can reach the tail.
+    const last = state.checkpoints[state.checkpoints.length - 1];
+    expect(last?.pos).toBe(code.length);
+  });
+
+  it("reparse after a mid-document edit still matches a full re-parse", () => {
+    const code = manyLines(100);
+    const edited = code.replace("const v50 = 50;", "const v50 = 500;");
+    assertEditSequenceMatchesOneShot("javascript", [code, edited]);
+  });
+
+  it("follow-up edit near a prior edit converges in O(1) appended lines", () => {
+    const code = manyLines(320);
+    let state = parseIncremental(registry, "javascript", code);
+
+    const edit1 = code.replace("const v50 = 50;", "const v50 = 500;");
+    state = reparseIncremental(registry, "javascript", state, edit1);
+    expect(render(state.events)).toEqual(oneShotRender(edit1, "javascript"));
+
+    // First mid-doc edit densifies a pocket; the second edit on the same
+    // line must resume from that pocket and converge without walking a
+    // full CHECKPOINT_INTERVAL of sparse boundaries.
+    let appendCount = 0;
+    const createSession = registry.createSession.bind(registry);
+    registry.createSession = ((...args: Parameters<typeof createSession>) => {
+      const session = createSession(...args);
+      const append = session.append.bind(session);
+      session.append = (chunk: string) => {
+        appendCount++;
+        return append(chunk);
+      };
+      return session;
+    }) as typeof registry.createSession;
+
+    try {
+      const edit2 = edit1.replace("const v50 = 500;", "const v50 = 5000;");
+      state = reparseIncremental(registry, "javascript", state, edit2);
+      expect(render(state.events)).toEqual(oneShotRender(edit2, "javascript"));
+      expect(appendCount).toBeLessThan(CHECKPOINT_INTERVAL);
+      expect(appendCount).toBeLessThan(4);
+    } finally {
+      registry.createSession = createSession;
+    }
   });
 });

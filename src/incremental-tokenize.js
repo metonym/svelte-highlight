@@ -94,8 +94,16 @@ function stateConverges(a, b) {
 }
 
 /**
- * Full parse with a line checkpoint after every line. First paint or language
- * change.
+ * Default gap between line checkpoints. Matches the spirit of
+ * `tokenized-document`'s interval: denser than its windowed default (100)
+ * so mid-document edits still resume nearby, sparse enough that a 10k-line
+ * file stores O(hundreds) of snapshots rather than O(lines).
+ */
+export const CHECKPOINT_INTERVAL = 32;
+
+/**
+ * Full parse with a line checkpoint every `CHECKPOINT_INTERVAL` lines (and
+ * always at the document end). First paint or language change.
  * @param {Registry} registry
  * @param {string} language
  * @param {string} code
@@ -104,8 +112,18 @@ function stateConverges(a, b) {
 export function parseIncremental(registry, language, code) {
   const session = registry.createSession(language);
   const checkpoints = [session.snapshot()];
+  let linesSinceCheckpoint = 0;
   for (const line of splitKeepEnds(code)) {
     session.append(line);
+    linesSinceCheckpoint++;
+    if (linesSinceCheckpoint >= CHECKPOINT_INTERVAL) {
+      checkpoints.push(session.snapshot());
+      linesSinceCheckpoint = 0;
+    }
+  }
+  // Always retain an end checkpoint so resume can land on the final state
+  // even when the last interval is incomplete.
+  if (linesSinceCheckpoint > 0 || checkpoints.length === 1) {
     checkpoints.push(session.snapshot());
   }
   const { events } = session.finish();
@@ -173,16 +191,19 @@ export function reparseIncremental(registry, language, previous, code) {
   const newLines = splitKeepEnds(code.slice(resumeCheckpoint.pos));
   let convergedAtOldIndex = -1;
   let oldIndex = resumeIndex;
+  let linesSinceCheckpoint = 0;
 
-  for (const line of newLines) {
-    session.append(line);
+  for (let li = 0; li < newLines.length; li++) {
+    session.append(/** @type {string} */ (newLines[li]));
     const snap = session.snapshot();
-    // snap.eventCount is session-local; shift to index the combined array.
-    checkpoints.push({
-      ...snap,
-      eventCount: snap.eventCount + prefixEvents.length,
-    });
-
+    linesSinceCheckpoint++;
+    // Check every line for convergence against previous checkpoints.
+    // Store every line for a window right after the edit (typing tends to
+    // stay near the cursor, so a follow-up edit here resumes in O(1)
+    // instead of walking to the next interval boundary), then fall back to
+    // the sparse interval so density doesn't stay O(lines) further out.
+    let shouldStore =
+      li < CHECKPOINT_INTERVAL || linesSinceCheckpoint >= CHECKPOINT_INTERVAL;
     if (snap.pos >= newSuffixStart) {
       const targetOldPos = snap.pos - posOffset;
       while (
@@ -201,9 +222,19 @@ export function reparseIncremental(registry, language, previous, code) {
         stateConverges(snap, oldCheckpoint)
       ) {
         convergedAtOldIndex = oldIndex;
-        break;
+        shouldStore = true;
       }
     }
+    if (!shouldStore && li === newLines.length - 1) shouldStore = true;
+    if (shouldStore) {
+      // snap.eventCount is session-local; shift to index the combined array.
+      checkpoints.push({
+        ...snap,
+        eventCount: snap.eventCount + prefixEvents.length,
+      });
+      linesSinceCheckpoint = 0;
+    }
+    if (convergedAtOldIndex >= 0) break;
   }
 
   if (convergedAtOldIndex >= 0) {
