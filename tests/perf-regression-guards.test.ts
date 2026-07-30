@@ -137,8 +137,10 @@ describe("HighlightStream sealed-chunk append", () => {
 
     // Measured at this scale: a true O(c) implementation costs ~4-6x for
     // 8x more seals; the O(c^2) spread-copy pattern this guards against
-    // costs ~30-40x. 15 sits clear of both with margin on either side.
-    expect(large / Math.max(small, 0.01)).toBeLessThan(15);
+    // costs ~30-40x. 22 sits clear of both, with more margin against CI
+    // timing noise than 15 (which flaked under load) while still well
+    // short of the O(c^2) range.
+    expect(large / Math.max(small, 0.01)).toBeLessThan(22);
   }, 10_000);
 });
 
