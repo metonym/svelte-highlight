@@ -102,7 +102,7 @@
   </span>
   <svelte:fragment slot="skipToContent"> <SkipToContent /> </svelte:fragment>
   <HeaderNav>
-    {#each Object.entries(navRoutes) as [ href, text ]}
+    {#each Object.entries(navRoutes) as [href, text]}
       <HeaderNavItem {href} {text} isSelected={path === href} />
     {/each}
   </HeaderNav>
