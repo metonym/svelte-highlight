@@ -50,6 +50,7 @@ describe("createDomLinePainter", () => {
 
     const steps = [
       "function greet(name) {\n",
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: this is JS *source text* fed to the tokenizer, not a template literal to evaluate
       "  const msg = `hi ${name}`;\n",
       "  return msg;\n",
       "}\n",
