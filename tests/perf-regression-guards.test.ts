@@ -1,16 +1,11 @@
 /**
  * Regression guards for four hot-path scaling issues (checkpoint memory,
- * sealed-chunk append, streamed-highlight rematerialization, and DOM paint
- * on pure-append edits). Where a fix already lives in this codebase
- * (`incremental-tokenize.js`), the guard calls it directly. Where a fix is
- * still landing as a separate branch that extracts a pure module
- * (`stream-sealed-chunks.js`, `stream-highlighted.js`,
- * `editable-dom-paint.js`), the guard imports that module dynamically and
- * falls back to a faithful reconstruction of this branch's current inline
- * behavior when the module doesn't exist yet. That means these guards
- * document today's baseline (and some currently fail, on purpose) and start
- * enforcing the tighter bound automatically once the corresponding fix is
- * rebased onto this branch - no test edits required.
+ * sealed-chunk append, streamed-highlight completed-html buffering, and DOM
+ * paint on pure-append edits). Where a fix already lives in this codebase,
+ * the guard calls it (or a faithful reconstruction of the inline behavior).
+ * Where a fix is still landing as a separate extracted module
+ * (`editable-dom-paint.js`), the guard falls back to today's baseline and
+ * may fail on purpose until that module lands.
  */
 import { createRegistry, registerAll, renderHtml } from "../src/engine.js";
 import {
@@ -111,10 +106,12 @@ describe("HighlightStream sealed-chunk append", () => {
         chunk: string,
       ) => string[];
     }
-    // Baseline: HighlightStream.svelte's sealChunk() currently does
-    // `sealedChunks = [...sealedChunks, domHtml]` inline - an O(c) copy per
-    // seal, O(c^2) over a stream of c seals.
-    return (chunks: string[], chunk: string) => [...chunks, chunk];
+    // Current HighlightStream.svelte sealChunk(): push + same-array return
+    // (Svelte invalidation via `sealedChunks = sealedChunks`), O(1) amortized.
+    return (chunks: string[], chunk: string) => {
+      chunks.push(chunk);
+      return chunks;
+    };
   }
 
   it("appends without copying the existing array (O(1) amortized, not O(c))", async () => {
@@ -146,59 +143,22 @@ describe("HighlightStream sealed-chunk append", () => {
 });
 
 describe("HighlightStream highlighted rematerialize policy", () => {
-  type RematerializeState = {
-    mounted: boolean;
-    done: boolean;
-    completedLinesChanged: boolean;
-  };
-
-  async function loadShouldRematerialize() {
+  it("keeps an append-only completed-html buffer (event string is assembled each frame)", async () => {
+    // Preview-only skips of `highlighted` were rejected: on:highlight must
+    // stay live mid-line. The remaining win is append-only completed HTML.
     const mod = await tryImport("../src/stream-highlighted.js");
-    if (mod) {
-      return mod.shouldRematerializeHighlighted as (
-        state: RematerializeState,
-      ) => boolean;
-    }
-    // Baseline: HighlightStream.svelte's repaint() currently rebuilds
-    // `highlighted` unconditionally every repaint (every animation frame
-    // while streaming), not just when a completed line changes.
-    return (_state: RematerializeState) => true;
-  }
-
-  it("skips rebuilding the highlighted string on preview-only frames", async () => {
-    const shouldRematerialize = await loadShouldRematerialize();
-    expect(
-      shouldRematerialize({
-        mounted: true,
-        done: false,
-        completedLinesChanged: false,
-      }),
-    ).toBe(false);
-  });
-
-  it("still rebuilds when a line completes, pre-mount, and on the final done pass", async () => {
-    const shouldRematerialize = await loadShouldRematerialize();
-    expect(
-      shouldRematerialize({
-        mounted: true,
-        done: false,
-        completedLinesChanged: true,
-      }),
-    ).toBe(true);
-    expect(
-      shouldRematerialize({
-        mounted: false,
-        done: false,
-        completedLinesChanged: false,
-      }),
-    ).toBe(true);
-    expect(
-      shouldRematerialize({
-        mounted: true,
-        done: true,
-        completedLinesChanged: false,
-      }),
-    ).toBe(true);
+    expect(mod).not.toBeNull();
+    expect(mod?.shouldRematerializeHighlighted).toBeUndefined();
+    const createCompletedHtmlBuffer = mod?.createCompletedHtmlBuffer as () => {
+      appendLines: (lines: string[]) => void;
+      toString: () => string;
+      lineCount: number;
+    };
+    const buf = createCompletedHtmlBuffer();
+    buf.appendLines(["a"]);
+    buf.appendLines(["b"]);
+    expect(buf.toString()).toBe("a\nb");
+    expect(buf.lineCount).toBe(2);
   });
 });
 

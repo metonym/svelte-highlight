@@ -31,6 +31,7 @@
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { extendLines } from "./engine.js";
   import { ensureRegistered, registry } from "./registry.js";
+  import { createCompletedHtmlBuffer } from "./stream-highlighted.js";
 
   // Lines between sealed chunks. Once a chunk fills, its line spans are
   // joined into one immutable HTML string and never touched again - keyed
@@ -75,13 +76,15 @@
   // Sealed (finished, immutable) chunks of `SEAL_CHUNK_LINES` line spans
   // each, pre-joined into one HTML string apiece - `sealedChunks` is never
   // mutated in place, only appended to, and past entries are never rebuilt.
-  // `sealedHtml` mirrors the same sealed prefix as plain (wrapper-free) HTML,
-  // appended once per sealed chunk, so `highlighted` below is O(tail) per
-  // repaint instead of rejoining every line streamed so far.
   /** @type {string[]} */
   let sealedChunks = [];
-  let sealedHtml = "";
   let sealedLineCount = 0;
+  // Append-only completed line HTML for the `highlight` event payload.
+  // Completed lines are concatenated once as they finalize (O(n) over the
+  // stream). Each repaint still assembles `highlighted = completed + preview`
+  // so `on:highlight` stays live mid-line; that concat copies the completed
+  // string but avoids rebuilding it from sealed DOM chunks.
+  const completedHtml = createCompletedHtmlBuffer();
   // Completed lines not yet folded into a sealed chunk - bounded by
   // `SEAL_CHUNK_LINES`, so touching it every repaint stays O(1).
   /** @type {string[]} */
@@ -106,8 +109,8 @@
     finalizedOpenScopes = [];
     renderedCommittedCount = 0;
     sealedChunks = [];
-    sealedHtml = "";
     sealedLineCount = 0;
+    completedHtml.reset();
     unsealedLines = [];
     tailLines = [];
   }
@@ -119,16 +122,13 @@
   function sealChunk() {
     const chunkLines = unsealedLines.slice(0, SEAL_CHUNK_LINES);
     let domHtml = "";
-    let plainHtml = "";
     for (let li = 0; li < chunkLines.length; li++) {
       const i = sealedLineCount + li;
       const sep = i > 0 ? "\n" : "";
       domHtml += `${sep}<span class="highlight-stream-line" data-line="${i}">${chunkLines[li]}</span>`;
-      plainHtml += sep + chunkLines[li];
     }
     sealedChunks.push(domHtml);
     sealedChunks = sealedChunks;
-    sealedHtml += plainHtml;
     sealedLineCount += chunkLines.length;
     unsealedLines = unsealedLines.slice(SEAL_CHUNK_LINES);
   }
@@ -153,6 +153,7 @@
           finalizedPendingHtml,
         );
         if (result.completedLines.length > 0) {
+          completedHtml.appendLines(result.completedLines);
           unsealedLines = unsealedLines.concat(result.completedLines);
           while (unsealedLines.length >= SEAL_CHUNK_LINES) sealChunk();
         }
@@ -175,8 +176,14 @@
       }
 
       tailLines = [...unsealedLines, ...previewLines];
+
+      // Always assemble a live event payload (including mid-line preview).
+      // Trailing empty preview keeps a final `\n` when the stream ends a line.
+      const completed = completedHtml.toString();
       highlighted =
-        sealedHtml + (sealedLineCount > 0 ? "\n" : "") + tailLines.join("\n");
+        completedHtml.lineCount === 0
+          ? previewLines.join("\n")
+          : `${completed}\n${previewLines.join("\n")}`;
     }
 
     dispatch("highlight", { highlighted });
