@@ -146,6 +146,16 @@
       }
     },
     {
+      "includes": ["src/HighlightStream.svelte"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noSelfAssign": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["src/**/*.d.ts"],
       "linter": {
         "rules": {
