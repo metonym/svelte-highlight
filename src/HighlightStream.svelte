@@ -126,7 +126,8 @@
       domHtml += `${sep}<span class="highlight-stream-line" data-line="${i}">${chunkLines[li]}</span>`;
       plainHtml += sep + chunkLines[li];
     }
-    sealedChunks = [...sealedChunks, domHtml];
+    sealedChunks.push(domHtml);
+    sealedChunks = sealedChunks;
     sealedHtml += plainHtml;
     sealedLineCount += chunkLines.length;
     unsealedLines = unsealedLines.slice(SEAL_CHUNK_LINES);
