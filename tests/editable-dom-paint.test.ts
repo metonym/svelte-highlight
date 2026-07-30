@@ -34,7 +34,7 @@ describe("isPureAppend", () => {
 
 describe("createDomLinePainter", () => {
   it("matches the historical renderHtml+splitLines path on a one-shot paint", () => {
-    const code = `function add(a, b) {\n  return a + b;\n}\n`;
+    const code = "function add(a, b) {\n  return a + b;\n}\n";
     const painter = createDomLinePainter({ registry });
     const events = eventsFor(code);
     // First paint is a pure append from "" → code, still must match historical.
@@ -91,5 +91,76 @@ describe("createDomLinePainter", () => {
       expect(lines).toEqual(lineHtmlFromEvents(state.events, code));
     }
     expect(painter.lastUsedIncremental()).toBe(true);
+  });
+
+  it("resumes incremental paint after append → mid-edit → append", () => {
+    const painter = createDomLinePainter({ registry });
+    let code = "const a = 1;\n";
+    let state = parseIncremental(registry, "javascript", code);
+    expect(painter.paint(state.events, code, "javascript")).toEqual(
+      lineHtmlFromEvents(state.events, code),
+    );
+
+    code += "const b = 2;\n";
+    state = reparseIncremental(registry, "javascript", state, code);
+    expect(painter.paint(state.events, code, "javascript")).toEqual(
+      lineHtmlFromEvents(state.events, code),
+    );
+    expect(painter.lastUsedIncremental()).toBe(true);
+
+    code = "const a = 99;\nconst b = 2;\n";
+    state = reparseIncremental(registry, "javascript", state, code);
+    expect(painter.paint(state.events, code, "javascript")).toEqual(
+      lineHtmlFromEvents(state.events, code),
+    );
+    expect(painter.lastUsedIncremental()).toBe(false);
+
+    code += "const c = 3;\n";
+    state = reparseIncremental(registry, "javascript", state, code);
+    expect(painter.paint(state.events, code, "javascript")).toEqual(
+      lineHtmlFromEvents(state.events, code),
+    );
+
+    code += "console.log(a + b + c);\n";
+    state = reparseIncremental(registry, "javascript", state, code);
+    expect(painter.paint(state.events, code, "javascript")).toEqual(
+      lineHtmlFromEvents(state.events, code),
+    );
+    expect(painter.lastUsedIncremental()).toBe(true);
+  });
+
+  it("does not call session.append on every mid-document edit", () => {
+    let appendCount = 0;
+    const createSession = registry.createSession.bind(registry);
+    registry.createSession = ((...args: Parameters<typeof createSession>) => {
+      const session = createSession(...args);
+      const append = session.append.bind(session);
+      session.append = (chunk: string) => {
+        appendCount++;
+        return append(chunk);
+      };
+      return session;
+    }) as typeof registry.createSession;
+
+    try {
+      const painter = createDomLinePainter({ registry });
+      let code = "const a = 1;\nconst b = 2;\nconst c = 3;\n";
+      painter.paint(eventsFor(code), code, "javascript");
+      const appendsAfterInit = appendCount;
+      expect(appendsAfterInit).toBeGreaterThan(0);
+
+      // Use one-shot tokenize (not reparseIncremental) so the spy only
+      // observes painter-driven createSession/append calls.
+      for (let i = 0; i < 20; i++) {
+        code = `const a = ${i};\nconst b = 2;\nconst c = 3;\n`;
+        const events = eventsFor(code);
+        const lines = painter.paint(events, code, "javascript");
+        expect(lines).toEqual(lineHtmlFromEvents(events, code));
+      }
+      // Mid-edits must not eagerly resync (createSession + append per keystroke).
+      expect(appendCount).toBe(appendsAfterInit);
+    } finally {
+      registry.createSession = createSession;
+    }
   });
 });

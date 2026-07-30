@@ -83,8 +83,17 @@ export function createDomLinePainter({ registry }) {
   let lastUsedIncremental = false;
   /** Whether the current session has already accepted at least one append. */
   let hasAppended = false;
+  /**
+   * Mid-document edits mark the stream session dirty instead of eagerly
+   * re-tokenizing. The next pure append pays one full resync, then resumes
+   * O(delta) painting.
+   */
+  let needsResync = false;
 
-  /** @param {string} nextLanguage */
+  /**
+   * @param {string} nextLanguage
+   * @returns {StreamSession}
+   */
   function resetSession(nextLanguage) {
     session = registry.createSession(nextLanguage);
     sessionLanguage = nextLanguage;
@@ -94,6 +103,24 @@ export function createDomLinePainter({ registry }) {
     pendingHtml = "";
     completedLines = [];
     hasAppended = false;
+    needsResync = false;
+    return session;
+  }
+
+  /**
+   * Rebuild the stream session from `base` so a subsequent delta append can
+   * continue incrementally. Preserves `fedCode` across the reset.
+   * @param {string} languageName
+   * @param {string} base
+   */
+  function resyncSession(languageName, base) {
+    session = resetSession(languageName);
+    if (base.length > 0) {
+      session.append(base);
+      hasAppended = true;
+      consumeCommitted(session.events());
+    }
+    fedCode = base;
   }
 
   /**
@@ -125,11 +152,7 @@ export function createDomLinePainter({ registry }) {
     let previewLines = [pendingHtml];
     if (snapshot.pos < fedCode.length) {
       const preview = registry.resume(fedCode, sessionLanguage, snapshot);
-      const result = extendLines(
-        preview.events,
-        openScopes,
-        pendingHtml,
-      );
+      const result = extendLines(preview.events, openScopes, pendingHtml);
       previewLines = result.completedLines.concat(result.pendingHtml);
     }
     return linesFromStreamState(completedLines, previewLines, code);
@@ -146,6 +169,7 @@ export function createDomLinePainter({ registry }) {
       completedLines = [];
       lastUsedIncremental = false;
       hasAppended = false;
+      needsResync = false;
     },
     lastUsedIncremental() {
       return lastUsedIncremental;
@@ -159,21 +183,20 @@ export function createDomLinePainter({ registry }) {
      */
     paint(events, code, languageName) {
       if (session === undefined || languageName !== sessionLanguage) {
-        resetSession(languageName);
+        session = resetSession(languageName);
       }
 
       if (!isPureAppend(fedCode, code)) {
         lastUsedIncremental = false;
         const lines = lineHtmlFromEvents(events, code);
-        // Resync the stream session so a later pure append can continue.
-        resetSession(languageName);
-        if (code.length > 0) {
-          session.append(code);
-          fedCode = code;
-          hasAppended = true;
-          consumeCommitted(session.events());
-        }
+        // Defer the O(n) stream resync until the next pure append.
+        needsResync = true;
+        fedCode = code;
         return lines;
+      }
+
+      if (needsResync) {
+        resyncSession(languageName, fedCode);
       }
 
       const hadContent = hasAppended;
