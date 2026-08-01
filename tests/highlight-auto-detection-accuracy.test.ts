@@ -76,6 +76,13 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-09-01' = {
 	file_server
 }
 `,
+  cql: `CREATE TABLE users (
+    id UUID PRIMARY KEY,
+    name TEXT
+);
+
+SELECT name FROM users WHERE id = 123 ALLOW FILTERING;
+`,
   cairo: `#[derive(Drop)]
 struct Point {
     x: felt252,
