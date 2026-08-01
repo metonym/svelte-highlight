@@ -88,6 +88,7 @@
     "/preview-sparql": "SPARQL language preview",
     "/preview-prql": "PRQL language preview",
     "/preview-flux": "Flux language preview",
+    "/preview-cql": "CQL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
