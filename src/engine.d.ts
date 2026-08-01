@@ -7,7 +7,7 @@
  *   `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`,
  *   `Registry` and all its methods, `createRegistry`, `registerAll`,
  *   `StreamSession`, `Snapshot` (see its own doc comment for a narrower
- *   guarantee).
+ *   guarantee), `DETECT_SAMPLE_LIMIT`.
  * - **Generated data (structure versioned with the library):** `GrammarIR`,
  *   `GrammarState` (see their doc comment).
  *
@@ -71,6 +71,14 @@ export type ScopeEvent = { t: 0; v: string } | { t: 1; s: string } | { t: 2 };
 export const TEXT: 0;
 export const OPEN: 1;
 export const CLOSE: 2;
+
+/**
+ * Max leading characters used for auto-detection scoring
+ * (`Registry#tokenizeAuto`/`highlightAuto`). Reused by
+ * `svelte-highlight/auto-detect`'s tier-0 fingerprint scoring so both tiers
+ * sample the same prefix of `code`.
+ */
+export const DETECT_SAMPLE_LIMIT: number;
 
 export function escapeHtml(value: string): string;
 
