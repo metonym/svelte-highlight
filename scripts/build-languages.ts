@@ -298,6 +298,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "flux",
     path: `${import.meta.dir}/custom-languages/flux.js`,
   },
+  {
+    name: "cql",
+    moduleName: "cql",
+    path: `${import.meta.dir}/custom-languages/cql.js`,
+  },
 ];
 
 export type LanguageEntry = {

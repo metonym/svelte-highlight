@@ -43,6 +43,7 @@ exports[`Languages 1`] = `
   "coq",
   "cos",
   "cpp",
+  "cql",
   "crmsh",
   "crystal",
   "csharp",
