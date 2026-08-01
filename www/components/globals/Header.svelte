@@ -86,6 +86,7 @@
     "/preview-gdscript": "GDScript language preview",
     "/preview-heex": "HEEx language preview",
     "/preview-sparql": "SPARQL language preview",
+    "/preview-prql": "PRQL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
