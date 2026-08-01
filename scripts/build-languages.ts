@@ -293,6 +293,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "prql",
     path: `${import.meta.dir}/custom-languages/prql.js`,
   },
+  {
+    name: "flux",
+    moduleName: "flux",
+    path: `${import.meta.dir}/custom-languages/flux.js`,
+  },
 ];
 
 export type LanguageEntry = {

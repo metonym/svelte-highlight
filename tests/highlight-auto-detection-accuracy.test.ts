@@ -116,6 +116,10 @@ in { greeting = greeting, n = n }
 NODE_ENV=production
 DATABASE_URL=postgres://localhost:5432/db
 `,
+  flux: `from(bucket: "example-bucket")
+  |> range(start: -1h)
+  |> filter(fn: (r) => r._measurement == "cpu")
+`,
   gleam: `pub fn main() {
   let x = 0
   io.println("hello")
