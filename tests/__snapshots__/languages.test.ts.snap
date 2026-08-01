@@ -178,6 +178,7 @@ exports[`Languages 1`] = `
   "promql",
   "properties",
   "protobuf",
+  "prql",
   "pug",
   "puppet",
   "purebasic",

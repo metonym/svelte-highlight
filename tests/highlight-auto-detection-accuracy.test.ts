@@ -174,6 +174,12 @@ result = add(1, 2)
 `,
   promql: `sum(rate(http_requests_total[5m])) by (job)
 `,
+  prql: `from employees
+filter department == "Sales"
+group [title] (
+  aggregate [average salary]
+)
+`,
   pug: `doctype html
 html
   head

@@ -288,6 +288,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "sparql",
     path: `${import.meta.dir}/custom-languages/sparql.js`,
   },
+  {
+    name: "prql",
+    moduleName: "prql",
+    path: `${import.meta.dir}/custom-languages/prql.js`,
+  },
 ];
 
 export type LanguageEntry = {

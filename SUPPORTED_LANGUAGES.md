@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 247 languages: 192 exported from highlight.js@11.11.1, 55 custom grammars added by svelte-highlight
+> 248 languages: 192 exported from highlight.js@11.11.1, 56 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2187,6 +2187,20 @@
 
   // base import
   import { protobuf } from "svelte-highlight/languages";
+</script>
+```
+
+## prql (`prql`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import prql from "svelte-highlight/languages/prql";
+
+  // base import
+  import { prql } from "svelte-highlight/languages";
 </script>
 ```
 
