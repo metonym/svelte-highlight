@@ -1644,19 +1644,21 @@ test("Typewriter - animates then settles to the full highlighted content", async
   );
 });
 
-test("Typewriter - reduced motion renders instantly", async ({
+test("Typewriter - ignores prefers-reduced-motion, animation is left to the consumer", async ({
   mount,
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 
-  // At speed 1000, typing would take ~44s without reduced motion. With reduced
-  // motion the full content (and `done`) must appear immediately.
+  // Typewriter doesn't gate on prefers-reduced-motion itself, so at a slow
+  // speed the content should still be mid-reveal (not instantly complete).
   await mount(Typewriter, { props: { speed: 1000 } });
 
   const tw = page.getByTestId("tw");
-  await expect(page.getByTestId("done")).toHaveText("1");
-  await expect(tw.locator(".hljs-title.function_")).toHaveText("add");
+  await expect(page.getByTestId("done")).toHaveText("0");
+  await expect(
+    tw.locator(".typewriter-unit.typewriter-hidden").first(),
+  ).toBeAttached();
 });
 
 test("Typewriter - revealed DOM nodes stay connected across ticks (no per-tick rebuild)", async ({
