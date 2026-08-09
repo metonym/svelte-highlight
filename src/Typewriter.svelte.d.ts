@@ -53,7 +53,7 @@ export type TypewriterProps = HTMLAttributes<HTMLPreElement> & {
 
 export type TypewriterEvents = {
   /**
-   * Fires when typing finishes (or immediately with reduced motion).
+   * Fires when typing finishes.
    */
   done: CustomEvent<null>;
 };
