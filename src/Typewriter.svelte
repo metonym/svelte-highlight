@@ -18,10 +18,21 @@
   export let play = true;
 
   import { createEventDispatcher, onMount } from "svelte";
+  import { linear } from "./typewriter-easing.js";
   import {
     createTypewriterSplitter,
     tokenizeTypewriter as tokenize,
   } from "./typewriter-units.js";
+
+  /**
+   * Reveal-progress curve: maps elapsed-time fraction (0-1) to
+   * revealed-fraction (0-1). Total typing duration is always
+   * `speed * <visible character count>` regardless of curve -- only the
+   * pacing within that duration changes. Import a named curve
+   * (`easeOutQuad`, `easeInOutCubic`, ...) or pass your own function.
+   * @type {(t: number) => number}
+   */
+  export let easing = linear;
 
   const dispatch = createEventDispatcher();
 
@@ -40,8 +51,14 @@
   /** Number of visible characters currently revealed. @type {number} */
   let revealed = 0;
 
-  /** @type {ReturnType<typeof setInterval> | undefined} */
-  let timerId;
+  /** @type {number | undefined} */
+  let rafId;
+
+  /** Active ms elapsed for the current run (excludes paused time). @type {number} */
+  let elapsedMs = 0;
+
+  /** `performance.now()` at the last tick, or `undefined` right after a (re)start. @type {number | undefined} */
+  let frameTime;
 
   /** @type {string | undefined} */
   let prevHighlighted;
@@ -107,9 +124,9 @@
     }
   }
 
-  function clearTimer() {
-    clearInterval(timerId);
-    timerId = undefined;
+  function stopLoop() {
+    if (rafId !== undefined) cancelAnimationFrame(rafId);
+    rafId = undefined;
   }
 
   function fireDone() {
@@ -119,24 +136,50 @@
     }
   }
 
-  function advance() {
-    if (revealed < total) revealed += 1;
+  /**
+   * One animation frame: advance `elapsedMs` by the real time since the last
+   * frame (zero on the first frame after a start/resume, so pausing never
+   * counts the paused gap), then derive `revealed` from `easing` applied to
+   * the elapsed fraction of the total duration. Total duration is always
+   * `speed * total`, so only the pacing within it -- not its length --
+   * depends on `easing`. Clamped to `[0, total]` since a custom `easing` may
+   * overshoot outside `[0, 1]` (e.g. a "back"/"elastic" curve).
+   * @param {number} now
+   */
+  function tick(now) {
+    if (frameTime !== undefined) elapsedMs += now - frameTime;
+    frameTime = now;
+
+    const duration = Math.max(0, speed) * total;
+    const t = duration > 0 ? Math.min(1, elapsedMs / duration) : 1;
+    const target = Math.round(easing(t) * total);
+    const next = Math.min(total, Math.max(0, target));
+    if (next > revealed) revealed = next;
+
     if (useUnitReveal) syncUnitDom();
+
     if (revealed >= total) {
-      clearTimer();
+      stopLoop();
       fireDone();
+      return;
     }
+    rafId = requestAnimationFrame(tick);
   }
 
-  /** Start/stop/retime the typing interval. */
+  function startLoop() {
+    frameTime = undefined;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  /** Start/stop/retime the typing loop. */
   function sync() {
-    clearTimer();
+    stopLoop();
     if (!mounted) return;
 
     if (useUnitReveal) syncUnitDom();
 
     if (play && revealed < total) {
-      timerId = setInterval(advance, Math.max(0, speed));
+      startLoop();
     } else if (revealed >= total) {
       fireDone();
     }
@@ -155,14 +198,15 @@
   $: if (highlighted !== prevHighlighted) {
     prevHighlighted = highlighted;
     doneFired = false;
+    elapsedMs = 0;
     revealed = 0;
     void useUnitReveal;
     sync();
   }
 
-  // Re-sync on play/speed/mount. Skip `total` (handled above).
+  // Re-sync on play/speed/easing/mount. Skip `total` (handled above).
   $: {
-    void [play, speed, mounted, useUnitReveal];
+    void [play, speed, easing, mounted, useUnitReveal];
     sync();
   }
 
@@ -178,7 +222,7 @@
     mounted = true;
 
     return () => {
-      clearTimer();
+      stopLoop();
     };
   });
 </script>

@@ -21,6 +21,15 @@ export type TypewriterProps = HTMLAttributes<HTMLPreElement> & {
   play?: boolean;
 
   /**
+   * Reveal-progress curve: maps elapsed-time fraction (0-1) to
+   * revealed-fraction (0-1). Total typing duration is always
+   * `speed * <visible character count>` regardless of curve. Import a named
+   * curve (`easeOutQuad`, `easeInOutCubic`, ...) or pass your own function.
+   * @default linear
+   */
+  easing?: (t: number) => number;
+
+  /**
    * Width of the blinking caret.
    * @default "0.6em"
    */
