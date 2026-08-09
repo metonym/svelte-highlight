@@ -478,12 +478,6 @@
     animation: highlight-stream-blink var(--caret-blink, 1s) step-end infinite;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .highlight-stream-caret {
-      animation: none;
-    }
-  }
-
   @keyframes highlight-stream-blink {
     50% {
       opacity: 0;
