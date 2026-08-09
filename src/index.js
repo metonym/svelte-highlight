@@ -21,3 +21,15 @@ export {
   scopeStyle,
 } from "./scoped.js";
 export { default as Typewriter } from "./Typewriter.svelte";
+export {
+  easeInCubic,
+  easeInOutCubic,
+  easeInOutQuad,
+  easeInOutSine,
+  easeInQuad,
+  easeInSine,
+  easeOutCubic,
+  easeOutQuad,
+  easeOutSine,
+  linear,
+} from "./typewriter-easing.js";
