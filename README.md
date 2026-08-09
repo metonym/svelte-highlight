@@ -1333,7 +1333,22 @@ Set `speed` (milliseconds per character) and pause with `play`. Turn `play` back
 </Highlight>
 ```
 
+Control the pacing curve with `easing`: a function mapping elapsed-time fraction (`0`-`1`) to revealed-fraction (`0`-`1`). It defaults to `linear`; import a named curve or pass your own. Total typing duration is always `speed` × character count, no matter the curve -- only the pacing within that duration changes.
+
+```svelte
+<script>
+  import Highlight, { Typewriter, easeOutCubic } from "svelte-highlight";
+</script>
+
+<Highlight language={typescript} {code} let:highlighted>
+  <Typewriter {highlighted} easing={easeOutCubic} />
+</Highlight>
+```
+
+Named curves: `linear` (default), `easeInQuad`/`easeOutQuad`/`easeInOutQuad`, `easeInCubic`/`easeOutCubic`/`easeInOutCubic`, `easeInSine`/`easeOutSine`/`easeInOutSine`.
+
 `Typewriter` doesn't gate itself on `prefers-reduced-motion` -- if you want to honor it, check `matchMedia("(prefers-reduced-motion: reduce)")` yourself and skip rendering `Typewriter` (or set a very low `speed`). Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
+
 
 Each tick reveals one already-rendered unit rather than re-rendering the block, so animating stays smooth up to tens of thousands of characters; past that it falls back to the coarser whole-block reveal.
 
@@ -1815,11 +1830,12 @@ See [Large documents](#large-documents) above.
 
 #### Props
 
-| Name        | Type      | Default value |
-| :---------- | :-------- | :------------ |
-| highlighted | `string`  | `""`          |
-| speed       | `number`  | `30`          |
-| play        | `boolean` | `true`        |
+| Name        | Type                     | Default value |
+| :---------- | :----------------------- | :------------ |
+| highlighted | `string`                 | `""`          |
+| speed       | `number`                 | `30`          |
+| play        | `boolean`                | `true`        |
+| easing      | `(t: number) => number`  | `linear`      |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
