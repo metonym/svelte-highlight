@@ -529,6 +529,18 @@ export default {
       inside a
       <code class="code">CodeWindow</code>.
     </p>
+    <p class="mb-5">
+      Control the pacing curve with <code class="code">easing</code>: a function
+      mapping elapsed-time fraction (0-1) to revealed-fraction (0-1). It
+      defaults to <code class="code">linear</code>; import a named curve (<code
+        class="code"
+        >easeOutQuad</code
+      >,
+      <code class="code">easeInOutCubic</code>, ...) or pass your own. Total
+      typing duration is always <code class="code">speed</code>
+      &times; character count no matter the curve—only the pacing within it
+      changes. Pick a curve in the demo below to try it live.
+    </p>
     <InlineNotification
       lowContrast
       hideCloseButton
