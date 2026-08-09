@@ -25,3 +25,15 @@ export {
 } from "./scoped";
 export { default as Typewriter } from "./Typewriter.svelte";
 export type { ThemePalette } from "./theme";
+export {
+  easeInCubic,
+  easeInOutCubic,
+  easeInOutQuad,
+  easeInOutSine,
+  easeInQuad,
+  easeInSine,
+  easeOutCubic,
+  easeOutQuad,
+  easeOutSine,
+  linear,
+} from "./typewriter-easing";
