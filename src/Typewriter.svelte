@@ -35,9 +35,6 @@
   let mounted = false;
 
   /** @type {boolean} */
-  let reducedMotion = false;
-
-  /** @type {boolean} */
   let doneFired = false;
 
   /** Number of visible characters currently revealed. @type {number} */
@@ -136,13 +133,6 @@
     clearTimer();
     if (!mounted) return;
 
-    if (reducedMotion) {
-      // Reduced motion: show all at once.
-      if (revealed !== total) revealed = total;
-      fireDone();
-      return;
-    }
-
     if (useUnitReveal) syncUnitDom();
 
     if (play && revealed < total) {
@@ -159,20 +149,20 @@
   $: splitter = createTypewriterSplitter(units, highlighted);
   $: total = units.reduce((sum, unit) => sum + unit.visible, 0);
   $: bigInput = total > UNIT_THRESHOLD;
-  $: useUnitReveal = mounted && !reducedMotion && !bigInput;
+  $: useUnitReveal = mounted && !bigInput;
 
   // Restart when `highlighted` changes.
   $: if (highlighted !== prevHighlighted) {
     prevHighlighted = highlighted;
     doneFired = false;
-    revealed = reducedMotion ? total : 0;
+    revealed = 0;
     void useUnitReveal;
     sync();
   }
 
-  // Re-sync on play/speed/mount/motion. Skip `total` (handled above).
+  // Re-sync on play/speed/mount. Skip `total` (handled above).
   $: {
-    void [play, speed, mounted, reducedMotion, useUnitReveal];
+    void [play, speed, mounted, useUnitReveal];
     sync();
   }
 
@@ -182,20 +172,12 @@
     : mounted
       ? splitter.splitAt(revealed)
       : { head: highlighted, tail: "" };
-  $: showCaret = mounted && !reducedMotion && revealed < total;
+  $: showCaret = mounted && revealed < total;
 
   onMount(() => {
     mounted = true;
 
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    reducedMotion = query.matches;
-    const onChange = (event) => {
-      reducedMotion = event.matches;
-    };
-    query.addEventListener?.("change", onChange);
-
     return () => {
-      query.removeEventListener?.("change", onChange);
       clearTimer();
     };
   });
@@ -245,13 +227,6 @@
     vertical-align: text-bottom;
     background: var(--caret-color, currentColor);
     animation: typewriter-blink var(--caret-blink, 1s) step-end infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .typewriter-caret,
-    :global(.typewriter-unit.typewriter-caret)::before {
-      animation: none;
-    }
   }
 
   @keyframes typewriter-blink {
