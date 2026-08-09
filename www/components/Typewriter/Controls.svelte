@@ -1,7 +1,26 @@
 <script>
   import { THEME_MODULE_NAME } from "@www/constants";
-  import { Button, Slider, Toggle } from "carbon-components-svelte";
-  import Highlight, { CodeWindow, Typewriter } from "svelte-highlight";
+  import {
+    Button,
+    Select,
+    SelectItem,
+    Slider,
+    Toggle,
+  } from "carbon-components-svelte";
+  import Highlight, {
+    CodeWindow,
+    easeInCubic,
+    easeInOutCubic,
+    easeInOutQuad,
+    easeInOutSine,
+    easeInQuad,
+    easeInSine,
+    easeOutCubic,
+    easeOutQuad,
+    easeOutSine,
+    linear,
+    Typewriter,
+  } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
 
   const code = `async function load(url) {
@@ -9,10 +28,26 @@
   return res.json();
 }`;
 
+  const EASINGS = {
+    linear,
+    easeInQuad,
+    easeOutQuad,
+    easeInOutQuad,
+    easeInCubic,
+    easeOutCubic,
+    easeInOutCubic,
+    easeInSine,
+    easeOutSine,
+    easeInOutSine,
+  };
+
   let speed = 40;
   let play = true;
   let done = false;
   let runId = 0;
+  let easingName = "linear";
+
+  $: easing = EASINGS[easingName];
 
   function replay() {
     done = false;
@@ -28,6 +63,7 @@
         {highlighted}
         {speed}
         {play}
+        {easing}
         class={THEME_MODULE_NAME}
         --caret-color="#2996cf"
         --caret-width="2px"
@@ -47,6 +83,11 @@
     step={5}
     labelText="Speed (ms / character)"
   />
+  <Select labelText="Easing" bind:selected={easingName}>
+    {#each Object.keys(EASINGS) as name}
+      <SelectItem value={name} />
+    {/each}
+  </Select>
   <Toggle
     bind:toggled={play}
     labelText="Playback"
