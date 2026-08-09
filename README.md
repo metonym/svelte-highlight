@@ -1333,7 +1333,7 @@ Set `speed` (milliseconds per character) and pause with `play`. Turn `play` back
 </Highlight>
 ```
 
-With `prefers-reduced-motion`, the full block shows immediately and `on:done` runs right away. Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
+`Typewriter` doesn't gate itself on `prefers-reduced-motion` -- if you want to honor it, check `matchMedia("(prefers-reduced-motion: reduce)")` yourself and skip rendering `Typewriter` (or set a very low `speed`). Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
 
 Each tick reveals one already-rendered unit rather than re-rendering the block, so animating stays smooth up to tens of thousands of characters; past that it falls back to the coarser whole-block reveal.
 
@@ -1825,7 +1825,7 @@ See [Large documents](#large-documents) above.
 
 #### Dispatched Events
 
-- **on:done**: fires when typing finishes, or immediately when reduced motion is on
+- **on:done**: fires when typing finishes
 
 ```svelte
 <Highlight language={typescript} {code} let:highlighted>

@@ -534,7 +534,7 @@ export default {
       hideCloseButton
       kind="info"
       title="Reduced motion"
-      subtitle="With prefers-reduced-motion, the full block shows immediately and on:done runs right away."
+      subtitle="Typewriter doesn't gate itself on prefers-reduced-motion; check it yourself and skip rendering Typewriter if you want to honor it."
     />
   </Column>
   <Column xlg={10} lg={10} md={12}> <TypewriterControls /> </Column>
