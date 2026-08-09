@@ -104,6 +104,15 @@
       paintedUnits = units;
       revealedInDom = 0;
       caretMark = undefined;
+      // Resolve `currentColor` to a literal value now, while `contentEl`
+      // itself carries the theme's base foreground (nothing has recolored
+      // it yet). Stored as a custom property, it stays correct even once
+      // the caret mark lands inside a colored hljs token span, where a live
+      // `currentColor` would pick up that token's color instead.
+      contentEl.style.setProperty(
+        "--typewriter-caret-fg",
+        getComputedStyle(contentEl).color,
+      );
     }
 
     while (revealedInDom < revealed) {
@@ -260,7 +269,13 @@
   }
 
   /* The caret rides the next-to-reveal (still hidden) unit's ::before, so it
-       never requires moving a real DOM node -- one class add/remove per tick. */
+       never requires moving a real DOM node -- one class add/remove per tick.
+       That unit can land inside a still-open hljs token span (e.g. mid-
+       keyword), where `currentColor` would resolve to that token's color
+       instead of the theme's base foreground. `--typewriter-caret-fg` is set
+       on `contentEl` as a literal resolved color (not the `currentColor`
+       keyword) in `syncUnitDom`, so it survives that nesting unaffected by
+       descendant `color` overrides. */
   :global(.typewriter-unit.typewriter-caret)::before {
     content: "";
     visibility: visible;
@@ -269,7 +284,7 @@
     height: var(--caret-height, 1.1em);
     margin-left: var(--caret-gap, 1px);
     vertical-align: text-bottom;
-    background: var(--caret-color, currentColor);
+    background: var(--caret-color, var(--typewriter-caret-fg, currentColor));
     animation: typewriter-blink var(--caret-blink, 1s) step-end infinite;
   }
 
