@@ -137,7 +137,11 @@ DATABASE_URL=postgres://localhost:5432/db
   "slug": slug.current
 } | order(publishedAt desc)
 `,
-  jq: `.users | map(select(.active)) | length
+  jq: `# recursively find every active user, regardless of nesting depth
+..
+  | objects
+  | select(.active == true)
+  | {name, email}
 `,
   jsonnet: `local f(x) = x + 1;
 {

@@ -460,6 +460,11 @@ exports[`style augmentations 1`] = `
   {
     "deadDeclarationsRemoved": 0,
     "gapsFilled": 6,
+    "name": "equinox",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
+    "gapsFilled": 6,
     "name": "espresso",
   },
   {
