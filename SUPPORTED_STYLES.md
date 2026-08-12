@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 257 styles exported from highlight.js@11.11.2
+> 258 styles exported from highlight.js@11.12.0
 
 ## 1c-light (`_1cLight`)
 
@@ -2089,6 +2089,28 @@
 ```html
 <script>
   import "svelte-highlight/styles/equilibrium-light.css";
+</script>
+```
+
+## equinox (`equinox`)
+
+**Injected Styles**
+
+```html
+<script>
+  import equinox from "svelte-highlight/styles/equinox";
+</script>
+
+<svelte:head>
+  {@html equinox}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/equinox.css";
 </script>
 ```
 

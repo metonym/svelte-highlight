@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 257 themes exported from highlight.js@11.11.2
+> 258 themes exported from highlight.js@11.12.0
 
 ## 1c-light (`_1cLight`)
 
@@ -2373,6 +2373,31 @@
 </script>
 
 <HighlightStyle theme={equilibriumLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## equinox (`equinox`)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/equinox.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import equinox from "svelte-highlight/themes/equinox";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={equinox}>
   <Highlight ... />
 </HighlightStyle>
 ```
