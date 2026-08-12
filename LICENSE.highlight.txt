@@ -2,7 +2,7 @@ Third-party notice
 ==================
 
 svelte-highlight ships grammar definitions derived from highlight.js
-11.11.1 (https://github.com/highlightjs/highlight.js), used under the
+11.11.2 (https://github.com/highlightjs/highlight.js), used under the
 BSD-3-Clause license below. Each derived grammar module carries a banner
 pointing back to this file. The svelte-highlight engine itself and all
 custom (non-hljs-derived) grammars are original code under this package's

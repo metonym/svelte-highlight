@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 250 languages: 192 exported from highlight.js@11.11.1, 58 custom grammars added by svelte-highlight
+> 250 languages: 192 exported from highlight.js@11.11.2, 58 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 

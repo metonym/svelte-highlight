@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 256 themes exported from highlight.js@11.11.1
+> 257 themes exported from highlight.js@11.11.2
 
 ## 1c-light (`_1cLight`)
 
@@ -6023,6 +6023,31 @@
 </script>
 
 <HighlightStyle theme={vs}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## vs-dark (`vsDark`)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/vs-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import vsDark from "svelte-highlight/themes/vs-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={vsDark}>
   <Highlight ... />
 </HighlightStyle>
 ```
