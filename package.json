@@ -41,7 +41,7 @@
     "carbon-preprocess-svelte": "^0.11.37",
     "cssnano": "^7.1.9",
     "cssnano-preset-lite": "^4.0.6",
-    "highlight.js": "11.11.1",
+    "highlight.js": "11.11.2",
     "postcss": "^8.5.19",
     "postcss-discard-duplicates": "^7.0.4",
     "postcss-inline-css-vars": "^0.1.0",

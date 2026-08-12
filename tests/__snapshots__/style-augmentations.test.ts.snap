@@ -1184,6 +1184,11 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
+    "gapsFilled": 7,
+    "name": "vs-dark",
+  },
+  {
+    "deadDeclarationsRemoved": 0,
     "gapsFilled": 5,
     "name": "vs2015",
   },
