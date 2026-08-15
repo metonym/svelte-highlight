@@ -20,6 +20,7 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { linear } from "./typewriter-easing.js";
   import {
+    buildUnitMarkup,
     createTypewriterSplitter,
     tokenizeTypewriter as tokenize,
   } from "./typewriter-units.js";
@@ -77,18 +78,6 @@
 
   /** The unit currently marked with the caret, if any. @type {HTMLElement | undefined} */
   let caretMark;
-
-  /** Render every unit once: tags pass through, each visible unit gets a span. */
-  function buildUnitMarkup(list) {
-    let html = "";
-    for (const unit of list) {
-      html +=
-        unit.visible === 0
-          ? unit.raw
-          : `<span class="typewriter-unit typewriter-hidden">${unit.raw}</span>`;
-    }
-    return html;
-  }
 
   /**
    * Bring `contentEl` in sync with `units`/`revealed` in O(1) amortized work:

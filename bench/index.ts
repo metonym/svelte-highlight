@@ -19,6 +19,7 @@ import "./incremental.bench.ts";
 import "./dom-paint.bench.ts";
 import "./text-diff.bench.ts";
 import "./render.bench.ts";
+import "./typewriter.bench.ts";
 
 const filterArg = process.argv[2];
 

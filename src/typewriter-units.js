@@ -73,6 +73,25 @@ export function tokenizeTypewriter(html) {
 }
 
 /**
+ * Renders `units` into HTML once: tags pass through unchanged, each visible
+ * unit is wrapped in a `typewriter-unit typewriter-hidden` span so
+ * `Typewriter` can reveal them one at a time without touching the DOM tree
+ * shape again until `units` itself changes.
+ * @param {TypewriterUnit[]} units
+ * @returns {string}
+ */
+export function buildUnitMarkup(units) {
+  let html = "";
+  for (const unit of units) {
+    html +=
+      unit.visible === 0
+        ? unit.raw
+        : `<span class="typewriter-unit typewriter-hidden">${unit.raw}</span>`;
+  }
+  return html;
+}
+
+/**
  * @typedef {Object} TypewriterSplitter
  * @property {(count: number) => { head: string; tail: string }} splitAt
  */
