@@ -12,6 +12,7 @@
  */
 import { run } from "mitata";
 
+import "./ansi.bench.ts";
 import "./tokenize.bench.ts";
 import "./auto-detect.bench.ts";
 import "./incremental.bench.ts";
