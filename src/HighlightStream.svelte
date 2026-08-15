@@ -59,6 +59,10 @@
   import { extendLines } from "./engine.js";
   import { ensureRegistered, registry } from "./registry.js";
   import { createCompletedHtmlBuffer } from "./stream-highlighted.js";
+  import {
+    buildSealedChunkHtml,
+    pushSealedChunk,
+  } from "./stream-sealed-chunks.js";
   import { createTokenizedDocument } from "./tokenized-document.js";
   import { watchLineHeight, windowRange } from "./virtual-window.js";
 
@@ -172,14 +176,10 @@
   // as many full chunks as are ready.
   function sealChunk() {
     const chunkLines = unsealedLines.slice(0, SEAL_CHUNK_LINES);
-    let domHtml = "";
-    for (let li = 0; li < chunkLines.length; li++) {
-      const i = sealedLineCount + li;
-      const sep = i > 0 ? "\n" : "";
-      domHtml += `${sep}<span class="highlight-stream-line" data-line="${i}">${chunkLines[li]}</span>`;
-    }
-    sealedChunks.push(domHtml);
-    sealedChunks = sealedChunks;
+    sealedChunks = pushSealedChunk(
+      sealedChunks,
+      buildSealedChunkHtml(chunkLines, sealedLineCount),
+    );
     sealedLineCount += chunkLines.length;
     unsealedLines = unsealedLines.slice(SEAL_CHUNK_LINES);
   }
