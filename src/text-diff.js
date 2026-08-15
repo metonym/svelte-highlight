@@ -24,15 +24,23 @@ function isLowSurrogate(code) {
 export function diffText(before, after) {
   const minLength = Math.min(before.length, after.length);
 
+  // charCodeAt (not bracket indexing) so this loop - which walks the entire
+  // unchanged prefix on a pure-append edit, the common case while typing -
+  // doesn't allocate a 1-character string per position compared.
   let prefix = 0;
-  while (prefix < minLength && before[prefix] === after[prefix]) prefix++;
+  while (
+    prefix < minLength &&
+    before.charCodeAt(prefix) === after.charCodeAt(prefix)
+  )
+    prefix++;
   if (isHighSurrogate(before.charCodeAt(prefix - 1))) prefix--;
 
   let suffix = 0;
   const maxSuffix = minLength - prefix;
   while (
     suffix < maxSuffix &&
-    before[before.length - 1 - suffix] === after[after.length - 1 - suffix]
+    before.charCodeAt(before.length - 1 - suffix) ===
+      after.charCodeAt(after.length - 1 - suffix)
   ) {
     suffix++;
   }
