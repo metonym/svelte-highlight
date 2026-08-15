@@ -25,9 +25,13 @@ export function tokenizeTypewriter(html) {
   let i = 0;
 
   while (i < n) {
-    const ch = html[i];
+    // charCodeAt, not html[i]: this runs once per iteration over the whole
+    // string, and bracket-indexing allocates a 1-character string for every
+    // position compared, even the (overwhelmingly common) plain-char branch
+    // below that doesn't otherwise need one.
+    const code = html.charCodeAt(i);
 
-    if (ch === "<") {
+    if (code === 60 /* "<" */) {
       const end = html.indexOf(">", i);
       if (end === -1) {
         // Unclosed tag: treat as text.
@@ -49,14 +53,14 @@ export function tokenizeTypewriter(html) {
         name: match ? (match[1] ?? "") : "",
       });
       i = end + 1;
-    } else if (ch === "&") {
+    } else if (code === 38 /* "&" */) {
       // One visible char per entity.
       const end = html.indexOf(";", i);
       if (end !== -1 && end - i <= 10) {
         units.push({ raw: html.slice(i, end + 1), visible: 1 });
         i = end + 1;
       } else {
-        units.push({ raw: ch, visible: 1 });
+        units.push({ raw: html.charAt(i), visible: 1 });
         i += 1;
       }
     } else {
