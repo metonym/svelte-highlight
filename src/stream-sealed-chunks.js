@@ -15,13 +15,17 @@
  * @returns {string}
  */
 export function buildSealedChunkHtml(lines, startLine) {
-  let html = "";
-  for (let i = 0; i < lines.length; i++) {
+  if (lines.length === 0) return "";
+  // Only the very first line of the whole document (index 0) skips a
+  // leading separator; every other line - including this chunk's own first
+  // line, when it isn't the document's first - gets one. Peeling that one
+  // check out of the loop avoids re-evaluating it every iteration.
+  let html = `<span class="highlight-stream-line" data-line="${startLine}">${lines[0]}</span>`;
+  for (let i = 1; i < lines.length; i++) {
     const lineIndex = startLine + i;
-    const sep = lineIndex > 0 ? "\n" : "";
-    html += `${sep}<span class="highlight-stream-line" data-line="${lineIndex}">${lines[i]}</span>`;
+    html += `\n<span class="highlight-stream-line" data-line="${lineIndex}">${lines[i]}</span>`;
   }
-  return html;
+  return startLine > 0 ? `\n${html}` : html;
 }
 
 /**
