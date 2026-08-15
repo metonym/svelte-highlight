@@ -61,13 +61,13 @@
  * Memoized result of scanning a single rule/frame's pattern: `match` is the
  * earliest guard-passing match at or after the position `this.pos` had when
  * it was computed (or `null` if none exists in `this.code` as of `codeLen`
- * characters). See `Tokenizer#cachedMatch`.
+ * characters). See `Tokenizer#nextMatch`'s cache-hit checks.
  * @typedef {{ codeLen: number, match: RegExpExecArray | null }} MatchCache
  */
 
 /**
  * One entry of the tokenizer's parse stack. `endCache` memoizes this
- * frame's end-pattern scan (see `cachedMatch`); it's per-frame rather than
+ * frame's end-pattern scan (see `nextMatch`); it's per-frame rather than
  * per-state because `endSameAsBegin`'s guard depends on this frame's own
  * `beginMatch`, and two frames can share the same state (recursive nesting).
  * `beginPos` is this frame's begin match's position in `this.code` (see
@@ -217,7 +217,7 @@ class Tokenizer {
     this.subContinuations = Object.create(null);
     /**
      * Memoized begin-pattern scans, indexed by state index (see
-     * `cachedMatch`). A rule's "next match" is independent of which parent
+     * `nextMatch`). A rule's "next match" is independent of which parent
      * state referenced it, so this is shared across all of them rather than
      * being per-frame like `Frame#endCache`.
      * @type {(MatchCache | undefined)[]}
@@ -428,27 +428,17 @@ class Tokenizer {
   }
 
   /**
-   * Memoized `execValid(re, this.pos, guardFn())`. Without this, every token
+   * Whether `cache` is still valid at `this.pos`: without this, every token
    * boundary re-scans every rule's pattern from scratch. A cached match stays
    * valid until `this.pos` passes it; a cached miss stays valid until the
-   * code grows (streaming append). `guardFn` is only called on a cache miss,
-   * so guarded rules don't allocate a fresh guard closure on every call once
-   * their match is cached.
-   * @param {RegExp} re
-   * @param {() => ((m: RegExpExecArray) => boolean) | null} guardFn
+   * code grows (streaming append).
    * @param {MatchCache | undefined} cache
-   * @returns {MatchCache}
+   * @returns {cache is MatchCache}
    */
-  cachedMatch(re, guardFn, cache) {
-    if (cache) {
-      if (cache.match !== null && cache.match.index >= this.pos) return cache;
-      if (cache.match === null && cache.codeLen === this.code.length)
-        return cache;
-    }
-    return {
-      codeLen: this.code.length,
-      match: this.execValid(re, this.pos, guardFn()),
-    };
+  isCacheValid(cache) {
+    if (!cache) return false;
+    if (cache.match !== null && cache.match.index >= this.pos) return true;
+    return cache.match === null && cache.codeLen === this.code.length;
   }
 
   /**
@@ -559,13 +549,23 @@ class Tokenizer {
       // rules[i] is in-bounds by the loop condition.
       const ruleIdx = /** @type {number} */ (state.rules[i]);
       const child = /** @type {CompiledState} */ (this.program.states[ruleIdx]);
-      const cache = this.cachedMatch(
-        // Every state referenced from a `rules` list has a `begin` pattern.
-        /** @type {RegExp} */ (child.beginRe),
-        () => this.beginGuard(child),
-        this.beginCache[ruleIdx],
-      );
-      this.beginCache[ruleIdx] = cache;
+      let cache = this.beginCache[ruleIdx];
+      // Guard closures (this.beginGuard(child)) are only built on a cache
+      // miss - passing them in as a pre-built thunk, as this used to via a
+      // shared cachedMatch() helper, allocated one on every call regardless
+      // of hit/miss, since JS evaluates argument expressions eagerly.
+      if (!this.isCacheValid(cache)) {
+        cache = {
+          codeLen: this.code.length,
+          match: this.execValid(
+            // Every state referenced from a `rules` list has a `begin` pattern.
+            /** @type {RegExp} */ (child.beginRe),
+            this.pos,
+            this.beginGuard(child),
+          ),
+        };
+        this.beginCache[ruleIdx] = cache;
+      }
       consider(cache.match, i, "begin", ruleIdx);
     }
     // End candidates walk outward while `endsWithParent` chains allow.
@@ -574,15 +574,21 @@ class Tokenizer {
       // d ranges over [1, frames.length - 1], always in bounds.
       const frame = /** @type {Frame} */ (this.frames[d]);
       if (frame.state.endRe) {
-        const cache = this.cachedMatch(
-          frame.state.endRe,
-          () =>
-            frame.state.endSameAsBegin
-              ? (/** @type {RegExpExecArray} */ m) => m[1] === frame.beginMatch
-              : null,
-          frame.endCache,
-        );
-        frame.endCache = cache;
+        let cache = frame.endCache;
+        if (!this.isCacheValid(cache)) {
+          cache = {
+            codeLen: this.code.length,
+            match: this.execValid(
+              /** @type {RegExp} */ (frame.state.endRe),
+              this.pos,
+              frame.state.endSameAsBegin
+                ? (/** @type {RegExpExecArray} */ m) =>
+                    m[1] === frame.beginMatch
+                : null,
+            ),
+          };
+          frame.endCache = cache;
+        }
         consider(cache.match, pri++, "end", d);
       }
       if (!frame.state.endsWithParent) break;
