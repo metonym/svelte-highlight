@@ -124,14 +124,26 @@ export const TEXT = 0;
 export const OPEN = 1;
 export const CLOSE = 2;
 
-/** @param {string} value */
+const HTML_ESCAPE_RE = /[&<>"']/g;
+/** @type {Record<string, string>} */
+const HTML_ESCAPE_MAP = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#x27;",
+};
+
+/**
+ * Five sequential `.replace()` passes (one per character) previously cost
+ * ~87% of renderHtml's time, since every TEXT event runs through this. A
+ * single regex pass, skipped entirely when there's nothing to escape, cuts
+ * that to a fraction (see bench/render.bench.ts).
+ * @param {string} value
+ */
 export function escapeHtml(value) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;");
+  if (!HTML_ESCAPE_RE.test(value)) return value;
+  return value.replace(HTML_ESCAPE_RE, (char) => HTML_ESCAPE_MAP[char] ?? char);
 }
 
 /**
