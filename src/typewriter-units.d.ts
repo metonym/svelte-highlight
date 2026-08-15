@@ -12,6 +12,12 @@ export interface TypewriterUnit {
  */
 export declare function tokenizeTypewriter(html: string): TypewriterUnit[];
 
+/**
+ * Renders `units` into HTML once: tags pass through unchanged, each visible
+ * unit is wrapped in a `typewriter-unit typewriter-hidden` span.
+ */
+export declare function buildUnitMarkup(units: TypewriterUnit[]): string;
+
 export interface TypewriterSplitter {
   splitAt(count: number): { head: string; tail: string };
 }
