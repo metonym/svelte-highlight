@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.18.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.18.0) - 2026-08-15
+
+**Features**
+
+- add `easing` prop to `Typewriter` for custom reveal pacing
+
+**Fixes**
+
+- keep `Typewriter` caret color theme-consistent during unit reveal
+- stop auto-skipping `Typewriter` and `HighlightStream` caret animation on `prefers-reduced-motion`
+
+**Performance**
+
+- collapse `escapeHtml` to a single regex pass
+- scan `diffText` prefix/suffix by char code
+- grow `HighlightEditable` completed lines with `push`, not `concat`
+- avoid a guard-closure allocation on engine cache hits
+- stop round-tripping 256-color ANSI through a hex string
+- scan `tokenizeTypewriter` by char code
+- peel the first-line check out of the sealed-chunk HTML loop
+
 ## [7.17.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.17.0) - 2026-08-12
 
 **Features**
