@@ -42,22 +42,34 @@ export const ANSI_COLOR_DEFAULTS = {
 const CUBE = [0, 95, 135, 175, 215, 255];
 
 /**
+ * 256-color index to an RGB triple. Shared by `indexedHex` (stringifies it
+ * for CSS) and `colorToRgb` (used as-is) so the latter doesn't have to
+ * round-trip through a hex string just to parse the numbers back out.
+ * @param {number} index
+ * @returns {[number, number, number]}
+ */
+function indexedRgb(index) {
+  if (index >= 232) {
+    const value = (index - 232) * 10 + 8;
+    return [value, value, value];
+  }
+  const n = index - 16;
+  // n is always in [0, 215] for index in [16, 231], so these three indices
+  // are always in CUBE's bounds ([0, 5]).
+  return [
+    /** @type {number} */ (CUBE[Math.floor(n / 36) % 6]),
+    /** @type {number} */ (CUBE[Math.floor(n / 6) % 6]),
+    /** @type {number} */ (CUBE[n % 6]),
+  ];
+}
+
+/**
  * 256-color index to hex.
  * @param {number} index
  * @returns {string}
  */
 export function indexedHex(index) {
-  if (index >= 232) {
-    const value = (index - 232) * 10 + 8;
-    const hex = value.toString(16).padStart(2, "0");
-    return `#${hex}${hex}${hex}`;
-  }
-  const n = index - 16;
-  // n is always in [0, 215] for index in [16, 231], so these three indices
-  // are always in CUBE's bounds ([0, 5]).
-  const r = /** @type {number} */ (CUBE[Math.floor(n / 36) % 6]);
-  const g = /** @type {number} */ (CUBE[Math.floor(n / 6) % 6]);
-  const b = /** @type {number} */ (CUBE[n % 6]);
+  const [r, g, b] = indexedRgb(index);
   return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
 }
 
@@ -99,7 +111,7 @@ export function colorToRgb(color) {
     return hexToRgb(ANSI_COLOR_DEFAULTS[color.name] ?? "#000000");
   }
   if ("rgb" in color) return color.rgb;
-  return hexToRgb(indexedHex(color.index));
+  return indexedRgb(color.index);
 }
 
 /**
