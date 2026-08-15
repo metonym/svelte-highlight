@@ -133,9 +133,10 @@ export function createDomLinePainter({ registry }) {
       openScopes,
       pendingHtml,
     );
-    if (result.completedLines.length > 0) {
-      completedLines = completedLines.concat(result.completedLines);
-    }
+    // push, not concat: concat copies the whole (ever-growing) array on
+    // every call, which is O(lines) per completed line - push is O(1)
+    // amortized (same reasoning as HighlightStream's sealed-chunk append).
+    for (const line of result.completedLines) completedLines.push(line);
     openScopes = result.openScopes;
     pendingHtml = result.pendingHtml;
     renderedEventCount = committed.length;
