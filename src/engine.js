@@ -113,7 +113,7 @@ const MAX_KEYWORD_HITS = 7;
  * changes the winner but costs O(candidates × length). tokenizeAuto still
  * re-tokenizes the winner over the full `code` before returning.
  */
-const DETECT_SAMPLE_LIMIT = 8000;
+export const DETECT_SAMPLE_LIMIT = 8000;
 
 // Tokenizer#isTrulyOpeningTag lookaheads.
 const XML_TAG_DEFAULT_PARAM_RE = /^\s*=/;
