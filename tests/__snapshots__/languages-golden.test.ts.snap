@@ -210,6 +210,13 @@ true false null
 /regex/ #hashtag @annotation</span>"
 `;
 
+exports[`golden snapshot: earthfile 1`] = `
+"<span class="language-dockerfile">// comment
+<span class="hljs-string">&quot;string&quot;</span> <span class="hljs-string">&#x27;string&#x27;</span> <span class="hljs-number">123</span> <span class="hljs-number">3.14</span>
+true false null
+/regex/ </span><span class="hljs-comment">#hashtag @annotation</span>"
+`;
+
 exports[`golden snapshot: ebnf 1`] = `
 "// comment
 &quot;string&quot; &#x27;string&#x27; 123 3.14

@@ -323,6 +323,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "kdl",
     path: `${import.meta.dir}/custom-languages/kdl.js`,
   },
+  {
+    name: "earthfile",
+    moduleName: "earthfile",
+    path: `${import.meta.dir}/custom-languages/earthfile.js`,
+  },
 ];
 
 export type LanguageEntry = {
