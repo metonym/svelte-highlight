@@ -89,6 +89,7 @@
     "/preview-prql": "PRQL language preview",
     "/preview-flux": "Flux language preview",
     "/preview-cql": "CQL language preview",
+    "/preview-tsrx": "TSRX language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
