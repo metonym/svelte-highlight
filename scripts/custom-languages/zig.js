@@ -1,9 +1,9 @@
 const ZIG_KEYWORDS =
   "const var fn pub return if else while for switch break continue " +
   "defer errdefer try catch comptime inline noinline struct enum union " +
-  "error test and or orelse unreachable async await suspend resume " +
+  "error test and or orelse unreachable suspend resume " +
   "nosuspend export extern packed align allowzero volatile linksection " +
-  "threadlocal usingnamespace asm anytype noalias callconv opaque " +
+  "threadlocal asm anytype noalias callconv opaque " +
   "anyframe";
 
 const ZIG_LITERALS = "true false null undefined";
