@@ -343,6 +343,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "cedar",
     path: `${import.meta.dir}/custom-languages/cedar.js`,
   },
+  {
+    name: "esql",
+    moduleName: "esql",
+    path: `${import.meta.dir}/custom-languages/esql.js`,
+  },
 ];
 
 export type LanguageEntry = {
