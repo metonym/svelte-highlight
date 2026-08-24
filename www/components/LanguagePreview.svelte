@@ -53,6 +53,7 @@
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
   import { templPreviewSnippets } from "@www/preview/templ-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
+  import { traceqlPreviewSnippets } from "@www/preview/traceql-preview-snippets";
   import { tsrxPreviewSnippets } from "@www/preview/tsrx-preview-snippets";
   import { typstPreviewSnippets } from "@www/preview/typst-preview-snippets";
   import { vPreviewSnippets } from "@www/preview/v-preview-snippets";
@@ -114,6 +115,7 @@
   import starlark from "svelte-highlight/languages/starlark";
   import templ from "svelte-highlight/languages/templ";
   import toml from "svelte-highlight/languages/toml";
+  import traceql from "svelte-highlight/languages/traceql";
   import tsrx from "svelte-highlight/languages/tsrx";
   import typst from "svelte-highlight/languages/typst";
   import v from "svelte-highlight/languages/v";
@@ -121,7 +123,7 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql"} */
   export let language;
 
   const registry = {
@@ -184,6 +186,7 @@
     polar: { lang: polar, snippets: polarPreviewSnippets },
     cedar: { lang: cedar, snippets: cedarPreviewSnippets },
     esql: { lang: esql, snippets: esqlPreviewSnippets },
+    traceql: { lang: traceql, snippets: traceqlPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
