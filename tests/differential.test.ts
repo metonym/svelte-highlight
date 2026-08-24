@@ -13,6 +13,7 @@ import coreFactory from "highlight.js/lib/core";
 import bash from "highlight.js/lib/languages/bash";
 import cpp from "highlight.js/lib/languages/cpp";
 import css from "highlight.js/lib/languages/css";
+import gcode from "highlight.js/lib/languages/gcode";
 import go from "highlight.js/lib/languages/go";
 import java from "highlight.js/lib/languages/java";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -319,6 +320,17 @@ final class Router
         return ($this->routes[$key] ?? fn () => null)();
     }
 }`,
+
+  gcode: `(Drill three holes)
+N10G90G54
+N20M6T1
+N30G0X0Y0
+N40G1X10.5Y0F200
+O100
+#1=25.4
+G1X#1
+N50M30
+%`,
 };
 
 const ASTRO_SNIPPET = `---
@@ -366,6 +378,7 @@ const HLJS_BUILTIN_GRAMMARS: Record<string, unknown> = {
   yaml,
   cpp,
   php,
+  gcode,
 };
 
 const hljs = coreFactory.newInstance();

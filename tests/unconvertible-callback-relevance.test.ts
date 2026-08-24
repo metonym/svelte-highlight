@@ -1,6 +1,5 @@
 import { registerAll } from "../src/engine.js";
 import allLanguages from "../src/languages/all.js";
-import gcode from "../src/languages/gcode.js";
 import mathematica from "../src/languages/mathematica.js";
 import { registry } from "../src/registry.js";
 
@@ -22,24 +21,6 @@ describe("states with an unconvertible on:begin/on:end callback don't contribute
     );
     expect(guarded.length).toBeGreaterThan(0);
     for (const state of guarded) expect(state.relevance ?? 1).toBe(0);
-  });
-
-  it("gcode's unguarded numeric-prefix rules have relevance 0", () => {
-    // The 6 begin patterns convert-grammars.ts reports as "on:begin not
-    // convertible" for gcode (title.function/symbol/property/params).
-    const flaggedBeginPatterns = [
-      "[GM]\\s*\\d+(\\.\\d+)?",
-      "T\\s*\\d+",
-      "O\\s*\\d+",
-      "O<.+>",
-      "[ABCUVWXYZ]\\s*[+-]?((\\.\\d+)|(\\d+)(\\.\\d*)?)",
-      "[FHIJKPQRS]\\s*[+-]?((\\.\\d+)|(\\d+)(\\.\\d*)?)",
-    ];
-    for (const begin of flaggedBeginPatterns) {
-      const state = gcode.register.states.find((s) => s.begin === begin);
-      expect(state).toBeDefined();
-      expect(state?.relevance ?? 1).toBe(0);
-    }
   });
 
   it("a solidity snippet wins full-corpus auto-detection instead of mathematica", () => {

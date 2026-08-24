@@ -8,7 +8,7 @@
  * from engine.d.ts. Tokenizer state is serializable so parses can
  * checkpoint, resume, and stream. Callback behavior from hljs grammars
  * becomes declarative IR flags (endSameAsBegin, onlyAtInputStart,
- * notAfterDot).
+ * notAfterDot, letterBoundaryGuard).
  *
  * A well-formed event stream is balanced: every OPEN has a matching later
  * CLOSE, properly nested, and the TEXT values, concatenated in order, equal
@@ -454,6 +454,16 @@ class Tokenizer {
     }
     if (state.xmlTagGuard) {
       return (m) => this.isTrulyOpeningTag(m);
+    }
+    if (state.letterBoundaryGuard) {
+      return (m) => {
+        if (m.index === 0) return true;
+        const charBeforeMatch = this.code[m.index - 1] ?? "";
+        return (
+          (charBeforeMatch >= "0" && charBeforeMatch <= "9") ||
+          charBeforeMatch === "_"
+        );
+      };
     }
     return null;
   }
