@@ -253,6 +253,13 @@ flowchart LR
     B --> C[(Database)]
   end
 `,
+  kdl: `// app config
+package {
+  name "svelte-highlight"
+  version 1.0
+}
+server host="localhost" port=8080 enabled=#true
+`,
   tsrx: `export function Greeting({ name }: { name?: string }) @{
   const message = name ? "Hello" : "stranger";
   <>

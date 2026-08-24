@@ -233,6 +233,15 @@ build target="release":
     cargo build --{{target}}
 
 export FOO := "bar"`,
+  kdl: `// app config
+package {
+  name "svelte-highlight"
+  version 1.0
+}
+server host="localhost" port=8080 enabled=#true
+/- skipped 1
+created (date)"2024-01-01"
+`,
   kql: `// filter and summarize security events
 let threshold = 5;
 SecurityEvent
