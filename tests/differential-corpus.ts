@@ -94,6 +94,13 @@ unless { context.mfa == false };
     (var-set counter (+ (var-get counter) u1))
     (asserts! (is-eq tx-sender contract-caller) (err u1))
     (ok (var-get counter))))`,
+  cql: `-- fetch a user
+CREATE TABLE users (
+  id UUID PRIMARY KEY,
+  name TEXT
+);
+SELECT name FROM users WHERE id = ? ALLOW FILTERING;
+`,
   cue: `package config
 
 import "strings"
@@ -170,6 +177,12 @@ end
 
 set files (ls *.txt)
 echo (count $files)`,
+  flux: `// cpu mean
+from(bucket: "example-bucket")
+  |> range(start: -1h)
+  |> filter(fn: (r) => r._measurement == "cpu")
+  |> mean()
+`,
   gleam: `/// Doubles a number
 pub fn double(x) {
   x * 2
@@ -181,6 +194,16 @@ pub type Color {
 
 const ok = True
 let greeting = "Hello, " <> "world"`,
+  gdscript: `# player controller
+extends CharacterBody2D
+class_name Player
+
+@export var speed: float = 300.0
+
+func _ready() -> void:
+	if true:
+		pass
+`,
   groq: `// recent movies released after 2018
 *[_type == "movie" && releaseYear >= 2018]{
   title,
@@ -196,6 +219,14 @@ resource "aws_instance" "web" {
 variable "region" {
   default = "us-east-1"
 }`,
+  heex: `<%!-- user card --%>
+<.card class={@highlighted && "on"}>
+  <p :if={@user.bio}>{@user.bio}</p>
+  <%= for post <- @posts do %>
+    <li>{post.title}</li>
+  <% end %>
+</.card>
+`,
   hlsl: `// vertex shader entry point
 #define MAX_LIGHTS 4
 
@@ -414,6 +445,15 @@ sum by (job, code) (
 ) / sum by (job) (
   rate(http_requests_total[5m])
 ) > 0.05 and node_cpu_seconds_total offset 5m`,
+  prql: `from employees
+filter department == "Sales"
+derive [
+  gross = salary + tax,
+]
+group [country] (
+  aggregate [average salary]
+)
+`,
   pug: `doctype html
 //- internal note, not rendered
 // visible comment
@@ -493,6 +533,15 @@ contract Token {
         balances[to] += amount;
     }
 }`,
+  sparql: `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT ?name ?email
+WHERE {
+  ?person a foaf:Person ;
+          foaf:name ?name .
+  OPTIONAL { ?person foaf:mbox ?email }
+  FILTER (LANG(?name) = "en")
+}
+`,
   starlark: `load("//foo:bar.bzl", "baz")
 
 # a comment
