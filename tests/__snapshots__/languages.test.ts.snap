@@ -230,6 +230,7 @@ exports[`Languages 1`] = `
   "thrift",
   "toml",
   "tp",
+  "tsrx",
   "twig",
   "typescript",
   "typst",
