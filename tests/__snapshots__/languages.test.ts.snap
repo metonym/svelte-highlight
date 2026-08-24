@@ -75,6 +75,7 @@ exports[`Languages 1`] = `
   "erb",
   "erlang",
   "erlangRepl",
+  "esql",
   "excel",
   "fish",
   "fix",

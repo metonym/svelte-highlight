@@ -151,6 +151,13 @@ build:
         RUN go mod download
     END
 `,
+  esql: `// error rate by host
+FROM logs-*
+| WHERE status >= 500
+| STATS count = COUNT(*) BY host
+| SORT count DESC
+| LIMIT 10
+`,
   fish: `# greet a user by name
 function greet
     set name $argv[1]

@@ -144,6 +144,12 @@ build:
     RUN go build -o bin
     SAVE ARTIFACT bin
 `,
+  esql: `FROM logs-*
+| WHERE status >= 500
+| STATS count = COUNT(*) BY host
+| SORT count DESC
+| LIMIT 10
+`,
   flux: `from(bucket: "example-bucket")
   |> range(start: -1h)
   |> filter(fn: (r) => r._measurement == "cpu")
