@@ -69,3 +69,25 @@ test("zig highlights optional and error-union type modifiers", () => {
   expect(result).toContain('<span class="hljs-type">?</span>');
   expect(result).toContain('<span class="hljs-type">!</span>');
 });
+
+test("zig still highlights suspend resume nosuspend", () => {
+  const result = highlight(
+    "fn f() void {\n  nosuspend {\n    suspend {}\n    resume f;\n  }\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">nosuspend</span>');
+  expect(result).toContain('<span class="hljs-keyword">suspend</span>');
+  expect(result).toContain('<span class="hljs-keyword">resume</span>');
+});
+
+test("zig treats usingnamespace async await as identifiers", () => {
+  const result = highlight(
+    "const usingnamespace = 1;\nconst async = 2;\nconst await = 3;",
+  );
+
+  expect(result).not.toContain(
+    '<span class="hljs-keyword">usingnamespace</span>',
+  );
+  expect(result).not.toContain('<span class="hljs-keyword">async</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">await</span>');
+});
