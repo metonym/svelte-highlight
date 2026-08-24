@@ -246,6 +246,13 @@ templ hello(name string) {
 	<div>Hello, { name }</div>
 }
 `,
+  mermaid: `%% request flow
+flowchart LR
+  A[Client] --> B{API}
+  subgraph cluster
+    B --> C[(Database)]
+  end
+`,
   tsrx: `export function Greeting({ name }: { name?: string }) @{
   const message = name ? "Hello" : "stranger";
   <>
@@ -318,6 +325,7 @@ const KNOWN_AUTO_DETECT_GAPS = new Set([
   "kql",
   "liquid",
   "logql",
+  "mermaid",
   "move",
   "nickel",
   "nushell",
