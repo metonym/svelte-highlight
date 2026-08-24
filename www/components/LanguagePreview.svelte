@@ -1,4 +1,5 @@
 <script>
+  import { angularPreviewSnippets } from "@www/preview/angular-preview-snippets";
   import { bibtexPreviewSnippets } from "@www/preview/bibtex-preview-snippets";
   import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
   import { caddyPreviewSnippets } from "@www/preview/caddy-preview-snippets";
@@ -53,6 +54,7 @@
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { Highlight } from "svelte-highlight";
+  import angular from "svelte-highlight/languages/angular";
   import bibtex from "svelte-highlight/languages/bibtex";
   import bicep from "svelte-highlight/languages/bicep";
   import caddy from "svelte-highlight/languages/caddy";
@@ -105,7 +107,7 @@
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular"} */
   export let language;
 
   const registry = {
@@ -160,6 +162,7 @@
     flux: { lang: flux, snippets: fluxPreviewSnippets },
     cql: { lang: cql, snippets: cqlPreviewSnippets },
     tsrx: { lang: tsrx, snippets: tsrxPreviewSnippets },
+    angular: { lang: angular, snippets: angularPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
