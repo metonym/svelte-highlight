@@ -277,6 +277,14 @@ SecurityEvent
   | line_format "{{.message}}"
   | unwrap duration [5m]
 sum(rate({job="app"} |= "error" [5m])) by (job)`,
+  luau: `-- typed greeting
+export type Point = { x: number, y: number }
+
+local function add(a: number, b: number): number
+  continue
+  return (a + b) :: number
+end
+`,
   marko: `<!-- greeting widget -->
 class {
   onCreate() {

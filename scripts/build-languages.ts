@@ -328,6 +328,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "earthfile",
     path: `${import.meta.dir}/custom-languages/earthfile.js`,
   },
+  {
+    name: "luau",
+    moduleName: "luau",
+    path: `${import.meta.dir}/custom-languages/luau.js`,
+  },
 ];
 
 export type LanguageEntry = {

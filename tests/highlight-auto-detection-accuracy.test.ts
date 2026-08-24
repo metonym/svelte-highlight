@@ -267,6 +267,12 @@ package {
 }
 server host="localhost" port=8080 enabled=#true
 `,
+  luau: `export type Point = { x: number, y: number }
+local function add(a: number, b: number): number
+  continue
+  return (a + b) :: number
+end
+`,
   tsrx: `export function Greeting({ name }: { name?: string }) @{
   const message = name ? "Hello" : "stranger";
   <>
