@@ -30,6 +30,13 @@ const title = "Hello";
   <h1>{title}</h1>
 </Layout>
 `,
+  angular: `@if (user) {
+  <p>{{ user.name }}</p>
+} @else {
+  <p>Guest</p>
+}
+<input *ngIf="visible" [(ngModel)]="name" />
+`,
   prisma: `datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

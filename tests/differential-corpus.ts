@@ -6,6 +6,19 @@
 // comments, strings, and at least one nested/structural construct where the
 // language has one.
 export const CUSTOM_SNIPPETS: Record<string, string> = {
+  angular: `@if (user) {
+  <p>{{ user.name }}</p>
+} @else {
+  <p>Guest</p>
+}
+
+<input *ngIf="visible" [(ngModel)]="name" (click)="save()" [class.on]="active" #field />
+
+@for (item of items; track item.id) {
+  <li>{{ item }}</li>
+} @empty {
+  <p>None</p>
+}`,
   bibtex: `@article{einstein1905,
   author = {Albert Einstein},
   title  = {On the Electrodynamics of Moving Bodies},

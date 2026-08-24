@@ -308,6 +308,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "tsrx",
     path: `${import.meta.dir}/custom-languages/tsrx.js`,
   },
+  {
+    name: "angular",
+    moduleName: "angular",
+    path: `${import.meta.dir}/custom-languages/angular.js`,
+  },
 ];
 
 export type LanguageEntry = {
