@@ -1,5 +1,5 @@
 const NU_KEYWORDS =
-  "def def-env export use let mut const if else match for in while loop " +
+  "def def-env export-env hide-env export use let mut const if else match for in while loop " +
   "break continue return do try catch alias module overlay source hide " +
   "where extern register";
 

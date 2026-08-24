@@ -31,7 +31,14 @@ test("nushell highlights command definitions", () => {
   expect(result).toContain('<span class="hljs-title function_">greet</span>');
 });
 
-test("nushell does not swallow def-env's -env suffix into the function title", () => {
+test("nushell highlights export-env and hide-env", () => {
+  const result = highlight("export-env { $env.FOO = 1 }\nhide-env FOO");
+
+  expect(result).toContain('<span class="hljs-keyword">export-env</span>');
+  expect(result).toContain('<span class="hljs-keyword">hide-env</span>');
+});
+
+test("nushell still title-matches legacy def-env", () => {
   const result = highlight("def-env myFunction [] { print hi }");
 
   expect(result).toContain(
