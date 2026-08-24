@@ -318,6 +318,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "mermaid",
     path: `${import.meta.dir}/custom-languages/mermaid.js`,
   },
+  {
+    name: "kdl",
+    moduleName: "kdl",
+    path: `${import.meta.dir}/custom-languages/kdl.js`,
+  },
 ];
 
 export type LanguageEntry = {
