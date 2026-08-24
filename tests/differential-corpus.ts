@@ -267,6 +267,16 @@ class {
     h1 -- \${input.title}
     button on-click("increment") -- Count: \${state.count}
 </div>`,
+  mermaid: `%% request flow
+flowchart LR
+  A[Client] --> B{API}
+  subgraph cluster
+    B --> C[(Database)]
+  end
+  sequenceDiagram
+    participant Alice
+    Alice->>Bob: Hello
+`,
   mdx: `import { Chart } from "./chart";
 
 # Hello MDX

@@ -145,6 +145,7 @@ exports[`Languages 1`] = `
   "mdx",
   "mel",
   "mercury",
+  "mermaid",
   "mipsasm",
   "mizar",
   "mojolicious",

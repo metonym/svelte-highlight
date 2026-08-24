@@ -313,6 +313,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "angular",
     path: `${import.meta.dir}/custom-languages/angular.js`,
   },
+  {
+    name: "mermaid",
+    moduleName: "mermaid",
+    path: `${import.meta.dir}/custom-languages/mermaid.js`,
+  },
 ];
 
 export type LanguageEntry = {
