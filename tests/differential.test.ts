@@ -19,6 +19,7 @@ import java from "highlight.js/lib/languages/java";
 import javascript from "highlight.js/lib/languages/javascript";
 import json from "highlight.js/lib/languages/json";
 import markdown from "highlight.js/lib/languages/markdown";
+import mathematica from "highlight.js/lib/languages/mathematica";
 import php from "highlight.js/lib/languages/php";
 import python from "highlight.js/lib/languages/python";
 import ruby from "highlight.js/lib/languages/ruby";
@@ -331,6 +332,14 @@ O100
 G1X#1
 N50M30
 %`,
+
+  mathematica: `(* recursive Fibonacci with a memoized rule *)
+fib[0] = 0; fib[1] = 1;
+fib[n_Integer] := fib[n] = fib[n - 1] + fib[n - 2];
+
+data = Table[fib[n], {n, 0, 10}];
+Print["Sum: ", Total[data]];
+notARealBuiltin[x_] := Sin[x] + x^2;`,
 };
 
 const ASTRO_SNIPPET = `---
@@ -379,6 +388,7 @@ const HLJS_BUILTIN_GRAMMARS: Record<string, unknown> = {
   cpp,
   php,
   gcode,
+  mathematica,
 };
 
 const hljs = coreFactory.newInstance();

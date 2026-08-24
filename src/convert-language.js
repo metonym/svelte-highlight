@@ -37,13 +37,52 @@ const FLAGS = /** @type {const} */ ([
  * @typedef {{ ir: GrammarIR, warnings: string[] }} ConvertResult
  */
 
+const SET_MEMBERSHIP_GUARD_RE = /(\w+)\.has\(match\[0\]\)/;
+
+/**
+ * Extracts hljs's array-membership `on:begin` filter (e.g. mathematica's
+ * `SYSTEM_SYMBOLS_SET.has(match[0])`) into a plain word list. The Set is
+ * built inside the grammar factory from a module-level array literal that
+ * isn't visible via the compiled callback's own `toString()`, so this greps
+ * the grammar's raw source file text instead - trusted, pinned highlight.js
+ * source, not user input.
+ * @param {string} onBegin
+ * @param {string | undefined} grammarSource
+ * @returns {string[] | null}
+ */
+function extractBeginWordSet(onBegin, grammarSource) {
+  if (!grammarSource) return null;
+  const setRef = onBegin.match(SET_MEMBERSHIP_GUARD_RE);
+  if (!setRef) return null;
+  const setDecl = grammarSource.match(
+    new RegExp(`${setRef[1]}\\s*=\\s*new Set\\(\\s*(\\w+)\\s*\\)`),
+  );
+  if (!setDecl) return null;
+  const arrayDecl = grammarSource.match(
+    new RegExp(`${setDecl[1]}\\s*=\\s*(\\[[^\\]]*\\])`),
+  );
+  if (!arrayDecl) return null;
+  try {
+    const words = new Function(`return (${arrayDecl[1]});`)();
+    if (Array.isArray(words) && words.every((w) => typeof w === "string")) {
+      return words;
+    }
+  } catch {
+    // fall through to null
+  }
+  return null;
+}
+
 /**
  * @param {unknown} hljs instance with the grammar (and any sublanguages it
  *   embeds) already registered
  * @param {string} name
+ * @param {string} [grammarSource] raw source text of the grammar's own file,
+ *   used only to recover data (like `extractBeginWordSet`'s word list) that
+ *   the compiled mode tree doesn't expose
  * @returns {ConvertResult}
  */
-export function convertLanguage(hljs, name) {
+export function convertLanguage(hljs, name, grammarSource) {
   // hljs's compiled mode type is not exported; read fields loosely.
   const hl = /** @type {any} */ (hljs);
   // Force compilation; the registered object is the compiled tree.
@@ -93,12 +132,20 @@ export function convertLanguage(hljs, name) {
         // otherwise), used until hljs can rely on native lookbehind.
         state.letterBoundaryGuard = true;
       } else {
-        warnings.add(
-          `on:begin not convertible (scope: ${mode.scope ?? "<none>"}, begin: ${source(mode.begin)})`,
-        );
-        // Dropped guard callback: state now matches unconditionally.
-        // Zero relevance so auto-detection is not skewed.
-        state.relevance = 0;
+        const wordSet = extractBeginWordSet(onBegin, grammarSource);
+        if (wordSet) {
+          // hljs word-list membership guard (e.g. mathematica's
+          // SYSTEM_SYMBOLS_SET), used to accept a begin match only for
+          // recognized identifiers rather than any syntactic shape.
+          state.beginWordSet = wordSet;
+        } else {
+          warnings.add(
+            `on:begin not convertible (scope: ${mode.scope ?? "<none>"}, begin: ${source(mode.begin)})`,
+          );
+          // Dropped guard callback: state now matches unconditionally.
+          // Zero relevance so auto-detection is not skewed.
+          state.relevance = 0;
+        }
       }
     }
     if (beforeBegin) {
