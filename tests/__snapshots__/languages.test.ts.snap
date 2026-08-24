@@ -67,6 +67,7 @@ exports[`Languages 1`] = `
   "dsconfig",
   "dts",
   "dust",
+  "earthfile",
   "ebnf",
   "elixir",
   "elm",

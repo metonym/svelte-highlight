@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 255 languages: 193 exported from highlight.js@11.12.0, 62 custom grammars added by svelte-highlight
+> 256 languages: 193 exported from highlight.js@11.12.0, 63 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -809,6 +809,20 @@
 
   // base import
   import { dust } from "svelte-highlight/languages";
+</script>
+```
+
+## earthfile (`earthfile`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import earthfile from "svelte-highlight/languages/earthfile";
+
+  // base import
+  import { earthfile } from "svelte-highlight/languages";
 </script>
 ```
 

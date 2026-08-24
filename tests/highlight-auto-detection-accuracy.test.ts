@@ -130,6 +130,13 @@ in { greeting = greeting, n = n }
 NODE_ENV=production
 DATABASE_URL=postgres://localhost:5432/db
 `,
+  earthfile: `VERSION 0.8
+FROM golang:1.22
+build:
+    COPY src .
+    RUN go build -o bin
+    SAVE ARTIFACT bin
+`,
   flux: `from(bucket: "example-bucket")
   |> range(start: -1h)
   |> filter(fn: (r) => r._measurement == "cpu")

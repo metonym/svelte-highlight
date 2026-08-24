@@ -128,6 +128,18 @@ DATABASE_URL="postgres://\${HOST}:\${PORT}/db"
 API_KEY='super-secret-value'
 TIMEOUT=30
 GREETING="hello \${NAME:-guest}"`,
+  earthfile: `# compile the Go binary
+VERSION 0.8
+FROM golang:1.22
+WORKDIR /app
+build:
+    COPY src .
+    RUN go build -o bin
+    SAVE ARTIFACT bin
+    IF [ -f go.mod ]
+        RUN go mod download
+    END
+`,
   fish: `# greet a user by name
 function greet
     set name $argv[1]
