@@ -449,6 +449,22 @@ templ Page(items []Item) {
 		<li>{ item.Name }</li>
 	}
 }`,
+  tsrx: `export function Greeting({ name }: { name?: string }) @{
+  const message = name ? \`Hello, \${name}\` : "stranger";
+
+  <>
+    @if (name) {
+      <p>{message}</p>
+    }
+    <style>
+      p { color: blue; }
+    </style>
+  </>
+}
+
+function Counter(&{ count }: Props) @{
+  <span>{count}</span>
+}`,
   toml: `[server]
 host = "localhost"
 port = 8080

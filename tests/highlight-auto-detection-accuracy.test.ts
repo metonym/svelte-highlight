@@ -239,6 +239,15 @@ templ hello(name string) {
 	<div>Hello, { name }</div>
 }
 `,
+  tsrx: `export function Greeting({ name }: { name?: string }) @{
+  const message = name ? "Hello" : "stranger";
+  <>
+    @if (name) {
+      <p>{message}</p>
+    }
+  </>
+}
+`,
   typst: `= Introduction
 
 This is *bold* and _italic_ text.

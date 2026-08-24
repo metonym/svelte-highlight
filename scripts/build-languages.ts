@@ -303,6 +303,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "cql",
     path: `${import.meta.dir}/custom-languages/cql.js`,
   },
+  {
+    name: "tsrx",
+    moduleName: "tsrx",
+    path: `${import.meta.dir}/custom-languages/tsrx.js`,
+  },
 ];
 
 export type LanguageEntry = {
