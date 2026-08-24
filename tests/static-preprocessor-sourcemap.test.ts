@@ -1,4 +1,4 @@
-import { TraceMap, originalPositionFor } from "@jridgewell/trace-mapping";
+import { originalPositionFor, TraceMap } from "@jridgewell/trace-mapping";
 import { highlightStatic } from "../src/static.js";
 
 const filename = "tests/fixture.svelte";
