@@ -51,6 +51,7 @@ export interface GrammarState {
   onlyAtInputStart?: boolean;
   notAfterDot?: boolean;
   xmlTagGuard?: boolean;
+  letterBoundaryGuard?: boolean;
   starts?: number;
 }
 

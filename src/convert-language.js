@@ -87,6 +87,11 @@ export function convertLanguage(hljs, name) {
       } else if (onBegin.includes("hasClosingTag(")) {
         // JSX opening tag vs generic/comparison. See Tokenizer#isTrulyOpeningTag.
         state.xmlTagGuard = true;
+      } else if (onBegin.includes("charBeforeMatch")) {
+        // hljs gcode LETTER_BOUNDARY_CALLBACK: a manual negative-lookbehind
+        // stand-in (accept at input start or after a digit/underscore, reject
+        // otherwise), used until hljs can rely on native lookbehind.
+        state.letterBoundaryGuard = true;
       } else {
         warnings.add(
           `on:begin not convertible (scope: ${mode.scope ?? "<none>"}, begin: ${source(mode.begin)})`,

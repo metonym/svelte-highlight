@@ -15,12 +15,6 @@ export interface AllowlistEntry {
 
 export const DIFFERENTIAL_ALLOWLIST: AllowlistEntry[] = [
   {
-    language: "gcode",
-    dimensions: ["html", "ranges", "relevance"],
-    reason:
-      "Several on:begin callbacks (title/symbol/property/params matching) have no declarative IR feature; not in the shipped snippet corpus, listed here for when it's added.",
-  },
-  {
     language: "mathematica",
     dimensions: ["html", "ranges", "relevance"],
     reason:
