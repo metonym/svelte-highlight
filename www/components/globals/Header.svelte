@@ -92,6 +92,7 @@
     "/preview-tsrx": "TSRX language preview",
     "/preview-angular": "Angular language preview",
     "/preview-mermaid": "Mermaid language preview",
+    "/preview-kdl": "KDL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
