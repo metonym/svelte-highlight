@@ -95,6 +95,7 @@
     "/preview-kdl": "KDL language preview",
     "/preview-earthfile": "Earthfile language preview",
     "/preview-luau": "Luau language preview",
+    "/preview-polar": "Polar language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
