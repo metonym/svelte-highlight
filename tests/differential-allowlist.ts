@@ -13,14 +13,7 @@ export interface AllowlistEntry {
   reason: string;
 }
 
-export const DIFFERENTIAL_ALLOWLIST: AllowlistEntry[] = [
-  {
-    language: "mathematica",
-    dimensions: ["html", "ranges", "relevance"],
-    reason:
-      "builtin-symbol on:begin callback has no declarative IR feature; not in the shipped snippet corpus, listed here for when it's added.",
-  },
-];
+export const DIFFERENTIAL_ALLOWLIST: AllowlistEntry[] = [];
 
 /**
  * Explicit, reviewable exceptions to the "real files" differential gate

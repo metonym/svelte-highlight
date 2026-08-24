@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import hljsCore from "highlight.js/lib/core";
 import hljsPackageJson from "highlight.js/package.json" with { type: "json" };
 import { convertLanguage } from "../src/convert-language.js";
@@ -78,6 +79,24 @@ export async function convertGrammars() {
 
   const entryByName = new Map(entries.map((entry) => [entry.name, entry]));
 
+  // Raw source text of each hljs-derived grammar's own file, for recovering
+  // data (see convert-language.js's `extractBeginWordSet`) that a callback's
+  // own `toString()` can't expose because it lives in an outer module scope.
+  const hljsSources = new Map<string, string>();
+  for (const entry of entries) {
+    if (entry.kind !== "hljs") continue;
+    try {
+      const path = Bun.resolveSync(
+        `highlight.js/lib/languages/${entry.name}`,
+        import.meta.dir,
+      );
+      hljsSources.set(entry.name, readFileSync(path, "utf8"));
+    } catch {
+      // Best-effort: convertLanguage falls back to a warning if an
+      // extraction that needed this source is unavailable.
+    }
+  }
+
   let clean = 0;
   let unminifiedBytes = 0;
   let minifiedBytes = 0;
@@ -90,7 +109,11 @@ export async function convertGrammars() {
       let ir: GrammarIR;
       let warnings: string[];
       try {
-        ({ ir, warnings } = convertLanguage(hljs, mod.name));
+        ({ ir, warnings } = convertLanguage(
+          hljs,
+          mod.name,
+          hljsSources.get(entry.name),
+        ));
       } catch (error) {
         failed.push([entry.name, (error as Error).message]);
         return null;

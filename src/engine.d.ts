@@ -52,6 +52,7 @@ export interface GrammarState {
   notAfterDot?: boolean;
   xmlTagGuard?: boolean;
   letterBoundaryGuard?: boolean;
+  beginWordSet?: string[];
   starts?: number;
 }
 

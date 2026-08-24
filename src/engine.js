@@ -8,7 +8,7 @@
  * from engine.d.ts. Tokenizer state is serializable so parses can
  * checkpoint, resume, and stream. Callback behavior from hljs grammars
  * becomes declarative IR flags (endSameAsBegin, onlyAtInputStart,
- * notAfterDot, letterBoundaryGuard).
+ * notAfterDot, letterBoundaryGuard, beginWordSet).
  *
  * A well-formed event stream is balanced: every OPEN has a matching later
  * CLOSE, properly nested, and the TEXT values, concatenated in order, equal
@@ -43,13 +43,14 @@
  * A grammar state after `compileProgram` has compiled its string patterns
  * into RegExps (and normalized `keywords`/`relevance` - the IR omits
  * `relevance` when it's the default 1, but the compiled form always has it).
- * @typedef {Omit<GrammarState, "keywords" | "relevance"> & {
+ * @typedef {Omit<GrammarState, "keywords" | "relevance" | "beginWordSet"> & {
  *   relevance: number,
  *   keywords: Record<string, [string, number]> | null,
  *   beginRe: RegExp | null,
  *   endRe: RegExp | null,
  *   illegalRe: RegExp | null,
  *   keywordRe: RegExp | null,
+ *   beginWordSet: Set<string> | null,
  * }} CompiledState
  */
 
@@ -166,6 +167,7 @@ function compileProgram(ir) {
     endRe: re(s.end),
     illegalRe: re(s.illegal),
     keywordRe: s.keywords ? re(s.keywordPattern || "\\w+") : null,
+    beginWordSet: s.beginWordSet ? new Set(s.beginWordSet) : null,
   }));
   return { ir, states };
 }
@@ -464,6 +466,10 @@ class Tokenizer {
           charBeforeMatch === "_"
         );
       };
+    }
+    if (state.beginWordSet) {
+      const wordSet = state.beginWordSet;
+      return (m) => wordSet.has(m[0]);
     }
     return null;
   }
