@@ -93,6 +93,7 @@
     "/preview-angular": "Angular language preview",
     "/preview-mermaid": "Mermaid language preview",
     "/preview-kdl": "KDL language preview",
+    "/preview-earthfile": "Earthfile language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
