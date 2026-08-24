@@ -333,6 +333,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "luau",
     path: `${import.meta.dir}/custom-languages/luau.js`,
   },
+  {
+    name: "polar",
+    moduleName: "polar",
+    path: `${import.meta.dir}/custom-languages/polar.js`,
+  },
 ];
 
 export type LanguageEntry = {

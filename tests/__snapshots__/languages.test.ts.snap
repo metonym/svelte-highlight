@@ -177,6 +177,7 @@ exports[`Languages 1`] = `
   "phpTemplate",
   "pkl",
   "plaintext",
+  "polar",
   "pony",
   "powershell",
   "prisma",
