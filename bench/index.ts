@@ -21,6 +21,7 @@ import "./text-diff.bench.ts";
 import "./render.bench.ts";
 import "./typewriter.bench.ts";
 import "./stream-sealed-chunks.bench.ts";
+import "./preprocessor.bench.ts";
 
 const filterArg = process.argv[2];
 

@@ -1,6 +1,5 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import MagicString from "magic-string";
 import { parse } from "svelte/compiler";
 import { ensureRegistered, registry } from "./registry.js";
 
@@ -252,6 +251,151 @@ function renderStatic(language, code) {
   );
 }
 
+const BASE64_VLQ_CHARS =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+/** @param {number} value */
+function encodeVlq(value) {
+  let vlq = value < 0 ? (-value << 1) + 1 : value << 1;
+  let result = "";
+  do {
+    let digit = vlq & 31;
+    vlq >>>= 5;
+    if (vlq > 0) digit |= 32;
+    result += BASE64_VLQ_CHARS[digit];
+  } while (vlq > 0);
+  return result;
+}
+
+/** @param {string} content */
+function computeLineStarts(content) {
+  const starts = [0];
+  for (let i = 0; i < content.length; i += 1) {
+    if (content[i] === "\n") starts.push(i + 1);
+  }
+  return starts;
+}
+
+/**
+ * @param {number[]} lineStarts
+ * @param {number} index
+ */
+function positionAt(lineStarts, index) {
+  let lo = 0;
+  let hi = lineStarts.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if ((lineStarts[mid] ?? 0) <= index) lo = mid;
+    else hi = mid - 1;
+  }
+  return { line: lo, column: index - (lineStarts[lo] ?? 0) };
+}
+
+/**
+ * Splices non-overlapping replacements into `content` and produces a matching
+ * (source-map v3) sourcemap. Every edit here replaces a whole element with a
+ * self-contained HTML string, so there's nothing finer-grained to map inside
+ * a replacement - one segment per edit boundary is as accurate as mapping
+ * every character, and far cheaper to produce.
+ *
+ * @param {string} content
+ * @param {{ start: number; end: number; replacement: string }[]} edits sorted by `start`, non-overlapping
+ */
+function applyEdits(content, edits) {
+  const lineStarts = computeLineStarts(content);
+  /** @type {string[]} */
+  const out = [];
+  /** @type {{ genCol: number; line: number; col: number }[][]} */
+  const segmentsByLine = [[]];
+
+  let genLine = 0;
+  let genCol = 0;
+
+  /**
+   * @param {number} line
+   * @param {number} col
+   */
+  function mark(line, col) {
+    segmentsByLine[genLine]?.push({ genCol, line, col });
+  }
+
+  /**
+   * Appends `text` to the output, advancing genLine/genCol across any
+   * newlines it contains. When `origLine` is given (unedited text only -
+   * a replacement's interior lines have no original counterpart), marks
+   * the start of each new line at column 0 against the next original line.
+   *
+   * @param {string} text
+   * @param {number} [origLine]
+   */
+  function advance(text, origLine) {
+    let from = 0;
+    let line = origLine ?? 0;
+    for (let i = 0; i < text.length; i += 1) {
+      if (text[i] !== "\n") continue;
+      out.push(text.slice(from, i + 1));
+      from = i + 1;
+      genLine += 1;
+      genCol = 0;
+      segmentsByLine.push([]);
+      if (origLine !== undefined) {
+        line += 1;
+        mark(line, 0);
+      }
+    }
+    out.push(text.slice(from));
+    genCol += text.length - from;
+  }
+
+  /**
+   * @param {number} start
+   * @param {number} end
+   */
+  function copyUnedited(start, end) {
+    if (start === end) return;
+    const pos = positionAt(lineStarts, start);
+    mark(pos.line, pos.column);
+    advance(content.slice(start, end), pos.line);
+  }
+
+  let cursor = 0;
+  for (const edit of edits) {
+    copyUnedited(cursor, edit.start);
+
+    const pos = positionAt(lineStarts, edit.start);
+    mark(pos.line, pos.column);
+    advance(edit.replacement);
+
+    cursor = edit.end;
+  }
+  copyUnedited(cursor, content.length);
+
+  let mappings = "";
+  let prevLine = 0;
+  let prevCol = 0;
+  for (const [lineIndex, segments] of segmentsByLine.entries()) {
+    if (lineIndex > 0) mappings += ";";
+    let prevGenCol = 0;
+    for (let i = 0; i < segments.length; i += 1) {
+      const segment = segments[i];
+      if (!segment) continue;
+      mappings += i === 0 ? "" : ",";
+      mappings += encodeVlq(segment.genCol - prevGenCol);
+      mappings += encodeVlq(0); // single source, index never changes
+      mappings += encodeVlq(segment.line - prevLine);
+      mappings += encodeVlq(segment.col - prevCol);
+      prevGenCol = segment.genCol;
+      prevLine = segment.line;
+      prevCol = segment.col;
+    }
+  }
+
+  return {
+    code: out.join(""),
+    map: { version: 3, sources: [""], names: [], mappings },
+  };
+}
+
 /**
  * @typedef {{
  *   onWarn?: (message: string, details: { filename?: string | undefined; line: number; cause: unknown }) => void;
@@ -348,27 +492,34 @@ export function highlightStatic(options = {}) {
         }),
       );
 
-      const ms = new MagicString(content);
-      let changed = false;
+      /** @type {{ start: number; end: number; replacement: string }[]} */
+      const edits = [];
 
       for (const [index, match] of matches.entries()) {
         const html = htmlByMatch[index];
         if (!html) continue;
 
-        try {
-          ms.overwrite(match.element.start, match.element.end, html);
-          changed = true;
-        } catch (cause) {
+        const { start, end } = match.element;
+        const previous = edits.at(-1);
+
+        // Matched elements can't nest (they require an empty slot) and
+        // collectElements visits them in source order, so this should
+        // never actually trigger - kept as a defensive fallback so one
+        // malformed range can't take down the whole preprocessor pass.
+        if (start >= end || (previous && start < previous.end)) {
           warn("failed to apply the static replacement", {
             filename,
-            line: locate(content, match.element.start).line,
-            cause,
+            line: locate(content, start).line,
+            cause: new Error("invalid or overlapping replacement range"),
           });
+          continue;
         }
+
+        edits.push({ start, end, replacement: html });
       }
 
-      if (!changed) return;
-      return { code: ms.toString(), map: ms.generateMap({ hires: true }) };
+      if (edits.length === 0) return;
+      return applyEdits(content, edits);
     },
   };
 }

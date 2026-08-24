@@ -4,9 +4,6 @@
   "workspaces": {
     "": {
       "name": "svelte-highlight",
-      "dependencies": {
-        "magic-string": "^0.30.17",
-      },
       "devDependencies": {
         "@astrojs/svelte": "^8.1.2",
         "@biomejs/biome": "2.5.10",
