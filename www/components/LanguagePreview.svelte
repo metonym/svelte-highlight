@@ -45,6 +45,7 @@
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
   import { templPreviewSnippets } from "@www/preview/templ-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
+  import { tsrxPreviewSnippets } from "@www/preview/tsrx-preview-snippets";
   import { typstPreviewSnippets } from "@www/preview/typst-preview-snippets";
   import { vPreviewSnippets } from "@www/preview/v-preview-snippets";
   import { vyperPreviewSnippets } from "@www/preview/vyper-preview-snippets";
@@ -97,13 +98,14 @@
   import starlark from "svelte-highlight/languages/starlark";
   import templ from "svelte-highlight/languages/templ";
   import toml from "svelte-highlight/languages/toml";
+  import tsrx from "svelte-highlight/languages/tsrx";
   import typst from "svelte-highlight/languages/typst";
   import v from "svelte-highlight/languages/v";
   import vyper from "svelte-highlight/languages/vyper";
   import wgsl from "svelte-highlight/languages/wgsl";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx"} */
   export let language;
 
   const registry = {
@@ -157,6 +159,7 @@
     prql: { lang: prql, snippets: prqlPreviewSnippets },
     flux: { lang: flux, snippets: fluxPreviewSnippets },
     cql: { lang: cql, snippets: cqlPreviewSnippets },
+    tsrx: { lang: tsrx, snippets: tsrxPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
