@@ -338,6 +338,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "polar",
     path: `${import.meta.dir}/custom-languages/polar.js`,
   },
+  {
+    name: "cedar",
+    moduleName: "cedar",
+    path: `${import.meta.dir}/custom-languages/cedar.js`,
+  },
 ];
 
 export type LanguageEntry = {

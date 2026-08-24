@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 258 languages: 193 exported from highlight.js@11.12.0, 65 custom grammars added by svelte-highlight
+> 259 languages: 193 exported from highlight.js@11.12.0, 66 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -397,6 +397,20 @@
 
   // base import
   import { capnproto } from "svelte-highlight/languages";
+</script>
+```
+
+## cedar (`cedar`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import cedar from "svelte-highlight/languages/cedar";
+
+  // base import
+  import { cedar } from "svelte-highlight/languages";
 </script>
 ```
 

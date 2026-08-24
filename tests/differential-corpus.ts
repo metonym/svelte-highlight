@@ -75,6 +75,17 @@ fn main() {
     let a = array![1, 2, 3];
     let hex = 0x1f;
 }`,
+  cedar: `// photo access
+permit (
+  principal == User::"alice",
+  action == Action::"viewPhoto",
+  resource
+)
+when { resource.owner == principal };
+
+forbid (principal, action, resource)
+unless { context.mfa == false };
+`,
   clarity: `;; a simple counter contract
 (define-data-var counter uint u0)
 

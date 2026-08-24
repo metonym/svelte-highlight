@@ -34,6 +34,7 @@ exports[`Languages 1`] = `
   "cairo",
   "cal",
   "capnproto",
+  "cedar",
   "ceylon",
   "clarity",
   "clean",

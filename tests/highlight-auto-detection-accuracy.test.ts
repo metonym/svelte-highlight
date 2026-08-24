@@ -100,6 +100,13 @@ fn main() {
     let caller = get_caller_address();
 }
 `,
+  cedar: `permit (
+  principal == User::"alice",
+  action == Action::"viewPhoto",
+  resource
+)
+when { resource.owner == principal };
+`,
   clarity: `(define-public (transfer (amount uint) (recipient principal))
   (begin
     (asserts! (> amount u0) (err u1))
