@@ -138,6 +138,7 @@ exports[`Languages 1`] = `
   "logql",
   "lsl",
   "lua",
+  "luau",
   "makefile",
   "markdown",
   "marko",

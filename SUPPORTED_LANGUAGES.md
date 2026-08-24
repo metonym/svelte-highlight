@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 256 languages: 193 exported from highlight.js@11.12.0, 63 custom grammars added by svelte-highlight
+> 257 languages: 193 exported from highlight.js@11.12.0, 64 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1699,6 +1699,20 @@
 
   // base import
   import { lua } from "svelte-highlight/languages";
+</script>
+```
+
+## luau (`luau`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import luau from "svelte-highlight/languages/luau";
+
+  // base import
+  import { luau } from "svelte-highlight/languages";
 </script>
 ```
 
