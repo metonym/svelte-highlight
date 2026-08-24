@@ -293,6 +293,9 @@ end
 allow(actor: User, "read", resource: Document) if
   has_permission(actor, "read", resource);
 `,
+  traceql: `{ resource.service.name = "api" && status = error }
+{ span.http.status_code >= 500 } >> { name = "SQL SELECT" } | count()
+`,
   tsrx: `export function Greeting({ name }: { name?: string }) @{
   const message = name ? "Hello" : "stranger";
   <>
@@ -376,6 +379,7 @@ const KNOWN_AUTO_DETECT_GAPS = new Set([
   "rego",
   "rescript",
   "starlark",
+  "traceql",
   "typst",
   "v",
   "vyper",

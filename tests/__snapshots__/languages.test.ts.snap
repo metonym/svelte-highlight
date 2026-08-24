@@ -238,6 +238,7 @@ exports[`Languages 1`] = `
   "thrift",
   "toml",
   "tp",
+  "traceql",
   "tsrx",
   "twig",
   "typescript",

@@ -348,6 +348,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "esql",
     path: `${import.meta.dir}/custom-languages/esql.js`,
   },
+  {
+    name: "traceql",
+    moduleName: "traceql",
+    path: `${import.meta.dir}/custom-languages/traceql.js`,
+  },
 ];
 
 export type LanguageEntry = {

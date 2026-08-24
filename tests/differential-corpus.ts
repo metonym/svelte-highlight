@@ -553,6 +553,11 @@ enabled = true
 name = "Widget"
 "127.0.0.1" = "value"
 updated = 2024-01-02T10:00:00Z`,
+  traceql: `# slow error traces
+{ resource.service.name = "api" && status = error }
+{ span.http.status_code >= 500 } >> { name = "SQL SELECT" } | count()
+{ duration > 5s }
+`,
   typst: `= Introduction
 
 #let name = "World"
