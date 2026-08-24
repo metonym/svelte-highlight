@@ -273,6 +273,13 @@ local function add(a: number, b: number): number
   return (a + b) :: number
 end
 `,
+  polar: `resource Document {
+  permissions = ["read", "write"];
+}
+
+allow(actor: User, "read", resource: Document) if
+  has_permission(actor, "read", resource);
+`,
   tsrx: `export function Greeting({ name }: { name?: string }) @{
   const message = name ? "Hello" : "stranger";
   <>

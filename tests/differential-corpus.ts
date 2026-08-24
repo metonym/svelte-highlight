@@ -367,6 +367,14 @@ class Server {
 
   function describe() = "\\(host):\\(port)"
 }`,
+  polar: `# document access
+resource Document {
+  permissions = ["read", "write"];
+}
+
+allow(actor: User, "read", resource: Document) if
+  has_permission(actor, "read", resource);
+`,
   prisma: `/// User model
 model User {
   id       Int      @id @default(autoincrement())
