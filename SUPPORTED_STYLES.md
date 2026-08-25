@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 276 styles: 258 exported from highlight.js@11.12.0, 18 custom styles added by svelte-highlight
+> 278 styles: 258 exported from highlight.js@11.12.0, 20 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2409,6 +2409,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/foundation.css";
+</script>
+```
+
+## foxfire-dark (`foxfireDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import foxfireDark from "svelte-highlight/styles/foxfire-dark";
+</script>
+
+<svelte:head>
+  {@html foxfireDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/foxfire-dark.css";
+</script>
+```
+
+## foxfire-light (`foxfireLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import foxfireLight from "svelte-highlight/styles/foxfire-light";
+</script>
+
+<svelte:head>
+  {@html foxfireLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/foxfire-light.css";
 </script>
 ```
 
