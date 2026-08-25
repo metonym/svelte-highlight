@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.19.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.19.0) - 2026-08-25
+
+**Features**
+
+- add custom `angular` language
+- add custom `assemblyscript` language
+- add custom `cedar` language
+- add custom `earthfile` language
+- add custom `esql` language
+- add custom `hurl` language
+- add custom `jinja` language
+- add custom `kdl` language
+- add custom `luau` language
+- add custom `mermaid` language
+- add custom `mojo` language
+- add custom `polar` language
+- add custom `surrealql` language
+- add custom `traceql` language
+- add custom `tsrx` language
+- add custom `wit` language
+- add custom `alebrije` dark and light styles
+- add custom `alpenglow` dark and light styles
+- add custom `amaranth` dark and light styles
+- add custom `anaglyph` dark and light styles
+- add custom `bakelite` dark and light styles
+- add custom `blacklight` dark and light styles
+- add custom `celadon` dark and light styles
+- add custom `cochineal` dark and light styles
+- add custom `cobalt` dark and light styles
+- add custom `cross-process` dark and light styles
+- add custom `cyanotype` dark and light styles
+- add custom `dusk` dark and light styles
+- add custom `fauve` dark and light styles
+- add custom `ferrofluid` dark and light styles
+- add custom `flint` dark and light styles
+- add custom `foxfire` dark and light styles
+- add custom `gamboge` dark and light styles
+- add custom `haar` dark and light styles
+- add custom `hojicha` dark and light styles
+- add custom `kintsugi` dark and light styles
+- add custom `letterpress` dark and light styles
+- add custom `lichen` dark and light styles
+- add custom `lumen` dark and light styles
+- add custom `mandarinfish` dark and light styles
+- add custom `memphis` dark and light styles
+- add custom `motherboard` dark and light styles
+- add custom `nacre` dark and light styles
+- add custom `peat` dark and light styles
+- add custom `pitaya` dark and light styles
+- add custom `scoria` dark and light styles
+- add custom `selenite` dark and light styles
+- add custom `strelitzia` dark and light styles
+- add custom `sumi` dark and light styles
+- add custom `suminagashi` dark and light styles
+- add custom `terrazzo` dark and light styles
+- add custom `thermal` dark and light styles
+- add custom `tidepool` dark and light styles
+- add custom `tourmaline` dark and light styles
+- add custom `tropicalia` dark and light styles
+- add custom `uranium` dark and light styles
+- add custom `urushi` dark and light styles
+- add custom `verdigris` dark and light styles
+- add custom `vitriol` dark and light styles
+- add custom `wet-plate` dark and light styles
+- add custom `woad` dark and light styles
+
 ## [7.18.2](https://github.com/metonym/svelte-highlight/releases/tag/v7.18.2) - 2026-08-24
 
 **Fixes**
