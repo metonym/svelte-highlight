@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 298 themes: 258 exported from highlight.js@11.12.0, 40 custom themes added by svelte-highlight
+> 300 themes: 258 exported from highlight.js@11.12.0, 42 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -202,6 +202,60 @@
 </script>
 
 <HighlightStyle theme={anOldHope}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## anaglyph-dark (`anaglyphDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/anaglyph-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import anaglyphDark from "svelte-highlight/themes/anaglyph-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={anaglyphDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## anaglyph-light (`anaglyphLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/anaglyph-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import anaglyphLight from "svelte-highlight/themes/anaglyph-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={anaglyphLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

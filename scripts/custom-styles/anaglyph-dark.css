@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Anaglyph Dark
+  Description: 3D glasses. Keywords through the red lens, strings through the cyan
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #e8e8e8;
+  background: #0a0a0c;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a6a72;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #e02020;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #e02020;
+}
+.hljs-literal {
+  color: #e040a0;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #20c8e0;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #40a0e0;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #f0f0f0;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #40a0e0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #e8e8e8;
+}
+.hljs-code {
+  color: #6a6a72;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #b8e8f0;
+  background-color: #102028;
+}
+.hljs-deletion {
+  color: #f0c0c0;
+  background-color: #2a1010;
+}

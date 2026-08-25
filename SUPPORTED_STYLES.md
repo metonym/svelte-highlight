@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 298 styles: 258 exported from highlight.js@11.12.0, 40 custom styles added by svelte-highlight
+> 300 styles: 258 exported from highlight.js@11.12.0, 42 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -179,6 +179,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/an-old-hope.css";
+</script>
+```
+
+## anaglyph-dark (`anaglyphDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import anaglyphDark from "svelte-highlight/styles/anaglyph-dark";
+</script>
+
+<svelte:head>
+  {@html anaglyphDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/anaglyph-dark.css";
+</script>
+```
+
+## anaglyph-light (`anaglyphLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import anaglyphLight from "svelte-highlight/styles/anaglyph-light";
+</script>
+
+<svelte:head>
+  {@html anaglyphLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/anaglyph-light.css";
 </script>
 ```
 
