@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 310 styles: 258 exported from highlight.js@11.12.0, 52 custom styles added by svelte-highlight
+> 312 styles: 258 exported from highlight.js@11.12.0, 54 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4995,6 +4995,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/pico.css";
+</script>
+```
+
+## pitaya-dark (`pitayaDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import pitayaDark from "svelte-highlight/styles/pitaya-dark";
+</script>
+
+<svelte:head>
+  {@html pitayaDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/pitaya-dark.css";
+</script>
+```
+
+## pitaya-light (`pitayaLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import pitayaLight from "svelte-highlight/styles/pitaya-light";
+</script>
+
+<svelte:head>
+  {@html pitayaLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/pitaya-light.css";
 </script>
 ```
 
