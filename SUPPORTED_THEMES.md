@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 286 themes: 258 exported from highlight.js@11.12.0, 28 custom themes added by svelte-highlight
+> 288 themes: 258 exported from highlight.js@11.12.0, 30 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -7079,6 +7079,60 @@
 </script>
 
 <HighlightStyle theme={windowsNtLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## woad-dark (`woadDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/woad-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import woadDark from "svelte-highlight/themes/woad-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={woadDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## woad-light (`woadLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/woad-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import woadLight from "svelte-highlight/themes/woad-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={woadLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

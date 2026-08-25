@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 286 styles: 258 exported from highlight.js@11.12.0, 28 custom styles added by svelte-highlight
+> 288 styles: 258 exported from highlight.js@11.12.0, 30 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6237,6 +6237,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/windows-nt-light.css";
+</script>
+```
+
+## woad-dark (`woadDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import woadDark from "svelte-highlight/styles/woad-dark";
+</script>
+
+<svelte:head>
+  {@html woadDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/woad-dark.css";
+</script>
+```
+
+## woad-light (`woadLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import woadLight from "svelte-highlight/styles/woad-light";
+</script>
+
+<svelte:head>
+  {@html woadLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/woad-light.css";
 </script>
 ```
 
