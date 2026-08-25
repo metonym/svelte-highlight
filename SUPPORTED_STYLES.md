@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 280 styles: 258 exported from highlight.js@11.12.0, 22 custom styles added by svelte-highlight
+> 282 styles: 258 exported from highlight.js@11.12.0, 24 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5535,6 +5535,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/tender.css";
+</script>
+```
+
+## tidepool-dark (`tidepoolDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import tidepoolDark from "svelte-highlight/styles/tidepool-dark";
+</script>
+
+<svelte:head>
+  {@html tidepoolDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/tidepool-dark.css";
+</script>
+```
+
+## tidepool-light (`tidepoolLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import tidepoolLight from "svelte-highlight/styles/tidepool-light";
+</script>
+
+<svelte:head>
+  {@html tidepoolLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/tidepool-light.css";
 </script>
 ```
 
