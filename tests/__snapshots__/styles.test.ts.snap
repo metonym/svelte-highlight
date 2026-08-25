@@ -195,6 +195,8 @@ exports[`Styles 1`] = `
   "materialPalenight",
   "materialVivid",
   "mellowPurple",
+  "memphisDark",
+  "memphisLight",
   "mexicoLight",
   "mocha",
   "monoBlue",

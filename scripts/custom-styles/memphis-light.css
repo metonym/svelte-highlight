@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Memphis Light
+  Description: Cream laminate, the same three shouts
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #1a1018;
+  background: #f8f0e0;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #787080;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #b09000;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #b09000;
+}
+.hljs-literal {
+  color: #087878;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #c04060;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #6830a0;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #201018;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #6830a0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #1a1018;
+}
+.hljs-code {
+  color: #787080;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #084848;
+  background-color: #e0ece4;
+}
+.hljs-deletion {
+  color: #801030;
+  background-color: #f0dce0;
+}

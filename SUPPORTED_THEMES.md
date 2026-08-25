@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 314 themes: 258 exported from highlight.js@11.12.0, 56 custom themes added by svelte-highlight
+> 316 themes: 258 exported from highlight.js@11.12.0, 58 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4883,6 +4883,60 @@
 </script>
 
 <HighlightStyle theme={mellowPurple}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## memphis-dark (`memphisDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/memphis-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import memphisDark from "svelte-highlight/themes/memphis-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={memphisDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## memphis-light (`memphisLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/memphis-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import memphisLight from "svelte-highlight/themes/memphis-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={memphisLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

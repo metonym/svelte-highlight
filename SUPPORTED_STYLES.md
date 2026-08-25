@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 314 styles: 258 exported from highlight.js@11.12.0, 56 custom styles added by svelte-highlight
+> 316 styles: 258 exported from highlight.js@11.12.0, 58 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4305,6 +4305,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/mellow-purple.css";
+</script>
+```
+
+## memphis-dark (`memphisDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import memphisDark from "svelte-highlight/styles/memphis-dark";
+</script>
+
+<svelte:head>
+  {@html memphisDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/memphis-dark.css";
+</script>
+```
+
+## memphis-light (`memphisLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import memphisLight from "svelte-highlight/styles/memphis-light";
+</script>
+
+<svelte:head>
+  {@html memphisLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/memphis-light.css";
 </script>
 ```
 

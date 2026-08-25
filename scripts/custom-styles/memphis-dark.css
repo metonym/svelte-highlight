@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Memphis Dark
+  Description: Sottsass laminate. Yellow, teal, salmon. Furniture that argues
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #f0ece4;
+  background: #1a1420;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #787080;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #f0d020;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #f0d020;
+}
+.hljs-literal {
+  color: #20c0c8;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #e07090;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #c080e0;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #f0f0f0;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #c080e0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #f0ece4;
+}
+.hljs-code {
+  color: #787080;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #c8ece8;
+  background-color: #182828;
+}
+.hljs-deletion {
+  color: #f0d0d8;
+  background-color: #2a1420;
+}
