@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 336 styles: 258 exported from highlight.js@11.12.0, 78 custom styles added by svelte-highlight
+> 338 styles: 258 exported from highlight.js@11.12.0, 80 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -957,6 +957,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/atom-one-light.css";
+</script>
+```
+
+## bakelite-dark (`bakeliteDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import bakeliteDark from "svelte-highlight/styles/bakelite-dark";
+</script>
+
+<svelte:head>
+  {@html bakeliteDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/bakelite-dark.css";
+</script>
+```
+
+## bakelite-light (`bakeliteLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import bakeliteLight from "svelte-highlight/styles/bakelite-light";
+</script>
+
+<svelte:head>
+  {@html bakeliteLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/bakelite-light.css";
 </script>
 ```
 

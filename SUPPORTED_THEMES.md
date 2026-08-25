@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 336 themes: 258 exported from highlight.js@11.12.0, 78 custom themes added by svelte-highlight
+> 338 themes: 258 exported from highlight.js@11.12.0, 80 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1085,6 +1085,60 @@
 </script>
 
 <HighlightStyle theme={atomOneLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## bakelite-dark (`bakeliteDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/bakelite-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import bakeliteDark from "svelte-highlight/themes/bakelite-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={bakeliteDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## bakelite-light (`bakeliteLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/bakelite-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import bakeliteLight from "svelte-highlight/themes/bakelite-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={bakeliteLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

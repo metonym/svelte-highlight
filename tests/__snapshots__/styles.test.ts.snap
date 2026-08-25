@@ -46,6 +46,8 @@ exports[`Styles 1`] = `
   "atomOneDark",
   "atomOneDarkReasonable",
   "atomOneLight",
+  "bakeliteDark",
+  "bakeliteLight",
   "base16Github",
   "base16IrBlack",
   "base16Monokai",
