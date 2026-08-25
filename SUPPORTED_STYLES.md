@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 312 styles: 258 exported from highlight.js@11.12.0, 54 custom styles added by svelte-highlight
+> 314 styles: 258 exported from highlight.js@11.12.0, 56 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6339,6 +6339,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/tomorrow-night-bright.css";
+</script>
+```
+
+## tourmaline-dark (`tourmalineDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import tourmalineDark from "svelte-highlight/styles/tourmaline-dark";
+</script>
+
+<svelte:head>
+  {@html tourmalineDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/tourmaline-dark.css";
+</script>
+```
+
+## tourmaline-light (`tourmalineLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import tourmalineLight from "svelte-highlight/styles/tourmaline-light";
+</script>
+
+<svelte:head>
+  {@html tourmalineLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/tourmaline-light.css";
 </script>
 ```
 

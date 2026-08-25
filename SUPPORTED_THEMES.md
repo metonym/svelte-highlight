@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 312 themes: 258 exported from highlight.js@11.12.0, 54 custom themes added by svelte-highlight
+> 314 themes: 258 exported from highlight.js@11.12.0, 56 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -7190,6 +7190,60 @@
 </script>
 
 <HighlightStyle theme={tomorrowNightBright}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## tourmaline-dark (`tourmalineDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/tourmaline-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import tourmalineDark from "svelte-highlight/themes/tourmaline-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={tourmalineDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## tourmaline-light (`tourmalineLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/tourmaline-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import tourmalineLight from "svelte-highlight/themes/tourmaline-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={tourmalineLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
