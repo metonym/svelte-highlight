@@ -140,6 +140,8 @@ exports[`Styles 1`] = `
   "gruvboxLightHard",
   "gruvboxLightMedium",
   "gruvboxLightSoft",
+  "haarDark",
+  "haarLight",
   "hardcore",
   "harmonic16Dark",
   "harmonic16Light",

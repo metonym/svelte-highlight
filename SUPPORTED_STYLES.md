@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 294 styles: 258 exported from highlight.js@11.12.0, 36 custom styles added by svelte-highlight
+> 296 styles: 258 exported from highlight.js@11.12.0, 38 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3059,6 +3059,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/gruvbox-light-soft.css";
+</script>
+```
+
+## haar-dark (`haarDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import haarDark from "svelte-highlight/styles/haar-dark";
+</script>
+
+<svelte:head>
+  {@html haarDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/haar-dark.css";
+</script>
+```
+
+## haar-light (`haarLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import haarLight from "svelte-highlight/styles/haar-light";
+</script>
+
+<svelte:head>
+  {@html haarLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/haar-light.css";
 </script>
 ```
 
