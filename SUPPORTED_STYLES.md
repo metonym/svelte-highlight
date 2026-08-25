@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 306 styles: 258 exported from highlight.js@11.12.0, 48 custom styles added by svelte-highlight
+> 308 styles: 258 exported from highlight.js@11.12.0, 50 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4081,6 +4081,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/magula.css";
+</script>
+```
+
+## mandarinfish-dark (`mandarinfishDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import mandarinfishDark from "svelte-highlight/styles/mandarinfish-dark";
+</script>
+
+<svelte:head>
+  {@html mandarinfishDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/mandarinfish-dark.css";
+</script>
+```
+
+## mandarinfish-light (`mandarinfishLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import mandarinfishLight from "svelte-highlight/styles/mandarinfish-light";
+</script>
+
+<svelte:head>
+  {@html mandarinfishLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/mandarinfish-light.css";
 </script>
 ```
 

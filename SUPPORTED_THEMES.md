@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 306 themes: 258 exported from highlight.js@11.12.0, 48 custom themes added by svelte-highlight
+> 308 themes: 258 exported from highlight.js@11.12.0, 50 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4629,6 +4629,60 @@
 </script>
 
 <HighlightStyle theme={magula}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## mandarinfish-dark (`mandarinfishDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/mandarinfish-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import mandarinfishDark from "svelte-highlight/themes/mandarinfish-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={mandarinfishDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## mandarinfish-light (`mandarinfishLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/mandarinfish-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import mandarinfishLight from "svelte-highlight/themes/mandarinfish-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={mandarinfishLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

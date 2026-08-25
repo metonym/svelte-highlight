@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Mandarinfish Light
+  Description: The same paint job in a tide pool at noon
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #1a1220;
+  background: #f4f0e8;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a7080;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #d04008;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #d04008;
+}
+.hljs-literal {
+  color: #b89000;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #087878;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #7030c0;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #087838;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #7030c0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #1a1220;
+}
+.hljs-code {
+  color: #7a7080;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #084838;
+  background-color: #d8ece4;
+}
+.hljs-deletion {
+  color: #801808;
+  background-color: #f0dcd0;
+}
