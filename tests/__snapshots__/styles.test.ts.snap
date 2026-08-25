@@ -184,6 +184,8 @@ exports[`Styles 1`] = `
   "monoBlue",
   "monokai",
   "monokaiSublime",
+  "nacreDark",
+  "nacreLight",
   "nebula",
   "nightOwl",
   "nnfxDark",
