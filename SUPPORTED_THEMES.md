@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 308 themes: 258 exported from highlight.js@11.12.0, 50 custom themes added by svelte-highlight
+> 310 themes: 258 exported from highlight.js@11.12.0, 52 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6570,6 +6570,60 @@
 </script>
 
 <HighlightStyle theme={stackoverflowLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## strelitzia-dark (`strelitziaDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/strelitzia-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import strelitziaDark from "svelte-highlight/themes/strelitzia-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={strelitziaDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## strelitzia-light (`strelitziaLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/strelitzia-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import strelitziaLight from "svelte-highlight/themes/strelitzia-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={strelitziaLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
