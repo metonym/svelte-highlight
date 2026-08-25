@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Ferrofluid Dark
+  Description: Magnetic black liquid: gunmetal spikes with a sharp magenta/cyan glow
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #0d0d10
+  fg:       #d4d6dc
+  comment:  #6a6d78
+  gunmetal: #8f97a8
+  magenta:  #ff3fa0
+  cyan:     #4fd8e0
+  steel:    #a8adba
+  slate:    #6b7488
+  brightmagenta: #ff6fc0
+  palesteel: #b8bccc
+*/
+.hljs {
+  color: #d4d6dc;
+  background: #0d0d10;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a6d78;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #8f97a8;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #ff3fa0;
+}
+.hljs-literal {
+  color: #4fd8e0;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #a8adba;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #6b7488;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #ff6fc0;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #b8bccc;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #d4d6dc;
+}
+.hljs-code {
+  color: #6a6d78;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #a8e8d8;
+  background-color: #10201c;
+}
+.hljs-deletion {
+  color: #ff8fae;
+  background-color: #2c1420;
+}

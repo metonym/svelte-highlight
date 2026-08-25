@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 332 themes: 258 exported from highlight.js@11.12.0, 74 custom themes added by svelte-highlight
+> 334 themes: 258 exported from highlight.js@11.12.0, 76 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3009,6 +3009,60 @@
 </script>
 
 <HighlightStyle theme={felipec}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## ferrofluid-dark (`ferrofluidDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/ferrofluid-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import ferrofluidDark from "svelte-highlight/themes/ferrofluid-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={ferrofluidDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## ferrofluid-light (`ferrofluidLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/ferrofluid-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import ferrofluidLight from "svelte-highlight/themes/ferrofluid-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={ferrofluidLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

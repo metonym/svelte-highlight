@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 332 styles: 258 exported from highlight.js@11.12.0, 74 custom styles added by svelte-highlight
+> 334 styles: 258 exported from highlight.js@11.12.0, 76 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2653,6 +2653,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/felipec.css";
+</script>
+```
+
+## ferrofluid-dark (`ferrofluidDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import ferrofluidDark from "svelte-highlight/styles/ferrofluid-dark";
+</script>
+
+<svelte:head>
+  {@html ferrofluidDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/ferrofluid-dark.css";
+</script>
+```
+
+## ferrofluid-light (`ferrofluidLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import ferrofluidLight from "svelte-highlight/styles/ferrofluid-light";
+</script>
+
+<svelte:head>
+  {@html ferrofluidLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/ferrofluid-light.css";
 </script>
 ```
 

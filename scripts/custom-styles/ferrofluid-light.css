@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Ferrofluid Light
+  Description: Magnetic ink on white paper: steel-blue spikes with a deep magenta/cyan accent
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #f0f0f2
+  fg:       #1a1a1e
+  comment:  #757a86
+  steelblue: #4a5468
+  magenta:  #b8135f
+  cyan:     #146e78
+  steel:    #565c6c
+  slate:    #3a4256
+  darkmagenta: #94104a
+  charcoal: #363a46
+*/
+.hljs {
+  color: #1a1a1e;
+  background: #f0f0f2;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #757a86;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #4a5468;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #b8135f;
+}
+.hljs-literal {
+  color: #146e78;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #565c6c;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #3a4256;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #94104a;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #363a46;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #1a1a1e;
+}
+.hljs-code {
+  color: #757a86;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #146048;
+  background-color: #d4ece0;
+}
+.hljs-deletion {
+  color: #94143a;
+  background-color: #f4d6e0;
+}
