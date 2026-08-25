@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 260 themes: 258 exported from highlight.js@11.12.0, 2 custom themes added by svelte-highlight
+> 262 themes: 258 exported from highlight.js@11.12.0, 4 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5652,6 +5652,60 @@
 </script>
 
 <HighlightStyle theme={stackoverflowLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## sumi-dark (`sumiDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/sumi-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import sumiDark from "svelte-highlight/themes/sumi-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={sumiDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## sumi-light (`sumiLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/sumi-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import sumiLight from "svelte-highlight/themes/sumi-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={sumiLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
