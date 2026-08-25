@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 272 styles: 258 exported from highlight.js@11.12.0, 14 custom styles added by svelte-highlight
+> 274 styles: 258 exported from highlight.js@11.12.0, 16 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3557,6 +3557,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/london-tube.css";
+</script>
+```
+
+## lumen-dark (`lumenDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import lumenDark from "svelte-highlight/styles/lumen-dark";
+</script>
+
+<svelte:head>
+  {@html lumenDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/lumen-dark.css";
+</script>
+```
+
+## lumen-light (`lumenLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import lumenLight from "svelte-highlight/styles/lumen-light";
+</script>
+
+<svelte:head>
+  {@html lumenLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/lumen-light.css";
 </script>
 ```
 
