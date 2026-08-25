@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 322 themes: 258 exported from highlight.js@11.12.0, 64 custom themes added by svelte-highlight
+> 324 themes: 258 exported from highlight.js@11.12.0, 66 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4450,6 +4450,60 @@
 </script>
 
 <HighlightStyle theme={kimbieLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## kintsugi-dark (`kintsugiDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/kintsugi-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import kintsugiDark from "svelte-highlight/themes/kintsugi-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={kintsugiDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## kintsugi-light (`kintsugiLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/kintsugi-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import kintsugiLight from "svelte-highlight/themes/kintsugi-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={kintsugiLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

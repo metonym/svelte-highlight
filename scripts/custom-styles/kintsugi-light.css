@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Kintsugi Light
+  Description: Porcelain repaired in gold: ivory glaze with gilded crack lines
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #f2ece0
+  fg:       #2b2418
+  comment:  #8a7d68
+  gold:     #9c7a1f
+  seam:     #a8492c
+  glaze:    #3d6670
+  amber:    #8a5a1a
+  bronze:   #6b4f24
+  darkgold: #7a5c14
+  ochre:    #5c4a1e
+*/
+.hljs {
+  color: #2b2418;
+  background: #f2ece0;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8a7d68;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #9c7a1f;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #a8492c;
+}
+.hljs-literal {
+  color: #3d6670;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #8a5a1a;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #6b4f24;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #7a5c14;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #5c4a1e;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #2b2418;
+}
+.hljs-code {
+  color: #8a7d68;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #2f4a1f;
+  background-color: #dce8d0;
+}
+.hljs-deletion {
+  color: #7a2418;
+  background-color: #f0d8d0;
+}
