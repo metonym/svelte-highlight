@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 270 styles: 258 exported from highlight.js@11.12.0, 12 custom styles added by svelte-highlight
+> 272 styles: 258 exported from highlight.js@11.12.0, 14 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5677,6 +5677,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/vulcan.css";
+</script>
+```
+
+## wet-plate-dark (`wetPlateDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import wetPlateDark from "svelte-highlight/styles/wet-plate-dark";
+</script>
+
+<svelte:head>
+  {@html wetPlateDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/wet-plate-dark.css";
+</script>
+```
+
+## wet-plate-light (`wetPlateLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import wetPlateLight from "svelte-highlight/styles/wet-plate-light";
+</script>
+
+<svelte:head>
+  {@html wetPlateLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/wet-plate-light.css";
 </script>
 ```
 

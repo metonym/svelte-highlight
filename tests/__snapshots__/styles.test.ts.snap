@@ -259,6 +259,8 @@ exports[`Styles 1`] = `
   "vs2015",
   "vsDark",
   "vulcan",
+  "wetPlateDark",
+  "wetPlateLight",
   "windows10",
   "windows10Light",
   "windows95",

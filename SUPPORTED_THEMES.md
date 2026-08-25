@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 270 themes: 258 exported from highlight.js@11.12.0, 12 custom themes added by svelte-highlight
+> 272 themes: 258 exported from highlight.js@11.12.0, 14 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6447,6 +6447,60 @@
 </script>
 
 <HighlightStyle theme={vulcan}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## wet-plate-dark (`wetPlateDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/wet-plate-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import wetPlateDark from "svelte-highlight/themes/wet-plate-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={wetPlateDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## wet-plate-light (`wetPlateLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/wet-plate-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import wetPlateLight from "svelte-highlight/themes/wet-plate-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={wetPlateLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
