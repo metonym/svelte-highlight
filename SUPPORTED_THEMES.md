@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 310 themes: 258 exported from highlight.js@11.12.0, 52 custom themes added by svelte-highlight
+> 312 themes: 258 exported from highlight.js@11.12.0, 54 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5666,6 +5666,60 @@
 </script>
 
 <HighlightStyle theme={pico}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## pitaya-dark (`pitayaDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/pitaya-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import pitayaDark from "svelte-highlight/themes/pitaya-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={pitayaDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## pitaya-light (`pitayaLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/pitaya-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import pitayaLight from "svelte-highlight/themes/pitaya-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={pitayaLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

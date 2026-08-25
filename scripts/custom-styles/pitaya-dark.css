@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Pitaya Dark
+  Description: Dragonfruit. Magenta skin, lime bracts, white flesh
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #f0e8ec;
+  background: #1a0814;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #886070;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #f02080;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #f02080;
+}
+.hljs-literal {
+  color: #f0f0e8;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #80e040;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #40c070;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #e080c0;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #40c070;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #f0e8ec;
+}
+.hljs-code {
+  color: #886070;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #d0f0c0;
+  background-color: #182818;
+}
+.hljs-deletion {
+  color: #f0c0d8;
+  background-color: #2a0818;
+}

@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Pitaya Light
+  Description: Sliced open on a plate. Pink juice on the rim
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #280818;
+  background: #fff0f6;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #886070;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #c01060;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c01060;
+}
+.hljs-literal {
+  color: #686058;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #2a7808;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #186838;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #881050;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #186838;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #280818;
+}
+.hljs-code {
+  color: #886070;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #1a4808;
+  background-color: #dce8c8;
+}
+.hljs-deletion {
+  color: #801040;
+  background-color: #f4d8e4;
+}
