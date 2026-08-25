@@ -176,6 +176,14 @@ build:
   b: f(2),
 }
 `,
+  jinja: `{# greeting #}
+{% macro hello(name) %}
+  <p>Hello {{ name | e }}</p>
+{% endmacro %}
+{% for item in items %}
+  {{ hello(item) }}
+{% endfor %}
+`,
   just: `test: build
     cargo test
 
@@ -363,6 +371,7 @@ const KNOWN_AUTO_DETECT_GAPS = new Set([
   "dotenv",
   "gleam",
   "groq",
+  "jinja",
   "jsonnet",
   "just",
   "kql",

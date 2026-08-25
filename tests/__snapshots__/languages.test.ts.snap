@@ -116,6 +116,7 @@ exports[`Languages 1`] = `
   "java",
   "javascript",
   "jbossCli",
+  "jinja",
   "jq",
   "json",
   "json5",

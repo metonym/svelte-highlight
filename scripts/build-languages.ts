@@ -353,6 +353,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "traceql",
     path: `${import.meta.dir}/custom-languages/traceql.js`,
   },
+  {
+    name: "jinja",
+    moduleName: "jinja",
+    path: `${import.meta.dir}/custom-languages/jinja.js`,
+  },
 ];
 
 export type LanguageEntry = {
