@@ -111,6 +111,8 @@ exports[`Styles 1`] = `
   "dirtysea",
   "docco",
   "dracula",
+  "duskDark",
+  "duskLight",
   "edgeDark",
   "edgeLight",
   "eighties",

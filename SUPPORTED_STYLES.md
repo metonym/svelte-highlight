@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 346 styles: 258 exported from highlight.js@11.12.0, 88 custom styles added by svelte-highlight
+> 348 styles: 258 exported from highlight.js@11.12.0, 90 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2441,6 +2441,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/dracula.css";
+</script>
+```
+
+## dusk-dark (`duskDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import duskDark from "svelte-highlight/styles/dusk-dark";
+</script>
+
+<svelte:head>
+  {@html duskDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/dusk-dark.css";
+</script>
+```
+
+## dusk-light (`duskLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import duskLight from "svelte-highlight/styles/dusk-light";
+</script>
+
+<svelte:head>
+  {@html duskLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/dusk-light.css";
 </script>
 ```
 

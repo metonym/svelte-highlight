@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 346 themes: 258 exported from highlight.js@11.12.0, 88 custom themes added by svelte-highlight
+> 348 themes: 258 exported from highlight.js@11.12.0, 90 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2767,6 +2767,60 @@
 </script>
 
 <HighlightStyle theme={dracula}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## dusk-dark (`duskDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/dusk-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import duskDark from "svelte-highlight/themes/dusk-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={duskDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## dusk-light (`duskLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/dusk-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import duskLight from "svelte-highlight/themes/dusk-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={duskLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
