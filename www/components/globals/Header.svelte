@@ -102,6 +102,7 @@
     "/preview-jinja": "Jinja language preview",
     "/preview-wit": "WIT language preview",
     "/preview-surrealql": "SurrealQL language preview",
+    "/preview-hurl": "Hurl language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
