@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 316 themes: 258 exported from highlight.js@11.12.0, 58 custom themes added by svelte-highlight
+> 318 themes: 258 exported from highlight.js@11.12.0, 60 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2822,6 +2822,60 @@
 </script>
 
 <HighlightStyle theme={far}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## fauve-dark (`fauveDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/fauve-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import fauveDark from "svelte-highlight/themes/fauve-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={fauveDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## fauve-light (`fauveLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/fauve-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import fauveLight from "svelte-highlight/themes/fauve-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={fauveLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

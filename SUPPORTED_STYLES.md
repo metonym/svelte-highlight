@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 316 styles: 258 exported from highlight.js@11.12.0, 58 custom styles added by svelte-highlight
+> 318 styles: 258 exported from highlight.js@11.12.0, 60 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2487,6 +2487,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/far.css";
+</script>
+```
+
+## fauve-dark (`fauveDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import fauveDark from "svelte-highlight/styles/fauve-dark";
+</script>
+
+<svelte:head>
+  {@html fauveDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/fauve-dark.css";
+</script>
+```
+
+## fauve-light (`fauveLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import fauveLight from "svelte-highlight/styles/fauve-light";
+</script>
+
+<svelte:head>
+  {@html fauveLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/fauve-light.css";
 </script>
 ```
 
