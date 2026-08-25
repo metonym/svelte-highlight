@@ -155,6 +155,7 @@ exports[`Languages 1`] = `
   "mermaid",
   "mipsasm",
   "mizar",
+  "mojo",
   "mojolicious",
   "monkey",
   "moonscript",

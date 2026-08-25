@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 265 languages: 193 exported from highlight.js@11.12.0, 72 custom grammars added by svelte-highlight
+> 266 languages: 193 exported from highlight.js@11.12.0, 73 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1919,6 +1919,20 @@
 
   // base import
   import { mizar } from "svelte-highlight/languages";
+</script>
+```
+
+## mojo (`mojo`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import mojo from "svelte-highlight/languages/mojo";
+
+  // base import
+  import { mojo } from "svelte-highlight/languages";
 </script>
 ```
 

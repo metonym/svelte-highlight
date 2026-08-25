@@ -373,6 +373,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "hurl",
     path: `${import.meta.dir}/custom-languages/hurl.js`,
   },
+  {
+    name: "mojo",
+    moduleName: "mojo",
+    path: `${import.meta.dir}/custom-languages/mojo.js`,
+  },
 ];
 
 export type LanguageEntry = {
