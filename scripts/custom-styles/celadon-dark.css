@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Celadon Dark
+  Description: Porcelain glaze: cool green-gray with iron-red tags and tea strings
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #1a221f
+  fg:       #d7e4dc
+  comment:  #7a9088
+  celadon:  #6aab98
+  iron:     #e08b7a
+  tea:      #c9b17a
+  aqua:     #8eb8c4
+  mist:     #a8d0c4
+  glaze:    #9ec9d0
+  cream:    #e2d3a8
+*/
+.hljs {
+  color: #d7e4dc;
+  background: #1a221f;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a9088;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #6aab98;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #e08b7a;
+}
+.hljs-literal {
+  color: #8eb8c4;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #c9b17a;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #a8d0c4;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #9ec9d0;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #e2d3a8;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #d7e4dc;
+}
+.hljs-code {
+  color: #7a9088;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #c5e0d4;
+  background-color: #1c2e28;
+}
+.hljs-deletion {
+  color: #e8c0b8;
+  background-color: #3a2420;
+}

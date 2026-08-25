@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 258 styles exported from highlight.js@11.12.0
+> 260 styles: 258 exported from highlight.js@11.12.0, 2 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1297,6 +1297,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/brush-trees-dark.css";
+</script>
+```
+
+## celadon-dark (`celadonDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import celadonDark from "svelte-highlight/styles/celadon-dark";
+</script>
+
+<svelte:head>
+  {@html celadonDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/celadon-dark.css";
+</script>
+```
+
+## celadon-light (`celadonLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import celadonLight from "svelte-highlight/styles/celadon-light";
+</script>
+
+<svelte:head>
+  {@html celadonLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/celadon-light.css";
 </script>
 ```
 
