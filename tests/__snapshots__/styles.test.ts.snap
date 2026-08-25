@@ -76,6 +76,8 @@ exports[`Styles 1`] = `
   "codeschool",
   "colorBrewer",
   "colors",
+  "crossProcessDark",
+  "crossProcessLight",
   "cupcake",
   "cupertino",
   "cyanotypeDark",

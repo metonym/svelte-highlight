@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 302 themes: 258 exported from highlight.js@11.12.0, 44 custom themes added by svelte-highlight
+> 304 themes: 258 exported from highlight.js@11.12.0, 46 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1835,6 +1835,60 @@
 </script>
 
 <HighlightStyle theme={colors}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## cross-process-dark (`crossProcessDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/cross-process-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import crossProcessDark from "svelte-highlight/themes/cross-process-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={crossProcessDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## cross-process-light (`crossProcessLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/cross-process-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import crossProcessLight from "svelte-highlight/themes/cross-process-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={crossProcessLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
