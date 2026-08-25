@@ -80,6 +80,8 @@ exports[`Styles 1`] = `
   "circus",
   "classicDark",
   "classicLight",
+  "cobaltDark",
+  "cobaltLight",
   "cochinealDark",
   "cochinealLight",
   "codepenEmbed",

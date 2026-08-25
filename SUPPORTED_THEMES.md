@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 342 themes: 258 exported from highlight.js@11.12.0, 84 custom themes added by svelte-highlight
+> 344 themes: 258 exported from highlight.js@11.12.0, 86 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1951,6 +1951,60 @@
 </script>
 
 <HighlightStyle theme={classicLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## cobalt-dark (`cobaltDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/cobalt-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import cobaltDark from "svelte-highlight/themes/cobalt-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={cobaltDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## cobalt-light (`cobaltLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/cobalt-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import cobaltLight from "svelte-highlight/themes/cobalt-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={cobaltLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

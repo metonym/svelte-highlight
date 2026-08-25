@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 342 styles: 258 exported from highlight.js@11.12.0, 84 custom styles added by svelte-highlight
+> 344 styles: 258 exported from highlight.js@11.12.0, 86 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1721,6 +1721,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/classic-light.css";
+</script>
+```
+
+## cobalt-dark (`cobaltDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import cobaltDark from "svelte-highlight/styles/cobalt-dark";
+</script>
+
+<svelte:head>
+  {@html cobaltDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cobalt-dark.css";
+</script>
+```
+
+## cobalt-light (`cobaltLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import cobaltLight from "svelte-highlight/styles/cobalt-light";
+</script>
+
+<svelte:head>
+  {@html cobaltLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cobalt-light.css";
 </script>
 ```
 
