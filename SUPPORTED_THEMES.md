@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 292 themes: 258 exported from highlight.js@11.12.0, 34 custom themes added by svelte-highlight
+> 294 themes: 258 exported from highlight.js@11.12.0, 36 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5842,6 +5842,60 @@
 </script>
 
 <HighlightStyle theme={schoolBook}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## scoria-dark (`scoriaDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/scoria-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import scoriaDark from "svelte-highlight/themes/scoria-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={scoriaDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## scoria-light (`scoriaLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/scoria-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import scoriaLight from "svelte-highlight/themes/scoria-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={scoriaLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
