@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Tidepool Light
+  Description: Noon at the rocks. Same animals, a little bleached
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #1a2428;
+  background: #e8eef0;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a7878;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #b05060;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #b05060;
+}
+.hljs-literal {
+  color: #8a6a20;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #3a6a40;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #5a4a70;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #2a6a80;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #5a4a70;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #1a2428;
+}
+.hljs-code {
+  color: #6a7878;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #1a3a28;
+  background-color: #d8e8dc;
+}
+.hljs-deletion {
+  color: #8a2838;
+  background-color: #f0dce0;
+}

@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 280 themes: 258 exported from highlight.js@11.12.0, 22 custom themes added by svelte-highlight
+> 282 themes: 258 exported from highlight.js@11.12.0, 24 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6284,6 +6284,60 @@
 </script>
 
 <HighlightStyle theme={tender}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## tidepool-dark (`tidepoolDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/tidepool-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import tidepoolDark from "svelte-highlight/themes/tidepool-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={tidepoolDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## tidepool-light (`tidepoolLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/tidepool-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import tidepoolLight from "svelte-highlight/themes/tidepool-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={tidepoolLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
