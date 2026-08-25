@@ -213,6 +213,14 @@ build:
     }
 }
 `,
+  mojo: `fn add(x: Int, y: Int) -> Int:
+    return x + y
+
+struct Point:
+    var x: Float64
+    fn __init__(inout self, x: Float64):
+        self.x = x
+`,
   nickel: `let f = fun x => x + 1 in
 { result = f 2 }
 `,

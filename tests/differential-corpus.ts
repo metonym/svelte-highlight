@@ -394,6 +394,15 @@ Some **bold** text and \`inline code\`.
         Coin { value }
     }
 }`,
+  mojo: `# origin
+fn add(x: Int, y: Int) -> Int:
+    return x + y
+
+struct Point:
+    var x: Float64
+    fn __init__(inout self, x: Float64):
+        self.x = x
+`,
   nickel: `# config record
 let name = "svelte" in
 {
