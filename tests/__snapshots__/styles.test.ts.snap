@@ -286,6 +286,8 @@ exports[`Styles 1`] = `
   "tomorrowNight",
   "tomorrowNightBlue",
   "tomorrowNightBright",
+  "tourmalineDark",
+  "tourmalineLight",
   "twilight",
   "unikittyDark",
   "unikittyLight",
