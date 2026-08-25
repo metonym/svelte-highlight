@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 328 themes: 258 exported from highlight.js@11.12.0, 70 custom themes added by svelte-highlight
+> 330 themes: 258 exported from highlight.js@11.12.0, 72 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5278,6 +5278,60 @@
 </script>
 
 <HighlightStyle theme={monokaiSublime}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## motherboard-dark (`motherboardDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/motherboard-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import motherboardDark from "svelte-highlight/themes/motherboard-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={motherboardDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## motherboard-light (`motherboardLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/motherboard-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import motherboardLight from "svelte-highlight/themes/motherboard-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={motherboardLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

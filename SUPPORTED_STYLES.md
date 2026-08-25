@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 328 styles: 258 exported from highlight.js@11.12.0, 70 custom styles added by svelte-highlight
+> 330 styles: 258 exported from highlight.js@11.12.0, 72 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4655,6 +4655,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/monokai-sublime.css";
+</script>
+```
+
+## motherboard-dark (`motherboardDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import motherboardDark from "svelte-highlight/styles/motherboard-dark";
+</script>
+
+<svelte:head>
+  {@html motherboardDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/motherboard-dark.css";
+</script>
+```
+
+## motherboard-light (`motherboardLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import motherboardLight from "svelte-highlight/styles/motherboard-light";
+</script>
+
+<svelte:head>
+  {@html motherboardLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/motherboard-light.css";
 </script>
 ```
 
