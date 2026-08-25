@@ -256,6 +256,7 @@ exports[`Languages 1`] = `
   "vyper",
   "wasm",
   "wgsl",
+  "wit",
   "wren",
   "x86asm",
   "xl",

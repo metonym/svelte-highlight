@@ -358,6 +358,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "jinja",
     path: `${import.meta.dir}/custom-languages/jinja.js`,
   },
+  {
+    name: "wit",
+    moduleName: "wit",
+    path: `${import.meta.dir}/custom-languages/wit.js`,
+  },
 ];
 
 export type LanguageEntry = {

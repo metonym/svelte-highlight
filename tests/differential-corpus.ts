@@ -678,6 +678,19 @@ fn main(@builtin(global_invocation_id) gid: vec3u) {
   let d = dpdx(color.x);
   workgroupBarrier();
 }`,
+  wit: `// host world
+package example:host@0.1.0;
+
+world hello {
+  import wasi:io/poll;
+  export greet: func(name: string) -> string;
+}
+
+interface types {
+  record person { name: string, age: u32 }
+  variant error { not-found, other(string) }
+}
+`,
   zig: `const std = @import("std");
 
 pub fn main() !void {
