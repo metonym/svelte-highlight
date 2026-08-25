@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 290 styles: 258 exported from highlight.js@11.12.0, 32 custom styles added by svelte-highlight
+> 292 styles: 258 exported from highlight.js@11.12.0, 34 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2387,6 +2387,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/flat.css";
+</script>
+```
+
+## flint-dark (`flintDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import flintDark from "svelte-highlight/styles/flint-dark";
+</script>
+
+<svelte:head>
+  {@html flintDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/flint-dark.css";
+</script>
+```
+
+## flint-light (`flintLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import flintLight from "svelte-highlight/styles/flint-light";
+</script>
+
+<svelte:head>
+  {@html flintLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/flint-light.css";
 </script>
 ```
 

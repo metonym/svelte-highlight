@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 290 themes: 258 exported from highlight.js@11.12.0, 32 custom themes added by svelte-highlight
+> 292 themes: 258 exported from highlight.js@11.12.0, 34 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2710,6 +2710,60 @@
 </script>
 
 <HighlightStyle theme={flat}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## flint-dark (`flintDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/flint-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import flintDark from "svelte-highlight/themes/flint-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={flintDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## flint-light (`flintLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/flint-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import flintLight from "svelte-highlight/themes/flint-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={flintLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

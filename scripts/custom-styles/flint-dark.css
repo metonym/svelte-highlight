@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Flint Dark
+  Description: Struck stone. Almost mono, then one spark of orange
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #d8d6d0;
+  background: #141414;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a6864;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #e87830;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #e87830;
+}
+.hljs-literal {
+  color: #e87830;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #b8b4ac;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #a8a49c;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #c8c4bc;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #a8a49c;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #d8d6d0;
+}
+.hljs-code {
+  color: #6a6864;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #d0d0c8;
+  background-color: #202018;
+}
+.hljs-deletion {
+  color: #e0c8b8;
+  background-color: #2a1810;
+}
