@@ -266,6 +266,8 @@ exports[`Styles 1`] = `
   "synthMidnightTerminalLight",
   "tango",
   "tender",
+  "thermalDark",
+  "thermalLight",
   "tidepoolDark",
   "tidepoolLight",
   "tokyoNightDark",

@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 300 themes: 258 exported from highlight.js@11.12.0, 42 custom themes added by svelte-highlight
+> 302 themes: 258 exported from highlight.js@11.12.0, 44 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6662,6 +6662,60 @@
 </script>
 
 <HighlightStyle theme={tender}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## thermal-dark (`thermalDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/thermal-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import thermalDark from "svelte-highlight/themes/thermal-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={thermalDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## thermal-light (`thermalLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/thermal-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import thermalLight from "svelte-highlight/themes/thermal-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={thermalLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

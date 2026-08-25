@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 300 styles: 258 exported from highlight.js@11.12.0, 42 custom styles added by svelte-highlight
+> 302 styles: 258 exported from highlight.js@11.12.0, 44 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5871,6 +5871,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/tender.css";
+</script>
+```
+
+## thermal-dark (`thermalDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import thermalDark from "svelte-highlight/styles/thermal-dark";
+</script>
+
+<svelte:head>
+  {@html thermalDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/thermal-dark.css";
+</script>
+```
+
+## thermal-light (`thermalLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import thermalLight from "svelte-highlight/styles/thermal-light";
+</script>
+
+<svelte:head>
+  {@html thermalLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/thermal-light.css";
 </script>
 ```
 
