@@ -243,6 +243,14 @@ float4 main(float2 uv : TEXCOORD0) : SV_TARGET {
   <script>const x = 1;</script>
   Hello &amp; world
 </div>`,
+  jinja: `{# greeting #}
+{% macro hello(name) %}
+  <p>Hello {{ name | e }}</p>
+{% endmacro %}
+{% for item in items %}
+  {{ hello(item) }}
+{% endfor %}
+`,
   jq: `# select active users and total their scores
 def add_one: . + 1;
 .users
