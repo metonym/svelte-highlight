@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 296 themes: 258 exported from highlight.js@11.12.0, 38 custom themes added by svelte-highlight
+> 298 themes: 258 exported from highlight.js@11.12.0, 40 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4234,6 +4234,60 @@
 </script>
 
 <HighlightStyle theme={letterpressLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## lichen-dark (`lichenDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/lichen-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import lichenDark from "svelte-highlight/themes/lichen-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={lichenDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## lichen-light (`lichenLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/lichen-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import lichenLight from "svelte-highlight/themes/lichen-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={lichenLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

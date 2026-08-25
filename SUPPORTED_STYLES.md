@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 296 styles: 258 exported from highlight.js@11.12.0, 38 custom styles added by svelte-highlight
+> 298 styles: 258 exported from highlight.js@11.12.0, 40 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3731,6 +3731,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/letterpress-light.css";
+</script>
+```
+
+## lichen-dark (`lichenDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import lichenDark from "svelte-highlight/styles/lichen-dark";
+</script>
+
+<svelte:head>
+  {@html lichenDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/lichen-dark.css";
+</script>
+```
+
+## lichen-light (`lichenLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import lichenLight from "svelte-highlight/styles/lichen-light";
+</script>
+
+<svelte:head>
+  {@html lichenLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/lichen-light.css";
 </script>
 ```
 
