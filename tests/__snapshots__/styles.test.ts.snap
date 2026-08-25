@@ -283,6 +283,8 @@ exports[`Styles 1`] = `
   "windowsHighContrastLight",
   "windowsNt",
   "windowsNtLight",
+  "woadDark",
+  "woadLight",
   "woodland",
   "xcode",
   "xcodeDusk",
