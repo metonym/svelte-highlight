@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Tropicalia Light
+  Description: Noon in the same garden. The yellow still shouts
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #182410;
+  background: #f4f0d8;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a7860;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #b08000;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c01848;
+}
+.hljs-literal {
+  color: #087888;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #c01848;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #c06010;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #2a7808;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #c06010;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #182410;
+}
+.hljs-code {
+  color: #6a7860;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #1a4808;
+  background-color: #e0ecc8;
+}
+.hljs-deletion {
+  color: #801028;
+  background-color: #f0dce0;
+}

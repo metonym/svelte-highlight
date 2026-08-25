@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 318 themes: 258 exported from highlight.js@11.12.0, 60 custom themes added by svelte-highlight
+> 320 themes: 258 exported from highlight.js@11.12.0, 62 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -7352,6 +7352,60 @@
 </script>
 
 <HighlightStyle theme={tourmalineLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## tropicalia-dark (`tropicaliaDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/tropicalia-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import tropicaliaDark from "svelte-highlight/themes/tropicalia-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={tropicaliaDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## tropicalia-light (`tropicaliaLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/tropicalia-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import tropicaliaLight from "svelte-highlight/themes/tropicalia-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={tropicaliaLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
