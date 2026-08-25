@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 320 themes: 258 exported from highlight.js@11.12.0, 62 custom themes added by svelte-highlight
+> 322 themes: 258 exported from highlight.js@11.12.0, 64 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -123,6 +123,60 @@
 </script>
 
 <HighlightStyle theme={agate}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## alebrije-dark (`alebrijeDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/alebrije-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import alebrijeDark from "svelte-highlight/themes/alebrije-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={alebrijeDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## alebrije-light (`alebrijeLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/alebrije-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import alebrijeLight from "svelte-highlight/themes/alebrije-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={alebrijeLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

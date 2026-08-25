@@ -14,12 +14,12 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "a11y-dark",
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "a11y-light",
   },
   {
@@ -29,12 +29,12 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "an-old-hope",
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 11,
+    "gapsFilled": 12,
     "name": "androidstudio",
   },
   {
@@ -59,7 +59,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 15,
+    "gapsFilled": 18,
     "name": "ascetic",
   },
   {
@@ -284,7 +284,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 11,
+    "gapsFilled": 13,
     "name": "brown-paper",
   },
   {
@@ -319,7 +319,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "codepen-embed",
   },
   {
@@ -329,7 +329,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 6,
+    "gapsFilled": 7,
     "name": "color-brewer",
   },
   {
@@ -359,7 +359,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 11,
+    "gapsFilled": 13,
     "name": "dark",
   },
   {
@@ -479,7 +479,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 8,
+    "gapsFilled": 9,
     "name": "far",
   },
   {
@@ -494,7 +494,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 8,
+    "gapsFilled": 9,
     "name": "foundation",
   },
   {
@@ -734,7 +734,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "lightfair",
   },
   {
@@ -809,7 +809,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 13,
+    "gapsFilled": 12,
     "name": "mono-blue",
   },
   {
@@ -904,12 +904,12 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "paraiso-dark",
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "paraiso-light",
   },
   {
@@ -1024,7 +1024,7 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 14,
+    "gapsFilled": 15,
     "name": "school-book",
   },
   {
@@ -1159,12 +1159,12 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "tomorrow-night-blue",
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "tomorrow-night-bright",
   },
   {
@@ -1184,12 +1184,12 @@ exports[`style augmentations 1`] = `
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "vs",
   },
   {
     "deadDeclarationsRemoved": 0,
-    "gapsFilled": 7,
+    "gapsFilled": 8,
     "name": "vs-dark",
   },
   {
