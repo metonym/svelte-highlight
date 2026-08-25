@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Sumi Light
+  Description: Rice paper with mineral ink: cinnabar keywords, moss strings
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #f3efe6
+  fg:       #2a2723
+  comment:  #857e72
+  cinnabar: #b03d1e
+  rust:     #9a3a2e
+  moss:     #3f6d45
+  amber:    #9a5a18
+  gold:     #7a5420
+  ink:      #5c4a28
+  wash:     #8a5a20
+*/
+.hljs {
+  color: #2a2723;
+  background: #f3efe6;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #857e72;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #b03d1e;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #9a3a2e;
+}
+.hljs-literal {
+  color: #9a5a18;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #3f6d45;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #7a5420;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #5c4a28;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #8a5a20;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #2a2723;
+}
+.hljs-code {
+  color: #857e72;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #2d5a34;
+  background-color: #dce8d8;
+}
+.hljs-deletion {
+  color: #7a2e24;
+  background-color: #f0d8d2;
+}

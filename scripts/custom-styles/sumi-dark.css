@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Sumi Dark
+  Description: Warm charcoal with mineral pigments: cinnabar, moss, gold leaf
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #161513
+  fg:       #e6e1d6
+  comment:  #8c8578
+  cinnabar: #c24e2a
+  rust:     #c45c4a
+  moss:     #7a9a72
+  amber:    #d4924a
+  gold:     #c9a36a
+  pale:     #dcc49a
+  wash:     #b89f7a
+*/
+.hljs {
+  color: #e6e1d6;
+  background: #161513;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8c8578;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #c24e2a;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c45c4a;
+}
+.hljs-literal {
+  color: #d4924a;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #7a9a72;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #c9a36a;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #dcc49a;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #b89f7a;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #e6e1d6;
+}
+.hljs-code {
+  color: #8c8578;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #c5d4b8;
+  background-color: #1e2a1c;
+}
+.hljs-deletion {
+  color: #e8c4b8;
+  background-color: #3a1e18;
+}

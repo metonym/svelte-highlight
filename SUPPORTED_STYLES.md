@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 260 styles: 258 exported from highlight.js@11.12.0, 2 custom styles added by svelte-highlight
+> 262 styles: 258 exported from highlight.js@11.12.0, 4 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4975,6 +4975,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/stackoverflow-light.css";
+</script>
+```
+
+## sumi-dark (`sumiDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import sumiDark from "svelte-highlight/styles/sumi-dark";
+</script>
+
+<svelte:head>
+  {@html sumiDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/sumi-dark.css";
+</script>
+```
+
+## sumi-light (`sumiLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import sumiLight from "svelte-highlight/styles/sumi-light";
+</script>
+
+<svelte:head>
+  {@html sumiLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/sumi-light.css";
 </script>
 ```
 
