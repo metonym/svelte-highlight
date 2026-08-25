@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Verdigris Light
+  Description: Weathered copper roofing: pale patina with burnt copper accents
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #eef4f1
+  fg:       #1c2c28
+  comment:  #6c7f79
+  patina:   #1f6e56
+  copper:   #a85526
+  teal:     #21707a
+  brass:    #7a5a1e
+  darkteal: #2a6e60
+  deeppatina: #175c48
+  bronze:   #6b4a20
+*/
+.hljs {
+  color: #1c2c28;
+  background: #eef4f1;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6c7f79;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #1f6e56;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #a85526;
+}
+.hljs-literal {
+  color: #21707a;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #7a5a1e;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #2a6e60;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #175c48;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #6b4a20;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #1c2c28;
+}
+.hljs-code {
+  color: #6c7f79;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #14401f;
+  background-color: #d4e8da;
+}
+.hljs-deletion {
+  color: #6e2c14;
+  background-color: #ecd6c8;
+}
