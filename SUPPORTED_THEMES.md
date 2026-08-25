@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 258 themes exported from highlight.js@11.12.0
+> 260 themes: 258 exported from highlight.js@11.12.0, 2 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1473,6 +1473,60 @@
 </script>
 
 <HighlightStyle theme={brushTreesDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## celadon-dark (`celadonDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/celadon-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import celadonDark from "svelte-highlight/themes/celadon-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={celadonDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## celadon-light (`celadonLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/celadon-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import celadonLight from "svelte-highlight/themes/celadon-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={celadonLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
