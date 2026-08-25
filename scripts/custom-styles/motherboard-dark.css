@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Motherboard Dark
+  Description: PCB substrate: matte green-black with gold traces and silver solder
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #0c1712
+  fg:       #cbe0c4
+  comment:  #5f7a5c
+  gold:     #d1a934
+  copper:   #d97f4a
+  silver:   #a8b8bc
+  palegold: #e6cd7a
+  pcbgreen: #7fbf87
+  icblue:   #8fd0d4
+  silkscreen: #d8dcc0
+*/
+.hljs {
+  color: #cbe0c4;
+  background: #0c1712;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #5f7a5c;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #d1a934;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #d97f4a;
+}
+.hljs-literal {
+  color: #a8b8bc;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #e6cd7a;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #7fbf87;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #8fd0d4;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #d8dcc0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #cbe0c4;
+}
+.hljs-code {
+  color: #5f7a5c;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #b8e8b0;
+  background-color: #14251a;
+}
+.hljs-deletion {
+  color: #e8a89c;
+  background-color: #2c1815;
+}

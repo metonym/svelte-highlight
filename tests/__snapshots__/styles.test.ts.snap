@@ -210,6 +210,8 @@ exports[`Styles 1`] = `
   "monoBlue",
   "monokai",
   "monokaiSublime",
+  "motherboardDark",
+  "motherboardLight",
   "nacreDark",
   "nacreLight",
   "nebula",
