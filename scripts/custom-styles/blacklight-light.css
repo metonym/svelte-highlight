@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Blacklight Light
+  Description: The poster in daylight. Still loud. The paper is lavender
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #1a0828;
+  background: #f0e8ff;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7860a0;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #c010a0;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c010a0;
+}
+.hljs-literal {
+  color: #0870a0;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #3a8808;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #086848;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #6810a0;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #086848;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #1a0828;
+}
+.hljs-code {
+  color: #7860a0;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #1a4808;
+  background-color: #dce8c8;
+}
+.hljs-deletion {
+  color: #801068;
+  background-color: #ecd8f0;
+}
