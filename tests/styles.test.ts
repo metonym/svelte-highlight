@@ -5,6 +5,6 @@ test("Styles", () => {
 
   // @ts-expect-error
   expect(styles.default).toBeUndefined();
-  expect(styleNames.length).toEqual(344);
+  expect(styleNames.length).toEqual(346);
   expect(styleNames).toMatchSnapshot();
 });

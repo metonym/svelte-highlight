@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 344 styles: 258 exported from highlight.js@11.12.0, 86 custom styles added by svelte-highlight
+> 346 styles: 258 exported from highlight.js@11.12.0, 88 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -7269,6 +7269,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/verdigris-light.css";
+</script>
+```
+
+## vitriol-dark (`vitriolDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import vitriolDark from "svelte-highlight/styles/vitriol-dark";
+</script>
+
+<svelte:head>
+  {@html vitriolDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/vitriol-dark.css";
+</script>
+```
+
+## vitriol-light (`vitriolLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import vitriolLight from "svelte-highlight/styles/vitriol-light";
+</script>
+
+<svelte:head>
+  {@html vitriolLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/vitriol-light.css";
 </script>
 ```
 
