@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 274 themes: 258 exported from highlight.js@11.12.0, 16 custom themes added by svelte-highlight
+> 276 themes: 258 exported from highlight.js@11.12.0, 18 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -123,6 +123,60 @@
 </script>
 
 <HighlightStyle theme={agate}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## alpenglow-dark (`alpenglowDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/alpenglow-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import alpenglowDark from "svelte-highlight/themes/alpenglow-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={alpenglowDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## alpenglow-light (`alpenglowLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/alpenglow-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import alpenglowLight from "svelte-highlight/themes/alpenglow-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={alpenglowLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
