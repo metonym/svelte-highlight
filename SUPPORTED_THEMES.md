@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 278 themes: 258 exported from highlight.js@11.12.0, 20 custom themes added by svelte-highlight
+> 280 themes: 258 exported from highlight.js@11.12.0, 22 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4576,6 +4576,60 @@
 </script>
 
 <HighlightStyle theme={monokaiSublime}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## nacre-dark (`nacreDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/nacre-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import nacreDark from "svelte-highlight/themes/nacre-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={nacreDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## nacre-light (`nacreLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/nacre-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import nacreLight from "svelte-highlight/themes/nacre-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={nacreLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 278 styles: 258 exported from highlight.js@11.12.0, 20 custom styles added by svelte-highlight
+> 280 styles: 258 exported from highlight.js@11.12.0, 22 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4031,6 +4031,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/monokai-sublime.css";
+</script>
+```
+
+## nacre-dark (`nacreDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import nacreDark from "svelte-highlight/styles/nacre-dark";
+</script>
+
+<svelte:head>
+  {@html nacreDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/nacre-dark.css";
+</script>
+```
+
+## nacre-light (`nacreLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import nacreLight from "svelte-highlight/styles/nacre-light";
+</script>
+
+<svelte:head>
+  {@html nacreLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/nacre-light.css";
 </script>
 ```
 
