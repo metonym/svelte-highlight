@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Tropicalia Dark
+  Description: Banana, hibiscus, ocean, leaf. Brazil, not a tiki bar
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #f0e8c8;
+  background: #1a2418;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a7860;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #f0c010;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #e04070;
+}
+.hljs-literal {
+  color: #20c0d0;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #e04070;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #f09030;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #80e040;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #f09030;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #f0e8c8;
+}
+.hljs-code {
+  color: #6a7860;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #d0f0b8;
+  background-color: #203018;
+}
+.hljs-deletion {
+  color: #f0c8d0;
+  background-color: #2c1818;
+}
