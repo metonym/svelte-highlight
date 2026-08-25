@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 266 styles: 258 exported from highlight.js@11.12.0, 8 custom styles added by svelte-highlight
+> 268 styles: 258 exported from highlight.js@11.12.0, 10 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1565,6 +1565,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/cupertino.css";
+</script>
+```
+
+## cyanotype-dark (`cyanotypeDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import cyanotypeDark from "svelte-highlight/styles/cyanotype-dark";
+</script>
+
+<svelte:head>
+  {@html cyanotypeDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cyanotype-dark.css";
+</script>
+```
+
+## cyanotype-light (`cyanotypeLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import cyanotypeLight from "svelte-highlight/styles/cyanotype-light";
+</script>
+
+<svelte:head>
+  {@html cyanotypeLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cyanotype-light.css";
 </script>
 ```
 

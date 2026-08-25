@@ -74,6 +74,8 @@ exports[`Styles 1`] = `
   "colors",
   "cupcake",
   "cupertino",
+  "cyanotypeDark",
+  "cyanotypeLight",
   "cybertopiaCherry",
   "cybertopiaDimmer",
   "cybertopiaIcecap",
