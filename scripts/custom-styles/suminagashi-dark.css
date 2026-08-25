@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Suminagashi Dark
+  Description: Ink pool at night: swirls of teal, crimson, and violet glow on black water
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #15130f
+  fg:       #ece4d0
+  comment:  #8f8570
+  teal:     #4fc4d4
+  crimson:  #e0576e
+  violet:   #a68adf
+  gold:     #e0a94a
+  green:    #6ecb8e
+  brightteal: #7ad4e0
+  sepia:    #cbb888
+*/
+.hljs {
+  color: #ece4d0;
+  background: #15130f;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8f8570;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #4fc4d4;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #e0576e;
+}
+.hljs-literal {
+  color: #a68adf;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #e0a94a;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #6ecb8e;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #7ad4e0;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #cbb888;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #ece4d0;
+}
+.hljs-code {
+  color: #8f8570;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #b8e8b0;
+  background-color: #182418;
+}
+.hljs-deletion {
+  color: #f0a8a8;
+  background-color: #301616;
+}
