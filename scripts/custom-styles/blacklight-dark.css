@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Blacklight Dark
+  Description: UV poster. Magenta and lime that only exist under a tube
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #e8d8ff;
+  background: #120818;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a5088;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #ff40e0;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #ff40e0;
+}
+.hljs-literal {
+  color: #40e0ff;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #b0ff20;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #80ffc0;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #f0a0ff;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #80ffc0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #e8d8ff;
+}
+.hljs-code {
+  color: #6a5088;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #d8ffb0;
+  background-color: #182818;
+}
+.hljs-deletion {
+  color: #ffc0f0;
+  background-color: #280818;
+}

@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 304 themes: 258 exported from highlight.js@11.12.0, 46 custom themes added by svelte-highlight
+> 306 themes: 258 exported from highlight.js@11.12.0, 48 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1431,6 +1431,60 @@
 </script>
 
 <HighlightStyle theme={blackMetalVenom}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## blacklight-dark (`blacklightDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/blacklight-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import blacklightDark from "svelte-highlight/themes/blacklight-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={blacklightDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## blacklight-light (`blacklightLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/blacklight-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import blacklightLight from "svelte-highlight/themes/blacklight-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={blacklightLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 304 styles: 258 exported from highlight.js@11.12.0, 46 custom styles added by svelte-highlight
+> 306 styles: 258 exported from highlight.js@11.12.0, 48 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1261,6 +1261,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/black-metal-venom.css";
+</script>
+```
+
+## blacklight-dark (`blacklightDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import blacklightDark from "svelte-highlight/styles/blacklight-dark";
+</script>
+
+<svelte:head>
+  {@html blacklightDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/blacklight-dark.css";
+</script>
+```
+
+## blacklight-light (`blacklightLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import blacklightLight from "svelte-highlight/styles/blacklight-light";
+</script>
+
+<svelte:head>
+  {@html blacklightLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/blacklight-light.css";
 </script>
 ```
 
