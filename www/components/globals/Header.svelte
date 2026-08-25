@@ -101,6 +101,7 @@
     "/preview-traceql": "TraceQL language preview",
     "/preview-jinja": "Jinja language preview",
     "/preview-wit": "WIT language preview",
+    "/preview-surrealql": "SurrealQL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
