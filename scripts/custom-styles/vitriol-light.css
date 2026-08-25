@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Vitriol Light
+  Description: Chemical glow on paper: violet-tinted white with a deep acid-green reagent
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #f0ecfa
+  fg:       #241c3a
+  comment:  #7a6e94
+  violet:   #6a3ea0
+  acid:     #2f7a1e
+  electric: #1a5e8a
+  orchid:   #8a2e94
+  softviolet: #5a4a94
+  darkviolet: #4a2a7a
+  darkacid: #3a6e24
+*/
+.hljs {
+  color: #241c3a;
+  background: #f0ecfa;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a6e94;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #6a3ea0;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #2f7a1e;
+}
+.hljs-literal {
+  color: #1a5e8a;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #8a2e94;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #5a4a94;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #4a2a7a;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #3a6e24;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #241c3a;
+}
+.hljs-code {
+  color: #7a6e94;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #1f4014;
+  background-color: #dce8cc;
+}
+.hljs-deletion {
+  color: #7a1440;
+  background-color: #f2d4e4;
+}

@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 344 themes: 258 exported from highlight.js@11.12.0, 86 custom themes added by svelte-highlight
+> 346 themes: 258 exported from highlight.js@11.12.0, 88 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -8237,6 +8237,60 @@
 </script>
 
 <HighlightStyle theme={verdigrisLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## vitriol-dark (`vitriolDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/vitriol-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import vitriolDark from "svelte-highlight/themes/vitriol-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={vitriolDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## vitriol-light (`vitriolLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/vitriol-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import vitriolLight from "svelte-highlight/themes/vitriol-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={vitriolLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
