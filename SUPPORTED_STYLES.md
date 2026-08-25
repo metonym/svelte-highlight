@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 284 styles: 258 exported from highlight.js@11.12.0, 26 custom styles added by svelte-highlight
+> 286 styles: 258 exported from highlight.js@11.12.0, 28 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5829,6 +5829,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/unikitty-light.css";
+</script>
+```
+
+## uranium-dark (`uraniumDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import uraniumDark from "svelte-highlight/styles/uranium-dark";
+</script>
+
+<svelte:head>
+  {@html uraniumDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/uranium-dark.css";
+</script>
+```
+
+## uranium-light (`uraniumLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import uraniumLight from "svelte-highlight/styles/uranium-light";
+</script>
+
+<svelte:head>
+  {@html uraniumLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/uranium-light.css";
 </script>
 ```
 

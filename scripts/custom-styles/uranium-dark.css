@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Uranium Dark
+  Description: Vaseline glass. Canary yellow-green under UV
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #e0e8c8;
+  background: #12140e;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a7050;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #c8e830;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c8e830;
+}
+.hljs-literal {
+  color: #e8d848;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #a0d060;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #88a848;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #c4e8a0;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #88a848;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #e0e8c8;
+}
+.hljs-code {
+  color: #6a7050;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #d8f0b0;
+  background-color: #1c2414;
+}
+.hljs-deletion {
+  color: #e8d0b0;
+  background-color: #2a2010;
+}

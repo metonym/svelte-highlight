@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Uranium Light
+  Description: The same glass in a window. Sickly, a little wrong
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #242818;
+  background: #f4f6e8;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a8060;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #6a8010;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #6a8010;
+}
+.hljs-literal {
+  color: #8a8018;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #4a6820;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #5a6030;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #3a5820;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #5a6030;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #242818;
+}
+.hljs-code {
+  color: #7a8060;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #2a4010;
+  background-color: #e0e8c8;
+}
+.hljs-deletion {
+  color: #6a3020;
+  background-color: #eadcd0;
+}

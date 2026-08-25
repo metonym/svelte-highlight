@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 284 themes: 258 exported from highlight.js@11.12.0, 26 custom themes added by svelte-highlight
+> 286 themes: 258 exported from highlight.js@11.12.0, 28 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6617,6 +6617,60 @@
 </script>
 
 <HighlightStyle theme={unikittyLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## uranium-dark (`uraniumDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/uranium-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import uraniumDark from "svelte-highlight/themes/uranium-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={uraniumDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## uranium-light (`uraniumLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/uranium-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import uraniumLight from "svelte-highlight/themes/uranium-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={uraniumLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
