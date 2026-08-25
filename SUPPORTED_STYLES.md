@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 322 styles: 258 exported from highlight.js@11.12.0, 64 custom styles added by svelte-highlight
+> 324 styles: 258 exported from highlight.js@11.12.0, 66 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3923,6 +3923,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/kimbie-light.css";
+</script>
+```
+
+## kintsugi-dark (`kintsugiDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import kintsugiDark from "svelte-highlight/styles/kintsugi-dark";
+</script>
+
+<svelte:head>
+  {@html kintsugiDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/kintsugi-dark.css";
+</script>
+```
+
+## kintsugi-light (`kintsugiLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import kintsugiLight from "svelte-highlight/styles/kintsugi-light";
+</script>
+
+<svelte:head>
+  {@html kintsugiLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/kintsugi-light.css";
 </script>
 ```
 

@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Kintsugi Dark
+  Description: Gold-mended lacquer: black ceramic base with gilded seams
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #17140f
+  fg:       #e8dcc8
+  comment:  #7a6f5c
+  gold:     #c9a44e
+  seam:     #c96f4a
+  glaze:    #8fa7ad
+  amber:    #e0b25c
+  bronze:   #b98a4e
+  brightgold: #f0c869
+  ivory:    #ead9a8
+*/
+.hljs {
+  color: #e8dcc8;
+  background: #17140f;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a6f5c;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #c9a44e;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c96f4a;
+}
+.hljs-literal {
+  color: #8fa7ad;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #e0b25c;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #b98a4e;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #f0c869;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #ead9a8;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #e8dcc8;
+}
+.hljs-code {
+  color: #7a6f5c;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #d9c98a;
+  background-color: #2a2415;
+}
+.hljs-deletion {
+  color: #e0a08c;
+  background-color: #3a1f18;
+}
