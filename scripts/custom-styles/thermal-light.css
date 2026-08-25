@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Thermal Light
+  Description: The same scale on pale sand. Hot still reads as danger
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #101018;
+  background: #f4f0e8;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #686078;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #880808;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c04008;
+}
+.hljs-literal {
+  color: #a06000;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #c04008;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #302080;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #481070;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #302080;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #101018;
+}
+.hljs-code {
+  color: #686078;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #584808;
+  background-color: #ece4c8;
+}
+.hljs-deletion {
+  color: #680830;
+  background-color: #f0d8e0;
+}
