@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 330 styles: 258 exported from highlight.js@11.12.0, 72 custom styles added by svelte-highlight
+> 332 styles: 258 exported from highlight.js@11.12.0, 74 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6399,6 +6399,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/tender.css";
+</script>
+```
+
+## terrazzo-dark (`terrazzoDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import terrazzoDark from "svelte-highlight/styles/terrazzo-dark";
+</script>
+
+<svelte:head>
+  {@html terrazzoDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/terrazzo-dark.css";
+</script>
+```
+
+## terrazzo-light (`terrazzoLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import terrazzoLight from "svelte-highlight/styles/terrazzo-light";
+</script>
+
+<svelte:head>
+  {@html terrazzoLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/terrazzo-light.css";
 </script>
 ```
 

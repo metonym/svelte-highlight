@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 330 themes: 258 exported from highlight.js@11.12.0, 72 custom themes added by svelte-highlight
+> 332 themes: 258 exported from highlight.js@11.12.0, 74 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -7256,6 +7256,60 @@
 </script>
 
 <HighlightStyle theme={tender}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## terrazzo-dark (`terrazzoDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/terrazzo-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import terrazzoDark from "svelte-highlight/themes/terrazzo-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={terrazzoDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## terrazzo-light (`terrazzoLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/terrazzo-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import terrazzoLight from "svelte-highlight/themes/terrazzo-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={terrazzoLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
