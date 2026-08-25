@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 288 themes: 258 exported from highlight.js@11.12.0, 30 custom themes added by svelte-highlight
+> 290 themes: 258 exported from highlight.js@11.12.0, 32 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2839,6 +2839,60 @@
 </script>
 
 <HighlightStyle theme={fruitSoda}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## gamboge-dark (`gambogeDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/gamboge-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import gambogeDark from "svelte-highlight/themes/gamboge-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={gambogeDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## gamboge-light (`gambogeLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/gamboge-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import gambogeLight from "svelte-highlight/themes/gamboge-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={gambogeLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
