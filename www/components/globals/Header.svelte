@@ -99,6 +99,7 @@
     "/preview-cedar": "Cedar language preview",
     "/preview-esql": "ES|QL language preview",
     "/preview-traceql": "TraceQL language preview",
+    "/preview-jinja": "Jinja language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
