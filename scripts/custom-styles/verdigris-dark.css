@@ -8,51 +8,51 @@ code.hljs {
 }
 /*
   Theme: Verdigris Dark
-  Description: Oxidized copper: patina blue-green with exposed copper accents
+  Description: Oxidized copper: cerulean-blue patina with exposed copper accents
   Author: svelte-highlight
   License: MIT
 
-  bg:       #101c1a
-  fg:       #cfe8de
-  comment:  #6f8f86
-  patina:   #4fae8e
-  copper:   #d9895a
-  aqua:     #7bc4c4
-  brass:    #c9a15a
-  teal:     #5fae9e
-  mint:     #8fd4b8
-  tan:      #e0b98a
+  bg:       #0c1a1e
+  fg:       #cfe6ec
+  comment:  #6a8992
+  patina:   #3f9aae
+  copper:   #d97a48
+  cerulean: #6fb8d4
+  brass:    #c99450
+  teal:     #4a96a8
+  brightcerulean: #7fc8d8
+  tan:      #dcb478
 */
 .hljs {
-  color: #cfe8de;
-  background: #101c1a;
+  color: #cfe6ec;
+  background: #0c1a1e;
 }
 .hljs-comment,
 .hljs-quote {
-  color: #6f8f86;
+  color: #6a8992;
   font-style: italic;
 }
 .hljs-doctag,
 .hljs-keyword,
 .hljs-formula,
 .hljs-template-tag {
-  color: #4fae8e;
+  color: #3f9aae;
 }
 .hljs-section,
 .hljs-name,
 .hljs-selector-tag,
 .hljs-tag,
 .hljs-subst {
-  color: #d9895a;
+  color: #d97a48;
 }
 .hljs-literal {
-  color: #7bc4c4;
+  color: #6fb8d4;
 }
 .hljs-string,
 .hljs-regexp,
 .hljs-attribute,
 .hljs-meta .hljs-string {
-  color: #c9a15a;
+  color: #c99450;
 }
 .hljs-attr,
 .hljs-variable,
@@ -63,7 +63,7 @@ code.hljs {
 .hljs-selector-attr,
 .hljs-selector-pseudo,
 .hljs-number {
-  color: #5fae9e;
+  color: #4a96a8;
 }
 .hljs-symbol,
 .hljs-bullet,
@@ -71,19 +71,19 @@ code.hljs {
 .hljs-meta,
 .hljs-selector-id,
 .hljs-title {
-  color: #8fd4b8;
+  color: #7fc8d8;
 }
 .hljs-built_in,
 .hljs-title.class_,
 .hljs-class .hljs-title {
-  color: #e0b98a;
+  color: #dcb478;
 }
 .hljs-punctuation,
 .hljs-operator {
-  color: #cfe8de;
+  color: #cfe6ec;
 }
 .hljs-code {
-  color: #6f8f86;
+  color: #6a8992;
 }
 .hljs-emphasis {
   font-style: italic;
