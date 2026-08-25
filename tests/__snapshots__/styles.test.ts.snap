@@ -76,6 +76,8 @@ exports[`Styles 1`] = `
   "circus",
   "classicDark",
   "classicLight",
+  "cochinealDark",
+  "cochinealLight",
   "codepenEmbed",
   "codeschool",
   "colorBrewer",

@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Cochineal Dark
+  Description: Dyer's crimson: deep wine black with scarlet and mauve pigment tones
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #180d0e
+  fg:       #ecd8d4
+  comment:  #8a6a68
+  crimson:  #d43f5a
+  saffron:  #e0834a
+  mauve:    #b06fae
+  gold:     #d99a56
+  rose:     #c85a6e
+  scarlet:  #e85f74
+  tan:      #caa06e
+*/
+.hljs {
+  color: #ecd8d4;
+  background: #180d0e;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8a6a68;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #d43f5a;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #e0834a;
+}
+.hljs-literal {
+  color: #b06fae;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #d99a56;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #c85a6e;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #e85f74;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #caa06e;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #ecd8d4;
+}
+.hljs-code {
+  color: #8a6a68;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #cde0b8;
+  background-color: #1c2814;
+}
+.hljs-deletion {
+  color: #f0a8a8;
+  background-color: #3a1418;
+}
