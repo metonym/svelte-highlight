@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Mandarinfish Dark
+  Description: Synchiropus. Orange, cyan, gold, and violet on the same animal
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #f0ece0;
+  background: #12101a;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a7088;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #ff6a18;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #ff6a18;
+}
+.hljs-literal {
+  color: #f0d020;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #18d0c8;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #c060ff;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #48e070;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #c060ff;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #f0ece0;
+}
+.hljs-code {
+  color: #7a7088;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #c8f0d8;
+  background-color: #182820;
+}
+.hljs-deletion {
+  color: #f0d0b8;
+  background-color: #2a1810;
+}
