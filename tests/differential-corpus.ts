@@ -19,6 +19,21 @@ export const CUSTOM_SNIPPETS: Record<string, string> = {
 } @empty {
   <p>None</p>
 }`,
+  assemblyscript: `// add two i32s
+@inline
+export function add(a: i32, b: i32): i32 {
+  return a + b;
+}
+
+export function loadX(ptr: usize): i32 {
+  return changetype<i32>(unchecked(load<i32>(ptr)));
+}
+
+export function grow(): i32 {
+  const label = "pages";
+  return memory.grow(1);
+}
+`,
   bibtex: `@article{einstein1905,
   author = {Albert Einstein},
   title  = {On the Electrodynamics of Moving Bodies},

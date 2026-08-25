@@ -48,6 +48,13 @@ true false null
 
 exports[`golden snapshot: aspectj 1`] = `"<span class="hljs-keyword">false</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">int</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">float</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span> <span class="hljs-keyword">boolean</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">true</span> <span class="hljs-keyword">while</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">strictfp</span> <span class="hljs-keyword">finally</span> <span class="hljs-keyword">protected</span> <span class="hljs-keyword">import</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">return</span> <span class="hljs-keyword">void</span> <span class="hljs-keyword">enum</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">extends</span> <span class="hljs-keyword">implements</span> <span class="hljs-keyword">break</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">catch</span> <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">byte</span> <span class="hljs-keyword">super</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">case</span> <span class="hljs-keyword">assert</span> <span class="hljs-keyword">short</span>"`;
 
+exports[`golden snapshot: assemblyscript 1`] = `
+"<span class="language-typescript"><span class="hljs-comment">// comment</span>
+<span class="hljs-string">&quot;string&quot;</span> <span class="hljs-string">&#x27;string&#x27;</span> <span class="hljs-number">123</span> <span class="hljs-number">3.14</span>
+<span class="hljs-literal">true</span> <span class="hljs-literal">false</span> <span class="hljs-literal">null</span>
+/regex/ #hashtag <span class="hljs-meta">@annotation</span></span>"
+`;
+
 exports[`golden snapshot: astro 1`] = `
 "<span class="language-html">// comment
 &quot;string&quot; &#x27;string&#x27; 123 3.14
