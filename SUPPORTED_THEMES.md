@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 338 themes: 258 exported from highlight.js@11.12.0, 80 custom themes added by svelte-highlight
+> 340 themes: 258 exported from highlight.js@11.12.0, 82 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6706,6 +6706,60 @@
 </script>
 
 <HighlightStyle theme={scoriaLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## selenite-dark (`seleniteDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/selenite-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import seleniteDark from "svelte-highlight/themes/selenite-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={seleniteDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## selenite-light (`seleniteLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/selenite-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import seleniteLight from "svelte-highlight/themes/selenite-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={seleniteLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

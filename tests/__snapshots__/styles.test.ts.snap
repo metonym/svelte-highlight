@@ -266,6 +266,8 @@ exports[`Styles 1`] = `
   "schoolBook",
   "scoriaDark",
   "scoriaLight",
+  "seleniteDark",
+  "seleniteLight",
   "setiUi",
   "shadesOfPurple",
   "shapeshifter",
