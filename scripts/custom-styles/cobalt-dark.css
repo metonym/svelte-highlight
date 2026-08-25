@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Cobalt Dark
+  Description: Saturated ultramarine glass: deep blue base with warm gold accents
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #16294f
+  fg:       #dce8f5
+  comment:  #6a84a8
+  gold:     #eab04a
+  copper:   #e0855a
+  cyan:     #8fd0e0
+  cream:    #e8cf8a
+  sky:      #7ab4dc
+  paleblue: #a8c8ec
+  palegold: #f0d9a0
+*/
+.hljs {
+  color: #dce8f5;
+  background: #16294f;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a84a8;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #eab04a;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #e0855a;
+}
+.hljs-literal {
+  color: #8fd0e0;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #e8cf8a;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #7ab4dc;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #a8c8ec;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #f0d9a0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #dce8f5;
+}
+.hljs-code {
+  color: #6a84a8;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #b8e8cc;
+  background-color: #163a2c;
+}
+.hljs-deletion {
+  color: #f0a8a0;
+  background-color: #4a2018;
+}
