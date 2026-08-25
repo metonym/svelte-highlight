@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 338 styles: 258 exported from highlight.js@11.12.0, 80 custom styles added by svelte-highlight
+> 340 styles: 258 exported from highlight.js@11.12.0, 82 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5915,6 +5915,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/scoria-light.css";
+</script>
+```
+
+## selenite-dark (`seleniteDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import seleniteDark from "svelte-highlight/styles/selenite-dark";
+</script>
+
+<svelte:head>
+  {@html seleniteDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/selenite-dark.css";
+</script>
+```
+
+## selenite-light (`seleniteLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import seleniteLight from "svelte-highlight/styles/selenite-light";
+</script>
+
+<svelte:head>
+  {@html seleniteLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/selenite-light.css";
 </script>
 ```
 

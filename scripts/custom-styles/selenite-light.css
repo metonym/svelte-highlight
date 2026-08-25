@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Selenite Light
+  Description: Translucent crystal: pale lavender-white with soft ethereal violets
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #f4f1f8
+  fg:       #2c2a34
+  comment:  #837e94
+  violet:   #6a5aa0
+  mauve:    #a05a8a
+  blue:     #4a7aa0
+  lilac:    #8a6ea0
+  periwinkle: #5a6ea0
+  indigo:   #4a5a94
+  dustymauve: #6b5a74
+*/
+.hljs {
+  color: #2c2a34;
+  background: #f4f1f8;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #837e94;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #6a5aa0;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #a05a8a;
+}
+.hljs-literal {
+  color: #4a7aa0;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #8a6ea0;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #5a6ea0;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #4a5a94;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #6b5a74;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #2c2a34;
+}
+.hljs-code {
+  color: #837e94;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #244a20;
+  background-color: #d8ecd0;
+}
+.hljs-deletion {
+  color: #7a2040;
+  background-color: #f2d8e4;
+}
