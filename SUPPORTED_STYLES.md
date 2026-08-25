@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 288 styles: 258 exported from highlight.js@11.12.0, 30 custom styles added by svelte-highlight
+> 290 styles: 258 exported from highlight.js@11.12.0, 32 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2501,6 +2501,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/fruit-soda.css";
+</script>
+```
+
+## gamboge-dark (`gambogeDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import gambogeDark from "svelte-highlight/styles/gamboge-dark";
+</script>
+
+<svelte:head>
+  {@html gambogeDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/gamboge-dark.css";
+</script>
+```
+
+## gamboge-light (`gambogeLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import gambogeLight from "svelte-highlight/styles/gamboge-light";
+</script>
+
+<svelte:head>
+  {@html gambogeLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/gamboge-light.css";
 </script>
 ```
 
