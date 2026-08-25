@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Peat Light
+  Description: Cut turf drying. Tan ground, rust keywords
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #2a2418;
+  background: #ebe4d4;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a6a58;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #8a3a18;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #8a3a18;
+}
+.hljs-literal {
+  color: #8a5a20;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #3a4a28;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #5a4a38;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #5c4030;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #5a4a38;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #2a2418;
+}
+.hljs-code {
+  color: #7a6a58;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #2a3a18;
+  background-color: #dce4cc;
+}
+.hljs-deletion {
+  color: #6a2818;
+  background-color: #ead8d0;
+}

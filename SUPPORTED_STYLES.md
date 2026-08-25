@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 282 styles: 258 exported from highlight.js@11.12.0, 24 custom styles added by svelte-highlight
+> 284 styles: 258 exported from highlight.js@11.12.0, 26 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -4519,6 +4519,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/pasque.css";
+</script>
+```
+
+## peat-dark (`peatDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import peatDark from "svelte-highlight/styles/peat-dark";
+</script>
+
+<svelte:head>
+  {@html peatDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/peat-dark.css";
+</script>
+```
+
+## peat-light (`peatLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import peatLight from "svelte-highlight/styles/peat-light";
+</script>
+
+<svelte:head>
+  {@html peatLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/peat-light.css";
 </script>
 ```
 

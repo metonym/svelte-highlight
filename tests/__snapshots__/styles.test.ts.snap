@@ -206,6 +206,8 @@ exports[`Styles 1`] = `
   "paraisoDark",
   "paraisoLight",
   "pasque",
+  "peatDark",
+  "peatLight",
   "phd",
   "pico",
   "pojoaque",
