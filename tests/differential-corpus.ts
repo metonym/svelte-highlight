@@ -557,6 +557,12 @@ def my_rule(name):
     enabled = True
     srcs = glob(["*.go"])
     pass`,
+  surrealql: `// users who wrote a post
+DEFINE TABLE user SCHEMAFULL;
+SELECT * FROM user:alice WHERE age > 18;
+CREATE user SET name = "Ada";
+RELATE user:alice->wrote->post:hello;
+`,
   svelte: `<script>
   let count = $state(0);
   let doubled = $derived(count * 2);

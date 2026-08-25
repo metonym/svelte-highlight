@@ -230,6 +230,7 @@ exports[`Languages 1`] = `
   "step21",
   "stylus",
   "subunit",
+  "surrealql",
   "svelte",
   "swift",
   "taggerscript",

@@ -268,6 +268,12 @@ Body text with *emphasis*.
 
 enabled = True
 `,
+  surrealql: `// users who wrote a post
+DEFINE TABLE user SCHEMAFULL;
+SELECT * FROM user:alice WHERE age > 18;
+CREATE user SET name = "Ada";
+RELATE user:alice->wrote->post:hello;
+`,
   templ: `package main
 
 templ hello(name string) {
