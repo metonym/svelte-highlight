@@ -49,6 +49,7 @@ type ThemeArtifact = {
   colorScheme: "light" | "dark";
   vars: Map<string, string>;
   extrasRaw: string;
+  custom?: boolean;
 };
 
 type ThemeReportEntry = {
@@ -165,6 +166,7 @@ function processTheme(
       colorScheme,
       vars,
       extrasRaw,
+      ...(input.custom ? { custom: true } : {}),
     },
     report: {
       name: input.name,
@@ -347,12 +349,16 @@ export default ${artifact.moduleName};
   allWrites.push(writeTo("src/themes/index.js", indexJs));
   allWrites.push(writeTo("src/themes/index.d.ts", indexDts));
 
+  const customCount = artifacts.filter((a) => a.custom).length;
   const markdown =
-    createMarkdown("Themes", artifacts.length) +
+    createMarkdown("Themes", artifacts.length, customCount) +
     artifacts
-      .map(
-        (a) => `## ${a.name} (\`${a.moduleName}\`)
-
+      .map((a) => {
+        const customNote = a.custom
+          ? "\n> Custom svelte-highlight theme (not exported by highlight.js)\n"
+          : "";
+        return `## ${a.name} (\`${a.moduleName}\`)
+${customNote}
 **CSS variables (global)**
 
 \`\`\`html
@@ -374,8 +380,8 @@ export default ${artifact.moduleName};
 <HighlightStyle theme={${a.moduleName}}>
   <Highlight ... />
 </HighlightStyle>
-\`\`\`\n\n`,
-      )
+\`\`\`\n\n`;
+      })
       .join("");
   allWrites.push(writeTo("SUPPORTED_THEMES.md", markdown));
 

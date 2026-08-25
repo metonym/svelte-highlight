@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { $, Glob } from "bun";
 import { createMarkdown } from "./utils/create-markdown.ts";
@@ -17,7 +18,12 @@ import { writeTo } from "./utils/write-to.ts";
 
 export type ModuleNames = Array<{ name: string; moduleName: string }>;
 
-export type ThemeInput = { name: string; moduleName: string; css: string };
+export type ThemeInput = {
+  name: string;
+  moduleName: string;
+  css: string;
+  custom?: boolean;
+};
 
 export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
   console.time("build styles");
@@ -35,6 +41,7 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
     name: string;
     dir: string;
     moduleName: string;
+    custom?: boolean;
   }> = [];
 
   for await (const file of glob.scan("node_modules/highlight.js/styles")) {
@@ -61,6 +68,41 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
     }
   }
 
+  const customStylesDir = path.join(import.meta.dir, "custom-styles");
+  if (existsSync(customStylesDir)) {
+    for await (const file of glob.scan(customStylesDir)) {
+      if (!NON_MINIFIED_CSS.test(file)) continue;
+
+      const absPath = path.resolve(customStylesDir, file);
+      const { name } = path.parse(file);
+      let moduleName = toCamelCase(name);
+
+      if (
+        STARTS_WITH_DIGIT.test(moduleName) ||
+        DEFAULT_STRING.test(moduleName)
+      ) {
+        moduleName = `_${moduleName}`;
+      }
+
+      if (seenNames.has(name)) {
+        throw new Error(
+          `custom style "${name}" collides with an existing highlight.js style`,
+        );
+      }
+
+      seenNames.add(name);
+      styles.push({ name, moduleName });
+      cssFiles.push({
+        file,
+        absPath,
+        name,
+        dir: "custom-styles",
+        moduleName,
+        custom: true,
+      });
+    }
+  }
+
   // Mining gap-fill proposals needs every theme's raw CSS up front, so read
   // it all once here rather than per-file inside the main pass below.
   const cssFilesWithRaw = await Promise.all(
@@ -75,7 +117,7 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
   const gapFillProposals = buildGapFillProposals(rawCssByTheme);
 
   const fileWrites = await Promise.all(
-    cssFilesWithRaw.map(async ({ absPath, name, moduleName, raw }) => {
+    cssFilesWithRaw.map(async ({ absPath, name, moduleName, raw, custom }) => {
       const content = await inlineCssUrls(raw, path.dirname(absPath));
 
       const proposals = gapFillProposals.get(name);
@@ -120,7 +162,12 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
         ],
         scopedStyle,
         augmentation,
-        themeInput: { name, moduleName, css: cssMinified },
+        themeInput: {
+          name,
+          moduleName,
+          css: cssMinified,
+          ...(custom ? { custom: true } : {}),
+        },
       };
     }),
   );
@@ -142,12 +189,19 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
 
   styles = styles.sort((a, b) => a.name.localeCompare(b.name));
 
+  const customNames = new Set(
+    cssFiles.filter((file) => file.custom).map((file) => file.name),
+  );
+
   const markdown =
-    createMarkdown("Styles", styles.length) +
+    createMarkdown("Styles", styles.length, customNames.size) +
     styles
       .map(({ name, moduleName }) => {
+        const customNote = customNames.has(name)
+          ? "\n> Custom svelte-highlight style (not exported by highlight.js)\n"
+          : "";
         return `## ${name} (\`${moduleName}\`)
-
+${customNote}
 **Injected Styles**
 
 \`\`\`html

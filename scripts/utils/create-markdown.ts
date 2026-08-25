@@ -8,11 +8,13 @@ export const createMarkdown = (
   len: number,
   customCount = 0,
 ) => {
+  const customNoun =
+    type === "Languages" ? "grammars" : type === "Styles" ? "styles" : "themes";
   const summary =
     customCount > 0
       ? `> ${len} ${type.toLowerCase()}: ${
           len - customCount
-        } exported from highlight.js@${hljsVersion}, ${customCount} custom grammars added by svelte-highlight`
+        } exported from highlight.js@${hljsVersion}, ${customCount} custom ${customNoun} added by svelte-highlight`
       : `> ${len} ${type.toLowerCase()} exported from highlight.js@${hljsVersion}`;
 
   return `# Supported ${type}
