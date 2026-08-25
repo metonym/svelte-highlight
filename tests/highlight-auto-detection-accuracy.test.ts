@@ -332,6 +332,17 @@ fn main(@location(0) pos: vec3<f32>) -> @builtin(position) vec4<f32> {
     return vec4<f32>(pos, 1.0);
 }
 `,
+  wit: `package example:host@0.1.0;
+
+world hello {
+  import wasi:io/poll;
+  export greet: func(name: string) -> string;
+}
+
+interface types {
+  record person { name: string, age: u32 }
+}
+`,
   zig: `pub fn main() !void {
     const x: i32 = 0;
     std.debug.print("{}\\n", .{x});
