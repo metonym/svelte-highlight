@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Flint Light
+  Description: Pale struck stone. Black type, one spark
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #1c1c1a;
+  background: #f0eee8;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a7874;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #c05018;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c05018;
+}
+.hljs-literal {
+  color: #c05018;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #3a3a36;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #4a4a46;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #2a2a28;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #4a4a46;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #1c1c1a;
+}
+.hljs-code {
+  color: #7a7874;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #2a2a18;
+  background-color: #e4e4d8;
+}
+.hljs-deletion {
+  color: #8a3010;
+  background-color: #f0dcd0;
+}
