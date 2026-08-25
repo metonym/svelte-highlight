@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Bakelite Light
+  Description: Cream butterscotch plastic: warm amber tones on vintage cream
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #f2e6cc
+  fg:       #2e1c10
+  comment:  #8a6f4e
+  amber:    #8a4a10
+  maroon:   #7a281a
+  caramel:  #6b4a1e
+  burnt:    #8a3e1a
+  bronze:   #6b4424
+  darkamber: #7a4e12
+  ochre:    #5c3f1e
+*/
+.hljs {
+  color: #2e1c10;
+  background: #f2e6cc;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8a6f4e;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #8a4a10;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #7a281a;
+}
+.hljs-literal {
+  color: #6b4a1e;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #8a3e1a;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #6b4424;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #7a4e12;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #5c3f1e;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #2e1c10;
+}
+.hljs-code {
+  color: #8a6f4e;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #2f4014;
+  background-color: #e0e0c0;
+}
+.hljs-deletion {
+  color: #6e2010;
+  background-color: #f0d4c4;
+}

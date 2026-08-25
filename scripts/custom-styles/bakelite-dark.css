@@ -1,0 +1,104 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Bakelite Dark
+  Description: Vintage maroon radio plastic: deep brown-red with butterscotch controls
+  Author: svelte-highlight
+  License: MIT
+
+  bg:       #1c110d
+  fg:       #ecd8b8
+  comment:  #8a6a58
+  amber:    #d68a2e
+  maroon:   #b8442e
+  caramel:  #d4b06a
+  burnt:    #c46a3a
+  bronze:   #a86e3e
+  brightamber: #e0a24a
+  tan:      #cfa66e
+*/
+.hljs {
+  color: #ecd8b8;
+  background: #1c110d;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8a6a58;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #d68a2e;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #b8442e;
+}
+.hljs-literal {
+  color: #d4b06a;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #c46a3a;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #a86e3e;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #e0a24a;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #cfa66e;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #ecd8b8;
+}
+.hljs-code {
+  color: #8a6a58;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #d8cf9a;
+  background-color: #241c10;
+}
+.hljs-deletion {
+  color: #e0a08c;
+  background-color: #341612;
+}
