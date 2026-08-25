@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Fauve Dark
+  Description: Matisse in 1905. Orange against cobalt. Viridian in the trees
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #f0e8d8;
+  background: #1c1410;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a6860;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #e04018;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #e04018;
+}
+.hljs-literal {
+  color: #e0c020;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #4060c8;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #a040c0;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #30a070;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #a040c0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #f0e8d8;
+}
+.hljs-code {
+  color: #7a6860;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #c8e0c8;
+  background-color: #1c2820;
+}
+.hljs-deletion {
+  color: #f0c8b8;
+  background-color: #2c1810;
+}
