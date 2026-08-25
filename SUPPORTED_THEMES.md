@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 340 themes: 258 exported from highlight.js@11.12.0, 82 custom themes added by svelte-highlight
+> 342 themes: 258 exported from highlight.js@11.12.0, 84 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -231,6 +231,60 @@
 </script>
 
 <HighlightStyle theme={alpenglowLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## amaranth-dark (`amaranthDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/amaranth-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import amaranthDark from "svelte-highlight/themes/amaranth-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={amaranthDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## amaranth-light (`amaranthLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/amaranth-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import amaranthLight from "svelte-highlight/themes/amaranth-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={amaranthLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

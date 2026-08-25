@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 340 styles: 258 exported from highlight.js@11.12.0, 82 custom styles added by svelte-highlight
+> 342 styles: 258 exported from highlight.js@11.12.0, 84 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -205,6 +205,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/alpenglow-light.css";
+</script>
+```
+
+## amaranth-dark (`amaranthDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import amaranthDark from "svelte-highlight/styles/amaranth-dark";
+</script>
+
+<svelte:head>
+  {@html amaranthDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/amaranth-dark.css";
+</script>
+```
+
+## amaranth-light (`amaranthLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import amaranthLight from "svelte-highlight/styles/amaranth-light";
+</script>
+
+<svelte:head>
+  {@html amaranthLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/amaranth-light.css";
 </script>
 ```
 
