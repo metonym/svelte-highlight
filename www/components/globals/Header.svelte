@@ -104,6 +104,7 @@
     "/preview-surrealql": "SurrealQL language preview",
     "/preview-hurl": "Hurl language preview",
     "/preview-mojo": "Mojo language preview",
+    "/preview-assemblyscript": "AssemblyScript language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
