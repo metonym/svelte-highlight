@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Urushi Light
+  Description: Lacquer red and gold on pale cypress
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #2a1810;
+  background: #f6efe4;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8a7368;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #a01830;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #a01830;
+}
+.hljs-literal {
+  color: #8a5a30;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #8a7018;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #6b4a28;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #5c4030;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #6b4a28;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #2a1810;
+}
+.hljs-code {
+  color: #8a7368;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #3a5a28;
+  background-color: #e4ead4;
+}
+.hljs-deletion {
+  color: #7a1828;
+  background-color: #f0d8d4;
+}

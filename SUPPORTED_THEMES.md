@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 262 themes: 258 exported from highlight.js@11.12.0, 4 custom themes added by svelte-highlight
+> 264 themes: 258 exported from highlight.js@11.12.0, 6 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6131,6 +6131,60 @@
 </script>
 
 <HighlightStyle theme={unikittyLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## urushi-dark (`urushiDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/urushi-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import urushiDark from "svelte-highlight/themes/urushi-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={urushiDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## urushi-light (`urushiLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/urushi-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import urushiLight from "svelte-highlight/themes/urushi-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={urushiLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
