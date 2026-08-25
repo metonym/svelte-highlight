@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Cross Process Light
+  Description: The same accident on green-cast paper
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #281018;
+  background: #e8f0e4;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #5a7060;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #c01870;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #c01870;
+}
+.hljs-literal {
+  color: #888010;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #186848;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #286858;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #681070;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #286858;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #281018;
+}
+.hljs-code {
+  color: #5a7060;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #104828;
+  background-color: #d0e4d4;
+}
+.hljs-deletion {
+  color: #801048;
+  background-color: #ecd8e4;
+}

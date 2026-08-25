@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 302 styles: 258 exported from highlight.js@11.12.0, 44 custom styles added by svelte-highlight
+> 304 styles: 258 exported from highlight.js@11.12.0, 46 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -1617,6 +1617,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/colors.css";
+</script>
+```
+
+## cross-process-dark (`crossProcessDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import crossProcessDark from "svelte-highlight/styles/cross-process-dark";
+</script>
+
+<svelte:head>
+  {@html crossProcessDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cross-process-dark.css";
+</script>
+```
+
+## cross-process-light (`crossProcessLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import crossProcessLight from "svelte-highlight/styles/cross-process-light";
+</script>
+
+<svelte:head>
+  {@html crossProcessLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/cross-process-light.css";
 </script>
 ```
 
