@@ -378,6 +378,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "mojo",
     path: `${import.meta.dir}/custom-languages/mojo.js`,
   },
+  {
+    name: "assemblyscript",
+    moduleName: "assemblyscript",
+    path: `${import.meta.dir}/custom-languages/assemblyscript.js`,
+  },
 ];
 
 export type LanguageEntry = {

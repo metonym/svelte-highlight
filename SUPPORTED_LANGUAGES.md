@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 266 languages: 193 exported from highlight.js@11.12.0, 73 custom grammars added by svelte-highlight
+> 267 languages: 193 exported from highlight.js@11.12.0, 74 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -169,6 +169,20 @@
 
   // base import
   import { aspectj } from "svelte-highlight/languages";
+</script>
+```
+
+## assemblyscript (`assemblyscript`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import assemblyscript from "svelte-highlight/languages/assemblyscript";
+
+  // base import
+  import { assemblyscript } from "svelte-highlight/languages";
 </script>
 ```
 

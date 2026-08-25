@@ -37,6 +37,15 @@ const title = "Hello";
 }
 <input *ngIf="visible" [(ngModel)]="name" />
 `,
+  assemblyscript: `@inline
+export function add(a: i32, b: i32): i32 {
+  return a + b;
+}
+
+export function loadX(ptr: usize): i32 {
+  return changetype<i32>(unchecked(load<i32>(ptr)));
+}
+`,
   prisma: `datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
