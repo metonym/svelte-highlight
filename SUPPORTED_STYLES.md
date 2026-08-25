@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 324 styles: 258 exported from highlight.js@11.12.0, 66 custom styles added by svelte-highlight
+> 326 styles: 258 exported from highlight.js@11.12.0, 68 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6789,6 +6789,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/urushi-light.css";
+</script>
+```
+
+## verdigris-dark (`verdigrisDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import verdigrisDark from "svelte-highlight/styles/verdigris-dark";
+</script>
+
+<svelte:head>
+  {@html verdigrisDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/verdigris-dark.css";
+</script>
+```
+
+## verdigris-light (`verdigrisLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import verdigrisLight from "svelte-highlight/styles/verdigris-light";
+</script>
+
+<svelte:head>
+  {@html verdigrisLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/verdigris-light.css";
 </script>
 ```
 
