@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 292 styles: 258 exported from highlight.js@11.12.0, 34 custom styles added by svelte-highlight
+> 294 styles: 258 exported from highlight.js@11.12.0, 36 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5147,6 +5147,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/school-book.css";
+</script>
+```
+
+## scoria-dark (`scoriaDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import scoriaDark from "svelte-highlight/styles/scoria-dark";
+</script>
+
+<svelte:head>
+  {@html scoriaDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/scoria-dark.css";
+</script>
+```
+
+## scoria-light (`scoriaLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import scoriaLight from "svelte-highlight/styles/scoria-light";
+</script>
+
+<svelte:head>
+  {@html scoriaLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/scoria-light.css";
 </script>
 ```
 
