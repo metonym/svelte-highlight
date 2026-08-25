@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Alebrije Light
+  Description: The same animal in a market stall. Still outlined. Still too many colors
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #141418;
+  background: #f4f0e8;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a6878;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #d01870;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #d01870;
+}
+.hljs-literal {
+  color: #0870b0;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #087848;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #6820b0;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #887800;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #6820b0;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #141418;
+}
+.hljs-code {
+  color: #6a6878;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #084830;
+  background-color: #d8ece0;
+}
+.hljs-deletion {
+  color: #801048;
+  background-color: #f0dce4;
+}
