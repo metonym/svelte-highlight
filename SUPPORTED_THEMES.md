@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 264 themes: 258 exported from highlight.js@11.12.0, 6 custom themes added by svelte-highlight
+> 266 themes: 258 exported from highlight.js@11.12.0, 8 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3352,6 +3352,60 @@
 </script>
 
 <HighlightStyle theme={helios}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## hojicha-dark (`hojichaDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/hojicha-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import hojichaDark from "svelte-highlight/themes/hojicha-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={hojichaDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## hojicha-light (`hojichaLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/hojicha-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import hojichaLight from "svelte-highlight/themes/hojicha-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={hojichaLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

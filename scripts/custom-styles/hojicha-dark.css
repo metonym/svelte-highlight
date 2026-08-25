@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Hojicha Dark
+  Description: Roasted tea: toasted orange-brown, dried-leaf green
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #e4d8c8;
+  background: #1c1814;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8a7a68;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #c47848;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #b86848;
+}
+.hljs-literal {
+  color: #d4a060;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #7a8a58;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #a89070;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #c4b090;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #a89070;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #e4d8c8;
+}
+.hljs-code {
+  color: #8a7a68;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #c8d4a8;
+  background-color: #242818;
+}
+.hljs-deletion {
+  color: #e8c4b0;
+  background-color: #3a2018;
+}

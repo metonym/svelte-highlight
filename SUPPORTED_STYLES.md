@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 264 styles: 258 exported from highlight.js@11.12.0, 6 custom styles added by svelte-highlight
+> 266 styles: 258 exported from highlight.js@11.12.0, 8 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -2951,6 +2951,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/helios.css";
+</script>
+```
+
+## hojicha-dark (`hojichaDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import hojichaDark from "svelte-highlight/styles/hojicha-dark";
+</script>
+
+<svelte:head>
+  {@html hojichaDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/hojicha-dark.css";
+</script>
+```
+
+## hojicha-light (`hojichaLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import hojichaLight from "svelte-highlight/styles/hojicha-light";
+</script>
+
+<svelte:head>
+  {@html hojichaLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/hojicha-light.css";
 </script>
 ```
 
