@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 294 themes: 258 exported from highlight.js@11.12.0, 36 custom themes added by svelte-highlight
+> 296 themes: 258 exported from highlight.js@11.12.0, 38 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3472,6 +3472,60 @@
 </script>
 
 <HighlightStyle theme={gruvboxLightSoft}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## haar-dark (`haarDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/haar-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import haarDark from "svelte-highlight/themes/haar-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={haarDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## haar-light (`haarLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/haar-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import haarLight from "svelte-highlight/themes/haar-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={haarLight}>
   <Highlight ... />
 </HighlightStyle>
 ```

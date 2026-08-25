@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Haar Dark
+  Description: North Sea fog. Almost no chroma, a wet green-gray
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #c8d0d0;
+  background: #1a1c1c;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #6a7474;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #8a9a98;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #8a9a98;
+}
+.hljs-literal {
+  color: #9aa8a4;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #7a8a84;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #889090;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #a0a8a8;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #889090;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #c8d0d0;
+}
+.hljs-code {
+  color: #6a7474;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #c8d4d0;
+  background-color: #202828;
+}
+.hljs-deletion {
+  color: #c8c0c0;
+  background-color: #282020;
+}

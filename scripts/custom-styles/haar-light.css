@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Haar Light
+  Description: Haar at noon. Cold green-gray, barely a dye at all
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #2a2e2e;
+  background: #e8ecec;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a8484;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #3a4a48;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #3a4a48;
+}
+.hljs-literal {
+  color: #4a5854;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #3a4a42;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #3a4444;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #2a3838;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #3a4444;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #2a2e2e;
+}
+.hljs-code {
+  color: #7a8484;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #1a2a24;
+  background-color: #dce4e0;
+}
+.hljs-deletion {
+  color: #4a2828;
+  background-color: #e8e0e0;
+}
