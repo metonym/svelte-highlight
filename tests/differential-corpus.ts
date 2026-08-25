@@ -243,6 +243,13 @@ float4 main(float2 uv : TEXCOORD0) : SV_TARGET {
   <script>const x = 1;</script>
   Hello &amp; world
 </div>`,
+  hurl: `# list users
+GET https://example.org/api/users
+HTTP 200
+[Asserts]
+jsonpath "$.id" == 1
+header "Content-Type" contains "json"
+`,
   jinja: `{# greeting #}
 {% macro hello(name) %}
   <p>Hello {{ name | e }}</p>

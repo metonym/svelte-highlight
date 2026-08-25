@@ -368,6 +368,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "surrealql",
     path: `${import.meta.dir}/custom-languages/surrealql.js`,
   },
+  {
+    name: "hurl",
+    moduleName: "hurl",
+    path: `${import.meta.dir}/custom-languages/hurl.js`,
+  },
 ];
 
 export type LanguageEntry = {

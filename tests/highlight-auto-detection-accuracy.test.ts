@@ -164,6 +164,13 @@ build:
   "slug": slug.current
 } | order(publishedAt desc)
 `,
+  hurl: `# list users
+GET https://example.org/api/users
+HTTP 200
+[Asserts]
+jsonpath "$.id" == 1
+header "Content-Type" contains "json"
+`,
   jq: `# recursively find every active user, regardless of nesting depth
 ..
   | objects
