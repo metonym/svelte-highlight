@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 308 styles: 258 exported from highlight.js@11.12.0, 50 custom styles added by svelte-highlight
+> 310 styles: 258 exported from highlight.js@11.12.0, 52 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -5791,6 +5791,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/stackoverflow-light.css";
+</script>
+```
+
+## strelitzia-dark (`strelitziaDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import strelitziaDark from "svelte-highlight/styles/strelitzia-dark";
+</script>
+
+<svelte:head>
+  {@html strelitziaDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/strelitzia-dark.css";
+</script>
+```
+
+## strelitzia-light (`strelitziaLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import strelitziaLight from "svelte-highlight/styles/strelitzia-light";
+</script>
+
+<svelte:head>
+  {@html strelitziaLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/strelitzia-light.css";
 </script>
 ```
 
