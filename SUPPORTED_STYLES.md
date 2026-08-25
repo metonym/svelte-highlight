@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 268 styles: 258 exported from highlight.js@11.12.0, 10 custom styles added by svelte-highlight
+> 270 styles: 258 exported from highlight.js@11.12.0, 12 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3443,6 +3443,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/kimbie-light.css";
+</script>
+```
+
+## letterpress-dark (`letterpressDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import letterpressDark from "svelte-highlight/styles/letterpress-dark";
+</script>
+
+<svelte:head>
+  {@html letterpressDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/letterpress-dark.css";
+</script>
+```
+
+## letterpress-light (`letterpressLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import letterpressLight from "svelte-highlight/styles/letterpress-light";
+</script>
+
+<svelte:head>
+  {@html letterpressLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/letterpress-light.css";
 </script>
 ```
 

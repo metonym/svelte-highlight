@@ -1,6 +1,6 @@
 # Supported Themes
 
-> 268 themes: 258 exported from highlight.js@11.12.0, 10 custom themes added by svelte-highlight
+> 270 themes: 258 exported from highlight.js@11.12.0, 12 custom themes added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -3910,6 +3910,60 @@
 </script>
 
 <HighlightStyle theme={kimbieLight}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## letterpress-dark (`letterpressDark`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/letterpress-dark.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import letterpressDark from "svelte-highlight/themes/letterpress-dark";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={letterpressDark}>
+  <Highlight ... />
+</HighlightStyle>
+```
+
+## letterpress-light (`letterpressLight`)
+
+> Custom svelte-highlight theme (not exported by highlight.js)
+
+**CSS variables (global)**
+
+```html
+<script>
+  import "svelte-highlight/themes/base.css";
+  import "svelte-highlight/themes/letterpress-light.css";
+</script>
+```
+
+**Palette object**
+
+```svelte
+<script>
+  import { HighlightStyle } from "svelte-highlight";
+  import letterpressLight from "svelte-highlight/themes/letterpress-light";
+  import "svelte-highlight/themes/base.css";
+</script>
+
+<HighlightStyle theme={letterpressLight}>
   <Highlight ... />
 </HighlightStyle>
 ```
