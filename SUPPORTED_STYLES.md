@@ -1,6 +1,6 @@
 # Supported Styles
 
-> 334 styles: 258 exported from highlight.js@11.12.0, 76 custom styles added by svelte-highlight
+> 336 styles: 258 exported from highlight.js@11.12.0, 78 custom styles added by svelte-highlight
 
 ## 1c-light (`_1cLight`)
 
@@ -6271,6 +6271,54 @@
 ```html
 <script>
   import "svelte-highlight/styles/sumi-light.css";
+</script>
+```
+
+## suminagashi-dark (`suminagashiDark`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import suminagashiDark from "svelte-highlight/styles/suminagashi-dark";
+</script>
+
+<svelte:head>
+  {@html suminagashiDark}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/suminagashi-dark.css";
+</script>
+```
+
+## suminagashi-light (`suminagashiLight`)
+
+> Custom svelte-highlight style (not exported by highlight.js)
+
+**Injected Styles**
+
+```html
+<script>
+  import suminagashiLight from "svelte-highlight/styles/suminagashi-light";
+</script>
+
+<svelte:head>
+  {@html suminagashiLight}
+</svelte:head>
+```
+
+**CSS StyleSheet**
+
+```html
+<script>
+  import "svelte-highlight/styles/suminagashi-light.css";
 </script>
 ```
 
