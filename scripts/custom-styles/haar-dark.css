@@ -8,40 +8,40 @@ code.hljs {
 }
 /*
   Theme: Haar Dark
-  Description: North Sea fog. Almost no chroma, a wet green-gray
+  Description: North Sea fog at dusk. Almost no chroma, a cold violet-gray
   Author: svelte-highlight
   License: MIT
 */
 .hljs {
-  color: #c8d0d0;
-  background: #1a1c1c;
+  color: #d0ccda;
+  background: #191820;
 }
 .hljs-comment,
 .hljs-quote {
-  color: #6a7474;
+  color: #726e82;
   font-style: italic;
 }
 .hljs-doctag,
 .hljs-keyword,
 .hljs-formula,
 .hljs-template-tag {
-  color: #8a9a98;
+  color: #8c86a2;
 }
 .hljs-section,
 .hljs-name,
 .hljs-selector-tag,
 .hljs-tag,
 .hljs-subst {
-  color: #8a9a98;
+  color: #a4948e;
 }
 .hljs-literal {
-  color: #9aa8a4;
+  color: #9a92ac;
 }
 .hljs-string,
 .hljs-regexp,
 .hljs-attribute,
 .hljs-meta .hljs-string {
-  color: #7a8a84;
+  color: #a49484;
 }
 .hljs-attr,
 .hljs-variable,
@@ -52,7 +52,7 @@ code.hljs {
 .hljs-selector-attr,
 .hljs-selector-pseudo,
 .hljs-number {
-  color: #889090;
+  color: #847ea0;
 }
 .hljs-symbol,
 .hljs-bullet,
@@ -60,19 +60,19 @@ code.hljs {
 .hljs-meta,
 .hljs-selector-id,
 .hljs-title {
-  color: #a0a8a8;
+  color: #ada4c0;
 }
 .hljs-built_in,
 .hljs-title.class_,
 .hljs-class .hljs-title {
-  color: #889090;
+  color: #ac9c8a;
 }
 .hljs-punctuation,
 .hljs-operator {
-  color: #c8d0d0;
+  color: #d0ccda;
 }
 .hljs-code {
-  color: #6a7474;
+  color: #726e82;
 }
 .hljs-emphasis {
   font-style: italic;
