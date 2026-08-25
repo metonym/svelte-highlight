@@ -1,0 +1,93 @@
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+/*
+  Theme: Wet Plate Light
+  Description: A plate left in the tray. Silver, then amber fog
+  Author: svelte-highlight
+  License: MIT
+*/
+.hljs {
+  color: #1c1814;
+  background: #ece6d8;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #7a7068;
+  font-style: italic;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula,
+.hljs-template-tag {
+  color: #8a6030;
+}
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-subst {
+  color: #8a6030;
+}
+.hljs-literal {
+  color: #6a5020;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #3a3830;
+}
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #4a4038;
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #2a2824;
+}
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #4a4038;
+}
+.hljs-punctuation,
+.hljs-operator {
+  color: #1c1814;
+}
+.hljs-code {
+  color: #7a7068;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+.hljs-addition {
+  color: #2a3820;
+  background-color: #dce4d0;
+}
+.hljs-deletion {
+  color: #6a3020;
+  background-color: #ead8d0;
+}
