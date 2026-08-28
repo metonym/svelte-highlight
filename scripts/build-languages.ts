@@ -408,6 +408,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "racket",
     path: `${import.meta.dir}/custom-languages/racket.js`,
   },
+  {
+    name: "fennel",
+    moduleName: "fennel",
+    path: `${import.meta.dir}/custom-languages/fennel.js`,
+  },
 ];
 
 export type LanguageEntry = {
