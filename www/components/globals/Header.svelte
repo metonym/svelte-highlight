@@ -109,6 +109,7 @@
     "/preview-lean": "Lean language preview",
     "/preview-agda": "Agda language preview",
     "/preview-idris": "Idris language preview",
+    "/preview-racket": "Racket language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
