@@ -107,6 +107,7 @@
     "/preview-assemblyscript": "AssemblyScript language preview",
     "/preview-purescript": "PureScript language preview",
     "/preview-lean": "Lean language preview",
+    "/preview-agda": "Agda language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
