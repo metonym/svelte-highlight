@@ -106,6 +106,7 @@
     "/preview-mojo": "Mojo language preview",
     "/preview-assemblyscript": "AssemblyScript language preview",
     "/preview-purescript": "PureScript language preview",
+    "/preview-lean": "Lean language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
