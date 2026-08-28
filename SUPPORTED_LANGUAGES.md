@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 268 languages: 193 exported from highlight.js@11.12.0, 75 custom grammars added by svelte-highlight
+> 269 languages: 193 exported from highlight.js@11.12.0, 76 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1657,6 +1657,20 @@
 
   // base import
   import { leaf } from "svelte-highlight/languages";
+</script>
+```
+
+## lean (`lean`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import lean from "svelte-highlight/languages/lean";
+
+  // base import
+  import { lean } from "svelte-highlight/languages";
 </script>
 ```
 

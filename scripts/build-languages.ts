@@ -388,6 +388,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "purescript",
     path: `${import.meta.dir}/custom-languages/purescript.js`,
   },
+  {
+    name: "lean",
+    moduleName: "lean",
+    path: `${import.meta.dir}/custom-languages/lean.js`,
+  },
 ];
 
 export type LanguageEntry = {

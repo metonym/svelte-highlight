@@ -134,6 +134,7 @@ exports[`Languages 1`] = `
   "latex",
   "ldif",
   "leaf",
+  "lean",
   "less",
   "liquid",
   "lisp",
