@@ -383,6 +383,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "assemblyscript",
     path: `${import.meta.dir}/custom-languages/assemblyscript.js`,
   },
+  {
+    name: "purescript",
+    moduleName: "purescript",
+    path: `${import.meta.dir}/custom-languages/purescript.js`,
+  },
 ];
 
 export type LanguageEntry = {
