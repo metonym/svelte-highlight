@@ -478,6 +478,22 @@ enum Role {
   USER
   ADMIN
 }`,
+  purescript: `-- module header and a simple function
+module Main where
+
+{- a nested
+   {- inner -}
+   block comment -}
+
+double :: Int -> Int
+double n = n + n
+
+main :: Effect Unit
+main = do
+  let greeting = "Hello, " <> "world"
+  case double 21 of
+    42 -> log greeting
+    _  -> log "nope"`,
   promql: `# alert on high error rate
 sum by (job, code) (
   rate(http_requests_total{code="500"}[5m])

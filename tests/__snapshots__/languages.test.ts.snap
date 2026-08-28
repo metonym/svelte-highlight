@@ -197,6 +197,7 @@ exports[`Languages 1`] = `
   "pug",
   "puppet",
   "purebasic",
+  "purescript",
   "python",
   "pythonRepl",
   "q",
