@@ -403,6 +403,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "idris",
     path: `${import.meta.dir}/custom-languages/idris.js`,
   },
+  {
+    name: "racket",
+    moduleName: "racket",
+    path: `${import.meta.dir}/custom-languages/racket.js`,
+  },
 ];
 
 export type LanguageEntry = {

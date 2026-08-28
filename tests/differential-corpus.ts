@@ -571,6 +571,16 @@ p Text with #{item} interpolation`,
   int count = 0;
   void Increment() { count++; }
 }`,
+  racket: `#lang racket
+;; sum of two numbers with a contract
+(define/contract (add a b)
+  (-> integer? integer? integer?)
+  (+ a b))
+
+(define pi 3.14159)
+(displayln (format "~a" (add 1 2)))
+#| a block
+   comment |#`,
   rego: `package authz
 
 import future.keywords.if
