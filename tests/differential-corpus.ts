@@ -192,6 +192,15 @@ FROM logs-*
 | SORT count DESC
 | LIMIT 10
 `,
+  fennel: `;; sum two numbers
+(fn add [a b]
+  (+ a b))
+
+(local greeting :hello)
+(each [i v (ipairs [1 2 3])]
+  (print i v))
+
+(print (add 1 2) greeting "done")`,
   fish: `# greet a user by name
 function greet
     set name $argv[1]
