@@ -173,6 +173,18 @@ build:
         RUN go mod download
     END
 `,
+  agda: `-- naturals and a simple proof
+{-# OPTIONS --safe #-}
+data ℕ : Set where
+  zero : ℕ
+  suc  : ℕ → ℕ
+
+{- nested
+   {- inner -}
+   comment -}
+double : ℕ → ℕ
+double zero = zero
+double (suc n) = suc (suc (double n))`,
   esql: `// error rate by host
 FROM logs-*
 | WHERE status >= 500

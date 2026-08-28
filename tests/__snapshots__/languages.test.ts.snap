@@ -7,6 +7,7 @@ exports[`Languages 1`] = `
   "accesslog",
   "actionscript",
   "ada",
+  "agda",
   "angelscript",
   "angular",
   "apache",
