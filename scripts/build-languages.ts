@@ -398,6 +398,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "agda",
     path: `${import.meta.dir}/custom-languages/agda.js`,
   },
+  {
+    name: "idris",
+    moduleName: "idris",
+    path: `${import.meta.dir}/custom-languages/idris.js`,
+  },
 ];
 
 export type LanguageEntry = {
