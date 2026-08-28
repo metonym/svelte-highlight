@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 269 languages: 193 exported from highlight.js@11.12.0, 76 custom grammars added by svelte-highlight
+> 270 languages: 193 exported from highlight.js@11.12.0, 77 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -59,6 +59,20 @@
 
   // base import
   import { ada } from "svelte-highlight/languages";
+</script>
+```
+
+## agda (`agda`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import agda from "svelte-highlight/languages/agda";
+
+  // base import
+  import { agda } from "svelte-highlight/languages";
 </script>
 ```
 

@@ -393,6 +393,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "lean",
     path: `${import.meta.dir}/custom-languages/lean.js`,
   },
+  {
+    name: "agda",
+    moduleName: "agda",
+    path: `${import.meta.dir}/custom-languages/agda.js`,
+  },
 ];
 
 export type LanguageEntry = {
