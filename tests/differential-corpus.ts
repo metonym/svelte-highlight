@@ -270,6 +270,23 @@ float4 main(float2 uv : TEXCOORD0) : SV_TARGET {
   <script>const x = 1;</script>
   Hello &amp; world
 </div>`,
+  idris: `-- module header and a total function
+module Main
+
+{- nested
+   {- inner -}
+   comment -}
+
+total
+double : Int -> Int
+double n = n + n
+
+main : IO ()
+main = do
+  let greeting = "Hello, " ++ "world"
+  case double 21 of
+       42 => putStrLn greeting
+       _  => putStrLn "nope"`,
   hurl: `# list users
 GET https://example.org/api/users
 HTTP 200

@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 270 languages: 193 exported from highlight.js@11.12.0, 77 custom grammars added by svelte-highlight
+> 271 languages: 193 exported from highlight.js@11.12.0, 78 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1379,6 +1379,20 @@
 
   // base import
   import { hy } from "svelte-highlight/languages";
+</script>
+```
+
+## idris (`idris`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import idris from "svelte-highlight/languages/idris";
+
+  // base import
+  import { idris } from "svelte-highlight/languages";
 </script>
 ```
 
