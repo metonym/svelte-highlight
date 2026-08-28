@@ -340,6 +340,15 @@ SecurityEvent
 | where State has "california"
 | summarize FailedCount = count() by bin(TimeGenerated, 1h)
 | mv-expand Tags`,
+  lean: `-- successor function over naturals
+/- nested doc:
+   /- inner note -/
+   still here -/
+def succ (n : ℕ) : ℕ := n + 1
+
+theorem succ_pos : ∀ n : ℕ, succ n > 0 := by
+  intro n
+  simp [succ]`,
   liquid: `{% comment %}Renders a product card{% endcomment %}
 <div class="card">
   <h1>{{ product.title | upcase }}</h1>
