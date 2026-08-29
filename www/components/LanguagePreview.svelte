@@ -7,6 +7,7 @@
   import { caddyPreviewSnippets } from "@www/preview/caddy-preview-snippets";
   import { cairoPreviewSnippets } from "@www/preview/cairo-preview-snippets";
   import { cedarPreviewSnippets } from "@www/preview/cedar-preview-snippets";
+  import { celPreviewSnippets } from "@www/preview/cel-preview-snippets";
   import { clarityPreviewSnippets } from "@www/preview/clarity-preview-snippets";
   import { cqlPreviewSnippets } from "@www/preview/cql-preview-snippets";
   import { cuePreviewSnippets } from "@www/preview/cue-preview-snippets";
@@ -84,6 +85,7 @@
   import caddy from "svelte-highlight/languages/caddy";
   import cairo from "svelte-highlight/languages/cairo";
   import cedar from "svelte-highlight/languages/cedar";
+  import cel from "svelte-highlight/languages/cel";
   import clarity from "svelte-highlight/languages/clarity";
   import cql from "svelte-highlight/languages/cql";
   import cue from "svelte-highlight/languages/cue";
@@ -151,7 +153,7 @@
   import wit from "svelte-highlight/languages/wit";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel"} */
   export let language;
 
   const registry = {
@@ -232,6 +234,7 @@
     fennel: { lang: fennel, snippets: fennelPreviewSnippets },
     jsonata: { lang: jsonata, snippets: jsonataPreviewSnippets },
     jmespath: { lang: jmespath, snippets: jmespathPreviewSnippets },
+    cel: { lang: cel, snippets: celPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
