@@ -679,6 +679,11 @@ WHERE {
   FILTER (LANG(?name) = "en")
 }
 `,
+  splunk: `search index=web status>=500
+| stats count by host
+| eval error_rate = count / total
+| where error_rate > 0.05 AND host != "test"
+| sort - count`,
   starlark: `load("//foo:bar.bzl", "baz")
 
 # a comment
