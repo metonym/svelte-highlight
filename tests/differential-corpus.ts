@@ -101,6 +101,12 @@ when { resource.owner == principal };
 forbid (principal, action, resource)
 unless { context.mfa == false };
 `,
+  cel: `// admin or verified owner may edit
+has(request.auth) &&
+  (request.auth.role == "admin" ||
+    (request.auth.uid == resource.owner && resource.verified))
+? "allow"
+: "deny"`,
   clarity: `;; a simple counter contract
 (define-data-var counter uint u0)
 
