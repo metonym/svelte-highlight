@@ -116,6 +116,7 @@
     "/preview-cel": "CEL language preview",
     "/preview-datalog": "Datalog language preview",
     "/preview-splunk": "SPL (Splunk) language preview",
+    "/preview-vrl": "VRL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
