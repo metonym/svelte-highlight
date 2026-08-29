@@ -780,6 +780,15 @@ fn main() {
 		println('other')
 	}
 }`,
+  vrl: `# normalize an incoming log event
+. = parse_json!(.message)
+.status_code = to_int(.status_code) ?? 0
+if exists(.error) {
+    .level = "error"
+} else {
+    .level = "info"
+}
+del(.raw)`,
   vue: `<script setup lang="ts">
 const count = ref(0);
 </script>
