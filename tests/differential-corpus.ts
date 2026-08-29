@@ -146,6 +146,17 @@ db: {
 }
 server -> db: query
 x.direction: right`,
+  datalog: `// transitive closure over an edge relation
+.decl edge(x: symbol, y: symbol)
+.decl path(x: symbol, y: symbol)
+.input edge
+edge("a", "b").
+edge("b", "c").
+
+path(x, y) :- edge(x, y).
+path(x, y) :- path(x, z), edge(z, y), !edge(y, x).
+
+.output path`,
   dax: `Total Sales =
 VAR CurrentRegion = "West"
 RETURN
