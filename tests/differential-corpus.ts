@@ -311,6 +311,8 @@ header "Content-Type" contains "json"
   {{ hello(item) }}
 {% endfor %}
 `,
+  jmespath:
+    "people[?age > \`30\`].{name: name, city: address.city} | sort_by(@, &name)",
   jq: `# select active users and total their scores
 def add_one: . + 1;
 .users
