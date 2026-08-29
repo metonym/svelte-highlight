@@ -423,6 +423,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "jmespath",
     path: `${import.meta.dir}/custom-languages/jmespath.js`,
   },
+  {
+    name: "cel",
+    moduleName: "cel",
+    path: `${import.meta.dir}/custom-languages/cel.js`,
+  },
 ];
 
 export type LanguageEntry = {
