@@ -317,6 +317,12 @@ def add_one: . + 1;
   | map(select(.active))
   | reduce .[] as $item (0; . + $item)
   | if . > 100 then "big" elif . > 10 then "medium" else "small" end`,
+  jsonata: `/* total price of active orders */
+$sum(
+  Account.Order[Status = "active"].Product.(Price * Quantity)
+)
+
+Account.\`Order Item\`[0].Description`,
   json5: `{
   // config for the app
   /* multi-line

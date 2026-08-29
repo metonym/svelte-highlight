@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 273 languages: 193 exported from highlight.js@11.12.0, 80 custom grammars added by svelte-highlight
+> 274 languages: 193 exported from highlight.js@11.12.0, 81 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1545,6 +1545,20 @@
 
   // base import
   import { json5 } from "svelte-highlight/languages";
+</script>
+```
+
+## jsonata (`jsonata`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import jsonata from "svelte-highlight/languages/jsonata";
+
+  // base import
+  import { jsonata } from "svelte-highlight/languages";
 </script>
 ```
 

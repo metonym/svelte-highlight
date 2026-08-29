@@ -413,6 +413,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "fennel",
     path: `${import.meta.dir}/custom-languages/fennel.js`,
   },
+  {
+    name: "jsonata",
+    moduleName: "jsonata",
+    path: `${import.meta.dir}/custom-languages/jsonata.js`,
+  },
 ];
 
 export type LanguageEntry = {
