@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 277 languages: 193 exported from highlight.js@11.12.0, 84 custom grammars added by svelte-highlight
+> 278 languages: 193 exported from highlight.js@11.12.0, 85 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2935,6 +2935,20 @@
 
   // base import
   import { sparql } from "svelte-highlight/languages";
+</script>
+```
+
+## splunk (`splunk`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import splunk from "svelte-highlight/languages/splunk";
+
+  // base import
+  import { splunk } from "svelte-highlight/languages";
 </script>
 ```
 

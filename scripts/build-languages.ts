@@ -433,6 +433,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "datalog",
     path: `${import.meta.dir}/custom-languages/datalog.js`,
   },
+  {
+    name: "splunk",
+    moduleName: "splunk",
+    path: `${import.meta.dir}/custom-languages/splunk.js`,
+  },
 ];
 
 export type LanguageEntry = {
