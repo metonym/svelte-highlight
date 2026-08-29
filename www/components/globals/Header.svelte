@@ -113,6 +113,7 @@
     "/preview-fennel": "Fennel language preview",
     "/preview-jsonata": "JSONata language preview",
     "/preview-jmespath": "JMESPath language preview",
+    "/preview-cel": "CEL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
