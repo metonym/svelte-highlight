@@ -438,6 +438,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "splunk",
     path: `${import.meta.dir}/custom-languages/splunk.js`,
   },
+  {
+    name: "vrl",
+    moduleName: "vrl",
+    path: `${import.meta.dir}/custom-languages/vrl.js`,
+  },
 ];
 
 export type LanguageEntry = {
