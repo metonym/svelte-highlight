@@ -114,6 +114,7 @@
     "/preview-jsonata": "JSONata language preview",
     "/preview-jmespath": "JMESPath language preview",
     "/preview-cel": "CEL language preview",
+    "/preview-datalog": "Datalog language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
