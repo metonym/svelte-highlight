@@ -31,6 +31,7 @@
   import { jinjaPreviewSnippets } from "@www/preview/jinja-preview-snippets";
   import { jqPreviewSnippets } from "@www/preview/jq-preview-snippets";
   import { json5PreviewSnippets } from "@www/preview/json5-preview-snippets";
+  import { jsonataPreviewSnippets } from "@www/preview/jsonata-preview-snippets";
   import { jsoncPreviewSnippets } from "@www/preview/jsonc-preview-snippets";
   import { jsonnetPreviewSnippets } from "@www/preview/jsonnet-preview-snippets";
   import { justPreviewSnippets } from "@www/preview/just-preview-snippets";
@@ -106,6 +107,7 @@
   import jinja from "svelte-highlight/languages/jinja";
   import jq from "svelte-highlight/languages/jq";
   import json5 from "svelte-highlight/languages/json5";
+  import jsonata from "svelte-highlight/languages/jsonata";
   import jsonc from "svelte-highlight/languages/jsonc";
   import jsonnet from "svelte-highlight/languages/jsonnet";
   import just from "svelte-highlight/languages/just";
@@ -147,7 +149,7 @@
   import wit from "svelte-highlight/languages/wit";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata"} */
   export let language;
 
   const registry = {
@@ -226,6 +228,7 @@
     idris: { lang: idris, snippets: idrisPreviewSnippets },
     racket: { lang: racket, snippets: racketPreviewSnippets },
     fennel: { lang: fennel, snippets: fennelPreviewSnippets },
+    jsonata: { lang: jsonata, snippets: jsonataPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);

@@ -111,6 +111,7 @@
     "/preview-idris": "Idris language preview",
     "/preview-racket": "Racket language preview",
     "/preview-fennel": "Fennel language preview",
+    "/preview-jsonata": "JSONata language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
