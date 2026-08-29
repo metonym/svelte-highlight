@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 274 languages: 193 exported from highlight.js@11.12.0, 81 custom grammars added by svelte-highlight
+> 275 languages: 193 exported from highlight.js@11.12.0, 82 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1505,6 +1505,20 @@
 
   // base import
   import { jinja } from "svelte-highlight/languages";
+</script>
+```
+
+## jmespath (`jmespath`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import jmespath from "svelte-highlight/languages/jmespath";
+
+  // base import
+  import { jmespath } from "svelte-highlight/languages";
 </script>
 ```
 

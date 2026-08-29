@@ -418,6 +418,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "jsonata",
     path: `${import.meta.dir}/custom-languages/jsonata.js`,
   },
+  {
+    name: "jmespath",
+    moduleName: "jmespath",
+    path: `${import.meta.dir}/custom-languages/jmespath.js`,
+  },
 ];
 
 export type LanguageEntry = {
