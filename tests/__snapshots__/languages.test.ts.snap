@@ -125,6 +125,7 @@ exports[`Languages 1`] = `
   "jq",
   "json",
   "json5",
+  "jsonata",
   "jsonc",
   "jsonnet",
   "julia",
