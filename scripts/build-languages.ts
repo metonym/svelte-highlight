@@ -428,6 +428,11 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] = [
     moduleName: "cel",
     path: `${import.meta.dir}/custom-languages/cel.js`,
   },
+  {
+    name: "datalog",
+    moduleName: "datalog",
+    path: `${import.meta.dir}/custom-languages/datalog.js`,
+  },
 ];
 
 export type LanguageEntry = {
