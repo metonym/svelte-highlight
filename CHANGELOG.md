@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.20.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.20.0) - 2026-08-30
+
+**Features**
+
+- add custom `agda` language
+- add custom `cel` language
+- add custom `datalog` language
+- add custom `fennel` language
+- add custom `idris` language
+- add custom `jmespath` language
+- add custom `jsonata` language
+- add custom `lean` language
+- add custom `purescript` language
+- add custom `racket` language
+- add custom `splunk` language
+- add custom `vrl` language
+
 ## [7.19.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.19.0) - 2026-08-25
 
 **Features**
