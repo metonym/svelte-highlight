@@ -106,6 +106,17 @@
     border-spacing: 0;
   }
 
+  td {
+    padding-left: var(--padding-left, var(--padding, 1em));
+    padding-right: var(--padding-right, var(--padding, 1em));
+  }
+
+  td,
+  td > code,
+  pre {
+    position: relative;
+  }
+
   tr:first-of-type td {
     padding-top: 1em;
   }
@@ -116,11 +127,6 @@
 
   tr td:first-of-type {
     z-index: 2;
-  }
-
-  td {
-    padding-left: var(--padding-left, var(--padding, 1em));
-    padding-right: var(--padding-right, var(--padding, 1em));
   }
 
   td.hljs:not(.hideBorder):after {
@@ -135,12 +141,6 @@
 
   .wrapLines {
     white-space: pre-wrap;
-  }
-
-  td,
-  td > code,
-  pre {
-    position: relative;
   }
 
   td > code,
