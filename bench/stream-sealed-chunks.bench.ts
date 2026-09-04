@@ -6,7 +6,7 @@
  * tests/perf-regression-guards.test.ts; this establishes the actual
  * baseline number on realistic line content instead of just a ratio).
  */
-import { bench, do_not_optimize, group, run, summary } from "mitata";
+import { group, task } from "ostia";
 import { extendLines } from "../src/engine.js";
 import {
   buildSealedChunkHtml,
@@ -24,35 +24,28 @@ const { completedLines } = extendLines(events, [], "");
 const chunkLines = completedLines.slice(0, SEAL_CHUNK_LINES);
 
 group("buildSealedChunkHtml()", () => {
-  summary(() => {
-    bench(`${chunkLines.length} highlighted lines, startLine=0`, () => {
-      do_not_optimize(buildSealedChunkHtml(chunkLines, 0));
-    });
-    bench(
-      `${chunkLines.length} highlighted lines, startLine=256 (mid-stream)`,
-      () => {
-        do_not_optimize(buildSealedChunkHtml(chunkLines, SEAL_CHUNK_LINES));
-      },
-    );
-  });
+  task(`${chunkLines.length} highlighted lines, startLine=0`, () =>
+    buildSealedChunkHtml(chunkLines, 0),
+  );
+  task(
+    `${chunkLines.length} highlighted lines, startLine=256 (mid-stream)`,
+    () => buildSealedChunkHtml(chunkLines, SEAL_CHUNK_LINES),
+  );
 });
 
 group("pushSealedChunk(): sealing a growing stream", () => {
-  summary(() => {
-    for (const chunkCount of [1_000, 8_000]) {
-      const chunk = buildSealedChunkHtml(chunkLines, 0);
-      bench(`${chunkCount.toLocaleString()} chunks sealed`, () => {
-        let chunks: string[] = [];
-        for (let i = 0; i < chunkCount; i++) {
-          chunks = pushSealedChunk(chunks, chunk);
-        }
-        do_not_optimize(chunks);
-      });
-    }
-  });
+  for (const chunkCount of [1_000, 8_000]) {
+    const chunk = buildSealedChunkHtml(chunkLines, 0);
+    task(`${chunkCount.toLocaleString()} chunks sealed`, () => {
+      let chunks: string[] = [];
+      for (let i = 0; i < chunkCount; i++) {
+        chunks = pushSealedChunk(chunks, chunk);
+      }
+      return chunks;
+    });
+  }
 });
 
-// Run this suite alone with `bun bench/stream-sealed-chunks.bench.ts` for a
-// fast feedback loop; bench/index.ts imports every suite for a full-baseline
-// run.
-if (import.meta.main) await run();
+// Run this suite with `ostia bench bench/stream-sealed-chunks.bench.ts` for a
+// fast feedback loop; `bun run bench` runs every *.bench.ts suite for a
+// full-baseline run.

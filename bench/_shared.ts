@@ -1,5 +1,5 @@
 /**
- * Shared fixtures for the mitata suites in this directory: a fully
+ * Shared fixtures for the ostia suites in this directory: a fully
  * registered engine registry plus real/synthetic code corpora. Kept
  * self-contained (not exported from src) since these are dev-only
  * benchmark inputs.

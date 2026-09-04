@@ -4,9 +4,10 @@
  * incremental reparse against naive "re-parse the whole document on every
  * keystroke" - the thing incremental parsing exists to avoid. Sizes are
  * kept modest for the typing simulations since each sample re-runs the
- * full keystroke-by-keystroke loop (mitata wants 12+ samples per case).
+ * full keystroke-by-keystroke loop (ostia's runner wants multiple samples
+ * per case).
  */
-import { bench, do_not_optimize, group, run, summary } from "mitata";
+import { group, task } from "ostia";
 import {
   parseIncremental,
   reparseIncremental,
@@ -16,28 +17,22 @@ import { buildRegistry, jsLines, jsSource } from "./_shared.ts";
 const registry = await buildRegistry();
 
 group("parseIncremental() cold parse", () => {
-  summary(() => {
-    for (const lines of [500, 2_000, 8_000]) {
-      const code = jsLines(lines);
-      bench(`${lines.toLocaleString()} lines`, () => {
-        do_not_optimize(parseIncremental(registry, "javascript", code));
-      });
-    }
-  });
+  for (const lines of [500, 2_000, 8_000]) {
+    const code = jsLines(lines);
+    task(`${lines.toLocaleString()} lines`, () =>
+      parseIncremental(registry, "javascript", code),
+    );
+  }
 });
 
 group("reparseIncremental() single append edit", () => {
-  summary(() => {
-    for (const lines of [500, 2_000, 8_000]) {
-      const base = parseIncremental(registry, "javascript", jsLines(lines));
-      const edited = `${base.code}function tail() {}\n`;
-      bench(`${lines.toLocaleString()}-line doc, +1 line`, () => {
-        do_not_optimize(
-          reparseIncremental(registry, "javascript", base, edited),
-        );
-      });
-    }
-  });
+  for (const lines of [500, 2_000, 8_000]) {
+    const base = parseIncremental(registry, "javascript", jsLines(lines));
+    const edited = `${base.code}function tail() {}\n`;
+    task(`${lines.toLocaleString()}-line doc, +1 line`, () =>
+      reparseIncremental(registry, "javascript", base, edited),
+    );
+  }
 });
 
 function typeIncremental(targetLength: number) {
@@ -65,24 +60,15 @@ function typeNaive(targetLength: number) {
 }
 
 group("typing simulation (keystroke-by-keystroke)", () => {
-  summary(() => {
-    for (const length of [800, 2_000]) {
-      bench(
-        `incremental reparse @ ${length.toLocaleString()} chars typed`,
-        () => {
-          do_not_optimize(typeIncremental(length));
-        },
-      );
-      bench(
-        `naive full re-parse @ ${length.toLocaleString()} chars typed`,
-        () => {
-          do_not_optimize(typeNaive(length));
-        },
-      );
-    }
-  });
+  for (const length of [800, 2_000]) {
+    task(`incremental reparse @ ${length.toLocaleString()} chars typed`, () =>
+      typeIncremental(length),
+    );
+    task(`naive full re-parse @ ${length.toLocaleString()} chars typed`, () =>
+      typeNaive(length),
+    );
+  }
 });
 
-// Run this suite alone with `bun bench/incremental.bench.ts` for a fast
-// feedback loop; bench/index.ts imports every suite for a full-baseline run.
-if (import.meta.main) await run();
+// Run this suite with `ostia bench bench/incremental.bench.ts` for a fast
+// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.
