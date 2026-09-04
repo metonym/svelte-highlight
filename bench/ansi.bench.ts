@@ -5,7 +5,7 @@
  * for the color-math half: it used to live inline in the component's
  * `<script>`, which isn't reachable from bench/ or tests/ at all.
  */
-import { bench, do_not_optimize, group, run, summary } from "mitata";
+import { group, task } from "ostia";
 import { parseAnsi } from "../src/ansi.js";
 import { classNames, inlineStyle } from "../src/ansi-color.js";
 
@@ -34,35 +34,30 @@ function ansiSource(segmentCount: number) {
 const SEGMENT_COUNTS = [200, 2_000, 20_000];
 
 group("parseAnsi()", () => {
-  summary(() => {
-    for (const count of SEGMENT_COUNTS) {
-      const source = ansiSource(count);
-      bench(`${count.toLocaleString()} segments`, () => {
-        do_not_optimize(parseAnsi(source));
-      });
-    }
-  });
+  for (const count of SEGMENT_COUNTS) {
+    const source = ansiSource(count);
+    task(`${count.toLocaleString()} segments`, () => parseAnsi(source));
+  }
 });
 
 group("classNames() + inlineStyle() over parsed segments", () => {
-  summary(() => {
-    for (const count of SEGMENT_COUNTS) {
-      const segments = parseAnsi(ansiSource(count));
-      for (const autoContrast of [true, false]) {
-        bench(
-          `${count.toLocaleString()} segments, autoContrast=${autoContrast}`,
-          () => {
-            for (const segment of segments) {
-              do_not_optimize(classNames(segment));
-              do_not_optimize(inlineStyle(segment, autoContrast));
-            }
-          },
-        );
-      }
+  for (const count of SEGMENT_COUNTS) {
+    const segments = parseAnsi(ansiSource(count));
+    for (const autoContrast of [true, false]) {
+      task(
+        `${count.toLocaleString()} segments, autoContrast=${autoContrast}`,
+        () => {
+          const results: unknown[] = [];
+          for (const segment of segments) {
+            results.push(classNames(segment));
+            results.push(inlineStyle(segment, autoContrast));
+          }
+          return results;
+        },
+      );
     }
-  });
+  }
 });
 
-// Run this suite alone with `bun bench/ansi.bench.ts` for a fast feedback
-// loop; bench/index.ts imports every suite for a full-baseline run.
-if (import.meta.main) await run();
+// Run this suite with `ostia bench bench/ansi.bench.ts` for a fast feedback
+// loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

@@ -6,7 +6,7 @@
  * stream), which is what a naive editable component pays on every
  * keystroke without the incremental painter.
  */
-import { bench, do_not_optimize, group, run, summary } from "mitata";
+import { group, task } from "ostia";
 import {
   createDomLinePainter,
   lineHtmlFromEvents,
@@ -36,32 +36,26 @@ function typeWithIncrementalPainter(targetLength: number) {
 function typeWithFullRepaint(targetLength: number) {
   const source = jsSource(targetLength);
   let code = "";
+  const results: unknown[] = [];
   for (const ch of source) {
     code += ch;
     const { events } = parseIncremental(registry, "javascript", code);
-    do_not_optimize(lineHtmlFromEvents(events, code));
+    results.push(lineHtmlFromEvents(events, code));
   }
+  return results;
 }
 
 group("HighlightEditable paint: typing simulation", () => {
-  summary(() => {
-    for (const length of [1_000, 4_000]) {
-      bench(
-        `incremental painter @ ${length.toLocaleString()} chars typed`,
-        () => {
-          typeWithIncrementalPainter(length);
-        },
-      );
-      bench(
-        `full repaint every keystroke @ ${length.toLocaleString()} chars typed`,
-        () => {
-          typeWithFullRepaint(length);
-        },
-      );
-    }
-  });
+  for (const length of [1_000, 4_000]) {
+    task(`incremental painter @ ${length.toLocaleString()} chars typed`, () => {
+      typeWithIncrementalPainter(length);
+    });
+    task(
+      `full repaint every keystroke @ ${length.toLocaleString()} chars typed`,
+      () => typeWithFullRepaint(length),
+    );
+  }
 });
 
-// Run this suite alone with `bun bench/dom-paint.bench.ts` for a fast
-// feedback loop; bench/index.ts imports every suite for a full-baseline run.
-if (import.meta.main) await run();
+// Run this suite with `ostia bench bench/dom-paint.bench.ts` for a fast
+// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

@@ -6,7 +6,7 @@
  * line-indexed token objects (tokenLines). Same event stream in, four
  * different consumers - useful to see their relative cost side by side.
  */
-import { bench, do_not_optimize, group, run, summary } from "mitata";
+import { group, task } from "ostia";
 import {
   extendLines,
   renderHtml,
@@ -26,29 +26,16 @@ const html = renderHtml(events);
 group(
   `render primitives @ ${SIZE.toLocaleString()} chars of javascript`,
   () => {
-    summary(() => {
-      bench("renderHtml", () => {
-        do_not_optimize(renderHtml(events));
-      });
-      bench("renderHtml + splitLines", () => {
-        do_not_optimize(splitLines(renderHtml(events)));
-      });
-      bench("extendLines (whole stream in one call)", () => {
-        do_not_optimize(extendLines(events, [], ""));
-      });
-      bench("toRanges", () => {
-        do_not_optimize(toRanges(events));
-      });
-      bench("tokenLines", () => {
-        do_not_optimize(tokenLines(events));
-      });
-      bench("splitLines (on pre-rendered HTML)", () => {
-        do_not_optimize(splitLines(html));
-      });
-    });
+    task("renderHtml", () => renderHtml(events));
+    task("renderHtml + splitLines", () => splitLines(renderHtml(events)));
+    task("extendLines (whole stream in one call)", () =>
+      extendLines(events, [], ""),
+    );
+    task("toRanges", () => toRanges(events));
+    task("tokenLines", () => tokenLines(events));
+    task("splitLines (on pre-rendered HTML)", () => splitLines(html));
   },
 );
 
-// Run this suite alone with `bun bench/render.bench.ts` for a fast feedback
-// loop; bench/index.ts imports every suite for a full-baseline run.
-if (import.meta.main) await run();
+// Run this suite with `ostia bench bench/render.bench.ts` for a fast feedback
+// loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

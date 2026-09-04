@@ -6,7 +6,7 @@
  * (once per animation frame, called with a monotonically increasing
  * `count` as more characters reveal).
  */
-import { bench, do_not_optimize, group, run, summary } from "mitata";
+import { group, task } from "ostia";
 import { renderHtml } from "../src/engine.js";
 import {
   buildUnitMarkup,
@@ -26,48 +26,43 @@ function highlightedHtml(size: number) {
 }
 
 group("tokenizeTypewriter()", () => {
-  summary(() => {
-    for (const size of SIZES) {
-      const html = highlightedHtml(size);
-      bench(`${size.toLocaleString()} chars of highlighted HTML`, () => {
-        do_not_optimize(tokenizeTypewriter(html));
-      });
-    }
-  });
+  for (const size of SIZES) {
+    const html = highlightedHtml(size);
+    task(`${size.toLocaleString()} chars of highlighted HTML`, () =>
+      tokenizeTypewriter(html),
+    );
+  }
 });
 
 group("buildUnitMarkup()", () => {
-  summary(() => {
-    for (const size of SIZES) {
-      const units = tokenizeTypewriter(highlightedHtml(size));
-      bench(`${size.toLocaleString()} chars of highlighted HTML`, () => {
-        do_not_optimize(buildUnitMarkup(units));
-      });
-    }
-  });
+  for (const size of SIZES) {
+    const units = tokenizeTypewriter(highlightedHtml(size));
+    task(`${size.toLocaleString()} chars of highlighted HTML`, () =>
+      buildUnitMarkup(units),
+    );
+  }
 });
 
 /** Simulates one full typewriter run: splitAt called once per revealed unit, in order. */
 function revealAll(html: string, units: ReturnType<typeof tokenizeTypewriter>) {
   const splitter = createTypewriterSplitter(units, html);
   const total = units.reduce((sum, unit) => sum + unit.visible, 0);
+  const results: unknown[] = [];
   for (let count = 0; count <= total; count++) {
-    do_not_optimize(splitter.splitAt(count));
+    results.push(splitter.splitAt(count));
   }
+  return results;
 }
 
 group("createTypewriterSplitter(): full reveal simulation", () => {
-  summary(() => {
-    for (const size of SIZES) {
-      const html = highlightedHtml(size);
-      const units = tokenizeTypewriter(html);
-      bench(`${size.toLocaleString()} chars, 1 splitAt() per unit`, () => {
-        revealAll(html, units);
-      });
-    }
-  });
+  for (const size of SIZES) {
+    const html = highlightedHtml(size);
+    const units = tokenizeTypewriter(html);
+    task(`${size.toLocaleString()} chars, 1 splitAt() per unit`, () =>
+      revealAll(html, units),
+    );
+  }
 });
 
-// Run this suite alone with `bun bench/typewriter.bench.ts` for a fast
-// feedback loop; bench/index.ts imports every suite for a full-baseline run.
-if (import.meta.main) await run();
+// Run this suite with `ostia bench bench/typewriter.bench.ts` for a fast
+// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

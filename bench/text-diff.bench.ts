@@ -5,7 +5,7 @@
  * document size alone but *how much of the document the scan has to walk
  * before finding a difference*.
  */
-import { bench, do_not_optimize, group, run, summary } from "mitata";
+import { group, task } from "ostia";
 import { diffText } from "../src/text-diff.js";
 import { jsSource } from "./_shared.ts";
 
@@ -21,15 +21,10 @@ const cases: Record<string, string> = {
 };
 
 group("diffText()", () => {
-  summary(() => {
-    for (const [name, after] of Object.entries(cases)) {
-      bench(name, () => {
-        do_not_optimize(diffText(base, after));
-      });
-    }
-  });
+  for (const [name, after] of Object.entries(cases)) {
+    task(name, () => diffText(base, after));
+  }
 });
 
-// Run this suite alone with `bun bench/text-diff.bench.ts` for a fast
-// feedback loop; bench/index.ts imports every suite for a full-baseline run.
-if (import.meta.main) await run();
+// Run this suite with `ostia bench bench/text-diff.bench.ts` for a fast
+// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.
