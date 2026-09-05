@@ -121,6 +121,14 @@ pkgJson.exports = {
     types: "./load-language.d.ts",
     default: "./load-language.js",
   },
+  "./auto-detect": {
+    types: "./auto-detect.d.ts",
+    default: "./auto-detect.js",
+  },
+  "./auto-detect.js": {
+    types: "./auto-detect.d.ts",
+    default: "./auto-detect.js",
+  },
   "./scoped": {
     types: "./scoped.d.ts",
     default: "./scoped.js",

@@ -23,7 +23,10 @@
     "preview:multiple-snippets-various-languages": "ENTRY=multiple-snippets-various-languages vite preview",
     "dev:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite",
     "build:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite build",
-    "preview:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite preview"
+    "preview:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite preview",
+    "dev:highlight-auto-no-grammars": "ENTRY=highlight-auto-no-grammars vite",
+    "build:highlight-auto-no-grammars": "ENTRY=highlight-auto-no-grammars vite build",
+    "preview:highlight-auto-no-grammars": "ENTRY=highlight-auto-no-grammars vite preview"
   },
   "dependencies": {
     "svelte-highlight": "file:../../../package"
