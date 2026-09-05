@@ -21,7 +21,7 @@
         "cssnano": "^7.1.9",
         "cssnano-preset-lite": "^4.0.6",
         "highlight.js": "11.12.0",
-        "ostia": "^0.1.4",
+        "ostia": "^0.1.7",
         "postcss": "^8.5.19",
         "postcss-discard-duplicates": "^7.0.4",
         "postcss-inline-css-vars": "^0.1.0",
@@ -702,7 +702,7 @@
 
     "oniguruma-to-es": ["oniguruma-to-es@4.3.5", "", { "dependencies": { "oniguruma-parser": "^0.12.1", "regex": "^6.1.0", "regex-recursion": "^6.0.2" } }, "sha512-Zjygswjpsewa0NLTsiizVuMQZbp0MDyM6lIt66OxsF21npUDlzpHi1Mgb/qhQdkb+dWFTzJmFbEWdvZgRho8eQ=="],
 
-    "ostia": ["ostia@0.1.4", "", { "bin": { "ostia": "cli.js" } }, "sha512-aaXQDUC+2DQfVgHCQYhrkavelHE+gjfnf0nL32LuKiQ/VLuV9JGYO+gSXsZ30+y6T4bUESGf6KRl/Rv/aReYcg=="],
+    "ostia": ["ostia@0.1.7", "", { "bin": { "ostia": "cli.js" } }, "sha512-TVrDTh9H/1xzROyNYQONNfIyT9w8Ki/1RDhJ3Awj8KB0tN8Qbnktqwt0cdElQLiP3TFuq6sTJ4XjTZS05PIDhg=="],
 
     "p-limit": ["p-limit@7.3.0", "", { "dependencies": { "yocto-queue": "^1.2.1" } }, "sha512-7cIXg/Z0M5WZRblrsOla88S4wAK+zOQQWeBYfV3qJuJXMr+LnbYjaadrFaS0JILfEDPVqHyKnZ1Z/1d6J9VVUw=="],
 
