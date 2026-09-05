@@ -7,6 +7,14 @@
  * `on:highlight` event detail, which is dispatched from `afterUpdate` and so
  * only fires client-side (covered instead by tests/e2e/*.events.test.svelte).
  *
+ * `HighlightAuto`'s default (no `languages` prop) path is a deliberate
+ * exception: SSR renders plain escaped text (dynamic import can't run in
+ * Svelte's synchronous SSR - see HighlightAuto.svelte), so its `events` slot
+ * prop is just a single `{t: TEXT, v: code}` there, not a real detection
+ * result. The `languages` prop path is unaffected: detection over that
+ * bounded pool is still synchronous, so it's asserted the same way
+ * `Highlight` is below.
+ *
  * Follows the `tests/highlight-non-string-code.test.ts` compile pattern: a
  * Bun plugin server-compiles every `.svelte` file on load (not just the
  * entrypoint), because Highlight/HighlightAuto/HighlightSvelte all
@@ -17,7 +25,12 @@ import path from "node:path";
 import { plugin } from "bun";
 import { compile } from "svelte/compiler";
 import { render } from "svelte/server";
-import { createRegistry, registerAll } from "../src/engine.js";
+import {
+  createRegistry,
+  escapeHtml,
+  registerAll,
+  TEXT,
+} from "../src/engine.js";
 import allLanguages from "../src/languages/all.js";
 import svelteLanguage from "../src/languages/svelte.js";
 import typescript from "../src/languages/typescript.js";
@@ -80,25 +93,23 @@ describe("slot `events` matches the registry's events", () => {
     expect(body).toContain(JSON.stringify(expected));
   });
 
-  it("HighlightAuto", async () => {
+  it("HighlightAuto: default path SSR-renders plain escaped text, not a detection result", async () => {
     const { default: Wrapper } = await importWrapper(
-      "highlight-auto-events",
+      "highlight-auto-default-events",
       `<script>
   import HighlightAuto from "./HighlightAuto.svelte";
   export let code;
 </script>
-<HighlightAuto {code} let:events>{@html JSON.stringify(events)}</HighlightAuto>
+<HighlightAuto {code} let:events let:highlighted let:languageName><span data-name="{languageName}">{@html highlighted}</span>{@html JSON.stringify(events)}</HighlightAuto>
 `,
     );
 
     const code = "const add = (a, b) => a + b;";
     const { body } = render(Wrapper, { props: { code } });
-    const detected = registry.highlightAuto(code);
-    const expected = registry.highlight(code, {
-      language: detected.language as string,
-    }).events;
 
-    expect(body).toContain(JSON.stringify(expected));
+    expect(body).toContain('data-name=""');
+    expect(body).toContain(escapeHtml(code));
+    expect(body).toContain(JSON.stringify([{ t: TEXT, v: code }]));
   });
 
   it("HighlightSvelte", async () => {
@@ -112,8 +123,15 @@ describe("slot `events` matches the registry's events", () => {
 `,
     );
 
+    // String concatenation, not "<\\/script>": a literal backslash there is
+    // a malformed closing tag, which used to parse identically (by luck)
+    // only because the old default `HighlightAuto` eagerly registered every
+    // grammar - including hljs's standalone "xml" grammar - onto the shared
+    // singleton registry as a side effect of an earlier test in this file,
+    // masking a malformed-input recovery path this well-formed sample never
+    // exercises in the first place.
     const code =
-      "<script>\n  let count = 0;\n<\\/script>\n<button>{count}</button>\n";
+      "<script>\n  let count = 0;\n<" + "/script>\n<button>{count}</button>\n";
     const { body } = render(Wrapper, { props: { code } });
     const expected = registry.highlight(code, { language: "svelte" }).events;
 

@@ -2,7 +2,7 @@ import type { SvelteComponentTyped } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { ScopeEvent } from "./engine.d.ts";
 import type { LangtagProps } from "./Highlight.svelte";
-import type { LanguageName } from "./languages";
+import type { LanguageName, LanguageType } from "./languages";
 
 export type HighlightAutoProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
@@ -12,11 +12,28 @@ export type HighlightAutoProps = HTMLAttributes<HTMLPreElement> &
     code: any;
 
     /**
-     * Languages to consider for auto-detection.
-     * This can improve performance and accuracy.
+     * Languages to consider for auto-detection. Combines with `languages`
+     * when both are given (`languageNames` further filters `languages`'
+     * pool); in the default (no `languages`) path, this becomes the exact
+     * candidate list tier-0 detection loads, skipping the fingerprint step.
      * @example ["javascript", "typescript"]
      */
     languageNames?: (LanguageName | (string & {}))[];
+
+    /**
+     * Explicit language modules to detect among. When provided, detection
+     * is synchronous and SSR-highlighted, exactly like `Highlight`, over
+     * this bounded, deterministic-bundle pool - the escape hatch for the
+     * old (pre-tiered) always-synchronous default behavior.
+     *
+     * Without this prop, `HighlightAuto` renders plain escaped text on the
+     * server and on first client paint (dynamic import can't run in
+     * Svelte's synchronous SSR), then upgrades to highlighted output once a
+     * tier-0 fingerprint match's grammar finishes loading; `on:highlight`
+     * fires after that async completion instead of synchronously.
+     * @example [typescript, python, rust]
+     */
+    languages?: LanguageType<string>[];
   };
 
 export type HighlightAutoEvents = {
