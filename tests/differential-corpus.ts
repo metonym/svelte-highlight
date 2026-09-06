@@ -615,6 +615,20 @@ schema Person:
 
 people = [Person {name = "Alice", age = 30}]
 `,
+  kconfig: `config DEBUG_KERNEL
+    bool "Kernel debugging"
+    default n
+    help
+      Say Y here to enable kernel debugging.
+      This adds extra checks and may slow the
+      kernel down.
+
+config LOG_LEVEL
+    int "Log level"
+    range 0 7
+    default 4
+    depends on DEBUG_KERNEL
+`,
   koka: `// prints a greeting with an effect
 effect ctl ask() : int
 

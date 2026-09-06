@@ -151,6 +151,7 @@ exports[`Languages 1`] = `
   "juliaRepl",
   "just",
   "kcl",
+  "kconfig",
   "kdl",
   "koka",
   "kotlin",
