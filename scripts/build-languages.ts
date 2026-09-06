@@ -135,6 +135,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "bitbake",
   "kconfig",
   "ldscript",
+  "vcl",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

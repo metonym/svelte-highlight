@@ -1245,6 +1245,26 @@ const count = ref(0);
   color: red;
 }
 </style>`,
+  vcl: `vcl 4.1;
+
+import std;
+
+backend default {
+    .host = "127.0.0.1";
+    .port = "8080";
+}
+
+sub vcl_recv {
+    if (req.method == "PURGE") {
+        return (purge);
+    }
+    set req.http.X-Forwarded-For = client.ip;
+}
+
+sub vcl_backend_response {
+    set beresp.ttl = 1h;
+}
+`,
   vyper: `@external
 def transfer(to: address, amount: uint256):
     # a comment
