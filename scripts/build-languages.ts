@@ -132,6 +132,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "bpftrace",
   "dtrace",
   "rpmspec",
+  "bitbake",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

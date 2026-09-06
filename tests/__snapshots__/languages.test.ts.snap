@@ -30,6 +30,7 @@ exports[`Languages 1`] = `
   "bend",
   "bibtex",
   "bicep",
+  "bitbake",
   "blade",
   "blueprint",
   "bnf",
