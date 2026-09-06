@@ -136,6 +136,7 @@
     "/preview-uiua": "Uiua language preview",
     "/preview-bqn": "BQN language preview",
     "/preview-raku": "Raku language preview",
+    "/preview-koka": "Koka language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
