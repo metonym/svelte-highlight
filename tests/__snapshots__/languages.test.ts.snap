@@ -252,6 +252,7 @@ exports[`Languages 1`] = `
   "smalltalk",
   "smithy",
   "sml",
+  "snort",
   "solidity",
   "sparql",
   "splunk",
