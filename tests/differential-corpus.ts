@@ -126,6 +126,11 @@ example.com {
 	}
 	file_server
 }`,
+  bqn: `# double each number and sum
+Double ⇐ ×2
+Sum ← +´
+Total ← Sum Double¨ ⟨1‿2‿3‿4⟩
+•Show Total`,
   c3: `module counters;
 
 fn int increment(int x) {
