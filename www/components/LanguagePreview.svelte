@@ -26,6 +26,7 @@
   import { fluxPreviewSnippets } from "@www/preview/flux-preview-snippets";
   import { gdscriptPreviewSnippets } from "@www/preview/gdscript-preview-snippets";
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
+  import { gotmplPreviewSnippets } from "@www/preview/gotmpl-preview-snippets";
   import { groqPreviewSnippets } from "@www/preview/groq-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
   import { heexPreviewSnippets } from "@www/preview/heex-preview-snippets";
@@ -111,6 +112,7 @@
   import flux from "svelte-highlight/languages/flux";
   import gdscript from "svelte-highlight/languages/gdscript";
   import gleam from "svelte-highlight/languages/gleam";
+  import gotmpl from "svelte-highlight/languages/gotmpl";
   import groq from "svelte-highlight/languages/groq";
   import hcl from "svelte-highlight/languages/hcl";
   import heex from "svelte-highlight/languages/heex";
@@ -167,7 +169,7 @@
   import wit from "svelte-highlight/languages/wit";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl"} */
   export let language;
 
   const registry = {
@@ -256,6 +258,7 @@
     imba: { lang: imba, snippets: imbaPreviewSnippets },
     slint: { lang: slint, snippets: slintPreviewSnippets },
     ejs: { lang: ejs, snippets: ejsPreviewSnippets },
+    gotmpl: { lang: gotmpl, snippets: gotmplPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
