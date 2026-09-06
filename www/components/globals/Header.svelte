@@ -127,6 +127,7 @@
     "/preview-kv": "KV language preview",
     "/preview-baml": "BAML language preview",
     "/preview-modelfile": "Modelfile language preview",
+    "/preview-gbnf": "GBNF language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
