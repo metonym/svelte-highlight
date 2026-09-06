@@ -530,6 +530,17 @@ server host="localhost" port=8080 enabled=#true
 /- skipped 1
 created (date)"2024-01-01"
 `,
+  koka: `// prints a greeting with an effect
+effect ctl ask() : int
+
+fun greet() : <ask,console> ()
+  val name = ask()
+  println("Hello, " ++ name.show)
+
+fun main()
+  handle(greet)
+    ctl ask() -> resume(42)
+`,
   kv: `#:kivy 2.0
 #:import utils app.utils
 
