@@ -124,6 +124,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "kcl",
   "typespec",
   "smithy",
+  "yara",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

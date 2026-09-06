@@ -1135,6 +1135,23 @@ interface types {
   variant error { not-found, other(string) }
 }
 `,
+  yara: `import "pe"
+
+rule SuspiciousExecutable : malware
+{
+    meta:
+        author = "analyst"
+        threat = "trojan"
+
+    strings:
+        $a = "malicious_string" nocase
+        $hex = { E2 34 ?? C8 }
+        $re = /evil[0-9]+/i
+
+    condition:
+        uint16(0) == 0x5A4D and $a and $hex and pe.number_of_sections > 3
+}
+`,
   zig: `const std = @import("std");
 
 pub fn main() !void {
