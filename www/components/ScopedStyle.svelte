@@ -15,9 +15,9 @@
   ${!useInjectedStyles && useCdnImport ? "" : `${importStyles}\n`}
   const code = "const add = (a: number, b: number) => a + b;";
 <\/script>
-${
-  useInjectedStyles || useCdnImport
-    ? `
+  ${
+    useInjectedStyles || useCdnImport
+      ? `
 <svelte:head>
   ${
     useInjectedStyles
@@ -28,9 +28,9 @@ ${
   />`
   }
 </svelte:head>
-`
-    : "\n"
-}
+  `
+      : "\n"
+  }
 <Highlight language={typescript} {code} />`;
 </script>
 
