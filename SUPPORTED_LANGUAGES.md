@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 309 languages: 193 exported from highlight.js@11.12.0, 116 custom grammars added by svelte-highlight
+> 310 languages: 193 exported from highlight.js@11.12.0, 117 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -981,6 +981,20 @@
 
   // base import
   import { dsconfig } from "svelte-highlight/languages";
+</script>
+```
+
+## dtrace (`dtrace`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import dtrace from "svelte-highlight/languages/dtrace";
+
+  // base import
+  import { dtrace } from "svelte-highlight/languages";
 </script>
 ```
 
