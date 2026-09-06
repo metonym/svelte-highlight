@@ -132,6 +132,7 @@
     "/preview-verse": "Verse language preview",
     "/preview-roc": "Roc language preview",
     "/preview-c3": "C3 language preview",
+    "/preview-bend": "Bend language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
