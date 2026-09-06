@@ -94,6 +94,8 @@ true false null
 /regex/ #hashtag</span> <span class="hljs-keyword">@annotation</span>"
 `;
 
+exports[`golden snapshot: blueprint 1`] = `"<span class="hljs-keyword">template</span> <span class="hljs-keyword">using</span> <span class="hljs-keyword">bind</span> <span class="hljs-keyword">bind</span>-property sync-create <span class="hljs-keyword">inverted</span> <span class="hljs-keyword">styles</span> <span class="hljs-keyword">menu</span> <span class="hljs-keyword">section</span> <span class="hljs-keyword">item</span> <span class="hljs-keyword">translatable</span> <span class="hljs-literal">true</span> <span class="hljs-literal">false</span>"`;
+
 exports[`golden snapshot: bnf 1`] = `
 "// comment
 &quot;string&quot; &#x27;string&#x27; 123 3.14
