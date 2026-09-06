@@ -95,6 +95,7 @@ exports[`Languages 1`] = `
   "fsharp",
   "gams",
   "gauss",
+  "gbnf",
   "gcode",
   "gdscript",
   "gherkin",
