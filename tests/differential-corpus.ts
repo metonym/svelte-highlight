@@ -194,6 +194,16 @@ unless result is 0
   console.log "not zero"
 add := (a, b) => a + b
 @name = "civet"`,
+  cisco: `! configure the uplink interface
+interface GigabitEthernet0/0/1
+ description Uplink to core
+ ip address 192.168.1.1 255.255.255.0
+ no shutdown
+!
+access-list 101 permit tcp any host 10.0.0.5 eq 443
+router ospf 1
+ network 192.168.1.0 0.0.0.255 area 0
+`,
   clarity: `;; a simple counter contract
 (define-data-var counter uint u0)
 

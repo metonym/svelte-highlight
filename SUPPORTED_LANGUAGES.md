@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 306 languages: 193 exported from highlight.js@11.12.0, 113 custom grammars added by svelte-highlight
+> 307 languages: 193 exported from highlight.js@11.12.0, 114 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -535,6 +535,20 @@
 
   // base import
   import { ceylon } from "svelte-highlight/languages";
+</script>
+```
+
+## cisco (`cisco`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import cisco from "svelte-highlight/languages/cisco";
+
+  // base import
+  import { cisco } from "svelte-highlight/languages";
 </script>
 ```
 
