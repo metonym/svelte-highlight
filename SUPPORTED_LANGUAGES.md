@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 315 languages: 193 exported from highlight.js@11.12.0, 122 custom grammars added by svelte-highlight
+> 316 languages: 193 exported from highlight.js@11.12.0, 123 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1487,6 +1487,20 @@
 
   // base import
   import { handlebars } from "svelte-highlight/languages";
+</script>
+```
+
+## haproxy (`haproxy`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import haproxy from "svelte-highlight/languages/haproxy";
+
+  // base import
+  import { haproxy } from "svelte-highlight/languages";
 </script>
 ```
 

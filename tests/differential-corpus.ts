@@ -450,6 +450,26 @@ Hello, {{ .Name | printf "%s" }}!
   "slug": slug.current,
   "director": director->name
 } | order(title) [0...10]`,
+  haproxy: `global
+    log stdout format raw local0
+    maxconn 4096
+
+defaults
+    mode http
+    timeout connect 5s
+    timeout client 30s
+    timeout server 30s
+
+frontend web
+    bind *:80
+    acl is_api path_beg /api
+    use_backend api_servers if is_api
+    default_backend web_servers
+
+backend web_servers
+    balance roundrobin
+    server web1 10.0.0.1:8080 check
+`,
   hcl: `# configure the web instance
 resource "aws_instance" "web" {
   instance_type = "t3.micro"
