@@ -138,6 +138,7 @@
     "/preview-raku": "Raku language preview",
     "/preview-koka": "Koka language preview",
     "/preview-unison": "Unison language preview",
+    "/preview-kcl": "KCL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
