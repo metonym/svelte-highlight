@@ -749,6 +749,16 @@ let render = () => {
     <Component prop={x} />
   </div>
 }`,
+  roc: `app [main] { pf: platform "https://github.com/roc-lang/basic-cli" }
+
+## Doubles a number
+double = \\n -> n * 2
+
+main =
+    result <- Task.await (Stdout.line "Hello, $(name)!")
+    when result is
+        Ok _ -> Stdout.line "done"
+        Err _ -> crash "failed"`,
   rst: `Title
 =====
 
