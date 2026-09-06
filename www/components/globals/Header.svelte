@@ -124,6 +124,7 @@
     "/preview-gotmpl": "Go template language preview",
     "/preview-helm": "Helm language preview",
     "/preview-blueprint": "Blueprint language preview",
+    "/preview-kv": "KV language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
