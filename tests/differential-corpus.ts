@@ -530,6 +530,16 @@ server host="localhost" port=8080 enabled=#true
 /- skipped 1
 created (date)"2024-01-01"
 `,
+  kcl: `# a schema with a check block
+schema Person:
+    name: str
+    age: int
+
+    check:
+        age >= 0, "age must be non-negative"
+
+people = [Person {name = "Alice", age = 30}]
+`,
   koka: `// prints a greeting with an effect
 effect ctl ask() : int
 
