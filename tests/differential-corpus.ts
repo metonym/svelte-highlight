@@ -282,6 +282,13 @@ from(bucket: "example-bucket")
   |> filter(fn: (r) => r._measurement == "cpu")
   |> mean()
 `,
+  gbnf: `# a simple JSON-ish grammar
+root ::= object
+object ::= "{" pair ("," pair)* "}"
+pair ::= string ":" value
+value ::= string | number | object
+string ::= "\\"" [^"]* "\\""
+number ::= [0-9]+ ("." [0-9]+)?`,
   gleam: `/// Doubles a number
 pub fn double(x) {
   x * 2
