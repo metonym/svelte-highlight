@@ -172,6 +172,7 @@ exports[`Languages 1`] = `
   "mermaid",
   "mipsasm",
   "mizar",
+  "modelfile",
   "mojo",
   "mojolicious",
   "monkey",

@@ -559,6 +559,14 @@ Some **bold** text and \`inline code\`.
 
 - first item
 - second item`,
+  modelfile: `# a custom llama model
+FROM llama3.2
+PARAMETER temperature 0.7
+PARAMETER num_ctx 4096
+SYSTEM """You are a helpful assistant."""
+TEMPLATE """{{ .Prompt }}"""
+MESSAGE system You are concise.
+MESSAGE user Hello!`,
   move: `module 0x1::coin {
     // Coin resource with drop and store abilities
     struct Coin has drop, store {
