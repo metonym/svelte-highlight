@@ -56,7 +56,6 @@ registry.register(javascriptLang.register);
 registry.register(cssLang.register);
 registry.register(markdownLang.register);
 
-/** @param {() => void} fn */
 function time(fn: () => void, iterations: number) {
   // warm up (JIT, regex caches)
   for (let i = 0; i < 3; i++) fn();

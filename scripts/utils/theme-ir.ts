@@ -18,12 +18,11 @@
 
 import {
   colorSchemeFor,
-  parseColorToRgb,
   SUPPORTED_PROPERTIES,
   varName,
 } from "../../src/theme-vars.js";
 
-export { colorSchemeFor, parseColorToRgb, SUPPORTED_PROPERTIES, varName };
+export { colorSchemeFor, SUPPORTED_PROPERTIES, varName };
 
 /** `background` is normalized to `background-color` — one property per
  * rule in the IR, regardless of which shorthand/longhand a theme used. */
@@ -84,9 +83,12 @@ export function classifySelector(rawSelector: string): SelectorShape {
  * rightmost (subject) class for descendants. `null` for shapes that don't
  * need a fallback (base/single have nothing more specific to lose to).
  */
-export function subjectScope(shape: SelectorShape): string[] | null {
+export function subjectScope(shape: {
+  kind: string;
+  scopes: string[];
+}): string[] | null {
   if (shape.kind === "compound") return [shape.scopes[0] as string];
-  if (shape.kind === "descendant") return [shape.scopes[1]];
+  if (shape.kind === "descendant") return [shape.scopes[1] as string];
   return null;
 }
 

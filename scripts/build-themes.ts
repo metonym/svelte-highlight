@@ -10,6 +10,7 @@ import {
   colorSchemeFor,
   isSimpleColorValue,
   SUPPORTED_PROPERTIES,
+  subjectScope,
   varName,
 } from "./utils/theme-ir.ts";
 import { writeTo } from "./utils/write-to.ts";
@@ -177,15 +178,6 @@ function processTheme(
   };
 }
 
-/** The scope a multi-scope selector's variable falls back to when unset —
- * mirrors `subjectScope` in `theme-ir.ts` but over the union's plain
- * `kind`/`scopes` pair instead of the full `SelectorShape` union. */
-function subjectFor(entry: UnionEntry): string[] | null {
-  if (entry.kind === "compound") return [entry.scopes[0] as string];
-  if (entry.kind === "descendant") return [entry.scopes[1] as string];
-  return null;
-}
-
 /**
  * `--shl-*` var name -> the single fallback var name `base.css` encodes
  * for it (the same pairs `buildBaseCss` wraps in `var(x, var(y))`).
@@ -198,7 +190,7 @@ function buildFallbackMap(
 ): Map<string, string> {
   const fallbacks = new Map<string, string>();
   for (const entry of selectorUnion.values()) {
-    const subject = subjectFor(entry);
+    const subject = subjectScope(entry);
     if (!subject) continue;
     for (const prop of entry.properties) {
       const vn = varName(entry.scopes, prop);
@@ -228,7 +220,7 @@ function buildBaseCss(selectorUnion: Map<string, UnionEntry>): string {
   });
 
   const rules = sorted.map(([selector, entry]) => {
-    const subject = subjectFor(entry);
+    const subject = subjectScope(entry);
     const decls = PROPERTY_ORDER.filter((prop) => entry.properties.has(prop))
       .map((prop) => {
         const vn = varName(entry.scopes, prop) as string;

@@ -46,13 +46,12 @@ export async function inlineCssUrls(
   const dataUrls = await Promise.all(
     uniqueFilenames.map(async (filename) => {
       const filePath = path.join(baseDir, filename);
-      const file = Bun.file(filePath);
-
-      if (!(await file.exists())) {
+      let buffer: ArrayBuffer;
+      try {
+        buffer = await Bun.file(filePath).arrayBuffer();
+      } catch {
         throw new Error(`CSS references missing asset: ${filePath}`);
       }
-
-      const buffer = await file.arrayBuffer();
       const base64 = Buffer.from(buffer).toString("base64");
       const mime = mimeFromExt(path.extname(filename));
       return {

@@ -18,6 +18,14 @@ import { writeTo } from "./utils/write-to.ts";
 
 export type ModuleNames = Array<{ name: string; moduleName: string }>;
 
+/** camelCase, prefixed with `_` when it can't be a bare identifier (`1c`, `default`). */
+function toStyleModuleName(name: string) {
+  const moduleName = toCamelCase(name);
+  return STARTS_WITH_DIGIT.test(moduleName) || DEFAULT_STRING.test(moduleName)
+    ? `_${moduleName}`
+    : moduleName;
+}
+
 export type ThemeInput = {
   name: string;
   moduleName: string;
@@ -48,14 +56,7 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
     const absPath = path.resolve("node_modules/highlight.js/styles", file);
     if (NON_MINIFIED_CSS.test(file)) {
       let { name, dir } = path.parse(file);
-      let moduleName = toCamelCase(name);
-
-      if (
-        STARTS_WITH_DIGIT.test(moduleName) ||
-        DEFAULT_STRING.test(moduleName)
-      ) {
-        moduleName = `_${moduleName}`;
-      }
+      let moduleName = toStyleModuleName(name);
 
       if (seenNames.has(name)) {
         name = `${dir}-${name}`;
@@ -75,14 +76,7 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
 
       const absPath = path.resolve(customStylesDir, file);
       const { name } = path.parse(file);
-      let moduleName = toCamelCase(name);
-
-      if (
-        STARTS_WITH_DIGIT.test(moduleName) ||
-        DEFAULT_STRING.test(moduleName)
-      ) {
-        moduleName = `_${moduleName}`;
-      }
+      const moduleName = toStyleModuleName(name);
 
       if (seenNames.has(name)) {
         throw new Error(

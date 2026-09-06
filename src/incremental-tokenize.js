@@ -52,16 +52,7 @@ function splitKeepEnds(code) {
  */
 function stateConverges(a, b) {
   if (a.buffer !== b.buffer || a.openScopes !== b.openScopes) return false;
-  if (a.frames.length !== b.frames.length) return false;
-  for (let i = 0; i < a.frames.length; i++) {
-    const af = /** @type {{ idx: number, beginMatch: string | undefined }} */ (
-      a.frames[i]
-    );
-    const bf = /** @type {{ idx: number, beginMatch: string | undefined }} */ (
-      b.frames[i]
-    );
-    if (af.idx !== bf.idx || af.beginMatch !== bf.beginMatch) return false;
-  }
+  if (!framesEqual(a.frames, b.frames)) return false;
   const aSubs = Object.keys(a.subContinuations);
   const bSubs = Object.keys(b.subContinuations);
   if (aSubs.length !== bSubs.length) return false;
@@ -75,20 +66,25 @@ function stateConverges(a, b) {
     // identical (the carry decision it gates is relative to whichever
     // parse is asking, and stays consistent once frames/buffer/openScopes
     // - already compared above and below - agree).
-    const aFrames = aRecord.frames;
-    const bFrames = bRecord.frames;
-    if (aFrames.length !== bFrames.length) return false;
-    for (let i = 0; i < aFrames.length; i++) {
-      const af =
-        /** @type {{ idx: number, beginMatch: string | undefined }} */ (
-          aFrames[i]
-        );
-      const bf =
-        /** @type {{ idx: number, beginMatch: string | undefined }} */ (
-          bFrames[i]
-        );
-      if (af.idx !== bf.idx || af.beginMatch !== bf.beginMatch) return false;
-    }
+    if (!framesEqual(aRecord.frames, bRecord.frames)) return false;
+  }
+  return true;
+}
+
+/**
+ * @param {{ idx: number, beginMatch: string | undefined }[]} a
+ * @param {{ idx: number, beginMatch: string | undefined }[]} b
+ */
+function framesEqual(a, b) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    const af = /** @type {{ idx: number, beginMatch: string | undefined }} */ (
+      a[i]
+    );
+    const bf = /** @type {{ idx: number, beginMatch: string | undefined }} */ (
+      b[i]
+    );
+    if (af.idx !== bf.idx || af.beginMatch !== bf.beginMatch) return false;
   }
   return true;
 }
