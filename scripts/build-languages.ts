@@ -134,6 +134,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "rpmspec",
   "bitbake",
   "kconfig",
+  "ldscript",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
