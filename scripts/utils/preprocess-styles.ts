@@ -23,7 +23,6 @@ export const preprocessStyles = (
   css: string,
   options?: {
     plugins?: Plugin[];
-    scopeStyles?: boolean;
     discardComments?: "preserve-license" | "remove-all";
     deadDeclarationStats?: RemoveDeadDeclarationsStats;
   },

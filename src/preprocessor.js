@@ -103,14 +103,23 @@ function getStaticStringExpression(expression) {
   return null;
 }
 
-/** @param {import("svelte/compiler").AST.Attribute} attribute */
-function getStaticStringAttribute(attribute) {
+/**
+ * The attribute's sole value node; `null` for boolean attributes and for
+ * values mixing several parts (`class="a {b}"`).
+ * @param {import("svelte/compiler").AST.Attribute} attribute
+ */
+function getSingleAttributeValue(attribute) {
   if (attribute.value === true) return null;
   const values = Array.isArray(attribute.value)
     ? attribute.value
     : [attribute.value];
   if (values.length !== 1) return null;
-  const [value] = values;
+  return values[0] ?? null;
+}
+
+/** @param {import("svelte/compiler").AST.Attribute} attribute */
+function getStaticStringAttribute(attribute) {
+  const value = getSingleAttributeValue(attribute);
   if (!value) return null;
   if (value.type === "Text") return value.data;
   if (value.type === "ExpressionTag")
@@ -120,12 +129,7 @@ function getStaticStringAttribute(attribute) {
 
 /** @param {import("svelte/compiler").AST.Attribute} attribute */
 function getIdentifierAttribute(attribute) {
-  if (attribute.value === true) return null;
-  const values = Array.isArray(attribute.value)
-    ? attribute.value
-    : [attribute.value];
-  if (values.length !== 1) return null;
-  const [value] = values;
+  const value = getSingleAttributeValue(attribute);
   if (
     value?.type !== "ExpressionTag" ||
     value.expression.type !== "Identifier"

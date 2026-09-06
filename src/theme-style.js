@@ -3,14 +3,13 @@
  * for `HighlightStyle`'s object path (see `HighlightStyle.svelte`).
  */
 
+import { PROP_SUFFIX } from "./theme-vars.js";
 import { SHL_FALLBACKS } from "./themes/_shl-fallbacks.js";
 
-const NON_COLOR_SUFFIXES = [
-  "-bg",
-  "-font-style",
-  "-font-weight",
-  "-text-decoration",
-];
+// `-bg`, `-font-style`, ...: every var suffix except color's empty one.
+const NON_COLOR_SUFFIXES = Object.values(PROP_SUFFIX)
+  .filter((suffix) => suffix !== "")
+  .map((suffix) => `-${suffix}`);
 
 /** @param {string} key */
 function isColorKey(key) {

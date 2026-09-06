@@ -10,7 +10,6 @@ await Bun.write(
   Bun.file("./LICENSE.highlight.txt"),
 );
 
-// Copy source folder to package
 await $`cp -r ./src/ ./package`;
 
 const pkgJson = await Bun.file("./package/package.json").json();

@@ -125,6 +125,9 @@ export const TEXT = 0;
 export const OPEN = 1;
 export const CLOSE = 2;
 
+/** Scope name prefix marking a sub-language boundary (`language:css`). */
+const LANGUAGE_SCOPE_PREFIX = "language:";
+
 const HTML_ESCAPE_RE = /[&<>"']/g;
 /** @type {Record<string, string>} */
 const HTML_ESCAPE_MAP = {
@@ -399,7 +402,7 @@ class Tokenizer {
     }
     if (state.relevance > 0) this.relevance += result.relevance;
     if (result.language) {
-      this.open(`language:${result.language}`);
+      this.open(`${LANGUAGE_SCOPE_PREFIX}${result.language}`);
       for (const event of result.events) this.events.push(event);
       this.close();
     } else {
@@ -856,8 +859,8 @@ class Tokenizer {
  * @param {string} prefix
  */
 function scopeToCssClass(name, prefix) {
-  if (name.startsWith("language:")) {
-    return name.replace("language:", "language-");
+  if (name.startsWith(LANGUAGE_SCOPE_PREFIX)) {
+    return name.replace(LANGUAGE_SCOPE_PREFIX, "language-");
   }
   if (name.includes(".")) {
     const pieces = name.split(".");
@@ -962,7 +965,7 @@ export function toRanges(events) {
   let pos = 0;
   for (const event of events) {
     if (event.t === OPEN) {
-      stack.push(event.s.startsWith("language:") ? null : event.s);
+      stack.push(event.s.startsWith(LANGUAGE_SCOPE_PREFIX) ? null : event.s);
     } else if (event.t === CLOSE) {
       stack.pop();
     } else {

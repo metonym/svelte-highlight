@@ -109,16 +109,12 @@
       revealedInDom++;
     }
 
-    if (caretMark) {
-      caretMark.classList.remove("typewriter-caret");
-      caretMark = undefined;
-    }
-    if (revealed < total) {
-      const next = unitEls[revealed];
-      if (next) {
-        next.classList.add("typewriter-caret");
-        caretMark = next;
-      }
+    // Skip the class churn on frames where `revealed` didn't advance.
+    const next = revealed < total ? unitEls[revealed] : undefined;
+    if (next !== caretMark) {
+      caretMark?.classList.remove("typewriter-caret");
+      next?.classList.add("typewriter-caret");
+      caretMark = next;
     }
   }
 
