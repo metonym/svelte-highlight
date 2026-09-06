@@ -1115,6 +1115,23 @@ RELATE user:alice->wrote->post:hello;
 {:else}
   <p>few</p>
 {/if}`,
+  systemd: `[Unit]
+Description=Example web service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=www-data
+Environment=PORT=%p
+ExecStartPre=-/usr/bin/mkdir -p /run/example
+ExecStart=/usr/bin/example-server --port=\${PORT}
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+`,
   templ: `// Hello renders a greeting
 templ Hello(name string) {
 	<h1>{ name }</h1>

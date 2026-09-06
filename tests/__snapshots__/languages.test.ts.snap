@@ -276,6 +276,7 @@ exports[`Languages 1`] = `
   "surrealql",
   "svelte",
   "swift",
+  "systemd",
   "taggerscript",
   "tap",
   "tcl",
