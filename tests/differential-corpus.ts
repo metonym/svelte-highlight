@@ -770,6 +770,22 @@ p Text with #{item} interpolation`,
 (displayln (format "~a" (add 1 2)))
 #| a block
    comment |#`,
+  raku: `#| doubles a number
+sub double(Int $x) {
+    return $x * 2;
+}
+
+my $name = "world";
+say "Hello, $name!";
+
+class Point {
+    has $.x is rw;
+    has $.y is rw;
+}
+
+my $p = Point.new(x => 1, y => 2);
+say $p.x ~~ $p.y;
+`,
   rego: `package authz
 
 import future.keywords.if
