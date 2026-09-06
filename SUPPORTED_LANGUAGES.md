@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 300 languages: 193 exported from highlight.js@11.12.0, 107 custom grammars added by svelte-highlight
+> 301 languages: 193 exported from highlight.js@11.12.0, 108 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1821,6 +1821,20 @@
 
   // base import
   import { just } from "svelte-highlight/languages";
+</script>
+```
+
+## kcl (`kcl`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import kcl from "svelte-highlight/languages/kcl";
+
+  // base import
+  import { kcl } from "svelte-highlight/languages";
 </script>
 ```
 
