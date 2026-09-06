@@ -250,6 +250,7 @@ exports[`Languages 1`] = `
   "slint",
   "smali",
   "smalltalk",
+  "smithy",
   "sml",
   "solidity",
   "sparql",
