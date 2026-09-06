@@ -151,6 +151,7 @@
     "/preview-rpmspec": "RPM spec language preview",
     "/preview-bitbake": "BitBake language preview",
     "/preview-kconfig": "Kconfig language preview",
+    "/preview-ldscript": "GNU ld linker script preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
