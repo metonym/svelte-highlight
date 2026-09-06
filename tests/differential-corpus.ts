@@ -107,6 +107,15 @@ has(request.auth) &&
     (request.auth.uid == resource.owner && resource.verified))
 ? "allow"
 : "deny"`,
+  civet: `### block comment
+describing this snippet ###
+x := 1  # single-line comment
+double := (n) -> n * 2
+result := x |> double
+unless result is 0
+  console.log "not zero"
+add := (a, b) => a + b
+@name = "civet"`,
   clarity: `;; a simple counter contract
 (define-data-var counter uint u0)
 
