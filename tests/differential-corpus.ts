@@ -957,6 +957,10 @@ This is *bold* and _emphasis_.
 $ x^2 + y^2 = z^2 $
 
 See @intro and <label-here>.`,
+  uiua: `# double each number and sum
+Double ← ×2
+Total ← /+ ≡Double [1 2 3 4]
+&p $"Total: _" Total`,
   v: `struct Point {
 	x int
 	y int
