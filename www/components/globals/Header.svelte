@@ -125,6 +125,7 @@
     "/preview-helm": "Helm language preview",
     "/preview-blueprint": "Blueprint language preview",
     "/preview-kv": "KV language preview",
+    "/preview-baml": "BAML language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
