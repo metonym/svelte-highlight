@@ -73,6 +73,23 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-09-01' = {
 }
 
 output storageId string = storage.id`,
+  bitbake: `# recipe for a simple tool
+SUMMARY = "A simple tool"
+LICENSE = "MIT"
+SRC_URI = "git://example.com/tool.git;branch=main"
+
+DEPENDS += "zlib"
+S = "\${WORKDIR}/git"
+
+do_install() {
+    install -d \${D}\${bindir}
+    install -m 0755 tool \${D}\${bindir}
+}
+
+python do_after_install() {
+    d.setVar('SOMEVAR', 'value')
+}
+`,
   bend: `# a binary tree sum
 type Tree:
   Node { ~lft, ~rgt }
