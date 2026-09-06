@@ -147,6 +147,7 @@
     "/preview-cisco": "Cisco IOS language preview",
     "/preview-yang": "YANG language preview",
     "/preview-bpftrace": "bpftrace language preview",
+    "/preview-dtrace": "DTrace language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
