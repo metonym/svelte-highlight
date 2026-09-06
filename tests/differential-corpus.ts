@@ -68,6 +68,21 @@ output storageId string = storage.id`,
   {{ $item }}
 @endforeach
 {{-- a comment --}}`,
+  blueprint: `using Gtk 4.0;
+
+template $MyWidget : Adw.Window {
+  title: _("My App");
+
+  Gtk.Box box {
+    orientation: vertical;
+    styles ["card"]
+
+    Gtk.Button button {
+      label: "Click me";
+      clicked => $on_clicked() swapped;
+    }
+  }
+}`,
   caddy: `# reverse proxy for the API
 example.com {
 	@api path /api/*
