@@ -199,6 +199,13 @@ build:
         RUN go mod download
     END
 `,
+  ejs: `<%# render a list of users %>
+<ul>
+  <% users.forEach(function(user) { %>
+    <li><%= user.name %></li>
+  <% }); %>
+</ul>
+<p><%- rawHtml %></p>`,
   agda: `-- naturals and a simple proof
 {-# OPTIONS --safe #-}
 data ℕ : Set where
