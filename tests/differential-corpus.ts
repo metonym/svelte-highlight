@@ -927,6 +927,16 @@ if exists(.error) {
     .level = "info"
 }
 del(.raw)`,
+  verse: `<# a simple counter class #>
+counter_device := class(creative_device):
+    Count : int = 0
+
+    OnBegin<override>()<suspends> : void =
+        loop:
+            Count += 1
+
+    GetCount<public>()<decides><transacts> : int =
+        Count`,
   vue: `<script setup lang="ts">
 const count = ref(0);
 </script>
