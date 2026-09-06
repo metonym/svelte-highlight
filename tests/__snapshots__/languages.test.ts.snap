@@ -277,6 +277,7 @@ exports[`Languages 1`] = `
   "vbscript",
   "vbscriptHtml",
   "verilog",
+  "verse",
   "vhdl",
   "vim",
   "vrl",
