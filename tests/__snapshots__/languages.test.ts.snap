@@ -303,6 +303,7 @@ exports[`Languages 1`] = `
   "xml",
   "xquery",
   "yaml",
+  "yara",
   "zephir",
   "zig",
 ]
