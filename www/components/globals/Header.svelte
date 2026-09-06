@@ -120,6 +120,7 @@
     "/preview-civet": "Civet language preview",
     "/preview-imba": "Imba language preview",
     "/preview-slint": "Slint language preview",
+    "/preview-ejs": "EJS language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
