@@ -137,6 +137,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "ldscript",
   "vcl",
   "haproxy",
+  "systemd",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
