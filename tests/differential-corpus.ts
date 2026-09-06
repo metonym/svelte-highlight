@@ -73,6 +73,25 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-09-01' = {
 }
 
 output storageId string = storage.id`,
+  bend: `# a binary tree sum
+type Tree:
+  Node { ~lft, ~rgt }
+  Leaf { val }
+
+def sum(tree):
+  match tree:
+    case Tree/Node:
+      return sum(tree.lft) + sum(tree.rgt)
+    case Tree/Leaf:
+      return tree.val
+
+def main():
+  bend x = 0:
+    when x < 3:
+      fold x = x + 1
+    else:
+      return #done
+`,
   blade: `@php
   $total = 1 + 2;
 @endphp
