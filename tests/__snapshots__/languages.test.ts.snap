@@ -60,6 +60,7 @@ exports[`Languages 1`] = `
   "cpp",
   "cql",
   "crmsh",
+  "crontab",
   "crystal",
   "csharp",
   "csp",

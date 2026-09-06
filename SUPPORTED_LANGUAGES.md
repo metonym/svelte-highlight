@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 317 languages: 193 exported from highlight.js@11.12.0, 124 custom grammars added by svelte-highlight
+> 318 languages: 193 exported from highlight.js@11.12.0, 125 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -741,6 +741,20 @@
 
   // base import
   import { crmsh } from "svelte-highlight/languages";
+</script>
+```
+
+## crontab (`crontab`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import crontab from "svelte-highlight/languages/crontab";
+
+  // base import
+  import { crontab } from "svelte-highlight/languages";
 </script>
 ```
 
