@@ -129,6 +129,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "codeql",
   "cisco",
   "yang",
+  "bpftrace",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

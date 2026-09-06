@@ -131,6 +131,26 @@ Double ⇐ ×2
 Sum ← +´
 Total ← Sum Double¨ ⟨1‿2‿3‿4⟩
 •Show Total`,
+  bpftrace: `// trace slow syscalls
+#include <linux/sched.h>
+
+BEGIN
+{
+    printf("Tracing syscalls...\\n");
+}
+
+kprobe:vfs_read
+/pid == 1234/
+{
+    @start[tid] = nsecs;
+}
+
+kretprobe:vfs_read
+{
+    $dur = nsecs - @start[tid];
+    printf("read took %d ns, arg0=%d\\n", $dur, arg0);
+}
+`,
   c3: `module counters;
 
 fn int increment(int x) {
