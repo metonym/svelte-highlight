@@ -120,6 +120,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "bqn",
   "raku",
   "koka",
+  "unison",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
