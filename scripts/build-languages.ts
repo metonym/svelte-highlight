@@ -107,6 +107,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "gotmpl",
   "helm",
   "blueprint",
+  "kv",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

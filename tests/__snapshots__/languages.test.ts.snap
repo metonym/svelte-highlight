@@ -143,6 +143,7 @@ exports[`Languages 1`] = `
   "kdl",
   "kotlin",
   "kql",
+  "kv",
   "lasso",
   "latex",
   "ldif",
