@@ -128,6 +128,7 @@
     "/preview-baml": "BAML language preview",
     "/preview-modelfile": "Modelfile language preview",
     "/preview-gbnf": "GBNF language preview",
+    "/preview-tsq": "Tree-sitter query language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
