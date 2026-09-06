@@ -104,6 +104,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "imba",
   "slint",
   "ejs",
+  "gotmpl",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

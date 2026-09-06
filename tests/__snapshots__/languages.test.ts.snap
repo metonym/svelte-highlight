@@ -101,6 +101,7 @@ exports[`Languages 1`] = `
   "gml",
   "go",
   "golo",
+  "gotmpl",
   "gradle",
   "graphql",
   "groovy",
