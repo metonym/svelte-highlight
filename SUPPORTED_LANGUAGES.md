@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 297 languages: 193 exported from highlight.js@11.12.0, 104 custom grammars added by svelte-highlight
+> 298 languages: 193 exported from highlight.js@11.12.0, 105 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2829,6 +2829,20 @@
 
   // base import
   import { racket } from "svelte-highlight/languages";
+</script>
+```
+
+## raku (`raku`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import raku from "svelte-highlight/languages/raku";
+
+  // base import
+  import { raku } from "svelte-highlight/languages";
 </script>
 ```
 

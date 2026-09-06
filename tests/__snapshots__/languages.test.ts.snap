@@ -225,6 +225,7 @@ exports[`Languages 1`] = `
   "qml",
   "r",
   "racket",
+  "raku",
   "razor",
   "reasonml",
   "rego",
