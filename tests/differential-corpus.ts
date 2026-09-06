@@ -202,6 +202,17 @@ add := (a, b) => a + b
     (var-set counter (+ (var-get counter) u1))
     (asserts! (is-eq tx-sender contract-caller) (err u1))
     (ok (var-get counter))))`,
+  codeql: `/**
+ * @name Unused variable
+ * @kind problem
+ * @problem.severity warning
+ */
+import javascript
+
+from Variable v
+where not exists(VarAccess a | a.getVariable() = v)
+select v, "Unused variable $@.", v, v.getName()
+`,
   cql: `-- fetch a user
 CREATE TABLE users (
   id UUID PRIMARY KEY,
