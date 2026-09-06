@@ -100,6 +100,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "datalog",
   "splunk",
   "vrl",
+  "civet",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
