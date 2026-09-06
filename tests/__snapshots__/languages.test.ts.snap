@@ -33,6 +33,7 @@ exports[`Languages 1`] = `
   "blade",
   "blueprint",
   "bnf",
+  "bqn",
   "brainfuck",
   "c",
   "c3",
