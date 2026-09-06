@@ -118,6 +118,7 @@
     "/preview-splunk": "SPL (Splunk) language preview",
     "/preview-vrl": "VRL language preview",
     "/preview-civet": "Civet language preview",
+    "/preview-imba": "Imba language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
