@@ -109,6 +109,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "blueprint",
   "kv",
   "baml",
+  "modelfile",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
