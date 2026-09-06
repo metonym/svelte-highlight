@@ -138,6 +138,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "vcl",
   "haproxy",
   "systemd",
+  "crontab",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
