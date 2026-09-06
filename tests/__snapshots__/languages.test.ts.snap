@@ -112,6 +112,7 @@ exports[`Languages 1`] = `
   "haxe",
   "hcl",
   "heex",
+  "helm",
   "hlsl",
   "hsp",
   "html",
