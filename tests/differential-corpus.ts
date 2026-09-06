@@ -858,6 +858,24 @@ main =
 * item two
 
 This is **strong**, *emphasis*, and \`\`literal\`\`.`,
+  smithy: `$version: "2"
+
+namespace com.example
+
+/// A simple user shape
+@readonly
+structure User {
+    @required
+    id: String
+
+    name: String
+}
+
+service UserService {
+    version: "2024-01-01"
+    resources: [com.example#User]
+}
+`,
   solidity: `pragma solidity ^0.8.24;
 
 /// @notice A simple token contract

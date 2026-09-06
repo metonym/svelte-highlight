@@ -123,6 +123,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "unison",
   "kcl",
   "typespec",
+  "smithy",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
