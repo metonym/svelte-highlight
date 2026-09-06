@@ -110,6 +110,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "kv",
   "baml",
   "modelfile",
+  "gbnf",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

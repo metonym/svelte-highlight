@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 289 languages: 193 exported from highlight.js@11.12.0, 96 custom grammars added by svelte-highlight
+> 290 languages: 193 exported from highlight.js@11.12.0, 97 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1173,6 +1173,20 @@
 
   // base import
   import { gauss } from "svelte-highlight/languages";
+</script>
+```
+
+## gbnf (`gbnf`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import gbnf from "svelte-highlight/languages/gbnf";
+
+  // base import
+  import { gbnf } from "svelte-highlight/languages";
 </script>
 ```
 
