@@ -168,6 +168,9 @@ export interface Snapshot {
 
 export interface StreamSession {
   append(text: string): void;
+  /** Tokenizes text loaded via `createSession`'s `from.code` up to (not
+   * including) the first lexeme starting at or past `stopAt`. */
+  advance(stopAt: number): void;
   finish(options?: { canonicalize?: boolean }): HighlightResult;
   snapshot(): Snapshot;
   events(): ScopeEvent[];
@@ -200,7 +203,7 @@ export interface Registry {
   tokenizeRanges(code: string, options: { language: string }): TokenRange[];
   createSession(
     language: string,
-    options?: { from?: { code: string; snapshot: Snapshot } },
+    options?: { from?: { code: string; snapshot?: Snapshot } },
   ): StreamSession;
   resume(
     code: string,

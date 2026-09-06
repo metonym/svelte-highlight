@@ -97,6 +97,51 @@ describe("incremental-tokenize checkpoint density", () => {
   });
 });
 
+describe("incremental-tokenize whole-document scaling", () => {
+  // Both paths used to feed the engine one line at a time, and every
+  // append re-flattened the grown string and invalidated every cached
+  // regex miss: O(lines x length). Loading the document once and stepping
+  // through it with `advance()` keeps them linear.
+  it("keeps a 4x larger cold parse from costing anywhere near 4x^2 the time", () => {
+    const small = jsLines(1_000);
+    const large = jsLines(4_000);
+    parseIncremental(registry, "javascript", small); // warm up
+
+    const smallMs = medianTime(
+      () => parseIncremental(registry, "javascript", small),
+      5,
+    );
+    const largeMs = medianTime(
+      () => parseIncremental(registry, "javascript", large),
+      5,
+    );
+
+    // Linear scaling measures ~4-5x here; the quadratic feed measured ~12x.
+    expect(largeMs / Math.max(smallMs, 1)).toBeLessThan(9);
+  }, 15_000);
+
+  it("keeps a never-converging reparse linear in document length", () => {
+    const small = parseIncremental(registry, "javascript", jsLines(1_000));
+    const large = parseIncremental(registry, "javascript", jsLines(4_000));
+    // A block comment opened on line 1 changes every later line's state,
+    // so nothing can be spliced from the previous parse.
+    const smallEdited = `/* ${small.code}`;
+    const largeEdited = `/* ${large.code}`;
+    reparseIncremental(registry, "javascript", small, smallEdited); // warm up
+
+    const smallMs = medianTime(
+      () => reparseIncremental(registry, "javascript", small, smallEdited),
+      5,
+    );
+    const largeMs = medianTime(
+      () => reparseIncremental(registry, "javascript", large, largeEdited),
+      5,
+    );
+
+    expect(largeMs / Math.max(smallMs, 1)).toBeLessThan(9);
+  }, 15_000);
+});
+
 describe("HighlightStream sealed-chunk append", () => {
   async function loadPushSealedChunk() {
     const mod = await tryImport("../src/stream-sealed-chunks.js");

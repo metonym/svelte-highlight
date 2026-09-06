@@ -25,26 +25,6 @@ import { diffText } from "./text-diff.js";
  */
 
 /**
- * Splits `code` into chunks ending right after each "\n". Matches how
- * `Registry#createSession#append` consumes input.
- * @param {string} code
- * @returns {string[]}
- */
-function splitKeepEnds(code) {
-  /** @type {string[]} */
-  const lines = [];
-  let start = 0;
-  for (let i = 0; i < code.length; i++) {
-    if (code.charCodeAt(i) === 10) {
-      lines.push(code.slice(start, i + 1));
-      start = i + 1;
-    }
-  }
-  if (start < code.length) lines.push(code.slice(start));
-  return lines;
-}
-
-/**
  * Whether two checkpoints will emit the same events from here on.
  * `relevance`/`kwHits` are excluded; they only affect detection scoring.
  * @param {Snapshot} a
@@ -100,23 +80,36 @@ export const CHECKPOINT_INTERVAL = 32;
 /**
  * Full parse with a line checkpoint every `CHECKPOINT_INTERVAL` lines (and
  * always at the document end). First paint or language change.
+ *
+ * The whole document is loaded up front and stepped through with
+ * `advance()` rather than `append()`-ed line by line: each append forces
+ * the engine to re-flatten the grown string and rescan every rule whose
+ * cached miss it invalidated, which made this O(lines x length).
  * @param {Registry} registry
  * @param {string} language
  * @param {string} code
  * @returns {IncrementalParse}
  */
 export function parseIncremental(registry, language, code) {
-  const session = registry.createSession(language);
+  const session = registry.createSession(language, { from: { code } });
   const checkpoints = [session.snapshot()];
   let linesSinceCheckpoint = 0;
-  for (const line of splitKeepEnds(code)) {
-    session.append(line);
+  // Only newline-terminated lines are tokenized before finish(): a lexeme
+  // ending at an unterminated tail may grow with the next keystroke, so no
+  // checkpoint can be taken past it (`append()` stages such text likewise).
+  let fedEnd = 0;
+  for (let lineStart = 0; lineStart < code.length; ) {
+    const newline = code.indexOf("\n", lineStart);
     linesSinceCheckpoint++;
+    if (newline === -1) break;
+    lineStart = fedEnd = newline + 1;
     if (linesSinceCheckpoint >= CHECKPOINT_INTERVAL) {
+      session.advance(fedEnd);
       checkpoints.push(session.snapshot());
       linesSinceCheckpoint = 0;
     }
   }
+  session.advance(fedEnd);
   // Always retain an end checkpoint so resume can land on the final state
   // even when the last interval is incomplete.
   if (linesSinceCheckpoint > 0 || checkpoints.length === 1) {
@@ -173,10 +166,11 @@ export function reparseIncremental(registry, language, previous, code) {
   // Prefix up to the resume checkpoint is unchanged (within diffText's common
   // prefix). restore() clears the session event log, so reattach prefix events
   // separately.
-  const prefixCode = code.slice(0, resumeCheckpoint.pos);
   const prefixEvents = previous.events.slice(0, resumeCheckpoint.eventCount);
+  // The full document is loaded so the tail can be walked with `advance()`
+  // (see parseIncremental); tokenization still only proceeds line by line.
   const session = registry.createSession(language, {
-    from: { code: prefixCode, snapshot: resumeCheckpoint },
+    from: { code, snapshot: resumeCheckpoint },
   });
   const checkpoints = previous.checkpoints.slice(0, resumeIndex + 1);
 
@@ -184,13 +178,24 @@ export function reparseIncremental(registry, language, previous, code) {
   const newSuffixStart = diff.start + diff.inserted.length;
   const posOffset = code.length - previous.code.length;
 
-  const newLines = splitKeepEnds(code.slice(resumeCheckpoint.pos));
   let convergedAtOldIndex = -1;
   let oldIndex = resumeIndex;
   let linesSinceCheckpoint = 0;
 
-  for (let li = 0; li < newLines.length; li++) {
-    session.append(/** @type {string} */ (newLines[li]));
+  for (
+    let li = 0, lineStart = resumeCheckpoint.pos;
+    lineStart < code.length;
+    li++
+  ) {
+    const newline = code.indexOf("\n", lineStart);
+    // An unterminated tail is staged, not tokenized (see parseIncremental);
+    // it still gets its own iteration so the final checkpoint is stored.
+    const isTail = newline === -1;
+    if (!isTail) {
+      lineStart = newline + 1;
+      session.advance(lineStart);
+    }
+    const isLast = isTail || lineStart === code.length;
     const snap = session.snapshot();
     linesSinceCheckpoint++;
     // Check every line for convergence against previous checkpoints.
@@ -221,7 +226,7 @@ export function reparseIncremental(registry, language, previous, code) {
         shouldStore = true;
       }
     }
-    if (!shouldStore && li === newLines.length - 1) shouldStore = true;
+    if (!shouldStore && isLast) shouldStore = true;
     if (shouldStore) {
       // snap.eventCount is session-local; shift to index the combined array.
       checkpoints.push({
@@ -230,7 +235,7 @@ export function reparseIncremental(registry, language, previous, code) {
       });
       linesSinceCheckpoint = 0;
     }
-    if (convergedAtOldIndex >= 0) break;
+    if (convergedAtOldIndex >= 0 || isLast) break;
   }
 
   if (convergedAtOldIndex >= 0) {

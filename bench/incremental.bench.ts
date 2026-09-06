@@ -35,6 +35,18 @@ group("reparseIncremental() single append edit", () => {
   }
 });
 
+group("reparseIncremental() edit that never re-converges", () => {
+  // Opening a block comment on line 1 changes the state of every later
+  // line, so the reparse has to walk the whole document without a splice.
+  for (const lines of [2_000, 8_000]) {
+    const base = parseIncremental(registry, "javascript", jsLines(lines));
+    const edited = `/* ${base.code}`;
+    task(`${lines.toLocaleString()}-line doc, comment opened at top`, () =>
+      reparseIncremental(registry, "javascript", base, edited),
+    );
+  }
+});
+
 function typeIncremental(targetLength: number) {
   const source = jsSource(targetLength);
   let code = "";
