@@ -273,6 +273,17 @@ func _ready() -> void:
 	if true:
 		pass
 `,
+  gotmpl: `{{- /* render a greeting */ -}}
+{{ define "greeting" }}
+Hello, {{ .Name | printf "%s" }}!
+{{ if .Admin }}
+  You are an admin, {{ $name := .Name }}{{ $name }}.
+{{ else }}
+  {{ range .Items }}
+    - {{ . }}
+  {{ end }}
+{{ end }}
+{{ end }}`,
   groq: `// recent movies released after 2018
 *[_type == "movie" && releaseYear >= 2018]{
   title,
