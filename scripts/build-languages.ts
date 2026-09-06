@@ -136,6 +136,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "kconfig",
   "ldscript",
   "vcl",
+  "haproxy",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

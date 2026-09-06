@@ -119,6 +119,7 @@ exports[`Languages 1`] = `
   "groq",
   "haml",
   "handlebars",
+  "haproxy",
   "haskell",
   "haxe",
   "hcl",
