@@ -730,8 +730,18 @@ class Tokenizer {
 
   // --- main loop ---
 
-  /** Consumes as much of `this.code` as possible; resumable after append. */
-  run() {
+  /**
+   * Consumes as much of `this.code` as possible; resumable after append.
+   *
+   * `stopAt` halts *before* the first lexeme starting at or past that
+   * offset, leaving `pos`/`buffer` exactly as they were after the previous
+   * lexeme. That makes the state at a line boundary identical whether the
+   * text after it was visible (this call) or not yet appended (streaming),
+   * so checkpoints taken either way line up - but with the whole document
+   * visible, match caches stay valid across stops and nothing is rescanned.
+   * @param {number} [stopAt]
+   */
+  run(stopAt = Number.POSITIVE_INFINITY) {
     if (this.aborted) return;
     for (;;) {
       this.iterations++;
@@ -740,6 +750,7 @@ class Tokenizer {
       }
       const found = this.nextMatch();
       if (!found) break;
+      if (found.match.index >= stopAt) return;
 
       const framesBefore = this.frames.length;
       const topBefore = this.top;
@@ -1289,11 +1300,12 @@ export function createRegistry() {
      * will in the final document. `snapshot()`/`resume()` expose the
      * serializable checkpoint state.
      *
-     * `options.from` resumes a parse at `snapshot` instead of from scratch.
-     * Used by incremental-tokenize.js: `code` is text already scanned as of
-     * `snapshot.pos`, and further `append()` calls extend it.
+     * `options.from` loads `code` up front instead of via `append()`, and
+     * resumes at `snapshot` when given (otherwise from the start). Used by
+     * incremental-tokenize.js, which knows the whole document and steps
+     * through it with `advance()`; further `append()` calls still extend it.
      * @param {string} language
-     * @param {{ from?: { code: string, snapshot: Snapshot } }} [options]
+     * @param {{ from?: { code: string, snapshot?: Snapshot } }} [options]
      * @returns {StreamSession}
      */
     createSession(language, { from } = {}) {
@@ -1305,7 +1317,7 @@ export function createRegistry() {
       let fed = from ? from.code : "";
       if (from) {
         tokenizer.code = from.code;
-        tokenizer.restore(from.snapshot);
+        if (from.snapshot) tokenizer.restore(from.snapshot);
       }
       return {
         /** @param {string} text */
@@ -1318,6 +1330,16 @@ export function createRegistry() {
             staged = staged.slice(newline + 1);
             tokenizer.run();
           }
+        },
+        /**
+         * Tokenizes already-loaded text up to (not including) the first
+         * lexeme starting at or past `stopAt`. A snapshot taken right after
+         * matches one taken by `append()`-ing the same text line by line -
+         * see `Tokenizer#run` - without the per-append rescans.
+         * @param {number} stopAt
+         */
+        advance(stopAt) {
+          tokenizer.run(stopAt);
         },
         /**
          * Multi-line lookahead (e.g. ruby heredocs) may need the full text
