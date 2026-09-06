@@ -149,6 +149,7 @@
     "/preview-bpftrace": "bpftrace language preview",
     "/preview-dtrace": "DTrace language preview",
     "/preview-rpmspec": "RPM spec language preview",
+    "/preview-bitbake": "BitBake language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
