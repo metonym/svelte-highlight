@@ -460,6 +460,19 @@ server host="localhost" port=8080 enabled=#true
 /- skipped 1
 created (date)"2024-01-01"
 `,
+  kv: `#:kivy 2.0
+#:import utils app.utils
+
+<MyWidget@BoxLayout>:
+  orientation: "vertical"
+  canvas.before:
+    Color:
+      rgba: 1, 1, 1, 1
+
+  Label:
+    text: "Hello, {}".format(self.name)
+    on_press: root.handle_press(self)
+`,
   kql: `// filter and summarize security events
 let threshold = 5;
 SecurityEvent
