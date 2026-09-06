@@ -876,6 +876,16 @@ service UserService {
     resources: [com.example#User]
 }
 `,
+  snort: `# detect suspicious HTTP requests
+alert tcp $EXTERNAL_NET any -> $HOME_NET 80 (
+    msg:"Suspicious User-Agent";
+    content:"User-Agent|3A|"; http_header;
+    content:"evilbot"; distance:0; nocase;
+    pcre:"/evil[0-9]+/i";
+    classtype:trojan-activity;
+    sid:1000001; rev:1;
+)
+`,
   solidity: `pragma solidity ^0.8.24;
 
 /// @notice A simple token contract
