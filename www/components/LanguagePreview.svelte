@@ -7,6 +7,7 @@
   import { bibtexPreviewSnippets } from "@www/preview/bibtex-preview-snippets";
   import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
   import { blueprintPreviewSnippets } from "@www/preview/blueprint-preview-snippets";
+  import { bpftracePreviewSnippets } from "@www/preview/bpftrace-preview-snippets";
   import { bqnPreviewSnippets } from "@www/preview/bqn-preview-snippets";
   import { c3PreviewSnippets } from "@www/preview/c3-preview-snippets";
   import { caddyPreviewSnippets } from "@www/preview/caddy-preview-snippets";
@@ -117,6 +118,7 @@
   import bibtex from "svelte-highlight/languages/bibtex";
   import bicep from "svelte-highlight/languages/bicep";
   import blueprint from "svelte-highlight/languages/blueprint";
+  import bpftrace from "svelte-highlight/languages/bpftrace";
   import bqn from "svelte-highlight/languages/bqn";
   import c3 from "svelte-highlight/languages/c3";
   import caddy from "svelte-highlight/languages/caddy";
@@ -217,7 +219,7 @@
   import yara from "svelte-highlight/languages/yara";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace"} */
   export let language;
 
   const registry = {
@@ -331,6 +333,7 @@
     codeql: { lang: codeql, snippets: codeqlPreviewSnippets },
     cisco: { lang: cisco, snippets: ciscoPreviewSnippets },
     yang: { lang: yang, snippets: yangPreviewSnippets },
+    bpftrace: { lang: bpftrace, snippets: bpftracePreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
