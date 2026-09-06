@@ -1,0 +1,8 @@
+---
+import LanguagePreview from "@components/LanguagePreview.svelte";
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout title="Tree-sitter query language preview">
+  <LanguagePreview language="tsq" client:idle />
+</Layout>
