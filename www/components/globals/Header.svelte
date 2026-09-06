@@ -123,6 +123,7 @@
     "/preview-ejs": "EJS language preview",
     "/preview-gotmpl": "Go template language preview",
     "/preview-helm": "Helm language preview",
+    "/preview-blueprint": "Blueprint language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
