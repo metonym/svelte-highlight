@@ -306,6 +306,23 @@ DATABASE_URL="postgres://\${HOST}:\${PORT}/db"
 API_KEY='super-secret-value'
 TIMEOUT=30
 GREETING="hello \${NAME:-guest}"`,
+  dtrace: `#!/usr/sbin/dtrace -s
+/* trace slow reads */
+#pragma D option quiet
+
+syscall::read:entry
+{
+    self->start = timestamp;
+}
+
+syscall::read:return
+/self->start/
+{
+    @counts[execname] = count();
+    printf("%s took %d ns\\n", execname, timestamp - self->start);
+    self->start = 0;
+}
+`,
   earthfile: `# compile the Go binary
 VERSION 0.8
 FROM golang:1.22

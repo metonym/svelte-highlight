@@ -130,6 +130,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "cisco",
   "yang",
   "bpftrace",
+  "dtrace",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
