@@ -130,6 +130,7 @@
     "/preview-gbnf": "GBNF language preview",
     "/preview-tsq": "Tree-sitter query language preview",
     "/preview-verse": "Verse language preview",
+    "/preview-roc": "Roc language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
