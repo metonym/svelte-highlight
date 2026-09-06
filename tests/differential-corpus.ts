@@ -267,6 +267,15 @@ CREATE TABLE users (
 );
 SELECT name FROM users WHERE id = ? ALLOW FILTERING;
 `,
+  crontab: `# run backups nightly
+SHELL=/bin/bash
+MAILTO=admin@example.com
+
+0 2 * * * /usr/local/bin/backup.sh --quiet
+*/15 * * * * root /usr/bin/check-disk.sh
+0 9 1 JAN-MAR * echo "quarterly report" >> /var/log/report.log
+@reboot /usr/local/bin/on-boot.sh
+`,
   cue: `package config
 
 import "strings"
