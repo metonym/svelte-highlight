@@ -299,6 +299,19 @@ resource "aws_instance" "web" {
 variable "region" {
   default = "us-east-1"
 }`,
+  helm: `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.fullname" . }}
+data:
+  {{- if .Values.debug }}
+  level: debug
+  {{- else }}
+  level: info
+  {{- end }}
+  config.yaml: |
+    {{ toYaml .Values.settings | nindent 4 }}
+`,
   heex: `<%!-- user card --%>
 <.card class={@highlighted && "on"}>
   <p :if={@user.bio}>{@user.bio}</p>
