@@ -153,6 +153,7 @@
     "/preview-kconfig": "Kconfig language preview",
     "/preview-ldscript": "GNU ld linker script preview",
     "/preview-vcl": "VCL language preview",
+    "/preview-haproxy": "HAProxy language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
