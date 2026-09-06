@@ -102,6 +102,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "vrl",
   "civet",
   "imba",
+  "slint",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
