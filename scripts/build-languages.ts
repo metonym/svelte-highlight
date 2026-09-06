@@ -114,6 +114,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "tsq",
   "verse",
   "roc",
+  "c3",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
