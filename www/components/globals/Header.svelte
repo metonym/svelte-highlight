@@ -141,6 +141,7 @@
     "/preview-kcl": "KCL language preview",
     "/preview-typespec": "TypeSpec language preview",
     "/preview-smithy": "Smithy language preview",
+    "/preview-yara": "YARA language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
