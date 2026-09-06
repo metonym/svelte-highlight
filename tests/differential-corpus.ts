@@ -107,6 +107,30 @@ example.com {
 	}
 	file_server
 }`,
+  c3: `module counters;
+
+fn int increment(int x) {
+    $if $defined(x):
+        return x + 1;
+    $endif
+    return x;
+}
+
+struct Counter {
+    int value;
+    String? name;
+}
+
+fn void main() {
+    Counter c = { .value = 0 };
+    switch (c.value) {
+        case 0:
+            nextcase default;
+        default:
+            io::printn("done");
+    }
+}
+`,
   cairo: `#[derive(Drop)]
 struct Point {
     x: felt252,
