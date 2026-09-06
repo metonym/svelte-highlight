@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 310 languages: 193 exported from highlight.js@11.12.0, 117 custom grammars added by svelte-highlight
+> 311 languages: 193 exported from highlight.js@11.12.0, 118 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -3031,6 +3031,20 @@
 
   // base import
   import { routeros } from "svelte-highlight/languages";
+</script>
+```
+
+## rpmspec (`rpmspec`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import rpmspec from "svelte-highlight/languages/rpmspec";
+
+  // base import
+  import { rpmspec } from "svelte-highlight/languages";
 </script>
 ```
 

@@ -240,6 +240,7 @@ exports[`Languages 1`] = `
   "roboconf",
   "roc",
   "routeros",
+  "rpmspec",
   "rsl",
   "rst",
   "ruby",
