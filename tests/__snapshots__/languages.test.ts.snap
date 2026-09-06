@@ -232,6 +232,7 @@ exports[`Languages 1`] = `
   "scilab",
   "scss",
   "shell",
+  "slint",
   "smali",
   "smalltalk",
   "sml",

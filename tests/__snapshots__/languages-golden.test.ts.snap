@@ -765,6 +765,8 @@ true false null
 /regex/ #hashtag @annotation"
 `;
 
+exports[`golden snapshot: slint 1`] = `"<span class="hljs-keyword">export</span> <span class="hljs-keyword">component</span> <span class="hljs-keyword">inherits</span> <span class="hljs-keyword">import</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">global</span> <span class="hljs-keyword">struct</span> <span class="hljs-keyword">enum</span> <span class="hljs-keyword">property</span> <span class="hljs-keyword">callback</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">out</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">pure</span> <span class="hljs-keyword">function</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">animate</span> <span class="hljs-keyword">states</span> <span class="hljs-keyword">transitions</span> <span class="hljs-keyword">when</span> <span class="hljs-literal">root</span> <span class="hljs-literal">self</span> <span class="hljs-literal">parent</span> <span class="hljs-literal">true</span> <span class="hljs-literal">false</span>"`;
+
 exports[`golden snapshot: smali 1`] = `
 "// comment
 <span class="hljs-string">&quot;string&quot;</span> &#x27;string&#x27; 123 3.14

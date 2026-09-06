@@ -697,6 +697,23 @@ WHERE {
   FILTER (LANG(?name) = "en")
 }
 `,
+  slint: `// a slider component
+export component Slider {
+    in-out property <int> value: 0;
+    callback changed(int);
+
+    Rectangle {
+        background: #3a3a3a;
+        width: 200px;
+        height: 24px;
+
+        handle := Rectangle {
+            width: 12px;
+            x <=> root.value;
+        }
+    }
+}
+`,
   splunk: `search index=web status>=500
 | stats count by host
 | eval error_rate = count / total
