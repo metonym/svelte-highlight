@@ -322,6 +322,15 @@ main = do
   case double 21 of
        42 => putStrLn greeting
        _  => putStrLn "nope"`,
+  imba: `# a card component with inline css
+tag Card
+  css .card
+    padding: 8px
+
+  def render
+    <self.card>
+      <div.title> "Hello"
+      <button @click=onClick> "Click"`,
   hurl: `# list users
 GET https://example.org/api/users
 HTTP 200
