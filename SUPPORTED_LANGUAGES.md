@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 294 languages: 193 exported from highlight.js@11.12.0, 101 custom grammars added by svelte-highlight
+> 295 languages: 193 exported from highlight.js@11.12.0, 102 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -309,6 +309,20 @@
 
   // base import
   import { basic } from "svelte-highlight/languages";
+</script>
+```
+
+## bend (`bend`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import bend from "svelte-highlight/languages/bend";
+
+  // base import
+  import { bend } from "svelte-highlight/languages";
 </script>
 ```
 
