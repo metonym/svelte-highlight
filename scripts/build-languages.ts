@@ -131,6 +131,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "yang",
   "bpftrace",
   "dtrace",
+  "rpmspec",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

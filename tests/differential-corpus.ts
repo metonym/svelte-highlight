@@ -902,6 +902,34 @@ main =
     when result is
         Ok _ -> Stdout.line "done"
         Err _ -> crash "failed"`,
+  rpmspec: `Name: mypackage
+Version: 1.0
+Release: 1%{?dist}
+Summary: An example package
+License: MIT
+BuildRequires: gcc
+
+%description
+This is an example package.
+
+%prep
+%autosetup
+
+%build
+%configure
+%make_build
+
+%install
+%make_install
+
+%files
+%license LICENSE
+%{_bindir}/mypackage
+
+%changelog
+* Mon Jan 01 2024 Jane Doe <jane@example.com> - 1.0-1
+- Initial package
+`,
   rst: `Title
 =====
 
