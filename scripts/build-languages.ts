@@ -111,6 +111,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "baml",
   "modelfile",
   "gbnf",
+  "tsq",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

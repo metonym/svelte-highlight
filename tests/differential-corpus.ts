@@ -848,6 +848,20 @@ templ Page(items []Item) {
 		<li>{ item.Name }</li>
 	}
 }`,
+  tsq: `; match a function definition with a captured name
+(function_item
+  name: (identifier) @function.name
+  parameters: (parameters) @function.params) @function.def
+
+(call_expression
+  function: [(identifier) (field_expression)] @call
+  !type_arguments)
+
+((identifier) @constant
+  (#match? @constant "^[A-Z_]+$"))
+
+(ERROR) @error
+_ @any`,
   tsrx: `export function Greeting({ name }: { name?: string }) @{
   const message = name ? \`Hello, \${name}\` : "stranger";
 
