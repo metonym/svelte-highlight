@@ -160,6 +160,7 @@ exports[`Languages 1`] = `
   "lasso",
   "latex",
   "ldif",
+  "ldscript",
   "leaf",
   "lean",
   "less",
