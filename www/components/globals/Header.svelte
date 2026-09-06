@@ -155,6 +155,7 @@
     "/preview-vcl": "VCL language preview",
     "/preview-haproxy": "HAProxy language preview",
     "/preview-systemd": "systemd language preview",
+    "/preview-crontab": "crontab language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
