@@ -122,6 +122,7 @@
     "/preview-slint": "Slint language preview",
     "/preview-ejs": "EJS language preview",
     "/preview-gotmpl": "Go template language preview",
+    "/preview-helm": "Helm language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
