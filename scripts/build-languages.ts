@@ -121,6 +121,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "raku",
   "koka",
   "unison",
+  "kcl",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
