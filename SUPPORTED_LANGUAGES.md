@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 292 languages: 193 exported from highlight.js@11.12.0, 99 custom grammars added by svelte-highlight
+> 293 languages: 193 exported from highlight.js@11.12.0, 100 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2865,6 +2865,20 @@
 
   // base import
   import { roboconf } from "svelte-highlight/languages";
+</script>
+```
+
+## roc (`roc`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import roc from "svelte-highlight/languages/roc";
+
+  // base import
+  import { roc } from "svelte-highlight/languages";
 </script>
 ```
 
