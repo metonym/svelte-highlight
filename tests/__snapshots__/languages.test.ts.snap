@@ -277,6 +277,7 @@ exports[`Languages 1`] = `
   "tsrx",
   "twig",
   "typescript",
+  "typespec",
   "typst",
   "uiua",
   "unison",

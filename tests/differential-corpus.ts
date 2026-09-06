@@ -999,6 +999,23 @@ This is *bold* and _emphasis_.
 $ x^2 + y^2 = z^2 $
 
 See @intro and <label-here>.`,
+  typespec: `import "@typespec/http";
+using TypeSpec.Http;
+
+@doc("A simple user model")
+model User {
+  @key
+  id: string;
+
+  name: string;
+  age?: int32;
+}
+
+@route("/users")
+interface Users {
+  @get op list(): User[];
+}
+`,
   uiua: `# double each number and sum
 Double ← ×2
 Total ← /+ ≡Double [1 2 3 4]
