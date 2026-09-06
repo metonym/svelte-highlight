@@ -12,39 +12,40 @@ export function splitLines(html) {
   /** @type {string[]} */
   const stack = [];
   let current = "";
+  // Text (tags included) is copied in runs delimited by newlines rather
+  // than character by character; only `<` and `\n` need inspecting.
+  let runStart = 0;
   let i = 0;
 
   while (i < html.length) {
-    const char = html[i];
+    const code = html.charCodeAt(i);
 
-    if (char === "<") {
+    if (code === LESS_THAN) {
       const tagEnd = html.indexOf(">", i);
-      const tag = html.slice(i, tagEnd + 1);
-
-      if (tag.startsWith("</span")) {
+      if (html.startsWith("</span", i)) {
         stack.pop();
-      } else if (tag.startsWith("<span")) {
-        stack.push(tag);
+      } else if (html.startsWith("<span", i)) {
+        stack.push(html.slice(i, tagEnd + 1));
       }
-
-      current += tag;
       i = tagEnd + 1;
       continue;
     }
 
-    if (char === "\n") {
-      current += "</span>".repeat(stack.length);
+    if (code === NEWLINE) {
+      current += html.slice(runStart, i);
+      if (stack.length > 0) current += "</span>".repeat(stack.length);
       lines.push(current);
       current = stack.join("");
-      i++;
-      continue;
+      runStart = i + 1;
     }
 
-    current += char;
     i++;
   }
 
-  lines.push(current);
+  lines.push(current + html.slice(runStart));
 
   return lines;
 }
+
+const LESS_THAN = 60;
+const NEWLINE = 10;
