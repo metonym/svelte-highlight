@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 290 languages: 193 exported from highlight.js@11.12.0, 97 custom grammars added by svelte-highlight
+> 291 languages: 193 exported from highlight.js@11.12.0, 98 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -3343,6 +3343,20 @@
 
   // base import
   import { traceql } from "svelte-highlight/languages";
+</script>
+```
+
+## tsq (`tsq`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import tsq from "svelte-highlight/languages/tsq";
+
+  // base import
+  import { tsq } from "svelte-highlight/languages";
 </script>
 ```
 

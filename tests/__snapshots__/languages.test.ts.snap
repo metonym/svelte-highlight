@@ -266,6 +266,7 @@ exports[`Languages 1`] = `
   "toml",
   "tp",
   "traceql",
+  "tsq",
   "tsrx",
   "twig",
   "typescript",
