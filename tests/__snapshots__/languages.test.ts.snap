@@ -24,6 +24,7 @@ exports[`Languages 1`] = `
   "avrasm",
   "awk",
   "axapta",
+  "baml",
   "bash",
   "basic",
   "bibtex",

@@ -34,6 +34,21 @@ export function grow(): i32 {
   return memory.grow(1);
 }
 `,
+  baml: `// extract a resume from raw text
+function Extract(text: string) -> Resume {
+  client GPT4
+  prompt #"
+    Extract the resume from this text: {{ text }}
+    {{ ctx.output_format }}
+  "#
+}
+
+client<llm> GPT4 {
+  provider openai
+  options {
+    model "gpt-4o"
+  }
+}`,
   bibtex: `@article{einstein1905,
   author = {Albert Einstein},
   title  = {On the Electrodynamics of Moving Bodies},

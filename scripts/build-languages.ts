@@ -108,6 +108,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "helm",
   "blueprint",
   "kv",
+  "baml",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
