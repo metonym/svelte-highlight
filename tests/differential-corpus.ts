@@ -1166,6 +1166,35 @@ interface types {
   variant error { not-found, other(string) }
 }
 `,
+  yang: `module example-system {
+  namespace "urn:example:system";
+  prefix sys;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  leaf-list address {
+    type inet:ip-address;
+    description
+      "A list of addresses.";
+  }
+
+  container system {
+    leaf host-name {
+      type string;
+      default "localhost";
+    }
+
+    augment "/system/config" {
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+    }
+  }
+}
+`,
   yara: `import "pe"
 
 rule SuspiciousExecutable : malware

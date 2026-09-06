@@ -128,6 +128,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "snort",
   "codeql",
   "cisco",
+  "yang",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
