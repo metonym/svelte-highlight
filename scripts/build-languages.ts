@@ -133,6 +133,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "dtrace",
   "rpmspec",
   "bitbake",
+  "kconfig",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
