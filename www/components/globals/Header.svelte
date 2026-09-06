@@ -144,6 +144,7 @@
     "/preview-yara": "YARA language preview",
     "/preview-snort": "Snort language preview",
     "/preview-codeql": "CodeQL language preview",
+    "/preview-cisco": "Cisco IOS language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
