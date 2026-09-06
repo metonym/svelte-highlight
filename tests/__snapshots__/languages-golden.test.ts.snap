@@ -246,6 +246,13 @@ exports[`golden snapshot: ebnf 1`] = `
 /regex/ #hashtag @annotation"
 `;
 
+exports[`golden snapshot: ejs 1`] = `
+"<span class="language-xml">// comment
+&quot;string&quot; &#x27;string&#x27; 123 3.14
+true false null
+/regex/ #hashtag @annotation</span>"
+`;
+
 exports[`golden snapshot: elixir 1`] = `"<span class="hljs-keyword">after</span> <span class="hljs-keyword">alias</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">case</span> <span class="hljs-keyword">catch</span> <span class="hljs-keyword">cond</span> <span class="hljs-keyword">defstruct</span> <span class="hljs-keyword">defguard</span> <span class="hljs-keyword">defguardp</span> <span class="hljs-keyword">do</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">fn</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">import</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">or</span> <span class="hljs-keyword">quote</span> <span class="hljs-keyword">raise</span> <span class="hljs-keyword">receive</span> <span class="hljs-keyword">require</span> <span class="hljs-keyword">reraise</span> <span class="hljs-keyword">rescue</span> <span class="hljs-keyword">try</span> <span class="hljs-keyword">unless</span> <span class="hljs-keyword">unquote</span> <span class="hljs-keyword">unquote_splicing</span> <span class="hljs-keyword">use</span> <span class="hljs-keyword">when</span> <span class="hljs-keyword">with</span> <span class="hljs-literal">false</span> <span class="hljs-literal">nil</span> <span class="hljs-literal">true</span>"`;
 
 exports[`golden snapshot: elm 1`] = `"<span class="hljs-title">let</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">case</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">module</span> import <span class="hljs-keyword">exposing</span> <span class="hljs-keyword">type</span> <span class="hljs-keyword">alias</span> as infix infixl infixr port effect command subscription"`;
