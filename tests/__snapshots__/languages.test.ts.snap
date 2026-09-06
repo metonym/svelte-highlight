@@ -306,6 +306,7 @@ exports[`Languages 1`] = `
   "xml",
   "xquery",
   "yaml",
+  "yang",
   "yara",
   "zephir",
   "zig",
