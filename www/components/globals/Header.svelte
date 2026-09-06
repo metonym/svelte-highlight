@@ -150,6 +150,7 @@
     "/preview-dtrace": "DTrace language preview",
     "/preview-rpmspec": "RPM spec language preview",
     "/preview-bitbake": "BitBake language preview",
+    "/preview-kconfig": "Kconfig language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
