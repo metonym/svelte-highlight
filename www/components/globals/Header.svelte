@@ -134,6 +134,7 @@
     "/preview-c3": "C3 language preview",
     "/preview-bend": "Bend language preview",
     "/preview-uiua": "Uiua language preview",
+    "/preview-bqn": "BQN language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
