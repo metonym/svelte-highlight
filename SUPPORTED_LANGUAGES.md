@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 332 languages: 193 exported from highlight.js@11.12.0, 139 custom grammars added by svelte-highlight
+> 333 languages: 193 exported from highlight.js@11.12.0, 140 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1623,6 +1623,20 @@
 
   // base import
   import { hlsl } from "svelte-highlight/languages";
+</script>
+```
+
+## hocon (`hocon`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import hocon from "svelte-highlight/languages/hocon";
+
+  // base import
+  import { hocon } from "svelte-highlight/languages";
 </script>
 ```
 

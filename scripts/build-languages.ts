@@ -153,6 +153,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "turtle",
   "textproto",
   "ron",
+  "hocon",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
