@@ -529,7 +529,7 @@ See the [kitchen-sink live demo](https://svhe.onrender.com/preview-svelte) for a
 The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) and attempts to guess what grammar to use based on the provided `code`. Its `on:highlight` event's `secondBest` field surfaces the runner-up candidate and its relevance, for showing detection confidence.
 
 > [!WARNING]
-> Auto-highlighting will result in a larger bundle size. Specify a language if possible.
+> Mounting `HighlightAuto` statically imports all 279 shipped grammars, regardless of `languageNames`, so bundle size is unconditionally larger than a `Highlight` with a single named language. Specify a language if possible.
 
 ```svelte
 <script>
@@ -548,7 +548,7 @@ The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.r
 
 ### Limiting Language Detection
 
-You can restrict [language auto-detection](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto-value-languagesubset) to a subset using the `languageNames` prop. This can improve performance and accuracy.
+You can restrict [language auto-detection](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto-value-languagesubset) to a subset using the `languageNames` prop. This can improve performance and accuracy — it narrows the candidates scored during detection, but it does not reduce bundle size, since all shipped grammars are imported unconditionally (see the warning above). A grammar registered with `disableAutodetect: true` stays excluded from detection even when explicitly named in `languageNames`.
 
 ```svelte
 <script>
