@@ -67,6 +67,18 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     highlightedLines?: number[];
 
     /**
+     * Per-line decoration state, indexed relative to `lines`/`highlighted`
+     * (not the absolute document line when rendering a window). Merged with
+     * `highlightedLines`, which is equivalent to setting `"highlighted"`
+     * here. `"focus"` is exempt from dimming but renders no background --
+     * the primitive for a meta-string highlight or a diff's context-line
+     * emphasis without red/green paint.
+     * @default {}
+     * @example { 1: "added", 2: "removed", 4: "focus" }
+     */
+    lineStates?: Record<number, "highlighted" | "focus" | "added" | "removed">;
+
+    /**
      * Line number text color.
      * Defaults to the current theme color applied to `.hljs code`.
      * @default currentColor
@@ -104,8 +116,22 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     "--highlighted-background"?: string;
 
     /**
+     * Background of lines with a `lineStates` `"added"` state.
+     * @default "rgba(46, 204, 113, 0.15)"
+     * @example "#fff"
+     */
+    "--line-added-background"?: string;
+
+    /**
+     * Background of lines with a `lineStates` `"removed"` state.
+     * @default "rgba(231, 76, 60, 0.15)"
+     * @example "#fff"
+     */
+    "--line-removed-background"?: string;
+
+    /**
      * Un-highlighted line opacity.
-     * Only applies when `highlightedLines` is non-empty.
+     * Only applies when `highlightedLines` or `lineStates` is non-empty.
      * @default 1
      * @example 0.4
      */
@@ -113,7 +139,7 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
 
     /**
      * Un-highlighted line filter.
-     * Only applies when `highlightedLines` is non-empty.
+     * Only applies when `highlightedLines` or `lineStates` is non-empty.
      * @default none
      * @example "blur(2px)"
      */

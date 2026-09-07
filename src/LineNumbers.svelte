@@ -35,6 +35,14 @@
   /** @type {number[]} */
   export let highlightedLines = [];
 
+  /**
+   * Per-line decoration state, indexed relative to `lines`/`highlighted`
+   * (not the absolute document line when rendering a window). Merged with
+   * `highlightedLines`, which is equivalent to setting `"highlighted"` here.
+   * @type {Record<number, "highlighted" | "focus" | "added" | "removed">}
+   */
+  export let lineStates = {};
+
   /** @type {import('./languages').LanguageName | (string & {})} */
   export let languageName = "plaintext";
 
@@ -44,10 +52,36 @@
   const DIGIT_WIDTH = 12;
   const MIN_DIGITS = 2;
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
+  const ADDED_BACKGROUND = "rgba(46, 204, 113, 0.15)";
+  const REMOVED_BACKGROUND = "rgba(231, 76, 60, 0.15)";
+
+  /**
+   * @param {number[]} highlightedLines
+   * @param {Record<number, "highlighted" | "focus" | "added" | "removed">} lineStates
+   */
+  function buildStateByIndex(highlightedLines, lineStates) {
+    const map = new Map(highlightedLines.map((i) => [i, "highlighted"]));
+    for (const key in lineStates) map.set(Number(key), lineStates[key]);
+    return map;
+  }
+
+  /** @param {"highlighted" | "focus" | "added" | "removed" | undefined} state */
+  function lineBackground(state) {
+    if (state === "added") {
+      return `var(--line-added-background, ${ADDED_BACKGROUND})`;
+    }
+    if (state === "removed") {
+      return `var(--line-removed-background, ${REMOVED_BACKGROUND})`;
+    }
+    if (state === "highlighted") {
+      return `var(--highlighted-background, ${HIGHLIGHTED_BACKGROUND})`;
+    }
+    return undefined;
+  }
 
   $: renderedLines = lines ?? splitLines(highlighted ?? "");
-  $: highlightedLineSet = new Set(highlightedLines);
-  $: focusMode = highlightedLines.length > 0;
+  $: stateByIndex = buildStateByIndex(highlightedLines, lineStates);
+  $: focusMode = stateByIndex.size > 0;
   $: len_digits = (
     startingLineNumber +
     (lineCount ?? renderedLines.length) -
@@ -71,8 +105,9 @@
     <tbody class:hljs={true}>
       {#each renderedLines as line, i}
         {@const lineNumber = i + startingLineNumber}
-        {@const isHighlighted = highlightedLineSet.has(i)}
-        <tr class:dimmed={focusMode && !isHighlighted}>
+        {@const lineState = stateByIndex.get(i)}
+        {@const background = lineBackground(lineState)}
+        <tr class:dimmed={focusMode && !lineState}>
           <td
             aria-hidden="true"
             class:hljs={true}
@@ -86,20 +121,14 @@
             <code style:color="var(--line-number-color, currentColor)">
               {lineNumber}
             </code>
-            {#if isHighlighted}
-              <div
-                class:line-background={true}
-                style:background="var(--highlighted-background, {HIGHLIGHTED_BACKGROUND})"
-              ></div>
+            {#if background}
+              <div class:line-background={true} style:background></div>
             {/if}
           </td>
           <td>
             <pre class:wrapLines><code>{@html line || "\n"}</code></pre>
-            {#if isHighlighted}
-              <div
-                class:line-background={true}
-                style:background="var(--highlighted-background, {HIGHLIGHTED_BACKGROUND})"
-              ></div>
+            {#if background}
+              <div class:line-background={true} style:background></div>
             {/if}
           </td>
         </tr>
