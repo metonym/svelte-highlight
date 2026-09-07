@@ -207,7 +207,7 @@ const midnight = defineTheme({
 </HighlightStyle>
 ```
 
-`roles` are `foreground`, `background`, `comment`, `keyword`, `string`, `literal`, `function`, `type`, `variable`, `property`, `tag`, `punctuation`, `meta`, `addition`, `deletion` — each expands to a documented set of `--shl-*` scope vars. A bare string is shorthand for `{ color: string }`; both roles and `scopes` also accept a `{ color, background, fontStyle, fontWeight, textDecoration }` object. Precedence is `extends` palette vars → `roles` → `scopes` (later layers win per-var, not per-role). `foreground`/`background` are required unless `extends` is given.
+`roles` are `foreground`, `background`, `comment`, `keyword`, `string`, `literal`, `function`, `type`, `variable`, `property`, `tag`, `punctuation`, `meta`, `addition`, `deletion` — each expands to a documented set of `--shl-*` scope vars. A bare string is shorthand for `{ color: string }`; both roles and `scopes` also accept a `{ color, background, fontStyle, fontWeight, textDecoration }` object. Precedence is `extends` palette vars → `roles` → `scopes` (later layers win per-var, not per-role). `foreground`/`background` are required unless `extends` is given. `ROLE_SCOPES` is exported for tooling that wants to enumerate exactly which scopes a role expands to.
 
 **`extendTheme()`** derives a new palette from any shipped or user palette with role- or scope-level overrides:
 
