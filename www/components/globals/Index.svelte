@@ -14,6 +14,7 @@
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
   import EditableCssHighlights from "@components/HighlightEditable/CssHighlights.svelte";
+  import EditableReadOnly from "@components/HighlightEditable/ReadOnly.svelte";
   import HighlightStreamBasic from "@components/HighlightStream/Basic.svelte";
   import HighlightStreamControls from "@components/HighlightStream/Controls.svelte";
   import HighlightStreamVirtualize from "@components/HighlightStream/Virtualize.svelte";
@@ -792,6 +793,15 @@ export default {
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <EditableCssHighlights /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Set <code class="code">readonly</code> to keep highlighting, caret
+      placement, and selection active while blocking edits. The imperative API
+      still works, so a consumer can toggle a document read-only without
+      swapping components.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <EditableReadOnly /> </Column>
 </Row>
 
 <Row class="mb-9">
