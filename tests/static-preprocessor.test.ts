@@ -173,4 +173,57 @@ describe("highlightStatic", () => {
       console.warn = originalWarn;
     }
   });
+
+  it("fires onSummary once per file with counts for eligible and matched-but-failing usages", async () => {
+    const source = `<script>
+  import Highlight from "../src/Highlight.svelte";
+  import javascript from "../src/languages/javascript.js";
+  import doesNotExist from "svelte-highlight/languages/does-not-exist";
+</script>
+
+<Highlight language={javascript} code="const x = 1;" />
+<Highlight language={doesNotExist} code="const y = 2;" />
+`;
+    const summaries: Array<{
+      filename?: string;
+      matched: number;
+      succeeded: number;
+      failed: number;
+    }> = [];
+
+    await preprocess(
+      source,
+      highlightStatic({
+        onWarn: () => {},
+        onSummary: (summary) => summaries.push(summary),
+      }),
+      { filename },
+    );
+
+    expect(summaries).toHaveLength(1);
+    expect(summaries[0]).toEqual({
+      filename,
+      matched: 2,
+      succeeded: 1,
+      failed: 1,
+    });
+  });
+
+  it("does not fire onSummary for a file with no <Highlight> usages", async () => {
+    const source = `<script>
+  const x = 1;
+</script>
+
+<p>{x}</p>
+`;
+    const summaries: unknown[] = [];
+
+    await preprocess(
+      source,
+      highlightStatic({ onSummary: (summary) => summaries.push(summary) }),
+      { filename },
+    );
+
+    expect(summaries).toHaveLength(0);
+  });
 });

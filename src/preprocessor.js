@@ -403,6 +403,7 @@ function applyEdits(content, edits) {
 /**
  * @typedef {{
  *   onWarn?: (message: string, details: { filename?: string | undefined; line: number; cause: unknown }) => void;
+ *   onSummary?: (summary: { filename?: string | undefined; matched: number; succeeded: number; failed: number }) => void;
  * }} HighlightStaticOptions
  */
 
@@ -419,6 +420,7 @@ function applyEdits(content, edits) {
  */
 export function highlightStatic(options = {}) {
   const warn = options.onWarn ?? defaultWarn;
+  const onSummary = options.onSummary;
 
   return {
     name: "svelte-highlight-static",
@@ -521,6 +523,13 @@ export function highlightStatic(options = {}) {
 
         edits.push({ start, end, replacement: html });
       }
+
+      onSummary?.({
+        filename,
+        matched: matches.length,
+        succeeded: edits.length,
+        failed: matches.length - edits.length,
+      });
 
       if (edits.length === 0) return;
       return applyEdits(content, edits);
