@@ -265,6 +265,15 @@ const palette = fromTextMate(nightOwl, {
 });
 ```
 
+To count unmapped entries instead of observing each one as it happens, use `fromTextMateWithWarnings`, which aggregates every `onWarn` call:
+
+```js
+import { fromTextMateWithWarnings } from "svelte-highlight/theme/textmate";
+
+const { palette, warnings } = fromTextMateWithWarnings(nightOwl);
+// warnings.length is the number of unmapped tokenColors entries
+```
+
 When present, `theme.semanticTokenColors` is read as a higher-priority overlay on top of `tokenColors` — matching VS Code's own precedence when semantic highlighting is enabled. It's resolved against a starter table of VS Code's default semantic token types (`namespace`, `class`, `interface`, `enum`, `struct`, `typeParameter`, `type`, `parameter`, `variable`, `enumMember`, `property`, `event`, `decorator`, `label`, `function`, `method`, `macro`, `comment`, `string`, `keyword`, `number`, `regexp`, `operator`); modifiers (`"variable.readonly"`) and language scoping (`"variable:typescript"`) are not resolved — only the base type before the first `.` or `:` is matched.
 
 ## Styling
