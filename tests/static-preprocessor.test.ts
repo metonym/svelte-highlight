@@ -68,13 +68,47 @@ describe("highlightStatic", () => {
     expect(output).toBe(source);
   });
 
-  it("leaves usages with the langtag prop untouched", async () => {
+  it("transforms a bare langtag into a position:relative pre plus an inline badge span", async () => {
     const source = `<script>
   import Highlight from "../src/Highlight.svelte";
   import javascript from "../src/languages/javascript.js";
 </script>
 
 <Highlight language={javascript} code="const x = 1;" langtag />
+`;
+    const output = await transform(source);
+
+    expect(output).not.toContain("<Highlight");
+    expect(output).toContain("position:relative;");
+    expect(output).toContain(
+      '<span style="position:absolute;top:var(--langtag-top, 0);',
+    );
+    expect(output).toContain(">javascript</span>");
+  });
+
+  it("transforms langtag={false} without the badge span", async () => {
+    const source = `<script>
+  import Highlight from "../src/Highlight.svelte";
+  import javascript from "../src/languages/javascript.js";
+</script>
+
+<Highlight language={javascript} code="const x = 1;" langtag={false} />
+`;
+    const output = await transform(source);
+
+    expect(output).not.toContain("<Highlight");
+    expect(output).not.toContain("position:relative;");
+    expect(output).not.toContain("position:absolute;top:var(--langtag-top");
+  });
+
+  it("leaves usages with a non-literal langtag untouched", async () => {
+    const source = `<script>
+  import Highlight from "../src/Highlight.svelte";
+  import javascript from "../src/languages/javascript.js";
+  let showLangtag = true;
+</script>
+
+<Highlight language={javascript} code="const x = 1;" langtag={showLangtag} />
 `;
     const output = await transform(source);
     expect(output).toBe(source);
