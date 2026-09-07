@@ -122,6 +122,8 @@ This renders SSR-identical output — no `<svelte:head>`, no `<style>` tag, just
 
 The wrapper's inline style carries the plain light value for each var (e.g. `--shl-keyword:#a626a4`) — a baseline every browser can render. A scoped, deduped `<style>` tag (gated behind `@supports (color: light-dark(...))`) overrides it with `--shl-keyword: light-dark(#a626a4, #c678dd)` (etc.) plus `color-scheme: light dark` on browsers that support `light-dark()`. `mode="light"` / `mode="dark"` force `color-scheme: light` / `dark`. Any other `mode` string (the legacy "CSS selector" mode) omits `color-scheme` inline — set it on your own selector for app-controlled switching, e.g. `[data-theme="dark"] { color-scheme: dark }`.
 
+See it live, with a mode toggle, on the [dual-palette preview page](https://svhe.onrender.com/preview-dual-palette).
+
 **One-line customization — any token, no theme forking:**
 
 ```css
@@ -172,6 +174,8 @@ Variable names are derived mechanically from the selectors found in `highlight.j
 `base.css` assumes the default `hljs-` class prefix; projects using a custom `classPrefix` should stay on the legacy string path below.
 
 `HighlightStyle` also inlines `color-scheme` from the palette(s) it's given — `palette.colorScheme` for a single `theme`, or a value derived from `mode` for a `light`/`dark` pair — so native form controls and scrollbars inside a themed block follow the theme too.
+
+`extras` isn't a corner case for every theme — e.g. the `3024` theme's `extras` covers 7 declarations, including `.hljs ::selection`, `.hljs::selection`, `.hljs-operator`, and `.ruby .hljs-property`, all silently dropped when that theme is imported as a `ThemePalette` object (`svelte-highlight/themes/3024`) instead of its `.css` artifact. There's no per-theme fidelity indicator today; [SUPPORTED_THEMES.md](SUPPORTED_THEMES.md) is where one could eventually live.
 
 ### Creating themes
 
