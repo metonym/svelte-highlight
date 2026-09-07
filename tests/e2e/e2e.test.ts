@@ -1189,6 +1189,26 @@ test("HighlightStream - `done` hides the caret and fires on:done", async ({
   await expect(page.getByTestId("done-count")).toHaveText("1");
 });
 
+test("HighlightStream - marks aria-busy while streaming and announces completion", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStream);
+
+  const stream = page.getByTestId("stream");
+  const status = page.getByRole("status");
+  await expect(stream).toHaveAttribute("aria-busy", "true");
+  await expect(status).toHaveText("");
+
+  await page.getByTestId("append-chunk").click();
+  await expect(stream).toHaveAttribute("aria-busy", "true");
+  await expect(status).toHaveText("");
+
+  await page.getByTestId("finish").click();
+  await expect(stream).toHaveAttribute("aria-busy", "false");
+  await expect(status).toHaveText("Code finished streaming");
+});
+
 test("HighlightStream sealing - text content stays byte-correct across sealed chunk boundaries", async ({
   mount,
   page,
