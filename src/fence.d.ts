@@ -17,3 +17,24 @@ export interface ParsedMeta {
  * directive appears later in the string. Unknown tokens are ignored.
  */
 export declare function parseMeta(meta: string): ParsedMeta;
+
+/**
+ * Highlights a single Markdown/MDX code fence into hljs-compatible HTML,
+ * for use from framework adapters (mdsvex, markdown-it, rehype, ...) that
+ * process fences outside the Svelte compiler.
+ *
+ * Renders each source line as `<span class="line">`, decorated with
+ * `data-line-state="mark" | "ins" | "del"` per `meta`'s directives (see
+ * `parseMeta`), wrapped in a `<pre class="hljs" data-language="...">` that
+ * carries `data-title`/`data-show-line-numbers` when `meta` sets them.
+ *
+ * `lang` must be the grammar's canonical file name (e.g. `"typescript"`,
+ * not `"ts"`) - alias resolution is the caller's job. Rejects with
+ * `LanguageLoadError` (`Unknown language: "<lang>"`) when `lang` doesn't
+ * resolve to a shipped grammar.
+ */
+export declare function highlightFence(options: {
+  code: string;
+  lang: string;
+  meta?: string;
+}): Promise<string>;

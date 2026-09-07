@@ -1,3 +1,7 @@
+import { escapeHtml, scopeToCssClass, tokenLines } from "./engine.js";
+import { loadLanguage } from "./load-language.js";
+import { ensureRegistered, registry } from "./registry.js";
+
 /**
  * @typedef {import("./fence.d.ts").ParsedMeta} ParsedMeta
  */
@@ -37,7 +41,7 @@ export function parseMeta(meta) {
     const [, titleKey, titleValue, stateKey, stateRanges, bareRanges, bareWord] = match;
 
     if (titleKey !== undefined) {
-      if (titleKey === "title") result.title = titleValue;
+      if (titleKey === "title") result.title = titleValue ?? "";
       continue;
     }
 
@@ -56,4 +60,55 @@ export function parseMeta(meta) {
   }
 
   return result;
+}
+
+/** @param {string} value */
+function escapeAttribute(value) {
+  return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+}
+
+/**
+ * @param {import("./engine.d.ts").LineToken} token
+ */
+function renderToken(token) {
+  let html = escapeHtml(token.text);
+  for (let i = token.scopes.length - 1; i >= 0; i -= 1) {
+    const scope = /** @type {string} */ (token.scopes[i]);
+    html = `<span class="${scopeToCssClass(scope, "hljs-")}">${html}</span>`;
+  }
+  return html;
+}
+
+/**
+ * @param {{ code: string; lang: string; meta?: string }} options
+ * @returns {Promise<string>}
+ */
+export async function highlightFence({ code, lang, meta }) {
+  const language = await loadLanguage(
+    /** @type {import("./languages").LanguageName} */ (lang),
+  );
+  ensureRegistered(language);
+  const { events } = registry.highlight(code, { language: lang });
+  const parsedMeta = meta !== undefined ? parseMeta(meta) : undefined;
+
+  const lines = tokenLines(events)
+    .map((tokens, index) => {
+      const state = parsedMeta?.lines[index + 1];
+      const stateAttr = state ? ` data-line-state="${state}"` : "";
+      return `<span class="line"${stateAttr}>${tokens.map(renderToken).join("")}</span>`;
+    })
+    .join("\n");
+
+  const titleAttr =
+    parsedMeta?.title !== undefined
+      ? ` data-title="${escapeAttribute(parsedMeta.title)}"`
+      : "";
+  const showLineNumbersAttr = parsedMeta?.showLineNumbers
+    ? ' data-show-line-numbers="true"'
+    : "";
+
+  return (
+    `<pre class="hljs" data-language="${escapeAttribute(lang)}"${titleAttr}${showLineNumbersAttr}>` +
+    `<code class="hljs">${lines}</code></pre>`
+  );
 }
