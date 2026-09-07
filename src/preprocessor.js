@@ -140,6 +140,22 @@ function getIdentifierAttribute(attribute) {
 }
 
 /**
+ * `null` unless the attribute is a bare flag (`langtag`) or a static
+ * boolean literal (`langtag={true}`/`langtag={false}`).
+ * @param {import("svelte/compiler").AST.Attribute} attribute
+ */
+function getStaticBooleanAttribute(attribute) {
+  if (attribute.value === true) return true;
+  const value = getSingleAttributeValue(attribute);
+  if (value?.type !== "ExpressionTag") return null;
+  const { expression } = value;
+  if (expression.type === "Literal" && typeof expression.value === "boolean") {
+    return expression.value;
+  }
+  return null;
+}
+
+/**
  * @param {import("svelte/compiler").AST.ElementLike} element
  * @param {Map<string, string>} imports
  */
@@ -156,9 +172,14 @@ function matchHighlightElement(element, imports) {
     // Reject spread attributes and any directive (bind:, on:, use:, class:, etc.) -
     // none of these can be safely replicated in static HTML.
     if (attribute.type !== "Attribute") return null;
-    // Reject any attribute outside the supported set (this also excludes `langtag`,
-    // which needs global CSS the static output can't guarantee is bundled - see README).
-    if (attribute.name !== "language" && attribute.name !== "code") return null;
+    // Reject any attribute outside the supported set.
+    if (
+      attribute.name !== "language" &&
+      attribute.name !== "code" &&
+      attribute.name !== "langtag"
+    ) {
+      return null;
+    }
     attrs.set(attribute.name, attribute);
   }
 
@@ -175,7 +196,17 @@ function matchHighlightElement(element, imports) {
   const languageSource = imports.get(languageLocalName);
   if (!languageSource || !isLanguageImportSource(languageSource)) return null;
 
-  return { code, languageSource };
+  // Bare `langtag` or a static boolean literal only - anything else (a
+  // variable, an expression) disqualifies the usage, same as `code`/`language`.
+  const langtagAttr = attrs.get("langtag");
+  let langtag = false;
+  if (langtagAttr) {
+    const value = getStaticBooleanAttribute(langtagAttr);
+    if (value === null) return null;
+    langtag = value;
+  }
+
+  return { code, languageSource, langtag };
 }
 
 /**
@@ -196,6 +227,14 @@ async function resolveLanguageModule(source, filename) {
 /** @param {string} value */
 function escapeAttribute(value) {
   return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+}
+
+/** @param {string} value */
+function escapeText(value) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 /**
@@ -240,18 +279,32 @@ function escapeSvelteBraces(html) {
   return html.replace(/[{}]/g, (char) => (char === "{" ? "{'{'}" : "{'}'}"));
 }
 
+// The same declarations `.langtag::after` uses (src/langtag.css), each backed by
+// the matching `--langtag-*` custom property, so a themed static usage needs no
+// stylesheet - see `matchHighlightElement`'s `langtag` handling.
+const LANGTAG_BADGE_STYLE =
+  "position:absolute;top:var(--langtag-top, 0);right:var(--langtag-right, 0);" +
+  "display:flex;align-items:center;justify-content:center;" +
+  "background:var(--langtag-background, inherit);color:var(--langtag-color, inherit);" +
+  "border-radius:var(--langtag-border-radius, 0);padding:var(--langtag-padding, 1em);" +
+  "font-size:var(--langtag-font-size, inherit);";
+
 /**
  * @param {import("./languages").LanguageType<string>} language
  * @param {string} code
+ * @param {boolean} langtag
  */
-function renderStatic(language, code) {
+function renderStatic(language, code, langtag) {
   ensureRegistered(language);
   const { value } = registry.highlight(code, { language: language.name });
+  const badge = langtag
+    ? `<span style="${LANGTAG_BADGE_STYLE}">${escapeText(language.name)}</span>`
+    : "";
   return escapeSvelteBraces(
     `<pre class="hljs" data-language="${escapeAttribute(language.name)}" ` +
-      `style="overflow-x:var(--overflow-x, auto);overflow-y:var(--overflow-y, auto);` +
+      `style="${langtag ? "position:relative;" : ""}overflow-x:var(--overflow-x, auto);overflow-y:var(--overflow-y, auto);` +
       `border-radius:var(--border-radius, 0);width:var(--width, auto);max-width:var(--max-width, none)">` +
-      `<code class="hljs">${value}</code></pre>`,
+      `<code class="hljs">${value}</code>${badge}</pre>`,
   );
 }
 
@@ -483,7 +536,7 @@ export function highlightStatic(options = {}) {
           }
 
           try {
-            return renderStatic(language, match.code);
+            return renderStatic(language, match.code, match.langtag);
           } catch (cause) {
             warn(
               `highlight.js failed to highlight the code (language "${language.name}")`,
