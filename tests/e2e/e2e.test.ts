@@ -29,6 +29,7 @@ import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.te
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
 import HighlightStreamMidLineHighlight from "./HighlightStream.midLineHighlight.test.svelte";
+import HighlightStreamRegenerate from "./HighlightStream.regenerate.test.svelte";
 import HighlightStreamSealing from "./HighlightStream.sealing.test.svelte";
 import HighlightStreamStability from "./HighlightStream.stability.test.svelte";
 import HighlightStreamTemplateLiteral from "./HighlightStream.templateLiteral.test.svelte";
@@ -1638,6 +1639,33 @@ test("HighlightStream - marks aria-busy while streaming and announces completion
   await page.getByTestId("finish").click();
   await expect(stream).toHaveAttribute("aria-busy", "false");
   await expect(status).toHaveText("Code finished streaming");
+});
+
+test("HighlightStream - a non-append edit reuses the session instead of restarting", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamRegenerate);
+
+  await page.getByTestId("append-1").click();
+  await page.getByTestId("append-2").click();
+  await page.getByTestId("append-3").click();
+  await expect(
+    page.getByTestId("stream").locator("[data-line='2']"),
+  ).toBeVisible();
+
+  await page.getByTestId("regenerate").click();
+  await expect(
+    page.getByTestId("stream").locator("[data-line='1']"),
+  ).toHaveText("const b = 222;");
+
+  const streamedHighlighted = await page
+    .getByTestId("highlighted-snapshot")
+    .textContent();
+  const referenceHighlighted = await page
+    .getByTestId("reference-highlighted-snapshot")
+    .textContent();
+  expect(streamedHighlighted).toBe(referenceHighlighted);
 });
 
 test("HighlightStream sealing - text content stays byte-correct across sealed chunk boundaries", async ({
