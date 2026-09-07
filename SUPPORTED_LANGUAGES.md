@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 338 languages: 193 exported from highlight.js@11.12.0, 145 custom grammars added by svelte-highlight
+> 339 languages: 193 exported from highlight.js@11.12.0, 146 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -4319,6 +4319,15 @@
 
   // base import
   import { yara } from "svelte-highlight/languages";
+</script>
+```
+## yarnspinner (`yarnspinner`)
+> Custom svelte-highlight language (not exported by highlight.js)
+```html
+<script>
+  // direct import (recommended)
+  import yarnspinner from "svelte-highlight/languages/yarnspinner";
+  import { yarnspinner } from "svelte-highlight/languages";
 </script>
 ```
 
