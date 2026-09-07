@@ -1750,6 +1750,37 @@ test("HighlightVirtual - white-space: pre survives a consumer style override", a
   expect(whiteSpace).toBe("pre");
 });
 
+test("HighlightVirtual - dispatches windowchange as the scrolled window moves", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+
+  const initial = await page.getByTestId("window").textContent();
+  expect(initial).not.toBe(JSON.stringify({ start: 0, end: 0, lineCount: 0 }));
+
+  await virtual.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(page.getByTestId("window")).not.toHaveText(initial ?? "");
+});
+
+test("HighlightVirtual - scrollToLine scrolls a given line into the rendered window", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+
+  await page.getByTestId("scroll-to-2500").click();
+  await expect(virtual.locator("[data-line='2500']")).toBeVisible();
+});
+
 test("Typewriter - animates then settles to the full highlighted content", async ({
   mount,
   page,
