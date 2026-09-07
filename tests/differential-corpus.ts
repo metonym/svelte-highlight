@@ -276,6 +276,11 @@ MAILTO=admin@example.com
 0 9 1 JAN-MAR * echo "quarterly report" >> /var/log/report.log
 @reboot /usr/local/bin/on-boot.sh
 `,
+  csv: `id,name,active,joined,notes
+1,"Alice ""Al"" Smith",true,2026-01-15,
+2,Bob,false,2025-12-01,"NA"
+3,Carol,,2026-03-02T10:00:00Z,NULL
+`,
   cue: `package config
 
 import "strings"
