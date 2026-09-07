@@ -59,6 +59,7 @@
   import { extendLines } from "./engine.js";
   import { ensureRegistered, registry } from "./registry.js";
   import { createCompletedHtmlBuffer } from "./stream-highlighted.js";
+  import { computeStagedTailPreview } from "./stream-preview.js";
   import {
     buildSealedChunkHtml,
     pushSealedChunk,
@@ -127,6 +128,9 @@
   /** @type {string[]} */
   let finalizedOpenScopes = [];
   let renderedCommittedCount = 0;
+  // Mid-line checkpoint for the staged-tail preview; see stream-preview.js.
+  /** @type {undefined} */
+  let previewCache;
 
   // Sealed (finished, immutable) chunks of `SEAL_CHUNK_LINES` line spans
   // each, pre-joined into one HTML string apiece - `sealedChunks` is never
@@ -163,6 +167,7 @@
     finalizedPendingHtml = "";
     finalizedOpenScopes = [];
     renderedCommittedCount = 0;
+    previewCache = undefined;
     sealedChunks = [];
     sealedLineCount = 0;
     completedHtml.reset();
@@ -214,17 +219,16 @@
       }
 
       // Staged tail: current line still streaming in, not newline-terminated.
-      const snapshot = session.snapshot();
-      let previewLines = [finalizedPendingHtml];
-      if (snapshot.pos < fedCode.length) {
-        const preview = registry.resume(fedCode, sessionLanguageName, snapshot);
-        const result = extendLines(
-          preview.events,
-          finalizedOpenScopes,
-          finalizedPendingHtml,
-        );
-        previewLines = [...result.completedLines, result.pendingHtml];
-      }
+      const { previewLines, cache } = computeStagedTailPreview({
+        registry,
+        language: sessionLanguageName,
+        session,
+        fedCode,
+        openScopes: finalizedOpenScopes,
+        pendingHtml: finalizedPendingHtml,
+        cache: previewCache,
+      });
+      previewCache = cache;
 
       tailLines = [...unsealedLines, ...previewLines];
 
