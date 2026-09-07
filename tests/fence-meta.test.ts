@@ -46,13 +46,13 @@ describe("parseMeta", () => {
   });
 
   it("parses a realistic string combining every directive", () => {
-    expect(
-      parseMeta('title="app.ts" {1,3-5} ins={7} showLineNumbers'),
-    ).toEqual({
-      lines: { 1: "mark", 3: "mark", 4: "mark", 5: "mark", 7: "ins" },
-      title: "app.ts",
-      showLineNumbers: true,
-    });
+    expect(parseMeta('title="app.ts" {1,3-5} ins={7} showLineNumbers')).toEqual(
+      {
+        lines: { 1: "mark", 3: "mark", 4: "mark", 5: "mark", 7: "ins" },
+        title: "app.ts",
+        showLineNumbers: true,
+      },
+    );
   });
 
   it("resolves a line named by multiple directives to whichever appears later", () => {
