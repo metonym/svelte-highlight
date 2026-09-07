@@ -193,7 +193,7 @@
     display: block;
     position: relative;
     overflow: auto;
-    white-space: pre;
+    white-space: pre !important;
     margin: 0;
   }
 
