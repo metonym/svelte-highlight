@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 318 languages: 193 exported from highlight.js@11.12.0, 125 custom grammars added by svelte-highlight
+> 319 languages: 193 exported from highlight.js@11.12.0, 126 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1451,6 +1451,20 @@
 
   // base import
   import { graphql } from "svelte-highlight/languages";
+</script>
+```
+
+## graphviz (`graphviz`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import graphviz from "svelte-highlight/languages/graphviz";
+
+  // base import
+  import { graphviz } from "svelte-highlight/languages";
 </script>
 ```
 

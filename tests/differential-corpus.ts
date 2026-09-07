@@ -453,6 +453,20 @@ Hello, {{ .Name | printf "%s" }}!
   {{ end }}
 {{ end }}
 {{ end }}`,
+  graphviz: `// a simple pipeline
+digraph pipeline {
+  rankdir=LR;
+  node [shape=box, fontname="Helvetica"];
+
+  subgraph cluster_build {
+    label="build";
+    compile -> test;
+  }
+
+  test -> deploy [label="on success", color=green];
+  deploy -> "prod:n" [style=dashed];
+}
+`,
   groq: `// recent movies released after 2018
 *[_type == "movie" && releaseYear >= 2018]{
   title,
