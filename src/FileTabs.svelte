@@ -6,7 +6,14 @@
   /** @type {string[]} */
   export let files;
 
-  /** @type {string} */
+  /**
+   * Active file (`bind:active`).
+   * Reconciled whenever `files` changes: an unknown or stale value
+   * selects `files[0]`; if the previously active file is removed, its
+   * neighbor (same index, clamped to the new length) is selected
+   * instead; an empty `files` list sets this to `undefined`.
+   * @type {string | undefined}
+   */
   export let active = files[0];
 
   import { afterUpdate, createEventDispatcher } from "svelte";
@@ -21,6 +28,36 @@
 
   /** @type {HTMLButtonElement[]} */
   let tabs = [];
+
+  // Index `active` last resolved to; used to pick a neighbor when the
+  // active file disappears from `files`.
+  let lastValidIndex = -1;
+
+  $: {
+    const index = files.indexOf(active);
+
+    if (index === -1) {
+      if (files.length === 0) {
+        if (active !== undefined) active = undefined;
+        lastValidIndex = -1;
+      } else {
+        const nextIndex =
+          lastValidIndex === -1
+            ? 0
+            : Math.min(lastValidIndex, files.length - 1);
+        const next = files[nextIndex];
+
+        lastValidIndex = nextIndex;
+
+        if (next !== active) {
+          active = next;
+          dispatch("change", { active });
+        }
+      }
+    } else {
+      lastValidIndex = index;
+    }
+  }
 
   $: activeIndex = files.indexOf(active);
 
@@ -107,7 +144,7 @@
     role="tabpanel"
     id="{baseId}-panel"
     class="tabpanel"
-    aria-labelledby="{baseId}-tab-{activeIndex}"
+    aria-labelledby={activeIndex === -1 ? undefined : `${baseId}-tab-${activeIndex}`}
   >
     <slot {active} />
   </div>

@@ -1848,3 +1848,58 @@ test("FileTabs - active tab background matches the highlighted code theme", asyn
     codeBackground,
   );
 });
+
+test("FileTabs - a stale initial active falls back to the first file", async ({
+  mount,
+  page,
+}) => {
+  await mount(FileTabs, { props: { initialActive: "nope.ts" } });
+
+  await expect(page.getByRole("tab", { name: "App.svelte" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+
+  const panel = page.getByRole("tabpanel");
+  const labelledby = await panel.getAttribute("aria-labelledby");
+  expect(labelledby).not.toBeNull();
+  await expect(page.locator(`#${labelledby}`)).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+});
+
+test("FileTabs - removing the active file selects its neighbor", async ({
+  mount,
+  page,
+}) => {
+  await mount(FileTabs, { props: { initialActive: "index.js" } });
+
+  await page.getByTestId("remove-active").click();
+
+  await expect(page.getByTestId("active")).toHaveText("vite.config.js");
+  await expect(
+    page.getByRole("tab", { name: "vite.config.js" }),
+  ).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByTestId("last-change")).toHaveText("vite.config.js");
+  await expect(page.getByTestId("change-count")).toHaveText("1");
+});
+
+test("FileTabs - an empty files list omits aria-labelledby", async ({
+  mount,
+  page,
+}) => {
+  const messages: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") messages.push(message.text());
+  });
+
+  await mount(FileTabs);
+  await page.getByTestId("clear-files").click();
+
+  await expect(page.getByRole("tab")).toHaveCount(0);
+  await expect(page.getByRole("tabpanel")).not.toHaveAttribute(
+    "aria-labelledby",
+  );
+  expect(messages).toEqual([]);
+});
