@@ -1799,12 +1799,12 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 
 #### Props
 
-| Name      | Type             | Default value  |
-| :-------- | :--------------- | :------------- |
-| code      | `any`            | N/A (required) |
-| languages | `LanguageName[]` | `undefined`    |
-| langtag   | `boolean`        | `false`        |
-| wrap      | `boolean`        | `false`        |
+| Name          | Type             | Default value  |
+| :------------ | :--------------- | :------------- |
+| code          | `any`            | N/A (required) |
+| languageNames | `LanguageName[]` | `undefined`    |
+| langtag       | `boolean`        | `false`        |
+| wrap          | `boolean`        | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
