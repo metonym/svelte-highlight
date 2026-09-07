@@ -855,6 +855,22 @@ class Server {
 
   function describe() = "\\(host):\\(port)"
 }`,
+  plantuml: `@startuml
+' a simple sequence diagram
+actor User
+participant "Web Server" as Web
+database DB
+
+User -> Web : request page
+Web --> DB : query
+DB --> Web : rows
+Web --> User : 200 OK
+
+note right of Web #lightblue
+  cache miss
+end note
+@enduml
+`,
   polar: `# document access
 resource Document {
   permissions = ["read", "write"];
