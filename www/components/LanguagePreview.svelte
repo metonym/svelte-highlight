@@ -80,6 +80,7 @@
   import { pklPreviewSnippets } from "@www/preview/pkl-preview-snippets";
   import { plantumlPreviewSnippets } from "@www/preview/plantuml-preview-snippets";
   import { polarPreviewSnippets } from "@www/preview/polar-preview-snippets";
+  import { powerqueryPreviewSnippets } from "@www/preview/powerquery-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
   import { prismaPreviewSnippets } from "@www/preview/prisma-preview-snippets";
   import { promqlPreviewSnippets } from "@www/preview/promql-preview-snippets";
@@ -207,6 +208,7 @@
   import pkl from "svelte-highlight/languages/pkl";
   import plantuml from "svelte-highlight/languages/plantuml";
   import polar from "svelte-highlight/languages/polar";
+  import powerquery from "svelte-highlight/languages/powerquery";
   import prisma from "svelte-highlight/languages/prisma";
   import promql from "svelte-highlight/languages/promql";
   import prql from "svelte-highlight/languages/prql";
@@ -251,7 +253,7 @@
   import yara from "svelte-highlight/languages/yara";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery"} */
   export let language;
 
   const registry = {
@@ -382,6 +384,7 @@
     djot: { lang: djot, snippets: djotPreviewSnippets },
     markdoc: { lang: markdoc, snippets: markdocPreviewSnippets },
     regex: { lang: regex, snippets: regexPreviewSnippets },
+    powerquery: { lang: powerquery, snippets: powerqueryPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
