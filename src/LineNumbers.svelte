@@ -51,6 +51,7 @@
         {@const isHighlighted = highlightedLineSet.has(i)}
         <tr class:dimmed={focusMode && !isHighlighted}>
           <td
+            aria-hidden="true"
             class:hljs={true}
             class:hideBorder
             style:position="sticky"
