@@ -143,6 +143,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "plantuml",
   "structurizr",
   "org",
+  "djot",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
