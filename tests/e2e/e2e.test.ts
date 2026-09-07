@@ -50,6 +50,7 @@ import LineNumbersFocusLines from "./LineNumbers.focusLines.test.svelte";
 import LineNumbersGutterOverflow from "./LineNumbers.gutterOverflow.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
+import LineNumbersLineStates from "./LineNumbers.lineStates.test.svelte";
 import LineNumbersLinesInput from "./LineNumbers.linesInput.test.svelte";
 import LineNumbersMultilineSpan from "./LineNumbers.multilineSpan.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
@@ -684,6 +685,38 @@ test("LineNumbers - focus lines dim/blur un-highlighted lines", async ({
   const dimmedCode = rows.nth(0).locator("pre");
   await expect(dimmedCode).toHaveCSS("opacity", "0.4");
   await expect(dimmedCode).toHaveCSS("filter", "blur(2px)");
+});
+
+test("LineNumbers - lineStates colors added/removed lines and exempts focus lines from dimming", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersLineStates);
+
+  const rows = page.locator("tr");
+
+  // Index 1: "added" -- colored, not dimmed.
+  await expect(rows.nth(1)).not.toHaveClass(/dimmed/);
+  await expect(rows.nth(1).locator("td:last-child .line-background")).toHaveCSS(
+    "background-color",
+    "rgba(46, 204, 113, 0.15)",
+  );
+
+  // Index 2: "removed" -- colored, not dimmed.
+  await expect(rows.nth(2)).not.toHaveClass(/dimmed/);
+  await expect(rows.nth(2).locator("td:last-child .line-background")).toHaveCSS(
+    "background-color",
+    "rgba(231, 76, 60, 0.15)",
+  );
+
+  // Index 4: "focus" -- exempt from dimming, but no background overlay.
+  await expect(rows.nth(4)).not.toHaveClass(/dimmed/);
+  await expect(rows.nth(4).locator(".line-background")).toHaveCount(0);
+
+  // Index 0 and 3: untouched -- dimmed like plain highlightedLines behavior.
+  await expect(rows.nth(0)).toHaveClass(/dimmed/);
+  await expect(rows.nth(3)).toHaveClass(/dimmed/);
+  await expect(rows.nth(0).locator("pre")).toHaveCSS("opacity", "0.4");
 });
 
 test("Language tag styling", async ({ mount, page }) => {
