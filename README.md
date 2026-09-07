@@ -115,7 +115,7 @@ This renders SSR-identical output — no `<svelte:head>`, no `<style>` tag, just
 **Dual light/dark via [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark):**
 
 ```svelte
-<HighlightStyle light={atomOneLight} dark={atomOneDark} mode="auto">
+<HighlightStyle light={cyanotypeLight} dark={cyanotypeDark} mode="auto">
   <Highlight language={typescript} {code} />
 </HighlightStyle>
 ```

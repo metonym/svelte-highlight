@@ -2,8 +2,8 @@
   import { Toggle } from "carbon-components-svelte";
   import Highlight, { HighlightStyle } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
-  import github from "svelte-highlight/styles/github";
-  import githubDark from "svelte-highlight/styles/github-dark";
+  import cyanotypeDark from "svelte-highlight/themes/cyanotype-dark";
+  import cyanotypeLight from "svelte-highlight/themes/cyanotype-light";
 
   const code = `interface User {
   id: number;
@@ -67,7 +67,11 @@ const greet = (user: User): string => {
 </p>
 
 <div data-theme={dataTheme}>
-  <HighlightStyle light={github} dark={githubDark} mode={resolvedMode}>
+  <HighlightStyle
+    light={cyanotypeLight}
+    dark={cyanotypeDark}
+    mode={resolvedMode}
+  >
     <Highlight language={typescript} {code} />
   </HighlightStyle>
 </div>
