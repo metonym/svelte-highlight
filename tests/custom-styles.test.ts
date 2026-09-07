@@ -64,3 +64,49 @@ test("custom styles and themes are exported after build", async () => {
     if (name.endsWith("-light")) expect(palette.colorScheme).toBe("light");
   }
 });
+
+describe("WCAG contrast", () => {
+  function relativeLuminance(hex: string): number {
+    const [r, g, b] = [1, 3, 5].map(
+      (i) => parseInt(hex.slice(i, i + 2), 16) / 255,
+    );
+    const lin = (c: number) =>
+      c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  }
+
+  function contrastRatio(hexA: string, hexB: string): number {
+    const [l1, l2] = [relativeLuminance(hexA), relativeLuminance(hexB)].sort(
+      (a, b) => b - a,
+    );
+    return (l1 + 0.05) / (l2 + 0.05);
+  }
+
+  test("custom style base palettes and comment colors clear WCAG contrast floors", async () => {
+    const contents = await Promise.all(
+      customFiles.map(async (file) => ({
+        file,
+        css: await Bun.file(path.join(CUSTOM_DIR, file)).text(),
+      })),
+    );
+
+    for (const { file, css } of contents) {
+      const base = css.match(
+        /\.hljs \{\s*color: (#[0-9a-fA-F]{6});\s*background: (#[0-9a-fA-F]{6});/,
+      );
+      const comment = css.match(
+        /\.hljs-comment,\n\.hljs-quote \{\s*color: (#[0-9a-fA-F]{6});/,
+      );
+      expect(base).not.toBeNull();
+      expect(comment).not.toBeNull();
+      const [, fg, bg] = base as RegExpMatchArray;
+      const [, commentColor] = comment as RegExpMatchArray;
+
+      // WCAG AA body text floor; already passes for all 90 files.
+      expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(4.5);
+      // Comments are secondary/decorative text, so held to WCAG's large-text
+      // floor rather than body text; today's failures are fixed in Step 2.
+      expect(contrastRatio(commentColor, bg)).toBeGreaterThanOrEqual(3);
+    }
+  });
+});
