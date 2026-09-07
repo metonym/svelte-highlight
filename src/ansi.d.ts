@@ -46,5 +46,13 @@ export type AnsiSegment = {
   link?: string;
 };
 
-/** Parse ANSI SGR escape codes into styled segments. Malformed input is dropped. */
+/**
+ * Parse ANSI SGR escape codes into styled segments. Malformed input is
+ * dropped.
+ *
+ * This is a one-shot parse: a trailing unterminated escape sequence is
+ * dropped rather than buffered, so calling it once per streamed chunk
+ * loses any sequence that straddles a chunk boundary. Accumulate the full
+ * string and re-parse it on each update instead of parsing per chunk.
+ */
 export declare function parseAnsi(text: string): AnsiSegment[];
