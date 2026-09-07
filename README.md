@@ -1221,17 +1221,7 @@ Grammars with embedded sublanguages (`astro`, `svelte`, and others with a `depen
 
 > **Note:** Because the imported name is dynamic, the bundler cannot prune unused grammars and will emit a chunk for every language — all 279 shipped grammars. Prefer a static `import` when the language is known ahead of time, and reach for `loadLanguage` only when it is not.
 
-A practical case is rendering Markdown, where each fenced block declares its own language:
-
-```js
-import { loadLanguage } from "svelte-highlight";
-
-// e.g. from a Markdown fence: ```ts → "typescript"
-async function highlightFence(fenceLang, code) {
-  const grammar = await loadLanguage(fenceLang);
-  return { code, language: grammar };
-}
-```
+A practical case is rendering Markdown, where each fenced block declares its own language — see "[Rendering Markdown/MDX fences](#rendering-markdownmdx-fences)" below for a ready-made `highlightFence` helper built on top of `loadLanguage`.
 
 ## Static mode
 
@@ -1285,7 +1275,88 @@ highlightStatic({
 });
 ```
 
-Scope is small on purpose. Extra props on `<Highlight>` don't carry over to the emitted `<pre>`. Unused `Highlight` and language imports are left in place; bundlers drop them (`sideEffects` in `package.json` is narrow enough). No Astro/MDX fence hook yet.
+Scope is small on purpose. Extra props on `<Highlight>` don't carry over to the emitted `<pre>`. Unused `Highlight` and language imports are left in place; bundlers drop them (`sideEffects` in `package.json` is narrow enough).
+
+### Rendering Markdown/MDX fences
+
+`highlightStatic` only transforms literal `<Highlight>` usages in `.svelte` files. Markdown/MDX/mdsvex code fences never go through the Svelte compiler at all, so `svelte-highlight/fence` provides a separate, framework-agnostic building block: `parseMeta(meta)` and `highlightFence({ code, lang, meta })`, a plain async function with zero Svelte dependency.
+
+```js
+import { highlightFence } from "svelte-highlight/fence";
+
+const html = await highlightFence({
+  code: 'const add = (a, b) => a + b;\nconst sub = (a, b) => a - b;\nexport { add, sub };',
+  lang: "typescript",
+  meta: '{1,3-5} title="app.ts"',
+});
+```
+
+`lang` must be the grammar's canonical file name (see "[Loading a language by name](#loading-a-language-by-name)"); it rejects with `LanguageLoadError` for an unrecognized one. `meta` is the Expressive Code/Shiki-style vocabulary standardized on by tools like Astro, Starlight, and rehype-pretty-code: a bare `{1,3-5}` or `mark={1,3-5}` marks lines, `ins={...}`/`del={...}` mark insertions/deletions, `title="..."` sets a title, and `showLineNumbers` is a bare flag. The output wraps each line in `<span class="line" data-line-state="mark|ins|del">` (only when a state applies) inside a `<pre class="hljs" data-language="...">`, so a `mark`/`ins`/`del`-aware stylesheet can target `[data-line-state]` the same way it would target Expressive Code or Shiki output.
+
+**mdsvex.** Wire `highlightFence` into `highlight.highlighter`, whose signature is `(code, lang, meta) => string | Promise<string>`:
+
+```js
+// mdsvex.config.js
+import { highlightFence } from "svelte-highlight/fence";
+
+/** @type {import("mdsvex").MdsvexOptions} */
+const config = {
+  highlight: {
+    highlighter: (code, lang, meta) => highlightFence({ code, lang, meta }),
+  },
+};
+
+export default config;
+```
+
+**markdown-it.** Wire it into the `highlight` constructor option, whose signature is `(str, lang, attrs) => string` — markdown-it inserts the returned string verbatim (no further escaping), and `highlight` isn't allowed to be `async`, so pre-render fences you know about or fall back to a sync path for the rest:
+
+```js
+import MarkdownIt from "markdown-it";
+import { highlightFence } from "svelte-highlight/fence";
+
+const md = new MarkdownIt({
+  highlight(str, lang, attrs) {
+    // highlightFence is async; markdown-it's highlight isn't, so either
+    // pre-highlight fences in a separate async pass before render() and
+    // look the result up here, or fall back to escaped plain text.
+    return md.utils.escapeHtml(str);
+  },
+});
+```
+
+**rehype.** `rehype`/`unist-util-visit` are the consumer's dependencies, not this package's. A rehype plugin walks the hast tree *after* `remark-rehype` has already converted fenced code to `<pre><code class="language-*">` — the fence's `meta` string isn't part of that hast by default, only `lang` (via the `language-*` class), so pass `meta` through only if an earlier remark step attached it (e.g. `node.data.hProperties["data-meta"] = mdastNode.meta`):
+
+```js
+import { visit } from "unist-util-visit";
+import { highlightFence } from "svelte-highlight/fence";
+
+function rehypeHighlightFence() {
+  return async (tree) => {
+    const nodes = [];
+    visit(tree, "element", (node, index, parent) => {
+      if (node.tagName !== "pre" || parent === undefined || index === undefined) return;
+      const code = node.children.find((child) => child.tagName === "code");
+      if (code) nodes.push({ node, index, parent, code });
+    });
+
+    for (const { node, index, parent, code } of nodes) {
+      const lang = code.properties?.className
+        ?.map(String)
+        .find((c) => c.startsWith("language-"))
+        ?.slice("language-".length);
+      if (!lang) continue;
+
+      const html = await highlightFence({
+        code: code.children.map((c) => (c.type === "text" ? c.value : "")).join(""),
+        lang,
+        meta: code.properties?.["data-meta"],
+      });
+      parent.children[index] = { type: "raw", value: html };
+    }
+  };
+}
+```
 
 ## Action
 
