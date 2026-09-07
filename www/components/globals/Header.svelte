@@ -158,6 +158,7 @@
     "/preview-crontab": "crontab language preview",
     "/preview-graphviz": "Graphviz DOT language preview",
     "/preview-plantuml": "PlantUML language preview",
+    "/preview-structurizr": "Structurizr DSL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
