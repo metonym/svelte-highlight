@@ -74,6 +74,14 @@
 
   const gitMarkup = "<AnsiOutput {text} />";
 
+  /** @param {string} uri */
+  const osc8 = (uri) => `${ESC}]8;;${uri}${ESC}\\`;
+  const links = [
+    `see ${osc8("https://example.com")}docs${osc8("")} for setup,`,
+    `or ${osc8("javascript:alert(1)")}this${osc8("")} which renders as plain text.`,
+  ].join("\n");
+  const linksMarkup = "<AnsiOutput {text} />";
+
   const lightMarkup = [
     "<AnsiOutput",
     "  {text}",
@@ -121,6 +129,7 @@
   );
   const themedSnippet = snippetFor("AnsiOutput", buildLog, themedMarkup);
   const gitSnippet = snippetFor("AnsiOutput", gitDiff, gitMarkup);
+  const linksSnippet = snippetFor("AnsiOutput", links, linksMarkup);
   const lightSnippet = snippetFor("AnsiOutput", vitest, lightMarkup);
 </script>
 
@@ -165,6 +174,18 @@
 </div>
 <div class="mb-5">
   <AnsiOutput text={gitDiff} />
+</div>
+
+<p class="label-01 mb-3">
+  OSC 8 hyperlinks. Only <code class="code">http:</code>,
+  <code class="code">https:</code>, and <code class="code">mailto:</code> render
+  as links; other schemes render as plain text.
+</p>
+<div class="mb-3">
+  <HighlightSvelte code={linksSnippet} class={THEME_MODULE_NAME} />
+</div>
+<div class="mb-5">
+  <AnsiOutput text={links} />
 </div>
 
 <p class="label-01 mb-3">
