@@ -158,6 +158,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "log",
   "gdshader",
   "shaderlab",
+  "ink",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

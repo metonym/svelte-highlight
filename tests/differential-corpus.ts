@@ -618,6 +618,17 @@ HTTP 200
 jsonpath "$.id" == 1
 header "Content-Type" contains "json"
 `,
+  ink: `=== knot_greeting ===
+Hello, traveler!
+* [Ask about the weather]
+    -> weather
+* [Say goodbye] -> END
+
+= weather
+~ temp x = 5
+{x > 3: It's warm today. | It's a bit chilly.}
+-> knot_greeting
+`,
   jinja: `{# greeting #}
 {% macro hello(name) %}
   <p>Hello {{ name | e }}</p>
