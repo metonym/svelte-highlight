@@ -12,6 +12,11 @@ export type HighlightSvelteProps = HTMLAttributes<HTMLPreElement> &
   };
 
 export type HighlightSvelteEvents = {
+  /**
+   * Fires once per highlight (when `code` changes and the highlighting
+   * result actually changes), including when the result is empty (empty
+   * `code`).
+   */
   highlight: CustomEvent<{
     /**
      * The highlighted HTML as a string.
