@@ -62,6 +62,15 @@ describe("highlightFence", () => {
     expect(html).toContain('data-show-line-numbers="true"');
   });
 
+  it('resolves an alias like "ts" to its canonical grammar', async () => {
+    const html = await highlightFence({
+      code: "const x: number = 1;",
+      lang: "ts",
+    });
+
+    expect(html).toContain('data-language="typescript"');
+  });
+
   it("rejects with Unknown language for an unresolvable lang", async () => {
     await expect(
       highlightFence({ code: "x", lang: "not-a-real-language" }),

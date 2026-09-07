@@ -38,10 +38,11 @@ export declare function resolveLanguageName(name: string): string | undefined;
  * `parseMeta`), wrapped in a `<pre class="hljs" data-language="...">` that
  * carries `data-title`/`data-show-line-numbers` when `meta` sets them.
  *
- * `lang` must be the grammar's canonical file name (e.g. `"typescript"`,
- * not `"ts"`) - alias resolution is the caller's job. Rejects with
- * `LanguageLoadError` (`Unknown language: "<lang>"`) when `lang` doesn't
- * resolve to a shipped grammar.
+ * `lang` accepts either the grammar's canonical file name (e.g.
+ * `"typescript"`) or a known alias (e.g. `"ts"`) - resolved internally via
+ * `resolveLanguageName`. Rejects with `LanguageLoadError`
+ * (`Unknown language: "<lang>"`) when neither resolves to a shipped
+ * grammar.
  */
 export declare function highlightFence(options: {
   code: string;
