@@ -174,6 +174,7 @@ exports[`Languages 1`] = `
   "livescript",
   "llvm",
   "logql",
+  "lookml",
   "lsl",
   "lua",
   "luau",
