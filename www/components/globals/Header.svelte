@@ -165,6 +165,7 @@
     "/preview-regex": "Regular expression language preview",
     "/preview-powerquery": "Power Query M language preview",
     "/preview-lookml": "LookML language preview",
+    "/preview-tsql": "T-SQL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
