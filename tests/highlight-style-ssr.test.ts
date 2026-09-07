@@ -60,6 +60,7 @@ describe("HighlightStyle SSR", () => {
     expect(body).not.toContain("<style>");
     expect(body).toContain("--shl-fg:#000000");
     expect(body).toContain("--shl-bg:#ffffff");
+    expect(body).toContain("color-scheme:light");
   });
 
   it("merges a light/dark palette pair via an @supports light-dark() override, with a plain light baseline inline", async () => {

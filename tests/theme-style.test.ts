@@ -96,13 +96,15 @@ describe("varsToStyle", () => {
 });
 
 describe("paletteStyle", () => {
-  it("serializes a single palette's vars", () => {
+  it("serializes a single palette's vars plus its color-scheme", () => {
     const palette = {
       name: "test",
       colorScheme: "dark" as const,
       vars: { "--shl-fg": "#fff", "--shl-bg": "#000" },
     };
-    expect(paletteStyle(palette)).toBe("--shl-fg:#fff;--shl-bg:#000");
+    expect(paletteStyle(palette)).toBe(
+      "--shl-fg:#fff;--shl-bg:#000;color-scheme:dark",
+    );
   });
 });
 
