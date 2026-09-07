@@ -292,7 +292,7 @@ bun scripts/import-textmate-theme.ts ./night-owl-color-theme.json ./night-owl.pa
 
 ## Styling
 
-Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility. Legacy styles are stable and will not be removed. One concrete reason to pick this path over `ThemePalette`: `base.css` assumes the default `hljs-` class prefix, so projects using a custom `classPrefix` should stay here.
+Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility. Legacy styles are stable and will not be removed. One concrete reason to pick this path over `ThemePalette`: `base.css` assumes the default `hljs-` class prefix, so projects using a custom `classPrefix` should stay here. 45 of the styles (90 dark/light files) are original pairs authored by svelte-highlight rather than ported from highlight.js, marked as custom in the gallery and in `SUPPORTED_STYLES.md`.
 
 There are two ways to apply `highlight.js` styles.
 
