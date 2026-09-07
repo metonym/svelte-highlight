@@ -68,6 +68,7 @@
   import { kvPreviewSnippets } from "@www/preview/kv-preview-snippets";
   import { ldscriptPreviewSnippets } from "@www/preview/ldscript-preview-snippets";
   import { leanPreviewSnippets } from "@www/preview/lean-preview-snippets";
+  import { logPreviewSnippets } from "@www/preview/log-preview-snippets";
   import { logqlPreviewSnippets } from "@www/preview/logql-preview-snippets";
   import { lookmlPreviewSnippets } from "@www/preview/lookml-preview-snippets";
   import { luauPreviewSnippets } from "@www/preview/luau-preview-snippets";
@@ -204,6 +205,7 @@
   import kv from "svelte-highlight/languages/kv";
   import ldscript from "svelte-highlight/languages/ldscript";
   import lean from "svelte-highlight/languages/lean";
+  import log from "svelte-highlight/languages/log";
   import logql from "svelte-highlight/languages/logql";
   import lookml from "svelte-highlight/languages/lookml";
   import luau from "svelte-highlight/languages/luau";
@@ -269,7 +271,7 @@
   import yara from "svelte-highlight/languages/yara";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery" | "lookml" | "tsql" | "plsql" | "turtle" | "textproto" | "ron" | "hocon" | "csv"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery" | "lookml" | "tsql" | "plsql" | "turtle" | "textproto" | "ron" | "hocon" | "csv" | "log"} */
   export let language;
 
   const registry = {
@@ -409,6 +411,7 @@
     ron: { lang: ron, snippets: ronPreviewSnippets },
     hocon: { lang: hocon, snippets: hoconPreviewSnippets },
     csv: { lang: csv, snippets: csvPreviewSnippets },
+    log: { lang: log, snippets: logPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
