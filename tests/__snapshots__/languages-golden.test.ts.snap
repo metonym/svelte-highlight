@@ -233,6 +233,13 @@ true false null
 /regex/ #hashtag @annotation</span>"
 `;
 
+exports[`golden snapshot: djot 1`] = `
+"// comment
+&quot;string&quot; &#x27;string&#x27; 123 3.14
+true false null
+/regex/ #hashtag @annotation"
+`;
+
 exports[`golden snapshot: dns 1`] = `"<span class="hljs-keyword">a</span> <span class="hljs-keyword">aaaa</span> <span class="hljs-keyword">afsdb</span> <span class="hljs-keyword">apl</span> <span class="hljs-keyword">caa</span> <span class="hljs-keyword">cdnskey</span> <span class="hljs-keyword">cds</span> <span class="hljs-keyword">cert</span> <span class="hljs-keyword">cname</span> <span class="hljs-keyword">dhcid</span> <span class="hljs-keyword">dlv</span> <span class="hljs-keyword">dname</span> <span class="hljs-keyword">dnskey</span> <span class="hljs-keyword">ds</span> <span class="hljs-keyword">hip</span> <span class="hljs-keyword">ipseckey</span> <span class="hljs-keyword">key</span> <span class="hljs-keyword">kx</span> <span class="hljs-keyword">loc</span> <span class="hljs-keyword">mx</span> <span class="hljs-keyword">naptr</span> <span class="hljs-keyword">ns</span> <span class="hljs-keyword">nsec</span> <span class="hljs-keyword">nsec3</span> <span class="hljs-keyword">nsec3param</span> <span class="hljs-keyword">ptr</span> <span class="hljs-keyword">rrsig</span> <span class="hljs-keyword">rp</span> <span class="hljs-keyword">sig</span> <span class="hljs-keyword">soa</span> <span class="hljs-keyword">srv</span> <span class="hljs-keyword">sshfp</span> <span class="hljs-keyword">ta</span> <span class="hljs-keyword">tkey</span> <span class="hljs-keyword">tlsa</span> <span class="hljs-keyword">tsig</span> <span class="hljs-keyword">txt</span>"`;
 
 exports[`golden snapshot: dockerfile 1`] = `"<span class="hljs-keyword">from</span> <span class="hljs-keyword">maintainer</span> <span class="hljs-keyword">expose</span> <span class="hljs-keyword">env</span> <span class="hljs-keyword">arg</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">onbuild</span> <span class="hljs-keyword">stopsignal</span>"`;
