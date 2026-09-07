@@ -1767,6 +1767,18 @@ doc.lineRange(50_000, 50_040); // 40 highlighted lines in O(window + interval)
 doc.append(moreCode); // streaming growth, no re-tokenization
 ```
 
+`Typewriter`'s tokenizer is available the same way, for a custom reveal UI or non-DOM use: `svelte-highlight/typewriter-units` exposes `tokenizeTypewriter`, `buildUnitMarkup`, `createTypewriterSplitter`, and `computeWordBoundaries` headlessly.
+
+```js
+import {
+  computeWordBoundaries,
+  tokenizeTypewriter,
+} from "svelte-highlight/typewriter-units";
+
+const units = tokenizeTypewriter(highlighted);
+const wordBoundaries = computeWordBoundaries(units); // for word-by-word reveal
+```
+
 `lineRange` tokenizes lazily and caches the most recently resolved window, so scrolling through even a huge document only ever pays for the lines actually requested. Its output matches `HighlightStream`'s live (non-canonicalized) parse: constructs needing multi-line lookahead across a window's edge can render slightly differently than `registry.highlight()`'s canonical output, the same tradeoff streaming already makes. `TokenizedDocument` doesn't support mid-document edits -- `append` and full `setCode` resets only. For a bounded, editable document (not a windowed/virtualized one), `HighlightEditable` solves mid-document editing, built on its own checkpoint-resume re-tokenizer (`src/incremental-tokenize.js`, not itself a public export). The two aren't unified today -- there's no single primitive yet for a document that's both editable and virtualized.
 
 ### Without virtualization
