@@ -173,6 +173,7 @@
     "/preview-hocon": "HOCON language preview",
     "/preview-csv": "CSV language preview",
     "/preview-log": "Log file language preview",
+    "/preview-gdshader": "Godot Shading Language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
