@@ -2,6 +2,11 @@
   position: relative;
 }
 
+.wrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .langtag::after {
   content: attr(data-language);
   position: absolute;

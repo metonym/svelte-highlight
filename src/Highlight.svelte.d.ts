@@ -54,6 +54,19 @@ export type LangtagProps = {
    * @default "1em"
    */
   "--langtag-padding"?: string;
+
+  /**
+   * Wrap long lines instead of scrolling horizontally: sets
+   * `white-space: pre-wrap; overflow-wrap: anywhere` on the container.
+   *
+   * Only affects the built-in `LangTag` fallback; a consumer overriding the
+   * default slot must set `white-space` themselves. Not compatible with
+   * `HighlightStream`'s `virtualize` mode or `HighlightVirtual`, which
+   * assume one fixed-height line per row.
+   *
+   * @default false
+   */
+  wrap?: boolean;
 };
 
 export type HighlightProps = HTMLAttributes<HTMLPreElement> &

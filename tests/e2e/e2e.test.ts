@@ -13,6 +13,7 @@ import HighlightDispatchOnce from "./Highlight.dispatchOnce.test.svelte";
 import HighlightEmptyCode from "./Highlight.emptyCode.test.svelte";
 import HighlightEvents from "./Highlight.events.test.svelte";
 import Highlight from "./Highlight.test.svelte";
+import HighlightWrap from "./Highlight.wrap.test.svelte";
 import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
@@ -414,6 +415,12 @@ test("Highlight - dispatches on:highlight once per change, not per re-render", a
   await expect(page.getByTestId("dispatch-count")).toHaveText("1");
   await page.getByRole("button", { name: "Toggle langtag" }).click();
   await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+});
+
+test("Highlight - wrap sets white-space: pre-wrap", async ({ mount, page }) => {
+  await mount(HighlightWrap);
+
+  await expect(page.locator("pre")).toHaveCSS("white-space", "pre-wrap");
 });
 
 test("HighlightAuto - exposes the scope-event stream via slot prop and on:highlight detail", async ({

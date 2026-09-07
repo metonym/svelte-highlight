@@ -10,6 +10,9 @@
   /** @type {boolean} */
   export let langtag = false;
 
+  /** @type {boolean} */
+  export let wrap = false;
+
   import { afterUpdate, createEventDispatcher } from "svelte";
   import { registerAll } from "./engine.js";
   // All shipped grammars so auto-detect sees customs too. Static import keeps
@@ -62,11 +65,12 @@
   }
 </script>
 
-<slot {highlighted} {langtag} languageName={language} {events}>
+<slot {highlighted} {langtag} {wrap} languageName={language} {events}>
   <LangTag
     {...$$restProps}
     languageName={language}
     {langtag}
+    {wrap}
     {highlighted}
     {code}
   />

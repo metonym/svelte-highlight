@@ -7,6 +7,9 @@
   /** @type {boolean} */
   export let langtag = false;
 
+  /** @type {boolean} */
+  export let wrap = false;
+
   import { afterUpdate, createEventDispatcher } from "svelte";
   import svelte from "./languages/svelte";
   import { ensureRegistered, registry } from "./registry.js";
@@ -42,11 +45,12 @@
   }
 </script>
 
-<slot {highlighted} {langtag} languageName="svelte" {events}>
+<slot {highlighted} {langtag} {wrap} languageName="svelte" {events}>
   <LangTag
     {...$$restProps}
     languageName="svelte"
     {langtag}
+    {wrap}
     {highlighted}
     {code}
   />

@@ -10,10 +10,14 @@
 
   /** @type {boolean} */
   export let langtag = false;
+
+  /** @type {boolean} */
+  export let wrap = false;
 </script>
 
 <pre
   class:langtag={langtag}
+  class:wrap={wrap}
   data-language={languageName}
   style:overflow-x="var(--overflow-x, auto)"
   style:overflow-y="var(--overflow-y, auto)"
