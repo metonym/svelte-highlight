@@ -159,6 +159,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "gdshader",
   "shaderlab",
   "ink",
+  "yarnspinner",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

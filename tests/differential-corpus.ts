@@ -1639,6 +1639,25 @@ rule SuspiciousExecutable : malware
         uint16(0) == 0x5A4D and $a and $hex and pe.number_of_sections > 3
 }
 `,
+  yarnspinner: `title: Start
+tags:
+---
+Guard: Halt! Who goes there? #line:abc123
+-> Explain yourself
+    <<jump Explain>>
+-> Attack
+    <<set $fought to true>>
+    <<if visited("Fight")>>
+        You've fought before.
+    <<endif>>
+===
+
+title: Explain
+---
+Traveler: I mean no harm, {$player_name}.
+[wave]Just passing through.[/wave]
+===
+`,
   zig: `const std = @import("std");
 
 pub fn main() !void {
