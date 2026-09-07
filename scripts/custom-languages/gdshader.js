@@ -70,7 +70,7 @@ const GDSHADER_BUILTIN_VARS = [
 
 /** @type {import("highlight.js").LanguageFn} */
 function register(hljs) {
-  const base = glslRegister(hljs);
+  const base = /** @type {any} */ (glslRegister(hljs));
 
   const SHADER_META = {
     className: "meta",

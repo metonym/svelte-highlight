@@ -119,7 +119,7 @@ const TSQL_EXTRA_BUILTINS = [
 
 /** @type {import("highlight.js").LanguageFn} */
 function register(hljs) {
-  const base = sqlRegister(hljs);
+  const base = /** @type {any} */ (sqlRegister(hljs));
 
   const GO_BATCH = {
     className: "meta",

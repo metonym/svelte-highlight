@@ -1,7 +1,8 @@
+/** @param {string} word */
 function ci(word) {
   return word
     .split("")
-    .map((ch) => {
+    .map((/** @type {string} */ ch) => {
       const upper = ch.toUpperCase();
       const lower = ch.toLowerCase();
       return upper === lower ? ch : `[${upper}${lower}]`;
@@ -9,6 +10,7 @@ function ci(word) {
     .join("");
 }
 
+/** @param {string[]} words */
 function ciAlt(words) {
   return words.map(ci).join("|");
 }

@@ -15,7 +15,7 @@ function defineCrontab(hljs) {
     relevance: 0,
   };
 
-  const fieldContains = (stepRelevance) => [
+  const fieldContains = (/** @type {number} */ stepRelevance) => [
     {
       className: "number",
       begin: /[*\d][\d,-]*\/\d+/,

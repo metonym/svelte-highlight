@@ -102,7 +102,7 @@ const PLSQL_EXTRA_BUILTINS = [
 
 /** @type {import("highlight.js").LanguageFn} */
 function register(hljs) {
-  const base = sqlRegister(hljs);
+  const base = /** @type {any} */ (sqlRegister(hljs));
 
   const MULTI_WORD_KEYWORD = {
     className: "keyword",
