@@ -1415,7 +1415,7 @@ Per-chunk work is O(tail), not O(stream length so far): finished output is seale
 <HighlightStream language={typescript} {code} {done} virtualize style="height: 20em;" />
 ```
 
-`virtualize` renders only the lines within the scrolled viewport (plus `overscan`), the same windowing `HighlightVirtual` does for static documents -- a stream that runs to tens of thousands of lines still costs a couple dozen DOM nodes. It swaps the sealed-chunk session for `TokenizedDocument` (see [Large documents](#large-documents) below), so output always reflects the streaming (non-canonicalized) parse, even once `done` -- unlike the default mode, which upgrades to a canonical final render. `on:highlight` isn't dispatched in this mode, since materializing the full HTML on every repaint would defeat the point of windowing; `on:done`, the caret, and `autoScroll` all keep working.
+`virtualize` renders only the lines within the scrolled viewport (plus `overscan`), the same windowing `HighlightVirtual` does for static documents -- a stream that runs to tens of thousands of lines still costs a couple dozen DOM nodes. It swaps the sealed-chunk session for `TokenizedDocument` (see [Large documents](#large-documents) below), so output always reflects the streaming (non-canonicalized) parse, even once `done` -- unlike the default mode, which upgrades to a canonical final render. `on:highlight` isn't dispatched in this mode, since materializing the full HTML on every repaint would defeat the point of windowing; `on:done`, the caret, and `autoScroll` all keep working. `on:windowchange` fires with `{ start, end, lineCount }` whenever the rendered window moves, so you can show something like "lines *N*-*M* of *T*" without counting DOM nodes yourself.
 
 ## Large documents
 
@@ -1796,6 +1796,7 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
 
 - **on:highlight**: fired after each highlight pass, with `{ highlighted }` -- not dispatched when `virtualize` is set
 - **on:done**: fired after the final full highlight once `done` is set
+- **on:windowchange**: fired with `{ start, end, lineCount }` whenever the rendered window moves -- only dispatched when `virtualize` is set
 
 ```svelte
 <HighlightStream
