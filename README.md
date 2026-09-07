@@ -1605,7 +1605,7 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 
 #### Dispatched Events
 
-- **on:highlight**: fired after `code` is highlighted
+- **on:highlight**: fired after `code` is highlighted, once per change (not on unrelated re-renders), including when the result is empty (empty `code`)
 
 ```svelte
 <Highlight
@@ -1708,7 +1708,7 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 
 #### Dispatched Events
 
-- **on:highlight**: fired after `code` is highlighted
+- **on:highlight**: fired after `code` is highlighted, once per change (not on unrelated re-renders), including when the result is empty (empty `code`)
 
 ```svelte
 <HighlightSvelte
@@ -1746,7 +1746,7 @@ import type { LanguageName } from "svelte-highlight";
 
 #### Dispatched Events
 
-- **on:highlight**: fired after `code` is highlighted
+- **on:highlight**: fired after `code` is highlighted, once per change (not on unrelated re-renders), including when the result is empty (empty `code`, or no candidate language matches)
 
 ```svelte
 <HighlightAuto
