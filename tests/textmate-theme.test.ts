@@ -1,4 +1,7 @@
-import { fromTextMate } from "../src/textmate-theme.js";
+import {
+  fromTextMate,
+  fromTextMateWithWarnings,
+} from "../src/textmate-theme.js";
 
 describe("fromTextMate", () => {
   it("resolves fg/bg from colors[editor.foreground/background]", () => {
@@ -349,5 +352,31 @@ describe("fromTextMate", () => {
     });
     expect(() => JSON.stringify(palette)).not.toThrow();
     expect(JSON.parse(JSON.stringify(palette))).toEqual(palette);
+  });
+});
+
+describe("fromTextMateWithWarnings", () => {
+  it("aggregates onWarn calls into a warnings array alongside the palette", () => {
+    const theme = {
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [
+        { scope: "totally.unknown.scope", settings: { foreground: "#bad" } },
+        {
+          scope: "source.js entity.name.function",
+          settings: { foreground: "#bad" },
+        },
+      ],
+    };
+    const { palette, warnings } = fromTextMateWithWarnings(theme);
+    expect(warnings).toHaveLength(2);
+    expect(palette).toEqual(fromTextMate(theme));
+  });
+
+  it("returns an empty warnings array for a clean theme", () => {
+    const { warnings } = fromTextMateWithWarnings({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [{ scope: "keyword", settings: { foreground: "#f0f" } }],
+    });
+    expect(warnings).toEqual([]);
   });
 });

@@ -52,3 +52,13 @@ export function fromTextMate(
   theme: TextMateTheme,
   options?: FromTextMateOptions,
 ): ThemePalette;
+
+/**
+ * Convenience wrapper around `fromTextMate` that aggregates every `onWarn`
+ * call into a returned `warnings` array, for the common "how many entries
+ * mapped" question.
+ */
+export function fromTextMateWithWarnings(theme: TextMateTheme): {
+  palette: ThemePalette;
+  warnings: string[];
+};

@@ -285,3 +285,16 @@ export function fromTextMate(theme, options = {}) {
     vars,
   };
 }
+
+/**
+ * Convenience wrapper around `fromTextMate` that aggregates every `onWarn`
+ * call instead of requiring the caller to collect them manually.
+ * @param {TextMateTheme} theme
+ * @returns {{ palette: ThemePalette, warnings: string[] }}
+ */
+export function fromTextMateWithWarnings(theme) {
+  /** @type {string[]} */
+  const warnings = [];
+  const palette = fromTextMate(theme, { onWarn: (m) => warnings.push(m) });
+  return { palette, warnings };
+}
