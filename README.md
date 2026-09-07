@@ -986,6 +986,15 @@ The easiest way to author one is with `svelte-highlight/compat`'s `fromHighlight
 
 `fromHighlightJs` needs `highlight.js` itself, which svelte-highlight does not bundle — install it as your own dependency (`npm install highlight.js`). It's only imported the first time you call `fromHighlightJs`, so pages that never use it don't pay for it.
 
+`fromHighlightJs` also accepts an optional third `source` argument (raw source text, e.g. via a bundler's `?raw` import) to recover array-membership `on:begin` guards the compiled callback alone can't expose, and the returned object carries a `warnings: string[]` field (empty when clean) so you can detect a degraded conversion without reading the console.
+
+```ts
+const language = await fromHighlightJs("custom-language", defineCustomLanguage, grammarSourceText);
+if (language.warnings.length > 0) {
+  console.error("custom-language degraded:", language.warnings);
+}
+```
+
 If you're using TypeScript, use the `LanguageType` interface to type the language.
 
 ```ts
