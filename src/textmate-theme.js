@@ -60,6 +60,12 @@ const STARTER_TABLE = [
   ["markup.underline.link", "link"],
   ["markup.inserted", "addition"],
   ["markup.deleted", "deletion"],
+  // "deletion" is the closest visual analog hljs offers for invalid/illegal
+  // syntax — an approximation, not a semantic match.
+  ["invalid", "deletion"],
+  ["markup.raw", "code"],
+  ["markup.fenced_code", "code"],
+  ["meta.embedded", "meta"],
 ];
 
 const STARTER_ROWS = STARTER_TABLE.map(([prefix, target]) => ({

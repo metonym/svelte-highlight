@@ -218,6 +218,58 @@ describe("fromTextMate", () => {
     expect(palette.name).toBe("night-owl");
   });
 
+  it("maps invalid(.illegal), markup.raw/fenced_code, and meta.embedded to their starter-table targets", () => {
+    const palette = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [
+        { scope: "invalid", settings: { foreground: "#a1" } },
+        { scope: "markup.raw", settings: { foreground: "#a2" } },
+        { scope: "meta.embedded.block.html", settings: { foreground: "#a4" } },
+      ],
+    });
+    expect(palette.vars["--shl-deletion"]).toBe("#a1");
+    expect(palette.vars["--shl-code"]).toBe("#a2");
+    expect(palette.vars["--shl-meta"]).toBe("#a4");
+
+    const illegal = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [
+        { scope: "invalid.illegal", settings: { foreground: "#a1" } },
+      ],
+    });
+    expect(illegal.vars["--shl-deletion"]).toBe("#a1");
+
+    const fenced = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [
+        { scope: "markup.fenced_code", settings: { foreground: "#a3" } },
+      ],
+    });
+    expect(fenced.vars["--shl-code"]).toBe("#a3");
+  });
+
+  it("already generalizes starter-table prefixes to more specific scopes without dedicated rows", () => {
+    const palette = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [
+        {
+          scope: "keyword.control.conditional",
+          settings: { foreground: "#b1" },
+        },
+        { scope: "keyword.operator.new", settings: { foreground: "#b2" } },
+        {
+          scope: "entity.name.tag.support",
+          settings: { foreground: "#b3" },
+        },
+        { scope: "string.quoted.docstring", settings: { foreground: "#b4" } },
+      ],
+    });
+    expect(palette.vars["--shl-keyword"]).toBe("#b1");
+    expect(palette.vars["--shl-operator"]).toBe("#b2");
+    expect(palette.vars["--shl-tag"]).toBe("#b3");
+    expect(palette.vars["--shl-string"]).toBe("#b4");
+  });
+
   it("returns a plain, serializable ThemePalette", () => {
     const palette = fromTextMate({
       name: "night-owl",
