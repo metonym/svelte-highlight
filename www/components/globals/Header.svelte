@@ -169,6 +169,7 @@
     "/preview-plsql": "PL/SQL language preview",
     "/preview-turtle": "Turtle/RDF language preview",
     "/preview-textproto": "Protocol Buffer text format language preview",
+    "/preview-ron": "RON language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
