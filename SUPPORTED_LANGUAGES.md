@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 320 languages: 193 exported from highlight.js@11.12.0, 127 custom grammars added by svelte-highlight
+> 321 languages: 193 exported from highlight.js@11.12.0, 128 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -3471,6 +3471,20 @@
 
   // base import
   import { step21 } from "svelte-highlight/languages";
+</script>
+```
+
+## structurizr (`structurizr`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import structurizr from "svelte-highlight/languages/structurizr";
+
+  // base import
+  import { structurizr } from "svelte-highlight/languages";
 </script>
 ```
 
