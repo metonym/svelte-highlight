@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
 import AnsiOutputContrast from "./AnsiOutput.contrast.test.svelte";
 import AnsiOutputLink from "./AnsiOutput.link.test.svelte";
+import AnsiOutputStreaming from "./AnsiOutput.streaming.test.svelte";
 import AnsiOutput from "./AnsiOutput.test.svelte";
 import CodeWindow from "./CodeWindow.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
@@ -211,6 +212,34 @@ test("AnsiOutput - OSC 8 hyperlink renders as an anchor", async ({
   const unsafe = page.getByTestId("ansi-unsafe");
   await expect(unsafe.locator("a")).toHaveCount(0);
   await expect(unsafe.locator("span", { hasText: "here" })).toBeVisible();
+});
+
+test("AnsiOutput - streamed appends match a single non-streamed render", async ({
+  mount,
+  page,
+}) => {
+  await mount(AnsiOutputStreaming);
+
+  const append = page.getByTestId("append-chunk");
+  // Each click appends a chunk; the 2nd and 4th split an SGR sequence and
+  // an OSC 8 URI respectively across the append() boundary.
+  await append.click();
+  await append.click();
+  await append.click();
+  await append.click();
+
+  const streamed = page.getByTestId("streamed");
+  await expect(streamed.getByText("green")).toHaveCSS(
+    "color",
+    "rgb(0, 205, 0)",
+  );
+  const link = streamed.locator("a");
+  await expect(link).toHaveText("docs");
+  await expect(link).toHaveAttribute("href", "https://example.com");
+
+  const reference = page.getByTestId("reference");
+  await expect(streamed).toHaveText(await reference.innerText());
+  expect(await streamed.innerHTML()).toBe(await reference.innerHTML());
 });
 
 test("Highlight", async ({ mount, page }) => {
