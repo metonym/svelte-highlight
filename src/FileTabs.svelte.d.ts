@@ -10,6 +10,10 @@ export type FileTabsProps = HTMLAttributes<HTMLDivElement> & {
 
   /**
    * Active file (`bind:active`).
+   * Reconciled whenever `files` changes: an unknown or stale value
+   * selects `files[0]`; if the previously active file is removed, its
+   * neighbor (same index, clamped to the new length) is selected
+   * instead; an empty `files` list sets this to `undefined`.
    * @default files[0]
    */
   active?: string;
