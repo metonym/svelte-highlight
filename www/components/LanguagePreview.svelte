@@ -109,6 +109,7 @@
   import { surrealqlPreviewSnippets } from "@www/preview/surrealql-preview-snippets";
   import { systemdPreviewSnippets } from "@www/preview/systemd-preview-snippets";
   import { templPreviewSnippets } from "@www/preview/templ-preview-snippets";
+  import { textprotoPreviewSnippets } from "@www/preview/textproto-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
   import { traceqlPreviewSnippets } from "@www/preview/traceql-preview-snippets";
   import { tsqPreviewSnippets } from "@www/preview/tsq-preview-snippets";
@@ -240,6 +241,7 @@
   import surrealql from "svelte-highlight/languages/surrealql";
   import systemd from "svelte-highlight/languages/systemd";
   import templ from "svelte-highlight/languages/templ";
+  import textproto from "svelte-highlight/languages/textproto";
   import toml from "svelte-highlight/languages/toml";
   import traceql from "svelte-highlight/languages/traceql";
   import tsq from "svelte-highlight/languages/tsq";
@@ -261,7 +263,7 @@
   import yara from "svelte-highlight/languages/yara";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery" | "lookml" | "tsql" | "plsql" | "turtle"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery" | "lookml" | "tsql" | "plsql" | "turtle" | "textproto"} */
   export let language;
 
   const registry = {
@@ -397,6 +399,7 @@
     tsql: { lang: tsql, snippets: tsqlPreviewSnippets },
     plsql: { lang: plsql, snippets: plsqlPreviewSnippets },
     turtle: { lang: turtle, snippets: turtlePreviewSnippets },
+    textproto: { lang: textproto, snippets: textprotoPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
