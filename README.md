@@ -1784,6 +1784,48 @@ Per-chunk work is O(tail), not O(stream length so far): finished output is seale
 
 `virtualize` renders only the lines within the scrolled viewport (plus `overscan`), the same windowing `HighlightVirtual` does for static documents -- a stream that runs to tens of thousands of lines still costs a couple dozen DOM nodes. It swaps the sealed-chunk session for `TokenizedDocument` (see [Large documents](#large-documents) below), so output always reflects the streaming (non-canonicalized) parse, even once `done` -- unlike the default mode, which upgrades to a canonical final render. `on:highlight` isn't dispatched in this mode, since materializing the full HTML on every repaint would defeat the point of windowing; `on:done`, the caret, and `autoScroll` all keep working. `on:windowchange` fires with `{ start, end, lineCount }` whenever the rendered window moves, so you can show something like "lines *N*-*M* of *T*" without counting DOM nodes yourself. Row math assumes one line per fixed-height row, so `virtualize` can't wrap lines -- it always renders with `white-space: pre`, overriding any `white-space` you pass through `$$restProps`.
 
+### Streaming Markdown with multiple fences
+
+`HighlightStream` highlights a single growing code buffer, but LLM chat output is Markdown: prose interleaved with several fenced code blocks, each in its own language. `svelte-highlight/fence`'s `createFenceSplitter` (see "[Rendering Markdown/MDX fences](#rendering-markdownmdx-fences)" above) turns that growing Markdown string into prose and fence segments, so you can drive one `HighlightStream` per fence as it streams in:
+
+```svelte
+<script>
+  import { HighlightStream, loadLanguage } from "svelte-highlight";
+  import { createFenceSplitter } from "svelte-highlight/fence";
+  import github from "svelte-highlight/styles/github";
+
+  const splitter = createFenceSplitter();
+  let segments = splitter.segments();
+  let done = false;
+
+  // Wire this up to your streaming source (fetch, WebSocket, SSE, ...).
+  async function stream() {
+    for (const chunk of chunks) {
+      splitter.append(chunk);
+      segments = splitter.segments();
+      await new Promise((r) => setTimeout(r, 30));
+    }
+    done = true;
+  }
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+{#each segments as segment (segment.id)}
+  {#if segment.kind === "text"}
+    <p style="white-space: pre-wrap">{segment.text}</p>
+  {:else}
+    {#await loadLanguage(segment.lang ?? "plaintext") then grammar}
+      <HighlightStream language={grammar} code={segment.code} done={!segment.open} />
+    {/await}
+  {/if}
+{/each}
+```
+
+Every segment's `id` is stable across both `append` (growing the buffer) and a full `set` (a regenerated buffer, keyed by common prefix) for everything before the first change, so the keyed `{#each}` never re-mounts a fence's `HighlightStream` just because more text arrived elsewhere in the document -- only the segment that actually changed gets a new instance. A `MarkdownStream` component that wraps this pattern is a separate deliverable; `createFenceSplitter` is the headless primitive underneath it.
+
 ## Large documents
 
 `HighlightVirtual` renders only the visible lines of a huge document (plus a small overscan margin) inside its own scroll container -- a 100k-line file costs a couple dozen DOM line nodes, not one per line. It exploits the same engine checkpoint/resume primitive `HighlightStream` uses for streaming, but for *random-access* windows into a static document instead of a growing tail.
@@ -2344,7 +2386,7 @@ The highlighting engine's output is a flat scope-event stream (`ScopeEvent[]`): 
 
 ### Stability tiers
 
-- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
+- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
 - **Generated data, versioned with the library:** `GrammarIR`/`GrammarState`. These come from the build pipeline and are consumed by `registerAll`; treat them as opaque payloads whose field-level structure may change in any minor release. Always load grammars from the same package version as the engine.
 
 ### Headless highlighting, isolated registry

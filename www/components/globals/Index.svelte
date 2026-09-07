@@ -18,6 +18,7 @@
   import EditableReadOnly from "@components/HighlightEditable/ReadOnly.svelte";
   import HighlightStreamBasic from "@components/HighlightStream/Basic.svelte";
   import HighlightStreamControls from "@components/HighlightStream/Controls.svelte";
+  import HighlightStreamMarkdownFences from "@components/HighlightStream/MarkdownFences.svelte";
   import HighlightStreamVirtualize from "@components/HighlightStream/Virtualize.svelte";
   import HighlightVirtualBasic from "@components/HighlightVirtual/Basic.svelte";
   import HighlightVirtualControls from "@components/HighlightVirtual/Controls.svelte";
@@ -681,6 +682,26 @@ export { add, mul };\`,
     />
   </Column>
   <Column xlg={10} lg={10} md={12}> <HighlightStreamVirtualize /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      LLM chat output is Markdown, not a single code buffer -- prose interleaved
+      with several fenced code blocks, each in its own language.
+      <code class="code">svelte-highlight/fence</code>'s
+      <code class="code">createFenceSplitter</code>
+      turns a growing Markdown string into prose and fence segments with stable
+      ids, so a keyed each block can drive one
+      <code class="code">HighlightStream</code>
+      per fence without re-mounting it as more text arrives elsewhere.
+    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="info"
+      title="Note:"
+      subtitle="Headless: createFenceSplitter has no Svelte dependency. A MarkdownStream component wrapping this pattern is a separate deliverable."
+    />
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightStreamMarkdownFences /> </Column>
 </Row>
 
 <Row class="mb-9">
