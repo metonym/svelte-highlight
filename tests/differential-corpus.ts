@@ -1185,6 +1185,27 @@ This is an example package.
 * item two
 
 This is **strong**, *emphasis*, and \`\`literal\`\`.`,
+  shaderlab: `Shader "Custom/Simple" {
+    Properties {
+        _MainTex ("Texture", 2D) = "white" {}
+        _Color ("Tint", Color) = (1,1,1,1)
+    }
+    SubShader {
+        Tags { "RenderType"="Opaque" }
+        Pass {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #include "UnityCG.cginc"
+
+            float4 frag() : SV_Target {
+                return float4(1, 0, 0, 1);
+            }
+            ENDCG
+        }
+    }
+}
+`,
   smithy: `$version: "2"
 
 namespace com.example
