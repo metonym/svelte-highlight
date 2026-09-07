@@ -270,6 +270,77 @@ describe("fromTextMate", () => {
     expect(palette.vars["--shl-string"]).toBe("#b4");
   });
 
+  it("maps a string-valued semanticTokenColors entry to foreground only", () => {
+    const palette = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [],
+      semanticTokenColors: { variable: "#c1c1c1" },
+    });
+    expect(palette.vars["--shl-variable"]).toBe("#c1c1c1");
+  });
+
+  it("maps an object-valued semanticTokenColors entry's bold/italic/underline/strikethrough", () => {
+    const palette = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [],
+      semanticTokenColors: {
+        function: {
+          foreground: "#d1d1d1",
+          bold: true,
+          italic: true,
+          underline: true,
+        },
+      },
+    });
+    expect(palette.vars["--shl-title-function_"]).toBe("#d1d1d1");
+    expect(palette.vars["--shl-title-function_-font-weight"]).toBe("bold");
+    expect(palette.vars["--shl-title-function_-font-style"]).toBe("italic");
+    expect(palette.vars["--shl-title-function_-text-decoration"]).toBe(
+      "underline",
+    );
+  });
+
+  it("maps strikethrough to line-through when underline is absent", () => {
+    const palette = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [],
+      semanticTokenColors: { comment: { strikethrough: true } },
+    });
+    expect(palette.vars["--shl-comment-text-decoration"]).toBe("line-through");
+  });
+
+  it("overrides a tokenColors match with a semanticTokenColors entry for the same target", () => {
+    const palette = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [{ scope: "variable", settings: { foreground: "#tok" } }],
+      semanticTokenColors: { variable: "#sem" },
+    });
+    expect(palette.vars["--shl-variable"]).toBe("#sem");
+  });
+
+  it("resolves a semanticTokenColors key with a modifier and language suffix via its base type", () => {
+    const palette = fromTextMate({
+      colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+      tokenColors: [],
+      semanticTokenColors: { "variable.readonly:typescript": "#e1e1e1" },
+    });
+    expect(palette.vars["--shl-variable"]).toBe("#e1e1e1");
+  });
+
+  it("calls onWarn for an unmapped semantic token type", () => {
+    const warnings: string[] = [];
+    fromTextMate(
+      {
+        colors: { "editor.foreground": "#eee", "editor.background": "#111" },
+        tokenColors: [],
+        semanticTokenColors: { unknownType: "#f1f1f1" },
+      },
+      { onWarn: (message) => warnings.push(message) },
+    );
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toMatch(/unknownType/);
+  });
+
   it("returns a plain, serializable ThemePalette", () => {
     const palette = fromTextMate({
       name: "night-owl",

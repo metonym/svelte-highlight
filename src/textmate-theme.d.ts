@@ -9,6 +9,16 @@ export interface TextMateTokenColor {
   };
 }
 
+/** One `semanticTokenColors` entry's value, VS Code's actual shape —
+ * distinct fields from `tokenColors`' `settings.fontStyle` string. */
+export interface TextMateSemanticTokenStyle {
+  foreground?: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+}
+
 /** A parsed VS Code / TextMate theme JSON object. JSONC parsing (comments,
  * trailing commas) is the caller's job — `fromTextMate` accepts plain
  * objects only. */
@@ -18,6 +28,9 @@ export interface TextMateTheme {
   /** VS Code workbench colors, e.g. `"editor.foreground"`. */
   colors?: Record<string, string>;
   tokenColors?: TextMateTokenColor[];
+  /** Semantic highlighting overlay, keyed `"<type>[.modifier...][:language]"`
+   * (e.g. `"variable.readonly:typescript"`) — resolved by base type only. */
+  semanticTokenColors?: Record<string, string | TextMateSemanticTokenStyle>;
 }
 
 export interface FromTextMateOptions {
