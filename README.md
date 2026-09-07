@@ -857,6 +857,7 @@ Use `bind:code` to keep your state in sync.
 
 - **Enter** inserts a newline.
 - **Tab** / **Shift+Tab** indent or dedent the selected lines (or insert one indent at the caret). Set the indent size with the `tabSize` prop (default `2`).
+- **Escape** then **Tab**/**Shift+Tab** moves keyboard focus out of the editor instead of indenting, so the block never traps focus. Any other key clears this and restores normal Tab behavior.
 - **Cmd/Ctrl+Z** undo and **Shift+Cmd/Ctrl+Z** (or **Ctrl+Y**) redo. Typing bursts collapse into a single undo step; cap the retained history with the `historyLimit` prop (default `200`).
 
 ### Dispatched Events
