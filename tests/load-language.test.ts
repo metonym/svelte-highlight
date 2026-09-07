@@ -1,5 +1,5 @@
 import { createRegistry, registerAll } from "../src/engine.js";
-import { loadLanguage } from "../src/load-language.js";
+import { LanguageLoadError, loadLanguage } from "../src/load-language.js";
 
 describe("loadLanguage", () => {
   it("loads a known language", async () => {
@@ -10,9 +10,12 @@ describe("loadLanguage", () => {
 
   it("rejects an unknown language", async () => {
     // @ts-expect-error — intentionally invalid name
-    await expect(loadLanguage("not-a-language")).rejects.toThrow(
-      /Unknown language/,
-    );
+    const promise = loadLanguage("not-a-language");
+    await expect(promise).rejects.toThrow(/Unknown language/);
+    await expect(promise).rejects.toBeInstanceOf(LanguageLoadError);
+    await promise.catch((error) => {
+      expect(error.language).toBe("not-a-language");
+    });
   });
 
   it("round-trips through ensureRegistered/registerAll with its dependencies", async () => {
