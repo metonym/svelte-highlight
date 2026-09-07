@@ -627,13 +627,24 @@ test("LineNumbers - sizes the gutter by the final rendered line number", async (
 }) => {
   await mount(LineNumbersGutterOverflow);
 
-  const gutterCells = page.locator("td.hljs");
-  await expect(gutterCells.last()).toHaveText("1001");
+  const smallGutterCells = page.getByTestId("small").locator("td.hljs");
+  await expect(smallGutterCells.last()).toHaveText("1001");
 
-  const overflows = await gutterCells
+  const smallOverflows = await smallGutterCells
     .last()
     .evaluate((el) => el.scrollWidth > el.clientWidth);
-  expect(overflows).toBe(false);
+  expect(smallOverflows).toBe(false);
+
+  // A much larger line count (6 digits) still gets a gutter wide enough to
+  // avoid overflow -- the calc()-based width scales linearly with digit
+  // count, not just the two digits DIGIT_WIDTH used to be tuned for.
+  const largeGutterCells = page.getByTestId("large").locator("td.hljs");
+  await expect(largeGutterCells.last()).toHaveText("100001");
+
+  const largeOverflows = await largeGutterCells
+    .last()
+    .evaluate((el) => el.scrollWidth > el.clientWidth);
+  expect(largeOverflows).toBe(false);
 });
 
 test("LineNumbers - langtag", async ({ mount, page }) => {
