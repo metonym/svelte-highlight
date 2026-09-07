@@ -12,6 +12,7 @@
   import HighlightWrap from "@components/Highlight/Wrap.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
+  import EditableComposition from "@components/HighlightEditable/Composition.svelte";
   import EditableCssHighlights from "@components/HighlightEditable/CssHighlights.svelte";
   import EditableReadOnly from "@components/HighlightEditable/ReadOnly.svelte";
   import HighlightStreamBasic from "@components/HighlightStream/Basic.svelte";
@@ -801,6 +802,18 @@ export default {
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <EditableReadOnly /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      There's no slot for
+      <code class="code">LineNumbers</code>
+      to wrap the editable block directly. Mirror
+      <code class="code">bind:code</code>
+      into a second, read-only <code class="code">Highlight</code> instance
+      wrapped in <code class="code">LineNumbers</code>, positioned alongside the
+      editor.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <EditableComposition /> </Column>
 </Row>
 
 <Row class="mb-9">
