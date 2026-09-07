@@ -46,10 +46,20 @@
   let done = false;
   let runId = 0;
   let easingName = "linear";
+  let skippedSpeed;
 
   $: easing = EASINGS[easingName];
 
+  function skip() {
+    skippedSpeed = speed;
+    speed = 0;
+  }
+
   function replay() {
+    if (skippedSpeed !== undefined) {
+      speed = skippedSpeed;
+      skippedSpeed = undefined;
+    }
     done = false;
     play = true;
     runId += 1;
@@ -94,6 +104,7 @@
     labelA="Paused"
     labelB="Playing"
   />
+  <Button size="small" kind="tertiary" on:click={skip}>Skip</Button>
   <Button size="small" kind="tertiary" on:click={replay}>Replay</Button>
   <p class="label-01" style="margin-bottom: 0.5rem">
     Status: <code class="code">{done ? "done" : "revealing…"}</code>

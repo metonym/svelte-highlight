@@ -1652,6 +1652,8 @@ Control the pacing curve with `easing`: a function mapping elapsed-time fraction
 
 Named curves: `linear` (default), `easeInQuad`/`easeOutQuad`/`easeInOutQuad`, `easeInCubic`/`easeOutCubic`/`easeInOutCubic`, `easeInSine`/`easeOutSine`/`easeInOutSine`.
 
+Set `speed={0}` to reveal all content on the very first frame -- a documented "skip typing" escape hatch, useful for a "skip" button or for finishing an off-screen instance instantly.
+
 `Typewriter` doesn't gate itself on `prefers-reduced-motion` -- if you want to honor it, check `matchMedia("(prefers-reduced-motion: reduce)")` yourself and skip rendering `Typewriter` (or set a very low `speed`). Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
 
 
