@@ -243,6 +243,29 @@ describe("TokenizedDocument: behavior", () => {
     expect(doc.tokenizedThrough()).toBeLessThanOrEqual(140);
   });
 
+  it("checkpointCount starts at 1 before anything is tokenized", () => {
+    const doc = createTokenizedDocument({ language: javascript });
+    doc.setCode(generateLargeJsDocument(500));
+    expect(doc.checkpointCount()).toBe(1);
+    expect(doc.tokenizedThrough()).toBe(0);
+  });
+
+  it("checkpointCount grows as more of the document is tokenized", () => {
+    const doc = createTokenizedDocument({
+      language: javascript,
+      checkpointInterval: 50,
+    });
+    doc.setCode(generateLargeJsDocument(400));
+    const afterFirstWindow = (() => {
+      doc.lineRange(0, 40);
+      return doc.checkpointCount();
+    })();
+    doc.lineRange(200, 240);
+    expect(doc.checkpointCount()).toBeGreaterThanOrEqual(afterFirstWindow);
+    expect(afterFirstWindow).toBeGreaterThanOrEqual(2);
+    expect(doc.checkpointCount()).toBeLessThanOrEqual(10);
+  });
+
   it("append is equivalent to setCode(old + chunk), across chunk shapes", () => {
     const full = generateLargeJsDocument(400);
     const expected = referenceLines("javascript", full);

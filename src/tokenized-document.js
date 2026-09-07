@@ -263,5 +263,14 @@ export function createTokenizedDocument({
     tokenizedThrough() {
       return committedLineCount;
     },
+
+    /**
+     * Number of retained engine checkpoints; one is created every
+     * `checkpointInterval` lines of tokenized content and never evicted (see
+     * the memory-tradeoff note in the README's "Large documents" section).
+     */
+    checkpointCount() {
+      return checkpoints.length;
+    },
   };
 }
