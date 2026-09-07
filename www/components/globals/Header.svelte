@@ -176,6 +176,7 @@
     "/preview-gdshader": "Godot Shading Language preview",
     "/preview-shaderlab": "Unity ShaderLab language preview",
     "/preview-ink": "Ink language preview",
+    "/preview-yarnspinner": "Yarn Spinner language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
