@@ -1,0 +1,8 @@
+---
+import LanguagePreview from "@components/LanguagePreview.svelte";
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout title="Org mode language preview">
+  <LanguagePreview language="org" client:idle />
+</Layout>
