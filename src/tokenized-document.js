@@ -14,6 +14,10 @@
  *
  * No mid-document edit support: `append` and full `setCode` resets only. A
  * patch/invalidation API for editable large documents is out of scope here.
+ * `HighlightEditable` solves mid-document editing for a bounded, editable
+ * document (not a windowed/virtualized one), built on its own checkpoint-
+ * resume re-tokenizer (`incremental-tokenize.js`, not itself a public
+ * export); the two primitives aren't unified today.
  */
 
 /**
