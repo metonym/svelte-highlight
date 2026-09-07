@@ -120,7 +120,7 @@ This renders SSR-identical output — no `<svelte:head>`, no `<style>` tag, just
 </HighlightStyle>
 ```
 
-This renders `--shl-keyword: light-dark(#a626a4, #c678dd)` (etc.) plus `color-scheme: light dark`. `mode="light"` / `mode="dark"` force `color-scheme: light` / `dark`. Any other `mode` string (the legacy "CSS selector" mode) omits `color-scheme` inline — set it on your own selector for app-controlled switching, e.g. `[data-theme="dark"] { color-scheme: dark }`.
+The wrapper's inline style carries the plain light value for each var (e.g. `--shl-keyword:#a626a4`) — a baseline every browser can render. A scoped, deduped `<style>` tag (gated behind `@supports (color: light-dark(...))`) overrides it with `--shl-keyword: light-dark(#a626a4, #c678dd)` (etc.) plus `color-scheme: light dark` on browsers that support `light-dark()`. `mode="light"` / `mode="dark"` force `color-scheme: light` / `dark`. Any other `mode` string (the legacy "CSS selector" mode) omits `color-scheme` inline — set it on your own selector for app-controlled switching, e.g. `[data-theme="dark"] { color-scheme: dark }`.
 
 **One-line customization — any token, no theme forking:**
 
@@ -170,6 +170,8 @@ Variable names are derived mechanically from the selectors found in `highlight.j
 `themes/base.css` wraps a multi-scope (compound/descendant) variable in a fallback to its subject scope's variable — e.g. `.hljs-meta .hljs-string { color: var(--shl-meta-string, var(--shl-string)); }` — so a theme that never styles that specific combination still falls through to the plain scope color instead of rendering unstyled. Declarations that don't fit the var contract (gradients, borders, `::selection`, etc.) ship as an opaque `extras` string on the palette, applied only via the `.css` artifact.
 
 `base.css` assumes the default `hljs-` class prefix; projects using a custom `classPrefix` should stay on the legacy string path below.
+
+`HighlightStyle` also inlines `color-scheme` from the palette(s) it's given — `palette.colorScheme` for a single `theme`, or a value derived from `mode` for a `light`/`dark` pair — so native form controls and scrollbars inside a themed block follow the theme too.
 
 ### Creating themes
 
@@ -437,6 +439,8 @@ The `mode` prop controls how the two themes are switched (default `"auto"`):
 ```
 
 Both themes are scoped to the wrapper, so different blocks can use different theme pairs on the same page. When `light` and `dark` are both set they take precedence over `theme`; passing only `theme` keeps the existing single-theme behavior unchanged.
+
+The `ThemePalette` object pair path (`light`/`dark` as [`ThemePalette`s](#theming) rather than CSS strings) works the same way, but resolves the pair via `light-dark()` instead of `prefers-color-scheme`/selector gating. On a browser that predates `light-dark()` support, it now falls back to the light theme instead of rendering broken (unset) colors: a scoped, deduped `<style>` tag applies the `light-dark()` values behind `@supports (color: light-dark(...))`, and the wrapper's own inline style carries the plain light value as the pre-`@supports` baseline. Single-theme (`theme` alone, no pair) SSR-identical guarantees are unaffected either way.
 
 ## Styling with CSS variables
 
