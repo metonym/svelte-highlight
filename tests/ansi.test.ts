@@ -222,4 +222,95 @@ describe("parseAnsi", () => {
       ),
     ).toEqual([{ text: "a", link: "https://example.com" }, { text: "b" }]);
   });
+
+  it("skips a DCS sequence terminated by ST", () => {
+    expect(parseAnsi(`a${ESC}P1$q"p${ESC}\\b`)).toEqual([{ text: "ab" }]);
+  });
+
+  it("skips an SOS sequence terminated by BEL", () => {
+    expect(parseAnsi(`a${ESC}Xjunk\x07b`)).toEqual([{ text: "ab" }]);
+  });
+
+  it("skips a PM sequence terminated by ST", () => {
+    expect(parseAnsi(`a${ESC}^junk${ESC}\\b`)).toEqual([{ text: "ab" }]);
+  });
+
+  it("skips an APC sequence terminated by BEL", () => {
+    expect(parseAnsi(`a${ESC}_junk\x07b`)).toEqual([{ text: "ab" }]);
+  });
+
+  it("drops the rest of the input on an unterminated DCS/SOS/PM/APC sequence", () => {
+    expect(parseAnsi(`a${ESC}Pjunk`)).toEqual([{ text: "a" }]);
+    expect(parseAnsi(`a${ESC}_junk`)).toEqual([{ text: "a" }]);
+  });
+
+  it("skips a charset select sequence", () => {
+    expect(parseAnsi(`a${ESC}(Bb`)).toEqual([{ text: "ab" }]);
+    expect(parseAnsi(`a${ESC}0b`)).toEqual([{ text: "ab" }]);
+  });
+
+  it("drops a single-character escape (reset, cursor save/restore, etc.)", () => {
+    expect(parseAnsi(`a${ESC}cb`)).toEqual([{ text: "ab" }]);
+    expect(parseAnsi(`a${ESC}7b`)).toEqual([{ text: "ab" }]);
+    expect(parseAnsi(`a${ESC}8b`)).toEqual([{ text: "ab" }]);
+    expect(parseAnsi(`a${ESC}=b`)).toEqual([{ text: "ab" }]);
+    expect(parseAnsi(`a${ESC}>b`)).toEqual([{ text: "ab" }]);
+    expect(parseAnsi(`a${ESC}Mb`)).toEqual([{ text: "ab" }]);
+  });
+
+  it("drops a trailing lone ESC without throwing", () => {
+    expect(parseAnsi(`a${ESC}`)).toEqual([{ text: "a" }]);
+  });
+
+  it("never leaks an escape byte into segment text (seeded fuzz)", () => {
+    // Deterministic PRNG (mulberry32) so failures reproduce across runs.
+    let state = 0x5eed1e55;
+    const next = () => {
+      state |= 0;
+      state = (state + 0x6d2b79f5) | 0;
+      let t = Math.imul(state ^ (state >>> 15), 1 | state);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+
+    const alphabet = [
+      ..."ABCabc019 \t",
+      ESC,
+      "[",
+      "]",
+      ";",
+      "m",
+      "\r",
+      "\n",
+      "\x07",
+      "\\",
+      "P",
+      "X",
+      "^",
+      "_",
+    ];
+
+    for (let trial = 0; trial < 200; trial += 1) {
+      const length = Math.floor(next() * 201);
+      let input = "";
+      for (let k = 0; k < length; k += 1) {
+        input += alphabet[Math.floor(next() * alphabet.length)];
+      }
+
+      let segments: ReturnType<typeof parseAnsi> = [];
+      expect(() => {
+        segments = parseAnsi(input);
+      }).not.toThrow();
+      for (const segment of segments) {
+        expect(segment.text.includes(ESC)).toBe(false);
+      }
+
+      // `\r` has its own pre-existing overwrite semantics (unrelated to
+      // escape handling) that rewrite text even without any ESC byte, so
+      // the identity check only applies when neither is present.
+      if (!input.includes(ESC) && !input.includes("\r")) {
+        expect(segments.map((s) => s.text).join("")).toBe(input);
+      }
+    }
+  });
 });
