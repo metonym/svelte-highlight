@@ -3,7 +3,7 @@
  *
  * - **Stable (semver-governed):** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`,
  *   `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`,
- *   `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`,
+ *   `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `scopeToCssClass`,
  *   `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`,
  *   `Registry` and all its methods, `createRegistry`, `registerAll`,
  *   `StreamSession`, `Snapshot` (see its own doc comment for a narrower
@@ -75,6 +75,13 @@ export const OPEN: 1;
 export const CLOSE: 2;
 
 export function escapeHtml(value: string): string;
+
+/**
+ * `renderHtml`'s internal scope-name-to-class-name conversion: splits
+ * compound scopes (e.g. `"title.class_"` -> `"hljs-title class_"`) and maps
+ * the `language-*` embedded-language convention.
+ */
+export function scopeToCssClass(name: string, prefix: string): string;
 
 export interface TokenRange {
   start: number;
