@@ -469,6 +469,21 @@ These apply when `langtag` is set to `true`.
 | --prompt-font-weight  | Font weight of the terminal prompt       | `700`                               |
 | --prompt-color        | Color of the terminal prompt             | `inherit`                           |
 
+### `FileTabs` variables
+
+| Variable               | Description                                                     | Default value                                |
+| :---------------------- | :--------------------------------------------------------------- | :-------------------------------------------- |
+| --file-tabs-gap         | Gap between tabs                                                  | `0`                                            |
+| --file-tabs-background  | Tab strip background                                              | `inherit`                                      |
+| --tab-overflow-fade     | Width of the scroll shadow shown on the overflowing edge          | `1.5rem`                                       |
+| --tab-padding           | Padding of each tab                                               | `0.5em 1em`                                    |
+| --tab-color             | Text color of inactive tabs                                      | `inherit`                                      |
+| --tab-background        | Background color of inactive tabs                                | `transparent`                                  |
+| --tab-inactive-opacity  | Opacity of inactive tabs (active and hovered tabs stay opaque)    | `0.55`                                         |
+| --tab-active-color      | Text color of the active tab                                     | the highlighted code's text color              |
+| --tab-active-background | Background color of the active tab                               | the highlighted code's background              |
+| --tab-focus-outline     | Keyboard focus outline of a tab                                   | `2px solid currentColor`                       |
+
 ## Svelte Syntax Highlighting
 
 Use the `HighlightSvelte` component for Svelte syntax highlighting.
@@ -1541,6 +1556,8 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 ```
 
 `active` is reconciled whenever `files` changes: an unknown or stale value (including a `bind:active` set before `files` loads) falls back to `files[0]`; removing the active file selects its former neighbor (same index, clamped to the new length), like closing a tab in an editor; an empty `files` array sets `active` to `undefined` and the tab panel omits `aria-labelledby`. `on:change` fires once whenever this reconciliation actually changes `active`.
+
+When the tab strip overflows, its overflowing edge fades to signal there's more to scroll to; changing `active` (by click, keyboard, or `bind:active`) scrolls that tab into view.
 
 ## Component API
 
