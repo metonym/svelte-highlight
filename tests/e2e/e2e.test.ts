@@ -554,6 +554,7 @@ test("LineNumbers - basic functionality", async ({ mount, page }) => {
   const lineNumbersColumn = page.locator("td.hljs").first();
   await expect(lineNumbersColumn).toHaveCSS("position", "sticky");
   await expect(lineNumbersColumn).not.toHaveClass(/hideBorder/);
+  await expect(lineNumbersColumn).toHaveAttribute("aria-hidden", "true");
 });
 
 test("LineNumbers - hide border", async ({ mount, page }) => {
