@@ -365,3 +365,227 @@ export function parseAnsi(text) {
   flush();
   return segments;
 }
+
+/** @typedef {import("./ansi").AnsiSession} AnsiSession */
+
+/**
+ * Create an incremental ANSI parser session for text arriving in chunks
+ * (a live-tailed log, a streamed response). `finish()`'s output is
+ * identical to calling `parseAnsi` once on the full concatenation of every
+ * appended chunk.
+ *
+ * @returns {AnsiSession}
+ */
+export function createAnsiSession() {
+  /** @type {AnsiSegment[]} */
+  const segments = [];
+  /** @type {AnsiStyle} */
+  const style = {};
+  let buffer = "";
+  /** @type {string | undefined} */
+  let link;
+  // Unconsumed tail from the previous append(): an incomplete sequence
+  // (split SGR/OSC 8, a lone trailing ESC or \r) that only made sense to
+  // resolve once more input arrived.
+  let pending = "";
+  let finished = false;
+
+  const flush = () => {
+    if (buffer) {
+      segments.push(toSegment(buffer, style, link));
+      buffer = "";
+    }
+  };
+
+  const resetLine = () => {
+    const bufferBreak = buffer.lastIndexOf("\n");
+    if (bufferBreak !== -1) {
+      buffer = buffer.slice(0, bufferBreak + 1);
+      return;
+    }
+    buffer = "";
+    let last = segments.pop();
+    while (last !== undefined) {
+      const segmentBreak = last.text.lastIndexOf("\n");
+      if (segmentBreak === -1) {
+        last = segments.pop();
+        continue;
+      }
+      last.text = last.text.slice(0, segmentBreak + 1);
+      segments.push(last);
+      return;
+    }
+  };
+
+  /**
+   * Scan `input`, mutating style/link/buffer/segments as it goes. When
+   * `atEnd` is false (an `append()` mid-stream), a sequence that can't be
+   * resolved without more bytes than `input` has is left unconsumed and
+   * returned so the next `append()` can retry once it has more. When
+   * `atEnd` is true (from `finish()`), those same sequences are settled
+   * exactly like `parseAnsi` settles them at the end of a one-shot input
+   * (dropped — or, for a trailing lone `\r`, applied as an overwrite).
+   * @param {string} input
+   * @param {boolean} atEnd
+   * @returns {string} Unconsumed tail (always "" when `atEnd`).
+   */
+  const scan = (input, atEnd) => {
+    let i = 0;
+
+    while (i < input.length) {
+      const ch = input[i];
+
+      if (ch === ESC && input[i + 1] === "[") {
+        let j = i + 2;
+        while (j < input.length) {
+          const code = input.charCodeAt(j);
+          if (code >= 0x40 && code <= 0x7e) break;
+          j += 1;
+        }
+
+        if (j >= input.length) {
+          if (atEnd) break;
+          return input.slice(i);
+        }
+
+        const final = input[j];
+        if (final === "m") {
+          flush();
+          const body = input.slice(i + 2, j);
+          const params = body
+            .split(";")
+            .map((part) => (part === "" ? 0 : Number(part)))
+            .filter((n) => Number.isInteger(n));
+          applySgr(style, params);
+        }
+        i = j + 1;
+        continue;
+      }
+
+      if (ch === ESC && input[i + 1] === "]") {
+        let j = i + 2;
+        let terminatorLength = 0;
+        while (j < input.length) {
+          if (input[j] === "\x07") {
+            terminatorLength = 1;
+            break;
+          }
+          if (input[j] === ESC && input[j + 1] === "\\") {
+            terminatorLength = 2;
+            break;
+          }
+          j += 1;
+        }
+
+        if (terminatorLength === 0) {
+          if (atEnd) break;
+          return input.slice(i);
+        }
+
+        const body = input.slice(i + 2, j);
+        const firstSemi = body.indexOf(";");
+        const command = firstSemi === -1 ? body : body.slice(0, firstSemi);
+        if (command === "8" && firstSemi !== -1) {
+          const rest = body.slice(firstSemi + 1);
+          const secondSemi = rest.indexOf(";");
+          if (secondSemi !== -1) {
+            flush();
+            const uri = rest.slice(secondSemi + 1);
+            link = uri ? sanitizeLink(uri) : undefined;
+          }
+        }
+        i = j + terminatorLength;
+        continue;
+      }
+
+      if (ch === ESC) {
+        const next = input[i + 1];
+
+        if (next === "P" || next === "X" || next === "^" || next === "_") {
+          let j = i + 2;
+          let terminatorLength = 0;
+          while (j < input.length) {
+            if (input[j] === "\x07") {
+              terminatorLength = 1;
+              break;
+            }
+            if (input[j] === ESC && input[j + 1] === "\\") {
+              terminatorLength = 2;
+              break;
+            }
+            j += 1;
+          }
+
+          if (terminatorLength === 0) {
+            if (atEnd) break;
+            return input.slice(i);
+          }
+
+          i = j + terminatorLength;
+          continue;
+        }
+
+        if (next !== undefined && "()*+-./".includes(next)) {
+          if (i + 2 >= input.length) {
+            if (atEnd) break;
+            return input.slice(i);
+          }
+          i += 3;
+          continue;
+        }
+
+        if (next === undefined) {
+          if (!atEnd) return input.slice(i);
+          i += 1;
+          continue;
+        }
+
+        i += 2;
+        continue;
+      }
+
+      if (ch === "\r") {
+        if (i + 1 >= input.length) {
+          if (!atEnd) return input.slice(i);
+          resetLine();
+          i += 1;
+          continue;
+        }
+        if (input[i + 1] === "\n") {
+          buffer += "\n";
+          i += 2;
+          continue;
+        }
+        resetLine();
+        i += 1;
+        continue;
+      }
+
+      buffer += ch;
+      i += 1;
+    }
+
+    return "";
+  };
+
+  return {
+    append(chunk) {
+      if (finished) return;
+      pending = scan(pending + chunk, false);
+    },
+    segments() {
+      const result = segments.slice();
+      if (buffer) result.push(toSegment(buffer, style, link));
+      return result;
+    },
+    finish() {
+      if (!finished) {
+        scan(pending, true);
+        pending = "";
+        flush();
+        finished = true;
+      }
+      return segments.slice();
+    },
+  };
+}
