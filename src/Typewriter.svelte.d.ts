@@ -32,6 +32,15 @@ export type TypewriterProps = HTMLAttributes<HTMLPreElement> & {
   easing?: (t: number) => number;
 
   /**
+   * Reveal granularity. `"char"` reveals one character at a time; `"word"`
+   * reveals a full word per step -- e.g. for a ChatGPT-style token-by-token
+   * reveal. Total duration and easing are unaffected -- only which
+   * character counts `revealed` may land on.
+   * @default "char"
+   */
+  granularity?: "char" | "word";
+
+  /**
    * Number of visible characters currently revealed. Read-only in practice
    * (overwritten every frame); exposed for `bind:revealed`.
    * @default 0

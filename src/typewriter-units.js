@@ -163,3 +163,39 @@ export function createTypewriterSplitter(units, html) {
 
   return { splitAt };
 }
+
+const WHITESPACE = new Set([" ", "\t", "\r", "\n"]);
+
+/**
+ * Groups `units`' visible characters into words: a maximal run of
+ * consecutive non-whitespace visible units, plus any visible whitespace
+ * (` `, `\t`, `\r`, `\n`) immediately following it. A leading whitespace run
+ * (with no preceding word) is its own word. Tags (`visible: 0`) are skipped
+ * without resetting the current word.
+ * @param {TypewriterUnit[]} units
+ * @returns {number[]} cumulative visible-unit count at the end of each word;
+ *   the last entry always equals the total visible-unit count. Empty for
+ *   zero visible units.
+ */
+export function computeWordBoundaries(units) {
+  /** @type {number[]} */
+  const boundaries = [];
+  let count = 0;
+  let inWhitespaceRun = false;
+
+  for (const unit of units) {
+    if (unit.visible === 0) continue;
+    count++;
+
+    if (WHITESPACE.has(unit.raw)) {
+      inWhitespaceRun = true;
+    } else if (inWhitespaceRun) {
+      boundaries.push(count - 1);
+      inWhitespaceRun = false;
+    }
+  }
+
+  if (count > 0) boundaries.push(count);
+
+  return boundaries;
+}

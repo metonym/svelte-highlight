@@ -4,6 +4,7 @@
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
   export let speed = 1;
+  export let granularity = "char";
 
   let code = "const add = (a: number, b: number) => a + b;";
   let play = true;
@@ -30,6 +31,7 @@
     {highlighted}
     {speed}
     {play}
+    {granularity}
     data-testid="tw"
     on:done={() => (done += 1)}
     on:progress={(e) => (progress = e.detail)}

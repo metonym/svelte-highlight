@@ -21,6 +21,7 @@
   import { linear } from "./typewriter-easing.js";
   import {
     buildUnitMarkup,
+    computeWordBoundaries,
     createTypewriterSplitter,
     tokenizeTypewriter as tokenize,
   } from "./typewriter-units.js";
@@ -34,6 +35,15 @@
    * @type {(t: number) => number}
    */
   export let easing = linear;
+
+  /**
+   * Reveal granularity. `"char"` reveals one character at a time; `"word"`
+   * reveals a full word per step -- e.g. for a ChatGPT-style token-by-token
+   * reveal. Total duration and easing are unaffected -- only which
+   * character counts `revealed` may land on.
+   * @type {"char" | "word"}
+   */
+  export let granularity = "char";
 
   const dispatch = createEventDispatcher();
 
@@ -131,6 +141,29 @@
     }
   }
 
+  /**
+   * Largest value in sorted `boundaries` that is `<= target`, or `0` if none.
+   * @param {number} target
+   * @param {number[]} boundaries
+   * @returns {number}
+   */
+  function snapToWordBoundary(target, boundaries) {
+    let lo = 0;
+    let hi = boundaries.length - 1;
+    let result = 0;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      const value = /** @type {number} */ (boundaries[mid]);
+      if (value <= target) {
+        result = value;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return result;
+  }
+
   function stopLoop() {
     if (rafId !== undefined) cancelAnimationFrame(rafId);
     rafId = undefined;
@@ -159,7 +192,9 @@
 
     const duration = Math.max(0, speed) * total;
     const t = duration > 0 ? Math.min(1, elapsedMs / duration) : 1;
-    const target = Math.round(easing(t) * total);
+    let target = Math.round(easing(t) * total);
+    if (granularity === "word" && wordBoundaries)
+      target = snapToWordBoundary(target, wordBoundaries);
     const next = Math.min(total, Math.max(0, target));
     if (next > revealed) {
       revealed = next;
@@ -201,6 +236,8 @@
   // together in the same reactive flush whenever `highlighted` changes.
   $: splitter = createTypewriterSplitter(units, highlighted);
   $: total = units.reduce((sum, unit) => sum + unit.visible, 0);
+  $: wordBoundaries =
+    granularity === "word" ? computeWordBoundaries(units) : null;
   $: bigInput = total > UNIT_THRESHOLD;
   $: useUnitReveal = mounted && !bigInput;
 

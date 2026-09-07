@@ -1,4 +1,7 @@
-import { tokenizeTypewriter } from "../src/typewriter-units.js";
+import {
+  computeWordBoundaries,
+  tokenizeTypewriter,
+} from "../src/typewriter-units.js";
 
 describe("tokenizeTypewriter", () => {
   it("counts one visible unit per plain character", () => {
@@ -53,5 +56,29 @@ describe("tokenizeTypewriter", () => {
     ]);
     // The emoji unit must contain both surrogate halves together.
     expect(units[1]?.raw.length).toBe(2);
+  });
+});
+
+describe("computeWordBoundaries", () => {
+  it("groups plain words separated by whitespace", () => {
+    const units = tokenizeTypewriter("hello world");
+    expect(computeWordBoundaries(units)).toEqual([6, 11]);
+  });
+
+  it("treats a leading whitespace run as its own word", () => {
+    const units = tokenizeTypewriter("  go");
+    expect(computeWordBoundaries(units)).toEqual([2, 4]);
+  });
+
+  it("skips tags without resetting the current word", () => {
+    const units = tokenizeTypewriter(
+      '<span class="hljs-keyword">const</span> add',
+    );
+    expect(computeWordBoundaries(units)).toEqual([6, 9]);
+  });
+
+  it("is empty for zero visible units", () => {
+    expect(computeWordBoundaries(tokenizeTypewriter(""))).toEqual([]);
+    expect(computeWordBoundaries(tokenizeTypewriter("<br/>"))).toEqual([]);
   });
 });
