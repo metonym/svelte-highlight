@@ -331,20 +331,6 @@ let increment : Natural -> Natural
 let isReady : Bool = True
 
 in  { count = increment 5, ready = isReady }`,
-  djot: `# A demo document
-
-This is *strong* and _emphasis_ and \`verbatim\`.
-
-- first item
-- [x] task done
-
-> a block quote
-
-{.note #intro}
-A paragraph with an attribute block above it.
-
-See the [docs](https://example.com) for more :smile:
-`,
   dotenv: `# application configuration
 export NODE_ENV=production
 DATABASE_URL="postgres://\${HOST}:\${PORT}/db"
@@ -461,20 +447,6 @@ func _ready() -> void:
 	if true:
 		pass
 `,
-  gdshader: `shader_type spatial;
-render_mode blend_mix, depth_draw_opaque;
-
-uniform float intensity : hint_range(0, 1) = 0.5;
-
-void vertex() {
-    VERTEX.y += sin(TIME) * 0.1;
-}
-
-void fragment() {
-    vec3 color = ALBEDO.rgb * intensity;
-    ALBEDO = color;
-}
-`,
   gotmpl: `{{- /* render a greeting */ -}}
 {{ define "greeting" }}
 Hello, {{ .Name | printf "%s" }}!
@@ -565,19 +537,6 @@ float4 main(float2 uv : TEXCOORD0) : SV_TARGET {
   }
   return float4(0, 0, 0, 1);
 }`,
-  hocon: `# server configuration
-app {
-  name = "my-service"
-  port = 8080
-  timeout = 30s
-  max-size = 512k
-
-  db.url = \${?DATABASE_URL}
-  db.retries += 1
-
-  include required(classpath("defaults.conf"))
-}
-`,
   html: `<!DOCTYPE html>
 <!-- page shell -->
 <div id="main" class='page'>
@@ -617,17 +576,6 @@ HTTP 200
 [Asserts]
 jsonpath "$.id" == 1
 header "Content-Type" contains "json"
-`,
-  ink: `=== knot_greeting ===
-Hello, traveler!
-* [Ask about the weather]
-    -> weather
-* [Say goodbye] -> END
-
-= weather
-~ temp x = 5
-{x > 3: It's warm today. | It's a bit chilly.}
--> knot_greeting
 `,
   jinja: `{# greeting #}
 {% macro hello(name) %}
@@ -798,12 +746,6 @@ theorem succ_pos : ∀ n : ℕ, succ n > 0 := by
     <p>Sold out</p>
   {% endif %}
 </div>`,
-  log: `2026-09-06T10:00:00.123Z INFO  [main] Starting server on 127.0.0.1:8080
-2026-09-06T10:00:01.456Z WARN  [req-123] slow query id=42 duration=1200
-2026-09-06T10:00:02.789Z ERROR [worker-1] Exception: NullPointerException
-    at com.foo.Bar.process(Bar.java:10)
-2026-09-06T10:00:03.012Z DEBUG [main] pid[4821] GET /api/users 200
-`,
   logql: `# filter application errors and compute rate
 {job="app", env=~"prod|staging"}
   |= "error" != "debug"
@@ -811,21 +753,6 @@ theorem succ_pos : ∀ n : ℕ, succ n > 0 := by
   | line_format "{{.message}}"
   | unwrap duration [5m]
 sum(rate({job="app"} |= "error" [5m])) by (job)`,
-  lookml: `view: orders {
-  sql_table_name: schema.orders ;;
-
-  dimension: id {
-    primary_key: yes
-    type: number
-    sql: \${TABLE}.id ;;
-  }
-
-  measure: total_orders {
-    type: count
-    drill_fields: [id]
-  }
-}
-`,
   luau: `-- typed greeting
 export type Point = { x: number, y: number }
 
@@ -833,20 +760,6 @@ local function add(a: number, b: number): number
   continue
   return (a + b) :: number
 end
-`,
-  markdoc: `---
-title: Getting Started
----
-
-# Welcome
-
-{% comment %} internal note, not rendered {% /comment %}
-
-{% callout type="warning" %}
-Set the $name variable before calling {% if(equals($name, "")) %}validate(){% /if %}.
-{% /callout %}
-
-{% partial file="footer.md" /%}
 `,
   marko: `<!-- greeting widget -->
 class {
@@ -936,21 +849,6 @@ main :: proc() {
         fmt.println("hello")
     }
 }`,
-  org: `* TODO Write quarterly report [#A]           :work:report:
-SCHEDULED: <2026-09-10 Thu>
-
-:PROPERTIES:
-:CREATED:  [2026-09-06 Sun]
-:END:
-
-Check the [[https://example.com][dashboard]] for *important* numbers.
-
-- first item
-- [X] second item done
-1. ordered item
-
-# a comment line
-`,
   pkl: `amends "base.pkl"
 
 // server config
@@ -962,34 +860,6 @@ class Server {
 
   function describe() = "\\(host):\\(port)"
 }`,
-  plantuml: `@startuml
-' a simple sequence diagram
-actor User
-participant "Web Server" as Web
-database DB
-
-User -> Web : request page
-Web --> DB : query
-DB --> Web : rows
-Web --> User : 200 OK
-
-note right of Web #lightblue
-  cache miss
-end note
-@enduml
-`,
-  plsql: `CREATE OR REPLACE PROCEDURE raise_salary(p_id NUMBER) IS
-  v_salary employees.salary%TYPE;
-BEGIN
-  SELECT salary INTO v_salary FROM employees WHERE id = p_id;
-  v_salary := v_salary * 1.1;
-  UPDATE employees SET salary = v_salary WHERE id = p_id;
-EXCEPTION
-  WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20001, 'Employee not found');
-END;
-/
-`,
   polar: `# document access
 resource Document {
   permissions = ["read", "write"];
@@ -997,14 +867,6 @@ resource Document {
 
 allow(actor: User, "read", resource: Document) if
   has_permission(actor, "read", resource);
-`,
-  powerquery: `let
-    // load the source table
-    Source = Csv.Document(File.Contents("data.csv")),
-    #"Changed Type" = Table.TransformColumnTypes(Source, {{"Amount", Int64.Type}}),
-    Total = List.Sum(Table.Column(#"Changed Type", "Amount"))
-in
-    each if Total > 0 then Total else 0
 `,
   prisma: `/// User model
 model User {
@@ -1102,10 +964,6 @@ class Point {
 my $p = Point.new(x => 1, y => 2);
 say $p.x ~~ $p.y;
 `,
-  regex: String.raw`^(?<year>\d{4})-(?<month>\d{2})-\d{2}\s+#\s*optional comment
-(?:https?|ftp):\/\/[\w.-]+\.[a-z]{2,}
-[[:alpha:]]+\d*\.?\p{L}*
-(?#inline comment)\k<year>\1`,
   rego: `package authz
 
 import future.keywords.if
@@ -1121,22 +979,6 @@ deny contains msg if {
   not allow
   msg := sprintf("denied for %s", [input.user.name])
 }`,
-  renpy: `label start:
-    scene bg room
-    show eileen happy at left
-    with dissolve
-
-    e "Hello, {b}world{/b}!"
-    e "You have [gold] gold pieces."
-
-    $ gold = gold + 10
-
-    menu:
-        "Ask about the weather":
-            jump weather
-        "Say goodbye":
-            return
-`,
   rescript: `// simple counter component
 type color = Red | Blue
 
@@ -1313,26 +1155,6 @@ def my_rule(name):
     enabled = True
     srcs = glob(["*.go"])
     pass`,
-  structurizr: `workspace "Big Bank" {
-  !identifiers hierarchical
-
-  model {
-    customer = person "Customer"
-    softwareSystem = softwareSystem "Internet Banking" {
-      webapp = container "Web Application"
-    }
-
-    customer -> softwareSystem.webapp "Uses" "HTTPS"
-  }
-
-  views {
-    systemContext softwareSystem {
-      include *
-      autoLayout lr
-    }
-  }
-}
-`,
   surrealql: `// users who wrote a post
 DEFINE TABLE user SCHEMAFULL;
 SELECT * FROM user:alice WHERE age > 18;
@@ -1383,21 +1205,6 @@ templ Page(items []Item) {
 		<li>{ item.Name }</li>
 	}
 }`,
-  textproto: `# proto-file: example.proto
-# proto-message: Person
-
-name: "Alice"
-age: 30
-active: true
-scores: [95, 87, 100]
-
-[com.example.ext.special_field]: "extended"
-
-address {
-  city: "Springfield"
-  zip: "00000"
-}
-`,
   tsq: `; match a function definition with a captured name
 (function_item
   name: (identifier) @function.name
@@ -1412,13 +1219,6 @@ address {
 
 (ERROR) @error
 _ @any`,
-  tsql: `DECLARE @count INT;
-
-SELECT TOP 10 [OrderId], N'note' AS Note
-FROM #TempOrders WITH (NOLOCK)
-WHERE CustomerId = @count AND @@ROWCOUNT > 0;
-GO
-`,
   tsrx: `export function Greeting({ name }: { name?: string }) @{
   const message = name ? \`Hello, \${name}\` : "stranger";
 
@@ -1449,16 +1249,6 @@ updated = 2024-01-02T10:00:00Z`,
 { resource.service.name = "api" && status = error }
 { span.http.status_code >= 500 } >> { name = "SQL SELECT" } | count()
 { duration > 5s }
-`,
-  turtle: `@prefix ex: <http://example.org/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-
-ex:alice a ex:Person ;
-  ex:name "Alice"@en ;
-  ex:age "30"^^xsd:integer ;
-  ex:knows _:b1 .
-
-_:b1 ex:name "Bob" .
 `,
   typst: `= Introduction
 
@@ -1655,6 +1445,210 @@ rule SuspiciousExecutable : malware
         uint16(0) == 0x5A4D and $a and $hex and pe.number_of_sections > 3
 }
 `,
+  zig: `const std = @import("std");
+
+pub fn main() !void {
+    const x: u32 = 0;
+    const mask = 0xFF_00;
+    const flags = 0b1010;
+    var y: f64 = 0;
+    const ok: bool = true;
+    const n = null;
+}
+
+fn foo() ?u32 {
+    return null;
+}`,
+  plantuml: `@startuml
+' a simple sequence diagram
+actor User
+participant "Web Server" as Web
+database DB
+
+User -> Web : request page
+Web --> DB : query
+DB --> Web : rows
+Web --> User : 200 OK
+
+note right of Web #lightblue
+  cache miss
+end note
+@enduml
+`,
+  structurizr: `workspace "Big Bank" {
+  !identifiers hierarchical
+
+  model {
+    customer = person "Customer"
+    softwareSystem = softwareSystem "Internet Banking" {
+      webapp = container "Web Application"
+    }
+
+    customer -> softwareSystem.webapp "Uses" "HTTPS"
+  }
+
+  views {
+    systemContext softwareSystem {
+      include *
+      autoLayout lr
+    }
+  }
+}
+`,
+  org: `* TODO Write quarterly report [#A]           :work:report:
+SCHEDULED: <2026-09-10 Thu>
+
+:PROPERTIES:
+:CREATED:  [2026-09-06 Sun]
+:END:
+
+Check the [[https://example.com][dashboard]] for *important* numbers.
+
+- first item
+- [X] second item done
+1. ordered item
+
+# a comment line
+`,
+  djot: `# A demo document
+
+This is *strong* and _emphasis_ and \`verbatim\`.
+
+- first item
+- [x] task done
+
+> a block quote
+
+{.note #intro}
+A paragraph with an attribute block above it.
+
+See the [docs](https://example.com) for more :smile:
+`,
+  markdoc: `---
+title: Getting Started
+---
+
+# Welcome
+
+{% comment %} internal note, not rendered {% /comment %}
+
+{% callout type="warning" %}
+Set the $name variable before calling {% if(equals($name, "")) %}validate(){% /if %}.
+{% /callout %}
+
+{% partial file="footer.md" /%}
+`,
+  powerquery: `let
+    // load the source table
+    Source = Csv.Document(File.Contents("data.csv")),
+    #"Changed Type" = Table.TransformColumnTypes(Source, {{"Amount", Int64.Type}}),
+    Total = List.Sum(Table.Column(#"Changed Type", "Amount"))
+in
+    each if Total > 0 then Total else 0
+`,
+  lookml: `view: orders {
+  sql_table_name: schema.orders ;;
+
+  dimension: id {
+    primary_key: yes
+    type: number
+    sql: \${TABLE}.id ;;
+  }
+
+  measure: total_orders {
+    type: count
+    drill_fields: [id]
+  }
+}
+`,
+  tsql: `DECLARE @count INT;
+
+SELECT TOP 10 [OrderId], N'note' AS Note
+FROM #TempOrders WITH (NOLOCK)
+WHERE CustomerId = @count AND @@ROWCOUNT > 0;
+GO
+`,
+  plsql: `CREATE OR REPLACE PROCEDURE raise_salary(p_id NUMBER) IS
+  v_salary employees.salary%TYPE;
+BEGIN
+  SELECT salary INTO v_salary FROM employees WHERE id = p_id;
+  v_salary := v_salary * 1.1;
+  UPDATE employees SET salary = v_salary WHERE id = p_id;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Employee not found');
+END;
+/
+`,
+  turtle: `@prefix ex: <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:alice a ex:Person ;
+  ex:name "Alice"@en ;
+  ex:age "30"^^xsd:integer ;
+  ex:knows _:b1 .
+
+_:b1 ex:name "Bob" .
+`,
+  textproto: `# proto-file: example.proto
+# proto-message: Person
+
+name: "Alice"
+age: 30
+active: true
+scores: [95, 87, 100]
+
+[com.example.ext.special_field]: "extended"
+
+address {
+  city: "Springfield"
+  zip: "00000"
+}
+`,
+  hocon: `# server configuration
+app {
+  name = "my-service"
+  port = 8080
+  timeout = 30s
+  max-size = 512k
+
+  db.url = \${?DATABASE_URL}
+  db.retries += 1
+
+  include required(classpath("defaults.conf"))
+}
+`,
+  log: `2026-09-06T10:00:00.123Z INFO  [main] Starting server on 127.0.0.1:8080
+2026-09-06T10:00:01.456Z WARN  [req-123] slow query id=42 duration=1200
+2026-09-06T10:00:02.789Z ERROR [worker-1] Exception: NullPointerException
+    at com.foo.Bar.process(Bar.java:10)
+2026-09-06T10:00:03.012Z DEBUG [main] pid[4821] GET /api/users 200
+`,
+  gdshader: `shader_type spatial;
+render_mode blend_mix, depth_draw_opaque;
+
+uniform float intensity : hint_range(0, 1) = 0.5;
+
+void vertex() {
+    VERTEX.y += sin(TIME) * 0.1;
+}
+
+void fragment() {
+    vec3 color = ALBEDO.rgb * intensity;
+    ALBEDO = color;
+}
+`,
+  ink: `=== knot_greeting ===
+Hello, traveler!
+* [Ask about the weather]
+    -> weather
+* [Say goodbye] -> END
+
+= weather
+~ temp x = 5
+{x > 3: It's warm today. | It's a bit chilly.}
+-> knot_greeting
+`,
   yarnspinner: `title: Start
 tags:
 ---
@@ -1674,18 +1668,20 @@ Traveler: I mean no harm, {$player_name}.
 [wave]Just passing through.[/wave]
 ===
 `,
-  zig: `const std = @import("std");
+  renpy: `label start:
+    scene bg room
+    show eileen happy at left
+    with dissolve
 
-pub fn main() !void {
-    const x: u32 = 0;
-    const mask = 0xFF_00;
-    const flags = 0b1010;
-    var y: f64 = 0;
-    const ok: bool = true;
-    const n = null;
-}
+    e "Hello, {b}world{/b}!"
+    e "You have [gold] gold pieces."
 
-fn foo() ?u32 {
-    return null;
-}`,
+    $ gold = gold + 10
+
+    menu:
+        "Ask about the weather":
+            jump weather
+        "Say goodbye":
+            return
+`,
 };

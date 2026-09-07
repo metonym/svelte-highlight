@@ -177,6 +177,7 @@
     "/preview-shaderlab": "Unity ShaderLab language preview",
     "/preview-ink": "Ink language preview",
     "/preview-yarnspinner": "Yarn Spinner language preview",
+    "/preview-renpy": "Ren'Py language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
