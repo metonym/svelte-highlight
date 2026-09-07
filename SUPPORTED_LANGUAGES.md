@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 329 languages: 193 exported from highlight.js@11.12.0, 136 custom grammars added by svelte-highlight
+> 330 languages: 193 exported from highlight.js@11.12.0, 137 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -3805,6 +3805,20 @@
 
   // base import
   import { tsrx } from "svelte-highlight/languages";
+</script>
+```
+
+## turtle (`turtle`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import turtle from "svelte-highlight/languages/turtle";
+
+  // base import
+  import { turtle } from "svelte-highlight/languages";
 </script>
 ```
 
