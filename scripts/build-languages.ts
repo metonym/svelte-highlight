@@ -155,6 +155,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "ron",
   "hocon",
   "csv",
+  "log",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
