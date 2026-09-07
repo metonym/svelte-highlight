@@ -1,4 +1,5 @@
 import { escapeHtml, scopeToCssClass, tokenLines } from "./engine.js";
+import { LANGUAGE_ALIASES } from "./languages/aliases.js";
 import { loadLanguage } from "./load-language.js";
 import { ensureRegistered, registry } from "./registry.js";
 
@@ -7,6 +8,7 @@ import { ensureRegistered, registry } from "./registry.js";
  */
 
 const TOKEN_RE = /(\w+)="([^"]*)"|(\w+)=\{([^}]*)\}|\{([^}]*)\}|(\w+)/g;
+const WHITESPACE_RE = /\s+/;
 
 /**
  * Expands a comma-separated `1,3-5` range string into individual 1-indexed
@@ -70,6 +72,15 @@ export function parseMeta(meta) {
   }
 
   return result;
+}
+
+/**
+ * @param {string} name
+ * @returns {string | undefined}
+ */
+export function resolveLanguageName(name) {
+  const word = name.trim().toLowerCase().split(WHITESPACE_RE)[0] ?? "";
+  return LANGUAGE_ALIASES[word];
 }
 
 /** @param {string} value */
