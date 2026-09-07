@@ -424,16 +424,18 @@ These apply to the outer container of every component (the `pre` element for `Hi
 
 ### `LineNumbers` variables
 
-| Variable                 | Description                                       | Default value             |
-| :----------------------- | :------------------------------------------------ | :------------------------ |
-| --line-number-color      | Text color of the line numbers                    | `currentColor`            |
-| --border-color           | Border color of the column of line numbers        | `currentColor`            |
-| --highlighted-background | Background color of highlighted lines             | `rgba(254, 241, 96, 0.2)` |
-| --unhighlighted-opacity  | Opacity of un-highlighted lines (focus mode)      | `1`                       |
-| --unhighlighted-filter   | CSS filter for un-highlighted lines (focus mode)  | `none`                    |
-| --padding                | Fallback padding for `--padding-left` / `--padding-right` | `1em`              |
-| --padding-left           | Left padding for `td` elements                    | `var(--padding, 1em)`     |
-| --padding-right          | Right padding for `td` elements                   | `var(--padding, 1em)`     |
+| Variable                  | Description                                       | Default value               |
+| :------------------------ | :------------------------------------------------ | :--------------------------- |
+| --line-number-color       | Text color of the line numbers                    | `currentColor`               |
+| --border-color            | Border color of the column of line numbers        | `currentColor`               |
+| --highlighted-background  | Background color of highlighted lines             | `rgba(254, 241, 96, 0.2)`    |
+| --line-added-background   | Background color of `lineStates` `"added"` lines   | `rgba(46, 204, 113, 0.15)`   |
+| --line-removed-background | Background color of `lineStates` `"removed"` lines | `rgba(231, 76, 60, 0.15)`    |
+| --unhighlighted-opacity   | Opacity of un-highlighted lines (focus mode)      | `1`                          |
+| --unhighlighted-filter    | CSS filter for un-highlighted lines (focus mode)  | `none`                       |
+| --padding                 | Fallback padding for `--padding-left` / `--padding-right` | `1em`                 |
+| --padding-left            | Left padding for `td` elements                    | `var(--padding, 1em)`        |
+| --padding-right           | Right padding for `td` elements                   | `var(--padding, 1em)`        |
 
 ### `CopyButton` variables
 
@@ -682,20 +684,48 @@ Use `--highlighted-background` to customize the background color of highlighted 
 </Highlight>
 ```
 
+### Line States
+
+`highlightedLines` only supports one visual treatment. Use `lineStates` for a per-line state map -- `"highlighted"` (same treatment as `highlightedLines`), `"focus"` (exempt from dimming, no background color), `"added"`, or `"removed"` -- so diff-style and meta-string-style decorations can share one primitive. Indices start at zero and are merged with `highlightedLines`, which is equivalent to setting `"highlighted"` here.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers
+    {highlighted}
+    lineStates={{ 1: "added", 2: "removed", 4: "focus" }}
+  />
+</Highlight>
+```
+
+Use `--line-added-background` and `--line-removed-background` to customize the background colors.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <LineNumbers
+    {highlighted}
+    lineStates={{ 1: "added", 2: "removed" }}
+    --line-added-background="rgba(0, 255, 0, 0.15)"
+    --line-removed-background="rgba(255, 0, 0, 0.15)"
+  />
+</Highlight>
+```
+
 ### Custom Styles
 
 Use `--style-props` to customize styles.
 
-| Style prop               | Description                                              | Default value             |
-| :----------------------- | :------------------------------------------------------ | :------------------------ |
-| --line-number-color      | Text color of the line numbers                          | `currentColor`            |
-| --border-color           | Border color of the column of line numbers              | `currentColor`            |
-| --padding                | Fallback padding for `--padding-left` / `--padding-right` | `1em`                   |
-| --padding-left           | Left padding for `td` elements                          | `var(--padding, 1em)`     |
-| --padding-right          | Right padding for `td` elements                         | `var(--padding, 1em)`     |
-| --highlighted-background | Background color of highlighted lines                   | `rgba(254, 241, 96, 0.2)` |
-| --unhighlighted-opacity  | Opacity of un-highlighted lines (focus mode)            | `1`                       |
-| --unhighlighted-filter   | CSS filter for un-highlighted lines (focus mode)        | `none`                    |
+| Style prop                | Description                                              | Default value              |
+| :------------------------ | :------------------------------------------------------ | :-------------------------- |
+| --line-number-color       | Text color of the line numbers                          | `currentColor`              |
+| --border-color            | Border color of the column of line numbers              | `currentColor`              |
+| --padding                 | Fallback padding for `--padding-left` / `--padding-right` | `1em`                     |
+| --padding-left            | Left padding for `td` elements                          | `var(--padding, 1em)`       |
+| --padding-right           | Right padding for `td` elements                         | `var(--padding, 1em)`       |
+| --highlighted-background  | Background color of highlighted lines                   | `rgba(254, 241, 96, 0.2)`   |
+| --line-added-background   | Background color of `lineStates` `"added"` lines         | `rgba(46, 204, 113, 0.15)`  |
+| --line-removed-background | Background color of `lineStates` `"removed"` lines        | `rgba(231, 76, 60, 0.15)`   |
+| --unhighlighted-opacity   | Opacity of un-highlighted lines (focus mode)             | `1`                         |
+| --unhighlighted-filter    | CSS filter for un-highlighted lines (focus mode)         | `none`                      |
 
 See [Styling with CSS variables](#styling-with-css-variables) for the full list, including container-level variables like `--border-radius`, `--width`, and `--overflow-x`.
 
@@ -1906,17 +1936,18 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 
 #### Props
 
-| Name               | Type       | Default value                       |
-| :----------------- | :--------- | :----------------------------------- |
-| highlighted        | `string`   | N/A (required unless `lines` is set) |
-| lines              | `string[]` | `undefined`                          |
-| lineCount          | `number`   | `undefined`                          |
-| hideBorder         | `boolean`  | `false`                              |
-| wrapLines          | `boolean`  | `false`                              |
-| startingLineNumber | `number`   | `1`                                  |
-| highlightedLines   | `number[]` | `[]`                                 |
-| langtag            | `boolean`  | `false`                              |
-| languageName       | `string`   | `"plaintext"`                        |
+| Name               | Type                                                        | Default value                       |
+| :----------------- | :---------------------------------------------------------- | :----------------------------------- |
+| highlighted        | `string`                                                     | N/A (required unless `lines` is set) |
+| lines              | `string[]`                                                   | `undefined`                          |
+| lineCount          | `number`                                                     | `undefined`                          |
+| hideBorder         | `boolean`                                                    | `false`                              |
+| wrapLines          | `boolean`                                                    | `false`                              |
+| startingLineNumber | `number`                                                     | `1`                                  |
+| highlightedLines   | `number[]`                                                   | `[]`                                 |
+| lineStates         | `Record<number, "highlighted" \| "focus" \| "added" \| "removed">` | `{}`                           |
+| langtag            | `boolean`                                                    | `false`                              |
+| languageName       | `string`                                                     | `"plaintext"`                        |
 
 `$$restProps` are forwarded to the top-level `div` element.
 
