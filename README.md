@@ -1494,6 +1494,14 @@ With `autoContrast` on (the default), spans that set a background get a readable
 <AnsiOutput {text} autoContrast={false} />
 ```
 
+### Wrapping long lines
+
+`AnsiOutput` never wraps by default -- long lines scroll horizontally. Set `wrap` to wrap them instead:
+
+```svelte
+<AnsiOutput {text} wrap />
+```
+
 ### Pairing with `CodeWindow`
 
 Put `AnsiOutput` inside `CodeWindow variant="terminal"` for the prompt and title bar:
@@ -1665,6 +1673,7 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 | :----------- | :-------- | :------------- |
 | text         | `string`  | N/A (required) |
 | autoContrast | `boolean` | `true`         |
+| wrap         | `boolean` | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 

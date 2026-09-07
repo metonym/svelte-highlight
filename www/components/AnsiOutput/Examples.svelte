@@ -74,6 +74,11 @@
 
   const gitMarkup = "<AnsiOutput {text} />";
 
+  const longLine =
+    `${sgr(31)}FAIL${R} tests/parser.test.ts` +
+    " > parses a very long line of streamed build output without wrapping the container itself, only the text inside it";
+  const wrapMarkup = "<AnsiOutput {text} wrap />";
+
   /** @param {string} uri */
   const osc8 = (uri) => `${ESC}]8;;${uri}${ESC}\\`;
   const links = [
@@ -131,6 +136,7 @@
   const gitSnippet = snippetFor("AnsiOutput", gitDiff, gitMarkup);
   const linksSnippet = snippetFor("AnsiOutput", links, linksMarkup);
   const lightSnippet = snippetFor("AnsiOutput", vitest, lightMarkup);
+  const wrapSnippet = snippetFor("AnsiOutput", longLine, wrapMarkup);
 </script>
 
 <div class="mb-5">
@@ -212,4 +218,14 @@
     --ansi-bold-weight="600"
     --ansi-dim-opacity="0.7"
   />
+</div>
+
+<p class="label-01 mb-3">
+  Wrapping a long line instead of scrolling. Set <code class="code">wrap</code>.
+</p>
+<div class="mb-3">
+  <HighlightSvelte code={wrapSnippet} class={THEME_MODULE_NAME} />
+</div>
+<div class="mb-5" style="max-width: 32em;">
+  <AnsiOutput text={longLine} wrap />
 </div>
