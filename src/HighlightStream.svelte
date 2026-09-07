@@ -129,7 +129,7 @@
   let finalizedOpenScopes = [];
   let renderedCommittedCount = 0;
   // Mid-line checkpoint for the staged-tail preview; see stream-preview.js.
-  /** @type {undefined} */
+  /** @type {import("./stream-preview.d.ts").PreviewCache | undefined} */
   let previewCache;
 
   // Sealed (finished, immutable) chunks of `SEAL_CHUNK_LINES` line spans

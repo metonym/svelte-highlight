@@ -1143,6 +1143,24 @@ test("HighlightStream - stable line elements are not recreated as more lines str
   expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
 });
 
+test("HighlightStream - a 64 KB single line streamed in chunks settles to Highlight's output", async ({
+  mount,
+  page,
+}) => {
+  test.setTimeout(30000);
+  await mount(HighlightStreamStability);
+
+  await page.getByTestId("stream-long-line").click();
+  await expect(page.getByTestId("long-line-done")).toHaveText("true", {
+    timeout: 20000,
+  });
+  await expect(page.getByTestId("long-line-reference")).toBeVisible();
+
+  expect(
+    await page.getByTestId("long-line-highlighted-snapshot").textContent(),
+  ).toBe(await page.getByTestId("long-line-reference").textContent());
+});
+
 test("HighlightStream - closing a multi-line template literal re-tokenizes the earlier line", async ({
   mount,
   page,
