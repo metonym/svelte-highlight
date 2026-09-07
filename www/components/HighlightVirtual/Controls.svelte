@@ -64,6 +64,7 @@
   </div>
   <p class="label-01" style="margin-bottom: 0.5rem">
     Rendered window: <code class="code">{win.start}-{win.end}</code> of
-    <code class="code">{win.lineCount}</code> lines
+    <code class="code">{win.lineCount}</code>
+    lines
   </p>
 </div>
