@@ -1275,6 +1275,20 @@ highlightStatic({
 });
 ```
 
+To measure how many `<Highlight>` usages a build actually converted to static markup, pass `onSummary`. It fires once per file with at least one shape-matched usage (files with none don't trigger it), so summing across calls gives a build-wide total:
+
+```js
+let matched = 0;
+let succeeded = 0;
+
+highlightStatic({
+  onSummary(summary) {
+    matched += summary.matched;
+    succeeded += summary.succeeded;
+  },
+});
+```
+
 Scope is small on purpose. Extra props on `<Highlight>` don't carry over to the emitted `<pre>`. Unused `Highlight` and language imports are left in place; bundlers drop them (`sideEffects` in `package.json` is narrow enough).
 
 ### Rendering Markdown/MDX fences
