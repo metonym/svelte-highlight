@@ -899,6 +899,37 @@ test("HighlightEditable - Enter inserts a newline and Tab inserts indent", async
   );
 });
 
+test("HighlightEditable - Escape then Tab releases focus instead of indenting", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, { props: { initialCode: "a" } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowRight"); // caret to end
+
+  // Plain Tab still indents.
+  await page.keyboard.press("Tab");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "a  ");
+
+  // Escape then Tab moves focus out instead of indenting; code is unchanged.
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("Tab");
+  await expect(page.getByTestId("after")).toBeFocused();
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "a  ");
+
+  // Escape then any other key clears the flag, so the next Tab indents again.
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("Tab");
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "a    ");
+});
+
 test("HighlightEditable - Tab and Shift+Tab indent/dedent selected lines", async ({
   mount,
   page,

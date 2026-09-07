@@ -22,6 +22,7 @@
   on:change={() => (changes += 1)}
   on:history={(e) => (historyState = e.detail)}
 />
+<input type="text" data-testid="after" />
 
 <div data-testid="code" data-value={code}></div>
 <div data-testid="changes" data-value={changes}></div>
