@@ -1,4 +1,4 @@
-import { scopeClassFor, scopeStyle } from "../src/scoped.js";
+import { dualStyle, scopeClassFor, scopeStyle } from "../src/scoped.js";
 import a11yDark from "../src/styles/a11y-dark.js";
 import brownPaper from "../src/styles/brown-paper.js";
 
@@ -75,6 +75,48 @@ describe("scopeStyle", () => {
     const out = scopeStyle(brownPaper, "svh-scope-2");
     expect(out).toContain(".svh-scope-2 .hljs{");
     expect(out).toContain("url(data:image/png;base64,");
+  });
+});
+
+describe("invalid scope token warnings", () => {
+  let warnings: unknown[][];
+  let originalWarn: typeof console.warn;
+
+  beforeEach(() => {
+    warnings = [];
+    originalWarn = console.warn;
+    console.warn = (...args: unknown[]) => {
+      warnings.push(args);
+    };
+  });
+
+  afterEach(() => {
+    console.warn = originalWarn;
+  });
+
+  it("warns once for a scope containing a space", () => {
+    scopeStyle(".hljs{color:red}", "a b");
+    expect(warnings.length).toBe(1);
+  });
+
+  it("warns once for a scope with a leading digit", () => {
+    scopeStyle(".hljs{color:red}", "1abc");
+    expect(warnings.length).toBe(1);
+  });
+
+  it("does not warn for a valid hyphenated scope", () => {
+    scopeStyle(".hljs{color:red}", "valid-scope");
+    expect(warnings.length).toBe(0);
+  });
+
+  it("does not warn for a scope starting with an underscore", () => {
+    scopeStyle(".hljs{color:red}", "_valid");
+    expect(warnings.length).toBe(0);
+  });
+
+  it("warns exactly once per dualStyle call, not once per theme", () => {
+    dualStyle(".hljs{color:red}", ".hljs{color:blue}", "a b");
+    expect(warnings.length).toBe(1);
   });
 });
 

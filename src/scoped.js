@@ -23,6 +23,17 @@ const GROUP_AT_RULES = new Set([
 const AT_RULE_NAME = /^@([a-zA-Z-]+)/;
 const WHITESPACE = /\s/;
 
+const VALID_SCOPE_TOKEN = /^-?[a-zA-Z_][\w-]*$/;
+
+/** @param {string} scope */
+function warnIfInvalidScope(scope) {
+  if (typeof console !== "undefined" && !VALID_SCOPE_TOKEN.test(scope)) {
+    console.warn(
+      `[svelte-highlight/scoped] "${scope}" is not a single valid CSS class name; the scoped selector and any class attribute built from it may not match as expected.`,
+    );
+  }
+}
+
 /**
  * @param {string} selector
  * @returns {[string, string, string]} `[leading, core, trailing]`
@@ -157,6 +168,7 @@ export function scopeSelectors(css, transform) {
  * @returns {string}
  */
 export function scopeStyle(style, scope) {
+  warnIfInvalidScope(scope);
   const body = scopedBody(style, scope);
   const match = STYLE_TAG.exec(style);
   return match ? `${match[1] ?? ""}${body}${match[3] ?? ""}` : body;
@@ -193,6 +205,7 @@ function scopedBody(style, scope, prefix = "") {
  * @returns {string}
  */
 export function dualStyle(light, dark, scope, mode = "auto") {
+  warnIfInvalidScope(scope);
   let css;
   if (mode === "light") {
     css = scopedBody(light, scope);
