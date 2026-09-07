@@ -47,8 +47,8 @@
   {lineCount.toLocaleString()}
   lines total. <code class="code">lines</code>
   only ever holds the scrolled-into-view window;
-  <code class="code">lineCount</code> keeps the gutter sized for the full
-  document.
+  <code class="code">lineCount</code>
+  keeps the gutter sized for the full document.
 </p>
 
 <div
