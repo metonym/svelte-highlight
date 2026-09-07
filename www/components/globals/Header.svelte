@@ -160,6 +160,7 @@
     "/preview-plantuml": "PlantUML language preview",
     "/preview-structurizr": "Structurizr DSL language preview",
     "/preview-org": "Org mode language preview",
+    "/preview-djot": "Djot language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
