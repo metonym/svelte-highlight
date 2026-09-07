@@ -2252,6 +2252,22 @@ test("Typewriter - swapping `highlighted` mid-animation restarts cleanly", async
   expect(errors).toEqual([]);
 });
 
+test("Typewriter - dispatches progress and exposes bindable revealed/total", async ({
+  mount,
+  page,
+}) => {
+  await mount(Typewriter, { props: { speed: 15 } });
+
+  const progress = page.getByTestId("progress");
+
+  await expect.poll(async () => progress.textContent()).not.toMatch(/^0\//);
+
+  const total = await progress
+    .textContent()
+    .then((text) => text?.split("/")[1]);
+  await expect(progress).toHaveText(`${total}/${total}`, { timeout: 15_000 });
+});
+
 test("HighlightEditable - two instances share the same bound code", async ({
   mount,
   page,

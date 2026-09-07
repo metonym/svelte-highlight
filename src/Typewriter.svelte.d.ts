@@ -32,6 +32,20 @@ export type TypewriterProps = HTMLAttributes<HTMLPreElement> & {
   easing?: (t: number) => number;
 
   /**
+   * Number of visible characters currently revealed. Read-only in practice
+   * (overwritten every frame); exposed for `bind:revealed`.
+   * @default 0
+   */
+  revealed?: number;
+
+  /**
+   * Total number of visible characters in `highlighted`. Read-only in
+   * practice (overwritten every reactive flush); exposed for `bind:total`.
+   * @default 0
+   */
+  total?: number;
+
+  /**
    * Width of the blinking caret.
    * @default "0.6em"
    */
@@ -67,6 +81,11 @@ export type TypewriterEvents = {
    * Fires when typing finishes.
    */
   done: CustomEvent<null>;
+
+  /**
+   * Fires whenever `revealed` advances, with the current `revealed`/`total`.
+   */
+  progress: CustomEvent<{ revealed: number; total: number }>;
 };
 
 export default class Typewriter extends SvelteComponentTyped<

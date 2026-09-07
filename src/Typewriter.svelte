@@ -49,8 +49,21 @@
   /** @type {boolean} */
   let doneFired = false;
 
-  /** Number of visible characters currently revealed. @type {number} */
-  let revealed = 0;
+  /**
+   * Number of visible characters currently revealed. Read-only in practice:
+   * overwritten every frame by the tick loop, but exported so `bind:revealed`
+   * can observe it (e.g. for a progress bar).
+   * @type {number}
+   */
+  export let revealed = 0;
+
+  /**
+   * Total number of visible characters in `highlighted`. Read-only in
+   * practice: overwritten every reactive flush from `units`, but exported so
+   * `bind:total` can observe it (e.g. for a progress bar).
+   * @type {number}
+   */
+  export let total = 0;
 
   /** @type {number | undefined} */
   let rafId;
@@ -148,7 +161,10 @@
     const t = duration > 0 ? Math.min(1, elapsedMs / duration) : 1;
     const target = Math.round(easing(t) * total);
     const next = Math.min(total, Math.max(0, target));
-    if (next > revealed) revealed = next;
+    if (next > revealed) {
+      revealed = next;
+      dispatch("progress", { revealed, total });
+    }
 
     if (useUnitReveal) syncUnitDom();
 
