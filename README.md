@@ -944,6 +944,8 @@ See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported lan
 
 ## Language Tags
 
+The language tag is one badge (`LangTag.svelte` + `langtag.css`) reached three ways: automatically, via `Highlight`/`HighlightAuto`/`HighlightSvelte`'s built-in fallback render when `langtag` is set; directly, via the standalone `LangTag` component; or via `LineNumbers`' own `langtag`/`languageName` props, which are not wired to a wrapping `Highlight` automatically and must be forwarded manually from slot props (see [Language Tag](#language-tag) under Line Numbers).
+
 Set `langtag` to `true` to display the language name in the top right corner of the code block.
 
 Customize the language tag `background`, `color`, and `border-radius` using style props.
