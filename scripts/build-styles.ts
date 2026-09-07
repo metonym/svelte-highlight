@@ -13,10 +13,23 @@ import {
 } from "./utils/regexes.ts";
 import { scopeStylesheet } from "./utils/scope-stylesheet.ts";
 import { buildGapFillProposals } from "./utils/similarity-map.ts";
+import { colorSchemeFor } from "./utils/theme-ir.ts";
 import { toCamelCase } from "./utils/to-camel-case.ts";
 import { writeTo } from "./utils/write-to.ts";
 
 export type ModuleNames = Array<{ name: string; moduleName: string }>;
+
+type StyleEntry = {
+  name: string;
+  moduleName: string;
+  description?: string;
+  custom?: boolean;
+  colorScheme: "light" | "dark";
+};
+
+const HLJS_BASE_RULE = /\n\.hljs\s*\{([^}]*)\}/;
+const BACKGROUND_DECLARATION = /background(?:-color)?:\s*([^;\n]+)/;
+const DESCRIPTION_COMMENT = /Description:\s*(.+)/;
 
 /** camelCase, prefixed with `_` when it can't be a bare identifier (`1c`, `default`). */
 function toStyleModuleName(name: string) {
@@ -39,7 +52,6 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
 
   let scopedStyles = "";
   const seenNames = new Set<string>();
-  let styles: ModuleNames = [];
 
   const glob = new Glob("**/*");
 
@@ -64,7 +76,6 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
       }
 
       seenNames.add(name);
-      styles.push({ name, moduleName });
       cssFiles.push({ file, absPath, name, dir, moduleName });
     }
   }
@@ -85,7 +96,6 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
       }
 
       seenNames.add(name);
-      styles.push({ name, moduleName });
       cssFiles.push({
         file,
         absPath,
@@ -145,6 +155,14 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
           ? { name, deadDeclarationsRemoved, gapsFilled }
           : null;
 
+      const bgValue = HLJS_BASE_RULE.exec(content)?.[1]?.match(
+        BACKGROUND_DECLARATION,
+      )?.[1];
+      const colorScheme = colorSchemeFor(bgValue?.trim());
+      const description = custom
+        ? DESCRIPTION_COMMENT.exec(content)?.[1]?.trim()
+        : undefined;
+
       return {
         writes: [
           writeTo(`src/styles/${name}.js`, exportee),
@@ -162,6 +180,13 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
           css: cssMinified,
           ...(custom ? { custom: true } : {}),
         },
+        styleEntry: {
+          name,
+          moduleName,
+          colorScheme,
+          ...(custom ? { custom: true } : {}),
+          ...(description ? { description } : {}),
+        } satisfies StyleEntry,
       };
     }),
   );
@@ -173,15 +198,23 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
     gapsFilled: number;
   }> = [];
   const themeInputs: ThemeInput[] = [];
-  for (const { writes, scopedStyle, augmentation, themeInput } of fileWrites) {
+  const styles: StyleEntry[] = [];
+  for (const {
+    writes,
+    scopedStyle,
+    augmentation,
+    themeInput,
+    styleEntry,
+  } of fileWrites) {
     allWrites.push(...writes);
     scopedStyles += scopedStyle;
     if (augmentation) augmentations.push(augmentation);
     themeInputs.push(themeInput);
+    styles.push(styleEntry);
   }
   augmentations.sort((a, b) => a.name.localeCompare(b.name));
 
-  styles = styles.sort((a, b) => a.name.localeCompare(b.name));
+  styles.sort((a, b) => a.name.localeCompare(b.name));
 
   const customNames = new Set(
     cssFiles.filter((file) => file.custom).map((file) => file.name),
