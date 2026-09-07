@@ -90,6 +90,22 @@ const declarationTagsSnippet = `<script lang="ts">
   </div>
 {/each}`;
 
+const snippetSnippet = `<script>
+  let items = [1, 2, 3];
+</script>
+
+{#snippet row(item)}
+  <li>{item}</li>
+{/snippet}
+
+<ul>
+  {#each items as item}
+    {@render row(item)}
+  {/each}
+</ul>
+
+<div {@attach myAttachment}>hi</div>`;
+
 test("svelte highlights embedded JavaScript, CSS, and expressions", () => {
   registerAll(registry, svelte);
 
@@ -244,6 +260,19 @@ test("svelte does not highlight directives inside script strings", () => {
   expect(result).toContain(
     '<span class="hljs-string">`&lt;button on:click={() =&gt; { console.log(0); }}&gt;Click me&lt;/button&gt;`</span>',
   );
+});
+
+test("svelte highlights snippet blocks, @render, and @attach", () => {
+  registerAll(registry, svelte);
+
+  const result = registry.highlight(snippetSnippet, {
+    language: "svelte",
+  }).value;
+
+  expect(result).toContain('<span class="hljs-keyword">#snippet</span>');
+  expect(result).toContain('<span class="hljs-keyword">/snippet</span>');
+  expect(result).toContain('<span class="hljs-keyword">@render</span>');
+  expect(result).toContain('<span class="hljs-keyword">@attach</span>');
 });
 
 test("html alone does not highlight Svelte block syntax", () => {
