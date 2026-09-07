@@ -31,3 +31,16 @@ export declare function createTypewriterSplitter(
   units: TypewriterUnit[],
   html: string,
 ): TypewriterSplitter;
+
+/**
+ * Groups `units`' visible characters into words: a maximal run of
+ * consecutive non-whitespace visible units, plus any visible whitespace
+ * (` `, `\t`, `\r`, `\n`) immediately following it. A leading whitespace run
+ * (with no preceding word) is its own word. Tags (`visible: 0`) are skipped
+ * without resetting the current word. Returns the cumulative visible-unit
+ * count at the end of each word; the last entry always equals the total
+ * visible-unit count. Empty for zero visible units.
+ */
+export declare function computeWordBoundaries(
+  units: TypewriterUnit[],
+): number[];

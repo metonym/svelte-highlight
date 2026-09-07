@@ -2252,6 +2252,23 @@ test("Typewriter - swapping `highlighted` mid-animation restarts cleanly", async
   expect(errors).toEqual([]);
 });
 
+test('Typewriter - granularity="word" still completes and settles to the full content', async ({
+  mount,
+  page,
+}) => {
+  await mount(Typewriter, { props: { speed: 10, granularity: "word" } });
+
+  const tw = page.getByTestId("tw");
+
+  await expect(page.getByTestId("done")).toHaveText("1");
+
+  await expect(tw.locator(".hljs-keyword").first()).toHaveText("const");
+  await expect(tw.locator(".hljs-title.function_")).toHaveText("add");
+  await expect(tw).toContainText(
+    "const add = (a: number, b: number) => a + b;",
+  );
+});
+
 test("Typewriter - dispatches progress and exposes bindable revealed/total", async ({
   mount,
   page,
