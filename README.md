@@ -1061,6 +1061,8 @@ In the example below, the `HighlightAuto` component and injected styles are dyna
 />
 ```
 
+Registering a grammar checks its canonical name, not an alias lookup, before skipping — so a grammar that aliases another (highlight.js's "ini" aliases "toml") can't make the real grammar look already-registered before it has actually loaded.
+
 ### Loading a language by name
 
 The example above imports a specific language as a static string, which lets the bundler split out only the grammars you reference. When the language is known only at **runtime** — a Markdown fence (` ```ts `), an API field, or a user-selected value — use the `loadLanguage` helper to import a grammar by name:
@@ -1086,9 +1088,11 @@ The example above imports a specific language as a static string, which lets the
 {/await}
 ```
 
-`loadLanguage` accepts a [supported language name](SUPPORTED_LANGUAGES.md), dynamically imports its grammar, and resolves with the language object. It rejects with an `Unknown language` error for an unrecognized name, so handle the `{:catch}` block (or `.catch`) when the name comes from untrusted input.
+`loadLanguage` accepts a [supported language name](SUPPORTED_LANGUAGES.md), dynamically imports its grammar, and resolves with the language object. It rejects with an `Unknown language` error for an unrecognized name, so handle the `{:catch}` block (or `.catch`) when the name comes from untrusted input. Grammars with embedded sublanguages (`astro`, `svelte`, and others with a `dependencies` list) register their dependencies automatically — `Highlight`, `HighlightAuto`, and `HighlightSvelte` all call `ensureRegistered` on the language they're given, which registers the grammar and recurses through its dependencies.
 
-> **Note:** Because the imported name is dynamic, the bundler cannot prune unused grammars and will emit a chunk for every language. Prefer a static `import` when the language is known ahead of time, and reach for `loadLanguage` only when it is not.
+`loadLanguage` does a fresh `import()` on every call and keeps no explicit cache, but it's safe to call repeatedly for the same name: module loaders dedupe dynamic imports by resolved specifier rather than re-fetching, so repeated calls resolve to the same cached module.
+
+> **Note:** Because the imported name is dynamic, the bundler cannot prune unused grammars and will emit a chunk for every language — all 279 shipped grammars. Prefer a static `import` when the language is known ahead of time, and reach for `loadLanguage` only when it is not.
 
 A practical case is rendering Markdown, where each fenced block declares its own language:
 
