@@ -108,6 +108,14 @@ pkgJson.exports = {
     types: "./tokenized-document.d.ts",
     default: "./tokenized-document.js",
   },
+  "./typewriter-units": {
+    types: "./typewriter-units.d.ts",
+    default: "./typewriter-units.js",
+  },
+  "./typewriter-units.js": {
+    types: "./typewriter-units.d.ts",
+    default: "./typewriter-units.js",
+  },
   "./registry": {
     types: "./registry.d.ts",
     default: "./registry.js",
