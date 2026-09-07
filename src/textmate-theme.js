@@ -4,6 +4,7 @@
  *
  * @typedef {import("./textmate-theme.d.ts").TextMateTheme} TextMateTheme
  * @typedef {import("./textmate-theme.d.ts").TextMateTokenColor} TextMateTokenColor
+ * @typedef {import("./textmate-theme.d.ts").TextMateSemanticTokenStyle} TextMateSemanticTokenStyle
  * @typedef {import("./textmate-theme.d.ts").FromTextMateOptions} FromTextMateOptions
  * @typedef {import("./theme.d.ts").ThemePalette} ThemePalette
  * @typedef {import("./theme.d.ts").TokenStyle} TokenStyle
@@ -74,6 +75,39 @@ const STARTER_ROWS = STARTER_TABLE.map(([prefix, target]) => ({
 }));
 
 /**
+ * VS Code semantic token type -> hljs target scope key. Covers VS Code's
+ * default semantic token types (`semanticTokenTypes`); modifiers and
+ * language scoping are not resolved — a `semanticTokenColors` key matches
+ * by base type only.
+ * @type {Record<string, string>}
+ */
+const SEMANTIC_STARTER_TABLE = {
+  namespace: "title.class_",
+  class: "title.class_",
+  interface: "title.class_",
+  enum: "title.class_",
+  struct: "title.class_",
+  typeParameter: "type",
+  type: "type",
+  parameter: "params",
+  variable: "variable",
+  enumMember: "variable",
+  property: "property",
+  event: "property",
+  decorator: "meta",
+  label: "meta",
+  function: "title.function_",
+  method: "title.function_",
+  macro: "title.function_",
+  comment: "comment",
+  string: "string",
+  keyword: "keyword",
+  number: "literal",
+  regexp: "regexp",
+  operator: "operator",
+};
+
+/**
  * The most specific (longest segment-prefix) starter-table row matching
  * `scope`, or `null` if none does.
  * @param {string} scope
@@ -115,6 +149,23 @@ function styleFromSettings(settings) {
     if (tokens.includes("bold")) style.fontWeight = "bold";
     if (tokens.includes("underline")) style.textDecoration = "underline";
   }
+  return style;
+}
+
+/**
+ * @param {string | TextMateSemanticTokenStyle} settings
+ * @returns {TokenStyle}
+ */
+function styleFromSemanticSettings(settings) {
+  if (typeof settings === "string") return { color: settings };
+
+  /** @type {TokenStyle} */
+  const style = {};
+  if (settings.foreground !== undefined) style.color = settings.foreground;
+  if (settings.italic) style.fontStyle = "italic";
+  if (settings.bold) style.fontWeight = "bold";
+  if (settings.underline) style.textDecoration = "underline";
+  else if (settings.strikethrough) style.textDecoration = "line-through";
   return style;
 }
 
@@ -202,6 +253,25 @@ export function fromTextMate(theme, options = {}) {
 
   for (const [target, style] of winnerStyle) {
     applyTokenStyle(vars, parseScopeKey(target), style);
+  }
+
+  // Second pass: semanticTokenColors overlays tokenColors, matching VS
+  // Code's own precedence when semantic highlighting is enabled.
+  const semanticTokenColors = theme.semanticTokenColors ?? {};
+  for (const [key, settings] of Object.entries(semanticTokenColors)) {
+    const baseType = key.split(":")[0]?.split(".")[0] ?? "";
+    const target = SEMANTIC_STARTER_TABLE[baseType];
+    if (!target) {
+      onWarn(
+        `fromTextMate(): no hljs mapping for semantic token type "${baseType}".`,
+      );
+      continue;
+    }
+    applyTokenStyle(
+      vars,
+      parseScopeKey(target),
+      styleFromSemanticSettings(settings),
+    );
   }
 
   const colorScheme =
