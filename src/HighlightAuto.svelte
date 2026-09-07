@@ -41,8 +41,14 @@
   /** @type {import("./engine.d.ts").ScopeEvent[]} */
   let events = [];
 
+  /** @type {import("./engine.d.ts").ScopeEvent[] | undefined} */
+  let lastDispatchedEvents;
+
   afterUpdate(() => {
-    if (highlighted) dispatch("highlight", { highlighted, language, events });
+    if (events !== lastDispatchedEvents) {
+      lastDispatchedEvents = events;
+      dispatch("highlight", { highlighted, language, events });
+    }
   });
 
   $: {

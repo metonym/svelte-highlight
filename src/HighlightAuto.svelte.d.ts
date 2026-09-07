@@ -20,6 +20,11 @@ export type HighlightAutoProps = HTMLAttributes<HTMLPreElement> &
   };
 
 export type HighlightAutoEvents = {
+  /**
+   * Fires once per highlight (when `code`/`languageNames` change and the
+   * highlighting result actually changes), including when the result is
+   * empty (empty `code`, or no candidate language matches).
+   */
   highlight: CustomEvent<{
     /**
      * The highlighted HTML as a string.

@@ -73,6 +73,11 @@ export type HighlightProps = HTMLAttributes<HTMLPreElement> &
   };
 
 export type HighlightEvents = {
+  /**
+   * Fires once per highlight (when `code`/`language` change and the
+   * highlighting result actually changes), including when the result is
+   * empty (empty `code`).
+   */
   highlight: CustomEvent<{
     /**
      * The highlighted HTML as a string.

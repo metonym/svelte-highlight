@@ -9,13 +9,18 @@ import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
 import CopyButtonTransform from "./CopyButton.transform.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
+import HighlightDispatchOnce from "./Highlight.dispatchOnce.test.svelte";
+import HighlightEmptyCode from "./Highlight.emptyCode.test.svelte";
 import HighlightEvents from "./Highlight.events.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
+import HighlightAutoDispatchOnce from "./HighlightAuto.dispatchOnce.test.svelte";
+import HighlightAutoEmptyCode from "./HighlightAuto.emptyCode.test.svelte";
 import HighlightAutoEvents from "./HighlightAuto.events.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
+import HighlightAutoNoCandidate from "./HighlightAuto.noCandidate.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
@@ -30,6 +35,8 @@ import HighlightStreamVirtualize from "./HighlightStream.virtualize.test.svelte"
 import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
 import HighlightStyleNoTheme from "./HighlightStyle.noTheme.test.svelte";
 import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte";
+import HighlightSvelteDispatchOnce from "./HighlightSvelte.dispatchOnce.test.svelte";
+import HighlightSvelteEmptyCode from "./HighlightSvelte.emptyCode.test.svelte";
 import HighlightSvelteEvents from "./HighlightSvelte.events.test.svelte";
 import HighlightVirtual from "./HighlightVirtual.test.svelte";
 import LangTag from "./LangTag.test.svelte";
@@ -387,6 +394,28 @@ test("Highlight - exposes the scope-event stream via slot prop and on:highlight 
   await expect(page.getByTestId("dispatch-events")).toHaveText(expected ?? "");
 });
 
+test("Highlight - dispatches on:highlight for empty code", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEmptyCode);
+
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await expect(page.getByTestId("highlighted")).toHaveText('""');
+  await expect(page.getByTestId("events")).toHaveText("[]");
+});
+
+test("Highlight - dispatches on:highlight once per change, not per re-render", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDispatchOnce);
+
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await page.getByRole("button", { name: "Toggle langtag" }).click();
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+});
+
 test("HighlightAuto - exposes the scope-event stream via slot prop and on:highlight detail", async ({
   mount,
   page,
@@ -399,6 +428,40 @@ test("HighlightAuto - exposes the scope-event stream via slot prop and on:highli
   await expect(page.getByTestId("dispatch-events")).toHaveText(expected ?? "");
 });
 
+test("HighlightAuto - dispatches on:highlight for empty code", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoEmptyCode);
+
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await expect(page.getByTestId("highlighted")).toHaveText('""');
+  const events = await page.getByTestId("events").textContent();
+  expect(events).not.toBe("");
+  expect(JSON.parse(events ?? "[]")).not.toEqual([]);
+});
+
+test("HighlightAuto - dispatches on:highlight when no candidate language matches", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoNoCandidate);
+
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await expect(page.getByTestId("language")).toHaveText('""');
+});
+
+test("HighlightAuto - dispatches on:highlight once per change, not per re-render", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoDispatchOnce);
+
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await page.getByRole("button", { name: "Toggle langtag" }).click();
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+});
+
 test("HighlightSvelte - exposes the scope-event stream via slot prop and on:highlight detail", async ({
   mount,
   page,
@@ -409,6 +472,28 @@ test("HighlightSvelte - exposes the scope-event stream via slot prop and on:high
   expect(expected).not.toBe("");
   await expect(page.getByTestId("slot-events")).toHaveText(expected ?? "");
   await expect(page.getByTestId("dispatch-events")).toHaveText(expected ?? "");
+});
+
+test("HighlightSvelte - dispatches on:highlight for empty code", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightSvelteEmptyCode);
+
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await expect(page.getByTestId("highlighted")).toHaveText('""');
+  await expect(page.getByTestId("events")).toHaveText("[]");
+});
+
+test("HighlightSvelte - dispatches on:highlight once per change, not per re-render", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightSvelteDispatchOnce);
+
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await page.getByRole("button", { name: "Toggle langtag" }).click();
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
 });
 
 test("SvelteHighlight", async ({ mount, page }) => {
