@@ -929,7 +929,7 @@ Set `readonly` to keep highlighting, caret placement, and selection active while
 
 Requires Chrome 105+, Safari 17.2+, or Firefox 140+. Where `CSS.highlights` is unavailable, `HighlightEditable` falls back to `engine="dom"` silently; check what actually ran with `editor.resolvedEngine()`.
 
-Pass `theme` (the same theme string you'd give `HighlightStyle`) to generate `::highlight()` rules from it. Only `color`/`background-color` convert — `::highlight()` doesn't support `font-style`/`font-weight`/`text-decoration` across browsers, so bold/italic scopes render in plain color.
+Pass `theme` (the same theme string you'd give `HighlightStyle`) to generate `::highlight()` rules from it. Only `color`/`background-color` convert, and only for single-class `.hljs-<scope>` rules — compound (`.hljs-title.class_`) and descendant-selector (`.hljs-meta .hljs-keyword`) scopes have no `::highlight()` equivalent and get **no color at all**, not just plain weight/style.
 
 `theme` only covers token colors — you still need `HighlightStyle` (or an injected stylesheet) for the base `.hljs` layout rules (padding, overflow, background), exactly as with the default engine.
 

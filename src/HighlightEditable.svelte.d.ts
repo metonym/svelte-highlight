@@ -46,9 +46,10 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
    * Safari 17.2+, Firefox 140+); check what was actually used with the
    * `resolvedEngine()` method.
    *
-   * Colors only: `::highlight()` doesn't support `font-style`/
-   * `font-weight`/`text-decoration` across browsers, so bold/italic scopes
-   * render plain in this mode.
+   * Colors only, and only for single-class `.hljs-<scope>` rules: compound
+   * (`.hljs-title.class_`) and descendant-selector (`.hljs-meta
+   * .hljs-keyword`) scopes have no `::highlight()` equivalent and get no
+   * color at all, not just plain weight/style.
    * @default "dom"
    */
   engine?: "dom" | "css-highlights";
@@ -57,7 +58,9 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
    * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
    * from `svelte-highlight/themes/<theme>`, used only in
    * `"css-highlights"` mode to generate `::highlight()` rules. Colors only
-   * (`color`/`background-color`); other declarations are dropped.
+   * (`color`/`background-color`); other declarations are dropped. Only
+   * single-class `.hljs-<scope>` rules convert — compound and
+   * descendant-selector scopes get no color at all.
    * @example
    * import a11yDark from "svelte-highlight/styles/a11y-dark";
    * @example
