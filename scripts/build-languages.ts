@@ -142,6 +142,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "graphviz",
   "plantuml",
   "structurizr",
+  "org",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
