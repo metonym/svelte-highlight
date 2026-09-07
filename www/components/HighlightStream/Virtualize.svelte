@@ -1,5 +1,4 @@
 <script>
-  import { trackRenderedLineCount } from "@components/HighlightVirtual/generate-large-code.js";
   import { THEME_MODULE_NAME } from "@www/constants";
   import { Button, Toggle } from "carbon-components-svelte";
   import { onDestroy, onMount } from "svelte";
@@ -17,7 +16,9 @@
   let code = "";
   let done = false;
   let paused = false;
-  let renderedLineCount = 0;
+  let windowStart = 0;
+  let windowEnd = 0;
+  let windowLineCount = 0;
   let stop = () => {};
 
   function run() {
@@ -49,17 +50,19 @@
   lines stream in fast; only the scrolled window is ever in the DOM.
 </p>
 
-<div use:trackRenderedLineCount={(n) => (renderedLineCount = n)}>
-  <HighlightStream
-    language={javascript}
-    {code}
-    {done}
-    {autoScroll}
-    virtualize
-    class={THEME_MODULE_NAME}
-    style="height: 320px"
-  />
-</div>
+<HighlightStream
+  language={javascript}
+  {code}
+  {done}
+  {autoScroll}
+  virtualize
+  class={THEME_MODULE_NAME}
+  style="height: 320px"
+  on:windowchange={(e) => {
+    ({ start: windowStart, end: windowEnd, lineCount: windowLineCount } =
+      e.detail);
+  }}
+/>
 
 <div
   style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1.5rem; margin-top: 1rem"
@@ -79,7 +82,10 @@
     <code class="code">{done ? "done" : paused ? "paused" : "streaming…"}</code>
   </p>
   <p class="label-01" style="margin-bottom: 0.5rem">
-    Rendered line nodes: <code class="code">{renderedLineCount}</code> of
-    {LINE_COUNT.toLocaleString()}
+    <code class="code"
+      >lines {windowStart}–{windowEnd}
+      of {windowLineCount}</code
+    >
+    rendered
   </p>
 </div>
