@@ -177,6 +177,49 @@
       return;
     }
     ensureRegistered(language);
+    if (session && sessionLanguageName === language.name) {
+      // Not a pure append (an LLM "regenerate the last paragraph", say):
+      // patch just the changed middle region instead of restarting the
+      // whole session and losing every sealed chunk.
+      const common = Math.min(code.length, fedCode.length);
+      let prefixLen = 0;
+      while (
+        prefixLen < common &&
+        code.charCodeAt(prefixLen) === fedCode.charCodeAt(prefixLen)
+      ) {
+        prefixLen++;
+      }
+      let suffixLen = 0;
+      const maxSuffix = common - prefixLen;
+      while (
+        suffixLen < maxSuffix &&
+        code.charCodeAt(code.length - 1 - suffixLen) ===
+          fedCode.charCodeAt(fedCode.length - 1 - suffixLen)
+      ) {
+        suffixLen++;
+      }
+      session.replace(
+        prefixLen,
+        fedCode.length - suffixLen,
+        code.slice(prefixLen, code.length - suffixLen),
+      );
+      fedCode = code;
+      previewCache = undefined;
+
+      const events = session.events();
+      const result = extendLines(events, [], "");
+      finalizedPendingHtml = result.pendingHtml;
+      finalizedOpenScopes = result.openScopes;
+      renderedCommittedCount = events.length;
+      completedHtml.reset();
+      completedHtml.appendLines(result.completedLines);
+      sealedChunks = [];
+      sealedLineCount = 0;
+      unsealedLines = result.completedLines;
+      while (unsealedLines.length >= SEAL_CHUNK_LINES) sealChunk();
+      tailLines = unsealedLines;
+      return;
+    }
     session = registry.createSession(language.name);
     sessionLanguageName = language.name;
     fedCode = "";
