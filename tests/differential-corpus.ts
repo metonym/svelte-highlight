@@ -922,6 +922,14 @@ resource Document {
 allow(actor: User, "read", resource: Document) if
   has_permission(actor, "read", resource);
 `,
+  powerquery: `let
+    // load the source table
+    Source = Csv.Document(File.Contents("data.csv")),
+    #"Changed Type" = Table.TransformColumnTypes(Source, {{"Amount", Int64.Type}}),
+    Total = List.Sum(Table.Column(#"Changed Type", "Amount"))
+in
+    each if Total > 0 then Total else 0
+`,
   prisma: `/// User model
 model User {
   id       Int      @id @default(autoincrement())

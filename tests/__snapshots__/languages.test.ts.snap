@@ -222,6 +222,7 @@ exports[`Languages 1`] = `
   "plantuml",
   "polar",
   "pony",
+  "powerquery",
   "powershell",
   "prisma",
   "processing",
