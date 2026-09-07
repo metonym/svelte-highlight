@@ -4,7 +4,11 @@
   import typescript from "svelte-highlight/languages/typescript";
   import atomOneDark from "svelte-highlight/themes/atom-one-dark";
   import "svelte-highlight/themes/base.css";
-  import { defineTheme, extendTheme } from "svelte-highlight/theme";
+  import {
+    defineTheme,
+    extendTheme,
+    ROLE_SCOPES,
+  } from "svelte-highlight/theme";
 
   const code = `interface User {
   id: number;
@@ -21,32 +25,37 @@ const greet = (user: User): string => {
   /** @type {"defineTheme" | "extendTheme"} */
   let mode = "defineTheme";
 
-  let background = "#0b1021";
-  let foreground = "#d6deeb";
-  let comment = "#637777";
-  let keyword = "#c792ea";
-  let string = "#ecc48d";
-  let fn = "#82aaff";
-  let type = "#ffcb8b";
-  let tag = "#7fdbca";
+  const roleNames = ["foreground", "background", ...Object.keys(ROLE_SCOPES)];
+
+  let roleColors = {
+    foreground: "#d6deeb",
+    background: "#0b1021",
+    comment: "#637777",
+    keyword: "#c792ea",
+    string: "#ecc48d",
+    literal: "#f78c6c",
+    function: "#82aaff",
+    type: "#ffcb8b",
+    variable: "#addb67",
+    property: "#7fdbca",
+    tag: "#7fdbca",
+    punctuation: "#c5e4fd",
+    meta: "#82aaff",
+    addition: "#a1cd5e",
+    deletion: "#ef5350",
+  };
 
   $: customTheme = defineTheme({
     name: "midnight",
     roles: {
-      background,
-      foreground,
-      comment: { color: comment, fontStyle: "italic" },
-      keyword,
-      string,
-      function: fn,
-      type,
-      tag,
+      ...roleColors,
+      comment: { color: roleColors.comment, fontStyle: "italic" },
     },
   });
 
   $: brandedTheme = extendTheme(atomOneDark, {
     name: "atom-one-dark-branded",
-    roles: { keyword },
+    roles: { keyword: roleColors.keyword },
   });
 
   $: theme = mode === "defineTheme" ? customTheme : brandedTheme;
@@ -98,29 +107,16 @@ const greet = (user: User): string => {
 
   {#if mode === "defineTheme"}
     <div class="swatches">
-      <label class="swatch"
-        ><input type="color" bind:value={background}>background</label
-      >
-      <label class="swatch"
-        ><input type="color" bind:value={foreground}>foreground</label
-      >
-      <label class="swatch"
-        ><input type="color" bind:value={comment}>comment</label
-      >
-      <label class="swatch"
-        ><input type="color" bind:value={keyword}>keyword</label
-      >
-      <label class="swatch"
-        ><input type="color" bind:value={string}>string</label
-      >
-      <label class="swatch"><input type="color" bind:value={fn}>function</label>
-      <label class="swatch"><input type="color" bind:value={type}>type</label>
-      <label class="swatch"><input type="color" bind:value={tag}>tag</label>
+      {#each roleNames as role}
+        <label class="swatch"
+          ><input type="color" bind:value={roleColors[role]}>{role}</label
+        >
+      {/each}
     </div>
   {:else}
     <div class="swatches">
       <label class="swatch"
-        ><input type="color" bind:value={keyword}>keyword</label
+        ><input type="color" bind:value={roleColors.keyword}>keyword</label
       >
     </div>
   {/if}
