@@ -62,16 +62,18 @@ describe("HighlightStyle SSR", () => {
     expect(body).toContain("--shl-bg:#ffffff");
   });
 
-  it("merges a light/dark palette pair via light-dark() with color-scheme", async () => {
+  it("merges a light/dark palette pair via an @supports light-dark() override, with a plain light baseline inline", async () => {
     const { default: HighlightStyle } = await compileForServer();
 
     const { head, body } = render(HighlightStyle, {
       props: { light: lightPalette, dark: darkPalette, mode: "auto" },
     });
 
-    expect(head).not.toContain("<style>");
-    expect(body).toContain("light-dark(#000000, #ffffff)");
-    expect(body).toContain("color-scheme:light dark");
+    expect(head).toContain("<style>");
+    expect(head).toContain("@supports");
+    expect(head).toContain("light-dark(#000000, #ffffff) !important");
+    expect(body).toContain("--shl-fg:#000000");
+    expect(body).not.toContain("light-dark(");
   });
 
   it("keeps the legacy string path unchanged: scoped <style> in head, no inline vars", async () => {

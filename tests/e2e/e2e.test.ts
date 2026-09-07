@@ -102,6 +102,22 @@ test("HighlightStyle - recomputes scope class when theme changes at runtime", as
   await expect(b).toHaveCSS("background-color", "rgb(255, 255, 255)");
 });
 
+test("HighlightStyle - applies the light-dark() @supports override for a light/dark palette pair", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStyleThemeSwitch);
+
+  const pair = page.getByTestId("palette-pair").locator(".hljs").first();
+
+  // atom-one-dark background is #282c34, resolved via light-dark() under
+  // mode="dark" — Chromium supports light-dark(), so the @supports override
+  // applies and matches the same value dualPaletteStyle would have resolved
+  // pre-fallback, not the plain light baseline (#fafafa) inlined as a
+  // fallback for unsupporting browsers.
+  await expect(pair).toHaveCSS("background-color", "rgb(40, 44, 52)");
+});
+
 test("HighlightStyle - dedupes head injection for instances sharing a theme", async ({
   mount,
   page,

@@ -25,7 +25,11 @@
 <script>
   import { onDestroy } from "svelte";
   import { dualStyle, scopeClassFor, scopeStyle } from "./scoped.js";
-  import { dualPaletteStyle, paletteStyle } from "./theme-style.js";
+  import {
+    dualPaletteSupportsStyle,
+    lightFallbackStyle,
+    paletteStyle,
+  } from "./theme-style.js";
 
   /**
    * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
@@ -77,7 +81,6 @@
     usingPair && typeof light === "object" && typeof dark === "object";
   $: usingObjectTheme =
     !usingPair && theme !== undefined && typeof theme === "object";
-  $: usingObjectPalette = usingObjectPair || usingObjectTheme;
 
   $: hasTheme = theme !== undefined || usingPair;
 
@@ -89,19 +92,27 @@
         : scopeClassFor(theme ?? `${light}${dark}`);
   }
 
-  // The scoped-<style> path's content; empty (nothing rendered) on the
-  // object path, which never touches <svelte:head> or the ownership store.
-  $: style =
-    hasTheme && !usingObjectPalette
-      ? usingPair
-        ? dualStyle(light, dark, scopeClass, mode)
-        : scopeStyle(theme, scopeClass)
-      : "";
+  // The <svelte:head>-injected <style> content. Empty for a single
+  // ThemePalette (inline vars only, no light-dark() to fall back from). For
+  // an object pair it's a light-dark()-gated @supports override, keyed into
+  // the same ownership registry as the legacy string path so identical
+  // pairs dedupe their tag too.
+  $: style = hasTheme
+    ? usingObjectPair
+      ? dualPaletteSupportsStyle(scopeClass, light, dark, mode)
+      : usingObjectTheme
+        ? ""
+        : usingPair
+          ? dualStyle(light, dark, scopeClass, mode)
+          : scopeStyle(theme, scopeClass)
+    : "";
 
   // Inline vars applied to the wrapper element; undefined (no `style`
-  // attribute) on the legacy scoped-<style> path.
+  // attribute) on the legacy scoped-<style> path. For an object pair this
+  // is the plain light-only baseline — light-dark() support upgrades it via
+  // the `style` tag above.
   $: inlineStyle = usingObjectPair
-    ? dualPaletteStyle(light, dark, mode)
+    ? lightFallbackStyle(light, dark)
     : usingObjectTheme
       ? paletteStyle(theme)
       : undefined;

@@ -1,5 +1,7 @@
 import {
   dualPaletteStyle,
+  dualPaletteSupportsStyle,
+  lightFallbackStyle,
   mergeLightDarkVars,
   paletteStyle,
   resolveThemeVar,
@@ -137,6 +139,87 @@ describe("dualPaletteStyle", () => {
 
   it("omits color-scheme for an app-controlled selector mode", () => {
     const style = dualPaletteStyle(light, dark, '[data-theme="dark"]');
+    expect(style).not.toContain("color-scheme");
+  });
+});
+
+describe("lightFallbackStyle", () => {
+  it("emits the light side's plain value for keys both sides declare", () => {
+    const style = lightFallbackStyle(
+      {
+        name: "light",
+        colorScheme: "light",
+        vars: { "--shl-keyword": "purple" },
+      },
+      {
+        name: "dark",
+        colorScheme: "dark",
+        vars: { "--shl-keyword": "violet" },
+      },
+    );
+    expect(style).toBe("--shl-keyword:purple");
+  });
+
+  it("resolves a one-sided key via the fallback chain (light only)", () => {
+    const style = lightFallbackStyle(
+      { name: "light", colorScheme: "light", vars: { "--shl-title": "navy" } },
+      {
+        name: "dark",
+        colorScheme: "dark",
+        vars: { "--shl-title-class_": "gold" },
+      },
+    );
+    expect(style).toContain("--shl-title-class_:navy");
+  });
+
+  it("omits a key resolvable only via the dark side", () => {
+    const style = lightFallbackStyle(
+      { name: "light", colorScheme: "light", vars: {} },
+      {
+        name: "dark",
+        colorScheme: "dark",
+        vars: { "--shl-keyword": "violet" },
+      },
+    );
+    expect(style).not.toContain("--shl-keyword");
+  });
+});
+
+describe("dualPaletteSupportsStyle", () => {
+  const light = {
+    name: "light",
+    colorScheme: "light" as const,
+    vars: { "--shl-fg": "#000", "--shl-bg": "#fff" },
+  };
+  const dark = {
+    name: "dark",
+    colorScheme: "dark" as const,
+    vars: { "--shl-fg": "#fff", "--shl-bg": "#000" },
+  };
+
+  it("wraps light-dark() declarations in an @supports block with !important", () => {
+    const style = dualPaletteSupportsStyle("svh-scope-1", light, dark, "auto");
+    expect(style).toContain(
+      "@supports (color: light-dark(#000, #000)){.svh-scope-1{",
+    );
+    expect(style).toContain("--shl-fg:light-dark(#000, #fff) !important");
+    expect(style).toContain("--shl-bg:light-dark(#fff, #000) !important");
+    expect(style.startsWith("<style>")).toBe(true);
+    expect(style.endsWith("</style>")).toBe(true);
+  });
+
+  it("includes color-scheme with !important for a resolved mode", () => {
+    const style = dualPaletteSupportsStyle("svh-scope-1", light, dark, "auto");
+    expect(style).toContain("color-scheme:light dark !important");
+  });
+
+  it("omits color-scheme for an app-controlled selector mode", () => {
+    const style = dualPaletteSupportsStyle(
+      "svh-scope-1",
+      light,
+      dark,
+      '[data-theme="dark"]',
+    );
     expect(style).not.toContain("color-scheme");
   });
 });

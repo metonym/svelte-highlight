@@ -61,10 +61,14 @@ export function mergeLightDarkVars(lightVars, darkVars, fallbacks) {
   return merged;
 }
 
-/** @param {Record<string, string>} vars */
-export function varsToStyle(vars) {
+/**
+ * @param {Record<string, string>} vars
+ * @param {{ important?: boolean }} [options]
+ */
+export function varsToStyle(vars, { important = false } = {}) {
+  const suffix = important ? " !important" : "";
   return Object.entries(vars)
-    .map(([key, value]) => `${key}:${value}`)
+    .map(([key, value]) => `${key}:${value}${suffix}`)
     .join(";");
 }
 
@@ -90,4 +94,45 @@ export function dualPaletteStyle(light, dark, mode) {
   const varsStyle = varsToStyle(merged);
   const colorScheme = COLOR_SCHEME_BY_MODE[mode];
   return colorScheme ? `${varsStyle};color-scheme:${colorScheme}` : varsStyle;
+}
+
+/**
+ * Plain-declaration baseline for a light/dark palette pair: the light
+ * side's resolved value for every key either palette declares, with no
+ * `light-dark()` — safe on any browser, including ones that don't support
+ * it. A key resolvable only via the dark side is omitted, same as
+ * `mergeLightDarkVars`.
+ * @param {import("./theme.d.ts").ThemePalette} light
+ * @param {import("./theme.d.ts").ThemePalette} dark
+ * @returns {string}
+ */
+export function lightFallbackStyle(light, dark) {
+  const keys = new Set([...Object.keys(light.vars), ...Object.keys(dark.vars)]);
+  /** @type {Record<string, string>} */
+  const vars = {};
+  for (const key of keys) {
+    const value = resolveThemeVar(light.vars, key, SHL_FALLBACKS);
+    if (value !== undefined) vars[key] = value;
+  }
+  return varsToStyle(vars);
+}
+
+/**
+ * A scoped `<style>` tag, gated behind `@supports (color: light-dark(#000,
+ * #000))`, that overrides `lightFallbackStyle`'s plain baseline with the
+ * `light-dark()` merge (and `color-scheme`) on browsers that support it.
+ * Paired with `lightFallbackStyle` as `HighlightStyle`'s inline style for a
+ * light/dark palette pair.
+ * @param {string} scopeClass
+ * @param {import("./theme.d.ts").ThemePalette} light
+ * @param {import("./theme.d.ts").ThemePalette} dark
+ * @param {string} mode
+ * @returns {string}
+ */
+export function dualPaletteSupportsStyle(scopeClass, light, dark, mode) {
+  const merged = mergeLightDarkVars(light.vars, dark.vars, SHL_FALLBACKS);
+  const colorScheme = COLOR_SCHEME_BY_MODE[mode];
+  if (colorScheme) merged["color-scheme"] = colorScheme;
+  const decls = varsToStyle(merged, { important: true });
+  return `<style>@supports (color: light-dark(#000, #000)){.${scopeClass}{${decls}}}</style>`;
 }
