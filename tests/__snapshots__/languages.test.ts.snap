@@ -76,6 +76,7 @@ exports[`Languages 1`] = `
   "dhall",
   "diff",
   "django",
+  "djot",
   "dns",
   "dockerfile",
   "dos",

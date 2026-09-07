@@ -326,6 +326,20 @@ let increment : Natural -> Natural
 let isReady : Bool = True
 
 in  { count = increment 5, ready = isReady }`,
+  djot: `# A demo document
+
+This is *strong* and _emphasis_ and \`verbatim\`.
+
+- first item
+- [x] task done
+
+> a block quote
+
+{.note #intro}
+A paragraph with an attribute block above it.
+
+See the [docs](https://example.com) for more :smile:
+`,
   dotenv: `# application configuration
 export NODE_ENV=production
 DATABASE_URL="postgres://\${HOST}:\${PORT}/db"
