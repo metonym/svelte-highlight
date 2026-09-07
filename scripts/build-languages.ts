@@ -149,6 +149,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "powerquery",
   "lookml",
   "tsql",
+  "plsql",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

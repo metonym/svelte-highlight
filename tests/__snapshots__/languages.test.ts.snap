@@ -221,6 +221,7 @@ exports[`Languages 1`] = `
   "pkl",
   "plaintext",
   "plantuml",
+  "plsql",
   "polar",
   "pony",
   "powerquery",
