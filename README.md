@@ -1492,6 +1492,41 @@ doc.append(moreCode); // streaming growth, no re-tokenization
 
 `lineRange` tokenizes lazily and caches the most recently resolved window, so scrolling through even a huge document only ever pays for the lines actually requested. Its output matches `HighlightStream`'s live (non-canonicalized) parse: constructs needing multi-line lookahead across a window's edge can render slightly differently than `registry.highlight()`'s canonical output, the same tradeoff streaming already makes. `TokenizedDocument` doesn't support mid-document edits -- `append` and full `setCode` resets only.
 
+### Without virtualization
+
+For documents in the low thousands to tens of thousands of lines (roughly 2,000-20,000), `HighlightVirtual`'s hard constraints -- no wrapping, an SSR-to-hydration flash, a fixed-height v1 container -- may not be worth taking on. The CSS [`content-visibility: auto`](https://developer.mozilla.org/en-US/docs/Web/CSS/content-visibility) property gets you a native-scrolling, cheap-to-render alternative built entirely from already-public APIs, at the cost of the DOM-node count `HighlightVirtual` avoids:
+
+```svelte
+<script>
+  import { createRegistry, registerAll, tokenLines } from "svelte-highlight/engine";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  const registry = createRegistry();
+  registerAll(registry, typescript);
+
+  export let code;
+  const { events } = registry.highlight(code, { language: "typescript" });
+  const lines = tokenLines(events); // [[{ text, scopes }, …], …]
+
+  function scopeClass(scope) {
+    return scope
+      .split(".")
+      .map((piece) => `hljs-${piece}`)
+      .join(" ");
+  }
+</script>
+
+<div class="hljs" style="content-visibility: auto; contain-intrinsic-size: auto 1000px;">
+  {#each lines as line}
+    <div style="white-space: pre; content-visibility: auto; contain-intrinsic-size: auto 20px;">
+      {#each line as token}<span class={token.scopes.map(scopeClass).join(" ")}>{token.text}</span>{/each}
+    </div>
+  {/each}
+</div>
+```
+
+Each line is its own block-level `<div>`, not a row in a `<table>`/`<tr>` (the way `LineNumbers` renders) -- `content-visibility` doesn't apply to table-internal display types, so off-screen table rows never get the skip. Off-screen `<div>` lines do: the browser skips layout/paint/style for them, using `contain-intrinsic-size` as a placeholder size until they scroll near the viewport. Unlike `HighlightVirtual`, this is a progressive enhancement, not a hard requirement -- browsers without `content-visibility` support just render every line normally, and you get native text selection, find-in-page, and line wrapping for free (drop the `white-space: pre` on each line's `<div>` to allow it).
+
 ## Terminal Output
 
 Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) escape codes. Colors, bold, dim, italic, and underline become styled HTML, along with OSC 8 hyperlinks, carriage-return overwrites, and reverse/strikethrough. The parser is separate from highlight.js, so reach for it with build logs, CLI output, and test runners.
