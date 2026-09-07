@@ -152,6 +152,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "plsql",
   "turtle",
   "textproto",
+  "ron",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

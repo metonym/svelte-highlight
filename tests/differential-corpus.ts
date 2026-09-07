@@ -1094,6 +1094,17 @@ main =
     when result is
         Ok _ -> Stdout.line "done"
         Err _ -> crash "failed"`,
+  ron: `#![enable(implicit_some)]
+GameConfig(
+    window_title: "My Game",
+    resolution: (1920, 1080),
+    fullscreen: false,
+    volume: 0.8,
+    difficulty: Hard,
+    save_slot: None,
+    tags: ["action", "rpg"],
+)
+`,
   rpmspec: `Name: mypackage
 Version: 1.0
 Release: 1%{?dist}
