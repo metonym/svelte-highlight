@@ -3,45 +3,36 @@
   import { Button, NumberInput, Slider } from "carbon-components-svelte";
   import { HighlightVirtual } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
-  import {
-    generateTypeScript,
-    trackRenderedLineCount,
-  } from "./generate-large-code.js";
+  import { generateTypeScript } from "./generate-large-code.js";
 
   const LINE_COUNT = 20_000;
   const code = generateTypeScript(LINE_COUNT);
 
   let overscan = 12;
   let checkpointInterval = 100;
-  let renderedLineCount = 0;
   let jumpToLine = 10_000;
 
-  /** @type {HTMLElement} */
-  let wrapper;
+  /** @type {HighlightVirtual} */
+  let ref;
+
+  /** @type {{ start: number; end: number; lineCount: number }} */
+  let win = { start: 0, end: 0, lineCount: 0 };
 
   function jump() {
-    const pre = wrapper?.querySelector("pre");
-    if (!pre) return;
-    const target = Math.max(0, Math.min(jumpToLine ?? 0, LINE_COUNT));
-    // Line height isn't known here; overshoot and let the browser clamp,
-    // then nudge back a viewport so the target line lands mid-screen.
-    pre.scrollTop = target * 20;
+    ref?.scrollToLine(jumpToLine ?? 0);
   }
 </script>
 
-<div
-  bind:this={wrapper}
-  use:trackRenderedLineCount={(n) => (renderedLineCount = n)}
->
-  <HighlightVirtual
-    language={typescript}
-    {code}
-    {overscan}
-    {checkpointInterval}
-    class={THEME_MODULE_NAME}
-    style="height: 320px"
-  />
-</div>
+<HighlightVirtual
+  bind:this={ref}
+  language={typescript}
+  {code}
+  {overscan}
+  {checkpointInterval}
+  class={THEME_MODULE_NAME}
+  style="height: 320px"
+  on:windowchange={(e) => (win = e.detail)}
+/>
 
 <div
   style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1.5rem; margin-top: 1rem"
@@ -72,6 +63,7 @@
     <Button size="small" kind="tertiary" on:click={jump}>Jump</Button>
   </div>
   <p class="label-01" style="margin-bottom: 0.5rem">
-    Rendered line nodes: <code class="code">{renderedLineCount}</code>
+    Rendered window: <code class="code">{win.start}-{win.end}</code> of
+    <code class="code">{win.lineCount}</code> lines
   </p>
 </div>
