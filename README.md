@@ -457,6 +457,7 @@ These apply when `langtag` is set to `true`.
 | --langtag-color         | Text color of the langtag       | `inherit`     |
 | --langtag-border-radius | Border radius of the langtag    | `0`           |
 | --langtag-padding       | Padding of the langtag          | `1em`         |
+| --langtag-font-size     | Font size of the langtag        | `inherit`     |
 
 ### `CodeWindow` variables
 
@@ -961,6 +962,7 @@ See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languag
 | --langtag-color         | Text color of the langtag       | `inherit`     |
 | --langtag-border-radius | Border radius of the langtag    | `0`           |
 | --langtag-padding       | Padding of the langtag          | `1em`         |
+| --langtag-font-size     | Font size of the langtag        | `inherit`     |
 
 ```svelte
 <script>
