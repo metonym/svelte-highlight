@@ -14,6 +14,13 @@ export type AnsiOutputProps = HTMLAttributes<HTMLPreElement> & {
   autoContrast?: boolean;
 
   /**
+   * Wrap long lines (`white-space: pre-wrap; overflow-wrap: anywhere`)
+   * instead of horizontally scrolling.
+   * @default false
+   */
+  wrap?: boolean;
+
+  /**
    * Output block padding.
    * @default "1em"
    */
