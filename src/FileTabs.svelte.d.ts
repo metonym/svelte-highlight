@@ -31,6 +31,13 @@ export type FileTabsProps = HTMLAttributes<HTMLDivElement> & {
   "--file-tabs-background"?: string;
 
   /**
+   * Width of the scroll shadow shown on the overflowing edge of the
+   * tab strip.
+   * @default "1.5rem"
+   */
+  "--tab-overflow-fade"?: string;
+
+  /**
    * Tab padding.
    * @default "0.5em 1em"
    */
