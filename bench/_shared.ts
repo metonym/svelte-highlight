@@ -91,3 +91,24 @@ export function sizedSlice(code: string, length: number) {
   while (out.length < length) out += code;
   return out.slice(0, length);
 }
+
+/**
+ * A synthetic Markdown document with exactly `fenceCount` fenced code
+ * blocks, each preceded by a prose paragraph, then padded with more prose
+ * paragraphs until at least `minLength` characters long - shaped like an
+ * LLM chat reply that talks through several snippets.
+ */
+export function markdownWithFences(minLength: number, fenceCount: number) {
+  const codeUnit = "function add(a, b) {\n  return a + b;\n}\n";
+  const proseUnit =
+    "Here is some explanatory prose about the snippet that follows, sized " +
+    "roughly like a chat response segment between fenced code blocks.\n\n";
+
+  let out = "";
+  for (let i = 0; i < fenceCount; i++) {
+    out += proseUnit;
+    out += `\`\`\`js\n${codeUnit.repeat(3)}\`\`\`\n\n`;
+  }
+  while (out.length < minLength) out += proseUnit;
+  return out;
+}
