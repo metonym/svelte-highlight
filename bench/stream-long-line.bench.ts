@@ -45,7 +45,7 @@ function streamPreview() {
   let fedCode = "";
   const openScopes: string[] = [];
   const pendingHtml = "";
-  let cache: undefined;
+  let cache: Parameters<typeof computeStagedTailPreview>[0]["cache"];
 
   for (let i = 0; i < code.length; i += CHUNK_SIZE) {
     const chunk = code.slice(i, i + CHUNK_SIZE);

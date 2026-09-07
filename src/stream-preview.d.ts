@@ -1,4 +1,12 @@
-import type { Registry, StreamSession } from "./engine.d.ts";
+import type { Registry, Snapshot, StreamSession } from "./engine.d.ts";
+
+export interface PreviewCache {
+  fedCode: string;
+  committedPos: number;
+  snapshot: Snapshot;
+  openScopes: string[];
+  pendingHtml: string;
+}
 
 export function computeStagedTailPreview(params: {
   registry: Registry;
@@ -7,5 +15,5 @@ export function computeStagedTailPreview(params: {
   fedCode: string;
   openScopes: string[];
   pendingHtml: string;
-  cache: undefined;
-}): { previewLines: string[]; cache: undefined };
+  cache: PreviewCache | undefined;
+}): { previewLines: string[]; cache: PreviewCache | undefined };
