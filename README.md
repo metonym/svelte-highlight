@@ -526,7 +526,7 @@ See the [kitchen-sink live demo](https://svhe.onrender.com/preview-svelte) for a
 
 ## Auto-highlighting
 
-The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) and attempts to guess what grammar to use based on the provided `code`.
+The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) and attempts to guess what grammar to use based on the provided `code`. Its `on:highlight` event's `secondBest` field surfaces the runner-up candidate and its relevance, for showing detection confidence.
 
 > [!WARNING]
 > Auto-highlighting will result in a larger bundle size. Specify a language if possible.
@@ -1836,6 +1836,13 @@ import type { LanguageName } from "svelte-highlight";
 
     /** The scope-event stream behind `highlighted`. See "Headless usage" below. */
     console.log(e.detail.events);
+
+    /**
+     * The runner-up candidate and its relevance, for surfacing detection
+     * confidence. `undefined` when no other candidate scored above zero.
+     * @example { language: "typescript", relevance: 6 }
+     */
+    console.log(e.detail.secondBest);
   }}
 />
 ```
