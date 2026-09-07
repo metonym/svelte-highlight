@@ -36,6 +36,7 @@ import HighlightStream from "./HighlightStream.test.svelte";
 import HighlightStreamVirtualize from "./HighlightStream.virtualize.test.svelte";
 import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
 import HighlightStyleEmptyScopeClass from "./HighlightStyle.emptyScopeClass.test.svelte";
+import HighlightStyleNonce from "./HighlightStyle.nonce.test.svelte";
 import HighlightStyleNoTheme from "./HighlightStyle.noTheme.test.svelte";
 import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte";
 import HighlightSvelteDispatchOnce from "./HighlightSvelte.dispatchOnce.test.svelte";
@@ -129,6 +130,15 @@ test("HighlightStyle - dedupes head injection for instances sharing a theme", as
   await component.unmount();
 
   await expect(page.locator("style")).toHaveCount(0);
+});
+
+test("HighlightStyle - attaches a CSP nonce to the injected <style> tag", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStyleNonce);
+
+  await expect(page.locator("style[nonce='test-nonce']")).toHaveCount(1);
 });
 
 test("HighlightStyle - renders nothing when no theme is provided", async ({

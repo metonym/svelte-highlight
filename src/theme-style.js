@@ -127,12 +127,14 @@ export function lightFallbackStyle(light, dark) {
  * @param {import("./theme.d.ts").ThemePalette} light
  * @param {import("./theme.d.ts").ThemePalette} dark
  * @param {string} mode
+ * @param {string} [nonce] CSP nonce for the `<style>` tag.
  * @returns {string}
  */
-export function dualPaletteSupportsStyle(scopeClass, light, dark, mode) {
+export function dualPaletteSupportsStyle(scopeClass, light, dark, mode, nonce) {
   const merged = mergeLightDarkVars(light.vars, dark.vars, SHL_FALLBACKS);
   const colorScheme = COLOR_SCHEME_BY_MODE[mode];
   if (colorScheme) merged["color-scheme"] = colorScheme;
   const decls = varsToStyle(merged, { important: true });
-  return `<style>@supports (color: light-dark(#000, #000)){.${scopeClass}{${decls}}}</style>`;
+  const openTag = nonce ? `<style nonce="${nonce}">` : "<style>";
+  return `${openTag}@supports (color: light-dark(#000, #000)){.${scopeClass}{${decls}}}</style>`;
 }

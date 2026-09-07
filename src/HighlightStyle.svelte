@@ -72,6 +72,15 @@
    * `<style>` tag to match against. */
   export let scopeClass = undefined;
 
+  /**
+   * CSP nonce attached to the injected `<style>` tag, for a `style-src`
+   * policy that requires one. Unneeded (and has no effect) on a single
+   * `ThemePalette` (`theme`, no `light`/`dark` pair): that path only ever
+   * sets inline vars on the wrapper, never injects a `<style>` tag.
+   * @type {string | undefined}
+   */
+  export let nonce = undefined;
+
   // Captured once: a consumer-supplied scopeClass is honored for the
   // lifetime of the instance instead of being overwritten by the hash below.
   const hasOwnScopeClass = scopeClass !== undefined && scopeClass !== "";
@@ -99,12 +108,12 @@
   // pairs dedupe their tag too.
   $: style = hasTheme
     ? usingObjectPair
-      ? dualPaletteSupportsStyle(scopeClass, light, dark, mode)
+      ? dualPaletteSupportsStyle(scopeClass, light, dark, mode, nonce)
       : usingObjectTheme
         ? ""
         : usingPair
-          ? dualStyle(light, dark, scopeClass, mode)
-          : scopeStyle(theme, scopeClass)
+          ? dualStyle(light, dark, scopeClass, mode, nonce)
+          : scopeStyle(theme, scopeClass, nonce)
     : "";
 
   // Inline vars applied to the wrapper element; undefined (no `style`

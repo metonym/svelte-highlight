@@ -49,6 +49,14 @@ export type HighlightStyleProps = HTMLAttributes<HTMLDivElement> & {
    * @default hash of `theme`
    */
   scopeClass?: string;
+
+  /**
+   * CSP nonce attached to the injected `<style>` tag, for a `style-src`
+   * policy that requires one. Unneeded (and has no effect) on a single
+   * `ThemePalette` (`theme`, no `light`/`dark` pair): that path only ever
+   * sets inline vars on the wrapper, never injects a `<style>` tag.
+   */
+  nonce?: string;
 };
 
 export type HighlightStyleSlots = {

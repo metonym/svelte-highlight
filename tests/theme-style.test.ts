@@ -222,4 +222,15 @@ describe("dualPaletteSupportsStyle", () => {
     );
     expect(style).not.toContain("color-scheme");
   });
+
+  it("attaches a CSP nonce to the <style> tag", () => {
+    const style = dualPaletteSupportsStyle(
+      "svh-scope-1",
+      light,
+      dark,
+      "auto",
+      "abc",
+    );
+    expect(style.startsWith('<style nonce="abc">')).toBe(true);
+  });
 });
