@@ -147,6 +147,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "markdoc",
   "regex",
   "powerquery",
+  "lookml",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
