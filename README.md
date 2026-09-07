@@ -1654,6 +1654,19 @@ Named curves: `linear` (default), `easeInQuad`/`easeOutQuad`/`easeInOutQuad`, `e
 
 Set `speed={0}` to reveal all content on the very first frame -- a documented "skip typing" escape hatch, useful for a "skip" button or for finishing an off-screen instance instantly.
 
+Fire `on:progress` for a progress bar or "X% typed" indicator -- it dispatches `{ revealed, total }` (visible-character counts) whenever `revealed` advances. `revealed` and `total` are also exposed for `bind:revealed`/`bind:total`, though both are read-only in practice: the component overwrites them every frame.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <Typewriter
+    {highlighted}
+    bind:revealed
+    bind:total
+    on:progress={(e) => console.log(`${e.detail.revealed}/${e.detail.total}`)}
+  />
+</Highlight>
+```
+
 `Typewriter` doesn't gate itself on `prefers-reduced-motion` -- if you want to honor it, check `matchMedia("(prefers-reduced-motion: reduce)")` yourself and skip rendering `Typewriter` (or set a very low `speed`). Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
 
 
@@ -2235,12 +2248,15 @@ See [Large documents](#large-documents) above.
 | speed       | `number`                 | `30`          |
 | play        | `boolean`                | `true`        |
 | easing      | `(t: number) => number`  | `linear`      |
+| revealed    | `number`                 | `0`           |
+| total       | `number`                 | `0`           |
 
-`$$restProps` are forwarded to the top-level `pre` element.
+`$$restProps` are forwarded to the top-level `pre` element. `revealed`/`total` are read-only in practice (overwritten every frame) but exposed for `bind:revealed`/`bind:total`.
 
 #### Dispatched Events
 
 - **on:done**: fires when typing finishes
+- **on:progress**: fires whenever `revealed` advances, with `{ revealed, total }`
 
 ```svelte
 <Highlight language={typescript} {code} let:highlighted>

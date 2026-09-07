@@ -47,6 +47,10 @@
   let runId = 0;
   let easingName = "linear";
   let skippedSpeed;
+  let revealed = 0;
+  let total = 0;
+
+  $: percent = total > 0 ? Math.round((revealed / total) * 100) : 0;
 
   $: easing = EASINGS[easingName];
 
@@ -77,6 +81,8 @@
         class={THEME_MODULE_NAME}
         --caret-color="#2996cf"
         --caret-width="2px"
+        bind:revealed
+        bind:total
         on:done={() => (done = true)}
       />
     </Highlight>
@@ -107,6 +113,7 @@
   <Button size="small" kind="tertiary" on:click={skip}>Skip</Button>
   <Button size="small" kind="tertiary" on:click={replay}>Replay</Button>
   <p class="label-01" style="margin-bottom: 0.5rem">
-    Status: <code class="code">{done ? "done" : "revealing…"}</code>
+    Status:
+    <code class="code">{done ? "done" : "revealing…"}</code> ({percent}%)
   </p>
 </div>
