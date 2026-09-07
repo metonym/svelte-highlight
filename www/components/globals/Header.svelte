@@ -172,6 +172,7 @@
     "/preview-ron": "RON language preview",
     "/preview-hocon": "HOCON language preview",
     "/preview-csv": "CSV language preview",
+    "/preview-log": "Log file language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
