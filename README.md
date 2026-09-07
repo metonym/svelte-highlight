@@ -990,18 +990,29 @@ The easiest way to author one is with `svelte-highlight/compat`'s `fromHighlight
   import { Highlight } from "svelte-highlight";
   import { fromHighlightJs } from "svelte-highlight/compat";
 
-  function defineCustomLanguage(hljs) {
+  function defineDotenv(hljs) {
     return {
-      /** custom language rules */
-      contains: [],
+      name: "dotenv",
+      contains: [
+        hljs.HASH_COMMENT_MODE,
+        { className: "keyword", begin: /^[ \t]*export(?=[ \t])/ },
+        { className: "attr", begin: /[A-Za-z_][A-Za-z0-9_]*(?=[ \t]*=)/ },
+        {
+          className: "string",
+          variants: [
+            { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
+            { begin: /'/, end: /'/ },
+          ],
+        },
+      ],
     };
   }
 
-  const languagePromise = fromHighlightJs("custom-language", defineCustomLanguage);
+  const languagePromise = fromHighlightJs("dotenv", defineDotenv);
 </script>
 
 {#await languagePromise then language}
-  <Highlight {language} code="..." />
+  <Highlight {language} code={'PORT=3000\n# comment'} />
 {/await}
 ```
 
@@ -1010,9 +1021,9 @@ The easiest way to author one is with `svelte-highlight/compat`'s `fromHighlight
 `fromHighlightJs` also accepts an optional third `source` argument (raw source text, e.g. via a bundler's `?raw` import) to recover array-membership `on:begin` guards the compiled callback alone can't expose, and the returned object carries a `warnings: string[]` field (empty when clean) so you can detect a degraded conversion without reading the console.
 
 ```ts
-const language = await fromHighlightJs("custom-language", defineCustomLanguage, grammarSourceText);
+const language = await fromHighlightJs("dotenv", defineDotenv, grammarSourceText);
 if (language.warnings.length > 0) {
-  console.error("custom-language degraded:", language.warnings);
+  console.error("dotenv degraded:", language.warnings);
 }
 ```
 
@@ -1022,9 +1033,15 @@ If you're using TypeScript, use the `LanguageType` interface to type the languag
 import type { LanguageType } from "svelte-highlight";
 import { fromHighlightJs } from "svelte-highlight/compat";
 
-const language: LanguageType<"custom-language"> = await fromHighlightJs(
-  "custom-language",
-  (hljs) => ({ contains: [] }),
+const language: LanguageType<"dotenv"> = await fromHighlightJs(
+  "dotenv",
+  (hljs) => ({
+    name: "dotenv",
+    contains: [
+      hljs.HASH_COMMENT_MODE,
+      { className: "attr", begin: /[A-Za-z_][A-Za-z0-9_]*(?=[ \t]*=)/ },
+    ],
+  }),
 );
 ```
 
