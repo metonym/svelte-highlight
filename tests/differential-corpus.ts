@@ -1286,6 +1286,21 @@ templ Page(items []Item) {
 		<li>{ item.Name }</li>
 	}
 }`,
+  textproto: `# proto-file: example.proto
+# proto-message: Person
+
+name: "Alice"
+age: 30
+active: true
+scores: [95, 87, 100]
+
+[com.example.ext.special_field]: "extended"
+
+address {
+  city: "Springfield"
+  zip: "00000"
+}
+`,
   tsq: `; match a function definition with a captured name
 (function_item
   name: (identifier) @function.name
