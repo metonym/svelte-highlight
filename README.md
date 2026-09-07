@@ -860,6 +860,8 @@ Use `bind:code` to keep your state in sync.
 - **Escape** then **Tab**/**Shift+Tab** moves keyboard focus out of the editor instead of indenting, so the block never traps focus. Any other key clears this and restores normal Tab behavior.
 - **Cmd/Ctrl+Z** undo and **Shift+Cmd/Ctrl+Z** (or **Ctrl+Y**) redo. Typing bursts collapse into a single undo step; cap the retained history with the `historyLimit` prop (default `200`).
 
+Pasting and dragging content into the editor both insert plain text only, regardless of the source payload (rich text, HTML, etc.).
+
 ### Dispatched Events
 
 `HighlightEditable` dispatches `change` (on every edit), `blur`, and `history` (whenever the undo/redo stack changes).
