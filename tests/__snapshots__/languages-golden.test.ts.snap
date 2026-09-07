@@ -587,6 +587,13 @@ exports[`golden snapshot: luau 1`] = `"<span class="hljs-keyword">and</span> <sp
 
 exports[`golden snapshot: makefile 1`] = `"<span class="hljs-keyword">define</span> <span class="hljs-keyword">endef</span> <span class="hljs-keyword">undefine</span> <span class="hljs-keyword">ifdef</span> <span class="hljs-keyword">ifndef</span> <span class="hljs-keyword">ifeq</span> <span class="hljs-keyword">ifneq</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">endif</span> <span class="hljs-keyword">include</span> <span class="hljs-keyword">-include</span> <span class="hljs-keyword">sinclude</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">export</span> <span class="hljs-keyword">unexport</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">vpath</span>"`;
 
+exports[`golden snapshot: markdoc 1`] = `
+"<span class="language-markdown">// comment
+&quot;string&quot; &#x27;string&#x27; 123 3.14
+true false null
+/regex/ #hashtag @annotation</span>"
+`;
+
 exports[`golden snapshot: markdown 1`] = `
 "// comment
 &quot;string&quot; &#x27;string&#x27; 123 3.14
