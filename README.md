@@ -353,7 +353,7 @@ Wrap each `Highlight` in `HighlightStyle` to keep a theme on that block:
 
 The component prefixes each selector with a scope class on the wrapper, so the theme only hits markup inside it.
 
-`theme` is required. `scopeClass` defaults to a hash of the theme string. Pass your own, or bind it (`bind:scopeClass`) / read it from the slot (`let:scopeClass`).
+`theme` is required. `scopeClass` defaults to a hash of the theme string. Pass your own, or bind it (`bind:scopeClass`) / read it from the slot (`let:scopeClass`). An empty string is treated the same as omitting `scopeClass` — it falls back to the auto-hash. `scopeClass` must be a single valid CSS class name; a value like `"a b"` will warn in the console and won't scope as expected.
 
 For a page-wide theme, use `{@html theme}` as shown above.
 
