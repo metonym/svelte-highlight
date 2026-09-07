@@ -952,6 +952,25 @@ Pass `theme` (the same theme string you'd give `HighlightStyle`) to generate `::
 </HighlightStyle>
 ```
 
+### Adding a gutter
+
+`HighlightEditable` has no slot and doesn't expose `highlighted`/`languageName`, so it can't be wrapped directly in `LineNumbers` the way a static `Highlight` block can. Mirror the same `code` in a second, read-only `Highlight` instance wrapped in `LineNumbers`, and position it alongside the editable block:
+
+```svelte
+<script>
+  import { Highlight, HighlightEditable, LineNumbers } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  let code = "const add = (a: number, b: number) => a + b";
+</script>
+
+<HighlightEditable language={typescript} bind:code />
+
+<Highlight language={typescript} {code} let:highlighted let:languageName>
+  <LineNumbers {highlighted} {languageName} />
+</Highlight>
+```
+
 ## Language Targeting
 
 All `Highlight` components apply a `data-language` attribute on the codeblock containing the language name.
