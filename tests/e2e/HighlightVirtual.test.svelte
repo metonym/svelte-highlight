@@ -32,6 +32,10 @@
   {...$$restProps}
 />
 <pre data-testid="window">{JSON.stringify(win)}</pre>
-<button data-testid="scroll-to-2500" on:click={() => ref.scrollToLine(2500)}
-  >Scroll to line 2500</button
+<button
+  type="button"
+  data-testid="scroll-to-2500"
+  on:click={() => ref.scrollToLine(2500)}
 >
+  Scroll to line 2500
+</button>
