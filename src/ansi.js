@@ -301,6 +301,51 @@ export function parseAnsi(text) {
       continue;
     }
 
+    if (ch === ESC) {
+      const next = text[i + 1];
+
+      if (next === "P" || next === "X" || next === "^" || next === "_") {
+        // DCS/SOS/PM/APC: string-terminated body, like OSC.
+        let j = i + 2;
+        let terminatorLength = 0;
+        while (j < text.length) {
+          if (text[j] === "\x07") {
+            terminatorLength = 1;
+            break;
+          }
+          if (text[j] === ESC && text[j + 1] === "\\") {
+            terminatorLength = 2;
+            break;
+          }
+          j += 1;
+        }
+
+        if (terminatorLength === 0) {
+          // Unterminated: drop the rest.
+          break;
+        }
+
+        i = j + terminatorLength;
+        continue;
+      }
+
+      if (next !== undefined && "()*+-./".includes(next)) {
+        // Charset select: ESC, intermediate byte, designator byte.
+        i = Math.min(i + 3, text.length);
+        continue;
+      }
+
+      if (next === undefined) {
+        // Trailing lone ESC: nothing follows to interpret.
+        i += 1;
+        continue;
+      }
+
+      // Any other ESC <char> (cursor save/restore, reset, etc.): drop both.
+      i += 2;
+      continue;
+    }
+
     if (ch === "\r") {
       if (text[i + 1] === "\n") {
         // Treat \r\n as \n.
