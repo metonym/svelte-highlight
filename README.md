@@ -1457,6 +1457,8 @@ Per-chunk work is O(tail), not O(stream length so far): finished output is seale
 
 The rendered `<pre>` is the scroll container itself -- size it with `style`/`class`/`$$restProps`, same as `Highlight`, but `white-space` can't be overridden this way: it's pinned to `pre` because the windowing math depends on a uniform line height. Content doesn't wrap (uniform line height is a v1 constraint, measured once from a rendered probe line). `overscan` (default `12`) controls how many extra lines render above/below the viewport; `checkpointInterval` (default `100`) controls how often the engine snapshots its parse state, trading a little memory for cheaper random access. Server-rendered output is the full document as plain escaped text (predictable cost for huge documents); the windowed, highlighted view takes over after hydration.
 
+`on:windowchange` fires with `{ start, end, lineCount }` whenever the rendered window moves, so you can show something like "lines *N*-*M* of *T*" without counting DOM nodes yourself. `bind:this`, then call `scrollToLine(line)` to scroll a given line into view -- useful for a "jump to line" control -- without guessing at the line height yourself.
+
 For custom virtualization, servers, or tests, `svelte-highlight/tokenized-document` exposes the same windowing primitive headlessly:
 
 ```js
@@ -1850,6 +1852,14 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
 | checkpointInterval | `number`                                       | `100`          |
 
 `$$restProps` are forwarded to the top-level `pre` element (the scroll container -- size it with `style`/`class`, but `white-space` is pinned to `pre` and can't be overridden this way).
+
+#### Methods
+
+Use `bind:this`, then call `scrollToLine(line)`.
+
+#### Dispatched Events
+
+- **on:windowchange**: fired whenever the rendered window changes, with `{ start, end, lineCount }`
 
 ```svelte
 <HighlightVirtual language={json} code={hugeLogDump} style="height: 480px" />
