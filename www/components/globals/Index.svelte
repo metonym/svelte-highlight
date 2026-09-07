@@ -8,6 +8,7 @@
   import CopyButtonLineNumbers from "@components/CopyButton/LineNumbers.svelte";
   import CopyButtonSlot from "@components/CopyButton/Slot.svelte";
   import CopyButtonStyleProps from "@components/CopyButton/StyleProps.svelte";
+  import CustomLanguage from "@components/CustomLanguage.svelte";
   import FileTabs from "@components/FileTabs.svelte";
   import HighlightWrap from "@components/Highlight/Wrap.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
@@ -907,6 +908,33 @@ export default {
       --langtag-padding="0.5rem"
     />
   </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h3>Custom Language</h3> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">fromHighlightJs</code>
+      converts a user-authored hljs-format grammar (a
+      <code class="code">register(hljs)</code>
+      function returning a mode object) into this package's
+      <code class="code">LanguageType</code>
+      at runtime — no build step, no bundled hljs code.
+    </p>
+    <p class="mb-5">
+      See the{" "}
+      <Link
+        size="lg"
+        href="https://github.com/metonym/svelte-highlight#custom-language"
+      >
+        Custom Language section
+      </Link>
+      {" "}
+      of the README for conversion fidelity details and third-party plugin
+      support.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CustomLanguage /> </Column>
 </Row>
 
 <Row class="mb-9">
