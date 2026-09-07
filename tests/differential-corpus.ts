@@ -844,6 +844,21 @@ main :: proc() {
         fmt.println("hello")
     }
 }`,
+  org: `* TODO Write quarterly report [#A]           :work:report:
+SCHEDULED: <2026-09-10 Thu>
+
+:PROPERTIES:
+:CREATED:  [2026-09-06 Sun]
+:END:
+
+Check the [[https://example.com][dashboard]] for *important* numbers.
+
+- first item
+- [X] second item done
+1. ordered item
+
+# a comment line
+`,
   pkl: `amends "base.pkl"
 
 // server config
