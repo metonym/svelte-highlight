@@ -165,13 +165,17 @@ export function scopeSelectors(css, transform) {
  *
  * @param {string} style Theme CSS (optionally `<style>`-wrapped).
  * @param {string} scope Scope class name without a leading `.`.
+ * @param {string} [nonce] CSP nonce for the `<style>` tag. Ignored when
+ *   `style` has no `<style>` wrapper to attach it to.
  * @returns {string}
  */
-export function scopeStyle(style, scope) {
+export function scopeStyle(style, scope, nonce) {
   warnIfInvalidScope(scope);
   const body = scopedBody(style, scope);
   const match = STYLE_TAG.exec(style);
-  return match ? `${match[1] ?? ""}${body}${match[3] ?? ""}` : body;
+  if (!match) return body;
+  if (nonce) return `<style nonce="${nonce}">${body}</style>`;
+  return `${match[1] ?? ""}${body}${match[3] ?? ""}`;
 }
 
 /**
@@ -202,9 +206,16 @@ function scopedBody(style, scope, prefix = "") {
  * @param {string} dark Dark theme CSS (optionally `<style>`-wrapped).
  * @param {string} scope Scope class name without a leading `.`.
  * @param {string} [mode] `"auto"` | `"light"` | `"dark"` | a CSS selector.
+ * @param {string} [nonce] CSP nonce for the `<style>` tag.
  * @returns {string}
  */
-export function dualStyle(light, dark, scope, mode = "auto") {
+export function dualStyle(
+  light,
+  dark,
+  scope,
+  mode = "auto",
+  nonce = undefined,
+) {
   warnIfInvalidScope(scope);
   let css;
   if (mode === "light") {
@@ -218,7 +229,8 @@ export function dualStyle(light, dark, scope, mode = "auto") {
   } else {
     css = scopedBody(light, scope) + scopedBody(dark, scope, mode);
   }
-  return `<style>${css}</style>`;
+  const openTag = nonce ? `<style nonce="${nonce}">` : "<style>";
+  return `${openTag}${css}</style>`;
 }
 
 /**

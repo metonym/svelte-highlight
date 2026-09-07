@@ -63,6 +63,13 @@ describe("dualStyle", () => {
     );
   });
 
+  it("attaches a CSP nonce to the <style> tag", () => {
+    const out = dualStyle(light, dark, "scope", "light", "abc");
+    expect(out).toBe(
+      '<style nonce="abc">.scope .hljs{color:black;background:white}</style>',
+    );
+  });
+
   it("handles themes without a <style> wrapper", () => {
     const out = dualStyle(
       ".hljs{color:black}",

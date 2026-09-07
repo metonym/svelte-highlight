@@ -28,6 +28,16 @@ describe("scopeStyle", () => {
     expect(out).toBe("<style>.scope .hljs{color:red}</style>");
   });
 
+  it("attaches a CSP nonce to the <style> tag", () => {
+    const out = scopeStyle("<style>.hljs{color:red}</style>", "scope", "abc");
+    expect(out).toBe('<style nonce="abc">.scope .hljs{color:red}</style>');
+  });
+
+  it("ignores a nonce when there's no <style> wrapper to attach it to", () => {
+    const out = scopeStyle(".hljs{color:red}", "scope", "abc");
+    expect(out).toBe(".scope .hljs{color:red}");
+  });
+
   it("leaves leading license comments in place", () => {
     const out = scopeStyle("/*! License */.hljs{color:red}", "scope");
     expect(out).toBe("/*! License */.scope .hljs{color:red}");
