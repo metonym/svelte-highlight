@@ -73,6 +73,10 @@ export type HighlightProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
     /**
      * Code to highlight.
+     *
+     * The container also exposes `--overflow-x`, `--overflow-y`,
+     * `--border-radius`, `--width`, and `--max-width` CSS variables. See
+     * README's "Container variables" section.
      */
     code: any;
 
