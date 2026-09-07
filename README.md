@@ -1559,6 +1559,8 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 
 When the tab strip overflows, its overflowing edge fades to signal there's more to scroll to; changing `active` (by click, keyboard, or `bind:active`) scrolls that tab into view.
 
+The active tab's `--tab-active-color` and `--tab-active-background` are resolved from the highlighted code's computed style after mount, so they render as `inherit`/`transparent` on first paint; for an SSR-critical, above-the-fold tab strip, set `--tab-active-background` and `--tab-active-color` yourself to avoid a flash before hydration.
+
 ## Component API
 
 ### `Highlight`
