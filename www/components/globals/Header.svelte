@@ -164,6 +164,7 @@
     "/preview-markdoc": "Markdoc language preview",
     "/preview-regex": "Regular expression language preview",
     "/preview-powerquery": "Power Query M language preview",
+    "/preview-lookml": "LookML language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
