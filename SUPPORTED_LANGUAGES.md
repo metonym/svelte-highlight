@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 339 languages: 193 exported from highlight.js@11.12.0, 146 custom grammars added by svelte-highlight
+> 340 languages: 193 exported from highlight.js@11.12.0, 147 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -3233,6 +3233,20 @@
 
   // base import
   import { rego } from "svelte-highlight/languages";
+</script>
+```
+
+## renpy (`renpy`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import renpy from "svelte-highlight/languages/renpy";
+
+  // base import
+  import { renpy } from "svelte-highlight/languages";
 </script>
 ```
 

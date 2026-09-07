@@ -254,6 +254,7 @@ exports[`Languages 1`] = `
   "reasonml",
   "regex",
   "rego",
+  "renpy",
   "rescript",
   "rib",
   "roboconf",
