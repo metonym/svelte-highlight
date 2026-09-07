@@ -279,6 +279,10 @@ This component exports `highlight.js` themes in JavaScript. Import the theme fro
 <Highlight language={typescript} {code} />
 ```
 
+Under a strict Content Security Policy without `'unsafe-inline'` for `style-src`, the browser silently drops this injected `<style>` tag with no visible error. Use [CSS StyleSheet](#css-stylesheet) below instead, which is CSP-safe by construction since it's a normal stylesheet reference.
+
+This snippet also has no protection against duplicate `<style>` tags: placing it inside a component that's mounted more than once emits one `<style>` tag per mount. For anything mounted more than once, use [`HighlightStyle`](#highlightstyle) instead, which dedupes automatically across instances of the same theme.
+
 ### CSS StyleSheet
 
 Depending on your set-up, importing a CSS StyleSheet in Svelte may require a CSS file loader. SvelteKit/Vite automatically supports this. For Webpack, refer to [examples/webpack](examples/webpack).
