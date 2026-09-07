@@ -19,6 +19,13 @@
   export let historyLimit = 200;
 
   /**
+   * Keeps highlighting, caret placement, and selection active while
+   * blocking edits (typing, paste, drag-and-drop, Tab/Shift+Tab indent).
+   * @type {boolean}
+   */
+  export let readonly = false;
+
+  /**
    * Rendering engine. `"css-highlights"` (experimental) paints tokens via
    * the CSS Custom Highlight API over plain-text line nodes instead of
    * wrapping them in `<span>`s, so a repaint never replaces DOM the caret
@@ -602,6 +609,7 @@
   }
 
   function commit(value, start, end, coalesce) {
+    if (readonly) return;
     const previousCode = code;
     code = value;
     internalCode = value;
@@ -725,7 +733,7 @@
   }
 
   export function setCode(value) {
-    if (value === code) return;
+    if (readonly || value === code) return;
     const previousCode = code;
     internalCode = value;
     code = value;
@@ -819,12 +827,12 @@
 
     if (mod && event.key === "z" && !event.shiftKey) {
       event.preventDefault();
-      undo();
+      if (!readonly) undo();
       return;
     }
     if (mod && (event.key === "y" || (event.key === "z" && event.shiftKey))) {
       event.preventDefault();
-      redo();
+      if (!readonly) redo();
       return;
     }
     if (event.key === "Enter") {
@@ -940,7 +948,7 @@
 ><code
     bind:this={editor}
     class:hljs={true}
-    contenteditable="true"
+    contenteditable={readonly ? "false" : "true"}
     spellcheck="false"
 >{code}</code></pre>
 
