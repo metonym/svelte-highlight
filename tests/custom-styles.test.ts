@@ -67,40 +67,43 @@ test("custom styles and themes are exported after build", async () => {
 
 describe("WCAG contrast", () => {
   function relativeLuminance(hex: string): number {
-    const [r, g, b] = [1, 3, 5].map(
-      (i) => parseInt(hex.slice(i, i + 2), 16) / 255,
-    );
+    const r = Number.parseInt(hex.slice(1, 3), 16) / 255;
+    const g = Number.parseInt(hex.slice(3, 5), 16) / 255;
+    const b = Number.parseInt(hex.slice(5, 7), 16) / 255;
     const lin = (c: number) =>
       c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
     return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
   }
 
   function contrastRatio(hexA: string, hexB: string): number {
-    const [l1, l2] = [relativeLuminance(hexA), relativeLuminance(hexB)].sort(
-      (a, b) => b - a,
-    );
+    const lA = relativeLuminance(hexA);
+    const lB = relativeLuminance(hexB);
+    const l1 = Math.max(lA, lB);
+    const l2 = Math.min(lA, lB);
     return (l1 + 0.05) / (l2 + 0.05);
   }
 
   test("custom style base palettes and comment colors clear WCAG contrast floors", async () => {
     const contents = await Promise.all(
-      customFiles.map(async (file) => ({
-        file,
-        css: await Bun.file(path.join(CUSTOM_DIR, file)).text(),
-      })),
+      customFiles.map((file) => Bun.file(path.join(CUSTOM_DIR, file)).text()),
     );
 
-    for (const { file, css } of contents) {
+    for (const css of contents) {
       const base = css.match(
         /\.hljs \{\s*color: (#[0-9a-fA-F]{6});\s*background: (#[0-9a-fA-F]{6});/,
       );
       const comment = css.match(
         /\.hljs-comment,\n\.hljs-quote \{\s*color: (#[0-9a-fA-F]{6});/,
       );
-      expect(base).not.toBeNull();
-      expect(comment).not.toBeNull();
-      const [, fg, bg] = base as RegExpMatchArray;
-      const [, commentColor] = comment as RegExpMatchArray;
+      if (!base) throw new Error("expected a .hljs base color/background rule");
+      if (!comment) throw new Error("expected a .hljs-comment color rule");
+      const [, fg, bg] = base;
+      const [, commentColor] = comment;
+      if (!fg || !bg || !commentColor) {
+        throw new Error(
+          "expected .hljs/.hljs-comment rules to capture hex colors",
+        );
+      }
 
       // WCAG AA body text floor; already passes for all 90 files.
       expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(4.5);
