@@ -254,7 +254,7 @@ const palette = fromTextMate(nightOwl, {
 
 Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility.
 
-These legacy styles are stable and will not be removed; new projects should still prefer [Theming](#theming) (the `ThemePalette` path) instead.
+These legacy styles are stable and will not be removed; new projects should still prefer [Theming](#theming) (the `ThemePalette` path) instead. The main reason to pick this path over `ThemePalette` is a custom `classPrefix`: `base.css` (used by `ThemePalette` themes) assumes the default `hljs-` class prefix, so projects using a custom prefix should stay on the legacy string path.
 
 There are two ways to apply `highlight.js` styles.
 
