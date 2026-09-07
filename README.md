@@ -395,6 +395,16 @@ The component prefixes each selector with a scope class on the wrapper, so the t
 
 For a page-wide theme, use `{@html theme}` as shown above.
 
+Under a `style-src` CSP that requires a nonce, pass `nonce` and it's attached to the `<style>` tag `HighlightStyle` injects into `<svelte:head>`:
+
+```svelte
+<HighlightStyle theme={a11yDark} nonce={cspNonce}>
+  <Highlight language={typescript} {code} />
+</HighlightStyle>
+```
+
+A single `ThemePalette` (`theme` as an object, not a `light`/`dark` pair) never injects a `<style>` tag at all — only inline vars on the wrapper — so it's unaffected by a `style-src` nonce requirement in the first place; that's a reason to prefer it under a strict CSP.
+
 ### Dark mode
 
 `HighlightStyle` can emit a light and a dark theme together and switch between them. Pass `light` and `dark` instead of `theme`:
@@ -2003,6 +2013,7 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 | dark       | `string \| ThemePalette` | N/A                       |
 | mode       | `"auto" \| "light" \| "dark" \| string` | `"auto"`   |
 | scopeClass | `string`                | hash of `theme`           |
+| nonce      | `string`                | N/A                       |
 
 The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the top-level `div` element.
 
