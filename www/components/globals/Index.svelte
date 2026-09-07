@@ -1080,11 +1080,34 @@ export { add, mul };\`,
         directives.
       </ListItem>
       <ListItem>
-        The <code class="code">langtag</code> prop is not used. Static output
-        can't pull in <code class="code">langtag.css</code>; that only happens
-        when a runtime <code class="code">LangTag</code> is in the bundle.
+        The <code class="code">langtag</code> prop, if set, is a bare flag or a
+        static boolean literal (<code class="code">langtag={"{true}"}</code
+        >/<code class="code">langtag={"{false}"}</code>) - not a variable or
+        expression.
       </ListItem>
     </UnorderedList>
+    <p class="mb-5">
+      A truthy <code class="code">langtag</code> can't pull in
+      <code class="code">langtag.css</code>
+      at build time, so it renders the language badge as a plain inline-styled
+      <code class="code">{"<span>"}</code>
+      instead, themed with the same
+      <code class="code">--langtag-*</code>
+      custom properties <code class="code">LangTag</code> reads:
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <Highlight
+      code={`<Highlight language={javascript} code="const x = 1;" langtag />`}
+      language={javascript}
+      class={THEME_MODULE_NAME}
+    />
+    <HighlightSvelte
+      code={`<pre class="hljs" data-language="javascript" style="position:relative;overflow-x:var(--overflow-x, auto);overflow-y:var(--overflow-y, auto);border-radius:var(--border-radius, 0);width:var(--width, auto);max-width:var(--max-width, none)"><code class="hljs"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;</code><span style="position:absolute;top:var(--langtag-top, 0);right:var(--langtag-right, 0);display:flex;align-items:center;justify-content:center;background:var(--langtag-background, inherit);color:var(--langtag-color, inherit);border-radius:var(--langtag-border-radius, 0);padding:var(--langtag-padding, 1em);font-size:var(--langtag-font-size, inherit);">javascript</span></pre>`}
+      class={THEME_MODULE_NAME}
+    />
+  </Column>
+  <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Dynamic <code class="code">code</code> or
       <code class="code">language</code>,
@@ -1140,7 +1163,8 @@ export { add, mul };\`,
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       ...renders per-line markup driven by <code class="code">meta</code>, with
-      <code class="code">data-line-state</code> on lines that
+      <code class="code">data-line-state</code>
+      on lines that
       <code class="code">mark</code>/<code class="code">ins</code>/
       <code class="code">del</code>
       target:
