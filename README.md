@@ -947,6 +947,8 @@ Set `langtag` to `true` to display the language name in the top right corner of 
 
 Customize the language tag `background`, `color`, and `border-radius` using style props.
 
+Setting `langtag` opts a `<Highlight>` usage out of the [`svelte-highlight/static`](#static-mode) build-time transform, since static output can't pull in `langtag.css`.
+
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
 | Style prop              | Description                     | Default value |
