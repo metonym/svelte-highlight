@@ -62,9 +62,11 @@
   $: activeIndex = files.indexOf(active);
 
   // Keep the active tab in view whenever it changes, e.g. `bind:active`
-  // set from outside the visible tab strip. Guarded so it never runs
-  // during SSR, where there is no scrollable DOM to act on.
-  let previousActive;
+  // set from outside the visible tab strip. Seeded to `active` so it
+  // doesn't fire on mount and yank the page's scroll position toward
+  // an already-visible tab; guarded so it never runs during SSR, where
+  // there is no scrollable DOM to act on.
+  let previousActive = active;
 
   $: if (typeof document !== "undefined" && active !== previousActive) {
     previousActive = active;
