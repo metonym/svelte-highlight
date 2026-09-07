@@ -9,6 +9,7 @@
   let play = true;
 
   let done = 0;
+  let progress = { revealed: 0, total: 0 };
 </script>
 
 <svelte:head>{@html atomOneDark}</svelte:head>
@@ -31,7 +32,9 @@
     {play}
     data-testid="tw"
     on:done={() => (done += 1)}
+    on:progress={(e) => (progress = e.detail)}
   />
 </Highlight>
 
 <span data-testid="done">{done}</span>
+<span data-testid="progress">{progress.revealed}/{progress.total}</span>
