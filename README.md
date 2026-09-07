@@ -1654,6 +1654,14 @@ Named curves: `linear` (default), `easeInQuad`/`easeOutQuad`/`easeInOutQuad`, `e
 
 Set `speed={0}` to reveal all content on the very first frame -- a documented "skip typing" escape hatch, useful for a "skip" button or for finishing an off-screen instance instantly.
 
+By default `granularity="char"` reveals one character at a time. Set `granularity="word"` to reveal a full word per step instead -- a ChatGPT-style token-by-token reveal. Total typing duration and `easing` are unaffected either way; only which character counts `revealed` may land on changes.
+
+```svelte
+<Highlight language={typescript} {code} let:highlighted>
+  <Typewriter {highlighted} granularity="word" />
+</Highlight>
+```
+
 Fire `on:progress` for a progress bar or "X% typed" indicator -- it dispatches `{ revealed, total }` (visible-character counts) whenever `revealed` advances. `revealed` and `total` are also exposed for `bind:revealed`/`bind:total`, though both are read-only in practice: the component overwrites them every frame.
 
 ```svelte
@@ -2248,6 +2256,7 @@ See [Large documents](#large-documents) above.
 | speed       | `number`                 | `30`          |
 | play        | `boolean`                | `true`        |
 | easing      | `(t: number) => number`  | `linear`      |
+| granularity | `"char" \| "word"`       | `"char"`      |
 | revealed    | `number`                 | `0`           |
 | total       | `number`                 | `0`           |
 

@@ -46,6 +46,7 @@
   let done = false;
   let runId = 0;
   let easingName = "linear";
+  let granularity = "char";
   let skippedSpeed;
   let revealed = 0;
   let total = 0;
@@ -78,6 +79,7 @@
         {speed}
         {play}
         {easing}
+        {granularity}
         class={THEME_MODULE_NAME}
         --caret-color="#2996cf"
         --caret-width="2px"
@@ -104,6 +106,10 @@
       <SelectItem value={name} />
     {/each}
   </Select>
+  <Select labelText="Granularity" bind:selected={granularity}>
+    <SelectItem value="char" />
+    <SelectItem value="word" />
+  </Select>
   <Toggle
     bind:toggled={play}
     labelText="Playback"
@@ -114,6 +120,7 @@
   <Button size="small" kind="tertiary" on:click={replay}>Replay</Button>
   <p class="label-01" style="margin-bottom: 0.5rem">
     Status:
-    <code class="code">{done ? "done" : "revealing…"}</code> ({percent}%)
+    <code class="code">{done ? "done" : "revealing…"}</code>
+    ({percent}%)
   </p>
 </div>
