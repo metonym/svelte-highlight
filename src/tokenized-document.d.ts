@@ -18,6 +18,12 @@ export interface TokenizedDocument {
   lineRange(start: number, end: number): string[];
   /** Lines tokenized so far (monotonically grows; for tests/introspection). */
   tokenizedThrough(): number;
+  /**
+   * Number of retained engine checkpoints; one is created every
+   * `checkpointInterval` lines of tokenized content and never evicted (see
+   * the memory-tradeoff note in the README's "Large documents" section).
+   */
+  checkpointCount(): number;
 }
 
 export function createTokenizedDocument(options: {
