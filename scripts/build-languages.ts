@@ -156,6 +156,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "hocon",
   "csv",
   "log",
+  "gdshader",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

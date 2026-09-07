@@ -461,6 +461,20 @@ func _ready() -> void:
 	if true:
 		pass
 `,
+  gdshader: `shader_type spatial;
+render_mode blend_mix, depth_draw_opaque;
+
+uniform float intensity : hint_range(0, 1) = 0.5;
+
+void vertex() {
+    VERTEX.y += sin(TIME) * 0.1;
+}
+
+void fragment() {
+    vec3 color = ALBEDO.rgb * intensity;
+    ALBEDO = color;
+}
+`,
   gotmpl: `{{- /* render a greeting */ -}}
 {{ define "greeting" }}
 Hello, {{ .Name | printf "%s" }}!
