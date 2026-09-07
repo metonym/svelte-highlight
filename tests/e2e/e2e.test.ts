@@ -1899,3 +1899,32 @@ test("FileTabs - an empty files list omits aria-labelledby", async ({
   );
   expect(messages).toEqual([]);
 });
+
+test("FileTabs - the active tab scrolls into view when set programmatically", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(FileTabs, {
+    props: { manyFiles: true, width: "300px" },
+  });
+
+  const lastTabName = "some-very-long-file-name-number-19.ts";
+
+  await component.update({
+    props: { manyFiles: true, width: "300px", initialActive: lastTabName },
+  });
+
+  const tablistBox = await page.locator(".tablist").boundingBox();
+  const tabBox = await page
+    .getByRole("tab", { name: lastTabName })
+    .boundingBox();
+
+  if (!tablistBox || !tabBox) {
+    throw new Error("expected .tablist and the active tab to have layout");
+  }
+
+  expect(tabBox.x).toBeGreaterThanOrEqual(tablistBox.x - 1);
+  expect(tabBox.x + tabBox.width).toBeLessThanOrEqual(
+    tablistBox.x + tablistBox.width + 1,
+  );
+});

@@ -12,12 +12,23 @@
     };
 
   export let initialActive: string | undefined = undefined;
+  export let manyFiles = false;
+  export let width: string | undefined = undefined;
 
-  let files = Object.keys(sources);
+  const manyFileNames = Array.from(
+    { length: 20 },
+    (_, i) => `some-very-long-file-name-number-${i}.ts`,
+  );
+
+  let files = manyFiles ? manyFileNames : Object.keys(sources);
 
   let active = initialActive ?? files[0];
   let lastChange = "";
   let changeCount = 0;
+
+  // Re-applies `initialActive` when the test updates it post-mount, to
+  // simulate a `bind:active` value set programmatically from outside.
+  $: if (initialActive !== undefined) active = initialActive;
 
   function removeActiveFile() {
     files = files.filter((file) => file !== active);
@@ -30,22 +41,24 @@
 
 <svelte:head> {@html atomOneDark} </svelte:head>
 
-<FileTabs
-  {files}
-  bind:active
-  on:change={(event) => {
-    lastChange = event.detail.active;
-    changeCount += 1;
-  }}
-  let:active
->
-  {#if active}
-    <Highlight
-      language={sources[active].language}
-      code={sources[active].code}
-    />
-  {/if}
-</FileTabs>
+<div style={width ? `width: ${width}` : undefined}>
+  <FileTabs
+    {files}
+    bind:active
+    on:change={(event) => {
+      lastChange = event.detail.active;
+      changeCount += 1;
+    }}
+    let:active
+  >
+    {#if active && sources[active]}
+      <Highlight
+        language={sources[active].language}
+        code={sources[active].code}
+      />
+    {/if}
+  </FileTabs>
+</div>
 
 <p data-testid="active">{active}</p>
 <p data-testid="last-change">{lastChange}</p>

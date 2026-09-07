@@ -16,7 +16,7 @@
    */
   export let active = files[0];
 
-  import { afterUpdate, createEventDispatcher } from "svelte";
+  import { afterUpdate, createEventDispatcher, tick } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -60,6 +60,21 @@
   }
 
   $: activeIndex = files.indexOf(active);
+
+  // Keep the active tab in view whenever it changes, e.g. `bind:active`
+  // set from outside the visible tab strip. Guarded so it never runs
+  // during SSR, where there is no scrollable DOM to act on.
+  let previousActive;
+
+  $: if (typeof document !== "undefined" && active !== previousActive) {
+    previousActive = active;
+    scrollActiveIntoView();
+  }
+
+  async function scrollActiveIntoView() {
+    await tick();
+    tabs[activeIndex]?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
 
   /** @param {string} file */
   function selectTab(file) {
@@ -159,8 +174,27 @@
   .tablist {
     display: flex;
     gap: var(--file-tabs-gap, 0);
-    background: var(--file-tabs-background, inherit);
     overflow-x: auto;
+    background-color: var(--file-tabs-background, inherit);
+    background-repeat: no-repeat;
+    background-size: var(--tab-overflow-fade, 1.5rem) 100%;
+    background-position: left, right, left, right;
+    /* `local` covers scroll with the content, hiding the `scroll` shadows
+       beneath them until the corresponding edge is scrolled out of view. */
+    background-attachment: local, local, scroll, scroll;
+    background-image:
+      linear-gradient(
+        to right,
+        var(--file-tabs-background, inherit),
+        var(--file-tabs-background, inherit)
+      ),
+      linear-gradient(
+        to left,
+        var(--file-tabs-background, inherit),
+        var(--file-tabs-background, inherit)
+      ),
+      linear-gradient(to right, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0)),
+      linear-gradient(to left, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0));
   }
 
   .tab {
