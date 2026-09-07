@@ -442,6 +442,7 @@ These apply to the outer container of every component (the `pre` element for `Hi
 | Variable                  | Description                                       | Default value               |
 | :------------------------ | :------------------------------------------------ | :--------------------------- |
 | --line-number-color       | Text color of the line numbers                    | `currentColor`               |
+| --line-number-digit-width | Width of a single gutter digit                    | `0.6em`                      |
 | --border-color            | Border color of the column of line numbers        | `currentColor`               |
 | --highlighted-background  | Background color of highlighted lines             | `rgba(254, 241, 96, 0.2)`    |
 | --line-added-background   | Background color of `lineStates` `"added"` lines   | `rgba(46, 204, 113, 0.15)`   |
@@ -732,6 +733,7 @@ Use `--style-props` to customize styles.
 | Style prop                | Description                                              | Default value              |
 | :------------------------ | :------------------------------------------------------ | :-------------------------- |
 | --line-number-color       | Text color of the line numbers                          | `currentColor`              |
+| --line-number-digit-width | Width of a single gutter digit                          | `0.6em`                     |
 | --border-color            | Border color of the column of line numbers              | `currentColor`              |
 | --padding                 | Fallback padding for `--padding-left` / `--padding-right` | `1em`                     |
 | --padding-left            | Left padding for `td` elements                          | `var(--padding, 1em)`       |
@@ -749,6 +751,7 @@ See [Styling with CSS variables](#styling-with-css-variables) for the full list,
   <LineNumbers
     {highlighted}
     --line-number-color="pink"
+    --line-number-digit-width="0.75em"
     --border-color="rgba(255, 255, 255, 0.2)"
     --padding-left={0}
     --padding-right="3em"
