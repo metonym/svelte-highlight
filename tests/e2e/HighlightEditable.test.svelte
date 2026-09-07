@@ -4,6 +4,7 @@
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
   export let initialCode = "const a = 1;";
+  export let readonly = false;
 
   let editor;
   let code = initialCode;
@@ -18,6 +19,7 @@
   language={typescript}
   bind:code
   tabSize={2}
+  {readonly}
   --outline-color="rgb(255, 0, 0)"
   on:change={() => (changes += 1)}
   on:history={(e) => (historyState = e.detail)}

@@ -1058,6 +1058,41 @@ test("HighlightEditable - setCode and clear replace the document", async ({
   await expect(page.getByTestId("code")).toHaveAttribute("data-value", "");
 });
 
+test("HighlightEditable - readonly blocks edits but keeps selection and reads working", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, {
+    props: { initialCode: "const a = 1;", readonly: true },
+  });
+
+  const editor = page.locator("[contenteditable='false']");
+  await expect(editor).toHaveCount(1);
+
+  await editor.click();
+  await page.keyboard.type("XYZ");
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "const a = 1;",
+  );
+  await expect(page.getByTestId("changes")).toHaveAttribute("data-value", "0");
+
+  await page.getByTestId("insert").click();
+  await page.getByTestId("indent").click();
+  await page.getByTestId("outdent").click();
+  await page.getByTestId("set-code").click();
+  await page.getByTestId("clear").click();
+  await expect(page.getByTestId("code")).toHaveAttribute(
+    "data-value",
+    "const a = 1;",
+  );
+  await expect(page.getByTestId("changes")).toHaveAttribute("data-value", "0");
+
+  await page.getByTestId("select-all").click();
+  const selected = await page.evaluate(() => window.getSelection()?.toString());
+  expect(selected).toBe("const a = 1;");
+});
+
 test("HighlightEditable - focus outline uses the --outline-color variable", async ({
   mount,
   page,

@@ -31,6 +31,13 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
   historyLimit?: number;
 
   /**
+   * Keeps highlighting, caret placement, and selection active while
+   * blocking edits (typing, paste, drag-and-drop, Tab/Shift+Tab indent).
+   * @default false
+   */
+  readonly?: boolean;
+
+  /**
    * Rendering engine. `"css-highlights"` (experimental) paints tokens via
    * the CSS Custom Highlight API (`CSS.highlights`) over plain-text line
    * nodes instead of wrapping them in `<span>`s, so a repaint never
