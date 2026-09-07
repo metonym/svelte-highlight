@@ -174,6 +174,7 @@
     "/preview-csv": "CSV language preview",
     "/preview-log": "Log file language preview",
     "/preview-gdshader": "Godot Shading Language preview",
+    "/preview-shaderlab": "Unity ShaderLab language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
