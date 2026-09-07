@@ -79,9 +79,13 @@ const COLOR_SCHEME_BY_MODE = {
   dark: "dark",
 };
 
-/** @param {import("./theme.d.ts").ThemePalette} palette */
+/**
+ * Serialize a single palette's vars plus its own `color-scheme`, so native
+ * form controls/scrollbars inside a themed block follow the theme too.
+ * @param {import("./theme.d.ts").ThemePalette} palette
+ */
 export function paletteStyle(palette) {
-  return varsToStyle(palette.vars);
+  return `${varsToStyle(palette.vars)};color-scheme:${palette.colorScheme}`;
 }
 
 /**
