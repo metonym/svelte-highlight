@@ -30,6 +30,14 @@ pkgJson.exports = {
     types: "./static.d.ts",
     import: "./static.js",
   },
+  "./fence": {
+    types: "./fence.d.ts",
+    import: "./fence.js",
+  },
+  "./fence.js": {
+    types: "./fence.d.ts",
+    import: "./fence.js",
+  },
   "./*.svelte": {
     types: "./*.svelte.d.ts",
     import: "./*.svelte",
