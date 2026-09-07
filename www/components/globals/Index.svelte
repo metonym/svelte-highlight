@@ -267,7 +267,7 @@ export default {
       hideCloseButton
       kind="warning"
       title="Note:"
-      subtitle="Auto-highlighting will result in a larger bundle size. Specify a language if possible."
+      subtitle="Mounting HighlightAuto statically imports all 279 shipped grammars, regardless of languageNames, so bundle size is unconditionally larger. Specify a language if possible."
     />
   </Column>
   <Column xlg={6} lg={6} md={12}>
