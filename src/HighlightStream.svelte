@@ -115,6 +115,14 @@
   let vEnd = 0;
   /** @type {string[]} */
   let vVisibleLines = [];
+  // Last { start, end, lineCount } dispatched as `windowchange`, so a
+  // recompute that lands on the same window doesn't re-dispatch.
+  /** @type {number | undefined} */
+  let dispatchedWindowStart;
+  /** @type {number | undefined} */
+  let dispatchedWindowEnd;
+  /** @type {number | undefined} */
+  let dispatchedWindowLineCount;
 
   /** @type {ReturnType<typeof registry.createSession> | undefined} */
   let session;
@@ -303,6 +311,21 @@
       total,
     }));
     vVisibleLines = vdoc.lineRange(vStart, vEnd);
+
+    if (
+      vStart !== dispatchedWindowStart ||
+      vEnd !== dispatchedWindowEnd ||
+      vLineCount !== dispatchedWindowLineCount
+    ) {
+      dispatchedWindowStart = vStart;
+      dispatchedWindowEnd = vEnd;
+      dispatchedWindowLineCount = vLineCount;
+      dispatch("windowchange", {
+        start: vStart,
+        end: vEnd,
+        lineCount: vLineCount,
+      });
+    }
   }
 
   // Mirrors `scrollToBottom`/the shrink-clamp in `HighlightVirtual`, merged:

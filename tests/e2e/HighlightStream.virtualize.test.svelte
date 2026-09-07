@@ -9,6 +9,8 @@
   let code = "";
   let done = false;
   let doneCount = 0;
+  let windowChangeCount = 0;
+  let lastWindow = { start: 0, end: 0, lineCount: 0 };
 
   function appendLines(n) {
     let extra = "";
@@ -39,6 +41,8 @@
 </button>
 <button type="button" data-testid="finish" on:click={finish}>Finish</button>
 <span data-testid="done-count">{doneCount}</span>
+<span data-testid="window-change-count">{windowChangeCount}</span>
+<span data-testid="window-change-snapshot">{JSON.stringify(lastWindow)}</span>
 
 <HighlightStream
   language={javascript}
@@ -50,4 +54,8 @@
   data-testid="stream"
   style="height: 300px; width: 600px;"
   on:done={() => (doneCount += 1)}
+  on:windowchange={(e) => {
+    windowChangeCount += 1;
+    lastWindow = e.detail;
+  }}
 />

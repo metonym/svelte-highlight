@@ -106,6 +106,19 @@ export type HighlightStreamEvents = {
    * Fires after the final full highlight once `done` is set.
    */
   done: CustomEvent<null>;
+
+  /**
+   * Fires whenever the rendered window moves in `virtualize` mode (mount,
+   * scroll, resize, or new lines arriving). Not dispatched otherwise.
+   */
+  windowchange: CustomEvent<{
+    /** Index of the first rendered line (inclusive). */
+    start: number;
+    /** Index of the last rendered line (exclusive). */
+    end: number;
+    /** Total number of lines in the document so far. */
+    lineCount: number;
+  }>;
 };
 
 export default class HighlightStream extends SvelteComponentTyped<
