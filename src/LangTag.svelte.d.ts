@@ -12,6 +12,9 @@ export type LangTagProps = HTMLAttributes<HTMLPreElement> &
 
     /**
      * Highlighted HTML.
+     *
+     * When empty, `code` is rendered instead as plain, Svelte-escaped text —
+     * the `hljs` class is still applied, there's just no highlighting markup.
      */
     highlighted: string;
 
