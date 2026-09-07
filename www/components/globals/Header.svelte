@@ -168,6 +168,7 @@
     "/preview-tsql": "T-SQL language preview",
     "/preview-plsql": "PL/SQL language preview",
     "/preview-turtle": "Turtle/RDF language preview",
+    "/preview-textproto": "Protocol Buffer text format language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
