@@ -49,6 +49,16 @@ See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported lan
 <Highlight language={typescript} {code} />
 ```
 
+### Wrapping Long Lines
+
+By default, overflowing horizontal content is contained by a scrollbar. Set `wrap` to `true` to wrap long lines instead.
+
+```svelte
+<Highlight wrap language={typescript} {code} />
+```
+
+Don't combine `wrap` with `HighlightStream`'s `virtualize` mode or `HighlightVirtual` -- both assume one fixed-height line per row, which wrapping breaks.
+
 ## Theming
 
 Every `highlight.js` theme is also compiled into a **`ThemePalette`**: a typed object of `--shl-*` CSS custom properties plus a shared structural stylesheet (`svelte-highlight/themes/base.css`) that maps `.hljs*` classes to those variables. This is the recommended way to theme new projects — themes are data, scoping is an inline `style` attribute (SSR-safe by construction), and any token is overridable with one CSS line or a Svelte style prop. See [SUPPORTED_THEMES.md](SUPPORTED_THEMES.md) for a list of compiled themes.
@@ -1655,6 +1665,7 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 | code     | `any`                                          | N/A (required) |
 | language | { name: `string`; register: `object` } | N/A (required) |
 | langtag  | `boolean`                                      | `false`        |
+| wrap     | `boolean`                                      | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
@@ -1758,6 +1769,7 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 | :------ | :-------- | :------------- |
 | code    | `any`     | N/A (required) |
 | langtag | `boolean` | `false`        |
+| wrap    | `boolean` | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
@@ -1790,6 +1802,7 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 | code      | `any`            | N/A (required) |
 | languages | `LanguageName[]` | `undefined`    |
 | langtag   | `boolean`        | `false`        |
+| wrap      | `boolean`        | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
