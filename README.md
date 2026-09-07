@@ -906,6 +906,21 @@ Customize the focus outline with the `--outline-color`, `--outline-width`, and `
 />
 ```
 
+### Read-only
+
+Set `readonly` to keep highlighting, caret placement, and selection active while blocking edits (typing, paste, drag-and-drop, and Tab/Shift+Tab indent). The imperative API still works, so a consumer can toggle a document read-only without swapping components.
+
+```svelte
+<script>
+  let readonly = false;
+</script>
+
+<HighlightEditable language={typescript} bind:code {readonly} />
+<button on:click={() => (readonly = !readonly)}>
+  {readonly ? "Unlock" : "Lock"}
+</button>
+```
+
 ### Experimental: CSS Custom Highlight engine
 
 `engine="css-highlights"` paints tokens with the [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) (`CSS.highlights`, `::highlight()`) instead of wrapping them in `<span>`s. The editable `<code>` stays plain text (one `<span>` per line, reused from the default engine's line structure, but with no per-token spans inside), so a repaint never replaces the DOM the caret is sitting in.
@@ -1851,6 +1866,7 @@ import type { LanguageName } from "svelte-highlight";
 | language     | { name: `string`; register: `object` } | N/A (required) |
 | tabSize      | `number`                                       | `2`            |
 | historyLimit | `number`                                       | `200`          |
+| readonly     | `boolean`                                      | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
