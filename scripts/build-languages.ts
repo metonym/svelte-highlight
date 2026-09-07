@@ -146,6 +146,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "djot",
   "markdoc",
   "regex",
+  "powerquery",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
