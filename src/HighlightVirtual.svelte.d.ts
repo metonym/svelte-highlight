@@ -29,8 +29,18 @@ export type HighlightVirtualProps = HTMLAttributes<HTMLPreElement> & {
   checkpointInterval?: number;
 };
 
+export type HighlightVirtualEvents = {
+  /**
+   * Fired whenever the rendered window changes.
+   */
+  windowchange: CustomEvent<{ start: number; end: number; lineCount: number }>;
+};
+
 export default class HighlightVirtual extends SvelteComponentTyped<
   HighlightVirtualProps,
-  Record<string, never>,
+  HighlightVirtualEvents,
   Record<string, never>
-> {}
+> {
+  /** Scroll a given line into the rendered window. */
+  scrollToLine(line: number): void;
+}

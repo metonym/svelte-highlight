@@ -21,9 +21,11 @@
    */
   export let checkpointInterval = 100;
 
-  import { onMount, tick } from "svelte";
+  import { createEventDispatcher, onMount, tick } from "svelte";
   import { createTokenizedDocument } from "./tokenized-document.js";
   import { watchLineHeight, windowRange } from "./virtual-window.js";
+
+  const dispatch = createEventDispatcher();
 
   /** @type {HTMLElement} */
   let container;
@@ -60,6 +62,15 @@
   /** @type {string[]} */
   let visibleLines = [];
 
+  // Last { start, end, lineCount } dispatched as `windowchange`, so a
+  // recompute that lands on the same window doesn't re-dispatch.
+  /** @type {number | undefined} */
+  let dispatchedWindowStart;
+  /** @type {number | undefined} */
+  let dispatchedWindowEnd;
+  /** @type {number | undefined} */
+  let dispatchedWindowLineCount;
+
   $: source = typeof code === "string" ? code : String(code ?? "");
 
   function ensureDoc() {
@@ -87,6 +98,17 @@
       total,
     }));
     visibleLines = doc.lineRange(start, end);
+
+    if (
+      start !== dispatchedWindowStart ||
+      end !== dispatchedWindowEnd ||
+      lineCount !== dispatchedWindowLineCount
+    ) {
+      dispatchedWindowStart = start;
+      dispatchedWindowEnd = end;
+      dispatchedWindowLineCount = lineCount;
+      dispatch("windowchange", { start, end, lineCount });
+    }
   }
 
   // After the document changes shape, the sizer's height changes too; sync
@@ -154,6 +176,22 @@
     void scrollTop;
     void clientHeight;
     void lineCount;
+    computeWindow();
+  }
+
+  /**
+   * Scroll a given line into the rendered window.
+   * @param {number} line
+   */
+  export function scrollToLine(line) {
+    if (!container) return;
+    const target = Math.max(0, Math.min(line, lineCount)) * lineHeight;
+    const maxScrollTop = Math.max(
+      0,
+      container.scrollHeight - container.clientHeight,
+    );
+    container.scrollTop = Math.max(0, Math.min(target, maxScrollTop));
+    scrollTop = container.scrollTop;
     computeWindow();
   }
 
