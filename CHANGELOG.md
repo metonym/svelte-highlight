@@ -5,6 +5,119 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.21.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.21.0) - 2026-09-07
+
+**Features**
+
+- add `highlightFence` and `parseMeta` for Markdown/MDX code fences
+- add `onSummary` callback to `highlightStatic`
+- allow `langtag` in statically-rendered `Highlight` usages
+- add `wrap` prop for pre-wrapped long lines
+- add `wrap` prop to `AnsiOutput`
+- add `lineStates` for added/removed/focus line decoration on `LineNumbers`
+- accept pre-split `lines` / `lineCount` on `LineNumbers` for windowed rendering
+- add word-granularity reveal to `Typewriter`
+- dispatch `progress` and expose bindable `revealed` / `total` on `Typewriter`
+- publish `svelte-highlight/typewriter-units` as a subpath export
+- add `readonly` prop to `HighlightEditable`
+- expose `secondBest` in `HighlightAuto`'s `highlight` event
+- add `windowchange` and `scrollToLine` to `HighlightVirtual`
+- dispatch `windowchange` from `HighlightStream` `virtualize`
+- mark `HighlightStream` busy and announce completion
+- show an overflow fade on `FileTabs` and keep the active tab in view
+- add `nonce` prop to `HighlightStyle` for CSP
+- add `createAnsiSession` for incremental ANSI parsing
+- add `StreamSession#replace` for mid-stream edits
+- add `TokenizedDocument.checkpointCount()`
+- add `validatePalette` and export `ROLE_SCOPES` from `svelte-highlight/theme`
+- improve TextMate theme import (`semanticTokenColors`, warnings, starter scopes)
+- emit `color-scheme` on the single-palette path
+- accept grammar `source` and return `warnings` from `fromHighlightJs`
+- reject `loadLanguage` with a typed `LanguageLoadError`
+- add custom `baml` language
+- add custom `bend` language
+- add custom `bitbake` language
+- add custom `blueprint` language
+- add custom `bpftrace` language
+- add custom `bqn` language
+- add custom `c3` language
+- add custom `cisco` language
+- add custom `civet` language
+- add custom `codeql` language
+- add custom `crontab` language
+- add custom `csv` language
+- add custom `djot` language
+- add custom `dtrace` language
+- add custom `ejs` language
+- add custom `gbnf` language
+- add custom `gdshader` language
+- add custom `gotmpl` language
+- add custom `graphviz` language
+- add custom `haproxy` language
+- add custom `helm` language
+- add custom `hocon` language
+- add custom `imba` language
+- add custom `ink` language
+- add custom `kcl` language
+- add custom `kconfig` language
+- add custom `koka` language
+- add custom `kv` language
+- add custom `ldscript` language
+- add custom `log` language
+- add custom `lookml` language
+- add custom `markdoc` language
+- add custom `modelfile` language
+- add custom `org` language
+- add custom `plantuml` language
+- add custom `plsql` language
+- add custom `powerquery` language
+- add custom `raku` language
+- add custom `regex` language
+- add custom `renpy` language
+- add custom `roc` language
+- add custom `ron` language
+- add custom `rpmspec` language
+- add custom `shaderlab` language
+- add custom `slint` language
+- add custom `smithy` language
+- add custom `snort` language
+- add custom `structurizr` language
+- add custom `systemd` language
+- add custom `textproto` language
+- add custom `tsq` language
+- add custom `tsql` language
+- add custom `turtle` language
+- add custom `typespec` language
+- add custom `uiua` language
+- add custom `unison` language
+- add custom `vcl` language
+- add custom `verse` language
+- add custom `yang` language
+- add custom `yara` language
+- add custom `yarnspinner` language
+
+**Fixes**
+
+- fall back to a plain light value under `light-dark()`
+- size the `LineNumbers` gutter in `em`
+- use logical properties for the `LineNumbers` gutter
+- hide the `LineNumbers` gutter from assistive technology
+- insert dropped text as plain text in `HighlightEditable`
+- let Escape then Tab leave `HighlightEditable`
+- warn when a scope token isn't a valid CSS class name
+- fall back to the auto-hash when `scopeClass` is empty
+- dispatch `on:highlight` for empty code, once per change
+- pin `white-space` in `HighlightVirtual` and `HighlightStream` virtualize mode
+- keep `FileTabs` `active` in sync with `files`
+- skip DCS, APC, PM, SOS, and single-character ANSI escapes
+- allow only `http`, `https`, and `mailto` in OSC 8 hyperlinks
+
+**Performance**
+
+- use `StreamSession#replace` in `HighlightStream` for mid-buffer edits
+- use `createAnsiSession` for `AnsiOutput` appends
+- resume the live stream preview from a mid-line checkpoint
+
 ## [7.20.1](https://github.com/metonym/svelte-highlight/releases/tag/v7.20.1) - 2026-09-06
 
 **Performance**
