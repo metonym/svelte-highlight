@@ -1047,6 +1047,21 @@ const language: LanguageType<"dotenv"> = await fromHighlightJs(
 
 Building a package for others to install? Ship the converted grammar directly instead of calling `fromHighlightJs` at runtime — see [`scripts/convert-grammars.ts`](scripts/convert-grammars.ts) for the converter this package's own bundled languages go through.
 
+### Conversion fidelity
+
+`fromHighlightJs` and [`scripts/convert-grammars.ts`](scripts/convert-grammars.ts) (the pipeline behind every one of the ~244 bundled `svelte-highlight/languages/*` grammars) share the exact same converter, so a custom grammar goes through identical logic to every shipped one, not a lesser path.
+
+Most hljs grammars are plain-JSON `contains`/`begin`/`end`/`className` rules, which convert as-is. A grammar can also use `on:begin`, `on:end`, or `__beforeBegin` callbacks for cases regexes alone can't express; the converter recognizes six specific shapes and turns them into declarative flags:
+
+- An `on:begin` callback that copies the matched text so the closing delimiter must equal the opening one (heredocs).
+- An `on:begin` callback that only accepts a match at the very start of input (a shebang guard).
+- An `on:begin` callback that disambiguates an opening tag from a generic comparison (JSX).
+- An `on:begin` callback that checks the character immediately before the match (a letter-boundary guard).
+- An `on:begin` callback checking `SOME_SET.has(match[0])` against a module-level word list — recovered only when you also pass the grammar's own source text as `fromHighlightJs`'s third argument, since the compiled callback alone doesn't expose the backing array.
+- A `__beforeBegin` callback that rejects a match immediately following a `.` (hljs's `beginKeywords` dot-guard).
+
+Any other `on:begin`/`on:end`/`__beforeBegin` body converts too, but with a `console.warn` and the rule's relevance forced to zero — it still matches, unconditionally, without skewing auto-detection. Check `language.warnings` (see above) to catch this without reading the console.
+
 ## Custom Plugin
 
 Third-party hljs language plugins work the same way: pass their `register(hljs)` export to `fromHighlightJs`.
