@@ -929,6 +929,18 @@ note right of Web #lightblue
 end note
 @enduml
 `,
+  plsql: `CREATE OR REPLACE PROCEDURE raise_salary(p_id NUMBER) IS
+  v_salary employees.salary%TYPE;
+BEGIN
+  SELECT salary INTO v_salary FROM employees WHERE id = p_id;
+  v_salary := v_salary * 1.1;
+  UPDATE employees SET salary = v_salary WHERE id = p_id;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Employee not found');
+END;
+/
+`,
   polar: `# document access
 resource Document {
   permissions = ["read", "write"];
