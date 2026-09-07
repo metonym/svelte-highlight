@@ -1738,6 +1738,20 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 />
 ```
 
+### `HighlightStyle`
+
+#### Props
+
+| Name       | Type                    | Default value            |
+| :--------- | :---------------------- | :------------------------ |
+| theme      | `string \| ThemePalette` | N/A                       |
+| light      | `string \| ThemePalette` | N/A                       |
+| dark       | `string \| ThemePalette` | N/A                       |
+| mode       | `"auto" \| "light" \| "dark" \| string` | `"auto"`   |
+| scopeClass | `string`                | hash of `theme`           |
+
+The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the top-level `div` element.
+
 ### `LineNumbers`
 
 #### Props
