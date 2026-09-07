@@ -759,6 +759,8 @@ See [Styling with CSS variables](#styling-with-css-variables) for the full list,
 </Highlight>
 ```
 
+The gutter's position and border use logical CSS properties (`inset-inline-start`/`inset-inline-end`), so it follows `dir="rtl"` without any extra configuration.
+
 ### Language Tag
 
 When using a custom slot, forward `langtag` and `languageName` from `Highlight` to `LineNumbers`.
