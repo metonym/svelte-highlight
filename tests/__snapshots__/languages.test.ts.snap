@@ -296,6 +296,7 @@ exports[`Languages 1`] = `
   "tp",
   "traceql",
   "tsq",
+  "tsql",
   "tsrx",
   "twig",
   "typescript",

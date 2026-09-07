@@ -1288,6 +1288,13 @@ templ Page(items []Item) {
 
 (ERROR) @error
 _ @any`,
+  tsql: `DECLARE @count INT;
+
+SELECT TOP 10 [OrderId], N'note' AS Note
+FROM #TempOrders WITH (NOLOCK)
+WHERE CustomerId = @count AND @@ROWCOUNT > 0;
+GO
+`,
   tsrx: `export function Greeting({ name }: { name?: string }) @{
   const message = name ? \`Hello, \${name}\` : "stranger";
 
