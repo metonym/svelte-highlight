@@ -231,6 +231,21 @@ writeFileSync("public/midnight.css", paletteToCss(midnight));
 
 `defineTheme` output is a plain `ThemePalette` — spreadable, serializable, diffable, and valid everywhere shipped palettes work, per [Themes are data](#theming) above.
 
+**`validatePalette()`** self-checks a `ThemePalette` — useful for a hand-built or hand-edited palette, e.g. one assembled via the [Themes are data](#theming) spread pattern above:
+
+```js
+import { validatePalette } from "svelte-highlight/theme";
+
+const custom = {
+  ...atomOneDark,
+  vars: { ...atomOneDark.vars, "--shl-keyword": "#ff79c6" },
+};
+
+validatePalette(custom); // -> [] when clean; otherwise a list of issues
+```
+
+It flags a missing/malformed `vars` object, a missing `--shl-fg`/`--shl-bg`, a `vars` key outside the `--shl-*` grammar, and a `--shl-fg`/`--shl-bg` value that doesn't look like a recognized color — never throws. `defineTheme` already runs it (plus an unknown-`scopes`-key check) automatically in dev mode.
+
 ### Importing VS Code themes
 
 `svelte-highlight/theme/textmate` imports VS Code / TextMate theme JSON (thousands of existing editor themes) into a `ThemePalette`:
