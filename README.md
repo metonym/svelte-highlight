@@ -38,6 +38,8 @@ Import languages from `svelte-highlight/languages`.
 
 See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
+`code` accepts any value and is coerced with `String(code ?? "")`: an object like `{}` renders as `"[object Object]"`, while `undefined`/`null` render as nothing.
+
 ```svelte
 <script>
   import Highlight from "svelte-highlight";
