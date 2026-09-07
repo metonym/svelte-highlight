@@ -105,11 +105,12 @@ function renderToken(token) {
  * @returns {Promise<string>}
  */
 export async function highlightFence({ code, lang, meta }) {
+  const resolvedLang = resolveLanguageName(lang) ?? lang;
   const language = await loadLanguage(
-    /** @type {import("./languages").LanguageName} */ (lang),
+    /** @type {import("./languages").LanguageName} */ (resolvedLang),
   );
   ensureRegistered(language);
-  const { events } = registry.highlight(code, { language: lang });
+  const { events } = registry.highlight(code, { language: resolvedLang });
   const parsedMeta = meta === undefined ? undefined : parseMeta(meta);
 
   const lines = tokenLines(events)
@@ -129,7 +130,7 @@ export async function highlightFence({ code, lang, meta }) {
     : "";
 
   return (
-    `<pre class="hljs" data-language="${escapeAttribute(lang)}"${titleAttr}${showLineNumbersAttr}>` +
+    `<pre class="hljs" data-language="${escapeAttribute(resolvedLang)}"${titleAttr}${showLineNumbersAttr}>` +
     `<code class="hljs">${lines}</code></pre>`
   );
 }
