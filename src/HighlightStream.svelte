@@ -490,7 +490,12 @@
     display: block;
     position: relative;
     overflow: auto;
-    white-space: pre;
+    /* Row math assumes one line per fixed-height row, which only holds
+       under `white-space: pre`; $$restProps forwards inline styles to this
+       same element, so a consumer `style="white-space: pre-wrap"` would
+       otherwise silently break scrolling. */
+    /* biome-ignore lint/complexity/noImportantStyles: must beat a consumer inline style, not just cascade order */
+    white-space: pre !important;
     margin: 0;
   }
 
