@@ -1,6 +1,6 @@
 import { $ } from "bun";
 
-import { buildLanguages } from "./build-languages.ts";
+import { buildAliases, buildLanguages } from "./build-languages.ts";
 import { buildStyles } from "./build-styles.ts";
 import { buildThemes } from "./build-themes.ts";
 import { convertGrammars } from "./convert-grammars.ts";
@@ -14,4 +14,6 @@ const stylesChain = buildStyles().then(({ themeInputs }) =>
 );
 await buildLanguages();
 await convertGrammars();
+// Aliases only land in each grammar module's register field once converted.
+await buildAliases();
 await stylesChain;

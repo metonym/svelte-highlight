@@ -19,6 +19,16 @@ export interface ParsedMeta {
 export declare function parseMeta(meta: string): ParsedMeta;
 
 /**
+ * Resolves a Markdown fence info string's language word (or a bare grammar
+ * name) to its canonical grammar name, e.g. `"ts"` or `"TypeScript"` ->
+ * `"typescript"`. Trims, lowercases, and takes only the first
+ * whitespace-delimited word, so passing a full info string like
+ * `"ts title=\"app.ts\""` works. Returns `undefined` when the word doesn't
+ * match a shipped grammar name or alias.
+ */
+export declare function resolveLanguageName(name: string): string | undefined;
+
+/**
  * Highlights a single Markdown/MDX code fence into hljs-compatible HTML,
  * for use from framework adapters (mdsvex, markdown-it, rehype, ...) that
  * process fences outside the Svelte compiler.
