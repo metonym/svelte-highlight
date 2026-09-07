@@ -1261,7 +1261,7 @@ The static transform runs only when all of these are true:
 - `language` is a plain identifier from a static `import` of `svelte-highlight/languages/*`.
 - `code` is a string literal or a template literal with no `${...}` interpolation.
 - The element has no slot content, spread props, or directives (`bind:`, `on:`, etc.).
-- `langtag` is not set. Static output can't pull in `langtag.css`; that only happens when a runtime `LangTag` is in the bundle.
+- `langtag`, if set, is a bare flag or a static boolean literal (`langtag={true}`/`langtag={false}`) - not a variable or expression. Static output can't pull in `langtag.css` (that only happens when a runtime `LangTag` is in the bundle), so a truthy `langtag` renders the language badge as a plain inline-styled `<span>` instead, themed with the same `--langtag-*` custom properties `LangTag` reads - customization is limited to those variables, not `LangTag`'s slot content.
 
 Dynamic `code` or `language`, `loadLanguage`, `HighlightAuto`, `HighlightSvelte`, and `HighlightEditable` keep the runtime component. No warning. That's intentional.
 
