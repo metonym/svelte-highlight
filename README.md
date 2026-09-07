@@ -1088,7 +1088,21 @@ The example above imports a specific language as a static string, which lets the
 {/await}
 ```
 
-`loadLanguage` accepts a [supported language name](SUPPORTED_LANGUAGES.md), dynamically imports its grammar, and resolves with the language object. It rejects with an `Unknown language` error for an unrecognized name, so handle the `{:catch}` block (or `.catch`) when the name comes from untrusted input. Grammars with embedded sublanguages (`astro`, `svelte`, and others with a `dependencies` list) register their dependencies automatically — `Highlight`, `HighlightAuto`, and `HighlightSvelte` all call `ensureRegistered` on the language they're given, which registers the grammar and recurses through its dependencies.
+`loadLanguage` accepts a [supported language name](SUPPORTED_LANGUAGES.md), dynamically imports its grammar, and resolves with the language object. It rejects with a `LanguageLoadError` for an unrecognized name, so handle the `{:catch}` block (or `.catch`) when the name comes from untrusted input. `LanguageLoadError` is importable from `svelte-highlight` for an `instanceof` check:
+
+```js
+import { LanguageLoadError } from "svelte-highlight";
+
+try {
+  const grammar = await loadLanguage(name);
+} catch (error) {
+  if (error instanceof LanguageLoadError) {
+    // handle a missing/misspelled language name
+  }
+}
+```
+
+Grammars with embedded sublanguages (`astro`, `svelte`, and others with a `dependencies` list) register their dependencies automatically — `Highlight`, `HighlightAuto`, and `HighlightSvelte` all call `ensureRegistered` on the language they're given, which registers the grammar and recurses through its dependencies.
 
 `loadLanguage` does a fresh `import()` on every call and keeps no explicit cache, but it's safe to call repeatedly for the same name: module loaders dedupe dynamic imports by resolved specifier rather than re-fetching, so repeated calls resolve to the same cached module.
 
