@@ -50,6 +50,7 @@ import LineNumbersFocusLines from "./LineNumbers.focusLines.test.svelte";
 import LineNumbersGutterOverflow from "./LineNumbers.gutterOverflow.test.svelte";
 import LineNumbersHideBorder from "./LineNumbers.hideBorder.test.svelte";
 import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
+import LineNumbersLinesInput from "./LineNumbers.linesInput.test.svelte";
 import LineNumbersMultilineSpan from "./LineNumbers.multilineSpan.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
@@ -575,6 +576,31 @@ test("LineNumbers - custom starting number", async ({ mount, page }) => {
   await mount(LineNumbersCustomStartingLine);
 
   await expect(page.getByText("100")).toBeVisible();
+});
+
+test("LineNumbers - renders a windowed lines array sized for the full document", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersLinesInput);
+
+  const windowed = page.getByTestId("windowed");
+  const full = page.getByTestId("full");
+
+  // The window covers lines 3-4 of the 100-line document, rendered as row
+  // numbers 3 and 4 (not 1 and 2), with the gutter sized for all 100.
+  const windowedNumbers = await windowed.locator("td.hljs").allTextContents();
+  expect(windowedNumbers.map((text) => text.trim())).toEqual(["3", "4"]);
+
+  const windowedWidth = await windowed
+    .locator("td.hljs")
+    .first()
+    .evaluate((el) => getComputedStyle(el).width);
+  const fullWidth = await full
+    .locator("td.hljs")
+    .first()
+    .evaluate((el) => getComputedStyle(el).width);
+  expect(windowedWidth).toBe(fullWidth);
 });
 
 test("LineNumbers - preserves a span across a multi-line block comment", async ({

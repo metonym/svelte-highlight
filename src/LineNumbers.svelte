@@ -1,8 +1,27 @@
 <script>
   import { splitLines } from "./split-lines.js";
 
-  /** @type {string} */
-  export let highlighted;
+  /**
+   * Highlighted `code` HTML. Required at runtime unless `lines` is passed.
+   * @type {string | undefined}
+   */
+  export let highlighted = undefined;
+
+  /**
+   * Pre-split per-line HTML, the same shape `splitLines`/`extendLines`/
+   * `TokenizedDocument#lineRange` produce. Overrides `highlighted` --
+   * pass this to render a window of a larger document without re-splitting
+   * the full string on every update.
+   * @type {string[] | undefined}
+   */
+  export let lines = undefined;
+
+  /**
+   * Total document line count, for gutter-width purposes, when `lines` is a
+   * partial window rather than the whole document.
+   * @type {number | undefined}
+   */
+  export let lineCount = undefined;
 
   /** @type {boolean} */
   export let hideBorder = false;
@@ -26,10 +45,14 @@
   const MIN_DIGITS = 2;
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
 
-  $: lines = splitLines(highlighted);
+  $: renderedLines = lines ?? splitLines(highlighted ?? "");
   $: highlightedLineSet = new Set(highlightedLines);
   $: focusMode = highlightedLines.length > 0;
-  $: len_digits = (startingLineNumber + lines.length - 1).toString().length;
+  $: len_digits = (
+    startingLineNumber +
+    (lineCount ?? renderedLines.length) -
+    1
+  ).toString().length;
   $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
   $: width = len * DIGIT_WIDTH;
 </script>
@@ -46,7 +69,7 @@
 >
   <table>
     <tbody class:hljs={true}>
-      {#each lines as line, i}
+      {#each renderedLines as line, i}
         {@const lineNumber = i + startingLineNumber}
         {@const isHighlighted = highlightedLineSet.has(i)}
         <tr class:dimmed={focusMode && !isHighlighted}>
