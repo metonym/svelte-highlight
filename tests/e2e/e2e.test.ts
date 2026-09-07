@@ -1732,6 +1732,24 @@ test("HighlightVirtual - the sizer's huge intrinsic height never inflates the su
   expect(documentElementScrollHeight).toBeLessThan(20_000);
 });
 
+test("HighlightVirtual - white-space: pre survives a consumer style override", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual, {
+    props: {
+      style: "height: 300px; width: 600px; white-space: pre-wrap",
+    },
+  });
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+  const whiteSpace = await virtual.evaluate(
+    (el) => getComputedStyle(el).whiteSpace,
+  );
+  expect(whiteSpace).toBe("pre");
+});
+
 test("Typewriter - animates then settles to the full highlighted content", async ({
   mount,
   page,
