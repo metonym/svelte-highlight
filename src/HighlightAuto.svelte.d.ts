@@ -45,6 +45,14 @@ export type HighlightAutoEvents = {
      * `toRanges`, custom renderers).
      */
     events: ScopeEvent[];
+
+    /**
+     * The runner-up candidate and its relevance score, for surfacing
+     * detection confidence (e.g. "detected javascript, runner-up
+     * typescript at relevance 6"). `undefined` when no other candidate
+     * scored above zero, or only one candidate was viable.
+     */
+    secondBest?: { language: string | undefined; relevance: number };
   }>;
 };
 

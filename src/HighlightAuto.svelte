@@ -21,7 +21,7 @@
   import { registry } from "./registry.js";
 
   /**
-   * @typedef {{ highlighted: string; language: string; events: import("./engine.d.ts").ScopeEvent[] }} HighlightEventDetail
+   * @typedef {{ highlighted: string; language: string; events: import("./engine.d.ts").ScopeEvent[]; secondBest?: { language: string | undefined; relevance: number } }} HighlightEventDetail
    * @type {import("svelte").EventDispatcher<{ highlight: HighlightEventDetail}>}
    */
   const dispatch = createEventDispatcher();
@@ -44,13 +44,16 @@
   /** @type {import("./engine.d.ts").ScopeEvent[]} */
   let events = [];
 
+  /** @type {{ language: string | undefined; relevance: number } | undefined} */
+  let secondBest;
+
   /** @type {import("./engine.d.ts").ScopeEvent[] | undefined} */
   let lastDispatchedEvents;
 
   afterUpdate(() => {
     if (events !== lastDispatchedEvents) {
       lastDispatchedEvents = events;
-      dispatch("highlight", { highlighted, language, events });
+      dispatch("highlight", { highlighted, language, events, secondBest });
     }
   });
 
@@ -61,6 +64,7 @@
       value: highlighted,
       language = "",
       events,
+      secondBest,
     } = registry.highlightAuto(source, languageNames));
   }
 </script>

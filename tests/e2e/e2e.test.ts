@@ -22,6 +22,7 @@ import HighlightAutoEmptyCode from "./HighlightAuto.emptyCode.test.svelte";
 import HighlightAutoEvents from "./HighlightAuto.events.test.svelte";
 import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestriction.test.svelte";
 import HighlightAutoNoCandidate from "./HighlightAuto.noCandidate.test.svelte";
+import HighlightAutoSecondBest from "./HighlightAuto.secondBest.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
@@ -467,6 +468,19 @@ test("HighlightAuto - dispatches on:highlight once per change, not per re-render
   await expect(page.getByTestId("dispatch-count")).toHaveText("1");
   await page.getByRole("button", { name: "Toggle langtag" }).click();
   await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+});
+
+test("HighlightAuto - exposes secondBest in the event detail", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoSecondBest);
+
+  const expected = await page.getByTestId("expected-second-best").textContent();
+  expect(expected).not.toBe("");
+  await expect(page.getByTestId("dispatch-second-best")).toHaveText(
+    expected ?? "",
+  );
 });
 
 test("HighlightSvelte - exposes the scope-event stream via slot prop and on:highlight detail", async ({
