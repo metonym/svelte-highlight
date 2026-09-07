@@ -30,6 +30,7 @@
   import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
   import Langtag from "@components/LineNumbers/Langtag.svelte";
   import LineStates from "@components/LineNumbers/LineStates.svelte";
+  import Rtl from "@components/LineNumbers/Rtl.svelte";
   import StartingLineNumber from "@components/LineNumbers/StartingLineNumber.svelte";
   import Streaming from "@components/LineNumbers/Streaming.svelte";
   import StyleProps from "@components/LineNumbers/StyleProps.svelte";
@@ -446,8 +447,9 @@ export { add, mul };\`,
     <p class="mb-5">
       Use <code class="code">lineStates</code> for a per-line state map --
       <code class="code">"added"</code>, <code class="code">"removed"</code>, or
-      <code class="code">"focus"</code> -- so diff-style decorations can build
-      on the same primitive as <code class="code">highlightedLines</code>.
+      <code class="code">"focus"</code>
+      -- so diff-style decorations can build on the same primitive as
+      <code class="code">highlightedLines</code>.
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <LineStates /> </Column>
@@ -462,6 +464,13 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <Langtag /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      The gutter follows <code class="code">dir="rtl"</code> via logical CSS
+      properties.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <Rtl /> </Column>
 </Row>
 
 <Row class="mb-9">
