@@ -12,6 +12,20 @@ export interface HighlightStaticOptions {
     message: string,
     details: { filename?: string; line: number; cause: unknown },
   ) => void;
+
+  /**
+   * Called once per file with at least one shape-matched `<Highlight>` usage,
+   * after all of that file's usages have been resolved - the escape hatch for
+   * "how many usages actually went static," with aggregation across files
+   * left to the caller. A file with no `<Highlight>`-shaped usages doesn't
+   * trigger this at all.
+   */
+  onSummary?: (summary: {
+    filename?: string;
+    matched: number;
+    succeeded: number;
+    failed: number;
+  }) => void;
 }
 
 /**
