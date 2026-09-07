@@ -9,6 +9,7 @@
   import CopyButtonSlot from "@components/CopyButton/Slot.svelte";
   import CopyButtonStyleProps from "@components/CopyButton/StyleProps.svelte";
   import FileTabs from "@components/FileTabs.svelte";
+  import HighlightWrap from "@components/Highlight/Wrap.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
   import EditableCssHighlights from "@components/HighlightEditable/CssHighlights.svelte";
@@ -156,6 +157,18 @@ export default {
       title="Note:"
       subtitle="Using a CDN is best suited for prototyping and not recommended for production use."
     />
+  </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12} lg={12} md={12}>
+    <p class="mb-5">
+      By default, overflowing horizontal content is contained by a scrollbar.
+      Set <code class="code">wrap</code> to wrap long lines instead.
+    </p>
+  </Column>
+  <Column xlg={16} lg={16} md={12}>
+    <HighlightWrap />
   </Column>
 </Row>
 
