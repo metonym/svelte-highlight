@@ -40,6 +40,7 @@ import HighlightSvelteDispatchOnce from "./HighlightSvelte.dispatchOnce.test.sve
 import HighlightSvelteEmptyCode from "./HighlightSvelte.emptyCode.test.svelte";
 import HighlightSvelteEvents from "./HighlightSvelte.events.test.svelte";
 import HighlightVirtual from "./HighlightVirtual.test.svelte";
+import LangTagCopyButton from "./LangTag.copyButton.test.svelte";
 import LangTag from "./LangTag.test.svelte";
 import LineNumbersCssVariables from "./LineNumbers.cssVariables.test.svelte";
 import LineNumbersCustomStartingLine from "./LineNumbers.customStartingLine.test.svelte";
@@ -680,6 +681,34 @@ test("LangTag", async ({ mount, page }) => {
 
   const preElement = page.locator("pre.langtag");
   await expect(preElement).toHaveCSS("position", "relative");
+});
+
+test("LangTag - offset recipe combines correctly with CopyButton", async ({
+  mount,
+  page,
+}) => {
+  await mount(LangTagCopyButton);
+
+  const pre = page.locator("pre.langtag");
+  await expect(pre).toBeVisible();
+  await expect(pre).toHaveAttribute("data-language", "typescript");
+  await expect(page.getByRole("button", { name: "Copy" })).toBeVisible();
+
+  const vars = await pre.evaluate((el) => {
+    const cs = getComputedStyle(el);
+    return {
+      top: cs.getPropertyValue("--langtag-top").trim(),
+      right: cs.getPropertyValue("--langtag-right").trim(),
+      padding: cs.getPropertyValue("--langtag-padding").trim(),
+      fontSize: cs.getPropertyValue("--langtag-font-size").trim(),
+    };
+  });
+  expect(vars).toEqual({
+    top: "0",
+    right: "3em",
+    padding: "0.25em 0.5em",
+    fontSize: "0.75em",
+  });
 });
 
 test("CopyButton - copies via the native Clipboard API", async ({
