@@ -1753,6 +1753,8 @@ Append to `code` as chunks come in; set `done` once the stream ends.
 
 Multiple chunks appended within the same animation frame coalesce into a single highlight pass. Already-rendered lines are diffed and left untouched in the DOM; only lines whose content actually changed are repainted, so a fast-scrolling response only touches its changed suffix (typically the last line). A multi-line construct left open mid-stream -- an unterminated template literal or block comment -- re-tokenizes the lines it spans once the closing delimiter arrives, with no special-casing needed: it falls out of re-highlighting the full buffer on every update.
 
+`code` doesn't have to only grow by appending -- an edit to already-streamed text (an LLM regenerating an earlier paragraph, say) is handled incrementally too, via `StreamSession#replace()` under the hood, instead of discarding the session and re-tokenizing the whole buffer from scratch.
+
 A blinking caret marks the end of output while `!done`; setting `done` hides it and performs one final full highlight, so the finished output matches what `Highlight` would render for the same code. `on:done` fires right after that final highlight. Customize the caret with the same `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink` variables as `Typewriter`.
 
 A blinking caret is a purely visual cue, so the root element also carries `aria-busy` while `!done`, and a visually-hidden, polite live region announces `doneText` (default `"Code finished streaming"`) once `done` flips to `true` -- screen reader users get the same "still streaming" / "finished" signal sighted users get from the caret. Set `doneText` to `""` to disable the announcement.
@@ -2372,6 +2374,7 @@ import { registry } from "svelte-highlight/registry";
 
 const session = registry.createSession("typescript");
 session.append(chunk); // repeat as chunks arrive
+session.replace(from, to, text); // patch an earlier range without restarting
 const snapshot = session.snapshot(); // JSON-serializable checkpoint
 const { value } = session.finish();
 ```
