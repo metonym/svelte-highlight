@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 319 languages: 193 exported from highlight.js@11.12.0, 126 custom grammars added by svelte-highlight
+> 320 languages: 193 exported from highlight.js@11.12.0, 127 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2731,6 +2731,20 @@
 
   // base import
   import { plaintext } from "svelte-highlight/languages";
+</script>
+```
+
+## plantuml (`plantuml`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import plantuml from "svelte-highlight/languages/plantuml";
+
+  // base import
+  import { plantuml } from "svelte-highlight/languages";
 </script>
 ```
 
