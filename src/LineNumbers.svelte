@@ -113,8 +113,8 @@
             class:hljs={true}
             class:hideBorder
             style:position="sticky"
-            style:left="0"
-            style:text-align="right"
+            style:inset-inline-start="0"
+            style:text-align="end"
             style:user-select="none"
             style:width={`${width}px`}
           >
@@ -186,7 +186,7 @@
     content: "";
     position: absolute;
     top: 0;
-    right: 0;
+    inset-inline-end: 0;
     width: 1px;
     height: 100%;
     background: var(--border-color, currentColor);

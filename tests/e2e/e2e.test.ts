@@ -53,6 +53,7 @@ import LineNumbersLangtag from "./LineNumbers.langtag.test.svelte";
 import LineNumbersLineStates from "./LineNumbers.lineStates.test.svelte";
 import LineNumbersLinesInput from "./LineNumbers.linesInput.test.svelte";
 import LineNumbersMultilineSpan from "./LineNumbers.multilineSpan.test.svelte";
+import LineNumbersRtl from "./LineNumbers.rtl.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
 import ScopedStyle from "./ScopedStyle.test.svelte";
@@ -645,6 +646,31 @@ test("LineNumbers - langtag", async ({ mount, page }) => {
   );
   await expect(page.locator("div.langtag")).toHaveCSS("position", "relative");
   await expect(page.locator(".hljs-keyword")).toHaveText("const");
+});
+
+test("LineNumbers - gutter follows dir=rtl via logical properties", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersRtl);
+
+  const gutter = page.locator("td.hljs").first();
+  // "text-align: end" is preserved as a logical keyword in computed style;
+  // it resolves to right-aligned text under dir="rtl".
+  await expect(gutter).toHaveCSS("text-align", "end");
+
+  const table = page.locator("table");
+  const gutterBox = await gutter.boundingBox();
+  const tableBox = await table.boundingBox();
+  expect(gutterBox).not.toBeNull();
+  expect(tableBox).not.toBeNull();
+  expect(
+    Math.abs(
+      (gutterBox?.x ?? 0) +
+        (gutterBox?.width ?? 0) -
+        ((tableBox?.x ?? 0) + (tableBox?.width ?? 0)),
+    ),
+  ).toBeLessThan(1);
 });
 
 test("LineNumbers - CSS variables override container styles without !important", async ({
