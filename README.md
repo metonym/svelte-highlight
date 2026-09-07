@@ -278,6 +278,12 @@ When present, `theme.semanticTokenColors` is read as a higher-priority overlay o
 
 `fromTextMate` never populates `ThemePalette.extras` — `editor.background` is always read as a single solid color assigned straight to `--shl-bg`. This matches VS Code's own model (VS Code doesn't support gradients for `editor.background` either), so it's a deliberate, low-risk scope cut rather than a gap to fix.
 
+Real VS Code theme files are usually JSONC (comments, trailing commas), which `fromTextMate` doesn't accept directly. `scripts/import-textmate-theme.ts` is a local dev recipe — not an installed CLI — that strips comments/trailing commas and writes the resulting `ThemePalette` as JSON; copy it into your own project and adapt as needed:
+
+```sh
+bun scripts/import-textmate-theme.ts ./night-owl-color-theme.json ./night-owl.palette.json
+```
+
 ## Styling
 
 Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility. Legacy styles are stable and will not be removed. One concrete reason to pick this path over `ThemePalette`: `base.css` assumes the default `hljs-` class prefix, so projects using a custom `classPrefix` should stay here.
