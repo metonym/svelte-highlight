@@ -388,6 +388,8 @@ Under a `style-src` CSP that requires a nonce, pass `nonce` and it's attached to
 
 A single `ThemePalette` (`theme` as an object, not a `light`/`dark` pair) never injects a `<style>` tag at all — only inline vars on the wrapper — so it's unaffected by a `style-src` nonce requirement in the first place; that's a reason to prefer it under a strict CSP.
 
+**Known limitation:** on the CSS-string path, server-side rendering emits one `<style>` tag per `HighlightStyle` instance, even when several instances on the page share the exact same theme — the client-side dedupe only kicks in after hydration. This is harmless (CSS is idempotent), but adds extra bytes on pages with many repeated identical-theme instances. The `ThemePalette` object path has no such concern for a single theme, since it never injects a `<style>` tag to begin with.
+
 ### Dark mode
 
 `HighlightStyle` can emit a light and a dark theme together and switch between them. Pass `light` and `dark` instead of `theme`:
