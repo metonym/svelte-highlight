@@ -39,6 +39,7 @@
   import { fluxPreviewSnippets } from "@www/preview/flux-preview-snippets";
   import { gbnfPreviewSnippets } from "@www/preview/gbnf-preview-snippets";
   import { gdscriptPreviewSnippets } from "@www/preview/gdscript-preview-snippets";
+  import { gdshaderPreviewSnippets } from "@www/preview/gdshader-preview-snippets";
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
   import { gotmplPreviewSnippets } from "@www/preview/gotmpl-preview-snippets";
   import { graphvizPreviewSnippets } from "@www/preview/graphviz-preview-snippets";
@@ -176,6 +177,7 @@
   import flux from "svelte-highlight/languages/flux";
   import gbnf from "svelte-highlight/languages/gbnf";
   import gdscript from "svelte-highlight/languages/gdscript";
+  import gdshader from "svelte-highlight/languages/gdshader";
   import gleam from "svelte-highlight/languages/gleam";
   import gotmpl from "svelte-highlight/languages/gotmpl";
   import graphviz from "svelte-highlight/languages/graphviz";
@@ -271,7 +273,7 @@
   import yara from "svelte-highlight/languages/yara";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery" | "lookml" | "tsql" | "plsql" | "turtle" | "textproto" | "ron" | "hocon" | "csv" | "log"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery" | "lookml" | "tsql" | "plsql" | "turtle" | "textproto" | "ron" | "hocon" | "csv" | "log" | "gdshader"} */
   export let language;
 
   const registry = {
@@ -412,6 +414,7 @@
     hocon: { lang: hocon, snippets: hoconPreviewSnippets },
     csv: { lang: csv, snippets: csvPreviewSnippets },
     log: { lang: log, snippets: logPreviewSnippets },
+    gdshader: { lang: gdshader, snippets: gdshaderPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
