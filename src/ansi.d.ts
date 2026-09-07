@@ -56,3 +56,30 @@ export type AnsiSegment = {
  * string and re-parse it on each update instead of parsing per chunk.
  */
 export declare function parseAnsi(text: string): AnsiSegment[];
+
+/** An incremental ANSI parser session; see {@link createAnsiSession}. */
+export interface AnsiSession {
+  /** Feed the next chunk of text into the session. */
+  append(chunk: string): void;
+  /**
+   * Completed segments so far, plus a live trailing segment for any
+   * buffered-but-not-yet-flushed text. Does not mutate session state.
+   */
+  segments(): AnsiSegment[];
+  /**
+   * Flush remaining buffered text and drop any still-pending incomplete
+   * sequence, then return the final segments. Calling `append()` after
+   * `finish()` is unsupported.
+   */
+  finish(): AnsiSegment[];
+}
+
+/**
+ * Create an incremental counterpart to {@link parseAnsi} for text that
+ * arrives in chunks. Carries style, the open OSC 8 link, and a
+ * partial-escape buffer across `append()` calls, so a chunk boundary that
+ * splits a sequence doesn't get parsed wrong or dropped. `finish()`'s
+ * output is identical to calling `parseAnsi` once on the full
+ * concatenation of every appended chunk.
+ */
+export declare function createAnsiSession(): AnsiSession;
