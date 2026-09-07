@@ -21,6 +21,10 @@ import {
   varName,
 } from "./theme-vars.js";
 
+/** The same `ThemeRole` -> raw hljs scope-key table `defineTheme`'s `roles`
+ * expansion uses. Read-only. */
+export { ROLE_SCOPES };
+
 const DEFAULT_NAME = "custom-theme";
 
 const THEME_VAR_GRAMMAR = /^--shl-[\w-]+$/;

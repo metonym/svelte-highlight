@@ -6,9 +6,13 @@ import {
   defineTheme,
   extendTheme,
   paletteToCss,
+  ROLE_SCOPES,
   validatePalette,
 } from "../src/theme.js";
-import { unknownScopeSegments } from "../src/theme-vars.js";
+import {
+  ROLE_SCOPES as INTERNAL_ROLE_SCOPES,
+  unknownScopeSegments,
+} from "../src/theme-vars.js";
 
 const THEME_VAR_GRAMMAR = /^--shl-[\w-]+$/;
 
@@ -390,6 +394,13 @@ describe("unknownScopeSegments", () => {
 
   it("returns [] for a known compound scope key", () => {
     expect(unknownScopeSegments("title.class_")).toEqual([]);
+  });
+});
+
+describe("ROLE_SCOPES", () => {
+  it("is the same table src/theme-vars.js exports", () => {
+    expect(ROLE_SCOPES).toEqual(INTERNAL_ROLE_SCOPES);
+    expect(ROLE_SCOPES.keyword).toContain("keyword");
   });
 });
 

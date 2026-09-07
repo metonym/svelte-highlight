@@ -111,3 +111,10 @@ export function paletteToCss(
  * clean. `defineTheme` runs this automatically in dev mode.
  */
 export function validatePalette(palette: ThemePalette): string[];
+
+/** The same `ThemeRole` -> raw hljs scope-key table `defineTheme`'s `roles`
+ * expansion uses. Read-only. */
+export const ROLE_SCOPES: Record<
+  Exclude<ThemeRole, "foreground" | "background">,
+  string[]
+>;
