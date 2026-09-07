@@ -1062,6 +1062,8 @@ Most hljs grammars are plain-JSON `contains`/`begin`/`end`/`className` rules, wh
 
 Any other `on:begin`/`on:end`/`__beforeBegin` body converts too, but with a `console.warn` and the rule's relevance forced to zero — it still matches, unconditionally, without skewing auto-detection. Check `language.warnings` (see above) to catch this without reading the console.
 
+Upgrading a custom language written before 7.16? Before 7.16, a custom language was `{ name, register: (hljs) => modeObject }` passed synchronously straight to `<Highlight>`'s `language` prop. Since 7.16 replaced the highlight.js runtime with this package's own engine, `register` must be plain-JSON grammar IR instead, and `fromHighlightJs` (now async, requiring `{#await}`) is the replacement shown above.
+
 ## Custom Plugin
 
 Third-party hljs language plugins work the same way: pass their `register(hljs)` export to `fromHighlightJs`.
