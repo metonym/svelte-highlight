@@ -16,12 +16,14 @@
   /** @type {string[]} */
   let lines = [];
   let tokenizedThrough = doc.tokenizedThrough();
+  let checkpointCount = doc.checkpointCount();
 
   function run() {
     const clampedStart = Math.max(0, Math.min(start ?? 0, LINE_COUNT));
     const clampedEnd = Math.max(clampedStart, Math.min(end ?? 0, LINE_COUNT));
     lines = doc.lineRange(clampedStart, clampedEnd);
     tokenizedThrough = doc.tokenizedThrough();
+    checkpointCount = doc.checkpointCount();
   }
 
   // Show a live result immediately rather than an empty box pre-interaction.
@@ -57,6 +59,9 @@
   >
   <p class="label-01" style="margin-bottom: 0.5rem">
     tokenizedThrough(): <code class="code">{tokenizedThrough}</code>
+  </p>
+  <p class="label-01" style="margin-bottom: 0.5rem">
+    checkpointCount(): <code class="code">{checkpointCount}</code>
   </p>
 </div>
 
