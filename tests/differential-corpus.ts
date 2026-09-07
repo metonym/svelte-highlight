@@ -1121,6 +1121,22 @@ deny contains msg if {
   not allow
   msg := sprintf("denied for %s", [input.user.name])
 }`,
+  renpy: `label start:
+    scene bg room
+    show eileen happy at left
+    with dissolve
+
+    e "Hello, {b}world{/b}!"
+    e "You have [gold] gold pieces."
+
+    $ gold = gold + 10
+
+    menu:
+        "Ask about the weather":
+            jump weather
+        "Say goodbye":
+            return
+`,
   rescript: `// simple counter component
 type color = Red | Blue
 

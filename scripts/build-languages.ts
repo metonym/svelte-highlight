@@ -160,6 +160,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "shaderlab",
   "ink",
   "yarnspinner",
+  "renpy",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
