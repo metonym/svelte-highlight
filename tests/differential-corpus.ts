@@ -762,6 +762,21 @@ theorem succ_pos : ∀ n : ℕ, succ n > 0 := by
   | line_format "{{.message}}"
   | unwrap duration [5m]
 sum(rate({job="app"} |= "error" [5m])) by (job)`,
+  lookml: `view: orders {
+  sql_table_name: schema.orders ;;
+
+  dimension: id {
+    primary_key: yes
+    type: number
+    sql: \${TABLE}.id ;;
+  }
+
+  measure: total_orders {
+    type: count
+    drill_fields: [id]
+  }
+}
+`,
   luau: `-- typed greeting
 export type Point = { x: number, y: number }
 

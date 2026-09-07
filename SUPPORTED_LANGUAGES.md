@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 326 languages: 193 exported from highlight.js@11.12.0, 133 custom grammars added by svelte-highlight
+> 327 languages: 193 exported from highlight.js@11.12.0, 134 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2207,6 +2207,20 @@
 
   // base import
   import { logql } from "svelte-highlight/languages";
+</script>
+```
+
+## lookml (`lookml`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import lookml from "svelte-highlight/languages/lookml";
+
+  // base import
+  import { lookml } from "svelte-highlight/languages";
 </script>
 ```
 
