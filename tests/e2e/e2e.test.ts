@@ -1346,6 +1346,29 @@ test("HighlightStream virtualize - renders a bounded number of line nodes for a 
   expect(count).toBeLessThan(200);
 });
 
+test("HighlightStream virtualize - dispatches windowchange with a bounded range", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamVirtualize);
+
+  await expect(page.getByTestId("window-change-count")).not.toHaveText("0");
+
+  await page.getByTestId("append-many").click();
+  const renderedLines = page.getByTestId("stream").locator("[data-line]");
+  await expect(renderedLines.first()).toBeVisible();
+
+  const snapshot = JSON.parse(
+    (await page.getByTestId("window-change-snapshot").textContent()) ?? "{}",
+  ) as { start: number; end: number; lineCount: number };
+
+  expect(snapshot.lineCount).toBe(2001);
+  expect(snapshot.end - snapshot.start).toBeGreaterThan(0);
+  // Same bound as the "renders a bounded number of line nodes" test: nowhere
+  // near the 2,000+ lines streamed in, which is the point of virtualizing.
+  expect(snapshot.end - snapshot.start).toBeLessThan(200);
+});
+
 test("HighlightStream virtualize - shows correct content at a scrolled position", async ({
   mount,
   page,
