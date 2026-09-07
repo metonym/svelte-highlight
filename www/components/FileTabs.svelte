@@ -1,5 +1,6 @@
 <script>
   import { THEME_MODULE_NAME } from "@www/constants";
+  import { Button } from "carbon-components-svelte";
   import Highlight, { FileTabs, HighlightSvelte } from "svelte-highlight";
   import css from "svelte-highlight/languages/css";
   import javascript from "svelte-highlight/languages/javascript";
@@ -11,7 +12,12 @@
     "styles.css": { language: css, code: ".hljs {\n  color: inherit;\n}" },
   };
 
-  const files = Object.keys(sources);
+  let files = Object.keys(sources);
+  let active = files[0];
+
+  function removeActiveFile() {
+    files = files.filter((file) => file !== active);
+  }
 
   const snippet = `<script>
   import Highlight, { FileTabs } from "svelte-highlight";
@@ -42,10 +48,26 @@
 
 <p class="mb-5">Pick a tab, or use the arrow keys:</p>
 
-<FileTabs {files} let:active>
-  <Highlight
-    language={sources[active].language}
-    code={sources[active].code}
-    class={THEME_MODULE_NAME}
-  />
+<FileTabs {files} bind:active let:active>
+  {#if active}
+    <Highlight
+      language={sources[active].language}
+      code={sources[active].code}
+      class={THEME_MODULE_NAME}
+    />
+  {/if}
 </FileTabs>
+
+<p class="label-01 mb-3" style="margin-top: 1.5rem">
+  Removing the active file selects its neighbor instead of leaving no tab
+  selected:
+</p>
+
+<Button
+  size="small"
+  kind="tertiary"
+  disabled={files.length === 0}
+  on:click={removeActiveFile}
+>
+  Remove "{active}"
+</Button>

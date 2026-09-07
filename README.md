@@ -1540,6 +1540,8 @@ Arrow keys move between tabs; `Home` and `End` jump to the first and last. The m
 </FileTabs>
 ```
 
+`active` is reconciled whenever `files` changes: an unknown or stale value (including a `bind:active` set before `files` loads) falls back to `files[0]`; removing the active file selects its former neighbor (same index, clamped to the new length), like closing a tab in an editor; an empty `files` array sets `active` to `undefined` and the tab panel omits `aria-labelledby`. `on:change` fires once whenever this reconciliation actually changes `active`.
+
 ## Component API
 
 ### `Highlight`
@@ -1814,7 +1816,7 @@ See [Large documents](#large-documents) above.
 | files  | `string[]` | N/A (required) |
 | active | `string`   | `files[0]`     |
 
-`$$restProps` are forwarded to the top-level `div` element. `active` supports `bind:active`.
+`$$restProps` are forwarded to the top-level `div` element. `active` supports `bind:active` and is reconciled against `files`: an unknown value falls back to `files[0]`, removing the active file selects its former neighbor, and an empty `files` array sets `active` to `undefined`.
 
 #### Dispatched Events
 
