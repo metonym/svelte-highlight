@@ -999,6 +999,8 @@ exports[`golden snapshot: tsrx 1`] = `
 /regex/ #hashtag <span class="hljs-meta">@annotation</span></span>"
 `;
 
+exports[`golden snapshot: turtle 1`] = `"<span class="hljs-keyword">PREFIX</span> <span class="hljs-keyword">BASE</span> <span class="hljs-keyword">GRAPH</span> <span class="hljs-literal">true</span> <span class="hljs-literal">false</span>"`;
+
 exports[`golden snapshot: twig 1`] = `
 "<span class="language-xml">// comment
 &quot;string&quot; &#x27;string&#x27; 123 3.14

@@ -1338,6 +1338,16 @@ updated = 2024-01-02T10:00:00Z`,
 { span.http.status_code >= 500 } >> { name = "SQL SELECT" } | count()
 { duration > 5s }
 `,
+  turtle: `@prefix ex: <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:alice a ex:Person ;
+  ex:name "Alice"@en ;
+  ex:age "30"^^xsd:integer ;
+  ex:knows _:b1 .
+
+_:b1 ex:name "Bob" .
+`,
   typst: `= Introduction
 
 #let name = "World"

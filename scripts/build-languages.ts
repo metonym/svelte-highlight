@@ -150,6 +150,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "lookml",
   "tsql",
   "plsql",
+  "turtle",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
