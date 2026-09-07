@@ -65,6 +65,7 @@ exports[`Languages 1`] = `
   "csharp",
   "csp",
   "css",
+  "csv",
   "cue",
   "cypher",
   "d",
