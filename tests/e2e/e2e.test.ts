@@ -177,6 +177,19 @@ test("AnsiOutput - renders styled spans inside a terminal window", async ({
   await expect(page.getByTestId("window").locator(".prompt")).toBeVisible();
 });
 
+test("AnsiOutput - wrap sets white-space: pre-wrap", async ({
+  mount,
+  page,
+}) => {
+  await mount(AnsiOutput);
+
+  await expect(page.getByTestId("ansi")).toHaveCSS("white-space", "pre");
+  await expect(page.getByTestId("ansi-wrap")).toHaveCSS(
+    "white-space",
+    "pre-wrap",
+  );
+});
+
 test("AnsiOutput - auto-contrast keeps low-contrast spans readable", async ({
   mount,
   page,

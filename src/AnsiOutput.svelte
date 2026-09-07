@@ -8,6 +8,12 @@
    */
   export let autoContrast = true;
 
+  /**
+   * Wrap long lines instead of horizontally scrolling.
+   * @type {boolean}
+   */
+  export let wrap = false;
+
   import { createAnsiSession } from "./ansi.js";
   import { classNames, inlineStyle } from "./ansi-color.js";
 
@@ -41,7 +47,7 @@
   }));
 </script>
 
-<pre class="ansi" {...$$restProps}><code
+<pre class="ansi" class:wrap {...$$restProps}><code
     >{#each segments as segment}{#if segment.link}<a href={segment.link} rel="noopener noreferrer" class={segment.class} style={segment.style}
         >{segment.text}</a
       >{:else}<span class={segment.class} style={segment.style}
@@ -66,6 +72,11 @@
     font-size: var(--ansi-font-size, 0.875em);
     line-height: var(--ansi-line-height, 1.5);
     tab-size: var(--ansi-tab-size, 4);
+  }
+
+  .ansi.wrap {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 
   .bold {

@@ -13,3 +13,5 @@
 <CodeWindow variant="terminal" title="bash" data-testid="window">
   <AnsiOutput {text} data-testid="ansi" />
 </CodeWindow>
+
+<AnsiOutput {text} wrap data-testid="ansi-wrap" />
