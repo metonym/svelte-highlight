@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 335 languages: 193 exported from highlight.js@11.12.0, 142 custom grammars added by svelte-highlight
+> 336 languages: 193 exported from highlight.js@11.12.0, 143 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1367,6 +1367,20 @@
 
   // base import
   import { gdscript } from "svelte-highlight/languages";
+</script>
+```
+
+## gdshader (`gdshader`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import gdshader from "svelte-highlight/languages/gdshader";
+
+  // base import
+  import { gdshader } from "svelte-highlight/languages";
 </script>
 ```
 

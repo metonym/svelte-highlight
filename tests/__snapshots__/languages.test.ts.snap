@@ -109,6 +109,7 @@ exports[`Languages 1`] = `
   "gbnf",
   "gcode",
   "gdscript",
+  "gdshader",
   "gherkin",
   "gleam",
   "glsl",
