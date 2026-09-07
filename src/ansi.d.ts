@@ -37,7 +37,12 @@ export type AnsiSegment = {
   conceal?: boolean;
   fg?: AnsiColor;
   bg?: AnsiColor;
-  /** OSC 8 hyperlink target for this run, if any. */
+  /**
+   * OSC 8 hyperlink target for this run, if any. Only `http:`, `https:`,
+   * and `mailto:` schemes are accepted (case-insensitive); any other
+   * scheme (e.g. `javascript:`, `data:`) or a scheme-less uri is dropped
+   * as if no link were present.
+   */
   link?: string;
 };
 

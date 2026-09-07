@@ -161,6 +161,22 @@ function toSegment(text, style, link) {
 
 const ESC = "\x1b";
 
+// Schemes allowed as OSC 8 hyperlink targets. Anything else (javascript:,
+// data:, vbscript:, scheme-less strings) is rejected like an empty uri.
+const ALLOWED_LINK_SCHEMES = ["http:", "https:", "mailto:"];
+
+/**
+ * @param {string} uri
+ * @returns {string | undefined}
+ */
+function sanitizeLink(uri) {
+  const trimmed = uri.trim();
+  const lower = trimmed.toLowerCase();
+  return ALLOWED_LINK_SCHEMES.some((scheme) => lower.startsWith(scheme))
+    ? trimmed
+    : undefined;
+}
+
 /**
  * Parse ANSI-escaped terminal output into styled segments.
  *
@@ -276,7 +292,7 @@ export function parseAnsi(text) {
         if (secondSemi !== -1) {
           flush();
           const uri = rest.slice(secondSemi + 1);
-          link = uri || undefined;
+          link = uri ? sanitizeLink(uri) : undefined;
         }
       }
       // Other OSC sequences (title/icon sets, unknown commands) carry no

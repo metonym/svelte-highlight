@@ -207,6 +207,10 @@ test("AnsiOutput - OSC 8 hyperlink renders as an anchor", async ({
   const link = page.getByTestId("ansi").locator("a");
   await expect(link).toHaveText("docs");
   await expect(link).toHaveAttribute("href", "https://example.com");
+
+  const unsafe = page.getByTestId("ansi-unsafe");
+  await expect(unsafe.locator("a")).toHaveCount(0);
+  await expect(unsafe.locator("span", { hasText: "here" })).toBeVisible();
 });
 
 test("Highlight", async ({ mount, page }) => {

@@ -188,4 +188,38 @@ describe("parseAnsi", () => {
       { text: "ok" },
     ]);
   });
+
+  it("rejects an OSC 8 hyperlink with a disallowed scheme", () => {
+    expect(
+      parseAnsi(`${ESC}]8;;javascript:alert(1)${ESC}\\click${ESC}]8;;${ESC}\\`),
+    ).toEqual([{ text: "click" }]);
+  });
+
+  it("accepts OSC 8 schemes case-insensitively", () => {
+    expect(
+      parseAnsi(`${ESC}]8;;HTTPS://example.com${ESC}\\x${ESC}]8;;${ESC}\\`),
+    ).toEqual([{ text: "x", link: "HTTPS://example.com" }]);
+  });
+
+  it("accepts a mailto OSC 8 hyperlink", () => {
+    expect(
+      parseAnsi(`${ESC}]8;;mailto:a@b.c${ESC}\\x${ESC}]8;;${ESC}\\`),
+    ).toEqual([{ text: "x", link: "mailto:a@b.c" }]);
+  });
+
+  it("links a valid OSC 8 hyperlink following a rejected one", () => {
+    expect(
+      parseAnsi(
+        `${ESC}]8;;javascript:alert(1)${ESC}\\a${ESC}]8;;https://example.com${ESC}\\b${ESC}]8;;${ESC}\\`,
+      ),
+    ).toEqual([{ text: "a" }, { text: "b", link: "https://example.com" }]);
+  });
+
+  it("closes a previously open link when a rejected OSC 8 uri follows", () => {
+    expect(
+      parseAnsi(
+        `${ESC}]8;;https://example.com${ESC}\\a${ESC}]8;;javascript:alert(1)${ESC}\\b`,
+      ),
+    ).toEqual([{ text: "a", link: "https://example.com" }, { text: "b" }]);
+  });
 });
