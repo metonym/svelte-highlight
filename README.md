@@ -1388,6 +1388,8 @@ Multiple chunks appended within the same animation frame coalesce into a single 
 
 A blinking caret marks the end of output while `!done`; setting `done` hides it and performs one final full highlight, so the finished output matches what `Highlight` would render for the same code. `on:done` fires right after that final highlight. Customize the caret with the same `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink` variables as `Typewriter`.
 
+A blinking caret is a purely visual cue, so the root element also carries `aria-busy` while `!done`, and a visually-hidden, polite live region announces `doneText` (default `"Code finished streaming"`) once `done` flips to `true` -- screen reader users get the same "still streaming" / "finished" signal sighted users get from the caret. Set `doneText` to `""` to disable the announcement.
+
 Set `autoScroll` to keep the container pinned to the bottom as output grows -- it stops auto-scrolling as soon as you scroll up, and resumes once you scroll back to the bottom.
 
 ```svelte
@@ -1768,8 +1770,9 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
 | virtualize         | `boolean`                               | `false`        |
 | overscan           | `number`                                | `12`           |
 | checkpointInterval | `number`                                | `100`          |
+| doneText           | `string`                                | `"Code finished streaming"` |
 
-`$$restProps` are forwarded to the top-level `pre` element. `overscan` and `checkpointInterval` only apply when `virtualize` is set.
+`$$restProps` are forwarded to the top-level `pre` element. `overscan` and `checkpointInterval` only apply when `virtualize` is set. `doneText` is announced by a visually-hidden live region once `done` becomes `true`; set it to `""` to disable the announcement.
 
 #### Dispatched Events
 

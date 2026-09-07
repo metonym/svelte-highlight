@@ -27,9 +27,12 @@ for (const user of users) {
 
   let speed = 25;
   let autoScroll = true;
+  let announceCompletion = true;
   let code = "";
   let done = false;
   let stop = () => {};
+
+  $: doneText = announceCompletion ? "Code finished streaming" : "";
 
   function run() {
     stop();
@@ -51,6 +54,7 @@ for (const user of users) {
   {code}
   {done}
   {autoScroll}
+  {doneText}
   class={THEME_MODULE_NAME}
   style="max-height: 12em; overflow-y: auto;"
 />
@@ -68,6 +72,12 @@ for (const user of users) {
   <Toggle
     bind:toggled={autoScroll}
     labelText="Auto-scroll"
+    labelA="Off"
+    labelB="On"
+  />
+  <Toggle
+    bind:toggled={announceCompletion}
+    labelText="Announce completion (doneText, screen readers only)"
     labelA="Off"
     labelB="On"
   />
