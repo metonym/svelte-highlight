@@ -14,6 +14,7 @@ export type LangtagProps = {
    * - `--langtag-color`
    * - `--langtag-border-radius`
    * - `--langtag-padding`
+   * - `--langtag-font-size`
    *
    * Opts this usage out of the `svelte-highlight/static` build-time
    * transform, since static output can't pull in `langtag.css`.
@@ -57,6 +58,12 @@ export type LangtagProps = {
    * @default "1em"
    */
   "--langtag-padding"?: string;
+
+  /**
+   * Langtag font size.
+   * @default "inherit"
+   */
+  "--langtag-font-size"?: string;
 
   /**
    * Wrap long lines instead of scrolling horizontally: sets

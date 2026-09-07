@@ -897,6 +897,7 @@ export default {
   --langtag-color="#fff"
   --langtag-border-radius="6px"
   --langtag-padding="0.5rem"
+  --langtag-font-size="0.75em"
 />`}
       class={THEME_MODULE_NAME}
       langtag
@@ -906,6 +907,7 @@ export default {
       --langtag-color="#fff"
       --langtag-border-radius="6px"
       --langtag-padding="0.5rem"
+      --langtag-font-size="0.75em"
     />
   </Column>
 </Row>
