@@ -257,7 +257,7 @@ import nightOwl from "./night-owl-color-theme.json" with { type: "json" };
 const palette = fromTextMate(nightOwl);
 ```
 
-`fromTextMate` accepts a **parsed object** only — VS Code themes are often JSONC, so parsing is the caller's job. The scope mapping is best-effort: TextMate scope selectors are matched against a starter table by segment-prefix (`"entity.name.function"` matches `"entity.name.function.method.ts"`), with the most specific (longest) match winning ties broken by the later `tokenColors` entry — the same specificity semantics VS Code itself uses. Entries that don't map to anything are never silently dropped; pass `onWarn` to observe them:
+`fromTextMate` accepts a **parsed object** only — VS Code themes are often JSONC, so parsing is the caller's job. The scope mapping is best-effort: TextMate scope selectors are matched against a starter table by segment-prefix (`"entity.name.function"` matches `"entity.name.function.method.ts"`), with the most specific (longest) match winning ties broken by the later `tokenColors` entry — the same specificity semantics VS Code itself uses. The starter table covers common scopes, including Markdown code spans/fences and invalid/illegal markers; because matching generalizes by prefix, a row like `"keyword"` already resolves any more-specific scope sharing that prefix, so `"keyword.control"` and `"keyword.operator"` resolve differently without needing a dedicated row for each. Entries that don't map to anything are never silently dropped; pass `onWarn` to observe them:
 
 ```js
 const palette = fromTextMate(nightOwl, {
