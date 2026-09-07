@@ -2,7 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import postcss from "postcss";
 import type { ThemeDefinition, ThemePalette } from "../src/theme.d.ts";
-import { defineTheme, extendTheme, paletteToCss } from "../src/theme.js";
+import {
+  defineTheme,
+  extendTheme,
+  paletteToCss,
+  validatePalette,
+} from "../src/theme.js";
+import { unknownScopeSegments } from "../src/theme-vars.js";
 
 const THEME_VAR_GRAMMAR = /^--shl-[\w-]+$/;
 
@@ -292,6 +298,98 @@ describe("paletteToCss", () => {
     };
     const css = paletteToCss(palette);
     expect(css).toContain(".hljs{background-image:linear-gradient(red,blue)}");
+  });
+});
+
+describe("validatePalette", () => {
+  it("returns [] for a clean shipped-shape palette", async () => {
+    const { default: atomOneDark } = (await import(
+      "../src/themes/atom-one-dark.js"
+    )) as {
+      default: ThemePalette;
+    };
+    expect(validatePalette(atomOneDark)).toEqual([]);
+  });
+
+  it("flags a missing vars object", () => {
+    const messages = validatePalette({
+      name: "broken",
+      colorScheme: "dark",
+    } as unknown as ThemePalette);
+    expect(messages).toHaveLength(1);
+    expect(messages[0]).toMatch(/vars/);
+  });
+
+  it("flags a missing --shl-fg", () => {
+    const messages = validatePalette({
+      name: "broken",
+      colorScheme: "dark",
+      vars: { "--shl-bg": "#000" },
+    });
+    expect(messages).toEqual(
+      expect.arrayContaining([expect.stringMatching(/roles\.foreground/)]),
+    );
+  });
+
+  it("flags a missing --shl-bg", () => {
+    const messages = validatePalette({
+      name: "broken",
+      colorScheme: "dark",
+      vars: { "--shl-fg": "#fff" },
+    });
+    expect(messages).toEqual(
+      expect.arrayContaining([expect.stringMatching(/roles\.background/)]),
+    );
+  });
+
+  it("flags one message per key outside the --shl-* grammar", () => {
+    const messages = validatePalette({
+      name: "broken",
+      colorScheme: "dark",
+      vars: {
+        "--shl-fg": "#fff",
+        "--shl-bg": "#000",
+        color: "#f00",
+      } as unknown as ThemePalette["vars"],
+    });
+    expect(messages).toHaveLength(1);
+    expect(messages[0]).toContain("color");
+  });
+
+  it("flags a --shl-fg value that doesn't look like a color", () => {
+    const messages = validatePalette({
+      name: "broken",
+      colorScheme: "dark",
+      vars: { "--shl-fg": "#ggg", "--shl-bg": "#000" },
+    });
+    expect(messages).toEqual(
+      expect.arrayContaining([expect.stringMatching(/--shl-fg/)]),
+    );
+  });
+
+  it("passes light-dark(), var(), and CSS color keywords through without a message", () => {
+    for (const value of ["light-dark(#000, #fff)", "var(--x)", "transparent"]) {
+      const messages = validatePalette({
+        name: "ok",
+        colorScheme: "dark",
+        vars: { "--shl-fg": value, "--shl-bg": "#000" },
+      });
+      expect(messages).toEqual([]);
+    }
+  });
+});
+
+describe("unknownScopeSegments", () => {
+  it("returns [] for a known single-segment scope key", () => {
+    expect(unknownScopeSegments("keyword")).toEqual([]);
+  });
+
+  it("returns both segments of a typo'd compound scope key", () => {
+    expect(unknownScopeSegments("titel.calss_")).toEqual(["titel", "calss_"]);
+  });
+
+  it("returns [] for a known compound scope key", () => {
+    expect(unknownScopeSegments("title.class_")).toEqual([]);
   });
 });
 

@@ -102,3 +102,12 @@ export function paletteToCss(
   palette: ThemePalette,
   options?: PaletteToCssOptions,
 ): string;
+
+/**
+ * Self-check a `ThemePalette` for common authoring mistakes: a missing or
+ * malformed `vars` object, a missing `--shl-fg`/`--shl-bg`, a `vars` key
+ * outside the `--shl-*` grammar, or a `--shl-fg`/`--shl-bg` value that
+ * doesn't look like a recognized color. Never throws; returns `[]` when
+ * clean. `defineTheme` runs this automatically in dev mode.
+ */
+export function validatePalette(palette: ThemePalette): string[];
