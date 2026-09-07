@@ -19,6 +19,12 @@
     files = files.filter((file) => file !== active);
   }
 
+  const manyFiles = Array.from(
+    { length: 12 },
+    (_, i) => `component-${i}.svelte`,
+  );
+  let manyFilesActive = manyFiles[0];
+
   const snippet = `<script>
   import Highlight, { FileTabs } from "svelte-highlight";
   import javascript from "svelte-highlight/languages/javascript";
@@ -70,4 +76,23 @@
   on:click={removeActiveFile}
 >
   Remove "{active}"
+</Button>
+
+<p class="label-01 mb-3" style="margin-top: 1.5rem">
+  A tab strip narrower than its tabs fades the overflowing edge, and jumping to
+  a tab scrolls it into view:
+</p>
+
+<div style="max-width: 320px" class="mb-3">
+  <FileTabs files={manyFiles} bind:active={manyFilesActive}>
+    <p class="label-01" style="padding: 1em">{manyFilesActive}</p>
+  </FileTabs>
+</div>
+
+<Button
+  size="small"
+  kind="tertiary"
+  on:click={() => (manyFilesActive = manyFiles[manyFiles.length - 1])}
+>
+  Jump to last tab
 </Button>
