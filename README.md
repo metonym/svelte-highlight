@@ -949,6 +949,8 @@ Customize the language tag `background`, `color`, and `border-radius` using styl
 
 Setting `langtag` opts a `<Highlight>` usage out of the [`svelte-highlight/static`](#static-mode) build-time transform, since static output can't pull in `langtag.css`.
 
+If the highlighted output is empty (e.g. empty `code`, or code that highlights to an empty string), the badge and code block still render, but the code falls back to plain, unhighlighted text — the `hljs` class is still applied, there's just no syntax-highlighting markup inside it.
+
 See the [Languages page](SUPPORTED_LANGUAGES.md) for a list of supported languages.
 
 | Style prop              | Description                     | Default value |
