@@ -6,13 +6,34 @@ import type { LanguageName } from "./languages";
 export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
   LangtagProps & {
     /**
-     * Pass the highlighted `code` to `LineNumbers`.
+     * Pass the highlighted `code` to `LineNumbers`. Required unless `lines`
+     * is passed instead.
      * @example
      * <Highlight language={typescript} {code} langtag let:highlighted let:langtag let:languageName>
      *  <LineNumbers {highlighted} {langtag} {languageName} />
      * </Highlight>
      */
-    highlighted: string;
+    highlighted?: string;
+
+    /**
+     * Pre-split per-line HTML, the same shape `splitLines`/`extendLines`/
+     * `TokenizedDocument#lineRange` produce. Overrides `highlighted` --
+     * pass a window of a larger document to render it without re-splitting
+     * the full string on every update. `highlightedLines`/`lineStates`
+     * index relative to this array, not the absolute document line.
+     * @default undefined
+     */
+    lines?: string[];
+
+    /**
+     * Total document line count, for gutter-width purposes, when `lines` is
+     * a partial window rather than the whole document. Combine with
+     * `startingLineNumber` to offset row numbers for the window.
+     * @default undefined
+     * @example
+     * <LineNumbers lines={doc.lineRange(start, end)} startingLineNumber={start + 1} lineCount={doc.lineCount()} />
+     */
+    lineCount?: number;
 
     /**
      * Language name.
