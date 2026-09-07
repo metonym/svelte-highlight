@@ -13,13 +13,25 @@
 import {
   applyTokenStyle,
   colorSchemeFor,
+  parseColorToRgb,
   parseScopeKey,
   ROLE_SCOPES,
   serializeVars,
+  unknownScopeSegments,
   varName,
 } from "./theme-vars.js";
 
 const DEFAULT_NAME = "custom-theme";
+
+const THEME_VAR_GRAMMAR = /^--shl-[\w-]+$/;
+const CSS_KEYWORD_COLORS = new Set([
+  "currentcolor",
+  "transparent",
+  "inherit",
+  "initial",
+  "unset",
+  "revert",
+]);
 
 /**
  * @param {string | TokenStyle} value
@@ -81,6 +93,14 @@ export function defineTheme(definition) {
   }
 
   for (const [scopeKey, rawValue] of Object.entries(definition.scopes ?? {})) {
+    if (import.meta.env?.DEV) {
+      const unknown = unknownScopeSegments(scopeKey);
+      if (unknown.length > 0) {
+        console.warn(
+          `[svelte-highlight] defineTheme(): scope key "${scopeKey}" has unfamiliar segment(s): ${unknown.join(", ")}.`,
+        );
+      }
+    }
     applyTokenStyle(vars, parseScopeKey(scopeKey), normalizeStyle(rawValue));
   }
 
@@ -96,6 +116,13 @@ export function defineTheme(definition) {
   if (definition.extends?.extras !== undefined) {
     palette.extras = definition.extends.extras;
   }
+
+  if (import.meta.env?.DEV) {
+    for (const message of validatePalette(palette)) {
+      console.warn(`[svelte-highlight] defineTheme(): ${message}`);
+    }
+  }
+
   return palette;
 }
 
@@ -127,4 +154,53 @@ export function paletteToCss(palette, options = {}) {
   css += `${selector}{${varsCss}}`;
   if (palette.extras) css += palette.extras;
   return css;
+}
+
+/**
+ * Self-check a `ThemePalette` for common authoring mistakes: a missing or
+ * malformed `vars` object, a missing `--shl-fg`/`--shl-bg`, a `vars` key
+ * outside the `--shl-*` grammar, or a `--shl-fg`/`--shl-bg` value that
+ * doesn't look like a recognized color. Never throws; `defineTheme` runs
+ * this automatically in dev mode.
+ * @param {ThemePalette} palette
+ * @returns {string[]}
+ */
+export function validatePalette(palette) {
+  /** @type {string[]} */
+  const messages = [];
+  const vars = palette?.vars;
+
+  if (vars === null || typeof vars !== "object") {
+    messages.push('"vars" is missing or not a plain object.');
+    return messages;
+  }
+
+  if (vars["--shl-fg"] === undefined) {
+    messages.push('"--shl-fg" (roles.foreground) is missing from "vars".');
+  }
+  if (vars["--shl-bg"] === undefined) {
+    messages.push('"--shl-bg" (roles.background) is missing from "vars".');
+  }
+
+  for (const key of Object.keys(vars)) {
+    if (!THEME_VAR_GRAMMAR.test(key)) {
+      messages.push(`"${key}" does not match the --shl-* var grammar.`);
+    }
+  }
+
+  for (const key of /** @type {const} */ (["--shl-fg", "--shl-bg"])) {
+    const value = vars[key];
+    if (!value) continue;
+    if (
+      parseColorToRgb(value) === null &&
+      !value.includes("(") &&
+      !CSS_KEYWORD_COLORS.has(value.toLowerCase())
+    ) {
+      messages.push(
+        `"${key}" value "${value}" doesn't look like a recognized color.`,
+      );
+    }
+  }
+
+  return messages;
 }

@@ -158,6 +158,31 @@ export const ROLE_SCOPES = {
   deletion: ["deletion"],
 };
 
+/** Every scope segment `ROLE_SCOPES` maps a role to, flattened into a single
+ * vocabulary. Built once; used to flag a typo'd `scopes` key like
+ * `"titel.calss_"` (see `unknownScopeSegments`).
+ * @type {Set<string>}
+ */
+export const KNOWN_SCOPE_SEGMENTS = new Set(
+  Object.values(ROLE_SCOPES).flatMap((scopeKeys) =>
+    scopeKeys.flatMap((scopeKey) => parseScopeKey(scopeKey)),
+  ),
+);
+
+/**
+ * The subset of `parseScopeKey(scopeKey)`'s segments that aren't in
+ * `KNOWN_SCOPE_SEGMENTS` — `[]` when every segment is known. Only checks
+ * segment membership against `ROLE_SCOPES`'s flattened vocabulary; not a
+ * general TextMate scope-selector validator.
+ * @param {string} scopeKey
+ * @returns {string[]}
+ */
+export function unknownScopeSegments(scopeKey) {
+  return parseScopeKey(scopeKey).filter(
+    (segment) => !KNOWN_SCOPE_SEGMENTS.has(segment),
+  );
+}
+
 /** `TokenStyle` field -> CSS property in the `--shl-*` var contract. Shared
  * between `defineTheme`'s role/scope expansion and the TextMate importer so
  * both write vars the same way. */
