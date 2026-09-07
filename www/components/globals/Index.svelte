@@ -68,6 +68,22 @@ export default {
     // defaults to a console.warn with the filename, line, and message
   },
 });`;
+
+  const highlightFenceCallSnippet = `import { highlightFence } from "svelte-highlight/fence";
+
+const html = await highlightFence({
+  code: \`const add = (a, b) => a + b;
+const mul = (a, b) => a * b;
+const oldSub = (a, b) => a - b;
+export { add, mul };\`,
+  lang: "typescript",
+  meta: '{1} ins={2} del={3} title="app.ts"',
+});`;
+
+  const highlightFenceOutputSnippet = `<pre class="hljs" data-language="typescript" data-title="app.ts"><code class="hljs"><span class="line" data-line-state="mark"><span class="hljs-keyword">const</span> <span class="hljs-title function_">add</span> = (<span class="hljs-params">a, b</span>) =&gt; a + b;</span>
+<span class="line" data-line-state="ins"><span class="hljs-keyword">const</span> <span class="hljs-title function_">mul</span> = (<span class="hljs-params">a, b</span>) =&gt; a * b;</span>
+<span class="line" data-line-state="del"><span class="hljs-keyword">const</span> <span class="hljs-title function_">oldSub</span> = (<span class="hljs-params">a, b</span>) =&gt; a - b;</span>
+<span class="line"><span class="hljs-keyword">export</span> { add, mul };</span></code></pre>`;
 </script>
 
 <Row>
@@ -1094,7 +1110,46 @@ export default {
       hideCloseButton
       kind="info"
       title="Note:"
-      subtitle="Scope is small on purpose: extra props on Highlight don't carry over to the emitted &lt;pre&gt;, unused imports are left for bundlers to drop, and there's no Astro/MDX fence hook yet."
+      subtitle="Scope is small on purpose: extra props on Highlight don't carry over to the emitted &lt;pre&gt;, and unused imports are left for bundlers to drop."
+    />
+  </Column>
+  <Column xlg={12}> <h4>Rendering Markdown/MDX Fences</h4> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">highlightStatic</code>
+      only transforms literal <code class="code">Highlight</code>
+      usages, which never appear in Markdown/MDX/mdsvex code fences.
+      <code class="code">svelte-highlight/fence</code>
+      is a separate, zero-Svelte building block for that case:
+      <code class="code">highlightFence({"{"} code, lang, meta {"}"})</code>
+      highlights a single fence, and <code class="code">meta</code>
+      uses the Expressive Code/Shiki-style vocabulary (
+      <code class="code">{"{1,3-5}"}</code>, <code class="code">ins=</code>,
+      <code class="code">del=</code>, <code class="code">title=</code>,
+      <code class="code">showLineNumbers</code>) already standard across that
+      tooling.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <Highlight
+      code={highlightFenceCallSnippet}
+      language={javascript}
+      class={THEME_MODULE_NAME}
+    />
+  </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      ...renders per-line markup driven by <code class="code">meta</code>, with
+      <code class="code">data-line-state</code> on lines that
+      <code class="code">mark</code>/<code class="code">ins</code>/
+      <code class="code">del</code>
+      target:
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <HighlightSvelte
+      code={highlightFenceOutputSnippet}
+      class={THEME_MODULE_NAME}
     />
   </Column>
 </Row>
