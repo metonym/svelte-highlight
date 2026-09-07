@@ -178,6 +178,12 @@ export interface StreamSession {
   /** Tokenizes text loaded via `createSession`'s `from.code` up to (not
    * including) the first lexeme starting at or past `stopAt`. */
   advance(stopAt: number): void;
+  /** Replaces `[from, to)` in the session's fed text with `text`, reusing
+   * unaffected tokenized regions where state reconverges (see
+   * `incremental-tokenize.js`). The resulting `events()` are always
+   * identical to a fresh session fed the resulting text from scratch,
+   * computed cheaper. Does not support replacing across a language change. */
+  replace(from: number, to: number, text: string): void;
   finish(options?: { canonicalize?: boolean }): HighlightResult;
   snapshot(): Snapshot;
   events(): ScopeEvent[];

@@ -31,7 +31,13 @@
  * @typedef {import("./engine.d.ts").StreamSession} StreamSession
  * @typedef {import("./engine.d.ts").Registry} Registry
  * @typedef {import("./engine.d.ts").Snapshot} Snapshot
+ * @typedef {import("./incremental-tokenize.js").IncrementalParse} IncrementalParse
  */
+
+import {
+  parseIncremental,
+  reparseIncremental,
+} from "./incremental-tokenize.js";
 
 /**
  * A grammar plus its transitive `subLanguage` dependencies, as passed to
@@ -1311,7 +1317,7 @@ export function createRegistry() {
     createSession(language, { from } = {}) {
       const program = this.get(language);
       if (!program) throw new Error(`Unknown language: "${language}"`);
-      const tokenizer = new Tokenizer(this, program);
+      let tokenizer = new Tokenizer(this, program);
       const registry = this;
       let staged = "";
       let fed = from ? from.code : "";
@@ -1319,6 +1325,12 @@ export function createRegistry() {
         tokenizer.code = from.code;
         if (from.snapshot) tokenizer.restore(from.snapshot);
       }
+      /**
+       * Lazily built on the first `replace()` call; stays null for sessions
+       * that only ever `append()`/`advance()` so they pay no extra cost.
+       * @type {IncrementalParse | null}
+       */
+      let incremental = null;
       return {
         /** @param {string} text */
         append(text) {
@@ -1340,6 +1352,57 @@ export function createRegistry() {
          */
         advance(stopAt) {
           tokenizer.run(stopAt);
+        },
+        /**
+         * Replaces the fed text's `[from, to)` range with `text`, as if the
+         * session had been fed the resulting string from the start.
+         * Built on `incremental-tokenize.js`'s diff-and-resume re-parsing: an
+         * `IncrementalParse` record is built once (lazily, on first call)
+         * and then re-parsed only for the affected region on each call,
+         * reusing the unaffected suffix when tokenizer state reconverges.
+         * Does not support a `replace()` across a language change; create a
+         * new session for that instead.
+         * @param {number} from
+         * @param {number} to
+         * @param {string} text
+         */
+        replace(from, to, text) {
+          if (!incremental) {
+            incremental = parseIncremental(
+              /** @type {Registry} */ (registry),
+              language,
+              fed,
+            );
+          }
+          const newCode = fed.slice(0, from) + text + fed.slice(to);
+          incremental = reparseIncremental(
+            /** @type {Registry} */ (registry),
+            language,
+            incremental,
+            newCode,
+          );
+          fed = newCode;
+          const lastCheckpoint = /** @type {Snapshot} */ (
+            incremental.checkpoints.at(-1)
+          );
+          tokenizer = new Tokenizer(registry, program);
+          tokenizer.code = fed.slice(0, lastCheckpoint.pos);
+          tokenizer.restore(lastCheckpoint);
+          // `lastCheckpoint` is taken just *before* `parseIncremental`'s
+          // internal `finish()` - by design (see `run`'s `stopAt` doc
+          // comment), it defers any lexeme starting exactly at the
+          // checkpoint's position so a later `advance()` could still see
+          // more text. `incremental.events` already has that lexeme
+          // resolved (by the `finish()` that produced it), so restore only
+          // the events up to the checkpoint's own count, then run the live
+          // tokenizer once - exactly what `append()` does for newly fed
+          // complete lines - to resolve it the same way.
+          tokenizer.events = incremental.events.slice(
+            0,
+            lastCheckpoint.eventCount,
+          );
+          tokenizer.run();
+          staged = fed.slice(tokenizer.pos);
         },
         /**
          * Multi-line lookahead (e.g. ruby heredocs) may need the full text
