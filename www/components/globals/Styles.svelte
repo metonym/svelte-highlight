@@ -15,6 +15,7 @@
   } from "carbon-components-svelte";
 
   let useCdnImport = false;
+  let customOnly = false;
 </script>
 
 <ListSearch
@@ -27,6 +28,15 @@
   let:filteredIds
 >
   {@const useInjectedStyles = currentLabel === "Injected styles"}
+  <Row>
+    <Column xlg={3} lg={12}>
+      <Toggle
+        size="sm"
+        labelText="Custom styles only"
+        bind:toggled={customOnly}
+      />
+    </Column>
+  </Row>
   {#if !useInjectedStyles}
     <Row>
       <Column xlg={3} lg={12}>
@@ -53,7 +63,10 @@
         <StructuredListBody>
           {#each styles as style (style.name)}
             <StructuredListRow
-              class={filteredIds.has(style.name) ? "" : "hidden"}
+              class={filteredIds.has(style.name) &&
+              (!customOnly || style.custom)
+                ? ""
+                : "hidden"}
               style="content-visibility: auto; contain-intrinsic-size: 0 360px;"
             >
               <StructuredListCell>
@@ -66,6 +79,13 @@
                   <div class="label-01 mb-3">Module name</div>
                   <CodeSnippet type="inline" code={style.moduleName} />
                 </div>
+
+                {#if style.description}
+                  <div class="mb-5">
+                    <div class="label-01 mb-3">Description</div>
+                    {style.description}
+                  </div>
+                {/if}
               </StructuredListCell>
               <StructuredListCell>
                 <ScopedStyle {...style} {useInjectedStyles} {useCdnImport} />
