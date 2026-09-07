@@ -1134,6 +1134,26 @@ def my_rule(name):
     enabled = True
     srcs = glob(["*.go"])
     pass`,
+  structurizr: `workspace "Big Bank" {
+  !identifiers hierarchical
+
+  model {
+    customer = person "Customer"
+    softwareSystem = softwareSystem "Internet Banking" {
+      webapp = container "Web Application"
+    }
+
+    customer -> softwareSystem.webapp "Uses" "HTTPS"
+  }
+
+  views {
+    systemContext softwareSystem {
+      include *
+      autoLayout lr
+    }
+  }
+}
+`,
   surrealql: `// users who wrote a post
 DEFINE TABLE user SCHEMAFULL;
 SELECT * FROM user:alice WHERE age > 18;
