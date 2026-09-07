@@ -1418,7 +1418,18 @@ const html = await highlightFence({
 });
 ```
 
-`lang` must be the grammar's canonical file name (see "[Loading a language by name](#loading-a-language-by-name)"); it rejects with `LanguageLoadError` for an unrecognized one. `meta` is the Expressive Code/Shiki-style vocabulary standardized on by tools like Astro, Starlight, and rehype-pretty-code: a bare `{1,3-5}` or `mark={1,3-5}` marks lines, `ins={...}`/`del={...}` mark insertions/deletions, `title="..."` sets a title, and `showLineNumbers` is a bare flag. The output wraps each line in `<span class="line" data-line-state="mark|ins|del">` (only when a state applies) inside a `<pre class="hljs" data-language="...">`, so a `mark`/`ins`/`del`-aware stylesheet can target `[data-line-state]` the same way it would target Expressive Code or Shiki output.
+`lang` accepts either the grammar's canonical file name or a known alias (e.g. `"ts"`, `"sh"`) -- `highlightFence` resolves it internally via `resolveLanguageName`, and rejects with `LanguageLoadError` when neither resolves. `meta` is the Expressive Code/Shiki-style vocabulary standardized on by tools like Astro, Starlight, and rehype-pretty-code: a bare `{1,3-5}` or `mark={1,3-5}` marks lines, `ins={...}`/`del={...}` mark insertions/deletions, `title="..."` sets a title, and `showLineNumbers` is a bare flag. The output wraps each line in `<span class="line" data-line-state="mark|ins|del">` (only when a state applies) inside a `<pre class="hljs" data-language="...">`, so a `mark`/`ins`/`del`-aware stylesheet can target `[data-line-state]` the same way it would target Expressive Code or Shiki output.
+
+Call `resolveLanguageName` directly when you need the canonical name ahead of `highlightFence` -- e.g. to pick a display label, or to call `loadLanguage`/`<Highlight>` yourself instead:
+
+```js
+import { resolveLanguageName } from "svelte-highlight/fence";
+
+resolveLanguageName("ts"); // "typescript"
+resolveLanguageName("nope"); // undefined
+```
+
+It trims, lowercases, and reads only the first word, so passing a whole info string (`resolveLanguageName("ts title=\"app.ts\"")`) works too. The alias table it reads from is also importable directly, as `svelte-highlight/languages/aliases` (`LANGUAGE_ALIASES: Readonly<Record<string, string>>`), for consumers that want the raw alias -> canonical mapping without going through `resolveLanguageName`.
 
 **mdsvex.** Wire `highlightFence` into `highlight.highlighter`, whose signature is `(code, lang, meta) => string | Promise<string>`:
 
