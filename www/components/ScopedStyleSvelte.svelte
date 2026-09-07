@@ -8,7 +8,12 @@
   import { HighlightSvelte } from "svelte-highlight";
   import ${moduleName} from "svelte-highlight/styles/${name}";
 
-  const code = \`<button on:click={() => { console.log(0); }}>Click me</button>\`;
+  const code = \`<script>
+  let count = $state(0);
+  let doubled = $derived(count * 2);
+<\/script>
+
+<button on:click={() => count++}>{doubled} (store: {$externalCount})</button>\`;
 <\/script>
 
 <svelte:head>

@@ -486,14 +486,19 @@ These apply when `langtag` is set to `true`.
 
 ## Svelte Syntax Highlighting
 
-Use the `HighlightSvelte` component for Svelte syntax highlighting.
+Use the `HighlightSvelte` component for Svelte syntax highlighting. Its grammar understands Svelte 5 runes (`$state`, `$derived`, `$effect` and its suffixed forms, `$props.id`, `$inspect.trace`), store auto-subscription (`$store`, `$store()`, `$store.prop`), `lang="ts"`/`context="module"` script-block resolution, and directive shorthand (`on:`, `bind:`, `use:`, and friends) — genuinely ahead of generic HTML-plus-embedded-JS Svelte highlighting, which has no notion that runes exist.
 
 ```svelte
 <script>
   import { HighlightSvelte } from "svelte-highlight";
   import github from "svelte-highlight/styles/github";
 
-  const code = `<button on:click={() => { console.log(0); }}>Increment {count}</button>`;
+  const code = `<script>
+  let count = $state(0);
+  let doubled = $derived(count * 2);
+<\/script>
+
+<button on:click={() => count++}>{doubled} (store: {$externalCount})</button>`;
 </script>
 
 <svelte:head>
@@ -502,6 +507,10 @@ Use the `HighlightSvelte` component for Svelte syntax highlighting.
 
 <HighlightSvelte {code} />
 ```
+
+Nested template declaration tags are also supported — including a second, shadowing `{const ...}` declared inside a nested element within the same `{#each}` block.
+
+See the [kitchen-sink live demo](https://svhe.onrender.com/preview-svelte) for a fuller tour of Svelte highlighting across every theme.
 
 ## Auto-highlighting
 
