@@ -15,6 +15,9 @@ export type LangtagProps = {
    * - `--langtag-border-radius`
    * - `--langtag-padding`
    *
+   * Opts this usage out of the `svelte-highlight/static` build-time
+   * transform, since static output can't pull in `langtag.css`.
+   *
    * @default false
    */
   langtag?: boolean;
