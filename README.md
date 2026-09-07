@@ -252,7 +252,7 @@ const palette = fromTextMate(nightOwl, {
 
 ## Styling
 
-Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility.
+Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility. Legacy styles are stable and will not be removed.
 
 There are two ways to apply `highlight.js` styles.
 
