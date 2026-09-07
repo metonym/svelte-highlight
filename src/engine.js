@@ -869,7 +869,7 @@ class Tokenizer {
  * @param {string} name
  * @param {string} prefix
  */
-function scopeToCssClass(name, prefix) {
+export function scopeToCssClass(name, prefix) {
   if (name.startsWith(LANGUAGE_SCOPE_PREFIX)) {
     return name.replace(LANGUAGE_SCOPE_PREFIX, "language-");
   }
