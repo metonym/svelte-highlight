@@ -167,6 +167,7 @@
     "/preview-lookml": "LookML language preview",
     "/preview-tsql": "T-SQL language preview",
     "/preview-plsql": "PL/SQL language preview",
+    "/preview-turtle": "Turtle/RDF language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
