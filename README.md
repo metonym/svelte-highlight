@@ -624,6 +624,30 @@ The line number starts at `1`. Customize this via the `startingLineNumber` prop.
 </Highlight>
 ```
 
+### Windowed Lines
+
+`LineNumbers` re-splits the entire `highlighted` string into lines on every update, which is wasteful once you're already rendering a window out of a much larger document. Pass a pre-split `lines` array instead -- the same per-line HTML shape `svelte-highlight/tokenized-document`'s `lineRange` (see [Large documents](#large-documents)) and `HighlightStream`'s incremental rendering already produce -- and set `lineCount` to the *total* document line count so the gutter is sized for the whole document instead of jittering as the window scrolls. `startingLineNumber` offsets the row numbers to match the window's position; `highlightedLines`/`lineStates` index relative to the `lines` array actually rendered, not the absolute document line.
+
+```svelte
+<script>
+  import { LineNumbers } from "svelte-highlight";
+  import { createTokenizedDocument } from "svelte-highlight/tokenized-document";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  const doc = createTokenizedDocument({ language: typescript });
+  doc.setCode(bigFile);
+
+  const start = 50_000;
+  const end = 50_040;
+</script>
+
+<LineNumbers
+  lines={doc.lineRange(start, end)}
+  startingLineNumber={start + 1}
+  lineCount={doc.lineCount()}
+/>
+```
+
 ### Highlighted Lines
 
 Specify the lines to highlight using the `highlightedLines` prop. Indices start at zero.
@@ -1882,15 +1906,17 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 
 #### Props
 
-| Name               | Type       | Default value  |
-| :----------------- | :--------- | :------------- |
-| highlighted        | `string`   | N/A (required) |
-| hideBorder         | `boolean`  | `false`        |
-| wrapLines          | `boolean`  | `false`        |
-| startingLineNumber | `number`   | `1`            |
-| highlightedLines   | `number[]` | `[]`           |
-| langtag            | `boolean`  | `false`        |
-| languageName       | `string`   | `"plaintext"`  |
+| Name               | Type       | Default value                       |
+| :----------------- | :--------- | :----------------------------------- |
+| highlighted        | `string`   | N/A (required unless `lines` is set) |
+| lines              | `string[]` | `undefined`                          |
+| lineCount          | `number`   | `undefined`                          |
+| hideBorder         | `boolean`  | `false`                              |
+| wrapLines          | `boolean`  | `false`                              |
+| startingLineNumber | `number`   | `1`                                  |
+| highlightedLines   | `number[]` | `[]`                                 |
+| langtag            | `boolean`  | `false`                              |
+| languageName       | `string`   | `"plaintext"`                        |
 
 `$$restProps` are forwarded to the top-level `div` element.
 

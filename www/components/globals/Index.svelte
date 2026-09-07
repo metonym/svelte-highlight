@@ -30,6 +30,7 @@
   import HighlightedLinesCustomColor from "@components/LineNumbers/HighlightedLinesCustomColor.svelte";
   import Langtag from "@components/LineNumbers/Langtag.svelte";
   import StartingLineNumber from "@components/LineNumbers/StartingLineNumber.svelte";
+  import Streaming from "@components/LineNumbers/Streaming.svelte";
   import StyleProps from "@components/LineNumbers/StyleProps.svelte";
   import WrapLines from "@components/LineNumbers/WrapLines.svelte";
   import ScopedStyle from "@components/ScopedStyle.svelte";
@@ -406,6 +407,16 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <StartingLineNumber /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Pass a pre-split <code class="code">lines</code> array to render a window
+      of a larger document instead of the full
+      <code class="code">highlighted</code> string. Set
+      <code class="code">lineCount</code> so the gutter is sized for the whole
+      document, not just the window.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <Streaming /> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">highlightedLines</code> to highlight specific
