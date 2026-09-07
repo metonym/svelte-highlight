@@ -1154,6 +1154,49 @@ test("HighlightEditable - readonly blocks edits but keeps selection and reads wo
   expect(selected).toBe("const a = 1;");
 });
 
+test("HighlightEditable - drop inserts only the plain-text payload", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, { props: { initialCode: "a" } });
+
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.press("ArrowRight"); // caret to end
+
+  await editor.evaluate((el) => {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData("text/plain", "b");
+    dataTransfer.setData("text/html", "<b>bold</b>");
+    el.dispatchEvent(
+      new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer }),
+    );
+  });
+
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "ab");
+});
+
+test("HighlightEditable - readonly blocks dropped text", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightEditable, {
+    props: { initialCode: "a", readonly: true },
+  });
+
+  const editor = page.locator("[contenteditable='false']");
+  await editor.evaluate((el) => {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData("text/plain", "b");
+    el.dispatchEvent(
+      new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer }),
+    );
+  });
+
+  await expect(page.getByTestId("code")).toHaveAttribute("data-value", "a");
+});
+
 test("HighlightEditable - focus outline uses the --outline-color variable", async ({
   mount,
   page,

@@ -852,6 +852,11 @@
     insertText(event.clipboardData?.getData("text/plain") ?? "");
   }
 
+  function onDrop(event) {
+    event.preventDefault();
+    insertText(event.dataTransfer?.getData("text/plain") ?? "");
+  }
+
   // Edit-menu / execCommand undo-redo bypass onKeydown; intercept here so the
   // browser doesn't mutate DOM that paint() has already rebuilt.
   function onBeforeInput(event) {
@@ -909,6 +914,7 @@
     editor.addEventListener("keydown", onKeydown);
     editor.addEventListener("beforeinput", onBeforeInput);
     editor.addEventListener("paste", onPaste);
+    editor.addEventListener("drop", onDrop);
     editor.addEventListener("mouseup", syncCaretToHistory);
     editor.addEventListener("keyup", syncCaretToHistory);
     editor.addEventListener("focusin", onFocusIn);
@@ -922,6 +928,7 @@
       editor.removeEventListener("keydown", onKeydown);
       editor.removeEventListener("beforeinput", onBeforeInput);
       editor.removeEventListener("paste", onPaste);
+      editor.removeEventListener("drop", onDrop);
       editor.removeEventListener("mouseup", syncCaretToHistory);
       editor.removeEventListener("keyup", syncCaretToHistory);
       editor.removeEventListener("focusin", onFocusIn);
