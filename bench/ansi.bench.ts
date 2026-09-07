@@ -6,7 +6,7 @@
  * `<script>`, which isn't reachable from bench/ or tests/ at all.
  */
 import { group, task } from "ostia";
-import { parseAnsi } from "../src/ansi.js";
+import { createAnsiSession, parseAnsi } from "../src/ansi.js";
 import { classNames, inlineStyle } from "../src/ansi-color.js";
 
 const FG_CODES = [
@@ -56,6 +56,45 @@ group("classNames() + inlineStyle() over parsed segments", () => {
         },
       );
     }
+  }
+});
+
+// Fixed chunk size for the repeated-append case below: small enough to
+// straddle SGR/OSC 8 sequences many times over a long corpus.
+const CHUNK_BYTES = 200;
+
+/** Split `source` into fixed-size chunks (the last one may be shorter). */
+function chunk(source: string, size: number) {
+  const chunks: string[] = [];
+  for (let i = 0; i < source.length; i += size) {
+    chunks.push(source.slice(i, i + size));
+  }
+  return chunks;
+}
+
+group("repeated append: createAnsiSession vs re-parsing on every chunk", () => {
+  for (const count of SEGMENT_COUNTS) {
+    const chunks = chunk(ansiSource(count), CHUNK_BYTES);
+
+    task(`${count.toLocaleString()} segments, createAnsiSession`, () => {
+      const session = createAnsiSession();
+      let latest: unknown;
+      for (const piece of chunks) {
+        session.append(piece);
+        latest = session.segments();
+      }
+      return latest;
+    });
+
+    task(`${count.toLocaleString()} segments, parseAnsi on every chunk`, () => {
+      let accumulated = "";
+      let latest: unknown;
+      for (const piece of chunks) {
+        accumulated += piece;
+        latest = parseAnsi(accumulated);
+      }
+      return latest;
+    });
   }
 });
 
