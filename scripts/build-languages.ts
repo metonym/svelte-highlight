@@ -140,6 +140,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "systemd",
   "crontab",
   "graphviz",
+  "plantuml",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
