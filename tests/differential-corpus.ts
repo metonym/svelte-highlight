@@ -546,6 +546,19 @@ float4 main(float2 uv : TEXCOORD0) : SV_TARGET {
   }
   return float4(0, 0, 0, 1);
 }`,
+  hocon: `# server configuration
+app {
+  name = "my-service"
+  port = 8080
+  timeout = 30s
+  max-size = 512k
+
+  db.url = \${?DATABASE_URL}
+  db.retries += 1
+
+  include required(classpath("defaults.conf"))
+}
+`,
   html: `<!DOCTYPE html>
 <!-- page shell -->
 <div id="main" class='page'>
