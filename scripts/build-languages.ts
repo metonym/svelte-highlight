@@ -141,6 +141,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "crontab",
   "graphviz",
   "plantuml",
+  "structurizr",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
