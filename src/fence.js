@@ -22,7 +22,7 @@ function parseRanges(ranges) {
     if (!trimmed) continue;
     const [startStr, endStr] = trimmed.split("-");
     const start = Number(startStr);
-    const end = endStr !== undefined ? Number(endStr) : start;
+    const end = endStr === undefined ? start : Number(endStr);
     if (!Number.isInteger(start) || !Number.isInteger(end)) continue;
     for (let line = start; line <= end; line += 1) lines.push(line);
   }
@@ -38,7 +38,15 @@ export function parseMeta(meta) {
   const result = { lines: {} };
 
   for (const match of meta.matchAll(TOKEN_RE)) {
-    const [, titleKey, titleValue, stateKey, stateRanges, bareRanges, bareWord] = match;
+    const [
+      ,
+      titleKey,
+      titleValue,
+      stateKey,
+      stateRanges,
+      bareRanges,
+      bareWord,
+    ] = match;
 
     if (titleKey !== undefined) {
       if (titleKey === "title") result.title = titleValue ?? "";
@@ -46,8 +54,10 @@ export function parseMeta(meta) {
     }
 
     if (stateKey !== undefined) {
-      if (stateKey !== "mark" && stateKey !== "ins" && stateKey !== "del") continue;
-      for (const line of parseRanges(stateRanges ?? "")) result.lines[line] = stateKey;
+      if (stateKey !== "mark" && stateKey !== "ins" && stateKey !== "del")
+        continue;
+      for (const line of parseRanges(stateRanges ?? ""))
+        result.lines[line] = stateKey;
       continue;
     }
 
@@ -89,7 +99,7 @@ export async function highlightFence({ code, lang, meta }) {
   );
   ensureRegistered(language);
   const { events } = registry.highlight(code, { language: lang });
-  const parsedMeta = meta !== undefined ? parseMeta(meta) : undefined;
+  const parsedMeta = meta === undefined ? undefined : parseMeta(meta);
 
   const lines = tokenLines(events)
     .map((tokens, index) => {
@@ -100,9 +110,9 @@ export async function highlightFence({ code, lang, meta }) {
     .join("\n");
 
   const titleAttr =
-    parsedMeta?.title !== undefined
-      ? ` data-title="${escapeAttribute(parsedMeta.title)}"`
-      : "";
+    parsedMeta?.title === undefined
+      ? ""
+      : ` data-title="${escapeAttribute(parsedMeta.title)}"`;
   const showLineNumbersAttr = parsedMeta?.showLineNumbers
     ? ' data-show-line-numbers="true"'
     : "";

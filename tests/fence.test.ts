@@ -1,7 +1,7 @@
 import { highlightFence } from "../src/fence.js";
 
 describe("highlightFence", () => {
-  it("wraps every line in <span class=\"line\"> when no meta is given", async () => {
+  it('wraps every line in <span class="line"> when no meta is given', async () => {
     const html = await highlightFence({
       code: "const a = 1;\nconst b = 2;",
       lang: "javascript",
