@@ -1452,7 +1452,7 @@ Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https:
 <AnsiOutput {text} />
 ```
 
-Malformed or unsupported escape sequences are dropped. Nothing throws.
+Malformed or unsupported escape sequences are dropped. Nothing throws. OSC 8 hyperlinks only render as links for `http:`, `https:`, and `mailto:` URIs; any other scheme renders as plain text.
 
 ### Theming the palette
 
