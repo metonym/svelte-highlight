@@ -63,6 +63,13 @@ export type HighlightStreamProps = HTMLAttributes<HTMLPreElement> & {
   checkpointInterval?: number;
 
   /**
+   * Announced by a polite, visually-hidden live region once `done` becomes
+   * `true`. Set to `""` to disable the announcement.
+   * @default "Code finished streaming"
+   */
+  doneText?: string;
+
+  /**
    * Width of the blinking caret.
    * @default "0.6em"
    */

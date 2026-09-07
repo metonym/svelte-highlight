@@ -55,6 +55,14 @@
    */
   export let checkpointInterval = 100;
 
+  /**
+   * Announced by a polite, visually-hidden live region once `done` becomes
+   * `true` - screen readers otherwise have no signal that a streamed block
+   * has stopped growing. Set to `""` to disable the announcement.
+   * @type {string}
+   */
+  export let doneText = "Code finished streaming";
+
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { extendLines } from "./engine.js";
   import { ensureRegistered, registry } from "./registry.js";
@@ -454,6 +462,7 @@
     bind:this={container}
     class:hljs={true}
     class:shl-virtual={true}
+    aria-busy={!done}
     on:scroll={onScroll}
     {...$$restProps}
   ><code>{#if !mounted}{code}{:else}<span class="shl-virtual-sizer" style="height: {vLineCount * vLineHeight}px;"><span class="shl-virtual-window" style="transform: translateY({vStart * vLineHeight}px);">{#each vVisibleLines as line, i (vStart + i)}<span class="highlight-stream-line" data-line={vStart + i}>{@html line}</span>{#if showCaret && vEnd === vLineCount && i === vVisibleLines.length - 1}<span class="highlight-stream-caret" aria-hidden="true"></span>{/if}{"\n"}{/each}</span></span>{/if}</code><span
@@ -462,10 +471,19 @@
   aria-hidden="true"
 >&nbsp;</span></pre>
 {:else}
-  <pre bind:this={container} on:scroll={onScroll} {...$$restProps}><code
+  <pre
+    bind:this={container}
+    aria-busy={!done}
+    on:scroll={onScroll}
+    {...$$restProps}
+  ><code
   class:hljs={true}
 >{#if useSplitRendering}{#each sealedChunks as chunk, c (c)}{@html chunk}{/each}{#each tailLines as line, li (sealedLineCount + li)}{#if sealedLineCount + li > 0}{"\n"}{/if}<span class="highlight-stream-line" data-line={sealedLineCount + li}>{@html line}</span>{/each}{#if showCaret}<span class="highlight-stream-caret" aria-hidden="true"></span>{/if}{:else}{@html highlighted}{/if}</code></pre>
 {/if}
+
+<span class="visually-hidden" role="status" aria-live="polite"
+  >{done ? doneText : ""}</span
+>
 
 <style>
   .shl-virtual {
@@ -493,6 +511,18 @@
     position: absolute;
     visibility: hidden;
     pointer-events: none;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .highlight-stream-caret {
