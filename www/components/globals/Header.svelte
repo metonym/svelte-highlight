@@ -170,6 +170,7 @@
     "/preview-turtle": "Turtle/RDF language preview",
     "/preview-textproto": "Protocol Buffer text format language preview",
     "/preview-ron": "RON language preview",
+    "/preview-hocon": "HOCON language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
