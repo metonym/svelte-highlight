@@ -70,7 +70,7 @@
 
   // Captured once: a consumer-supplied scopeClass is honored for the
   // lifetime of the instance instead of being overwritten by the hash below.
-  const hasOwnScopeClass = scopeClass !== undefined;
+  const hasOwnScopeClass = scopeClass !== undefined && scopeClass !== "";
 
   $: usingPair = light !== undefined && dark !== undefined;
   $: usingObjectPair =

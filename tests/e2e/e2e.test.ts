@@ -35,6 +35,7 @@ import HighlightStreamTemplateLiteral from "./HighlightStream.templateLiteral.te
 import HighlightStream from "./HighlightStream.test.svelte";
 import HighlightStreamVirtualize from "./HighlightStream.virtualize.test.svelte";
 import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
+import HighlightStyleEmptyScopeClass from "./HighlightStyle.emptyScopeClass.test.svelte";
 import HighlightStyleNoTheme from "./HighlightStyle.noTheme.test.svelte";
 import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte";
 import HighlightSvelteDispatchOnce from "./HighlightSvelte.dispatchOnce.test.svelte";
@@ -122,6 +123,23 @@ test("HighlightStyle - renders nothing when no theme is provided", async ({
     .evaluate((head) => head.textContent ?? "");
   expect(headText).not.toContain("undefined");
   await expect(page.locator("style")).toHaveCount(0);
+});
+
+test("HighlightStyle - falls back to the auto-hash when scopeClass is an empty string", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStyleEmptyScopeClass);
+
+  const wrapper = page.getByTestId("wrapper");
+  const scopeClass = await wrapper.getAttribute("class");
+  expect(scopeClass).not.toBe("");
+  expect(scopeClass).not.toBeNull();
+
+  await expect(page.locator(".hljs-keyword").first()).toHaveCSS(
+    "color",
+    "rgb(220, 198, 224)",
+  );
 });
 
 test("CodeWindow - renders each variant wrapping a Highlight", async ({

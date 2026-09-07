@@ -44,7 +44,8 @@ export type HighlightStyleProps = HTMLAttributes<HTMLDivElement> & {
 
   /**
    * Wrapper class the scoped selectors target. Inert on the `ThemePalette`
-   * path (kept for back-compat / slot access).
+   * path (kept for back-compat / slot access). An empty string is treated
+   * the same as omitting the prop (falls back to the auto-hash).
    * @default hash of `theme`
    */
   scopeClass?: string;
