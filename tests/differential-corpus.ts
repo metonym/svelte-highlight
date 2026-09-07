@@ -773,6 +773,12 @@ theorem succ_pos : ∀ n : ℕ, succ n > 0 := by
     <p>Sold out</p>
   {% endif %}
 </div>`,
+  log: `2026-09-06T10:00:00.123Z INFO  [main] Starting server on 127.0.0.1:8080
+2026-09-06T10:00:01.456Z WARN  [req-123] slow query id=42 duration=1200
+2026-09-06T10:00:02.789Z ERROR [worker-1] Exception: NullPointerException
+    at com.foo.Bar.process(Bar.java:10)
+2026-09-06T10:00:03.012Z DEBUG [main] pid[4821] GET /api/users 200
+`,
   logql: `# filter application errors and compute rate
 {job="app", env=~"prod|staging"}
   |= "error" != "debug"
