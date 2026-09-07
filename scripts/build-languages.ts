@@ -145,6 +145,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "org",
   "djot",
   "markdoc",
+  "regex",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
