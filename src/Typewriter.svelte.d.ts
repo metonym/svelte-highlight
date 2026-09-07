@@ -9,7 +9,9 @@ export type TypewriterProps = HTMLAttributes<HTMLPreElement> & {
   highlighted?: string;
 
   /**
-   * Milliseconds between characters.
+   * Milliseconds between characters. `0` reveals all content on the first
+   * frame -- a "skip typing" escape hatch (e.g. a skip button, or finishing
+   * an off-screen instance instantly).
    * @default 30
    */
   speed?: number;
