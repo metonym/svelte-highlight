@@ -111,6 +111,7 @@
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
   import { traceqlPreviewSnippets } from "@www/preview/traceql-preview-snippets";
   import { tsqPreviewSnippets } from "@www/preview/tsq-preview-snippets";
+  import { tsqlPreviewSnippets } from "@www/preview/tsql-preview-snippets";
   import { tsrxPreviewSnippets } from "@www/preview/tsrx-preview-snippets";
   import { typespecPreviewSnippets } from "@www/preview/typespec-preview-snippets";
   import { typstPreviewSnippets } from "@www/preview/typst-preview-snippets";
@@ -239,6 +240,7 @@
   import toml from "svelte-highlight/languages/toml";
   import traceql from "svelte-highlight/languages/traceql";
   import tsq from "svelte-highlight/languages/tsq";
+  import tsql from "svelte-highlight/languages/tsql";
   import tsrx from "svelte-highlight/languages/tsrx";
   import typespec from "svelte-highlight/languages/typespec";
   import typst from "svelte-highlight/languages/typst";
@@ -255,7 +257,7 @@
   import yara from "svelte-highlight/languages/yara";
   import zig from "svelte-highlight/languages/zig";
 
-  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery" | "lookml"} */
+  /** @type {"solidity" | "hcl" | "zig" | "prisma" | "toml" | "fish" | "nushell" | "gleam" | "json5" | "jsonc" | "dotenv" | "groq" | "wgsl" | "cypher" | "promql" | "bicep" | "rescript" | "starlark" | "move" | "cairo" | "vyper" | "clarity" | "cue" | "jsonnet" | "dhall" | "pkl" | "nickel" | "pug" | "razor" | "v" | "odin" | "caddy" | "d2" | "bibtex" | "jq" | "kql" | "logql" | "rego" | "dax" | "typst" | "rst" | "templ" | "hlsl" | "just" | "gdscript" | "heex" | "sparql" | "prql" | "flux" | "cql" | "tsrx" | "angular" | "mermaid" | "kdl" | "earthfile" | "luau" | "polar" | "cedar" | "esql" | "traceql" | "jinja" | "wit" | "surrealql" | "hurl" | "mojo" | "assemblyscript" | "purescript" | "lean" | "agda" | "idris" | "racket" | "fennel" | "jsonata" | "jmespath" | "cel" | "datalog" | "splunk" | "vrl" | "civet" | "imba" | "slint" | "ejs" | "gotmpl" | "helm" | "blueprint" | "kv" | "baml" | "modelfile" | "gbnf" | "tsq" | "verse" | "roc" | "c3" | "bend" | "uiua" | "bqn" | "raku" | "koka" | "unison" | "kcl" | "typespec" | "smithy" | "yara" | "snort" | "codeql" | "cisco" | "yang" | "bpftrace" | "dtrace" | "rpmspec" | "bitbake" | "kconfig" | "ldscript" | "vcl" | "haproxy" | "systemd" | "crontab" | "graphviz" | "plantuml" | "structurizr" | "org" | "djot" | "markdoc" | "regex" | "powerquery" | "lookml" | "tsql"} */
   export let language;
 
   const registry = {
@@ -388,6 +390,7 @@
     regex: { lang: regex, snippets: regexPreviewSnippets },
     powerquery: { lang: powerquery, snippets: powerqueryPreviewSnippets },
     lookml: { lang: lookml, snippets: lookmlPreviewSnippets },
+    tsql: { lang: tsql, snippets: tsqlPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
