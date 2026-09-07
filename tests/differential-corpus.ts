@@ -1018,6 +1018,10 @@ class Point {
 my $p = Point.new(x => 1, y => 2);
 say $p.x ~~ $p.y;
 `,
+  regex: String.raw`^(?<year>\d{4})-(?<month>\d{2})-\d{2}\s+#\s*optional comment
+(?:https?|ftp):\/\/[\w.-]+\.[a-z]{2,}
+[[:alpha:]]+\d*\.?\p{L}*
+(?#inline comment)\k<year>\1`,
   rego: `package authz
 
 import future.keywords.if

@@ -244,6 +244,7 @@ exports[`Languages 1`] = `
   "raku",
   "razor",
   "reasonml",
+  "regex",
   "rego",
   "rescript",
   "rib",
