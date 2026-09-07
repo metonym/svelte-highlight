@@ -265,6 +265,8 @@ const palette = fromTextMate(nightOwl, {
 });
 ```
 
+When present, `theme.semanticTokenColors` is read as a higher-priority overlay on top of `tokenColors` — matching VS Code's own precedence when semantic highlighting is enabled. It's resolved against a starter table of VS Code's default semantic token types (`namespace`, `class`, `interface`, `enum`, `struct`, `typeParameter`, `type`, `parameter`, `variable`, `enumMember`, `property`, `event`, `decorator`, `label`, `function`, `method`, `macro`, `comment`, `string`, `keyword`, `number`, `regexp`, `operator`); modifiers (`"variable.readonly"`) and language scoping (`"variable:typescript"`) are not resolved — only the base type before the first `.` or `:` is matched.
+
 ## Styling
 
 Import styles from `svelte-highlight/styles`. See [SUPPORTED_STYLES.md](SUPPORTED_STYLES.md) for a list of supported styles. For new projects, prefer [Theming](#theming) above — this is the original, string-based theming path, kept fully supported for backward compatibility. Legacy styles are stable and will not be removed. One concrete reason to pick this path over `ThemePalette`: `base.css` assumes the default `hljs-` class prefix, so projects using a custom `classPrefix` should stay here.
