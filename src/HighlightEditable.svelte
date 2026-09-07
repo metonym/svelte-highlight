@@ -64,6 +64,10 @@
   let mounted = false;
   let restoringSelection = false;
 
+  // Set by Escape, consumed by the next Tab/Shift+Tab to release focus
+  // instead of indenting; cleared by any other keydown or blur.
+  let tabTrapReleased = false;
+
   // One <span> per line, painted incrementally (see `renderLines`).
   /** @type {HTMLSpanElement[]} */
   let lineEls = [];
@@ -804,6 +808,15 @@
   function onKeydown(event) {
     const mod = event.metaKey || event.ctrlKey;
 
+    if (event.key === "Escape") {
+      tabTrapReleased = true;
+      return;
+    }
+    if (tabTrapReleased) {
+      tabTrapReleased = false;
+      if (event.key === "Tab") return;
+    }
+
     if (mod && event.key === "z" && !event.shiftKey) {
       event.preventDefault();
       undo();
@@ -844,6 +857,7 @@
   }
 
   function onBlur() {
+    tabTrapReleased = false;
     dispatch("blur", { code: getCode() });
   }
 
