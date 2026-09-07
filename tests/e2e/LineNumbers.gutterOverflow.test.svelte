@@ -10,6 +10,14 @@ const c = 3;`;
 
 <svelte:head> {@html horizonDark} </svelte:head>
 
-<Highlight language={typescript} {code} let:highlighted>
-  <LineNumbers {highlighted} startingLineNumber={999} />
-</Highlight>
+<div data-testid="small">
+  <Highlight language={typescript} {code} let:highlighted>
+    <LineNumbers {highlighted} startingLineNumber={999} />
+  </Highlight>
+</div>
+
+<div data-testid="large">
+  <Highlight language={typescript} {code} let:highlighted>
+    <LineNumbers {highlighted} startingLineNumber={99_999} />
+  </Highlight>
+</div>

@@ -49,7 +49,6 @@
   /** @type {boolean} */
   export let langtag = false;
 
-  const DIGIT_WIDTH = 12;
   const MIN_DIGITS = 2;
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
   const ADDED_BACKGROUND = "rgba(46, 204, 113, 0.15)";
@@ -88,7 +87,6 @@
     1
   ).toString().length;
   $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
-  $: width = len * DIGIT_WIDTH;
 </script>
 
 <div
@@ -116,7 +114,7 @@
             style:inset-inline-start="0"
             style:text-align="end"
             style:user-select="none"
-            style:width={`${width}px`}
+            style:width={`calc(${len} * var(--line-number-digit-width, 0.6em))`}
           >
             <code style:color="var(--line-number-color, currentColor)">
               {lineNumber}

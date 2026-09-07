@@ -87,6 +87,15 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     "--line-number-color"?: string;
 
     /**
+     * Width of a single gutter digit. The gutter's total width is
+     * `calc(<digit count> * --line-number-digit-width)`, so it scales
+     * automatically with the code font-size instead of a fixed pixel guess.
+     * @default "0.6em"
+     * @example "0.65em"
+     */
+    "--line-number-digit-width"?: string;
+
+    /**
      * Border color.
      * Defaults to the current background color applied to `.hljs`.
      * @default currentColor
