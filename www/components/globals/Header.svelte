@@ -162,6 +162,7 @@
     "/preview-org": "Org mode language preview",
     "/preview-djot": "Djot language preview",
     "/preview-markdoc": "Markdoc language preview",
+    "/preview-regex": "Regular expression language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
