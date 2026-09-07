@@ -770,6 +770,20 @@ local function add(a: number, b: number): number
   return (a + b) :: number
 end
 `,
+  markdoc: `---
+title: Getting Started
+---
+
+# Welcome
+
+{% comment %} internal note, not rendered {% /comment %}
+
+{% callout type="warning" %}
+Set the $name variable before calling {% if(equals($name, "")) %}validate(){% /if %}.
+{% /callout %}
+
+{% partial file="footer.md" /%}
+`,
   marko: `<!-- greeting widget -->
 class {
   onCreate() {
