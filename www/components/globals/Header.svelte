@@ -156,6 +156,7 @@
     "/preview-haproxy": "HAProxy language preview",
     "/preview-systemd": "systemd language preview",
     "/preview-crontab": "crontab language preview",
+    "/preview-graphviz": "Graphviz DOT language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
