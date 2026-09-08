@@ -3,9 +3,13 @@ import type { LanguageType } from "./languages";
 
 export type HighlightActionParameters = {
   /**
-   * Language used to highlight the element's contents.
+   * Language used to highlight the element's contents. When omitted, the
+   * action reads a `language-xxx` class off the node itself (the
+   * Prism/highlight.js Markdown convention) and resolves it via
+   * `loadLanguage`. No `language` prop and no matching class dispatches
+   * `error` and leaves the content untouched.
    */
-  language: LanguageType<string>;
+  language?: LanguageType<string>;
 
   /**
    * Code to highlight. When omitted, the element's
