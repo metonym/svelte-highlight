@@ -1687,4 +1687,10 @@ Traveler: I mean no harm, {$player_name}.
   url: `GET https://user:pass@api.example.com:8443/v1/search?q=highlight+js&limit=20&sort=
 mailto:jane.doe@example.com
 https://example.com/docs#installation`,
+  semver: `^1.2.3
+~2.3.x
+>=1.0.0 <2.0.0
+1.0.0 - 2.9.9
+2.1.0-alpha.1+build.123
+*`,
 };

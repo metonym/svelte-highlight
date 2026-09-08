@@ -162,6 +162,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "yarnspinner",
   "renpy",
   "url",
+  "semver",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
