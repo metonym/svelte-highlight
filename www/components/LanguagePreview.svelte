@@ -132,6 +132,7 @@
   import { typstPreviewSnippets } from "@www/preview/typst-preview-snippets";
   import { uiuaPreviewSnippets } from "@www/preview/uiua-preview-snippets";
   import { unisonPreviewSnippets } from "@www/preview/unison-preview-snippets";
+  import { urlPreviewSnippets } from "@www/preview/url-preview-snippets";
   import { vPreviewSnippets } from "@www/preview/v-preview-snippets";
   import { vclPreviewSnippets } from "@www/preview/vcl-preview-snippets";
   import { versePreviewSnippets } from "@www/preview/verse-preview-snippets";
@@ -277,6 +278,7 @@
   import typst from "svelte-highlight/languages/typst";
   import uiua from "svelte-highlight/languages/uiua";
   import unison from "svelte-highlight/languages/unison";
+  import url from "svelte-highlight/languages/url";
   import v from "svelte-highlight/languages/v";
   import vcl from "svelte-highlight/languages/vcl";
   import verse from "svelte-highlight/languages/verse";
@@ -439,6 +441,7 @@
     blade: { lang: blade, snippets: bladePreviewSnippets },
     html: { lang: html, snippets: htmlPreviewSnippets },
     liquid: { lang: liquid, snippets: liquidPreviewSnippets },
+    url: { lang: url, snippets: urlPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
