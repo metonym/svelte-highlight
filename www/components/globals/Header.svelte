@@ -178,6 +178,10 @@
     "/preview-ink": "Ink language preview",
     "/preview-yarnspinner": "Yarn Spinner language preview",
     "/preview-renpy": "Ren'Py language preview",
+    "/preview-astro": "Astro language preview",
+    "/preview-blade": "Blade language preview",
+    "/preview-html": "HTML language preview",
+    "/preview-liquid": "Liquid language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 

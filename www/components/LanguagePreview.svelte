@@ -2,11 +2,13 @@
   import { agdaPreviewSnippets } from "@www/preview/agda-preview-snippets";
   import { angularPreviewSnippets } from "@www/preview/angular-preview-snippets";
   import { assemblyscriptPreviewSnippets } from "@www/preview/assemblyscript-preview-snippets";
+  import { astroPreviewSnippets } from "@www/preview/astro-preview-snippets";
   import { bamlPreviewSnippets } from "@www/preview/baml-preview-snippets";
   import { bendPreviewSnippets } from "@www/preview/bend-preview-snippets";
   import { bibtexPreviewSnippets } from "@www/preview/bibtex-preview-snippets";
   import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
   import { bitbakePreviewSnippets } from "@www/preview/bitbake-preview-snippets";
+  import { bladePreviewSnippets } from "@www/preview/blade-preview-snippets";
   import { blueprintPreviewSnippets } from "@www/preview/blueprint-preview-snippets";
   import { bpftracePreviewSnippets } from "@www/preview/bpftrace-preview-snippets";
   import { bqnPreviewSnippets } from "@www/preview/bqn-preview-snippets";
@@ -50,6 +52,7 @@
   import { helmPreviewSnippets } from "@www/preview/helm-preview-snippets";
   import { hlslPreviewSnippets } from "@www/preview/hlsl-preview-snippets";
   import { hoconPreviewSnippets } from "@www/preview/hocon-preview-snippets";
+  import { htmlPreviewSnippets } from "@www/preview/html-preview-snippets";
   import { hurlPreviewSnippets } from "@www/preview/hurl-preview-snippets";
   import { idrisPreviewSnippets } from "@www/preview/idris-preview-snippets";
   import { imbaPreviewSnippets } from "@www/preview/imba-preview-snippets";
@@ -70,6 +73,7 @@
   import { kvPreviewSnippets } from "@www/preview/kv-preview-snippets";
   import { ldscriptPreviewSnippets } from "@www/preview/ldscript-preview-snippets";
   import { leanPreviewSnippets } from "@www/preview/lean-preview-snippets";
+  import { liquidPreviewSnippets } from "@www/preview/liquid-preview-snippets";
   import { logPreviewSnippets } from "@www/preview/log-preview-snippets";
   import { logqlPreviewSnippets } from "@www/preview/logql-preview-snippets";
   import { lookmlPreviewSnippets } from "@www/preview/lookml-preview-snippets";
@@ -144,11 +148,13 @@
   import agda from "svelte-highlight/languages/agda";
   import angular from "svelte-highlight/languages/angular";
   import assemblyscript from "svelte-highlight/languages/assemblyscript";
+  import astro from "svelte-highlight/languages/astro";
   import baml from "svelte-highlight/languages/baml";
   import bend from "svelte-highlight/languages/bend";
   import bibtex from "svelte-highlight/languages/bibtex";
   import bicep from "svelte-highlight/languages/bicep";
   import bitbake from "svelte-highlight/languages/bitbake";
+  import blade from "svelte-highlight/languages/blade";
   import blueprint from "svelte-highlight/languages/blueprint";
   import bpftrace from "svelte-highlight/languages/bpftrace";
   import bqn from "svelte-highlight/languages/bqn";
@@ -192,6 +198,7 @@
   import helm from "svelte-highlight/languages/helm";
   import hlsl from "svelte-highlight/languages/hlsl";
   import hocon from "svelte-highlight/languages/hocon";
+  import html from "svelte-highlight/languages/html";
   import hurl from "svelte-highlight/languages/hurl";
   import idris from "svelte-highlight/languages/idris";
   import imba from "svelte-highlight/languages/imba";
@@ -212,6 +219,7 @@
   import kv from "svelte-highlight/languages/kv";
   import ldscript from "svelte-highlight/languages/ldscript";
   import lean from "svelte-highlight/languages/lean";
+  import liquid from "svelte-highlight/languages/liquid";
   import log from "svelte-highlight/languages/log";
   import logql from "svelte-highlight/languages/logql";
   import lookml from "svelte-highlight/languages/lookml";
@@ -427,6 +435,10 @@
     ink: { lang: ink, snippets: inkPreviewSnippets },
     yarnspinner: { lang: yarnspinner, snippets: yarnspinnerPreviewSnippets },
     renpy: { lang: renpy, snippets: renpyPreviewSnippets },
+    astro: { lang: astro, snippets: astroPreviewSnippets },
+    blade: { lang: blade, snippets: bladePreviewSnippets },
+    html: { lang: html, snippets: htmlPreviewSnippets },
+    liquid: { lang: liquid, snippets: liquidPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
