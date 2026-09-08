@@ -2384,6 +2384,25 @@ See [Large documents](#large-documents) above.
 
 The highlighting engine's output is a flat scope-event stream (`ScopeEvent[]`): a sequence of `TEXT`/`OPEN`/`CLOSE` events that `renderHtml`, `toRanges`, and `tokenLines` each render differently. Every `<Highlight>`-family component exposes this stream (as `events`, in the default slot and the `highlight` event detail — see [Component API](#component-api) above), and `svelte-highlight/engine` + `svelte-highlight/registry` expose it directly, so highlighting can be consumed headlessly: server routes, build pipelines, tests, or any non-component context. `svelte-highlight/engine` has zero Svelte dependency and works in any JS runtime.
 
+### Zero-bundler usage from a CDN
+
+`svelte-highlight/engine` has no `import` statements of its own, so it — and any generated language grammar — can be loaded straight from a CDN like [esm.sh](https://esm.sh), with no bundler, build step, or Svelte in the loop:
+
+```html
+<script type="module">
+  import { createRegistry, registerAll, renderHtml } from "https://esm.sh/svelte-highlight/engine";
+  import typescript from "https://esm.sh/svelte-highlight/languages/typescript";
+
+  const registry = createRegistry();
+  registerAll(registry, typescript);
+
+  const { events } = registry.tokenize("const greeting: string = 'hi';", "typescript");
+  document.querySelector("pre").innerHTML = renderHtml(events);
+</script>
+```
+
+See it as a complete page in [examples/cdn](examples/cdn).
+
 ### Stability tiers
 
 - **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
