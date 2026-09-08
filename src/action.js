@@ -4,6 +4,9 @@ import { ensureRegistered, registry } from "./registry.js";
  * Highlight an element in place with highlight.js.
  * Omits `code` to highlight existing `textContent`.
  *
+ * Dispatches `highlighted` ({ html, language }) on the node after a
+ * successful highlight, and `error` ({ error }) after a failed one.
+ *
  * @param {HTMLElement} node
  * @param {{ language: import("./languages").LanguageType<string>; code?: string }} parameters
  * @returns {ReturnType<import("svelte/action").Action<HTMLElement, { language: import("./languages").LanguageType<string>; code?: string }>>}
@@ -29,11 +32,26 @@ export function highlight(node, parameters) {
           error,
         );
       }
+      // Deferred: Svelte wraps `on:` listeners on this node in an effect
+      // that flushes after this action's own (synchronous) mount/update
+      // runs, so dispatching synchronously here would fire before a
+      // listener declared via `on:error` is attached.
+      queueMicrotask(() =>
+        node.dispatchEvent(new CustomEvent("error", { detail: { error } })),
+      );
       return;
     }
 
     node.innerHTML = value;
     node.classList.add("hljs");
+    // See the `error` dispatch above for why this is deferred.
+    queueMicrotask(() =>
+      node.dispatchEvent(
+        new CustomEvent("highlighted", {
+          detail: { html: value, language: language.name },
+        }),
+      ),
+    );
   }
 
   apply(parameters);

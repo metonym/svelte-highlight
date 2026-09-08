@@ -16,5 +16,10 @@ export type HighlightActionParameters = {
 
 /**
  * Highlight element contents in place with highlight.js.
+ *
+ * Dispatches two events on the node:
+ * - `highlighted`: `detail: { html: string; language: string }`, after a
+ *   successful highlight.
+ * - `error`: `detail: { error: unknown }`, after a failed highlight.
  */
 export declare const highlight: Action<HTMLElement, HighlightActionParameters>;

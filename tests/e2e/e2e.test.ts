@@ -14,6 +14,7 @@ import HighlightEmptyCode from "./Highlight.emptyCode.test.svelte";
 import HighlightEvents from "./Highlight.events.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightWrap from "./Highlight.wrap.test.svelte";
+import HighlightActionEvents from "./HighlightAction.events.test.svelte";
 import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
@@ -420,6 +421,18 @@ test("highlight action - destroy restores the original content", async ({
 
   expect(await handle?.evaluate((el) => el.innerHTML)).toBe("const s = 1;");
   expect(await handle?.evaluate((el) => el.className)).toBe("");
+});
+
+test("highlight action - dispatches highlighted and error events", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightActionEvents);
+  await expect(page.locator('[data-testid="last-event"]')).toHaveText(
+    "highlighted",
+  );
+  await page.getByRole("button", { name: "Break" }).click();
+  await expect(page.locator('[data-testid="last-event"]')).toHaveText("error");
 });
 
 test("HighlightAuto", async ({ mount, page }) => {
