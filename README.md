@@ -1526,6 +1526,20 @@ Omit `code` to highlight the element's existing contents:
 ></pre>
 ```
 
+### Dispatched Events
+
+The action dispatches `highlighted` (`detail: { html, language }`) on success and `error` (`detail: { error }`) on failure, on the node it's placed on.
+
+```svelte
+<pre><code
+  use:highlight={{ language: typescript, code }}
+  on:highlighted={(e) => console.log(e.detail.html, e.detail.language)}
+  on:error={(e) => console.error(e.detail.error)}
+></code></pre>
+```
+
+`highlighted` is also a composition hook for a sibling `LineNumbers`: `on:highlighted={(e) => (highlighted = e.detail.html)}` feeding `<LineNumbers {highlighted} languageName={typescript.name} />`.
+
 ## Code Window
 
 Wrap a code block in `CodeWindow` to frame it with window chrome. It's purely cosmetic; the default slot renders your content unchanged.
