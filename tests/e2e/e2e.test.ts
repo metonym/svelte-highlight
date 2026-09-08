@@ -14,6 +14,7 @@ import HighlightEmptyCode from "./Highlight.emptyCode.test.svelte";
 import HighlightEvents from "./Highlight.events.test.svelte";
 import Highlight from "./Highlight.test.svelte";
 import HighlightWrap from "./Highlight.wrap.test.svelte";
+import HighlightActionClassConvention from "./HighlightAction.classConvention.test.svelte";
 import HighlightActionEvents from "./HighlightAction.events.test.svelte";
 import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
@@ -432,6 +433,17 @@ test("highlight action - dispatches highlighted and error events", async ({
     "highlighted",
   );
   await page.getByRole("button", { name: "Break" }).click();
+  await expect(page.locator('[data-testid="last-event"]')).toHaveText("error");
+});
+
+test('highlight action - honors class="language-xxx" and errors when no class matches', async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightActionClassConvention);
+  const code = page.locator("pre code.hljs");
+  await expect(code).toBeVisible();
+  await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
   await expect(page.locator('[data-testid="last-event"]')).toHaveText("error");
 });
 
