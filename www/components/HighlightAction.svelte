@@ -39,6 +39,11 @@
     },
   };
 
+  const classConventionSnippet = `<pre><code
+  class="language-typescript"
+  use:highlight
+>const add = (a, b) => a + b;</code></pre>`;
+
   let language = typescript;
   let status = "";
 </script>
@@ -54,3 +59,9 @@
     on:error={() => (status = "error")}
   ></code></pre>
 <p>Status: {status}</p>
+
+<HighlightSvelte code={classConventionSnippet} class={THEME_MODULE_NAME} />
+
+<pre><code class="language-typescript" use:highlight
+  >const add = (a, b) => a + b;</code
+></pre>

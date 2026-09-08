@@ -1526,6 +1526,12 @@ Omit `code` to highlight the element's existing contents:
 ></pre>
 ```
 
+`language` is also optional: when omitted, the action reads a `language-xxx` class off its own node (the Prism/highlight.js Markdown convention) and resolves it via `loadLanguage`, so server-rendered Markdown output needs no per-block `language` prop. With no matching class, it warns in dev and dispatches `error`.
+
+```svelte
+<pre><code class="language-typescript" use:highlight>const add = (a, b) => a + b;</code></pre>
+```
+
 ### Dispatched Events
 
 The action dispatches `highlighted` (`detail: { html, language }`) on success and `error` (`detail: { error }`) on failure, on the node it's placed on.
