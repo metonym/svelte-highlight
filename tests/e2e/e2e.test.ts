@@ -30,6 +30,7 @@ import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
 import HighlightEditable from "./HighlightEditable.test.svelte";
+import HighlightSearch from "./HighlightSearch.test.svelte";
 import HighlightStreamMidLineHighlight from "./HighlightStream.midLineHighlight.test.svelte";
 import HighlightStreamRegenerate from "./HighlightStream.regenerate.test.svelte";
 import HighlightStreamSealing from "./HighlightStream.sealing.test.svelte";
@@ -1493,6 +1494,90 @@ test("HighlightEditable css-highlights engine - falls back to the DOM engine wit
     "dom",
   );
   await expect(page.locator(".hljs-keyword").first()).toHaveText("const");
+});
+
+test("Search - shows a match count and highlights occurrences in the rendered window", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+
+  await mount(HighlightSearch);
+
+  await page.getByTestId("query").fill("NEEDLE");
+  await expect(page.getByTestId("count")).not.toHaveText("0");
+
+  if (supported) {
+    const painted = await page.evaluate(() => {
+      const highlight = CSS.highlights.get("shl-search");
+      return highlight ? highlight.size > 0 : false;
+    });
+    expect(painted).toBe(true);
+  } else {
+    await expect(page.locator("mark[data-shl-search]").first()).toBeVisible();
+  }
+});
+
+test("Search - next scrolls the current match into the rendered window", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightSearch);
+
+  const virtual = page.getByTestId("virtual");
+  await page.getByTestId("query").fill("NEEDLE");
+  await expect(page.getByTestId("count")).not.toHaveText("0");
+
+  const next = page.getByTestId("next");
+  // Lines 0-4 form the first match cluster, all inside the initial rendered
+  // window; the 6th match (index 5) is line 200, well outside it.
+  // biome-ignore lint/performance/noAwaitInLoops: each click's scroll must land before the next
+  for (let i = 0; i < 5; i += 1) await next.click();
+
+  await expect(virtual.locator('[data-line="200"]')).toBeVisible();
+});
+
+test("Search - falls back to <mark> wrapping without CSS.highlights", async ({
+  mount,
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  await mount(HighlightSearch, { props: { forceFallback: true } });
+
+  await page.getByTestId("query").fill("NEEDLE");
+  await expect(page.locator("mark[data-shl-search]").first()).toBeVisible();
+  expect(await page.locator("mark[data-shl-search]").count()).toBeGreaterThan(
+    0,
+  );
+
+  expect(errors).toEqual([]);
+});
+
+test("Search - registers a highlight via the CSS Custom Highlight API", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightSearch);
+
+  await page.getByTestId("query").fill("NEEDLE");
+  await expect(page.getByTestId("count")).not.toHaveText("0");
+
+  const size = await page.evaluate(
+    () => CSS.highlights.get("shl-search")?.size ?? 0,
+  );
+  expect(size).toBeGreaterThan(0);
 });
 
 test("HighlightStream - streaming chunks (split mid-keyword and mid-template-literal) settle to Highlight's output", async ({

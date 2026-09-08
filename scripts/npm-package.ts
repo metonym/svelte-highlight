@@ -158,6 +158,17 @@ pkgJson.exports = {
   },
   "./worker": { types: "./worker.d.ts", import: "./worker.js" },
   "./worker.js": { types: "./worker.d.ts", import: "./worker.js" },
+  "./search": {
+    types: "./search.d.ts",
+    import: "./search.js",
+  },
+  "./search.js": {
+    types: "./search.d.ts",
+    import: "./search.js",
+  },
+  "./search.css": {
+    import: "./search.css",
+  },
   "./package.json": "./package.json",
 };
 
@@ -169,7 +180,12 @@ pkgJson.types = "./index.d.ts";
 // We specify it here to be sure so that it will not be mistakenly tree-shaken.
 // `cp -r ./src/ ./package` flattens src/ into the package root, so these
 // globs must match the published layout, not the source layout.
-pkgJson.sideEffects = ["styles/*.css", "themes/*.css", "langtag.css"];
+pkgJson.sideEffects = [
+  "styles/*.css",
+  "themes/*.css",
+  "langtag.css",
+  "search.css",
+];
 
 await Bun.write("./package/package.json", JSON.stringify(pkgJson, null, 2));
 console.timeEnd("package");
