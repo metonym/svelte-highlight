@@ -2493,6 +2493,10 @@ const myRenderer = {
 
 Both are exported from `svelte-highlight/engine` and are distinct from `LanguageLoadError` (exported from `svelte-highlight` and `svelte-highlight/load-language`), which fires from a grammar module's *dynamic import* failure, not a registry lookup.
 
+### `illegal` is enforced only during auto-detection
+
+A grammar's `illegal` pattern only aborts `tokenizeAuto`/`highlightAuto`: a candidate whose text matches its own `illegal` pattern loses relevance scoring and is dropped from consideration. An explicit `tokenize`/`highlight`/`createSession` call never checks it, unlike hljs's own `ignoreIllegals: false` default, which throws on the same condition. This is deliberate: streamed or LLM-generated code is routinely "illegal" mid-stream — an unclosed string, a dangling `#` — and an explicit-language highlighter that could throw partway through a stream would be unusable for that case. For hljs-style strict validation, run `highlightAuto(code, [language])` instead.
+
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
 
 ## [Supported Styles](SUPPORTED_STYLES.md)

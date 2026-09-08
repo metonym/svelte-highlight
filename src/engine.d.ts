@@ -40,6 +40,12 @@ export interface GrammarState {
   returnBegin?: boolean;
   returnEnd?: boolean;
   subLanguage?: string | string[];
+  /**
+   * Only enforced during auto-detection (`tokenizeAuto`/`highlightAuto`);
+   * inert on an explicit-language `tokenize()`/`highlight()`/`createSession()`/
+   * `resume()` call, so mid-stream text that would trip `illegal` under hljs's
+   * `ignoreIllegals: false` default is never rejected once the language is named.
+   */
   illegal?: string;
   keywords?: Record<string, [string, number]>;
   keywordPattern?: string;
