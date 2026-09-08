@@ -70,7 +70,7 @@
 
 <svelte:head>{@html atomOneDark}</svelte:head>
 
-<input data-testid="query" on:input={onInput} />
+<input data-testid="query" on:input={onInput}>
 <span data-testid="count">{count}</span>
 <button type="button" data-testid="next" on:click={next}>Next</button>
 <button type="button" data-testid="prev" on:click={prev}>Prev</button>

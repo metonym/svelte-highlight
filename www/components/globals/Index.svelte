@@ -24,6 +24,7 @@
   import HighlightVirtualBasic from "@components/HighlightVirtual/Basic.svelte";
   import HighlightVirtualControls from "@components/HighlightVirtual/Controls.svelte";
   import HighlightVirtualHeadless from "@components/HighlightVirtual/Headless.svelte";
+  import HighlightVirtualSearch from "@components/HighlightVirtual/Search.svelte";
   import Basic from "@components/LineNumbers/Basic.svelte";
   import ContainerStyle from "@components/LineNumbers/ContainerStyle.svelte";
   import FocusLines from "@components/LineNumbers/FocusLines.svelte";
@@ -766,6 +767,20 @@ export { add, mul };\`,
     />
   </Column>
   <Column xlg={10} lg={10} md={12}> <HighlightVirtualHeadless /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">svelte-highlight/search</code>
+      is a headless find-in-document engine (<code class="code"
+        >createSearch</code
+      >) plus a DOM-painting helper (<code class="code">highlightMatches</code>)
+      -- no search-box component is exported, so this input and its
+      "next"/"prev" buttons are demo UI, not a library primitive. Matches
+      outside the rendered window are found immediately;
+      <code class="code">scrollToLine</code>
+      brings them into view.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightVirtualSearch /> </Column>
 </Row>
 
 <Row class="mb-9">

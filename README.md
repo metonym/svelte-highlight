@@ -1932,6 +1932,59 @@ For documents in the low thousands to tens of thousands of lines (roughly 2,000-
 
 Each line is its own block-level `<div>`, not a row in a `<table>`/`<tr>` (the way `LineNumbers` renders) -- `content-visibility` doesn't apply to table-internal display types, so off-screen table rows never get the skip. Off-screen `<div>` lines do: the browser skips layout/paint/style for them, using `contain-intrinsic-size` as a placeholder size until they scroll near the viewport. Unlike `HighlightVirtual`, this is a progressive enhancement, not a hard requirement -- browsers without `content-visibility` support just render every line normally, and you get native text selection, find-in-page, and line wrapping for free (drop the `white-space: pre` on each line's `<div>` to allow it).
 
+## Find in document
+
+Browser Cmd+F can't see rows a virtualized view (`HighlightVirtual`, `HighlightStream`'s `virtualize` mode) hasn't mounted, and neither of them ships a search box -- `svelte-highlight/search` is a headless find-in-document engine plus a DOM-painting helper, so any consumer can build one. No `<input>` component is exported; that's application UI, not a library primitive.
+
+`createSearch(source)` accepts a plain `string` (split on `"\n"`), a `string[]` of lines, or a `TokenizedDocument` (duck-typed -- only `lineCount`/`lineRange` are used, never checked via `instanceof`), such as the one backing a `HighlightStream` in `virtualize` mode. Against a `TokenizedDocument`, repeated `query()` calls with unchanged text/options only rescan lines appended since the last call, instead of rescanning the whole document every time:
+
+```svelte
+<script>
+  import { HighlightVirtual } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import { createSearch, highlightMatches } from "svelte-highlight/search";
+  import "svelte-highlight/search.css";
+
+  export let code;
+  const search = createSearch(code);
+
+  /** @type {HighlightVirtual} */
+  let ref;
+  /** @type {HTMLElement} */
+  let root;
+  let dispose = () => {};
+
+  function repaint() {
+    dispose();
+    dispose = highlightMatches(root, search.matches(), {
+      current: search.current()?.index,
+    }).dispose;
+  }
+
+  const unsubscribe = search.onChange(repaint);
+
+  function onInput(event) {
+    search.query(event.currentTarget.value, { wholeWord: true });
+  }
+
+  function next() {
+    const match = search.next();
+    if (match) ref.scrollToLine(match.line);
+  }
+</script>
+
+<input on:input={onInput} />
+<button on:click={next}>Next ({search.count()})</button>
+
+<div bind:this={root}>
+  <HighlightVirtual bind:this={ref} language={typescript} {code} on:windowchange={repaint} />
+</div>
+```
+
+`query(text, options)` runs a search; `options.caseSensitive` and `options.wholeWord` (wraps the pattern in `\b...\b`) both default to `false`. `options.regex` treats `text` as a regular expression source instead of literal text -- capped at 256 characters and compiled in a `try`/`catch`, so an over-long or invalid pattern yields zero matches and sets `error()` rather than throwing. Empty `text` clears matches without an error. `matches()` returns every `{ line, start, end }` match in document order (never spanning a line); `count()` is its length. `current()`/`next()`/`prev()` return the selected match plus its `index` into `matches()`, wrapping around the ends; all return `undefined` before any query or with zero matches. `setSource(source)` swaps the document and re-runs an already-active query as a full rescan. `onChange(callback)` fires after every mutating call and returns an unsubscribe function.
+
+`highlightMatches(root, matches, { current, name })` paints `matches` into `root`, restricted to whatever rows are currently rendered there -- resolved per match's line via `[data-line]` (the row shape `HighlightVirtual`/`HighlightStream` render), then the `line`-th `.line` element (the shape `highlightFence`/fenced code renders), then the whole `<code>` split on `"\n"`; matches whose line resolves to nothing are skipped. It uses the CSS Custom Highlight API when available (two `Highlight`s: `name`, defaulting to `"shl-search"`, and `${name}-current` for the match at index `current`), or falls back to wrapping text in `<mark data-shl-search>` (plus `data-shl-search-current`) when it isn't. It paints once per call and returns `{ dispose() }` -- there's no diffing against a previous call, so a consumer disposes and re-runs it after the rendered window changes (`on:windowchange`) or the query changes (`onChange`), as in the example above. It's a no-op on the server. `import "svelte-highlight/search.css"` is optional and styles both highlight names via the `--search-match-background`/`--search-current-background` CSS variables; passing a custom `name` bypasses it, since the stylesheet only targets the default names.
+
 ## Terminal Output
 
 Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) escape codes. Colors, bold, dim, italic, and underline become styled HTML, along with OSC 8 hyperlinks, carriage-return overwrites, and reverse/strikethrough. The parser is separate from highlight.js, so reach for it with build logs, CLI output, and test runners.
@@ -2431,7 +2484,7 @@ See it as a complete page in [examples/cdn](examples/cdn).
 
 ### Stability tiers
 
-- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
+- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `SearchMatch`, `SearchOptions`, `Search`, `createSearch`, `highlightMatches`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
 - **Generated data, versioned with the library:** `GrammarIR`/`GrammarState`. These come from the build pipeline and are consumed by `registerAll`; treat them as opaque payloads whose field-level structure may change in any minor release. Always load grammars from the same package version as the engine.
 - **Experimental, may change in a minor release:** `createWorkerHighlighter`, `serveHighlighter`, `PostMessageTarget`, `WorkerHighlighter`, `WorkerSession`, `ServeHighlighterOptions` (`svelte-highlight/worker`). The wire protocol between the two halves is not part of the public contract — only the documented function behavior is.
 
