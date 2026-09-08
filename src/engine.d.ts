@@ -7,7 +7,7 @@
  *   `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`,
  *   `Registry` and all its methods, `createRegistry`, `registerAll`,
  *   `StreamSession`, `Snapshot` (see its own doc comment for a narrower
- *   guarantee).
+ *   guarantee), `UnknownLanguageError`, `TokenizerLoopError`.
  * - **Generated data (structure versioned with the library):** `GrammarIR`,
  *   `GrammarState` (see their doc comment).
  *
@@ -192,6 +192,28 @@ export interface StreamSession {
 /** The compiled program `Registry#get` returns; opaque other than its source IR's identity. */
 export interface CompiledProgram {
   ir: GrammarIR;
+}
+
+/**
+ * Thrown by `tokenize`, `highlight`, `tokenizeRanges`, and `createSession`
+ * when `language` isn't registered. Distinct from `LanguageLoadError`
+ * (`svelte-highlight`/`svelte-highlight/load-language`), which fires from a
+ * grammar module's dynamic `import()` failure, not a registry lookup.
+ * `resume()` does not throw this - see its own doc comment.
+ */
+export class UnknownLanguageError extends Error {
+  constructor(language: string);
+  language: string;
+}
+
+/**
+ * Thrown by the tokenizer once a parse exceeds 500,000 iterations,
+ * guarding against a grammar bug that never advances position.
+ */
+export class TokenizerLoopError extends Error {
+  constructor(grammarName: string, iterations: number);
+  grammarName: string;
+  iterations: number;
 }
 
 export interface Registry {

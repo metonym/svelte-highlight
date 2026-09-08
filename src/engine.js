@@ -131,6 +131,41 @@ export const TEXT = 0;
 export const OPEN = 1;
 export const CLOSE = 2;
 
+/**
+ * Thrown by `tokenize`, `highlight`, `tokenizeRanges`, and `createSession`
+ * when `language` isn't registered. Distinct from `LanguageLoadError`
+ * (src/load-language.js), which fires from a grammar module's dynamic
+ * `import()` failure, not a registry lookup. `resume()` does not throw
+ * this - see its own comment.
+ */
+export class UnknownLanguageError extends Error {
+  /**
+   * @param {string} language
+   */
+  constructor(language) {
+    super(`Unknown language: "${language}"`);
+    this.name = "UnknownLanguageError";
+    this.language = language;
+  }
+}
+
+/**
+ * Thrown by `Tokenizer#run` once a parse exceeds 500,000 iterations,
+ * guarding against a grammar bug that never advances `pos`.
+ */
+export class TokenizerLoopError extends Error {
+  /**
+   * @param {string} grammarName
+   * @param {number} iterations
+   */
+  constructor(grammarName, iterations) {
+    super(`potential infinite loop (${grammarName})`);
+    this.name = "TokenizerLoopError";
+    this.grammarName = grammarName;
+    this.iterations = iterations;
+  }
+}
+
 /** Scope name prefix marking a sub-language boundary (`language:css`). */
 const LANGUAGE_SCOPE_PREFIX = "language:";
 
@@ -752,7 +787,7 @@ class Tokenizer {
     for (;;) {
       this.iterations++;
       if (this.iterations > 500000) {
-        throw new Error(`potential infinite loop (${this.program.ir.name})`);
+        throw new TokenizerLoopError(this.program.ir.name, this.iterations);
       }
       const found = this.nextMatch();
       if (!found) break;
@@ -1150,7 +1185,7 @@ export function createRegistry() {
      */
     tokenize(code, language) {
       const program = this.get(language);
-      if (!program) throw new Error(`Unknown language: "${language}"`);
+      if (!program) throw new UnknownLanguageError(language);
       const tokenizer = new Tokenizer(this, program);
       tokenizer.code = code;
       tokenizer.run();
@@ -1316,7 +1351,7 @@ export function createRegistry() {
      */
     createSession(language, { from } = {}) {
       const program = this.get(language);
-      if (!program) throw new Error(`Unknown language: "${language}"`);
+      if (!program) throw new UnknownLanguageError(language);
       let tokenizer = new Tokenizer(this, program);
       const registry = this;
       let staged = "";
