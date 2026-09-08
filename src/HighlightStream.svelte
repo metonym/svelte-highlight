@@ -379,6 +379,28 @@
     }
   }
 
+  /**
+   * Scroll a given line into the rendered window.
+   * @param {number} line
+   */
+  export function scrollToLine(line) {
+    if (!container) return;
+    if (virtualize) {
+      const target = Math.max(0, Math.min(line, vLineCount)) * vLineHeight;
+      const maxScrollTop = Math.max(
+        0,
+        container.scrollHeight - container.clientHeight,
+      );
+      container.scrollTop = Math.max(0, Math.min(target, maxScrollTop));
+      vScrollTop = container.scrollTop;
+      computeVirtualWindow();
+    } else {
+      container
+        .querySelector(`[data-line="${line}"]`)
+        ?.scrollIntoView({ block: "nearest" });
+    }
+  }
+
   // Mirrors `scrollToBottom`/the shrink-clamp in `HighlightVirtual`, merged:
   // while streaming with `autoScroll`, stick to the (growing) bottom; once
   // the user scrolls away, just keep the scroll position in bounds.

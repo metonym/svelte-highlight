@@ -6,6 +6,8 @@
   export let overscan = 5;
   export let autoScroll = false;
 
+  /** @type {import("../../src/HighlightStream.svelte").default} */
+  let ref;
   let code = "";
   let done = false;
   let doneCount = 0;
@@ -45,6 +47,7 @@
 <span data-testid="window-change-snapshot">{JSON.stringify(lastWindow)}</span>
 
 <HighlightStream
+  bind:this={ref}
   language={javascript}
   {code}
   {done}
@@ -59,3 +62,10 @@
     lastWindow = e.detail;
   }}
 />
+<button
+  type="button"
+  data-testid="scroll-to-1000"
+  on:click={() => ref.scrollToLine(1000)}
+>
+  Scroll to line 1000
+</button>

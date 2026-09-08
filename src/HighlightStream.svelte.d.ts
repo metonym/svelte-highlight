@@ -132,4 +132,7 @@ export default class HighlightStream extends SvelteComponentTyped<
   HighlightStreamProps,
   HighlightStreamEvents,
   Record<string, never>
-> {}
+> {
+  /** Scroll a given line into the rendered window. */
+  scrollToLine(line: number): void;
+}

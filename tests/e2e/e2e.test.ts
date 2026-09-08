@@ -1904,6 +1904,20 @@ test("HighlightStream virtualize - shows correct content at a scrolled position"
   );
 });
 
+test("HighlightStream virtualize - scrollToLine scrolls a given line into the rendered window", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightStreamVirtualize);
+
+  const stream = page.getByTestId("stream");
+  await page.getByTestId("append-many").click();
+  await expect(stream.locator("[data-line]").first()).toBeVisible();
+
+  await page.getByTestId("scroll-to-1000").click();
+  await expect(stream.locator("[data-line='1000']")).toBeVisible();
+});
+
 test("HighlightStream virtualize - the caret only renders once the window reaches the live tail", async ({
   mount,
   page,
