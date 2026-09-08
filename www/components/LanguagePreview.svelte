@@ -109,6 +109,7 @@
   import { ronPreviewSnippets } from "@www/preview/ron-preview-snippets";
   import { rpmspecPreviewSnippets } from "@www/preview/rpmspec-preview-snippets";
   import { rstPreviewSnippets } from "@www/preview/rst-preview-snippets";
+  import { semverPreviewSnippets } from "@www/preview/semver-preview-snippets";
   import { shaderlabPreviewSnippets } from "@www/preview/shaderlab-preview-snippets";
   import { slintPreviewSnippets } from "@www/preview/slint-preview-snippets";
   import { smithyPreviewSnippets } from "@www/preview/smithy-preview-snippets";
@@ -255,6 +256,7 @@
   import ron from "svelte-highlight/languages/ron";
   import rpmspec from "svelte-highlight/languages/rpmspec";
   import rst from "svelte-highlight/languages/rst";
+  import semver from "svelte-highlight/languages/semver";
   import shaderlab from "svelte-highlight/languages/shaderlab";
   import slint from "svelte-highlight/languages/slint";
   import smithy from "svelte-highlight/languages/smithy";
@@ -442,6 +444,7 @@
     html: { lang: html, snippets: htmlPreviewSnippets },
     liquid: { lang: liquid, snippets: liquidPreviewSnippets },
     url: { lang: url, snippets: urlPreviewSnippets },
+    semver: { lang: semver, snippets: semverPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);

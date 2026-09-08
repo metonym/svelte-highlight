@@ -183,6 +183,7 @@
     "/preview-html": "HTML language preview",
     "/preview-liquid": "Liquid language preview",
     "/preview-url": "URL language preview",
+    "/preview-semver": "Semver language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
