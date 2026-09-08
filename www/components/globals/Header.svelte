@@ -182,6 +182,7 @@
     "/preview-blade": "Blade language preview",
     "/preview-html": "HTML language preview",
     "/preview-liquid": "Liquid language preview",
+    "/preview-url": "URL language preview",
     "/preview-define-theme": "defineTheme preview",
   };
 
