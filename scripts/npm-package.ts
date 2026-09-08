@@ -148,6 +148,14 @@ pkgJson.exports = {
     types: "./compat.d.ts",
     default: "./compat.js",
   },
+  "./transformers": {
+    types: "./transformers.d.ts",
+    default: "./transformers.js",
+  },
+  "./transformers.js": {
+    types: "./transformers.d.ts",
+    default: "./transformers.js",
+  },
   "./package.json": "./package.json",
 };
 
