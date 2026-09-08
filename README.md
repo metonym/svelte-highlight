@@ -2405,7 +2405,7 @@ See it as a complete page in [examples/cdn](examples/cdn).
 
 ### Stability tiers
 
-- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
+- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
 - **Generated data, versioned with the library:** `GrammarIR`/`GrammarState`. These come from the build pipeline and are consumed by `registerAll`; treat them as opaque payloads whose field-level structure may change in any minor release. Always load grammars from the same package version as the engine.
 
 ### Headless highlighting, isolated registry
@@ -2485,6 +2485,13 @@ const myRenderer = {
   },
 };
 ```
+
+### Errors
+
+- **`UnknownLanguageError`** (`{ language }`): thrown by `tokenize`, `highlight`, `tokenizeRanges`, and `createSession` when `language` isn't registered.
+- **`TokenizerLoopError`** (`{ grammarName, iterations }`): thrown once a parse exceeds 500,000 tokenizer iterations, guarding against a grammar bug that never advances position.
+
+Both are exported from `svelte-highlight/engine` and are distinct from `LanguageLoadError` (exported from `svelte-highlight` and `svelte-highlight/load-language`), which fires from a grammar module's *dynamic import* failure, not a registry lookup.
 
 ## [Supported Languages](SUPPORTED_LANGUAGES.md)
 
