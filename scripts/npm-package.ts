@@ -156,6 +156,8 @@ pkgJson.exports = {
     types: "./transformers.d.ts",
     default: "./transformers.js",
   },
+  "./worker": { types: "./worker.d.ts", import: "./worker.js" },
+  "./worker.js": { types: "./worker.d.ts", import: "./worker.js" },
   "./package.json": "./package.json",
 };
 
