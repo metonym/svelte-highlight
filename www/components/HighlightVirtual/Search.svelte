@@ -22,6 +22,7 @@
   let dispose = () => {};
 
   function repaint() {
+    if (!root) return;
     dispose();
     dispose = highlightMatches(root, search.matches(), {
       current: search.current()?.index,
