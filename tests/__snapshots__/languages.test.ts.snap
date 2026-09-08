@@ -272,6 +272,7 @@ exports[`Languages 1`] = `
   "scheme",
   "scilab",
   "scss",
+  "semver",
   "shaderlab",
   "shell",
   "slint",
