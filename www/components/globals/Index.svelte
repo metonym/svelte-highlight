@@ -11,6 +11,7 @@
   import CustomLanguage from "@components/CustomLanguage.svelte";
   import FileTabs from "@components/FileTabs.svelte";
   import HighlightWrap from "@components/Highlight/Wrap.svelte";
+  import HighlightAction from "@components/HighlightAction.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
   import EditableComposition from "@components/HighlightEditable/Composition.svelte";
@@ -334,6 +335,11 @@ export { add, mul };\`,
       <code class="code">code</code>
       re-highlights the element.
     </p>
+    <p class="mb-5">
+      The action dispatches <code class="code">highlighted</code> and
+      <code class="code">error</code>
+      events on the node it's placed on.
+    </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
     <HighlightSvelte
@@ -352,6 +358,7 @@ export { add, mul };\`,
 <pre><code use:highlight={{ language: typescript, code }}><\/code><\/pre>`}
       class={THEME_MODULE_NAME}
     />
+    <HighlightAction />
   </Column>
 </Row>
 
