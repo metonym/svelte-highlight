@@ -97,3 +97,10 @@ for (const row of rows) {
 console.log(
   `\nworst-case ratio: ${worstRatio.toFixed(2)}x ${worstRatio <= 1.5 ? "(within 1.5x budget)" : "(OVER the 1.5x budget)"}`,
 );
+
+if (worstRatio > 1.5) {
+  console.error(
+    `\nengine benchmark FAILED: worst-case ratio ${worstRatio.toFixed(2)}x exceeds the 1.5x budget`,
+  );
+  process.exit(1);
+}
