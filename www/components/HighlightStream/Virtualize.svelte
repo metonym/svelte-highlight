@@ -1,6 +1,6 @@
 <script>
   import { THEME_MODULE_NAME } from "@www/constants";
-  import { Button, Toggle } from "carbon-components-svelte";
+  import { Button, NumberInput, Toggle } from "carbon-components-svelte";
   import { onDestroy, onMount } from "svelte";
   import { HighlightStream } from "svelte-highlight";
   import javascript from "svelte-highlight/languages/javascript";
@@ -20,6 +20,14 @@
   let windowEnd = 0;
   let windowLineCount = 0;
   let stop = () => {};
+  let jumpToLine = 750;
+
+  /** @type {HighlightStream} */
+  let ref;
+
+  function jump() {
+    ref?.scrollToLine(jumpToLine ?? 0);
+  }
 
   function run() {
     stop();
@@ -51,6 +59,7 @@
 </p>
 
 <HighlightStream
+  bind:this={ref}
   language={javascript}
   {code}
   {done}
@@ -77,6 +86,17 @@
     {paused ? "Resume" : "Pause"}
   </Button>
   <Button size="small" kind="tertiary" on:click={run}>Replay</Button>
+  <div style="display: flex; align-items: flex-end; gap: 0.5rem">
+    <NumberInput
+      id="jump-to-line"
+      size="sm"
+      min={0}
+      max={LINE_COUNT}
+      bind:value={jumpToLine}
+      labelText={`Jump to line (of ${LINE_COUNT.toLocaleString()})`}
+    />
+    <Button size="small" kind="tertiary" on:click={jump}>Jump</Button>
+  </div>
   <p class="label-01" style="margin-bottom: 0.5rem">
     Status:{" "}
     <code class="code">{done ? "done" : paused ? "paused" : "streaming…"}</code>

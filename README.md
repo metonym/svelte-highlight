@@ -1804,7 +1804,7 @@ Per-chunk work is O(tail), not O(stream length so far): finished output is seale
 <HighlightStream language={typescript} {code} {done} virtualize style="height: 20em;" />
 ```
 
-`virtualize` renders only the lines within the scrolled viewport (plus `overscan`), the same windowing `HighlightVirtual` does for static documents -- a stream that runs to tens of thousands of lines still costs a couple dozen DOM nodes. It swaps the sealed-chunk session for `TokenizedDocument` (see [Large documents](#large-documents) below), so output always reflects the streaming (non-canonicalized) parse, even once `done` -- unlike the default mode, which upgrades to a canonical final render. `on:highlight` isn't dispatched in this mode, since materializing the full HTML on every repaint would defeat the point of windowing; `on:done`, the caret, and `autoScroll` all keep working. `on:windowchange` fires with `{ start, end, lineCount }` whenever the rendered window moves, so you can show something like "lines *N*-*M* of *T*" without counting DOM nodes yourself. Row math assumes one line per fixed-height row, so `virtualize` can't wrap lines -- it always renders with `white-space: pre`, overriding any `white-space` you pass through `$$restProps`.
+`virtualize` renders only the lines within the scrolled viewport (plus `overscan`), the same windowing `HighlightVirtual` does for static documents -- a stream that runs to tens of thousands of lines still costs a couple dozen DOM nodes. It swaps the sealed-chunk session for `TokenizedDocument` (see [Large documents](#large-documents) below), so output always reflects the streaming (non-canonicalized) parse, even once `done` -- unlike the default mode, which upgrades to a canonical final render. `on:highlight` isn't dispatched in this mode, since materializing the full HTML on every repaint would defeat the point of windowing; `on:done`, the caret, and `autoScroll` all keep working. `on:windowchange` fires with `{ start, end, lineCount }` whenever the rendered window moves, so you can show something like "lines *N*-*M* of *T*" without counting DOM nodes yourself. Row math assumes one line per fixed-height row, so `virtualize` can't wrap lines -- it always renders with `white-space: pre`, overriding any `white-space` you pass through `$$restProps`. `bind:this`, then call `scrollToLine(line)` to scroll a given line into view -- works in both `virtualize` and default modes.
 
 ### Streaming Markdown with multiple fences
 
@@ -2310,6 +2310,10 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
 | doneText           | `string`                                | `"Code finished streaming"` |
 
 `$$restProps` are forwarded to the top-level `pre` element. `overscan` and `checkpointInterval` only apply when `virtualize` is set. `doneText` is announced by a visually-hidden live region once `done` becomes `true`; set it to `""` to disable the announcement.
+
+#### Methods
+
+Use `bind:this`, then call `scrollToLine(line)` -- works in both `virtualize` and default modes.
 
 #### Dispatched Events
 
