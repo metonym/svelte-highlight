@@ -2551,6 +2551,7 @@ By default, example set-ups use Svelte 5. The exception is `examples/vite@svelte
 - [examples/vite](examples/vite)
 - [examples/vite@svelte-4](examples/vite@svelte-4)
 - [examples/webpack](examples/webpack)
+- [examples/worker](examples/worker)
 
 ## [Changelog](CHANGELOG.md)
 
