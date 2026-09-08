@@ -61,3 +61,32 @@ export interface Search {
  * when the same query is repeated against a grown document).
  */
 export declare function createSearch(source: SearchSource): Search;
+
+export interface HighlightMatchesOptions {
+  /** 0-based index into `matches` of the selected ("current") match. */
+  current?: number;
+  /**
+   * Name registered with `CSS.highlights` (and `${name}-current` for the
+   * current match). A custom name bypasses `search.css`'s built-in rules.
+   * @default "shl-search"
+   */
+  name?: string;
+}
+
+/**
+ * Paints `matches` into `root`, restricted to whatever rows are currently
+ * rendered there: resolved per match's line via `[data-line]`, then the
+ * `line`-th `.line` element, then the whole `<code>` split on `"\n"`.
+ * Matches whose line resolves to nothing are skipped.
+ *
+ * Uses the CSS Custom Highlight API when available (two `Highlight`s:
+ * `name` and `${name}-current`), else wraps text in
+ * `<mark data-shl-search>` (plus `data-shl-search-current`). A no-op on the
+ * server. Paints once per call -- call `dispose()` and re-run to repaint
+ * after the rendered window or the query changes.
+ */
+export declare function highlightMatches(
+  root: Element,
+  matches: readonly SearchMatch[],
+  options?: HighlightMatchesOptions,
+): { dispose(): void };

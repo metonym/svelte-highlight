@@ -1,0 +1,16 @@
+::highlight(shl-search) {
+  background-color: var(--search-match-background, rgba(255, 235, 59, 0.4));
+}
+
+mark[data-shl-search] {
+  background-color: var(--search-match-background, rgba(255, 235, 59, 0.4));
+  color: inherit;
+}
+
+::highlight(shl-search-current) {
+  background-color: var(--search-current-background, rgba(255, 152, 0, 0.6));
+}
+
+mark[data-shl-search][data-shl-search-current] {
+  background-color: var(--search-current-background, rgba(255, 152, 0, 0.6));
+}
