@@ -1500,6 +1500,8 @@ function rehypeHighlightFence() {
 
 Use the `highlight` action to highlight existing `<pre><code>` markup in place. This is useful for progressively enhancing server-rendered content (e.g. markdown) without swapping in a component.
 
+Place `use:highlight` on the `<code>` element inside a `<pre>`, matching the theme CSS's `.hljs code` selector -- elsewhere (directly on `<pre>`, or a non-`<pre><code>` element) it still highlights but may not be visually targeted by the active theme.
+
 The action accepts the same `language` prop as the components. When `code` is omitted, the element's existing `textContent` is highlighted. Updating `code` re-highlights the element.
 
 ```svelte

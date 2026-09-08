@@ -21,6 +21,11 @@ export type HighlightActionParameters = {
 /**
  * Highlight element contents in place with highlight.js.
  *
+ * Should be placed on the `<code>` element inside a `<pre>`, matching the
+ * theme CSS's `.hljs code` selector -- elsewhere (directly on `<pre>`, or a
+ * non-`<pre><code>` element) it still highlights but may not be visually
+ * targeted by the active theme.
+ *
  * Dispatches two events on the node:
  * - `highlighted`: `detail: { html: string; language: string }`, after a
  *   successful highlight.
