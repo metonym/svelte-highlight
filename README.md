@@ -2407,6 +2407,7 @@ See it as a complete page in [examples/cdn](examples/cdn).
 
 - **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
 - **Generated data, versioned with the library:** `GrammarIR`/`GrammarState`. These come from the build pipeline and are consumed by `registerAll`; treat them as opaque payloads whose field-level structure may change in any minor release. Always load grammars from the same package version as the engine.
+- **Experimental, may change in a minor release:** `createWorkerHighlighter`, `serveHighlighter`, `PostMessageTarget`, `WorkerHighlighter`, `WorkerSession`, `ServeHighlighterOptions` (`svelte-highlight/worker`). The wire protocol between the two halves is not part of the public contract — only the documented function behavior is.
 
 ### Headless highlighting, isolated registry
 
@@ -2450,6 +2451,45 @@ session.replace(from, to, text); // patch an earlier range without restarting
 const snapshot = session.snapshot(); // JSON-serializable checkpoint
 const { value } = session.finish();
 ```
+
+### Highlighting in a Web Worker
+
+`svelte-highlight/worker` is a headless pair — a worker-side handler and a main-thread client — for running the engine off the main thread. Both halves have zero Svelte dependency.
+
+```js
+// highlight.worker.js
+import { serveHighlighter } from "svelte-highlight/worker";
+serveHighlighter();
+```
+
+```js
+import { createWorkerHighlighter } from "svelte-highlight/worker";
+
+const highlighter = createWorkerHighlighter(
+  typeof Worker !== "undefined"
+    ? new Worker(new URL("./highlight.worker.js", import.meta.url), { type: "module" })
+    : undefined,
+);
+```
+
+An omitted (or falsy) `worker` runs the identical API in-process against `svelte-highlight/registry`'s shared singleton instead — the SSR/tests fallback, and why the construction above is a single ternary: the same code works whether or not `Worker` exists in the current environment.
+
+```js
+const { value } = await highlighter.highlight(code, "typescript");
+const lines = await highlighter.tokenLines(code, "typescript");
+```
+
+Streaming works the same way as `registry.createSession`, just async:
+
+```js
+const session = highlighter.createSession("typescript");
+await session.append(chunk); // repeat as chunks arrive
+await session.replace(from, to, text); // patch an earlier range without restarting
+const snapshot = await session.snapshot(); // JSON-serializable checkpoint
+const { value } = await session.finish();
+```
+
+Grammars load lazily inside the worker, per language, the first time each is seen. `HighlightStream` can't yet consume a remote, worker-backed session — its incremental rendering assumes a same-thread `StreamSession` — so streaming highlight results back into a component still requires posting the resolved HTML/events yourself. `terminate()` tears down the underlying `Worker` (a no-op in local mode).
 
 ### Reaching the stream from a component — no HTML re-parsing
 
