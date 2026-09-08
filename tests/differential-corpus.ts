@@ -1684,4 +1684,7 @@ Traveler: I mean no harm, {$player_name}.
         "Say goodbye":
             return
 `,
+  url: `GET https://user:pass@api.example.com:8443/v1/search?q=highlight+js&limit=20&sort=
+mailto:jane.doe@example.com
+https://example.com/docs#installation`,
 };
