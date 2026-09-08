@@ -42,6 +42,9 @@ jobs:
       - name: Run typecheck
         run: bun test:types
 
+      - name: Run engine perf budget
+        run: bun scripts/benchmark-engine.ts
+
   e2e-tests:
     needs: [lint]
     runs-on: macos-15
