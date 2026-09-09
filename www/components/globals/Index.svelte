@@ -1337,6 +1337,25 @@ export { add, mul };\`,
   </Column>
 </Row>
 
+<Row class="mb-9">
+  <Column xlg={12}> <h2 id="headless-usage">Headless usage</h2> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">svelte-highlight/engine</code>
+      exposes the same scope-event stream every
+      <code class="code">Highlight</code>-family component renders from --
+      <code class="code">createRegistry</code>,
+      <code class="code">registerAll</code>,
+      <code class="code">renderHtml</code>,
+      <code class="code">tokenLines</code>, and streaming
+      <code class="code">StreamSession</code>s -- with zero Svelte dependency,
+      so it works in any JS runtime: server routes, build pipelines, tests, or a
+      plain script tag.
+    </p>
+    <Link size="lg" href="/preview-engine">Try the headless engine</Link>
+  </Column>
+</Row>
+
 <Row>
   <Column xlg={12}><h2 id="examples">Examples</h2></Column>
   <Column xlg={6} lg={6} md={12}>
