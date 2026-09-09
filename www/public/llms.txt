@@ -1,0 +1,22 @@
+# svelte-highlight
+
+> Svelte components for syntax highlighting, backed by a zero-runtime-dependency
+> headless highlighting engine. 342 languages ship as build-time-converted JSON
+> IR (`src/languages/*.js`); no `highlight.js`, TextMate grammar, or tree-sitter
+> parser is bundled or imported at runtime.
+
+Because the engine converts highlight.js grammars into its own IR at build
+time and then walks that IR itself, it's easy for a coding agent to conflate
+this package with runtime engines like Shiki or Prism, or to assume
+`highlight.js` is a runtime dependency. The sections below are the ones most
+likely to be misread — read them before proposing a fix or feature that
+touches highlighting, streaming, or bundle size.
+
+- [Headless usage](https://github.com/metonym/svelte-highlight/blob/master/README.md#headless-usage)
+- [Custom Language](https://github.com/metonym/svelte-highlight/blob/master/README.md#custom-language)
+- [Streaming](https://github.com/metonym/svelte-highlight/blob/master/README.md#streaming)
+- [Static mode](https://github.com/metonym/svelte-highlight/blob/master/README.md#static-mode)
+- [Styling with CSS variables](https://github.com/metonym/svelte-highlight/blob/master/README.md#styling-with-css-variables)
+- [Component API](https://github.com/metonym/svelte-highlight/blob/master/README.md#component-api)
+- [Supported Languages](https://github.com/metonym/svelte-highlight/blob/master/SUPPORTED_LANGUAGES.md)
+- [Supported Styles](https://github.com/metonym/svelte-highlight/blob/master/SUPPORTED_STYLES.md)
