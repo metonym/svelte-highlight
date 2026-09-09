@@ -212,7 +212,7 @@
 <Content>
   <Grid padding>
     <Row>
-      <Column> <h2>{title}</h2> </Column>
+      <Column> <h1>{title}</h1> </Column>
     </Row>
     <slot />
   </Grid>

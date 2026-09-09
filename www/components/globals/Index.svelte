@@ -123,7 +123,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Usage</h3> </Column>
+  <Column xlg={12}> <h2 id="usage">Usage</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">The default Highlight component requires two props:</p>
     <UnorderedList class="mb-5">
@@ -198,7 +198,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Scoping styles</h3> </Column>
+  <Column xlg={12}> <h2 id="scoping-styles">Scoping styles</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Themes target global <code class="code">.hljs</code> selectors, so the
@@ -216,7 +216,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Dark mode</h3> </Column>
+  <Column xlg={12}> <h2 id="dark-mode">Dark mode</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">HighlightStyle</code>
@@ -263,7 +263,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Svelte Syntax Highlighting</h3> </Column>
+  <Column xlg={12}> <h2 id="svelte-syntax-highlighting">Svelte Syntax Highlighting</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use the <code class="code">HighlightSvelte</code> component for Svelte
@@ -276,7 +276,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Auto-highlighting</h3> </Column>
+  <Column xlg={12}> <h2 id="auto-highlighting">Auto-highlighting</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       The <code class="code">HighlightAuto</code> component invokes the
@@ -321,7 +321,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Action</h3> </Column>
+  <Column xlg={12}> <h2 id="action">Action</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use the <code class="code">highlight</code> action to highlight existing
@@ -364,7 +364,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Line Numbers</h3> </Column>
+  <Column xlg={12}> <h2 id="line-numbers">Line Numbers</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use the <code class="code">LineNumbers</code> component to render the
@@ -483,7 +483,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Copy Button</h3> </Column>
+  <Column xlg={12}> <h2 id="copy-button">Copy Button</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Compose the <code class="code">CopyButton</code> component alongside
@@ -541,7 +541,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Code Window</h3> </Column>
+  <Column xlg={12}> <h2 id="code-window">Code Window</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Wrap a code block in the <code class="code">CodeWindow</code> component to
@@ -568,7 +568,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Animation</h3> </Column>
+  <Column xlg={12}> <h2 id="animation">Animation</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">Typewriter</code> inside
@@ -625,7 +625,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Streaming</h3> </Column>
+  <Column xlg={12}> <h2 id="streaming">Streaming</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Rendering LLM chat output is the dominant new syntax-highlighting use
@@ -713,7 +713,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Large Documents</h3> </Column>
+  <Column xlg={12}> <h2 id="large-documents">Large Documents</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">HighlightVirtual</code>
@@ -784,7 +784,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Terminal Output</h3> </Column>
+  <Column xlg={12}> <h2 id="terminal-output">Terminal Output</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">AnsiOutput</code>
@@ -807,7 +807,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Editable</h3> </Column>
+  <Column xlg={12}> <h2 id="editable">Editable</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">HighlightEditable</code>
@@ -908,7 +908,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>File Tabs</h3> </Column>
+  <Column xlg={12}> <h2 id="file-tabs">File Tabs</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">FileTabs</code>
@@ -934,7 +934,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Language Targeting</h3> </Column>
+  <Column xlg={12}> <h2 id="language-targeting">Language Targeting</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components apply a
@@ -958,7 +958,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Language Tags</h3> </Column>
+  <Column xlg={12}> <h2 id="language-tags">Language Tags</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components allow for a tag to be
@@ -1026,7 +1026,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Custom Language</h3> </Column>
+  <Column xlg={12}> <h2 id="custom-language">Custom Language</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">fromHighlightJs</code>
@@ -1053,7 +1053,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Loading a Language by Name</h3> </Column>
+  <Column xlg={12}> <h2 id="loading-a-language-by-name">Loading a Language by Name</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Import a language as a static string when you know it ahead of time—the
@@ -1101,7 +1101,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h3>Static Mode</h3> </Column>
+  <Column xlg={12}> <h2 id="static-mode">Static Mode</h2> </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">svelte-highlight/static</code>
@@ -1276,7 +1276,7 @@ export { add, mul };\`,
 </Row>
 
 <Row>
-  <Column xlg={12}><h3>Examples</h3></Column>
+  <Column xlg={12}><h2 id="examples">Examples</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Get started with{" "}
