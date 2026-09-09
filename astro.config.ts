@@ -1,3 +1,4 @@
+import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
 import { optimizeCss, optimizeImports } from "carbon-preprocess-svelte";
@@ -5,12 +6,14 @@ import path from "node:path";
 import pkg from "./package.json" assert { type: "json" };
 
 export default defineConfig({
+  site: "https://svhe.onrender.com",
   outDir: "build",
   trailingSlash: "never",
   integrations: [
     svelte({
       preprocess: [optimizeImports()],
     }),
+    sitemap(),
   ],
   srcDir: "./www",
   publicDir: "./www/public",
