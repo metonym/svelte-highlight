@@ -54,7 +54,7 @@
     Row,
     UnorderedList,
   } from "carbon-components-svelte";
-  import Highlight, { HighlightSvelte } from "svelte-highlight";
+  import Highlight, { CopyButton, HighlightSvelte } from "svelte-highlight";
   import css from "svelte-highlight/languages/css";
   import javascript from "svelte-highlight/languages/javascript";
 
@@ -92,6 +92,87 @@ export { add, mul };\`,
 <span class="line" data-line-state="ins"><span class="hljs-keyword">const</span> <span class="hljs-title function_">mul</span> = (<span class="hljs-params">a, b</span>) =&gt; a * b;</span>
 <span class="line" data-line-state="del"><span class="hljs-keyword">const</span> <span class="hljs-title function_">oldSub</span> = (<span class="hljs-params">a, b</span>) =&gt; a - b;</span>
 <span class="line"><span class="hljs-keyword">export</span> { add, mul };</span></code></pre>`;
+
+  const languageNamesSnippet = `<script>
+  import { HighlightAuto } from "svelte-highlight";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+
+  const code = "const x = 42;";
+<\/script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
+
+<HighlightAuto {code} languageNames={["javascript", "typescript"]} />`;
+
+  const actionSnippet = `<script>
+  import { highlight } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const add = (a, b) => a + b;";
+<\/script>
+
+<svelte:head>
+  {@html github}
+<\/svelte:head>
+
+<pre><code use:highlight={{ language: typescript, code }}><\/code><\/pre>`;
+
+  const langtagBasicSnippet = `<script>
+  import { HighlightAuto } from "svelte-highlight";
+
+  $: code = \`body {\n  padding: 0;\n  color: red;\n}\`;
+<\/script>
+
+<HighlightAuto {code} langtag \/>`;
+
+  const langtagStylePropsSnippet = `<HighlightAuto
+  {code}
+  langtag
+  --langtag-top="0.5rem"
+  --langtag-right="0.5rem"
+  --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
+  --langtag-color="#fff"
+  --langtag-border-radius="6px"
+  --langtag-padding="0.5rem"
+  --langtag-font-size="0.75em"
+/>`;
+
+  const loadLanguageSnippet = `<script>
+  import { Highlight, loadLanguage } from "svelte-highlight";
+  import github from "svelte-highlight/styles/github";
+
+  // The language name is not known until runtime.
+  export let language = "typescript";
+  export let code = "const add = (a, b) => a + b;";
+<\/script>
+
+<svelte:head>
+  {@html github}
+<\/svelte:head>
+
+{#await loadLanguage(language) then grammar}
+  <Highlight {code} language={grammar} \/>
+{:catch}
+  <pre>{code}<\/pre>
+{/await}`;
+
+  const staticModeHtmlSourceSnippet = `<script>
+  import Highlight from "svelte-highlight";
+  import javascript from "svelte-highlight/languages/javascript";
+<\/script>
+
+<Highlight language={javascript} code="const x = 1;" />`;
+
+  const staticModeHtmlOutputSnippet = `<pre class="hljs" data-language="javascript"><code class="hljs"
+  ><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;</code
+></pre>`;
+
+  const langtagDemoSourceSnippet = `<Highlight language={javascript} code="const x = 1;" langtag />`;
+
+  const langtagDemoOutputSnippet = `<pre class="hljs" data-language="javascript" style="position:relative;overflow-x:var(--overflow-x, auto);overflow-y:var(--overflow-y, auto);border-radius:var(--border-radius, 0);width:var(--width, auto);max-width:var(--max-width, none)"><code class="hljs"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;</code><span style="position:absolute;top:var(--langtag-top, 0);right:var(--langtag-right, 0);display:flex;align-items:center;justify-content:center;background:var(--langtag-background, inherit);color:var(--langtag-color, inherit);border-radius:var(--langtag-border-radius, 0);padding:var(--langtag-padding, 1em);font-size:var(--langtag-font-size, inherit);">javascript</span></pre>`;
 </script>
 
 <Row>
@@ -174,7 +255,10 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte code={svelteHeadCdn} class={THEME_MODULE_NAME} />
+    <div style="position: relative">
+      <HighlightSvelte code={svelteHeadCdn} class={THEME_MODULE_NAME} />
+      <CopyButton code={svelteHeadCdn} />
+    </div>
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -304,21 +388,10 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={`<script>
-  import { HighlightAuto } from "svelte-highlight";
-  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
-
-  const code = "const x = 42;";
-<\/script>
-
-<svelte:head>
-  {@html atomOneDark}
-</svelte:head>
-
-<HighlightAuto {code} languageNames={["javascript", "typescript"]} />`}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <HighlightSvelte code={languageNamesSnippet} class={THEME_MODULE_NAME} />
+      <CopyButton code={languageNamesSnippet} />
+    </div>
   </Column>
 </Row>
 
@@ -345,22 +418,10 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={`<script>
-  import { highlight } from "svelte-highlight";
-  import typescript from "svelte-highlight/languages/typescript";
-  import github from "svelte-highlight/styles/github";
-
-  const code = "const add = (a, b) => a + b;";
-<\/script>
-
-<svelte:head>
-  {@html github}
-<\/svelte:head>
-
-<pre><code use:highlight={{ language: typescript, code }}><\/code><\/pre>`}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <HighlightSvelte code={actionSnippet} class={THEME_MODULE_NAME} />
+      <CopyButton code={actionSnippet} />
+    </div>
     <HighlightAction />
   </Column>
 </Row>
@@ -953,11 +1014,16 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <Highlight
-      code={'[data-language="css"] {\n  /* custom style rules */\n}'}
-      language={css}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <Highlight
+        code={'[data-language="css"] {\n  /* custom style rules */\n}'}
+        language={css}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton
+        code={'[data-language="css"] {\n  /* custom style rules */\n}'}
+      />
+    </div>
   </Column>
 </Row>
 
@@ -992,40 +1058,30 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={`<script>
-  import { HighlightAuto } from "svelte-highlight";
-
-  $: code = \`body {\n  padding: 0;\n  color: red;\n}\`;
-<\/script>
-
-<HighlightAuto {code} langtag \/>`}
-      class={THEME_MODULE_NAME}
-      langtag
-    />
+    <div style="position: relative">
+      <HighlightSvelte
+        code={langtagBasicSnippet}
+        class={THEME_MODULE_NAME}
+        langtag
+      />
+      <CopyButton code={langtagBasicSnippet} />
+    </div>
     <br>
-    <HighlightSvelte
-      code={`<HighlightAuto
-  {code}
-  langtag
-  --langtag-top="0.5rem"
-  --langtag-right="0.5rem"
-  --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
-  --langtag-color="#fff"
-  --langtag-border-radius="6px"
-  --langtag-padding="0.5rem"
-  --langtag-font-size="0.75em"
-/>`}
-      class={THEME_MODULE_NAME}
-      langtag
-      --langtag-top="0.5rem"
-      --langtag-right="0.5rem"
-      --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
-      --langtag-color="#fff"
-      --langtag-border-radius="6px"
-      --langtag-padding="0.5rem"
-      --langtag-font-size="0.75em"
-    />
+    <div style="position: relative">
+      <HighlightSvelte
+        code={langtagStylePropsSnippet}
+        class={THEME_MODULE_NAME}
+        langtag
+        --langtag-top="0.5rem"
+        --langtag-right="0.5rem"
+        --langtag-background="linear-gradient(135deg, #2996cf, 80%, white)"
+        --langtag-color="#fff"
+        --langtag-border-radius="6px"
+        --langtag-padding="0.5rem"
+        --langtag-font-size="0.75em"
+      />
+      <CopyButton code={langtagStylePropsSnippet} />
+    </div>
   </Column>
 </Row>
 
@@ -1082,27 +1138,10 @@ export { add, mul };\`,
     />
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={`<script>
-  import { Highlight, loadLanguage } from "svelte-highlight";
-  import github from "svelte-highlight/styles/github";
-
-  // The language name is not known until runtime.
-  export let language = "typescript";
-  export let code = "const add = (a, b) => a + b;";
-<\/script>
-
-<svelte:head>
-  {@html github}
-<\/svelte:head>
-
-{#await loadLanguage(language) then grammar}
-  <Highlight {code} language={grammar} \/>
-{:catch}
-  <pre>{code}<\/pre>
-{/await}`}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <HighlightSvelte code={loadLanguageSnippet} class={THEME_MODULE_NAME} />
+      <CopyButton code={loadLanguageSnippet} />
+    </div>
   </Column>
 </Row>
 
@@ -1124,11 +1163,14 @@ export { add, mul };\`,
     <p class="mb-5">Wire it into your Vite/Svelte preprocess config:</p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <Highlight
-      code={viteConfigSnippet}
-      language={javascript}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <Highlight
+        code={viteConfigSnippet}
+        language={javascript}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton code={viteConfigSnippet} />
+    </div>
   </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
@@ -1138,15 +1180,13 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={`<script>
-  import Highlight from "svelte-highlight";
-  import javascript from "svelte-highlight/languages/javascript";
-<\/script>
-
-<Highlight language={javascript} code="const x = 1;" />`}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <HighlightSvelte
+        code={staticModeHtmlSourceSnippet}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton code={staticModeHtmlSourceSnippet} />
+    </div>
   </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
@@ -1155,12 +1195,13 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={`<pre class="hljs" data-language="javascript"><code class="hljs"
-  ><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;</code
-></pre>`}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <HighlightSvelte
+        code={staticModeHtmlOutputSnippet}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton code={staticModeHtmlOutputSnippet} />
+    </div>
   </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
@@ -1200,15 +1241,21 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <Highlight
-      code={`<Highlight language={javascript} code="const x = 1;" langtag />`}
-      language={javascript}
-      class={THEME_MODULE_NAME}
-    />
-    <HighlightSvelte
-      code={`<pre class="hljs" data-language="javascript" style="position:relative;overflow-x:var(--overflow-x, auto);overflow-y:var(--overflow-y, auto);border-radius:var(--border-radius, 0);width:var(--width, auto);max-width:var(--max-width, none)"><code class="hljs"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;</code><span style="position:absolute;top:var(--langtag-top, 0);right:var(--langtag-right, 0);display:flex;align-items:center;justify-content:center;background:var(--langtag-background, inherit);color:var(--langtag-color, inherit);border-radius:var(--langtag-border-radius, 0);padding:var(--langtag-padding, 1em);font-size:var(--langtag-font-size, inherit);">javascript</span></pre>`}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <Highlight
+        code={langtagDemoSourceSnippet}
+        language={javascript}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton code={langtagDemoSourceSnippet} />
+    </div>
+    <div style="position: relative">
+      <HighlightSvelte
+        code={langtagDemoOutputSnippet}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton code={langtagDemoOutputSnippet} />
+    </div>
   </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
@@ -1226,11 +1273,14 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <Highlight
-      code={highlightStaticOnWarnSnippet}
-      language={javascript}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <Highlight
+        code={highlightStaticOnWarnSnippet}
+        language={javascript}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton code={highlightStaticOnWarnSnippet} />
+    </div>
     <InlineNotification
       lowContrast
       hideCloseButton
@@ -1257,11 +1307,14 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <Highlight
-      code={highlightFenceCallSnippet}
-      language={javascript}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <Highlight
+        code={highlightFenceCallSnippet}
+        language={javascript}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton code={highlightFenceCallSnippet} />
+    </div>
   </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
@@ -1274,10 +1327,13 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
-    <HighlightSvelte
-      code={highlightFenceOutputSnippet}
-      class={THEME_MODULE_NAME}
-    />
+    <div style="position: relative">
+      <HighlightSvelte
+        code={highlightFenceOutputSnippet}
+        class={THEME_MODULE_NAME}
+      />
+      <CopyButton code={highlightFenceOutputSnippet} />
+    </div>
   </Column>
 </Row>
 
