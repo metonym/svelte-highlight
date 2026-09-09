@@ -3,6 +3,9 @@ import EnginePreview from "@components/EnginePreview.svelte";
 import Layout from "@layouts/Layout.astro";
 ---
 
-<Layout title="Headless engine preview">
+<Layout
+  title="Headless engine preview"
+  description="Try svelte-highlight/engine live: createRegistry, registerAll, renderHtml, tokenLines, and streaming StreamSessions, with zero Svelte dependency."
+>
   <EnginePreview client:idle />
 </Layout>

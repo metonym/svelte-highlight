@@ -6,9 +6,13 @@ import "@www/data/scoped-styles.css";
 
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = `${title} — svelte-highlight, a zero-runtime-dependency Svelte syntax-highlighting library.`,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -18,10 +22,11 @@ const { title } = Astro.props;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta
-      name="description"
-      content="Syntax Highlighting for Svelte using highlight.js"
-    >
+    <meta name="description" content={description}>
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
     <title>{title}</title>
     <style is:global>
       body {
