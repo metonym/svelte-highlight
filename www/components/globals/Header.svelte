@@ -73,6 +73,7 @@
     "/preview-editable": "Editable highlight preview",
     "/preview-highlight-stream": "HighlightStream preview",
     "/preview-virtual": "HighlightVirtual preview",
+    "/preview-engine": "Headless engine preview",
     "/preview-jq": "jq language preview",
     "/preview-kql": "KQL language preview",
     "/preview-logql": "LogQL language preview",
