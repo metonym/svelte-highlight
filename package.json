@@ -25,6 +25,7 @@
     "playwright": "playwright"
   },
   "devDependencies": {
+    "@astrojs/sitemap": "^3.7.4",
     "@astrojs/svelte": "^8.1.2",
     "@biomejs/biome": "2.5.12",
     "@jridgewell/trace-mapping": "^0.3.31",
