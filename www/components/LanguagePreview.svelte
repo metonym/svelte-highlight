@@ -146,7 +146,7 @@
   import { yarnspinnerPreviewSnippets } from "@www/preview/yarnspinner-preview-snippets";
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
-  import { Highlight } from "svelte-highlight";
+  import { CopyButton, Highlight } from "svelte-highlight";
   import agda from "svelte-highlight/languages/agda";
   import angular from "svelte-highlight/languages/angular";
   import assemblyscript from "svelte-highlight/languages/assemblyscript";
@@ -461,12 +461,15 @@
     {#each previewThemes as theme}
       <Column xlg={10} lg={10} md={12} class="mb-5">
         <div class="label-01 mb-3">{theme.name}</div>
-        <Highlight
-          class={theme.moduleName}
-          language={lang}
-          code={snippet.code}
-          langtag
-        />
+        <div style="position: relative">
+          <Highlight
+            class={theme.moduleName}
+            language={lang}
+            code={snippet.code}
+            langtag
+          />
+          <CopyButton code={snippet.code} />
+        </div>
       </Column>
     {/each}
   </Row>

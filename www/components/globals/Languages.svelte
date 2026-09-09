@@ -15,9 +15,11 @@
   } from "carbon-components-svelte";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 
+  const PREVIEW_PAGE_NAME = /preview-(.+)\.astro$/;
+
   const previewPages = import.meta.glob("../../pages/preview-*.astro");
   const previewSlugs = new Set(
-    Object.keys(previewPages).map((p) => p.match(/preview-(.+)\.astro$/)[1]),
+    Object.keys(previewPages).map((p) => p.match(PREVIEW_PAGE_NAME)[1]),
   );
 </script>
 
