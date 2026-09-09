@@ -13,7 +13,7 @@ function defineAstro(hljs) {
         begin: /^---\s*\n/,
         end: /^---\s*$|^\.\.\.\s*$/m,
         subLanguage: "typescript",
-        excludeBegin: true,
+        beginScope: "meta",
         // `returnEnd` (not `excludeEnd`): the closing fence must be handed
         // back unconsumed so the sibling "meta" rule below gets a chance to
         // match and style it. `excludeEnd` would also hide it from this
