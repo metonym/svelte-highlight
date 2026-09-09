@@ -263,7 +263,9 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="svelte-syntax-highlighting">Svelte Syntax Highlighting</h2> </Column>
+  <Column xlg={12}>
+    <h2 id="svelte-syntax-highlighting">Svelte Syntax Highlighting</h2>
+  </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use the <code class="code">HighlightSvelte</code> component for Svelte
@@ -934,7 +936,9 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="language-targeting">Language Targeting</h2> </Column>
+  <Column xlg={12}>
+    <h2 id="language-targeting">Language Targeting</h2>
+  </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components apply a
@@ -1053,7 +1057,9 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="loading-a-language-by-name">Loading a Language by Name</h2> </Column>
+  <Column xlg={12}>
+    <h2 id="loading-a-language-by-name">Loading a Language by Name</h2>
+  </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Import a language as a static string when you know it ahead of time—the

@@ -5,6 +5,7 @@
   import languages from "@www/data/languages.json";
   import {
     Column,
+    Link,
     Row,
     StructuredList,
     StructuredListBody,
@@ -13,6 +14,11 @@
     StructuredListRow,
   } from "carbon-components-svelte";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+
+  const previewPages = import.meta.glob("../../pages/preview-*.astro");
+  const previewSlugs = new Set(
+    Object.keys(previewPages).map((p) => p.match(/preview-(.+)\.astro$/)[1]),
+  );
 </script>
 
 <svelte:head> {@html atomOneDark} </svelte:head>
@@ -51,6 +57,10 @@
                   <div class="label-01 mb-3">Module name</div>
                   <CodeSnippet type="inline" code={language.moduleName} />
                 </div>
+
+                {#if previewSlugs.has(language.name)}
+                  <Link href="/preview-{language.name}">Preview</Link>
+                {/if}
               </StructuredListCell>
               <StructuredListCell>
                 <ScopedLanguage
