@@ -2191,10 +2191,26 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 
 `$$restProps` are forwarded to the top-level `button` element.
 
+#### CSS Variables
+
+| Variable             | Description                          | Default value |
+| :-------------------- | :----------------------------------- | :------------ |
+| --copy-top           | Top offset of the button             | `0.5em`       |
+| --copy-right         | Right offset of the button           | `0.5em`       |
+| --copy-size          | Width and height of the button       | `2em`         |
+| --copy-padding       | Inner padding of the button          | `0.5em`       |
+| --copy-background    | Background color of the button       | `inherit`     |
+| --copy-color         | Foreground color of the button       | `inherit`     |
+| --copy-border-radius | Border radius of the button          | `4px`         |
+| --copy-border        | Border of the button                 | `none`        |
+| --copy-z-index       | Stacking order of the button         | `2`           |
+
 #### Dispatched Events
 
 - **on:copy**: fired after a successful copy, with `{ code }` -- the `transform`-applied string, not the original `code` prop
 - **on:error**: fired if the copy behavior throws, with `{ error }`
+- **on:mouseenter**: forwarded `MouseEvent`, useful for prefetching an async copy on hover
+- **on:mouseleave**: forwarded `MouseEvent`
 
 ```svelte
 <CopyButton
@@ -2214,6 +2230,29 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | title   | `string`                           | `""`          |
 
 `$$restProps` are forwarded to the top-level `div` element.
+
+#### CSS Variables
+
+| Variable              | Description                              | Default value                       |
+| :-------------------- | :---------------------------------------- | :---------------------------------- |
+| --window-background   | Background color of the window body      | `#1e1e1e`                           |
+| --window-border       | Border of the window                     | `1px solid rgba(255, 255, 255, 0.1)`|
+| --window-radius       | Corner radius of the window              | `0`                                 |
+| --titlebar-gap        | Gap between items in the title bar       | `0.5em`                             |
+| --titlebar-padding    | Padding of the title bar                 | `0.65em 1em`                        |
+| --titlebar-background | Background color of the title bar        | `#2d2d2d`                           |
+| --titlebar-border     | Bottom border of the title bar           | `1px solid rgba(255, 255, 255, 0.1)`|
+| --titlebar-color      | Text color of the title bar              | `rgba(255, 255, 255, 0.6)`          |
+| --titlebar-font-family| Font family of the title bar             | `system-ui, -apple-system, sans-serif`|
+| --titlebar-font-size  | Font size of the title bar               | `0.8125em`                          |
+| --dot-gap             | Gap between the macOS traffic-light dots | `0.5em`                             |
+| --dot-size            | Diameter of the macOS traffic-light dots | `0.75em`                            |
+| --dot-close           | Color of the "close" traffic-light dot   | `#ff5f56`                           |
+| --dot-minimize        | Color of the "minimize" traffic-light dot| `#ffbd2e`                           |
+| --dot-maximize        | Color of the "maximize" traffic-light dot| `#27c93f`                           |
+| --prompt-font-family  | Font family of the terminal prompt       | `ui-monospace, monospace`           |
+| --prompt-font-weight  | Font weight of the terminal prompt       | `700`                               |
+| --prompt-color        | Color of the terminal prompt             | `inherit`                           |
 
 ### `AnsiOutput`
 
