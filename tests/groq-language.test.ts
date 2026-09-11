@@ -80,3 +80,29 @@ test("groq highlights object-projection aliases as attr", () => {
 
   expect(result).toContain('<span class="hljs-attr">&quot;slug&quot;</span>:');
 });
+
+test("groq highlights the select() conditional arrow", () => {
+  const result = highlight('select(year > 2020 => "new", "old")');
+
+  expect(result).toContain('<span class="hljs-built_in">select</span>');
+  expect(result).toContain('<span class="hljs-operator">=&gt;</span>');
+});
+
+test("groq does not style a comparison operator", () => {
+  const result = highlight("year >= 2020 && year != 2021");
+
+  expect(result).toContain("year &gt;= ");
+  expect(result).toContain("year != ");
+});
+
+test("groq highlights the current-value and parent references", () => {
+  const result = highlight(
+    'genres[@ in ["drama"]] { "related": *[references(^._id)][0], "up": ^.^._id }',
+  );
+
+  expect(result).toContain('<span class="hljs-variable">@</span>');
+  expect(result).toContain(
+    '<span class="hljs-variable">^</span>.<span class="hljs-meta">_id</span>',
+  );
+  expect(result).toContain('<span class="hljs-variable">^.^</span>');
+});
