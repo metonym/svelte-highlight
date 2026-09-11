@@ -136,3 +136,18 @@ test("html alone does not highlight vue directives or mustache expressions", () 
   expect(result).not.toContain('<span class="hljs-keyword">v-if</span>');
   expect(result).not.toContain("language-javascript");
 });
+
+test("vue highlights the same-name bind shorthand without a value", () => {
+  registerAll(registry, vue);
+
+  const result = registry.highlight(
+    '<template>\n  <slot name="row" :it />\n  <Comp :items :id="x">10:30</Comp>\n</template>',
+    { language: "vue" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-variable">:it</span>');
+  expect(result).toContain('<span class="hljs-variable">:items</span>');
+  expect(result).toContain('<span class="hljs-variable">:id</span>');
+  expect(result).toContain("10:30");
+  expect(result).not.toContain('<span class="hljs-variable">:30</span>');
+});
