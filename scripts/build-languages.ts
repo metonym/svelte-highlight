@@ -183,6 +183,7 @@ const HLJS_PATCH_NAMES = [
   "c",
   "csharp",
   "go",
+  "java",
   "javascript",
   "python",
   "rust",
