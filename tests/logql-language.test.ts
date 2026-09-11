@@ -78,3 +78,46 @@ test("logql highlights comments", () => {
 
   expect(result).toContain('<span class="hljs-comment"># comment line</span>');
 });
+
+test("logql highlights byte literals as numbers", () => {
+  const result = highlight('{job="app"} | json | bytes > 10MB or size < 1KiB');
+
+  expect(result).toContain('<span class="hljs-number">10MB</span>');
+  expect(result).toContain('<span class="hljs-number">1KiB</span>');
+});
+
+test("logql highlights binary-operator modifiers and offset", () => {
+  const result = highlight(
+    'sum(rate({job="a"}[5m] offset 1h)) and on() vector(1) / ignoring(pod) group_left sum(rate({job="b"}[5m]))',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">offset</span>');
+  expect(result).toContain('<span class="hljs-keyword">on</span>()');
+  expect(result).toContain('<span class="hljs-keyword">ignoring</span>');
+  expect(result).toContain('<span class="hljs-keyword">group_left</span>');
+  expect(result).toContain('<span class="hljs-built_in">vector</span>');
+});
+
+test("logql highlights sort, approx_topk, label_replace, and the ip filter", () => {
+  const result = highlight(
+    'sort_desc(approx_topk(3, label_replace(x, "a", "$1", "b", "(.*)")))\n{job="a"} |= ip("10.0.0.0/8") | ip != "1.2.3.4"',
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">sort_desc</span>');
+  expect(result).toContain('<span class="hljs-built_in">approx_topk</span>');
+  expect(result).toContain('<span class="hljs-built_in">label_replace</span>');
+  expect(result).toContain('<span class="hljs-built_in">ip</span>(');
+  expect(result).toContain(
+    '<span class="hljs-attr">ip</span> <span class="hljs-operator">!=</span>',
+  );
+});
+
+test("logql does not style keywords inside parser flags", () => {
+  const result = highlight(
+    '{job="a"} | logfmt --strict --keep-empty | keep level',
+  );
+
+  expect(result).toContain("--strict --keep-empty");
+  expect(result).not.toContain('--<span class="hljs-keyword">keep</span>');
+  expect(result).toContain('<span class="hljs-keyword">keep</span> level');
+});
