@@ -63,8 +63,21 @@ function defineNushell(hljs) {
 
   const NUMBER = {
     className: "number",
-    begin:
-      /\b\d[\d_]*(?:\.\d[\d_]*)?(?:ns|us|ms|sec|min|hr|day|wk|b|kb|mb|gb|tb|pb|kib|mib|gib)?\b/,
+    variants: [
+      // Date/datetime literals (`2024-01-01`, `2024-01-01T00:00:00Z`) must
+      // precede the decimal variant, which would otherwise split them.
+      {
+        begin:
+          /\b\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?)?\b/,
+      },
+      { begin: /\b0[xX][0-9a-fA-F][0-9a-fA-F_]*\b/ },
+      { begin: /\b0[bB][01][01_]*\b/ },
+      { begin: /\b0[oO][0-7][0-7_]*\b/ },
+      {
+        begin:
+          /\b\d[\d_]*(?:\.\d[\d_]*)?(?:ns|us|ms|sec|min|hr|day|wk|b|kb|mb|gb|tb|pb|kib|mib|gib)?\b/,
+      },
+    ],
     relevance: 0,
   };
 
@@ -76,7 +89,12 @@ function defineNushell(hljs) {
     beginKeywords: "def-env def extern",
     end: /[[{(]/,
     excludeEnd: true,
-    contains: [{ className: "title function_", begin: /[\w-]+/ }],
+    contains: [
+      // `def "my cmd" [...]`: a quoted, space-containing command name is one
+      // title, not one per word.
+      { className: "title function_", begin: /"[^"\n]*"/ },
+      { className: "title function_", begin: /[\w-]+/ },
+    ],
   };
 
   return {
