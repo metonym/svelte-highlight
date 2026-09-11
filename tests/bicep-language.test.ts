@@ -48,3 +48,22 @@ test("bicep highlights declaration names as title", () => {
 
   expect(result).toContain('<span class="hljs-title">myStorage</span>');
 });
+
+test("bicep highlights export, extension, from, and else", () => {
+  const result = highlight(
+    "export type tags = { env: string }\nimport * as az from 'az@1.0.0'\nextension kubernetes with { kubeConfig: kube } as k8s\nvar n = 1 > 0 ? 1 else 0",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">export</span>');
+  expect(result).toContain('<span class="hljs-keyword">extension</span>');
+  expect(result).toContain('<span class="hljs-keyword">from</span>');
+  expect(result).toContain('<span class="hljs-keyword">else</span>');
+  expect(result).toContain('<span class="hljs-title">tags</span>');
+});
+
+test("bicep does not treat from inside an identifier as a keyword", () => {
+  const result = highlight("var fromCount int = 1");
+
+  expect(result).toContain('<span class="hljs-title">fromCount</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">from</span>');
+});
