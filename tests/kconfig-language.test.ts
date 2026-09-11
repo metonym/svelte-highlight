@@ -43,3 +43,26 @@ test("kconfig highlights help bodies as indented text", () => {
   expect(result).toContain('<span class="hljs-keyword">help</span>');
   expect(result).toContain('<span class="hljs-comment">');
 });
+
+test("kconfig highlights menuconfig symbol names as titles", () => {
+  const result = highlight('menuconfig EMBEDDED\n    bool "Embedded system"');
+
+  expect(result).toContain('<span class="hljs-keyword">menuconfig</span>');
+  expect(result).toContain('<span class="hljs-title class_">EMBEDDED</span>');
+});
+
+test("kconfig highlights optional on a choice", () => {
+  const result = highlight("choice\n    optional\nendchoice");
+
+  expect(result).toContain('<span class="hljs-keyword">optional</span>');
+  expect(result).toContain('<span class="hljs-keyword">choice</span>');
+});
+
+test("kconfig config definitions are unchanged", () => {
+  const result = highlight("config DEBUG_KERNEL\n    bool");
+
+  expect(result).toContain('<span class="hljs-keyword">config</span>');
+  expect(result).toContain(
+    '<span class="hljs-title class_">DEBUG_KERNEL</span>',
+  );
+});

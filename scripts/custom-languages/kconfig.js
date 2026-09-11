@@ -18,6 +18,7 @@ const KCONFIG_KEYWORDS = [
   "option",
   "modules",
   "default",
+  "optional",
 ];
 
 const KCONFIG_ATTRS =
@@ -35,7 +36,7 @@ function defineKconfig(hljs) {
   };
 
   const CONFIG_DEF = {
-    begin: [/^[ \t]*/, /config\b/, /\s+/, /[A-Za-z0-9_]+/],
+    begin: [/^[ \t]*/, /(?:menu)?config\b/, /\s+/, /[A-Za-z0-9_]+/],
     beginScope: { 2: "keyword", 4: "title.class" },
     relevance: 10,
   };
