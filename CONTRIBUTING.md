@@ -56,6 +56,27 @@ Steps 1/2/6/8/9/10/11 are stubbed out by the scaffold script (some as working co
 
 Split the work into two commits, matching how every language pair in this repo's history has landed: a `feat(languages): …` commit covering steps 1-7 (grammar, registration, differential snippet, count bump, build output, language test, updated snapshots), and a `docs(languages): …` commit covering steps 8-11 (preview snippets, preview page, `LanguagePreview.svelte` wiring, `hiddenRoutes`).
 
+### Auditing an existing custom grammar
+
+Custom grammars drift as their languages evolve (Zig removed `async`, Gleam added `echo` and `assert`, Solidity added `transient`). An audit pass is a small, per-language loop, not a rewrite:
+
+1. **Probe before reading.** Write a throwaway `.context/*.ts` that registers the grammar's own `register(hljs)` on a fresh `highlight.js/lib/core` instance and highlights a sample built from the language's *current* release notes (new keywords, literal forms, declaration shapes, block constructs). Judge the output first; only then open `scripts/custom-languages/<name>.js`. Reading the grammar first biases you towards what it already handles.
+2. **Rank what you find.** Outright bugs (a rule that swallows the wrong tokens, an entry that can never match) come first, then stable syntax the grammar predates, then holes in existing rules (a keyword table that stops at a block boundary, an operator rule missing one of its siblings). Skip proposals, nightly-only features, and anything so common as an identifier that styling it would misfire more than it helps (Kotlin's `value`, Ruby's `it`).
+3. **Change the grammar in the smallest way that fits its existing shape.** A new keyword goes in the existing keyword string. A new operator goes in the existing operator alternation. A new block construct (an embedded language like Yul inside `assembly { }`) gets its own keyword table and a mode whose `begin` consumes the opening brace and whose nested braces are balanced by a `self`-recursive block mode, so it closes at its own `}` instead of the next one in the file.
+4. **Extend the existing test file**, don't start a new one: append `test(...)` blocks to `tests/<name>-language.test.ts` for each new span, plus at least one negative case for the neighbouring syntax that must not change (an opcode name used as a plain Solidity identifier, a `<` comparison next to a new `<-` operator).
+5. **Feed the differential corpus** if the change adds a structural construct (a new block or sublanguage): extend the grammar's `CUSTOM_SNIPPETS` entry in `tests/differential-corpus.ts` so `tests/differential.test.ts` proves the converted engine reproduces it byte-for-byte. Keyword-only additions don't need this.
+6. **Validate with the targeted commands only:**
+
+   ```sh
+   bun run build:lib
+   bun test tests/<name>-language.test.ts tests/differential.test.ts tests/languages-golden.test.ts tests/languages.test.ts
+   bun run test:types
+   bun fix:changed
+   ```
+
+   Re-run `languages-golden` with `--update-snapshots` only when its failure is the patched grammar's own sample gaining a span; anything else is a regression.
+7. **Commit per language** as `fix(languages): <what it now recognizes>`, matching this repo's history for custom-grammar fixes, with a body naming the language version that introduced the syntax.
+
 ### Patching an hljs-derived grammar
 
 Most shipped grammars come straight from `highlight.js` and are converted to the engine's IR at build time. When one of them has a bug or lags the language it targets (a new Go builtin, a new Python statement form), don't fork it into a custom grammar: add a **patch** that wraps the stock grammar and adjusts it.
