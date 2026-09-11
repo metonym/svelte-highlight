@@ -16,9 +16,11 @@ function definePromQL(hljs) {
       // may itself be a bare `:` with the resolution omitted, e.g.
       // `metric[5m:]`). Consuming it here keeps METRIC below from matching
       // the leading `:` as if it were a (colon-prefixed) metric name.
+      // The unit segment repeats so compound durations like `1h30m` are one
+      // token instead of `1h` followed by an unstyled `30m`.
       {
         begin:
-          /\b\d+(?:\.\d+)?(?:ms|[smhdwy])(?::(?:\d+(?:\.\d+)?(?:ms|[smhdwy]))?)?/,
+          /\b(?:\d+(?:\.\d+)?(?:ms|[smhdwy]))+(?::(?:\d+(?:\.\d+)?(?:ms|[smhdwy]))*)?/,
       },
       { begin: /\b0[xX][0-9a-fA-F]+\b/ },
       { begin: /\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b/ },
