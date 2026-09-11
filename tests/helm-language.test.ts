@@ -36,3 +36,23 @@ test("helm highlights trim-marker actions and control flow keywords", () => {
   expect(result).toContain('<span class="hljs-keyword">if</span>');
   expect(result).toContain('<span class="hljs-keyword">end</span>');
 });
+
+test("helm highlights toJson, fromYaml, fail, and .Template", () => {
+  const result = highlight(
+    '{{ .Values.raw | fromYaml | toJson }}\n{{ fail "missing" }}\n{{ .Template.Name }}',
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">fromYaml</span>');
+  expect(result).toContain('<span class="hljs-built_in">toJson</span>');
+  expect(result).toContain('<span class="hljs-built_in">fail</span>');
+  expect(result).toContain('<span class="hljs-built_in">.Template.Name</span>');
+});
+
+test("helm toYaml and .Values are unchanged", () => {
+  const result = highlight("{{ toYaml .Values.settings | nindent 4 }}");
+
+  expect(result).toContain('<span class="hljs-built_in">toYaml</span>');
+  expect(result).toContain(
+    '<span class="hljs-built_in">.Values.settings</span>',
+  );
+});
