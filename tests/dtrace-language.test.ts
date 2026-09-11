@@ -43,3 +43,32 @@ test("dtrace highlights aggregations", () => {
 
   expect(result).toContain('<span class="hljs-variable">@counts</span>');
 });
+
+test("dtrace highlights BEGIN, END, and tick-N profile probes", () => {
+  const result = highlight("BEGIN\n{\n}\ntick-1sec\n{\n}\nEND\n{\n}");
+
+  expect(result).toContain('<span class="hljs-title function_">BEGIN</span>');
+  expect(result).toContain('<span class="hljs-title function_">END</span>');
+  expect(result).toContain(
+    '<span class="hljs-title function_">tick-1sec</span>',
+  );
+});
+
+test("dtrace highlights trunc, normalize, inline, and translator", () => {
+  const result = highlight(
+    "inline int MAX = 1;\ntranslator foo_t < bar_t *b> {\n}\nEND { trunc(@q); normalize(@bytes, 1000); }",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">inline</span>');
+  expect(result).toContain('<span class="hljs-keyword">translator</span>');
+  expect(result).toContain('<span class="hljs-built_in">trunc</span>');
+  expect(result).toContain('<span class="hljs-built_in">normalize</span>');
+});
+
+test("dtrace still highlights a four-field syscall probe", () => {
+  const result = highlight("syscall::read:entry\n{\n}");
+
+  expect(result).toContain(
+    '<span class="hljs-title function_">syscall::read:entry</span>',
+  );
+});

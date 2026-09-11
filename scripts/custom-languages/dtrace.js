@@ -1,5 +1,5 @@
 const DTRACE_BUILT_INS =
-  "trace printf printa stack ustack exit copyin copyinstr stringof strlen strjoin basename dirname lltostr tolower toupper speculate commit discard panic chill raise stop system count sum avg min max quantize lquantize llquantize stddev";
+  "trace printf printa stack ustack exit copyin copyinstr stringof strlen strjoin basename dirname lltostr tolower toupper speculate commit discard panic chill raise stop system count sum avg min max quantize lquantize llquantize stddev trunc normalize";
 
 const DTRACE_VARS =
   "execname pid tid uid timestamp vtimestamp walltimestamp probefunc probename probemod probeprov args curthread curpsinfo errno self this";
@@ -17,6 +17,18 @@ function defineDtrace(hljs) {
     className: "title.function",
     begin: /\b[A-Za-z_][\w$-]*(?::[\w$*-]*){3}/,
     relevance: 10,
+  };
+
+  const SPECIAL_PROBE = {
+    className: "title.function",
+    begin: /\b(?:BEGIN|END|ERROR)\b/,
+    relevance: 10,
+  };
+
+  const PROFILE_PROBE = {
+    className: "title.function",
+    begin: /\b(?:tick|profile)-\d+\w*/,
+    relevance: 8,
   };
 
   const DOLLAR_VAR = {
@@ -63,6 +75,7 @@ function defineDtrace(hljs) {
     name: "DTrace",
     aliases: ["dtrace-script"],
     keywords: {
+      keyword: "inline translator typedef",
       built_in: DTRACE_BUILT_INS,
       "variable.language": DTRACE_VARS,
     },
@@ -72,6 +85,8 @@ function defineDtrace(hljs) {
       hljs.C_BLOCK_COMMENT_MODE,
       PRAGMA,
       STRING,
+      SPECIAL_PROBE,
+      PROFILE_PROBE,
       PROBE,
       PREDICATE,
       DOLLAR_VAR,
