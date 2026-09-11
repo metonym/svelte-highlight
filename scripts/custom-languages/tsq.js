@@ -7,8 +7,14 @@ function defineTsq(hljs) {
     contains: [hljs.BACKSLASH_ESCAPE],
   };
 
+  // `(node_name` and supertype-qualified `(supertype/subtype`; a lone `_`
+  // is the wildcard, not a node name.
   const NODE = {
-    begin: [/\(/, /\s*/, /(?!ERROR\b|MISSING\b)[a-zA-Z_][\w]*/],
+    begin: [
+      /\(/,
+      /\s*/,
+      /(?!ERROR\b|MISSING\b|_(?!\w))[a-zA-Z_][\w]*(?:\/[a-zA-Z_][\w]*)?/,
+    ],
     beginScope: { 3: "title.class" },
     relevance: 0,
   };
@@ -49,9 +55,18 @@ function defineTsq(hljs) {
     relevance: 0,
   };
 
+  // Quantifiers and the `.` anchor. The anchor stands alone, so a `.`
+  // inside a dotted directive argument (`injection.language`) is not one.
   const OPERATOR = {
     className: "operator",
-    begin: /[?*+.]/,
+    begin: /[?*+]|\.(?!\w)/,
+    relevance: 0,
+  };
+
+  // Numeric arguments to directives such as `(#offset! @node 0 1 0 -1)`.
+  const NUMBER = {
+    className: "number",
+    begin: /-?\b\d+(?:\.\d+)?\b/,
     relevance: 0,
   };
 
@@ -69,6 +84,7 @@ function defineTsq(hljs) {
       ERROR_MISSING,
       WILDCARD,
       OPERATOR,
+      NUMBER,
     ],
   };
 }

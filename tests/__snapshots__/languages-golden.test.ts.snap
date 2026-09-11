@@ -1022,7 +1022,7 @@ exports[`golden snapshot: traceql 1`] = `"<span class="hljs-keyword">and</span> 
 
 exports[`golden snapshot: tsq 1`] = `
 "// comment
-<span class="hljs-string">&quot;string&quot;</span> &#x27;string&#x27; 123 3<span class="hljs-operator">.</span>14
+<span class="hljs-string">&quot;string&quot;</span> &#x27;string&#x27; <span class="hljs-number">123</span> <span class="hljs-number">3.14</span>
 true false null
 /regex/ <span class="hljs-built_in">#hashtag</span> <span class="hljs-variable">@annotation</span>"
 `;
