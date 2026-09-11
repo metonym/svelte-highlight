@@ -189,6 +189,7 @@ const HLJS_PATCH_NAMES = [
   "kotlin",
   "python",
   "rust",
+  "swift",
   "typescript",
 ] as const;
 
