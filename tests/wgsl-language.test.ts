@@ -114,3 +114,37 @@ fn main(@builtin(global_invocation_id) gid: vec3u) {
     '<span class="hljs-built_in">workgroupBarrier</span>',
   );
 });
+
+test("wgsl highlights bitcast with an explicit template list as a builtin call", () => {
+  const result = highlight("let b = bitcast<u32>(1.0f);");
+
+  expect(result).toContain('<span class="hljs-built_in">bitcast</span>');
+  expect(result).toContain('<span class="hljs-type">u32</span>');
+});
+
+test("wgsl highlights hex float literals as one number", () => {
+  const result = highlight(
+    "let a = 0xFF.8p2;\nlet b = 0x1p-2h;\nlet c = 0x.8;",
+  );
+
+  expect(result).toContain('<span class="hljs-number">0xFF.8p2</span>');
+  expect(result).toContain('<span class="hljs-number">0x1p-2h</span>');
+  expect(result).toContain('<span class="hljs-number">0x.8</span>');
+});
+
+test("wgsl keeps hex integer literals intact next to a member access", () => {
+  const result = highlight("let n = 0x1fu;\nlet m = arr[0xF].x;");
+
+  expect(result).toContain('<span class="hljs-number">0x1fu</span>');
+  expect(result).toContain('<span class="hljs-number">0xF</span>].x');
+});
+
+test("wgsl highlights texture_external and newer stage builtins", () => {
+  const result = highlight(
+    "var t: texture_external;\n@builtin(subgroup_id) sid: u32,\n@builtin(clip_distances) cd: array<f32, 2>,",
+  );
+
+  expect(result).toContain('<span class="hljs-type">texture_external</span>');
+  expect(result).toContain('<span class="hljs-built_in">subgroup_id</span>');
+  expect(result).toContain('<span class="hljs-built_in">clip_distances</span>');
+});
