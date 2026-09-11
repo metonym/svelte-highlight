@@ -42,3 +42,18 @@ test("kcl highlights comments and literals", () => {
   expect(result).toContain('<span class="hljs-comment"># a comment</span>');
   expect(result).toContain('<span class="hljs-literal">True</span>');
 });
+
+test("kcl highlights SI and IEC unit suffixes on numbers", () => {
+  const result = highlight("cpu = 0.5Gi\nwait = 10m\nbits = 0xFF");
+
+  expect(result).toContain('<span class="hljs-number">0.5Gi</span>');
+  expect(result).toContain('<span class="hljs-number">10m</span>');
+  expect(result).toContain('<span class="hljs-number">0xFF</span>');
+});
+
+test("kcl does not treat a unit suffix as part of a following identifier", () => {
+  const result = highlight("count = 3\nGi = name");
+
+  expect(result).toContain('<span class="hljs-number">3</span>');
+  expect(result).not.toContain('<span class="hljs-number">3Gi</span>');
+});
