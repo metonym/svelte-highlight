@@ -68,3 +68,30 @@ test("hcl highlights hash and slash comments", () => {
 
   expect(result).toContain("hljs-comment");
 });
+
+test("hcl highlights nested block types", () => {
+  const result = highlight(
+    'variable "n" {\n  validation {\n    condition = var.n > 0\n  }\n}\nresource "x" "y" {\n  lifecycle {\n    precondition {}\n  }\n  dynamic "d" {\n    content {}\n  }\n}\nrun "plan" {\n  assert {}\n}',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">validation</span>');
+  expect(result).toContain('<span class="hljs-keyword">precondition</span>');
+  expect(result).toContain('<span class="hljs-keyword">content</span>');
+  expect(result).toContain('<span class="hljs-keyword">run</span>');
+  expect(result).toContain('<span class="hljs-keyword">assert</span>');
+});
+
+test("hcl does not treat an attribute named like a block type as a block header", () => {
+  const result = highlight(
+    'resource "aws_instance" "web" {\n  provider = aws.west\n  ami      = "ami-1"\n  content  = "x"\n}\nmodule "m" {}',
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-attr">provider</span> = aws.west',
+  );
+  expect(result).toContain('<span class="hljs-attr">ami</span>');
+  expect(result).toContain('<span class="hljs-attr">content</span>');
+  expect(result).toContain(
+    '<span class="hljs-keyword">module</span> <span class="hljs-string">&quot;m&quot;</span>',
+  );
+});

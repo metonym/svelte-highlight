@@ -1,7 +1,10 @@
+// Top-level and nested block types (Terraform 1.x, including `.tftest.hcl`
+// files: `run`, `variables`, `assert`).
 const HCL_BLOCK_TYPES =
   "resource data variable output module provider terraform locals " +
   "provisioner connection backend dynamic lifecycle moved import check " +
-  "removed";
+  "removed ephemeral validation precondition postcondition content " +
+  "required_providers cloud run variables assert";
 
 const HCL_KEYWORDS =
   "for in if else endif endfor for_each count depends_on " +
@@ -71,11 +74,17 @@ function defineHcl(hljs) {
       STRING,
       NUMBER,
       {
+        // A block header is the type, zero or more labels (quoted, or bare
+        // in generic HCL), then `{`. The lookahead is what tells
+        // `provider "aws" {` (block) apart from `provider = aws.west`
+        // (attribute): without it the mode opened on the attribute and ran
+        // to the next `{` in the file, unstyling everything in between.
         begin: [
           new RegExp(
             String.raw`\b(?:${HCL_BLOCK_TYPES.split(" ").join("|")})\b`,
           ),
           /\s+/,
+          /(?=(?:(?:"[^"\n]*"|[A-Za-z_][\w-]*)\s*)*\{)/,
         ],
         beginScope: { 1: "keyword" },
         end: /(?=\{)/,
