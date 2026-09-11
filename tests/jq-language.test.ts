@@ -83,3 +83,30 @@ test("jq highlights function definitions", () => {
   expect(result).toContain('<span class="hljs-keyword">def</span>');
   expect(result).toContain('<span class="hljs-title function_">add</span>');
 });
+
+test("jq highlights del, type filters, and jq 1.7/1.8 builtins", () => {
+  const result = highlight(
+    'del(.a) | numbers | trim | abs | toarray | pick(.b) | have_decnum | trimstr("x") | floor | stderr',
+  );
+
+  for (const name of [
+    "del",
+    "numbers",
+    "trim",
+    "abs",
+    "toarray",
+    "pick",
+    "have_decnum",
+    "trimstr",
+    "floor",
+    "stderr",
+  ]) {
+    expect(result).toContain(`<span class="hljs-built_in">${name}</span>`);
+  }
+});
+
+test("jq leaves user-defined function calls unstyled", () => {
+  const result = highlight("def total(f): .; total(.score)");
+
+  expect(result).toContain('total(<span class="hljs-property">.score</span>)');
+});
