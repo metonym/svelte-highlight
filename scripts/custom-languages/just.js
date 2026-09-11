@@ -1,7 +1,7 @@
-const JUST_KEYWORDS = "export set import mod alias if else in";
+const JUST_KEYWORDS = "export unexport set import mod alias if else in";
 
 const JUST_BUILT_INS =
-  "env_var env_var_or_default arch os os_family num_cpus justfile justfile_directory just_executable just_pid invocation_directory invocation_directory_native working_directory trim trim_end trim_start trim_end_match trim_start_match replace replace_regex uppercase lowercase capitalize quote sha256 sha256_file uuid clean join absolute_path canonicalize extension file_name file_stem parent_directory without_extension error semver_matches path_exists which shell blake3 blake3_file choose datetime datetime_utc encode_uri_component style";
+  "env_var env_var_or_default env arch os os_family num_cpus justfile justfile_directory just_executable just_pid invocation_directory invocation_directory_native working_directory source_file source_directory require assert trim trim_end trim_start trim_end_match trim_start_match replace replace_regex uppercase lowercase capitalize quote sha256 sha256_file uuid clean join absolute_path canonicalize extension file_name file_stem parent_directory without_extension error semver_matches path_exists which shell blake3 blake3_file choose datetime datetime_utc encode_uri_component style";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineJust(hljs) {
@@ -88,6 +88,13 @@ function defineJust(hljs) {
     contains: [STRING],
   };
 
+  const BACKTICK = {
+    className: "string",
+    begin: /`/,
+    end: /`/,
+    contains: [INTERPOLATION],
+  };
+
   return {
     name: "just",
     aliases: ["justfile", "Justfile"],
@@ -102,6 +109,7 @@ function defineJust(hljs) {
       hljs.HASH_COMMENT_MODE,
       ATTRIBUTE,
       STRING,
+      BACKTICK,
       INTERPOLATION,
       VARIABLE_ASSIGNMENT,
       ASSIGN_OP,
