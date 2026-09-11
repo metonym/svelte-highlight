@@ -449,7 +449,8 @@ echo (count $files)`,
   flux: `// cpu mean
 from(bucket: "example-bucket")
   |> range(start: -1h)
-  |> filter(fn: (r) => r._measurement == "cpu")
+  |> filter(fn: (r) => r._measurement == "cpu" and r.host =~ /web.*/)
+  |> filter(fn: (r) => r._value / 2.0 > 10.0)
   |> mean()
 `,
   gbnf: `# a simple JSON-ish grammar
