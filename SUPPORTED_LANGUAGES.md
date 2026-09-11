@@ -3984,6 +3984,8 @@
 
 ## typescript (`typescript`)
 
+> Exported from highlight.js with svelte-highlight patches on top (see `scripts/hljs-patches/typescript.js`)
+
 ```html
 <script>
   // direct import (recommended)
