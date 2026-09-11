@@ -28,7 +28,7 @@ function defineFlux(hljs) {
 
   const DURATION = {
     className: "number",
-    begin: /-?\b\d+(?:ns|us|µs|ms|s|m|h|d|w|mo|y)\b/,
+    begin: /-?\b(?:\d+(?:ns|us|µs|ms|mo|y|w|d|h|m|s))+\b/,
     relevance: 0,
   };
 
@@ -42,11 +42,14 @@ function defineFlux(hljs) {
     relevance: 0,
   };
 
+  // Only after `=~` / `!~`. A bare `/` is division and used to swallow the
+  // rest of the file as a regexp (`r._value / 2.0 > 10`). Consume the
+  // operator as its own begin-group so we don't need a lookbehind, and
+  // keep it outside the regexp span.
   const REGEXP = {
-    className: "regexp",
-    begin: /\/(?![*/])/,
-    end: /\/[a-z]*/,
-    contains: [hljs.BACKSLASH_ESCAPE],
+    begin: [/(?:=~|!~)/, /\s*/, /\/(?![*/])(?:\\.|[^\\/])*\/[a-z]*/],
+    beginScope: { 1: "operator", 3: "regexp" },
+    relevance: 0,
   };
 
   const PIPE_FORWARD = {

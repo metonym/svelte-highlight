@@ -63,3 +63,29 @@ test("flux highlights lambda arrows", () => {
 
   expect(result).toContain('<span class="hljs-operator">=&gt;</span>');
 });
+
+test("flux highlights compound durations including mo", () => {
+  const result = highlight("option task = {every: 1h30m, offset: 1mo}");
+
+  expect(result).toContain('<span class="hljs-number">1h30m</span>');
+  expect(result).toContain('<span class="hljs-number">1mo</span>');
+});
+
+test("flux does not treat division as a regexp that swallows the pipeline", () => {
+  const result = highlight(
+    'filter(fn: (r) => r._value / 2.0 > 10.0)\n  |> yield(name: "mean")',
+  );
+
+  expect(result).toContain('<span class="hljs-operator">/</span>');
+  expect(result).toContain(
+    '<span class="hljs-title function_ invoke__">yield</span>',
+  );
+  expect(result).not.toContain("hljs-regexp");
+});
+
+test("flux still highlights regex literals after =~", () => {
+  const result = highlight("filter(fn: (r) => r.host =~ /web.*/)");
+
+  expect(result).toContain('<span class="hljs-operator">=~</span>');
+  expect(result).toContain('<span class="hljs-regexp">/web.*/</span>');
+});
