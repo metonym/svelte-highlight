@@ -45,3 +45,23 @@ test("slint highlights comments and strings", () => {
   expect(result).toContain('<span class="hljs-keyword">import</span>');
   expect(result).toContain('<span class="hljs-keyword">from</span>');
 });
+
+test("slint does not highlight in/out inside easing names", () => {
+  const result = highlight("easing: ease-in-out;");
+
+  expect(result).not.toContain('<span class="hljs-keyword">in-out</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">in</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">out</span>');
+});
+
+test("slint still highlights in-out property modifiers", () => {
+  const result = highlight("in-out property <int> count: 0;");
+
+  expect(result).toContain('<span class="hljs-keyword">in-out</span>');
+});
+
+test("slint highlights string interpolations", () => {
+  const result = highlight('"Count: \\{root.count}"');
+
+  expect(result).toContain('<span class="hljs-subst">\\{root.count}</span>');
+});

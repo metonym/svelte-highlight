@@ -9,6 +9,7 @@ const SLINT_KEYWORDS = [
   "enum",
   "property",
   "callback",
+  "in-out|5",
   "in",
   "out",
   "private",
@@ -27,11 +28,20 @@ const SLINT_LITERALS = "root self parent true false";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineSlint(hljs) {
+  const INTERPOLATION = {
+    className: "subst",
+    begin: /\\\{/,
+    end: /\}/,
+    relevance: 0,
+  };
+
   const STRING = {
     className: "string",
     begin: /"/,
     end: /"/,
-    contains: [hljs.BACKSLASH_ESCAPE],
+    // Interpolation (`\{expr}`) must precede BACKSLASH_ESCAPE, which would
+    // otherwise consume `\{` as a single escaped character.
+    contains: [INTERPOLATION, hljs.BACKSLASH_ESCAPE],
   };
 
   const NUMBER = {
@@ -47,12 +57,6 @@ function defineSlint(hljs) {
     className: "number",
     begin: /#[0-9a-fA-F]{3,8}\b/,
     relevance: 0,
-  };
-
-  const IN_OUT = {
-    className: "keyword",
-    begin: /\bin-out\b/,
-    relevance: 5,
   };
 
   const TWO_WAY_BINDING = {
@@ -92,6 +96,9 @@ function defineSlint(hljs) {
     name: "Slint",
     aliases: ["slint"],
     keywords: {
+      // Hyphenated modifiers (`in-out`) and easing names (`ease-in-out`)
+      // must tokenize as one word so `in`/`out` don't fire inside the latter.
+      $pattern: "[a-zA-Z][\\w-]*",
       keyword: SLINT_KEYWORDS,
       literal: SLINT_LITERALS,
     },
@@ -100,7 +107,6 @@ function defineSlint(hljs) {
       hljs.C_BLOCK_COMMENT_MODE,
       STRING,
       META_CALL,
-      IN_OUT,
       TWO_WAY_BINDING,
       NAMING_OP,
       COLOR,

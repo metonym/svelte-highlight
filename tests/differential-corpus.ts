@@ -1219,6 +1219,7 @@ export component Slider {
         background: #3a3a3a;
         width: 200px;
         height: 24px;
+        text: "Count: \\{root.value}";
 
         handle := Rectangle {
             width: 12px;
