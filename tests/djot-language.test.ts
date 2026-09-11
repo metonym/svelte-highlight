@@ -50,3 +50,52 @@ test("djot highlights inline verbatim and block quotes", () => {
   expect(result).toContain('<span class="hljs-code">`verbatim`</span>');
   expect(result).toContain('<span class="hljs-quote">&gt;</span>');
 });
+
+test("djot keeps a raw inline format attribute inside the verbatim span", () => {
+  const result = highlight("Raw `<b>x</b>`{=html} then {=marked=} and plain.");
+
+  expect(result).toContain(
+    '<span class="hljs-code">`&lt;b&gt;x&lt;/b&gt;`{=html}</span>',
+  );
+  expect(result).toContain('<span class="hljs-mark">{=marked=}</span>');
+  expect(result).toContain("</span> and plain.");
+});
+
+test("djot only treats a dollar-prefixed verbatim span as math", () => {
+  const result = highlight(
+    "Inline $`e=mc^2` and display $$`\\int x` cost $5 or $10.",
+  );
+
+  expect(result).toContain('<span class="hljs-formula">$`e=mc^2`</span>');
+  expect(result).toContain('<span class="hljs-formula">$$`\\int x`</span>');
+  expect(result).toContain("cost $5 or $10.");
+});
+
+test("djot does not open strong or emphasis on escaped punctuation", () => {
+  const result = highlight(
+    "\\*not strong\\* and \\_not emphasis\\_ but *strong*",
+  );
+
+  expect(result).not.toContain('<span class="hljs-strong">*not strong');
+  expect(result).not.toContain('<span class="hljs-emphasis">');
+  expect(result).toContain('<span class="hljs-strong">*strong*</span>');
+});
+
+test("djot highlights parenthesized and roman-numeral enumerators", () => {
+  const result = highlight(
+    "(a) first\niv. fourth\n(IV) fourth\nHello. not a list",
+  );
+
+  expect(result).toContain('<span class="hljs-bullet">(a)</span> first');
+  expect(result).toContain('<span class="hljs-bullet">iv.</span> fourth');
+  expect(result).toContain('<span class="hljs-bullet">(IV)</span> fourth');
+  expect(result).toContain("\nHello. not a list");
+});
+
+test("djot highlights spaced thematic breaks", () => {
+  const result = highlight("* * *\n- - -\n- item");
+
+  expect(result).toContain('<span class="hljs-meta">* * *</span>');
+  expect(result).toContain('<span class="hljs-meta">- - -</span>');
+  expect(result).toContain('<span class="hljs-bullet">-</span> item');
+});

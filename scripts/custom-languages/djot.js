@@ -8,7 +8,8 @@ function defineDjot() {
 
   const THEMATIC_BREAK = {
     className: "meta",
-    begin: /^(?:\*{3,}|-{3,})\s*$/,
+    // Three or more marks, optionally separated by spaces: `* * *`, `- - -`.
+    begin: /^(?:\*(?:[ \t]*\*){2,}|-(?:[ \t]*-){2,})[ \t]*$/,
     relevance: 0,
   };
 
@@ -43,23 +44,31 @@ function defineDjot() {
     relevance: 0,
   };
 
+  // Enumerators may be decimal, a single letter, or a roman numeral, followed
+  // by `.` or `)`, or wrapped in parentheses: `1.`, `a)`, `(iv)`.
+  const ENUMERATOR = /(?:\d+|[A-Za-z]|[ivx]+|[IVX]+)/;
+
   const BULLET = {
     className: "bullet",
-    begin: /^\s*(?:[-*+]|\d+[.)]|[A-Za-z][.)]|i+[.)])(?=\s)/,
+    begin: new RegExp(
+      String.raw`^\s*(?:[-*+]|\(${ENUMERATOR.source}\)|${ENUMERATOR.source}[.)])(?=\s)`,
+    ),
     relevance: 0,
   };
 
+  // Math is a verbatim span prefixed with `$` (inline) or `$$` (display). A
+  // bare `$` in prose is not math, so `$5 and $10` stays plain text.
   const MATH_BLOCK = {
     className: "formula",
-    begin: /\$\$/,
-    end: /\$\$/,
+    begin: /\$\$`/,
+    end: /`/,
     relevance: 0,
   };
 
   const MATH_INLINE = {
     className: "formula",
-    begin: /\$(?=\S)/,
-    end: /\$/,
+    begin: /\$`/,
+    end: /`/,
     relevance: 0,
   };
 
@@ -79,7 +88,9 @@ function defineDjot() {
 
   const HIGHLIGHT = {
     className: "mark",
-    begin: /\{=/,
+    // `{=html}` after a verbatim span is a raw-inline format attribute, not a
+    // highlight; without the lookahead it opened a mark that never closed.
+    begin: /\{=(?![\w-]+\})/,
     end: /=\}/,
     relevance: 0,
   };
@@ -135,10 +146,17 @@ function defineDjot() {
     relevance: 0,
   };
 
+  // A backslash escapes the punctuation after it, so `\*` never opens strong.
+  const ESCAPE = {
+    begin: /\\[!-/:-@[-`{-~]/,
+    relevance: 0,
+  };
+
   const VERBATIM = {
     className: "code",
     begin: /`/,
-    end: /`/,
+    // A trailing `{=format}` marks the span as raw inline content.
+    end: /`(?:\{=[\w-]+\})?/,
     relevance: 0,
   };
 
@@ -216,6 +234,7 @@ function defineDjot() {
       LINK_REF,
       LINK_INLINE,
       AUTOLINK,
+      ESCAPE,
       VERBATIM,
       STRONG,
       EMPHASIS,
