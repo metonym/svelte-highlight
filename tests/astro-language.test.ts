@@ -145,3 +145,16 @@ test("html alone does not highlight Astro frontmatter or client directives", () 
 
   expect(result).not.toContain("language-typescript");
 });
+
+test("astro closes a single-line style block at its own </style>", () => {
+  registerAll(registry, astro);
+
+  const result = registry.highlight(
+    "<style>h1 { color: red; }</style>\n<Counter client:load />",
+    { language: "astro" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-selector-tag">h1</span>');
+  expect(result).toContain('<span class="hljs-name">Counter</span>');
+  expect(result).toContain('<span class="hljs-attr">client:load</span>');
+});

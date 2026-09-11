@@ -35,8 +35,11 @@ function defineAstro(hljs) {
       },
       hljs.COMMENT(/<!--/, /-->/, { relevance: 10 }),
       {
-        begin: /^(\s*)(<style[^>]*>)/gm,
-        end: /^(\s*)(<\/style>)/gm,
+        // Not anchored to line starts: `<style>h1 { }</style>` on one line
+        // is valid, and an anchored `end` never matched it, so the css mode
+        // swallowed the rest of the document.
+        begin: /<style[^>]*>/,
+        end: /<\/style>/,
         subLanguage: "css",
         excludeBegin: true,
         excludeEnd: true,
