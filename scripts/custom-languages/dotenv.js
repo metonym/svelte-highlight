@@ -17,6 +17,9 @@ function defineDotenv(hljs) {
     variants: [
       { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE, VARIABLE] },
       { begin: /'/, end: /'/ },
+      // Backtick quoting (dotenv 15+, dotenv-expand): lets a value hold both
+      // quote kinds; variables still expand, single quotes still don't.
+      { begin: /`/, end: /`/, contains: [VARIABLE] },
     ],
   };
 
