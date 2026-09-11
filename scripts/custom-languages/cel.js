@@ -9,15 +9,23 @@ const CEL_BUILT_INS =
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineCel(hljs) {
+  // The raw and bytes prefixes are case-insensitive in the spec (`R"..."`,
+  // `B'...'`, and the `bR` / `Rb` combination).
   const STRING = {
     className: "string",
     variants: [
-      { begin: /r?"""/, end: /"""/ },
-      { begin: /r?'''/, end: /'''/ },
-      { begin: /r?"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
-      { begin: /r?'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
-      { begin: /b"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
-      { begin: /b'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /(?:[rR][bB]?|[bB][rR]?)?"""/, end: /"""/ },
+      { begin: /(?:[rR][bB]?|[bB][rR]?)?'''/, end: /'''/ },
+      {
+        begin: /(?:[rR][bB]?|[bB][rR]?)?"/,
+        end: /"/,
+        contains: [hljs.BACKSLASH_ESCAPE],
+      },
+      {
+        begin: /(?:[rR][bB]?|[bB][rR]?)?'/,
+        end: /'/,
+        contains: [hljs.BACKSLASH_ESCAPE],
+      },
     ],
   };
 
@@ -35,17 +43,12 @@ function defineCel(hljs) {
     relevance: 0,
   };
 
+  // `.field` and the optional-field form `.?field`. Index access (`a["k"]`)
+  // and list literals (`[1, 2]`) are plain: an earlier `[ ... ]` mode wrapped
+  // every list literal in a property span.
   const FIELD = {
     className: "property",
-    begin: /\.[a-zA-Z_]\w*/,
-    relevance: 0,
-  };
-
-  const BRACKET_FIELD = {
-    className: "property",
-    begin: /\[/,
-    end: /\]/,
-    contains: [STRING, NUMBER],
+    begin: /\.\??[a-zA-Z_]\w*/,
     relevance: 0,
   };
 
@@ -57,14 +60,7 @@ function defineCel(hljs) {
       literal: CEL_LITERALS,
       built_in: CEL_BUILT_INS,
     },
-    contains: [
-      hljs.C_LINE_COMMENT_MODE,
-      STRING,
-      MACRO,
-      BRACKET_FIELD,
-      FIELD,
-      NUMBER,
-    ],
+    contains: [hljs.C_LINE_COMMENT_MODE, STRING, MACRO, FIELD, NUMBER],
   };
 }
 
