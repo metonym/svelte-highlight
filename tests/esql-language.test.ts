@@ -53,3 +53,26 @@ test("esql highlights nested STATS aggregations", () => {
   expect(result).toContain('<span class="hljs-built_in">AVG</span>');
   expect(result).toContain('<span class="hljs-keyword">BY</span>');
 });
+
+test("esql highlights ROW, type casts, and GA 9.x commands", () => {
+  const result = highlight(
+    "ROW a = 1 | EVAL x = a::double | INLINE STATS total = SUM(a) | CHANGE_POINT total | FORK (WHERE true) | TS metrics",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">ROW</span>');
+  expect(result).toContain('<span class="hljs-operator">::</span>');
+  expect(result).toContain('<span class="hljs-keyword">INLINE</span>');
+  expect(result).toContain('<span class="hljs-keyword">CHANGE_POINT</span>');
+  expect(result).toContain('<span class="hljs-keyword">FORK</span>');
+  expect(result).toContain('<span class="hljs-keyword">TS</span>');
+});
+
+test("esql highlights MATCH and KQL without restyling COUNT", () => {
+  const result = highlight(
+    'FROM logs | WHERE MATCH(message, "timeout") AND KQL("status:500") | STATS COUNT(*)',
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">MATCH</span>');
+  expect(result).toContain('<span class="hljs-built_in">KQL</span>');
+  expect(result).toContain('<span class="hljs-built_in">COUNT</span>');
+});
