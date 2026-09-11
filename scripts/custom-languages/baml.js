@@ -14,10 +14,13 @@ const BAML_KEYWORDS = [
   "map",
   "image",
   "audio",
+  "pdf",
+  "video",
   "string",
   "int",
   "float",
   "bool",
+  "prompt",
   "provider",
   "options",
 ];
@@ -33,10 +36,20 @@ function defineBaml(hljs) {
     contains: [hljs.BACKSLASH_ESCAPE],
   };
 
+  // `@alias(...)` field attributes, `@@dynamic` block attributes, and the
+  // dotted streaming attributes (`@stream.done`, `@stream.not_null`,
+  // `@stream.with_state`).
   const ATTRIBUTE = {
     className: "meta",
-    begin: /@{1,2}[A-Za-z_]\w*/,
+    begin: /@{1,2}[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)?/,
     relevance: 5,
+  };
+
+  // `env.OPENAI_API_KEY` environment-variable references in client options.
+  const ENV_REF = {
+    className: "variable",
+    begin: /\benv\.[A-Za-z_]\w*/,
+    relevance: 0,
   };
 
   const ARROW = {
@@ -65,6 +78,7 @@ function defineBaml(hljs) {
       hljs.C_LINE_COMMENT_MODE,
       PROMPT_BLOCK,
       ATTRIBUTE,
+      ENV_REF,
       ARROW,
       STRING,
       hljs.C_NUMBER_MODE,
