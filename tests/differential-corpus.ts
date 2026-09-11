@@ -1740,7 +1740,8 @@ void fragment() {
 `,
   ink: `=== knot_greeting ===
 Hello, traveler!
-* [Ask about the weather]
+EXTERNAL play_sound(name)
+* (ask_weather) [Ask about the weather]
     -> weather
 * [Say goodbye] -> END
 
