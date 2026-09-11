@@ -118,6 +118,11 @@ def main():
 @foreach($items as $item)
   {{ $item }}
 @endforeach
+@php($count = 1)
+@verbatim
+  <div>{{ raw }} @@if</div>
+@endverbatim
+<p>@php $y = 2; @endphp</p>
 {{-- a comment --}}`,
   blueprint: `using Gtk 4.0;
 
