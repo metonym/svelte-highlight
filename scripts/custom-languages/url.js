@@ -9,7 +9,9 @@ function defineUrl(_hljs) {
     begin: [
       /\b[a-zA-Z][a-zA-Z0-9+.-]*:(?:\/\/)?/,
       /(?:[^/\s?#@]+@)?[^/\s?#:]*/,
-      /(?::\d+)?/,
+      // Ports are 1–5 digits. A longer `:`+digits run is a URN NSS
+      // (`urn:isbn:0451450523`), not a TCP port.
+      /(?::\d{1,5}(?!\d))?/,
     ],
     beginScope: { 1: "meta", 2: "link", 3: "number" },
     relevance: 5,
