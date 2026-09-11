@@ -109,6 +109,9 @@ function defineCisco(hljs) {
     aliases: ["ios", "cisco-ios"],
     case_insensitive: true,
     keywords: {
+      // Hyphenated commands (`access-list`, `snmp-server`, `route-map`, …)
+      // never matched under the default `\w+` tokenizer.
+      $pattern: "[a-zA-Z][\\w-]*",
       keyword: CISCO_KEYWORDS,
       built_in: CISCO_BUILT_INS,
     },
