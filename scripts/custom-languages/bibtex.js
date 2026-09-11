@@ -25,8 +25,17 @@ function defineBibtex(hljs) {
   };
 
   const ENTRY = {
-    begin: [/@[a-zA-Z]+/, /\{/, /\s*/, /[^\s,}]+/],
+    begin: [/@[a-zA-Z]+/, /\{/, /\s*/, /[A-Za-z0-9][^\s,}]*/],
     beginScope: { 1: "keyword", 4: "title" },
+    relevance: 0,
+  };
+
+  // `@preamble` / `@comment` have no citation key; the keyed ENTRY
+  // above would otherwise fail to match them (or, with a looser title
+  // pattern, swallow a quoted value as the title).
+  const BARE_ENTRY = {
+    begin: [/@[a-zA-Z]+/, /\{/],
+    beginScope: { 1: "keyword" },
     relevance: 0,
   };
 
@@ -34,7 +43,7 @@ function defineBibtex(hljs) {
     name: "BibTeX",
     aliases: ["bibtex", "bib"],
     case_insensitive: true,
-    contains: [hljs.COMMENT(/%/, /$/), ENTRY, FIELD],
+    contains: [hljs.COMMENT(/%/, /$/), ENTRY, BARE_ENTRY, FIELD, QUOTED_VALUE],
   };
 }
 
