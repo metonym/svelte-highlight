@@ -13,6 +13,14 @@ function defineAngular(hljs) {
     relevance: 10,
   };
 
+  // `@let name = expr;` (Angular 18.1, stable in 19). The declared name is
+  // captured in the same bounded match so nothing after `=` is touched.
+  const letDeclaration = {
+    begin: [/@let\b/, /\s+/, /[A-Za-z_$][\w$]*/],
+    beginScope: { 1: "keyword", 3: "variable" },
+    relevance: 10,
+  };
+
   const structuralDirective = {
     begin: /\*[\w-]+/,
     className: "keyword",
@@ -57,6 +65,7 @@ function defineAngular(hljs) {
     subLanguage: "html",
     contains: [
       hljs.COMMENT(/<!--/, /-->/, { relevance: 10 }),
+      letDeclaration,
       controlFlow,
       structuralDirective,
       twoWayBinding,
