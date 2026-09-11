@@ -92,3 +92,35 @@ test("nushell highlights raw strings without treating them as comments", () => {
   );
   expect(result).not.toContain("hljs-comment");
 });
+
+test("nushell highlights hex, binary, and octal integers", () => {
+  const result = highlight("let m = 0x1F + 0b101 + 0o17 + 0xdead_beef");
+
+  expect(result).toContain('<span class="hljs-number">0x1F</span>');
+  expect(result).toContain('<span class="hljs-number">0b101</span>');
+  expect(result).toContain('<span class="hljs-number">0o17</span>');
+  expect(result).toContain('<span class="hljs-number">0xdead_beef</span>');
+});
+
+test("nushell highlights date and datetime literals as one token", () => {
+  const result = highlight(
+    "let d = 2024-01-01\nlet t = 2024-01-01T00:00:00Z\nlet z = 2024-01-01T12:30:00.5+02:00",
+  );
+
+  expect(result).toContain('<span class="hljs-number">2024-01-01</span>');
+  expect(result).toContain(
+    '<span class="hljs-number">2024-01-01T00:00:00Z</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-number">2024-01-01T12:30:00.5+02:00</span>',
+  );
+});
+
+test("nushell highlights a quoted command name as a single title", () => {
+  const result = highlight('def "my cmd" [name: string] { $name }');
+
+  expect(result).toContain(
+    '<span class="hljs-title function_">&quot;my cmd&quot;</span>',
+  );
+  expect(result).not.toContain('<span class="hljs-title function_">my</span>');
+});
