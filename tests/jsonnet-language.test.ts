@@ -56,3 +56,41 @@ test("jsonnet highlights verbatim strings with doubled-quote escapes", () => {
     '<span class="hljs-string">@&quot;say &quot;&quot;hi&quot;&quot;&quot;</span>',
   );
 });
+
+test("jsonnet highlights any std member as a built-in", () => {
+  const result = highlight(
+    "local e = std.extVar('env');\n{ t: std.trim(' x '), s: std.sha256('a'), m: std.manifestToml({}) }",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-built_in">std</span>.<span class="hljs-built_in">extVar</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-built_in">std</span>.<span class="hljs-built_in">trim</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-built_in">std</span>.<span class="hljs-built_in">manifestToml</span>',
+  );
+});
+
+test("jsonnet leaves fields that share a std function's name plain", () => {
+  const result = highlight(
+    "{ type: 'ClusterIP', format: 'json', length: 3, lib: std }",
+  );
+
+  expect(result).toContain("{ type: <span");
+  expect(result).toContain(", format: <span");
+  expect(result).toContain(", length: <span");
+  expect(result).not.toContain('<span class="hljs-built_in">type</span>');
+  expect(result).toContain('lib: <span class="hljs-built_in">std</span> }');
+});
+
+test("jsonnet highlights the $ root reference as a literal", () => {
+  const result = highlight("{ a: $.name, b: self.name, c: '$notroot' }");
+
+  expect(result).toContain('<span class="hljs-literal">$</span>.name');
+  expect(result).toContain('<span class="hljs-literal">self</span>.name');
+  expect(result).toContain(
+    '<span class="hljs-string">&#x27;$notroot&#x27;</span>',
+  );
+});

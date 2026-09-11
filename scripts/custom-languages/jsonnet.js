@@ -3,8 +3,10 @@ const JSONNET_KEYWORDS =
 
 const JSONNET_LITERALS = "true false null self super";
 
-const JSONNET_BUILTINS =
-  "std length type makeArray join split format substr foldl foldr map filter mapWithKey objectFields objectHas mergePatch manifestJson manifestYamlDoc parseJson parseYaml toString prune range";
+// Only the `std` object itself is a bare built-in; its functions are styled
+// through STD_CALL (`std.<name>`) so that a field or parameter that shares a
+// function's name (`type: 'ClusterIP'`, `format: 'json'`) stays plain.
+const JSONNET_BUILTINS = "std";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineJsonnet(hljs) {
@@ -41,6 +43,23 @@ function defineJsonnet(hljs) {
     relevance: 0,
   };
 
+  // Any `std.<name>` is a standard-library call; the std library grows every
+  // release (`std.trim`, `std.sha256`, `std.manifestToml` in 0.20), so the
+  // member is matched by shape rather than by a list.
+  const STD_CALL = {
+    begin: [/\bstd\b/, /\./, /[a-zA-Z_]\w*/],
+    beginScope: { 1: "built_in", 3: "built_in" },
+    relevance: 0,
+  };
+
+  // `$` is the outermost-object reference, the third of the `self`/`super`
+  // trio, and can't be a keyword-table entry because it isn't a word.
+  const ROOT_REF = {
+    className: "literal",
+    begin: /\$/,
+    relevance: 0,
+  };
+
   return {
     name: "Jsonnet",
     aliases: ["jsonnet", "libsonnet"],
@@ -56,6 +75,8 @@ function defineJsonnet(hljs) {
       TEXT_BLOCK,
       STRING,
       FUNCTION,
+      STD_CALL,
+      ROOT_REF,
       FIELD_VISIBILITY,
       NUMBER,
     ],
