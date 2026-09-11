@@ -51,10 +51,22 @@ function defineV(hljs) {
     ],
   };
 
+  // `@[heap; noinit]` is the attribute form since V 0.4.3; the bare
+  // `[inline]` line form is the deprecated spelling it replaced.
   const ATTRIBUTE = {
     className: "meta",
-    begin: /^\s*\[[a-zA-Z_]/,
-    end: /\]/,
+    variants: [
+      { begin: /@\[/, end: /\]/ },
+      { begin: /^[ \t]*\[[a-zA-Z_]/, end: /\]/ },
+    ],
+    relevance: 0,
+  };
+
+  // C-interop directives: `#include <stdio.h>`, `#flag -lm`, `#pkgconfig`.
+  const DIRECTIVE = {
+    className: "meta",
+    begin: /^[ \t]*#(?:include|flag|pkgconfig|preinclude|insert)\b/,
+    end: /$/,
     relevance: 0,
   };
 
@@ -67,6 +79,22 @@ function defineV(hljs) {
     className: "type",
     begin: /\b[A-Z]\w*/,
     relevance: 0,
+  };
+
+  // Methods: `fn (p &Point) scale(k int)`. The lookahead pins the shape
+  // (receiver, then a name followed by its parameter or generic list), so an
+  // anonymous function `fn (x int) int { ... }` does not match. The receiver
+  // keeps its own type styling; the name after it is the title.
+  const METHOD = {
+    begin: [/\bfn/, /\s+/, /(?=\([^)]*\)\s+[a-z_]\w*\s*[([])/],
+    beginScope: { 1: "keyword" },
+    end: /\)/,
+    keywords: { keyword: "mut shared", type: V_TYPES },
+    contains: [TYPE],
+    starts: {
+      end: /(?=[([])/,
+      contains: [{ className: "title.function", begin: /[a-z_]\w*/ }],
+    },
   };
 
   const COMPTIME_KEYWORD = {
@@ -94,7 +122,9 @@ function defineV(hljs) {
       hljs.C_BLOCK_COMMENT_MODE,
       COMPTIME_KEYWORD,
       ATTRIBUTE,
+      DIRECTIVE,
       STRING,
+      METHOD,
       FUNCTION,
       TYPE,
       OPTION_TYPE,

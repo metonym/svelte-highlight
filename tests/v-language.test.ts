@@ -76,3 +76,39 @@ test("v does not process escapes or interpolation inside raw strings", () => {
   // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
   expect(plain).toContain('<span class="hljs-subst">${name}</span>');
 });
+
+test("v highlights @[...] attributes and C directives", () => {
+  const result = highlight(
+    "#include <stdio.h>\n#flag -lm\n\n@[heap; noinit]\npub struct Point { x int }\n\n@[params]\nstruct Config {}\n\n[inline]\nfn old() {}\nnums := [1, 2]\n",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-meta">#include &lt;stdio.h&gt;</span>',
+  );
+  expect(result).toContain('<span class="hljs-meta">#flag -lm</span>');
+  expect(result).toContain('<span class="hljs-meta">@[heap; noinit]</span>');
+  expect(result).toContain('<span class="hljs-meta">@[params]</span>');
+  expect(result).toContain('<span class="hljs-meta">[inline]</span>');
+  // An array literal is not an attribute.
+  expect(result).toContain(
+    'nums := [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]',
+  );
+});
+
+test("v highlights method names after a receiver", () => {
+  const result = highlight(
+    "fn (p &Point) scale(k int) Point { return p }\nfn (mut s Stack[T]) push[T](x T) {}\nsq := fn (x int) int { return x * x }",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">fn</span> (p &amp;<span class="hljs-type">Point</span>) <span class="hljs-title function_">scale</span>(k <span class="hljs-type">int</span>)',
+  );
+  expect(result).toContain(
+    '(<span class="hljs-keyword">mut</span> s <span class="hljs-type">Stack</span>[<span class="hljs-type">T</span>]) <span class="hljs-title function_">push</span>[',
+  );
+  // An anonymous function literal has no name to style.
+  expect(result).toContain(
+    '<span class="hljs-keyword">fn</span> (x <span class="hljs-type">int</span>) <span class="hljs-type">int</span> {',
+  );
+  expect(result).not.toContain('hljs-title function_">int');
+});
