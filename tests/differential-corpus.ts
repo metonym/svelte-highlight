@@ -782,7 +782,11 @@ flowchart LR
     participant Alice
     Alice->>Bob: Hello
 `,
-  mdx: `import { Chart } from "./chart";
+  mdx: `---
+title: Hello
+tags: [a, b]
+---
+import { Chart } from "./chart";
 
 # Hello MDX
 

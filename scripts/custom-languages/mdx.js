@@ -1,6 +1,7 @@
 import cssRegister from "highlight.js/lib/languages/css";
 import javascriptRegister from "highlight.js/lib/languages/javascript";
 import typescriptRegister from "highlight.js/lib/languages/typescript";
+import yamlRegister from "highlight.js/lib/languages/yaml";
 import html from "./html.js";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
@@ -9,15 +10,37 @@ function defineMdx(hljs) {
     name: "MDX",
     aliases: ["mdx"],
     contains: [
+      {
+        // YAML frontmatter (remark-frontmatter), only at the very start of
+        // the document. Same shape as astro's frontmatter: `returnEnd` hands
+        // the closing fence to the sibling "meta" rule below.
+        begin: /^---[ \t]*\n/,
+        end: /^---[ \t]*$/m,
+        subLanguage: "yaml",
+        beginScope: "meta",
+        returnEnd: true,
+        relevance: 50,
+        /** @type {import("highlight.js").ModeCallback} */
+        "on:begin": (match, response) => {
+          if (match.index !== 0) {
+            response.ignoreMatch();
+          }
+        },
+      },
+      {
+        begin: /^---[ \t]*$/m,
+        className: "meta",
+        relevance: 0,
+      },
       hljs.COMMENT(/<!--/, /-->/, { relevance: 10 }),
       {
         // ESM import/export statements often omit the trailing semicolon
-        // (ASI). Bound the match so a missing `;` can't run away and
-        // consume the rest of the document: stop at a semicolon-terminated
-        // line as before, but fall back to a blank line or the next
-        // Markdown heading, whichever comes first.
+        // (ASI). Close on a semicolon at EOL, or on an EOL that isn't a JS
+        // continuation (`{`, `,`, `(`, `[`, `\`, `.`). Use `[ \t]` rather
+        // than `\s` so a streaming batch that ends on the next blank line
+        // cannot let `$` eat that newline (`\s` includes `\n`).
         begin: /^(?:import|export)\b/m,
-        end: /;\s*$|\n[ \t]*\n|(?=^#{1,6}\s)/m,
+        end: /;[ \t]*$|[^ \t,{([\\.\n][ \t]*$/m,
         subLanguage: "javascript",
         relevance: 100,
       },
@@ -132,6 +155,7 @@ function register(hljs) {
   hljs.registerLanguage("javascript", javascriptRegister);
   hljs.registerLanguage("typescript", typescriptRegister);
   hljs.registerLanguage("css", cssRegister);
+  hljs.registerLanguage("yaml", yamlRegister);
   return defineMdx(hljs);
 }
 

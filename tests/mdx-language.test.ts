@@ -200,3 +200,26 @@ test("mdx falls back to plain code styling for unsupported fence languages", () 
   expect(result).not.toContain("language-");
   expect(result).toContain("echo hi");
 });
+
+test("mdx highlights YAML frontmatter at the start of the document", () => {
+  registerAll(registry, mdx);
+
+  const result = registry.highlight(
+    "---\ntitle: Hello\ntags: [a, b]\n---\n\n# Heading",
+    { language: "mdx" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-meta">---');
+  expect(result).toContain('<span class="hljs-attr">title:</span>');
+  expect(result).toContain('<span class="hljs-section"># </span>Heading');
+});
+
+test("mdx does not open frontmatter at a --- mid-document", () => {
+  registerAll(registry, mdx);
+
+  const result = registry.highlight("# Heading\n\n---\n\ntitle: not yaml", {
+    language: "mdx",
+  }).value;
+
+  expect(result).not.toContain("hljs-attr");
+});
