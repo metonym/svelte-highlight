@@ -52,3 +52,24 @@ test("hocon highlights literals and comments", () => {
   expect(result).toContain('<span class="hljs-comment"># a comment</span>');
   expect(result).toContain('<span class="hljs-literal">true</span>');
 });
+
+test("hocon highlights quoted keys as attrs and leaves quoted values as strings", () => {
+  const result = highlight('"akka.http" { timeout = 30s }\nname = "plain"');
+
+  expect(result).toContain(
+    '<span class="hljs-attr">&quot;akka.http&quot;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;plain&quot;</span>',
+  );
+  expect(result).not.toContain(
+    '<span class="hljs-attr">&quot;plain&quot;</span>',
+  );
+});
+
+test("hocon still matches a key followed by +=", () => {
+  const result = highlight("db.retries += 1");
+
+  expect(result).toContain('<span class="hljs-attr">db.retries</span>');
+  expect(result).toContain('<span class="hljs-operator">+=</span>');
+});
