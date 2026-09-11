@@ -51,3 +51,16 @@ test("url highlights the fragment as a symbol", () => {
 
   expect(result).toContain('<span class="hljs-symbol">#installation</span>');
 });
+
+test("url does not treat a URN NSS colon-digits run as a port", () => {
+  const result = highlight("urn:isbn:0451450523");
+
+  expect(result).toContain('<span class="hljs-meta">urn:</span>');
+  expect(result).not.toContain('<span class="hljs-number">:0451450523</span>');
+});
+
+test("url still highlights a real TCP port", () => {
+  const result = highlight("https://example.com:8443/path");
+
+  expect(result).toContain('<span class="hljs-number">:8443</span>');
+});
