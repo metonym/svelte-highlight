@@ -119,6 +119,71 @@ function defineMarko(hljs) {
     ],
   };
 
+  // Top-level `import` / `export` / `static` statements and the `$ ` inline
+  // form are JavaScript lines. Without this the concise-tag rule read
+  // `export const limit = 1;` as a tag named `export` (the line carries an
+  // `=`) and left `import ...` as plain text.
+  const markoTopLevelStatement = {
+    begin: /^(?=(?:import|export|static)\b|\$\s)/m,
+    end: /$/,
+    subLanguage: "javascript",
+    relevance: 0,
+  };
+
+  // Everything after a tag name is the same grammar in HTML and concise
+  // mode, so the HTML-mode tag below reuses the concise attribute rules.
+  // The one difference is that an unquoted value ends at the tag's own `>`
+  // as well (`<if=count>`); in concise mode `>` is never a terminator.
+  // Fresh objects per use: hljs bakes `endsWithParent` into the first parent
+  // a mode is compiled under.
+  const markoHtmlAttrValue = {
+    ...markoConciseAttrValue,
+    end: /(?=[\s/>)]|--|$)/,
+  };
+
+  const createTagBody = () => ({
+    endsWithParent: true,
+    relevance: 0,
+    contains: [
+      // `<let/count=0/>` tag variable (Marko 6), `<div/ref>`.
+      { className: "variable", begin: /\/[a-zA-Z_$][\w$]*/ },
+      // `<for|item, i| of=items>` tag parameters.
+      { className: "params", begin: /\|/, end: /\|/ },
+      markoEventAttribute,
+      markoConciseAttrArgs,
+      markoConciseAttrName,
+      markoHtmlAttrValue,
+    ],
+  });
+
+  // Marko-only tag heads the html sublanguage cannot parse, so they used to
+  // render as plain text: `<if=cond>`, `<for|item| of=items>`, tag
+  // variables `<let/count=0/>`, attribute tags `<@then|user|>` and
+  // `<div.card#main>` shorthand. Ordinary `<div class="x">` tags never
+  // match the lookahead and stay with the html sublanguage.
+  const markoHtmlTag = {
+    className: "tag",
+    // biome-ignore lint/complexity/useRegexLiterals: `(?=` and `[|=(]` in this lookahead confuse biome's regex-literal rewriter
+    begin: new RegExp(
+      String.raw`<\/?(?=@|(?:if|else-if|else|for|while)\b|[a-zA-Z][\w-]*(?:[.#][\w-]+|\/[a-zA-Z_$]|[|=(]))`,
+    ),
+    end: /\/?>/,
+    relevance: 5,
+    contains: [
+      {
+        className: "keyword",
+        begin: /(?:if|else-if|else|for|while)\b/,
+        starts: createTagBody(),
+      },
+      {
+        className: "name",
+        begin: new RegExp(`@?${MARKO_TAG_NAME}`),
+        relevance: 0,
+        starts: createTagBody(),
+      },
+    ],
+  };
+
   return {
     name: "Marko",
     subLanguage: "html",
@@ -141,8 +206,11 @@ function defineMarko(hljs) {
         excludeEnd: true,
       },
       {
-        begin: /^(\s*)(<style[^>]*>)/gm,
-        end: /^(\s*)(<\/style>)/gm,
+        // Not anchored to line starts: `<style>.a { }</style>` on one line
+        // is valid, and an anchored `end` never matched it, so the css mode
+        // swallowed the rest of the document.
+        begin: /<style[^>]*>/,
+        end: /<\/style>/,
         subLanguage: "css",
         excludeBegin: true,
         excludeEnd: true,
@@ -161,6 +229,8 @@ function defineMarko(hljs) {
         excludeEnd: true,
         relevance: 100,
       },
+      markoTopLevelStatement,
+      markoHtmlTag,
       markoConciseTag,
     ],
   };
