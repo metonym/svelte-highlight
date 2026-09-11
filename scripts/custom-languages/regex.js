@@ -109,6 +109,18 @@ function defineRegex() {
     relevance: 0,
   };
 
+  const ESCAPE_UNICODE = {
+    className: "built_in",
+    begin: /\\u\{[0-9A-Fa-f]+\}|\\u[0-9A-Fa-f]{4}/,
+    relevance: 0,
+  };
+
+  const ESCAPE_CONTROL = {
+    className: "built_in",
+    begin: /\\c[A-Za-z]/,
+    relevance: 0,
+  };
+
   const ESCAPE_CLASS = {
     className: "built_in",
     begin: /\\[dwsbBDWSAzZGnt]/,
@@ -153,6 +165,8 @@ function defineRegex() {
       META_CHAR,
       UNICODE_PROP,
       ESCAPE_HEX,
+      ESCAPE_UNICODE,
+      ESCAPE_CONTROL,
       ESCAPE_CLASS,
       BACKREF_NAMED,
       BACKREF_NUMBERED,
