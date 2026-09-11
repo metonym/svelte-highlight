@@ -37,7 +37,25 @@ function defineCedar(hljs) {
   const SET = {
     begin: /\[/,
     end: /\]/,
-    contains: [STRING, NUMBER],
+    contains: [ENTITY_UID, STRING, NUMBER],
+    relevance: 0,
+  };
+
+  const OPERATOR = {
+    className: "operator",
+    begin: /&&|\|\||==|!=|\?\?/,
+    relevance: 0,
+  };
+
+  const SLOT = {
+    className: "variable",
+    begin: /\?(?:principal|resource)\b/,
+    relevance: 0,
+  };
+
+  const BUILT_IN = {
+    className: "built_in",
+    begin: /\b(?:ip|datetime|duration|decimal)\b(?=\s*\()/,
     relevance: 0,
   };
 
@@ -48,7 +66,16 @@ function defineCedar(hljs) {
       keyword: CEDAR_KEYWORDS,
       literal: CEDAR_LITERALS,
     },
-    contains: [COMMENT, ENTITY_UID, STRING, SET, NUMBER],
+    contains: [
+      COMMENT,
+      SLOT,
+      ENTITY_UID,
+      STRING,
+      SET,
+      BUILT_IN,
+      OPERATOR,
+      NUMBER,
+    ],
   };
 }
 

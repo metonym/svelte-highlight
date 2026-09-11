@@ -48,3 +48,36 @@ unless { context.mfa == false };
   expect(result).toContain('<span class="hljs-keyword">context</span>');
   expect(result).toContain('<span class="hljs-literal">false</span>');
 });
+
+test("cedar highlights entity UIDs inside sets and template slots", () => {
+  const result = highlight(
+    'permit (principal is User in ?principal, action, resource) when { principal in [User::"alice", User::"bob"] };',
+  );
+
+  expect(result).toContain('<span class="hljs-variable">?principal</span>');
+  expect(result).toContain('<span class="hljs-title class_">User::</span>');
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;alice&quot;</span>',
+  );
+});
+
+test("cedar highlights datetime/ip constructors and ?? without restyling permit", () => {
+  const result = highlight(
+    'permit (principal, action, resource) when { ip(context.ip) && datetime("2026-01-01T00:00:00Z") && context.dept ?? "eng" };',
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">ip</span>');
+  expect(result).toContain('<span class="hljs-built_in">datetime</span>');
+  expect(result).toContain('<span class="hljs-operator">&amp;&amp;</span>');
+  expect(result).toContain('<span class="hljs-operator">??</span>');
+  expect(result).toContain('<span class="hljs-keyword">permit</span>');
+});
+
+test("cedar does not treat ip as a builtin except as a call", () => {
+  const result = highlight('when { context.ip == ip("10.0.0.1") };');
+
+  expect(result).toContain('<span class="hljs-built_in">ip</span>(');
+  expect(result).not.toContain(
+    '<span class="hljs-keyword">context</span>.<span class="hljs-built_in">ip</span>',
+  );
+});

@@ -230,7 +230,10 @@ permit (
   action == Action::"viewPhoto",
   resource
 )
-when { resource.owner == principal };
+when {
+  resource.owner == principal &&
+  principal in [User::"alice", User::"bob"]
+};
 
 forbid (principal, action, resource)
 unless { context.mfa == false };
