@@ -1838,6 +1838,8 @@
 
 ## javascript (`javascript`)
 
+> Exported from highlight.js with svelte-highlight patches on top (see `scripts/hljs-patches/javascript.js`)
+
 ```html
 <script>
   // direct import (recommended)
