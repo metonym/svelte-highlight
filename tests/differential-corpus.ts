@@ -500,6 +500,10 @@ digraph pipeline {
   haproxy: `global
     log stdout format raw local0
     maxconn 4096
+    setenv API_PORT 8080
+    .if defined(ENABLE_H3)
+    .notice "http3 enabled"
+    .endif
 
 defaults
     mode http
