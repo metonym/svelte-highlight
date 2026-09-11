@@ -533,6 +533,10 @@ data:
     <li>{post.title}</li>
   <% end %>
 </.card>
+<style>.card { color: red; }</style>
+<script src={~p"/assets/app.js"}>
+  function f() { return <%= @count %>; }
+</script>
 `,
   hlsl: `// vertex shader entry point
 #define MAX_LIGHTS 4

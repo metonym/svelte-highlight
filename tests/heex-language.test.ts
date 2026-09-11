@@ -113,3 +113,37 @@ test("heex balances a nested map literal inside an interpolation", () => {
   expect(result).toContain('<span class="hljs-symbol">a:</span>');
   expect(result).toContain('<span class="hljs-symbol">b:</span>');
 });
+
+test("heex keeps braces inside <style> and <script> bodies out of Elixir", () => {
+  const result = highlight(
+    "<style>\n  .card { color: red; }\n</style>\n<script>\n  function f() { return {a: 1}; }\n</script>\n<p>{@count}</p>",
+  );
+
+  expect(result).toContain('<span class="language-css">');
+  expect(result).toContain('<span class="language-javascript">');
+  expect(result).toContain('<span class="hljs-name">style</span>');
+  expect(result).toContain('<span class="hljs-name">script</span>');
+  expect(result).not.toContain('<span class="language-elixir">{ ');
+  expect(result).not.toContain('<span class="hljs-symbol">color:</span>');
+  expect(result).not.toContain('<span class="hljs-symbol">a:</span>');
+  // Body interpolation outside those tags is unchanged.
+  expect(result).toContain(
+    '<span class="language-elixir">{<span class="hljs-variable">@count</span>}</span>',
+  );
+});
+
+test("heex still interpolates EEx tags and attributes on raw-text tags", () => {
+  const result = highlight(
+    '<script src={~p"/assets/app.js"} defer>\n  const n = <%= @count %>;\n</script>',
+  );
+
+  expect(result).toContain('<span class="hljs-attr">src</span>');
+  expect(result).toContain(
+    '<span class="hljs-string">~p&quot;/assets/app.js&quot;</span>',
+  );
+  expect(result).toContain('<span class="hljs-attr">defer</span>');
+  expect(result).toContain(
+    '<span class="language-elixir">&lt;%= <span class="hljs-variable">@count</span> %&gt;</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">const</span>');
+});
