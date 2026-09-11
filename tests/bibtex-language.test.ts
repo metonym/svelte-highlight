@@ -40,3 +40,23 @@ test("bibtex highlights the citation key as a title", () => {
   expect(result).toContain('<span class="hljs-keyword">@article</span>');
   expect(result).toContain('<span class="hljs-title">einstein1905</span>');
 });
+
+test("bibtex highlights a quoted @preamble value instead of treating it as a key", () => {
+  const result = highlight('@preamble{"foo {bar} baz"}');
+
+  expect(result).toContain('<span class="hljs-keyword">@preamble</span>');
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;foo {bar} baz&quot;</span>',
+  );
+  expect(result).not.toContain('<span class="hljs-title">');
+});
+
+test("bibtex still highlights a keyed @string name and its quoted value", () => {
+  const result = highlight('@string{jgr = "J. Geophys. Res."}');
+
+  expect(result).toContain('<span class="hljs-keyword">@string</span>');
+  expect(result).toContain('<span class="hljs-title">jgr</span>');
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;J. Geophys. Res.&quot;</span>',
+  );
+});
