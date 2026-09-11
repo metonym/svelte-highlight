@@ -182,6 +182,7 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
 const HLJS_PATCH_NAMES = [
   "c",
   "csharp",
+  "dart",
   "go",
   "java",
   "javascript",
