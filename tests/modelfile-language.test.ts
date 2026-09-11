@@ -42,3 +42,18 @@ test("modelfile is case-insensitive for instructions", () => {
 
   expect(result).toContain('<span class="hljs-keyword">from</span>');
 });
+
+test("modelfile highlights FROM model tags without splitting dotted versions", () => {
+  const result = highlight("FROM llama3.2:latest");
+
+  expect(result).toContain('<span class="hljs-keyword">FROM</span>');
+  expect(result).toContain('<span class="hljs-string">llama3.2:latest</span>');
+  expect(result).not.toContain('<span class="hljs-number">.2</span>');
+});
+
+test("modelfile still highlights numbers on PARAMETER lines", () => {
+  const result = highlight("PARAMETER temperature 0.7");
+
+  expect(result).toContain('<span class="hljs-keyword">PARAMETER</span>');
+  expect(result).toContain('<span class="hljs-number">0.7</span>');
+});

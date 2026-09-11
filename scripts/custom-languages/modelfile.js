@@ -40,6 +40,15 @@ function defineModelfile(hljs) {
     relevance: 5,
   };
 
+  const FROM_LINE = {
+    begin: [/^FROM\b/, /\s+/, /[^\n]+/],
+    beginScope: { 1: "keyword", 3: "string" },
+    // Keep this at 0: `from employees` in PRQL is a FROM line under
+    // case-insensitive matching, and relevance 5 made Modelfile win
+    // auto-detect on PRQL samples. PARAMETER/MESSAGE still score 5.
+    relevance: 0,
+  };
+
   const INSTRUCTION = {
     className: "keyword",
     begin: new RegExp(`^(?:${MODELFILE_INSTRUCTIONS})\\b`),
@@ -56,6 +65,7 @@ function defineModelfile(hljs) {
       STRING,
       PARAMETER_LINE,
       MESSAGE_LINE,
+      FROM_LINE,
       INSTRUCTION,
       hljs.C_NUMBER_MODE,
     ],
