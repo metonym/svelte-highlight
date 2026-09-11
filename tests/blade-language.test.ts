@@ -104,3 +104,54 @@ test("blade highlights @php blocks as PHP even when not at the start of the file
   expect(result).toContain('<span class="hljs-keyword">@php</span>');
   expect(result).toContain('<span class="hljs-keyword">@endphp</span>');
 });
+
+test("blade treats inline @php(...) as a directive, not a block opener", () => {
+  const result = highlight(
+    "@php($count = 1)\n<p>{{ $count }}</p>\n@php\n  $x = 2;\n@endphp\n<p>{{ $x }}</p>",
+  );
+
+  // Both echoes stay Blade echoes: the inline form must not swallow the
+  // markup between it and the real block's `@endphp`.
+  expect(result).toContain(
+    '<span class="hljs-template-variable">{{ <span class="hljs-variable">$count</span> }}</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-template-variable">{{ <span class="hljs-variable">$x</span> }}</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">@php</span><span class="language-php">',
+  );
+  expect(result).toContain('<span class="hljs-keyword">@endphp</span>');
+});
+
+test("blade styles a same-line @endphp as a keyword", () => {
+  const result = highlight("<p>@php $x = 1; @endphp</p>");
+
+  expect(result).toContain("language-php");
+  expect(result).toContain('<span class="hljs-keyword">@endphp</span>');
+});
+
+test("blade keeps @verbatim bodies as plain markup", () => {
+  const result = highlight(
+    "@verbatim\n  <div>{{ raw }} @if</div>\n@endverbatim\n{{ $real }} @endverbatim",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">@verbatim</span>');
+  expect(result).toContain('<span class="hljs-keyword">@endverbatim</span>');
+  expect(result).not.toContain(
+    '<span class="hljs-template-variable">{{ raw }}</span>',
+  );
+  expect(result).not.toContain('<span class="hljs-keyword">@if</span>');
+  expect(result).toContain(
+    '<span class="hljs-template-variable">{{ <span class="hljs-variable">$real</span> }}</span>',
+  );
+});
+
+test("blade styles escaped @@directives as meta", () => {
+  const result = highlight("@@if(true) @if($x) foo@@bar @endif");
+
+  expect(result).toContain('<span class="hljs-meta">@@if</span>');
+  expect(result).toContain('<span class="hljs-keyword">@if</span>');
+  expect(result).toContain('<span class="hljs-keyword">@endif</span>');
+  expect(result).not.toContain('<span class="hljs-meta">@@bar</span>');
+});

@@ -55,19 +55,46 @@ function defineBlade(hljs) {
     relevance: 10,
   };
 
+  // `@@if` is the same escape hatch for a directive name: it renders a
+  // literal `@if`, so style it like ESCAPED_ECHO rather than as a keyword.
+  const ESCAPED_DIRECTIVE = {
+    begin: [/(?:^|[^\w@])/, /@@[a-zA-Z]\w*/],
+    beginScope: { 2: "meta" },
+    relevance: 0,
+  };
+
+  // `@verbatim ... @endverbatim` emits its body untouched, so the `{{ }}`
+  // inside it is plain markup, not a Blade echo. Same prefix-capture shape as
+  // PHP_BLOCK, for the same reason.
+  const VERBATIM_BLOCK = {
+    begin: [/(?:^|[^\w@])/, /@verbatim\b/],
+    beginScope: { 2: "keyword" },
+    starts: {
+      end: /@endverbatim\b/,
+      endScope: "keyword",
+      subLanguage: "xml",
+    },
+  };
+
   // `@php ... @endphp` embeds a real PHP statement block. Highlight the
-  // body with the full `php` grammar and hand `@endphp` back to DIRECTIVE
-  // so it's styled the same as every other Blade directive.
+  // body with the full `php` grammar and style the `@endphp` closer here:
+  // handing it back to DIRECTIVE only worked when it sat at a line start,
+  // because a same-line `; @endphp` had its prefix space eaten by the block.
   //
   // Must consume the same optional prefix character as DIRECTIVE below: both
   // match `@php`, so without this, DIRECTIVE's match (which starts one
   // character earlier whenever `@php` isn't at the very start of the file)
   // would win by earliest-start-position and this mode would never fire.
+  //
+  // The lookahead keeps the inline `@php($x = 1)` form out: it is a single
+  // directive, not a block opener, and without the check it swallowed
+  // everything up to the next `@endphp` in the file.
   const PHP_BLOCK = {
-    begin: [/(?:^|[^\w@])/, /@php\b/],
+    begin: [/(?:^|[^\w@])/, /@php\b(?![ \t]*\()/],
     beginScope: { 2: "keyword" },
     starts: {
-      end: /(?=@endphp\b)/,
+      end: /@endphp\b/,
+      endScope: "keyword",
       subLanguage: "php",
     },
   };
@@ -79,7 +106,9 @@ function defineBlade(hljs) {
     contains: [
       COMMENT,
       ESCAPED_ECHO,
+      ESCAPED_DIRECTIVE,
       PHP_BLOCK,
+      VERBATIM_BLOCK,
       DIRECTIVE,
       RAW_ECHO,
       ECHO,
