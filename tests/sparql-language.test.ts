@@ -92,3 +92,17 @@ test("sparql highlights a lang-tagged and a datatype-tagged literal", () => {
   expect(result).toContain('<span class="hljs-string">&quot;30&quot;</span>');
   expect(result).toContain('<span class="hljs-symbol">xsd:integer</span>');
 });
+
+test("sparql highlights ^^ as a single datatype-constructor operator", () => {
+  const result = highlight('?person foaf:age "30"^^xsd:integer .');
+
+  expect(result).toContain('<span class="hljs-operator">^^</span>');
+  expect(result).toContain('<span class="hljs-symbol">xsd:integer</span>');
+});
+
+test("sparql still highlights inverse-path ^ separately from ^^", () => {
+  const result = highlight("?person ^rdf:type ?class .");
+
+  expect(result).toContain('<span class="hljs-operator">^</span>');
+  expect(result).not.toContain('<span class="hljs-operator">^^</span>');
+});
