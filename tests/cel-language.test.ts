@@ -34,3 +34,25 @@ test("cel highlights line comments and numbers", () => {
   expect(result).toContain('<span class="hljs-comment">// check quota</span>');
   expect(result).toContain('<span class="hljs-number">100u</span>');
 });
+
+test("cel highlights case-insensitive raw and bytes string prefixes", () => {
+  const result = highlight(`R"path" B'bytes' bR"both"`);
+
+  expect(result).toContain(
+    '<span class="hljs-string">R&quot;path&quot;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">B&#x27;bytes&#x27;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">bR&quot;both&quot;</span>',
+  );
+});
+
+test("cel highlights optional field access and leaves list literals plain", () => {
+  const result = highlight("request.?auth && items[0] == [1, 2]");
+
+  expect(result).toContain('<span class="hljs-property">.?auth</span>');
+  expect(result).not.toContain('<span class="hljs-property">[0]</span>');
+  expect(result).not.toContain('<span class="hljs-property">[1, 2]</span>');
+});
