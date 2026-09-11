@@ -61,3 +61,25 @@ test("dotenv highlights variable references inside double quotes", () => {
   // biome-ignore lint/suspicious/noTemplateCurlyInString: asserting the literal ${PORT} token
   expect(result).toContain('<span class="hljs-variable">${PORT}</span>');
 });
+
+test("dotenv highlights backtick-quoted values as strings", () => {
+  const result = highlight(
+    "KEY=`has 'single' and \"double\" quotes`\nNEXT=plain",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-string">`has &#x27;single&#x27; and &quot;double&quot; quotes`</span>',
+  );
+  expect(result).toContain('<span class="hljs-attr">NEXT</span>');
+});
+
+test("dotenv expands variables inside backticks but not single quotes", () => {
+  const result = highlight("A=`$HOME/x`\nB='$HOME/x'");
+
+  expect(result).toContain(
+    '<span class="hljs-string">`<span class="hljs-variable">$HOME</span>/x`</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">&#x27;$HOME/x&#x27;</span>',
+  );
+});
