@@ -817,7 +817,17 @@ class {
   if (state.visible)
     h1 -- \${input.title}
     button on-click("increment") -- Count: \${state.count}
-</div>`,
+</div>
+import { format } from "./utils";
+export const limit = 10;
+<let/count=0/>
+<if=count>
+  <for|item, i| of=items by="id">
+    <@then|user|>\${user.name}</@then>
+  </for>
+</if>
+<div.card#main data-x="1">hi</div>
+<style>.card { color: red; }</style>`,
   mermaid: `%% request flow
 flowchart LR
   A[Client] --> B{API}

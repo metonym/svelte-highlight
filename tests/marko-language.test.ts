@@ -223,3 +223,97 @@ test("html alone does not highlight marko expressions", () => {
 
   expect(result).not.toContain("language-javascript");
 });
+
+test("marko highlights top-level import/export/static/$ statements as JavaScript", () => {
+  registerAll(registry, marko);
+
+  const result = registry.highlight(
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
+    'import { format } from "./utils";\nexport const limit = 1_000;\nstatic const VERSION = "6";\n$ const greeting = "Hi";\n<div>\${greeting}</div>',
+    { language: "marko" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-keyword">import</span>');
+  expect(result).toContain('<span class="hljs-keyword">export</span>');
+  expect(result).toContain('<span class="hljs-keyword">static</span>');
+  expect(result).toContain('<span class="hljs-number">1_000</span>');
+  expect(result).toContain('<span class="hljs-string">&quot;Hi&quot;</span>');
+  // These lines are statements, not concise tags named `export`/`static`.
+  expect(result).not.toContain('<span class="hljs-name">export</span>');
+  expect(result).not.toContain('<span class="hljs-name">static</span>');
+  expect(result).toContain('<span class="hljs-name">div</span>');
+});
+
+test("marko highlights HTML-mode control-flow tags with attribute-value conditions", () => {
+  registerAll(registry, marko);
+
+  const result = registry.highlight(
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
+    '<if=count>\n  <span>Some</span>\n</if>\n<else-if=other>\n  <span>x</span>\n</else>\n<for|item, i| of=items by="id">\n  <span>${item}</span>\n</for>',
+    { language: "marko" },
+  ).value;
+
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-keyword">if</span>=count&gt;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;/<span class="hljs-keyword">if</span>&gt;</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">else-if</span>');
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-keyword">for</span><span class="hljs-params">|item, i|</span> <span class="hljs-attr">of</span>=items <span class="hljs-attr">by</span>=<span class="hljs-string">&quot;id&quot;</span>&gt;</span>',
+  );
+  expect(result).toContain('<span class="hljs-name">span</span>');
+});
+
+test("marko highlights tag variables, attribute tags, and shorthand heads", () => {
+  registerAll(registry, marko);
+
+  const result = registry.highlight(
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
+    '<let/count=0/>\n<define/Card|{ title }|><h2>${title}</h2></define>\n<await|user|=fetchUser(id)>\n  <@then|user|>${user.name}</@then>\n  <@catch|err|>oops</@catch>\n</await>\n<div.card#main data-x="1">hi</div>\n<my-tag>\n  <@header>Title</@header>\n</my-tag>',
+    { language: "marko" },
+  ).value;
+
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">let</span><span class="hljs-variable">/count</span>=0/&gt;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-name">define</span><span class="hljs-variable">/Card</span><span class="hljs-params">|{ title }|</span>&gt;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-name">await</span><span class="hljs-params">|user|</span>=fetchUser(id)&gt;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">@then</span><span class="hljs-params">|user|</span>&gt;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;/<span class="hljs-name">@then</span>&gt;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">@header</span>&gt;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">div.card#main</span> <span class="hljs-attr">data-x</span>=<span class="hljs-string">&quot;1&quot;</span>&gt;</span>',
+  );
+  // Ordinary tags still belong to the html sublanguage.
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">my-tag</span>&gt;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>',
+  );
+});
+
+test("marko closes a one-line style block at its own </style>", () => {
+  registerAll(registry, marko);
+
+  const result = registry.highlight(
+    '<style>.card { color: red; }</style>\n<div class="x">Hi</div>',
+    { language: "marko" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-selector-class">.card</span>');
+  expect(result).toContain('<span class="hljs-name">div</span>');
+  expect(result).toContain('<span class="hljs-string">&quot;x&quot;</span>');
+});
