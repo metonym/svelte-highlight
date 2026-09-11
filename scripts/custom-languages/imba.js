@@ -2,9 +2,12 @@ import cssRegister from "highlight.js/lib/languages/css";
 import javascriptRegister from "highlight.js/lib/languages/javascript";
 
 const IMBA_KEYWORDS =
-  "def tag prop attr get set let const if elif else unless for of in do self";
+  "def tag prop attr get set let const if elif else unless for of in do self " +
+  "import export from class extend global declare rescue return switch while until " +
+  "try catch finally throw break continue static async await super new is and " +
+  "or not";
 
-const IMBA_LITERALS = "yes no";
+const IMBA_LITERALS = "yes no true false null undefined";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineImba(hljs) {
@@ -63,11 +66,16 @@ function defineImba(hljs) {
     contains: [TAG_CLASS, TAG_ID, TAG_EVENT, TAG_REF, TAG_ATTR, STRING],
   };
 
+  // `css` / `global css` open an indented style block. Ending at `/^(?=\S)/`
+  // never closed a nested block (`tag Card` / `css .card` / `def render`),
+  // so the CSS sublanguage ran to the next column-0 line and unstyled the
+  // rest of the tag. Stop at the next Imba declaration or tag literal
+  // instead, and don't open on `css = x`.
   const CSS_BLOCK = {
     className: "keyword",
-    begin: /\bcss\b/,
+    begin: /\bcss\b(?!\s*=)/,
     starts: {
-      end: /^(?=\S)/,
+      end: /^(?=\s*(?:def|tag|prop|attr|get|set|let|const|class|extend|export|import|css|global|declare|if|elif|else|unless|for|switch|try|catch|finally|while|until)\b|\s*<)/,
       subLanguage: "css",
     },
   };
