@@ -41,3 +41,24 @@ test("vcl highlights durations", () => {
 
   expect(result).toContain('<span class="hljs-number">1h</span>');
 });
+
+test("vcl highlights the vcl switch return action", () => {
+  const result = highlight("return (vcl(legacy_label));");
+
+  expect(result).toContain('<span class="hljs-literal">vcl</span>');
+});
+
+test("vcl highlights hyphenated HTTP header variables", () => {
+  const result = highlight("set req.http.X-Forwarded-For = client.ip;");
+
+  expect(result).toContain(
+    '<span class="hljs-variable">req.http.X-Forwarded-For</span>',
+  );
+});
+
+test("vcl does not treat a version header as a return action", () => {
+  const result = highlight("vcl 4.1;\nreturn (hash);");
+
+  expect(result).toContain('<span class="hljs-meta">vcl 4.1;</span>');
+  expect(result).toContain('<span class="hljs-literal">hash</span>');
+});
