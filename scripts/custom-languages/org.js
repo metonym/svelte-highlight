@@ -1,7 +1,9 @@
 const ORG_TODO_WORDS = "TODO|DONE|NEXT|WAITING|CANCELLED";
 
-const ORG_META_KEYWORDS = "TITLE|AUTHOR|OPTIONS|PROPERTY|STARTUP|FILETAGS|TODO";
-
+// Every line-anchored rule uses `[ \t]*`, not `\s*`: hljs compiles regexes
+// with the `m` flag, so `^\s*` also matches from the end of the previous
+// (blank) line, which let a bullet or block start one line early and beat
+// the headline rule for `* TODO ...` after an empty line.
 function defineOrg() {
   const PRIORITY = {
     className: "meta",
@@ -15,16 +17,15 @@ function defineOrg() {
     relevance: 0,
   };
 
+  // The TODO keyword is only the word right after the stars; a bounded
+  // multi-match keeps `* TODO Mark it DONE` from styling `DONE` as well.
   const HEADLINE_KEYWORD = {
     className: "section",
-    begin: new RegExp(`^\\*+ (?=(?:${ORG_TODO_WORDS})\\b)`),
+    begin: [/^\*+ /, new RegExp(`(?:${ORG_TODO_WORDS})\\b`)],
+    beginScope: { 2: "keyword" },
     end: /$/,
     relevance: 10,
-    contains: [
-      { className: "keyword", begin: new RegExp(ORG_TODO_WORDS) },
-      PRIORITY,
-      TAGS,
-    ],
+    contains: [PRIORITY, TAGS],
   };
 
   const HEADLINE = {
@@ -35,35 +36,81 @@ function defineOrg() {
     contains: [PRIORITY, TAGS],
   };
 
+  // Any `#+KEYWORD:` line (`#+TITLE:`, `#+NAME:`, `#+CAPTION:`, `#+TBLFM:`,
+  // `#+ATTR_HTML:`, `#+RESULTS[hash]:`, ...) is a keyword line.
   const META_LINE = {
     className: "meta",
-    begin: new RegExp(`^#\\+(?:${ORG_META_KEYWORDS}):`),
+    begin: /^#\+[A-Za-z_]+(?:\[[^\]\n]*\])?:/,
     relevance: 5,
   };
 
+  // hljs rebuilds regexes from `.source`, so a per-regex `/i` flag is lost:
+  // the case alternation is spelled out. Any `#+begin_NAME` block counts,
+  // including verse, center, comment, and special blocks.
   const BLOCK = {
     className: "code",
-    begin: /^\s*#\+begin_(?:src|quote|example|export)\b.*$/i,
-    end: /^\s*#\+end_(?:src|quote|example|export)\b/i,
+    begin: /^[ \t]*#\+(?:begin|BEGIN)_\w+.*$/,
+    end: /^[ \t]*#\+(?:end|END)_\w+/,
     relevance: 0,
   };
 
   const DRAWER_LINE = {
     className: "attr",
-    begin: /^\s*:[A-Za-z_][\w-]*:(?=\s|$)/,
+    begin: /^[ \t]*:[A-Za-z_][\w-]*:(?=\s|$)/,
     relevance: 0,
   };
 
+  // A fixed-width line: `: literal text`.
+  const FIXED_WIDTH_LINE = {
+    className: "code",
+    begin: /^[ \t]*:(?: .*)?$/,
+    relevance: 0,
+  };
+
+  // A date, then optionally a day name, time or time range, and repeater
+  // or warning cookies: `<2026-09-15 Mon 10:00-11:00 +1w -2d>`.
   const TIMESTAMP = {
     className: "number",
-    begin: /[<[]\d{4}-\d{2}-\d{2}(?:\s+[A-Za-z]+)?(?:\s+\d{2}:\d{2})?[\]>]/,
+    begin: /[<[]\d{4}-\d{2}-\d{2}(?:\s[^\]>\n]*)?[\]>]/,
     relevance: 0,
   };
 
   const PLANNING_KEYWORD = {
     className: "keyword",
-    begin: /\b(?:SCHEDULED|DEADLINE|CLOSED):/,
+    begin: /\b(?:SCHEDULED|DEADLINE|CLOSED|CLOCK):/,
     relevance: 5,
+  };
+
+  // `src_lang{code}` and `src_lang[:header args]{code}`.
+  const INLINE_SRC = {
+    className: "code",
+    begin: /\bsrc_[\w-]+(?:\[[^\]\n]*\])?\{/,
+    end: /\}/,
+    relevance: 0,
+  };
+
+  // LaTeX fragments: `\(x\)` and `\[y\]`.
+  const LATEX_FRAGMENT = {
+    className: "formula",
+    variants: [
+      { begin: /\\\(/, end: /\\\)/ },
+      { begin: /\\\[/, end: /\\\]/ },
+    ],
+    relevance: 0,
+  };
+
+  // `{{{macro(args)}}}`.
+  const MACRO = {
+    className: "template-variable",
+    begin: /\{\{\{[A-Za-z][\w-]*(?:\([^)\n]*\))?\}\}\}/,
+    relevance: 0,
+  };
+
+  // `<<radio target>>` and `<<<radio target>>>`.
+  const RADIO_TARGET = {
+    className: "link",
+    begin: /<<<?[^<>\n]+>>>?/,
+    relevance: 0,
   };
 
   const LINK = {
@@ -95,7 +142,7 @@ function defineOrg() {
 
   const BULLET = {
     className: "bullet",
-    begin: /^\s*(?:[-+*]|\d+[.)])\s/,
+    begin: /^[ \t]*(?:[-+*]|\d+[.)])[ \t]/,
     relevance: 0,
   };
 
@@ -107,7 +154,7 @@ function defineOrg() {
 
   const COMMENT_LINE = {
     className: "comment",
-    begin: /^\s*#(?:\s.*)?$/,
+    begin: /^[ \t]*#(?:[ \t].*)?$/,
     relevance: 0,
   };
 
@@ -152,8 +199,13 @@ function defineOrg() {
       META_LINE,
       COMMENT_LINE,
       DRAWER_LINE,
+      FIXED_WIDTH_LINE,
       PLANNING_KEYWORD,
       TIMESTAMP,
+      INLINE_SRC,
+      LATEX_FRAGMENT,
+      MACRO,
+      RADIO_TARGET,
       LINK,
       FOOTNOTE,
       CHECKBOX,
