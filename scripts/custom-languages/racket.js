@@ -1,5 +1,11 @@
 const RACKET_KEYWORDS =
-  "define define/contract define-syntax syntax-rules lambda let let* letrec letrec* if cond case when unless begin begin0 set! and or not quote quasiquote unquote unquote-splicing require provide module module+ struct match for for/list for/vector for/fold for/sum class new send with-handlers parameterize call/cc call-with-values dynamic-wind delay force";
+  "define define/contract define-syntax syntax-rules lambda let let* letrec letrec* if cond case when unless begin begin0 set! and or not quote quasiquote unquote unquote-splicing require provide module module+ struct match for for/list for/vector for/fold for/sum class new send with-handlers parameterize call/cc call-with-values dynamic-wind delay force " +
+  // Definition and binding forms, `else`, the rest of the `for` family, the
+  // `match`/`syntax` macro forms, and the `class` body forms.
+  "define-values define-syntax-rule define-syntaxes define-for-syntax begin-for-syntax case-lambda λ else let-values let*-values letrec-values let-syntax letrec-syntax do local " +
+  "for* for/and for/or for/first for/last for/hash for/string for*/list for*/vector for*/fold for*/sum for*/and for*/or " +
+  "match* match-define match-let match-lambda syntax syntax-case syntax-parse quasisyntax with-syntax define-syntax-parser " +
+  "module* define/public define/override define/private super-new init init-field field inherit interface this";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineRacket(hljs) {
@@ -38,9 +44,10 @@ function defineRacket(hljs) {
     relevance: 0,
   };
 
+  // Plain, byte (`#"..."`), and regexp (`#rx"..."`, `#px#"..."`) strings.
   const STRING = {
     className: "string",
-    begin: /"/,
+    begin: /(?:#[rp]x#?|#)?"/,
     end: /"/,
     contains: [hljs.BACKSLASH_ESCAPE],
   };
@@ -51,8 +58,22 @@ function defineRacket(hljs) {
       { begin: /#[xX][0-9a-fA-F]+/ },
       { begin: /#[oO][0-7]+/ },
       { begin: /#[bB][01]+/ },
+      // `+inf.0`, `-nan.0`, `+inf.f`
+      { begin: /[+-](?:inf|nan)\.[0f]/ },
+      // `3+4i`, `1.5-2i`
+      { begin: /[+-]?\b\d+(?:\.\d+)?[+-]\d*(?:\.\d+)?i\b/ },
       { begin: /\b\d+\/\d+\b/ },
       { begin: /[+-]?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b/ },
+    ],
+    relevance: 0,
+  };
+
+  // `#:when`, `#:transparent` keyword arguments and `'sym` quoted symbols.
+  const SYMBOL = {
+    className: "symbol",
+    variants: [
+      { begin: /#:[^\s()[\]{}"'`,;]+/ },
+      { begin: /'[^\s()[\]{}"'`,;#]+/ },
     ],
     relevance: 0,
   };
@@ -76,6 +97,7 @@ function defineRacket(hljs) {
       CHAR,
       STRING,
       NUMBER,
+      SYMBOL,
     ],
   };
 }
