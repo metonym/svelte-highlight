@@ -1,5 +1,5 @@
 const PRQL_KEYWORDS =
-  "let into case func module import prql type enum as from join group aggregate derive filter select sort take window append remove intersect union loop switch this that";
+  "let into case func module import internal prql type enum as from from_text join group aggregate derive filter select sort take window append remove intersect union loop switch this that";
 
 const PRQL_LITERALS = "true false null";
 
@@ -42,6 +42,7 @@ function definePrql(hljs) {
     variants: [
       { begin: /f"/, end: /"/, contains: [INTERPOLATION] },
       { begin: /s"/, end: /"/, contains: [INTERPOLATION] },
+      { begin: /r"/, end: /"/ },
       { begin: /"""/, end: /"""/ },
       { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
       { begin: /'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
@@ -62,7 +63,7 @@ function definePrql(hljs) {
 
   const OPERATOR = {
     className: "operator",
-    begin: /==|!=|>=|<=|~=|&&|\|\||\?\?|->|=>|[+\-*/%!]/,
+    begin: /==|!=|>=|<=|~=|&&|\|\||\?\?|->|=>|\*\*|[+\-*/%!]/,
     relevance: 0,
   };
 
