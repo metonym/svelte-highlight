@@ -5,7 +5,7 @@ const SOLIDITY_KEYWORDS =
   "try catch revert assembly unchecked new delete override virtual " +
   "public private internal external pure view payable constant immutable " +
   "storage memory calldata indexed anonymous type this super " +
-  "selfdestruct";
+  "selfdestruct transient global";
 
 const SOLIDITY_LITERALS =
   "true false wei gwei szabo finney ether " +
@@ -14,6 +14,26 @@ const SOLIDITY_LITERALS =
 const SOLIDITY_BUILT_INS =
   "msg block tx abi require assert keccak256 sha256 ripemd160 ecrecover " +
   "addmod mulmod gasleft blockhash now";
+
+// Yul, the language of `assembly { ... }` blocks. Its keyword set is
+// disjoint from Solidity's (`let`, `leave`, `:=`) and its "functions" are
+// EVM opcodes, so the block gets its own keyword table.
+const YUL_KEYWORDS = {
+  keyword: "let function if switch case default for leave break continue",
+  literal: "true false",
+  built_in:
+    "stop add sub mul div sdiv mod smod exp not lt gt slt sgt eq iszero " +
+    "and or xor byte shl shr sar addmod mulmod signextend keccak256 " +
+    "pc pop mload mstore mstore8 sload sstore tload tstore mcopy msize gas " +
+    "address balance selfbalance caller callvalue calldataload calldatasize " +
+    "calldatacopy codesize codecopy extcodesize extcodecopy returndatasize " +
+    "returndatacopy extcodehash create create2 call callcode delegatecall " +
+    "staticcall return revert selfdestruct invalid log0 log1 log2 log3 log4 " +
+    "chainid basefee blobbasefee origin gasprice blockhash blobhash coinbase " +
+    "timestamp number difficulty prevrandao gaslimit " +
+    "datasize dataoffset datacopy setimmutable loadimmutable linkersymbol " +
+    "memoryguard verbatim",
+};
 
 const SOLIDITY_TYPE = {
   className: "type",
@@ -57,6 +77,37 @@ function defineSolidity(hljs) {
     ],
   };
 
+  // `assembly { ... }`: the opening brace is part of `begin`, so the mode
+  // ends at its matching `}` as long as every nested `{ ... }` (switch
+  // cases, for-loop bodies, function bodies) is consumed by YUL_BLOCK, which
+  // recurses via `self`.
+  const YUL_CONTAINS = [
+    hljs.C_LINE_COMMENT_MODE,
+    hljs.C_BLOCK_COMMENT_MODE,
+    STRING,
+    NUMBER,
+  ];
+
+  const YUL_BLOCK = {
+    begin: /\{/,
+    end: /\}/,
+    keywords: YUL_KEYWORDS,
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      ...YUL_CONTAINS,
+      "self",
+    ]),
+    relevance: 0,
+  };
+
+  const ASSEMBLY = {
+    begin: [/\bassembly\b/, /\s*/, /(?:\(\s*"[^"]*"\s*\)\s*)?/, /\{/],
+    beginScope: { 1: "keyword", 3: "string" },
+    end: /\}/,
+    keywords: YUL_KEYWORDS,
+    contains: [...YUL_CONTAINS, YUL_BLOCK],
+    relevance: 0,
+  };
+
   return {
     name: "Solidity",
     aliases: ["sol"],
@@ -72,6 +123,7 @@ function defineSolidity(hljs) {
       hljs.C_BLOCK_COMMENT_MODE,
       STRING,
       NUMBER,
+      ASSEMBLY,
       SOLIDITY_TYPE,
       {
         // Only the contract/interface/library's own name is captured here

@@ -88,3 +88,56 @@ test("solidity scopes constructor/fallback/receive with the same declaration con
   expect(result).toContain('<span class="hljs-keyword">fallback</span>');
   expect(result).toContain('<span class="hljs-keyword">receive</span>');
 });
+
+test("solidity highlights transient and global as keywords", () => {
+  const result = highlight(
+    "using SafeMath for uint256 global;\nuint256 transient lock;",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">global</span>');
+  expect(result).toContain('<span class="hljs-keyword">transient</span>');
+});
+
+test("solidity highlights Yul keywords and opcodes inside assembly blocks", () => {
+  const result = highlight(
+    "assembly {\n  let x := mload(0x40)\n  mstore(x, 1)\n  if iszero(x) { revert(0, 0) }\n}\nuint256 y;",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">assembly</span>');
+  expect(result).toContain(
+    '<span class="hljs-keyword">let</span> x := <span class="hljs-built_in">mload</span>(<span class="hljs-number">0x40</span>)',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">if</span> <span class="hljs-built_in">iszero</span>(x) { <span class="hljs-built_in">revert</span>(',
+  );
+  // The block closed at its own `}`: the Solidity declaration after it is
+  // parsed with the Solidity table again.
+  expect(result).toContain('<span class="hljs-type">uint256</span> y;');
+});
+
+test("solidity balances nested braces inside assembly blocks", () => {
+  const result = highlight(
+    'assembly ("memory-safe") {\n  switch x\n  case 0 { y := 1 }\n  default { y := 2 }\n  for { let i := 0 } lt(i, 3) { i := add(i, 1) } { }\n}\nfunction f() public {}',
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-string">(&quot;memory-safe&quot;) </span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">switch</span> x');
+  expect(result).toContain(
+    '<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">for</span> { <span class="hljs-keyword">let</span> i',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>',
+  );
+});
+
+test("solidity keeps Yul opcode names as plain identifiers outside assembly", () => {
+  const result = highlight("uint256 number = 1;\naddress caller = msg.sender;");
+
+  expect(result).not.toContain('hljs-built_in">number');
+  expect(result).not.toContain('hljs-built_in">caller');
+});
