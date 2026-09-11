@@ -67,3 +67,27 @@ test("angular highlights interpolation as JavaScript", () => {
   expect(result).toContain("language-javascript");
   expect(result).toContain("hljs-tag");
 });
+
+test("angular highlights @let declarations", () => {
+  const result = highlight(
+    "@let total = items().length + 1;\n<p>{{ total }}</p>\n@let $user = user$ | async;",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">@let</span> <span class="hljs-variable">total</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">@let</span> <span class="hljs-variable">$user</span>',
+  );
+  // The initializer stays plain HTML text.
+  expect(result).toContain(" = items().length + 1;");
+  expect(result).not.toContain('<span class="hljs-variable">user$');
+});
+
+test("angular leaves non-@let at-words alone", () => {
+  const result = highlight("<div @fadeIn>@letter @if</div>");
+
+  expect(result).not.toContain('<span class="hljs-keyword">@let</span>');
+  expect(result).not.toContain("hljs-variable");
+  expect(result).toContain('<span class="hljs-keyword">@if</span>');
+});
