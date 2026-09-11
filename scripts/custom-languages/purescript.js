@@ -1,10 +1,14 @@
+// `derive` (not Haskell's `deriving`), `ado` (applicative do), `hiding` and
+// `as` (import lists) are all PureScript keywords.
 const PURESCRIPT_KEYWORDS =
-  "module where import class instance data newtype type foreign forall do case of if then else let in deriving infixl infixr infix";
+  "module where import class instance data newtype type foreign forall do ado case of if then else let in derive hiding as infixl infixr infix";
 
-const PURESCRIPT_LITERALS = "True False";
+// PureScript booleans are lowercase; `True`/`False` would be ordinary
+// constructors.
+const PURESCRIPT_LITERALS = "true false";
 
 const PURESCRIPT_BUILTINS =
-  "map filter show print pure bind then id const flip compose otherwise";
+  "map filter show print pure bind id const flip compose otherwise";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function definePureScript(hljs) {
@@ -33,18 +37,16 @@ function definePureScript(hljs) {
     contains: [hljs.BACKSLASH_ESCAPE],
   };
 
+  // Hex literals and `_` digit separators (`1_000_000`, PureScript 0.13).
   const NUMBER = {
     className: "number",
-    begin: /\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b/,
+    begin: /\b(?:0x[\da-fA-F_]+|\d[\d_]*(?:\.[\d_]+)?(?:[eE][+-]?\d+)?)\b/,
     relevance: 0,
   };
 
-  // Excludes True/False: without the lookahead, this mode's unconditional
-  // capitalized-word match would intercept them before the keyword table
-  // gets a chance to classify them as `literal`.
   const TYPE = {
     className: "type",
-    begin: /\b(?!True\b|False\b)[A-Z][\w']*/,
+    begin: /\b[A-Z][\w']*/,
     relevance: 0,
   };
 
