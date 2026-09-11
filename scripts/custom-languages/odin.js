@@ -6,6 +6,13 @@ const ODIN_TYPES =
 
 const ODIN_LITERALS = "true false nil";
 
+// Compiler built-in procedures (the ones that need no import).
+const ODIN_BUILT_INS =
+  "len cap size_of align_of offset_of type_of type_info_of typeid_of " +
+  "make new free delete append clear reserve resize copy min max abs clamp " +
+  "assert panic unreachable swizzle complex quaternion real imag jmag kmag " +
+  "conj expand_values soa_zip soa_unzip";
+
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineOdin(hljs) {
   const NUMBER = {
@@ -14,8 +21,16 @@ function defineOdin(hljs) {
       { begin: /\b0[xX][0-9a-fA-F][0-9a-fA-F_]*\b/ },
       { begin: /\b0[oO][0-7][0-7_]*\b/ },
       { begin: /\b0[bB][01][01_]*\b/ },
+      { begin: /\b0[zZ][0-9abAB][0-9abAB_]*\b/ },
       { begin: /\b\d[\d_]*(?:\.[\d_]*)?(?:[eE][+-]?\d+)?[ij]?\b/ },
     ],
+    relevance: 0,
+  };
+
+  // `x: int = ---` leaves the variable uninitialized.
+  const UNINITIALIZED = {
+    className: "literal",
+    begin: /---/,
     relevance: 0,
   };
 
@@ -25,10 +40,22 @@ function defineOdin(hljs) {
     relevance: 0,
   };
 
+  // `@(private = "file")`, `@(export)`, or the bare `@static` form.
   const ATTRIBUTE = {
     className: "meta",
-    begin: /@\(?[a-zA-Z_]\w*/,
+    variants: [{ begin: /@\(/, end: /\)/ }, { begin: /@[a-zA-Z_]\w*/ }],
     relevance: 0,
+  };
+
+  // `name :: proc(...)` (optionally `:: #force_inline proc`) is the
+  // procedure declaration shape; the name is the title.
+  const PROC_DECL = {
+    begin: [
+      /\b[a-zA-Z_]\w*/,
+      /\s*::\s*/,
+      /(?=(?:#force_(?:no_)?inline\s+)?proc\b)/,
+    ],
+    beginScope: { 1: "title.function" },
   };
 
   const TYPE = {
@@ -44,6 +71,7 @@ function defineOdin(hljs) {
       keyword: ODIN_KEYWORDS,
       type: ODIN_TYPES,
       literal: ODIN_LITERALS,
+      built_in: ODIN_BUILT_INS,
     },
     contains: [
       hljs.C_LINE_COMMENT_MODE,
@@ -63,7 +91,9 @@ function defineOdin(hljs) {
       },
       DIRECTIVE,
       ATTRIBUTE,
+      PROC_DECL,
       TYPE,
+      UNINITIALIZED,
       NUMBER,
     ],
   };
