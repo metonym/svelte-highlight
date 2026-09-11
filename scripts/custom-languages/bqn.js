@@ -1,6 +1,3 @@
-const BQN_SYSTEM_VALUES =
-  "•Show •Out •BQN •Import •ReadFile •Type •Repr •Decompose •_timed •MakeRand";
-
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineBqn(hljs) {
   const STRING = {
@@ -24,7 +21,7 @@ function defineBqn(hljs) {
 
   const SYSTEM_VALUE = {
     className: "built_in",
-    begin: new RegExp(BQN_SYSTEM_VALUES.split(" ").join("|")),
+    begin: /•[_A-Za-z][\w.]*/,
     relevance: 5,
   };
 
