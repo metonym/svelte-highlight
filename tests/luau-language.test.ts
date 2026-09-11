@@ -58,3 +58,39 @@ test("luau highlights literals", () => {
   expect(result).toContain('<span class="hljs-literal">true</span>');
   expect(result).toContain('<span class="hljs-literal">nil</span>');
 });
+
+test("luau highlights backtick interpolated strings and floor division", () => {
+  const result = highlight("local msg = `Hello {name}, {n // 2}!`");
+
+  expect(result).toContain('<span class="hljs-subst">{name}</span>');
+  expect(result).toContain('<span class="hljs-operator">//</span>');
+  expect(result).toContain('<span class="hljs-number">2</span>');
+});
+
+test("luau highlights @native and parameterized attributes", () => {
+  const result = highlight(
+    '@native\nlocal function add()\nend\n@[deprecated { use = "add()" }]\nfunction oldAdd()\nend\n',
+  );
+
+  expect(result).toContain('<span class="hljs-meta">@native</span>');
+  expect(result).toContain('<span class="hljs-meta">@[');
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;add()&quot;</span>',
+  );
+});
+
+test("luau highlights numeric separators", () => {
+  const result = highlight("local n = 1_048_576\nlocal h = 0xFFFF_FFFF");
+
+  expect(result).toContain('<span class="hljs-number">1_048_576</span>');
+  expect(result).toContain('<span class="hljs-number">0xFFFF_FFFF</span>');
+});
+
+test("luau does not treat quoted strings as interpolated", () => {
+  const result = highlight('local msg = "Hello {name}"');
+
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;Hello {name}&quot;</span>',
+  );
+  expect(result).not.toContain("hljs-subst");
+});

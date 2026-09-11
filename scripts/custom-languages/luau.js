@@ -9,6 +9,29 @@ const LUAU_TYPES =
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineLuau(hljs) {
+  const NUMBER = {
+    className: "number",
+    variants: [
+      { begin: /\b0x[0-9a-fA-F_]+\b/ },
+      { begin: /\b0b[01_]+\b/ },
+      { begin: /\b\d[\d_]*(?:\.\d[\d_]*)?(?:[eE][+-]?\d+)?\b/ },
+    ],
+    relevance: 0,
+  };
+
+  const FLOOR_DIV = {
+    className: "operator",
+    begin: /\/\//,
+    relevance: 0,
+  };
+
+  const INTERPOLATION = {
+    className: "subst",
+    begin: /\{/,
+    end: /\}/,
+    contains: [NUMBER, FLOOR_DIV],
+  };
+
   const STRING = {
     className: "string",
     variants: [
@@ -16,6 +39,11 @@ function defineLuau(hljs) {
         begin: /\[(=*)\[/,
         end: /\](=*)\]/,
       }),
+      {
+        begin: /`/,
+        end: /`/,
+        contains: [hljs.BACKSLASH_ESCAPE, INTERPOLATION],
+      },
       { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
       { begin: /'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
     ],
@@ -32,14 +60,17 @@ function defineLuau(hljs) {
     ],
   };
 
-  const NUMBER = {
-    className: "number",
+  const ATTRIBUTE = {
+    className: "meta",
     variants: [
-      { begin: /\b0x[0-9a-fA-F]+\b/ },
-      { begin: /\b0b[01]+\b/ },
-      { begin: /\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b/ },
+      { begin: /@[A-Za-z_]\w*/, relevance: 10 },
+      {
+        begin: /@\[/,
+        end: /\]/,
+        contains: [STRING],
+        relevance: 10,
+      },
     ],
-    relevance: 0,
   };
 
   const FUNCTION = {
@@ -75,7 +106,16 @@ function defineLuau(hljs) {
       literal: LUAU_LITERALS,
       type: LUAU_TYPES,
     },
-    contains: [COMMENT, EXPORT_TYPE, STRING, FUNCTION, TYPE_ASSERT, NUMBER],
+    contains: [
+      COMMENT,
+      ATTRIBUTE,
+      EXPORT_TYPE,
+      STRING,
+      FUNCTION,
+      TYPE_ASSERT,
+      FLOOR_DIV,
+      NUMBER,
+    ],
   };
 }
 
