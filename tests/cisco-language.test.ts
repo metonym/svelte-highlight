@@ -47,3 +47,15 @@ test("cisco is case-insensitive for keywords", () => {
 
   expect(result).toContain('<span class="hljs-keyword">INTERFACE</span>');
 });
+
+test("cisco highlights hyphenated keywords as a single token", () => {
+  const result = highlight("ip access-list extended WEB");
+
+  expect(result).toContain('<span class="hljs-keyword">access-list</span>');
+});
+
+test("cisco still highlights a bare access keyword", () => {
+  const result = highlight("switchport mode access");
+
+  expect(result).toContain('<span class="hljs-keyword">access</span>');
+});
