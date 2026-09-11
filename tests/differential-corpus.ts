@@ -183,6 +183,10 @@ kretprobe:vfs_read
 `,
   c3: `module counters;
 
+<*
+ Adds one.
+ @require x >= 0
+*>
 fn int increment(int x) {
     $if $defined(x):
         return x + 1;
@@ -195,8 +199,10 @@ struct Counter {
     String? name;
 }
 
+macro @twice(#expr) { return #expr * 2; }
+
 fn void main() {
-    Counter c = { .value = 0 };
+    Counter c = { .value = 0x1_0 };
     switch (c.value) {
         case 0:
             nextcase default;
