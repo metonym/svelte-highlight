@@ -88,3 +88,30 @@ test("just highlights keywords", () => {
 
   expect(result).toContain('<span class="hljs-keyword">export</span>');
 });
+
+test("just highlights unexport and newer builtins", () => {
+  const result = highlight(
+    'unexport SECRET\njq := require("jq")\nroot := source_directory()',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">unexport</span>');
+  expect(result).toContain('<span class="hljs-built_in">require</span>');
+  expect(result).toContain(
+    '<span class="hljs-built_in">source_directory</span>',
+  );
+});
+
+test("just highlights backtick command substitution", () => {
+  const result = highlight("ver := `git describe --tags`");
+
+  expect(result).toContain(
+    '<span class="hljs-string">`git describe --tags`</span>',
+  );
+});
+
+test("just export and quoted strings are unchanged", () => {
+  const result = highlight('export FOO := "bar"');
+
+  expect(result).toContain('<span class="hljs-keyword">export</span>');
+  expect(result).toContain('<span class="hljs-string">&quot;bar&quot;</span>');
+});
