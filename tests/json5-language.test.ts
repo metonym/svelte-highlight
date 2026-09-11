@@ -47,3 +47,19 @@ test("json5 highlights Infinity, NaN, and boolean literals", () => {
   expect(result).toContain('<span class="hljs-literal">true</span>');
   expect(result).toContain('<span class="hljs-literal">null</span>');
 });
+
+test("json5 highlights numbers with a trailing decimal point", () => {
+  const result = highlight("{ a: 8675309., b: .5, c: -1., d: 1.5e3 }");
+
+  expect(result).toContain('<span class="hljs-number">8675309.</span>');
+  expect(result).toContain('<span class="hljs-number">.5</span>');
+  expect(result).toContain('<span class="hljs-number">-1.</span>');
+  expect(result).toContain('<span class="hljs-number">1.5e3</span>');
+});
+
+test("json5 does not style digits glued to an identifier as a number", () => {
+  const result = highlight("{ a: 12abc, b: 'x1.' }");
+
+  expect(result).not.toContain('<span class="hljs-number">12</span>');
+  expect(result).toContain('<span class="hljs-string">&#x27;x1.&#x27;</span>');
+});

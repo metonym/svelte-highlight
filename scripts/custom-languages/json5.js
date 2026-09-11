@@ -7,7 +7,10 @@ function defineJson5(hljs) {
     variants: [
       { begin: /[+-]?0[xX][0-9a-fA-F]+\b/ },
       { begin: /[+-]?(?:Infinity|NaN)\b/ },
-      { begin: /[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?\b/ },
+      // JSON5 allows a leading (`.5`) or trailing (`5.`) decimal point; the
+      // negative lookahead (rather than `\b`) lets the trailing form keep
+      // its `.`, which `\b` refused before a `,` or `}`.
+      { begin: /[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?(?![\w.])/ },
     ],
     relevance: 0,
   };
