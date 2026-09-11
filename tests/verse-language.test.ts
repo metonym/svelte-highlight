@@ -44,3 +44,33 @@ test("verse highlights editable attributes", () => {
 
   expect(result).toContain('<span class="hljs-meta">@editable</span>');
 });
+
+test("verse highlights access, concrete, persistable, and localizes specifiers", () => {
+  const result = highlight(
+    'player_data := class<final><persistable>:\n    Health<private> : int = 100\n    Tick<protected>()<suspends> : void =\n        false\nhelper<localizes>(Who : string) : message =\n    "{Who}"\nspawnable := class<concrete>:\n    X : int = 0',
+  );
+
+  expect(result).toContain('<span class="hljs-meta">&lt;private&gt;</span>');
+  expect(result).toContain('<span class="hljs-meta">&lt;protected&gt;</span>');
+  expect(result).toContain(
+    '<span class="hljs-meta">&lt;persistable&gt;</span>',
+  );
+  expect(result).toContain('<span class="hljs-meta">&lt;localizes&gt;</span>');
+  expect(result).toContain('<span class="hljs-meta">&lt;concrete&gt;</span>');
+  expect(result).toContain('<span class="hljs-type">message</span>');
+});
+
+test("verse does not treat an identifier as a specifier", () => {
+  const result = highlight(
+    "private_name : int = 0\nconcrete_value : float = 1.0",
+  );
+
+  expect(result).not.toContain(
+    '<span class="hljs-meta">&lt;private&gt;</span>',
+  );
+  expect(result).not.toContain(
+    '<span class="hljs-meta">&lt;concrete&gt;</span>',
+  );
+  expect(result).toContain('<span class="hljs-type">int</span>');
+  expect(result).toContain('<span class="hljs-type">float</span>');
+});
