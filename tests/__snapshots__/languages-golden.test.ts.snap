@@ -86,7 +86,7 @@ exports[`golden snapshot: bend 1`] = `"<span class="hljs-keyword">def</span> <sp
 
 exports[`golden snapshot: bibtex 1`] = `
 "// comment
-&quot;string&quot; &#x27;string&#x27; 123 3.14
+<span class="hljs-string">&quot;string&quot;</span> &#x27;string&#x27; 123 3.14
 true false null
 /regex/ #hashtag @annotation"
 `;
