@@ -8,9 +8,18 @@ function defineHocon(hljs) {
     ],
   };
 
+  // A key is followed by `=`, `:`, `+=`, or an object body `{`.
   const KEY = {
     className: "attr",
-    begin: /\b[A-Za-z_][\w.-]*(?=\s*[:=]|\s*\{)/,
+    begin: /\b[A-Za-z_][\w.-]*(?=\s*(?:[:=]|\+=|\{))/,
+    relevance: 0,
+  };
+
+  // `"akka.http" { ... }` / `"key with spaces" = 1`: a quoted key is an
+  // attr, not a string value. Listed before STRING so it wins the `"`.
+  const QUOTED_KEY = {
+    className: "attr",
+    begin: /"(?:[^"\\\n]|\\.)*"(?=\s*(?:[:=]|\+=|\{))/,
     relevance: 0,
   };
 
@@ -62,6 +71,7 @@ function defineHocon(hljs) {
     contains: [
       hljs.HASH_COMMENT_MODE,
       hljs.C_LINE_COMMENT_MODE,
+      QUOTED_KEY,
       STRING,
       SUBST_OPTIONAL,
       SUBST,
