@@ -42,7 +42,13 @@ function defineVue(hljs) {
   };
 
   const vueBindShorthand = {
-    begin: /:(?:[\w.$-]+|\[[\w.$-]+\])(?==)/,
+    variants: [
+      { begin: /:(?:[\w.$-]+|\[[\w.$-]+\])(?==)/ },
+      // Vue 3.4 same-name shorthand: `:id` alone means `:id="id"`. Only a
+      // bare identifier (no digits first, no modifiers) before whitespace
+      // or the tag close, so `10:30` in text or `href:x=` don't match.
+      { begin: /:[A-Za-z_$][\w-]*(?=\s|\/?>)/ },
+    ],
     className: "variable",
     relevance: 5,
   };
