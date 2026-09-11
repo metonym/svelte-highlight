@@ -1,7 +1,7 @@
 import sqlRegister from "highlight.js/lib/languages/sql";
 
 const LOOKML_BLOCK_KEYWORDS =
-  "view|explore|dimension|measure|join|dimension_group|parameter|filter|set|datagroup";
+  "view|explore|dimension|measure|join|dimension_group|parameter|filter|set|datagroup|access_grant|aggregate_table|named_value_format|map_layer|test";
 
 const LOOKML_LITERALS =
   "yes no string number sum count count_distinct average max min time date datetime many_to_one one_to_many one_to_one many_to_many left_outer inner full_outer cross";
@@ -25,8 +25,11 @@ function defineLookml(hljs) {
     relevance: 0,
   };
 
+  // `sql_table_name` is a table identifier, not a SQL clause, and often has no
+  // terminating `;;`. Matching it here would open a SQL region that ran to the
+  // next `;;` in the file (usually a later `sql:` field).
   const SQL_VALUE = {
-    begin: /\bsql(?:_\w+)?:/,
+    begin: /\bsql(?!_table_name)(?:_\w+)?:/,
     beginScope: "attr",
     end: /;;/,
     subLanguage: "sql",
@@ -34,7 +37,11 @@ function defineLookml(hljs) {
   };
 
   const BLOCK_HEADER = {
-    begin: [new RegExp(`\\b(?:${LOOKML_BLOCK_KEYWORDS})\\b`), /:\s*/, /[\w.]+/],
+    begin: [
+      new RegExp(`\\b(?:${LOOKML_BLOCK_KEYWORDS})\\b`),
+      /:\s*/,
+      /\+?[\w.]+/,
+    ],
     beginScope: { 1: "keyword", 3: "title.class" },
     relevance: 5,
   };

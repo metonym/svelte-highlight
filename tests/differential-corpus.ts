@@ -1628,6 +1628,20 @@ in
     drill_fields: [id]
   }
 }
+
+view: +orders {
+  measure: extra {
+    type: count
+  }
+}
+
+explore: orders {
+  aggregate_table: sales_monthly {
+    query: {
+      dimensions: [id]
+    }
+  }
+}
 `,
   tsql: `DECLARE @count INT;
 
