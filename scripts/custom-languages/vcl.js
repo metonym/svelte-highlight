@@ -29,7 +29,7 @@ const VCL_BUILT_IN_SUBS =
   "vcl_recv vcl_hash vcl_backend_fetch vcl_backend_response vcl_deliver vcl_synth vcl_init vcl_fini vcl_pipe vcl_pass vcl_hit vcl_miss vcl_purge vcl_backend_error";
 
 const VCL_RETURN_ACTIONS =
-  "hash pass pipe lookup synth restart retry fetch deliver abandon purge fail ok error miss";
+  "hash pass pipe lookup synth restart retry fetch deliver abandon purge fail ok error miss vcl";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineVcl(hljs) {
@@ -56,8 +56,9 @@ function defineVcl(hljs) {
 
   const VARIABLE = {
     className: "variable",
+    // Header names are hyphenated (`req.http.X-Forwarded-For`).
     begin:
-      /\b(?:req|bereq|beresp|resp|obj|client|server|local|remote|sess)\.[\w.]+/,
+      /\b(?:req|bereq|beresp|resp|obj|client|server|local|remote|sess)\.[\w.-]+/,
     relevance: 0,
   };
 
