@@ -1,5 +1,11 @@
+// Clause keywords through Neo4j 5.x / Cypher 25: `USE` (4.0), `IN
+// TRANSACTIONS` (4.4), `INSERT`/`NODETACH` (5.x GQL conformance), `FINISH`
+// (5.20), `LET`/`FILTER`/`NEXT` (Cypher 25), `SHORTEST` path selectors,
+// `CREATE INDEX ... FOR`, `LOAD CSV WITH HEADERS`, and the `CYPHER` query
+// option prefix.
 const CYPHER_KEYWORDS =
-  "MATCH OPTIONAL WHERE RETURN WITH CREATE MERGE DELETE DETACH SET REMOVE ORDER BY SKIP LIMIT UNION UNWIND CALL YIELD FOREACH USING INDEX CONSTRAINT ON DROP LOAD CSV FROM AS DISTINCT ASC DESC ASCENDING DESCENDING CASE WHEN THEN ELSE END";
+  "MATCH OPTIONAL WHERE RETURN WITH CREATE MERGE DELETE DETACH SET REMOVE ORDER BY SKIP LIMIT UNION UNWIND CALL YIELD FOREACH USING INDEX CONSTRAINT ON DROP LOAD CSV FROM AS DISTINCT ASC DESC ASCENDING DESCENDING CASE WHEN THEN ELSE END " +
+  "USE SHOW INSERT NODETACH FINISH LET FILTER NEXT ALL SHORTEST FOR HEADERS TRANSACTIONS CYPHER";
 
 const CYPHER_OPERATORS = "AND OR XOR NOT IN STARTS ENDS CONTAINS IS";
 
@@ -7,9 +13,10 @@ const CYPHER_LITERALS = "true false null TRUE FALSE NULL";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineCypher(hljs) {
+  // Decimal, plus the `0x` hex and `0o` octal forms (Cypher 4.x+).
   const NUMBER = {
     className: "number",
-    begin: /\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b/,
+    begin: /\b(?:0x[0-9a-fA-F]+|0o[0-7]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b/,
     relevance: 0,
   };
 
@@ -36,7 +43,24 @@ function defineCypher(hljs) {
   const FUNCTION = {
     className: "built_in",
     begin:
-      /\b(?:id|labels|type|properties|coalesce|toInteger|toString|size|collect|nodes|relationships|exists|count)(?=\s*\()/,
+      /\b(?:id|labels|type|properties|coalesce|toInteger|toString|size|collect|nodes|relationships|exists|count|all|any|none|single)(?=\s*\()/,
+    relevance: 0,
+  };
+
+  // `EXISTS { ... }`, `COUNT { ... }`, `COLLECT { ... }` subquery
+  // expressions (Neo4j 5.x). The brace lookahead is what separates the
+  // clause-like use from the `count(...)` function (FUNCTION above) and
+  // from `count` used as a plain variable name (`WITH count(n) AS count`).
+  const SUBQUERY_EXPRESSION = {
+    className: "keyword",
+    begin: /\b(?:exists|count|collect)(?=\s*\{)/,
+    relevance: 0,
+  };
+
+  // `n.prop` property access: consumed so a property that shares a keyword
+  // or operator name (`n.desc`, `n.limit`, `n.in`) isn't styled as one.
+  const PROPERTY = {
+    begin: /\.[A-Za-z_]\w*/,
     relevance: 0,
   };
 
@@ -52,8 +76,14 @@ function defineCypher(hljs) {
   // misdetected as a node label. Give map-literal content its own scope
   // (keyed by MAP_KEY, not LABEL) so `(n:Person:Employee)`-style label
   // chains elsewhere are unaffected.
+  //
+  // The lookahead requires a map's real shape: `{}` or a (possibly
+  // backtick-quoted) key followed by `:`. Without it the mode also opened on
+  // the `{` of `CALL { ... }` / `CALL (x) { ... }` / `EXISTS { ... }`
+  // subqueries and quantifiers like `{1,3}`, so an entire subquery body was
+  // scanned as map content and lost its keywords, labels, and functions.
   const MAP_LITERAL = {
-    begin: /\{/,
+    begin: /\{(?=\s*(?:\}|(?:[A-Za-z_]\w*|`[^`]*`)\s*:))/,
     end: /\}/,
     contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
       MAP_KEY,
@@ -83,6 +113,8 @@ function defineCypher(hljs) {
       LABEL,
       PARAMETER,
       FUNCTION,
+      SUBQUERY_EXPRESSION,
+      PROPERTY,
       NUMBER,
     ],
   };
