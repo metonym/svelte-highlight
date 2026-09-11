@@ -283,3 +283,15 @@ test("html alone does not highlight Svelte block syntax", () => {
 
   expect(result).not.toContain("hljs-keyword");
 });
+
+test("svelte closes a single-line style block at its own </style>", () => {
+  registerAll(registry, svelte);
+
+  const result = registry.highlight(
+    "<style>button { color: red; }</style>\n<button onclick={inc}>{count}</button>",
+    { language: "svelte" },
+  ).value;
+
+  expect(result).toContain('<span class="hljs-selector-tag">button</span>');
+  expect(result).toContain('<span class="hljs-variable">onclick</span>');
+});
