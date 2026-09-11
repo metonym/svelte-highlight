@@ -3,16 +3,43 @@ const BLUEPRINT_KEYWORDS = [
   "using",
   "bind",
   "bind-property",
+  "as",
+  "typeof",
+  // Binding and signal flags.
   "sync-create",
+  "no-sync-create",
+  "bidirectional",
   "inverted",
-  "styles",
+  "swapped",
+  "after",
+  // Menus.
   "menu",
   "section",
+  "submenu",
   "item",
+  // Extension blocks (`styles [...]`, `layout { }`, `setters { }`, ...).
+  "styles",
+  "accessibility",
+  "layout",
+  "setters",
+  "condition",
+  "strings",
+  "widgets",
+  "marks",
+  "mark",
+  "mime-types",
+  "patterns",
+  "suffixes",
+  "columns",
+  "items",
+  "responses",
+  "destructive",
+  "disabled",
+  "default",
   "translatable",
 ];
 
-const BLUEPRINT_LITERALS = "true false";
+const BLUEPRINT_LITERALS = "true false null";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineBlueprint(hljs) {
@@ -59,9 +86,10 @@ function defineBlueprint(hljs) {
     relevance: 0,
   };
 
+  // `_("...")` and the context form `C_("ctx", "...")`.
   const TRANSLATABLE_STRING = {
     className: "string",
-    begin: /_\(/,
+    begin: /\b(?:C_|_)\(/,
     end: /\)/,
     contains: [STRING],
     relevance: 5,
@@ -71,6 +99,9 @@ function defineBlueprint(hljs) {
     name: "Blueprint",
     aliases: ["blp", "gtk-blueprint"],
     keywords: {
+      // Kebab-case keywords (`bind-property`, `no-sync-create`) need a word
+      // pattern that includes `-`; hljs's default `\w+` never matched them.
+      $pattern: "[a-zA-Z_][\\w-]*",
       keyword: BLUEPRINT_KEYWORDS,
       literal: BLUEPRINT_LITERALS,
     },
