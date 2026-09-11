@@ -31,13 +31,13 @@ function defineJsonata(hljs) {
   const BUILT_IN = {
     className: "built_in",
     begin:
-      /\$(?:sum|count|max|min|average|map|filter|sift|each|keys|lookup|merge|append|exists|sort|reverse|shuffle|zip|single|string|length|substringBefore|substringAfter|substring|uppercase|lowercase|trim|pad|contains|split|join|match|replace|eval|formatNumber|formatBase|formatInteger|parseInteger|number|boolean|not|type|now|millis|fromMillis|toMillis|power|sqrt|random|round|abs|floor|ceil|error|assert|distinct|flatten|range|reduce|base64encode|base64decode|encodeUrl|decodeUrl)\b/,
+      /\$(?:sum|count|max|min|average|map|filter|sift|each|keys|lookup|merge|append|exists|sort|reverse|shuffle|zip|single|string|length|substringBefore|substringAfter|substring|uppercase|lowercase|trim|pad|contains|split|join|match|replace|eval|formatNumber|formatBase|formatInteger|parseInteger|number|boolean|not|type|now|millis|fromMillis|toMillis|power|sqrt|random|round|abs|floor|ceil|error|assert|distinct|flatten|range|reduce|base64encode|base64decode|encodeUrlComponent|decodeUrlComponent|encodeUrl|decodeUrl)\b/,
     relevance: 0,
   };
 
   const VARIABLE = {
     className: "variable",
-    begin: /\$\$?[A-Za-z_]\w*|\$/,
+    begin: /\$\$?[A-Za-z_]\w*|\$\$|\$/,
     relevance: 0,
   };
 
@@ -48,12 +48,9 @@ function defineJsonata(hljs) {
     relevance: 0,
   };
 
-  const BRACKET_FIELD = {
-    // Predicates and array indices: Order[0], Product[Price > 10]
-    className: "property",
-    begin: /\[/,
-    end: /\]/,
-    contains: [STRING, NUMBER],
+  const OPERATOR = {
+    className: "operator",
+    begin: /~>|:=|\?\?|\?:|\.\./,
     relevance: 0,
   };
 
@@ -70,7 +67,7 @@ function defineJsonata(hljs) {
       QUOTED_FIELD,
       BUILT_IN,
       VARIABLE,
-      BRACKET_FIELD,
+      OPERATOR,
       FIELD,
       NUMBER,
     ],
