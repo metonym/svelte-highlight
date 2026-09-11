@@ -2,12 +2,12 @@ const WGSL_KEYWORDS =
   "alias break case const const_assert continue continuing default diagnostic discard else enable fn for if let loop override requires return struct switch var while";
 
 const WGSL_TYPES =
-  "bool f16 f32 i32 u32 vec2 vec3 vec4 vec2f vec3f vec4f vec2h vec3h vec4h vec2i vec3i vec4i vec2u vec3u vec4u mat2x2 mat2x3 mat2x4 mat3x2 mat3x3 mat3x4 mat4x2 mat4x3 mat4x4 mat2x2f mat2x3f mat2x4f mat3x2f mat3x3f mat3x4f mat4x2f mat4x3f mat4x4f mat2x2h mat2x3h mat2x4h mat3x2h mat3x3h mat3x4h mat4x2h mat4x3h mat4x4h array atomic ptr sampler sampler_comparison texture_1d texture_2d texture_2d_array texture_3d texture_cube texture_cube_array texture_multisampled_2d texture_storage_1d texture_storage_2d texture_storage_2d_array texture_storage_3d texture_depth_2d texture_depth_2d_array texture_depth_cube texture_depth_cube_array texture_depth_multisampled_2d";
+  "bool f16 f32 i32 u32 vec2 vec3 vec4 vec2f vec3f vec4f vec2h vec3h vec4h vec2i vec3i vec4i vec2u vec3u vec4u mat2x2 mat2x3 mat2x4 mat3x2 mat3x3 mat3x4 mat4x2 mat4x3 mat4x4 mat2x2f mat2x3f mat2x4f mat3x2f mat3x3f mat3x4f mat4x2f mat4x3f mat4x4f mat2x2h mat2x3h mat2x4h mat3x2h mat3x3h mat3x4h mat4x2h mat4x3h mat4x4h array atomic ptr sampler sampler_comparison texture_1d texture_2d texture_2d_array texture_3d texture_cube texture_cube_array texture_multisampled_2d texture_storage_1d texture_storage_2d texture_storage_2d_array texture_storage_3d texture_depth_2d texture_depth_2d_array texture_depth_cube texture_depth_cube_array texture_depth_multisampled_2d texture_external";
 
 const WGSL_LITERALS = "true false";
 
 const WGSL_BUILTINS =
-  "vertex_index instance_index position frag_depth sample_index sample_mask local_invocation_id local_invocation_index global_invocation_id workgroup_id num_workgroups front_facing subgroup_invocation_id subgroup_size";
+  "vertex_index instance_index position frag_depth sample_index sample_mask local_invocation_id local_invocation_index global_invocation_id workgroup_id num_workgroups front_facing subgroup_invocation_id subgroup_size subgroup_id num_subgroups clip_distances";
 
 const WGSL_ADDRESS_SPACE_KEYWORDS =
   "storage uniform workgroup private function handle read write read_write";
@@ -20,6 +20,13 @@ function defineWgsl(hljs) {
   const NUMBER = {
     className: "number",
     variants: [
+      // Hex floats (`0x1.8p2`, `0xFp-1h`, `0x.8`) come first so the hex-int
+      // variant does not stop at the `.`.
+      {
+        begin:
+          /\b0[xX](?:[0-9a-fA-F]+\.?[0-9a-fA-F]*|\.[0-9a-fA-F]+)[pP][+-]?\d+[fh]?\b/,
+      },
+      { begin: /\b0[xX](?:[0-9a-fA-F]+\.[0-9a-fA-F]*|\.[0-9a-fA-F]+)/ },
       { begin: /\b0[xX][0-9a-fA-F]+[iuhf]?\b/ },
       { begin: /\b\d+(?:\.\d*)?(?:[eE][+-]?\d+)?[iufh]?\b/ },
       { begin: /\.\d+(?:[eE][+-]?\d+)?[iufh]?\b/ },
@@ -38,10 +45,12 @@ function defineWgsl(hljs) {
     beginScope: { 1: "keyword", 3: "title.function" },
   };
 
+  // The lookahead allows an explicit template list so `bitcast<u32>(x)` is
+  // styled like every other built-in call.
   const BUILTIN_FUNCTION_CALL = {
     className: "built_in",
     begin: new RegExp(
-      `\\b(?:${WGSL_BUILTIN_FUNCTIONS.split(" ").join("|")})(?=\\s*\\()`,
+      `\\b(?:${WGSL_BUILTIN_FUNCTIONS.split(" ").join("|")})(?=\\s*(?:<[^<>\\n]*>\\s*)?\\()`,
     ),
     relevance: 0,
   };
