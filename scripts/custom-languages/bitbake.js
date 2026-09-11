@@ -16,6 +16,9 @@ const BITBAKE_DIRECTIVES = [
   "python",
   "fakeroot",
   "def",
+  "inherit_defer",
+  "include_all",
+  "addpylib",
 ];
 
 const BITBAKE_BUILT_IN_NAMES = [
@@ -69,10 +72,12 @@ function defineBitbake(hljs) {
   const ASSIGNMENT_LOOKAHEAD =
     /(?=\s*(?:\[[^\]]*\])?\s*(?:\?\?=|\?=|:=|\+=|=\+|\.=|=\.|=))/;
 
+  const OVERRIDE = "(?::(?:[\\w-]+|\\$\\{[^}]+\\}))*";
+
   const BUILT_IN_VAR_NAME = {
     className: "built_in",
     begin: new RegExp(
-      `^(?:${BITBAKE_BUILT_IN_NAMES.join("|")})(?::[\\w-]+)?${ASSIGNMENT_LOOKAHEAD.source}`,
+      `^(?:${BITBAKE_BUILT_IN_NAMES.join("|")})${OVERRIDE}${ASSIGNMENT_LOOKAHEAD.source}`,
     ),
     relevance: 5,
   };
@@ -80,13 +85,27 @@ function defineBitbake(hljs) {
   const VAR_NAME = {
     className: "variable",
     begin: new RegExp(
-      `^[A-Za-z_][\\w]*(?::[\\w-]+)?${ASSIGNMENT_LOOKAHEAD.source}`,
+      `^[A-Za-z_][\\w]*${OVERRIDE}${ASSIGNMENT_LOOKAHEAD.source}`,
     ),
     relevance: 0,
   };
 
+  const PYTHON_FUNCTION = {
+    begin: [/^python\b/, /\s+/, /[A-Za-z_][\w.:-]*/, /\s*\(\)\s*/, /\{/],
+    beginScope: { 1: "keyword", 3: "title.function" },
+    end: /^\}/,
+    subLanguage: "python",
+  };
+
+  const PYTHON_ANON = {
+    begin: [/^python\b/, /\s*\(\)\s*/, /\{/],
+    beginScope: { 1: "keyword" },
+    end: /^\}/,
+    subLanguage: "python",
+  };
+
   const SHELL_FUNCTION = {
-    begin: [/^[A-Za-z_][\w.]*/, /\s*\(\)\s*/, /\{/],
+    begin: [/^(?!python\b)[A-Za-z_][\w.]*/, /\s*\(\)\s*/, /\{/],
     beginScope: { 1: "title.function" },
     end: /^\}/,
     subLanguage: "bash",
@@ -103,6 +122,8 @@ function defineBitbake(hljs) {
       STRING,
       PY_EXPANSION,
       EXPANSION,
+      PYTHON_FUNCTION,
+      PYTHON_ANON,
       VAR_OP,
       BUILT_IN_VAR_NAME,
       VAR_NAME,
