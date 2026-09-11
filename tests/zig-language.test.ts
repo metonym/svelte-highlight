@@ -91,3 +91,12 @@ test("zig treats usingnamespace async await as identifiers", () => {
   expect(result).not.toContain('<span class="hljs-keyword">async</span>');
   expect(result).not.toContain('<span class="hljs-keyword">await</span>');
 });
+
+test("zig highlights the addrspace keyword", () => {
+  const result = highlight(
+    "var p: *addrspace(.generic) u8 = undefined;\nfn f() addrspace(.generic) void {}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">addrspace</span>');
+  expect(result).toContain('<span class="hljs-type">u8</span>');
+});

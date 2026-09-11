@@ -4,7 +4,7 @@ const ZIG_KEYWORDS =
   "error test and or orelse unreachable suspend resume " +
   "nosuspend export extern packed align allowzero volatile linksection " +
   "threadlocal asm anytype noalias callconv opaque " +
-  "anyframe";
+  "anyframe addrspace";
 
 const ZIG_LITERALS = "true false null undefined";
 
