@@ -46,3 +46,48 @@ test("kdl highlights type annotations", () => {
 
   expect(result).toContain('<span class="hljs-type">(date)</span>');
 });
+
+test("kdl highlights KDL 2.0 raw strings as one string", () => {
+  const result = highlight(
+    'author email=#"kat@example.com"# features=#"["small_rng"]"# deep=##"a "# b"##',
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-string">#&quot;kat@example.com&quot;#</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">#&quot;[&quot;small_rng&quot;]&quot;#</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">##&quot;a &quot;# b&quot;##</span>',
+  );
+  expect(result).not.toContain(
+    '<span class="hljs-title function_">small_rng</span>',
+  );
+});
+
+test("kdl highlights multi-line and raw multi-line strings", () => {
+  const result = highlight(
+    'text """\n    line one\n    line "two"\n    """\nraw #"""\n    r\\n\n    """#\nnext 1',
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;&quot;&quot;\n    line one\n    line &quot;two&quot;\n    &quot;&quot;&quot;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">#&quot;&quot;&quot;\n    r\\n\n    &quot;&quot;&quot;#</span>',
+  );
+  expect(result).toContain('<span class="hljs-title function_">next</span>');
+});
+
+test("kdl keeps KDL 1.0 raw strings, hash literals, and plain strings", () => {
+  const result = highlight('node r#"raw"# #true "a" "b"');
+
+  expect(result).toContain(
+    '<span class="hljs-string">r#&quot;raw&quot;#</span>',
+  );
+  expect(result).toContain('<span class="hljs-literal">#true</span>');
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;a&quot;</span> <span class="hljs-string">&quot;b&quot;</span>',
+  );
+});
