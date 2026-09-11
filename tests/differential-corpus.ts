@@ -847,6 +847,7 @@ flowchart LR
   A[Client] --> B{API}
   subgraph cluster
     B --> C[(Database)]
+    D((End))
   end
   sequenceDiagram
     participant Alice
