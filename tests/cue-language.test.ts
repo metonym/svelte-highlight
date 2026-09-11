@@ -63,3 +63,39 @@ test("cue highlights the optional-field marker", () => {
 
   expect(result).toContain('<span class="hljs-operator">?</span>');
 });
+
+test("cue highlights the required-field marker", () => {
+  const result = highlight("name!: string\nnot: !x");
+
+  expect(result).toContain(
+    'name<span class="hljs-operator">!</span>: <span class="hljs-type">string</span>',
+  );
+  expect(result).toContain("not: !x");
+});
+
+test("cue highlights bare comparison operators and equality", () => {
+  const result = highlight("age: int & >=0 & <150\nok: x == 1 && y > 2");
+
+  expect(result).toContain(
+    '<span class="hljs-operator">&lt;</span><span class="hljs-number">150</span>',
+  );
+  expect(result).toContain('<span class="hljs-operator">&gt;=</span>');
+  expect(result).toContain('<span class="hljs-operator">==</span>');
+  expect(result).toContain('<span class="hljs-operator">&gt;</span> ');
+  expect(result).not.toContain(
+    '<span class="hljs-operator">&gt;</span><span class="hljs-operator">=</span>',
+  );
+});
+
+test("cue highlights word-form arithmetic operators and bottom", () => {
+  const result = highlight(
+    "a: 10 div 3\nb: 10 mod 3\nc: 7 quo 2\nd: 7 rem 2\ne: _|_",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">div</span>');
+  expect(result).toContain('<span class="hljs-keyword">mod</span>');
+  expect(result).toContain('<span class="hljs-keyword">quo</span>');
+  expect(result).toContain('<span class="hljs-keyword">rem</span>');
+  expect(result).toContain('<span class="hljs-literal">_|_</span>');
+  expect(result).not.toContain('_<span class="hljs-operator">|</span>_');
+});
