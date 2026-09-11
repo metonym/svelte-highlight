@@ -71,8 +71,18 @@ export async function convertGrammars() {
   }
 
   // One hljs instance so sublanguage refs resolve in any conversion order.
+  // Patched hljs built-ins (scripts/hljs-patches/) go last: several custom
+  // grammars re-register the stock built-in they embed (e.g. astro registers
+  // stock typescript) as a side effect of their own registration, and the
+  // last registration for a name wins.
   const hljs = hljsCore.newInstance();
+  const patchedEntries = entries.filter((entry) => entry.patchPath);
   for (const entry of entries) {
+    if (entry.patchPath) continue;
+    const mod = getModule(entry);
+    hljs.registerLanguage(mod.name, mod.register);
+  }
+  for (const entry of patchedEntries) {
     const mod = getModule(entry);
     hljs.registerLanguage(mod.name, mod.register);
   }
