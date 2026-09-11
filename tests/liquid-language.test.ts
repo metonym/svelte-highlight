@@ -46,3 +46,51 @@ test("liquid treats comment blocks as opaque comments", () => {
   expect(result).not.toContain("hljs-template-tag");
   expect(result).not.toContain("hljs-template-variable");
 });
+
+test("liquid highlights Shopify theme tags and literals", () => {
+  const result = highlight(
+    "{% paginate items by 5 %}{% endpaginate %}\n{% form 'contact' %}{% endform %}\n{{ product.title | default: \"n/a\", allow_false: true }} {{ nil }}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">paginate</span>');
+  expect(result).toContain('<span class="hljs-keyword">endform</span>');
+  expect(result).toContain('<span class="hljs-literal">true</span>');
+  expect(result).toContain('<span class="hljs-literal">nil</span>');
+});
+
+test("liquid treats inline # comments and doc blocks as comments", () => {
+  const result = highlight(
+    "{% # a note %}\n{%- # trimmed -%}\n{% doc %}\n  @param x\n{% enddoc %}\n{% assign y = 1 %}",
+  );
+
+  expect(result).toContain('<span class="hljs-comment">{% # a note %}</span>');
+  expect(result).toContain(
+    '<span class="hljs-comment">{%- # trimmed -%}</span>',
+  );
+  expect(result).toContain('<span class="hljs-comment">{% doc %}');
+  expect(result).toContain('<span class="hljs-keyword">assign</span>');
+});
+
+test("liquid does not parse template syntax inside raw blocks", () => {
+  const result = highlight(
+    "{% raw %}{{ not parsed }} {% nope %}{% endraw %}{{ parsed }}",
+  );
+
+  expect(result).not.toContain(
+    '<span class="hljs-template-variable">{{ not parsed }}</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-template-variable">{{ parsed }}</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">raw</span>');
+});
+
+test("liquid highlights schema bodies as JSON", () => {
+  const result = highlight(
+    '{% schema %}\n{ "name": "Hero", "settings": [] }\n{% endschema %}',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">schema</span>');
+  expect(result).toContain('<span class="hljs-attr">&quot;name&quot;</span>');
+  expect(result).toContain('<span class="hljs-keyword">endschema</span>');
+});

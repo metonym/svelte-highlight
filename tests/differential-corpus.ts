@@ -745,7 +745,12 @@ theorem succ_pos : ∀ n : ℕ, succ n > 0 := by
   {% else %}
     <p>Sold out</p>
   {% endif %}
-</div>`,
+  {% # inline note %}
+  {% raw %}{{ literal }}{% endraw %}
+</div>
+{% schema %}
+{ "name": "Card", "settings": [] }
+{% endschema %}`,
   logql: `# filter application errors and compute rate
 {job="app", env=~"prod|staging"}
   |= "error" != "debug"
