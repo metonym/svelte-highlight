@@ -73,3 +73,53 @@ test("wit highlights list types and package paths", () => {
   expect(result).toContain('<span class="hljs-type">list</span>');
   expect(result).toContain('<span class="hljs-type">string</span>');
 });
+
+test("wit keeps kebab-case identifiers and %-escaped names as plain words", () => {
+  const result = highlight(
+    "resource fields {\n  from-list: static func() -> list<u8>;\n}\nenum status { ok, not-found }\n%type: func();",
+  );
+
+  expect(result).toContain(
+    'from-list: <span class="hljs-keyword">static</span>',
+  );
+  expect(result).toContain("{ ok, not-found }");
+  expect(result).toContain('%type: <span class="hljs-keyword">func</span>');
+  expect(result).not.toContain('hljs-keyword">from');
+  expect(result).not.toContain('hljs-keyword">type</span>: ');
+});
+
+test("wit highlights own handles, async funcs, and stream/future types", () => {
+  const result = highlight(
+    "handle: func(o: own<fields>, b: borrow<fields>) -> result<_, string>;\nrun: async func() -> stream<u8>;\nfut: func() -> future<string>;",
+  );
+
+  expect(result).toContain('<span class="hljs-type">own</span>&lt;fields&gt;');
+  expect(result).toContain(
+    '<span class="hljs-keyword">async</span> <span class="hljs-keyword">func</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-type">stream</span>&lt;<span class="hljs-type">u8</span>&gt;',
+  );
+  expect(result).toContain(
+    '<span class="hljs-type">future</span>&lt;<span class="hljs-type">string</span>&gt;',
+  );
+});
+
+test("wit highlights feature gates and flags/type declarations", () => {
+  const result = highlight(
+    "@since(version = 0.2.0)\n@unstable(feature = ready)\nflags perms { read, write }\ntype duration = u64;\nuse types.{method as http-method};",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-meta">@since</span>(version = <span class="hljs-number">0.2.0</span>)',
+  );
+  expect(result).toContain('<span class="hljs-meta">@unstable</span>(feature');
+  expect(result).toContain(
+    '<span class="hljs-keyword">flags</span> <span class="hljs-title class_">perms</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">type</span> <span class="hljs-title class_">duration</span> = <span class="hljs-type">u64</span>',
+  );
+  // `types` in a use path is not the `type` keyword.
+  expect(result).toContain('<span class="hljs-keyword">use</span> types.{');
+});

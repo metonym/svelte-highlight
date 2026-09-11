@@ -1,10 +1,12 @@
 const WIT_KEYWORDS =
   "package world interface use import export func record variant enum " +
-  "resource include type flags constructor static with as from";
+  "resource include type flags constructor static with as async";
 
+// Primitive types, the built-in generics, and the `own`/`borrow` resource
+// handles; `stream`/`future` are the component-model 0.3 async types.
 const WIT_TYPES =
   "string u8 u16 u32 u64 s8 s16 s32 s64 f32 f64 bool char list option " +
-  "result tuple borrow";
+  "result tuple own borrow stream future";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineWit(hljs) {
@@ -33,8 +35,19 @@ function defineWit(hljs) {
     relevance: 10,
   };
 
+  // Feature gates (`@since(version = 0.2.0)`, `@unstable(feature = x)`,
+  // `@deprecated(version = 0.3.0)`) that precede an item.
+  const GATE = {
+    className: "meta",
+    begin: /@(?:since|unstable|deprecated)\b/,
+    relevance: 0,
+  };
+
   const GENERIC = {
-    begin: [/\b(?:list|option|result|tuple|borrow)\b/, /\s*</],
+    begin: [
+      /\b(?:list|option|result|tuple|own|borrow|stream|future)\b/,
+      /\s*</,
+    ],
     beginScope: { 1: "type" },
     end: />/,
     contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
@@ -49,7 +62,7 @@ function defineWit(hljs) {
 
   const DECLARATION = {
     begin: [
-      /\b(?:world|interface|record|variant|enum|resource)\b/,
+      /\b(?:world|interface|record|variant|enum|flags|resource|type)\b/,
       /\s+/,
       /[a-z][\w-]*/,
     ],
@@ -61,6 +74,10 @@ function defineWit(hljs) {
     name: "WIT",
     aliases: ["wit"],
     keywords: {
+      // Identifiers are kebab-case, so `from-list` or `not-found` must lex
+      // as one word rather than leaking `list`/`not` as keywords; a `%`
+      // prefix escapes a keyword used as an identifier (`%type: func()`).
+      $pattern: "%?[a-z][\\w-]*",
       keyword: WIT_KEYWORDS,
       type: WIT_TYPES,
     },
@@ -68,6 +85,7 @@ function defineWit(hljs) {
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
       STRING,
+      GATE,
       VERSION,
       PACKAGE_PATH,
       GENERIC,
