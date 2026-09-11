@@ -45,3 +45,41 @@ test("typespec highlights comments and strings", () => {
     '<span class="hljs-string">&quot;@typespec/http&quot;</span>',
   );
 });
+
+test("typespec highlights const and typeof", () => {
+  const result = highlight(
+    'const cfg = #{ enabled: true };\nmodel X { note: typeof "hello"; }',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">const</span> cfg');
+  expect(result).toContain(
+    '<span class="hljs-keyword">typeof</span> <span class="hljs-string">&quot;hello&quot;</span>',
+  );
+});
+
+test("typespec highlights augment decorators as one token", () => {
+  const result = highlight('@@doc(Pet.name, "The name");\n@doc("x")');
+
+  expect(result).toContain('<span class="hljs-meta">@@doc</span>(Pet.name');
+  expect(result).toContain('<span class="hljs-meta">@doc</span>(');
+  expect(result).not.toContain('@<span class="hljs-meta">@doc</span>');
+});
+
+test("typespec highlights binary and hex literals and newer scalars", () => {
+  const result = highlight(
+    "model N { bits: 0b1010; mask: 0xFF; price: decimal128; n: safeint; t: unixTimestamp32; }",
+  );
+
+  expect(result).toContain('<span class="hljs-number">0b1010</span>');
+  expect(result).toContain('<span class="hljs-number">0xFF</span>');
+  expect(result).toContain('<span class="hljs-type">decimal128</span>');
+  expect(result).toContain('<span class="hljs-type">safeint</span>');
+  expect(result).toContain('<span class="hljs-type">unixTimestamp32</span>');
+});
+
+test("typespec no longer styles projection as a keyword", () => {
+  const result = highlight("model M { projection: string; }");
+
+  expect(result).not.toContain('hljs-keyword">projection');
+  expect(result).toContain('projection: <span class="hljs-type">string</span>');
+});
