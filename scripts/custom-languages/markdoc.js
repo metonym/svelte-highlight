@@ -77,17 +77,37 @@ function defineMarkdoc(hljs) {
     end: /\{%-?\s*\/comment\s*-?%\}/,
   };
 
+  // Frontmatter only at the start of the document. Same shape as mdx/astro:
+  // the opening fence consumes its trailing newline so `end` cannot match
+  // the same line, `returnEnd` hands the closing fence to the sibling meta
+  // rule, and `on:begin` compiles to `onlyAtInputStart` so a Markdoc table
+  // separator (`---`) mid-document cannot open YAML and swallow
+  // `{% /table %}`.
   const FRONTMATTER = {
-    begin: /^---$/,
-    end: /^---$/,
+    begin: /^---[ \t]*\n/,
+    end: /^---[ \t]*$/m,
     subLanguage: "yaml",
+    beginScope: "meta",
+    returnEnd: true,
+    /** @type {import("highlight.js").ModeCallback} */
+    "on:begin": (match, response) => {
+      if (match.index !== 0) {
+        response.ignoreMatch();
+      }
+    },
+  };
+
+  const FRONTMATTER_CLOSE = {
+    begin: /^---[ \t]*$/m,
+    className: "meta",
+    relevance: 0,
   };
 
   return {
     name: "Markdoc",
     aliases: ["mdoc"],
     subLanguage: "markdown",
-    contains: [FRONTMATTER, COMMENT, TAG],
+    contains: [FRONTMATTER, FRONTMATTER_CLOSE, COMMENT, TAG],
   };
 }
 

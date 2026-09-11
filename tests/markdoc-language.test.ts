@@ -1,10 +1,10 @@
-import { createRegistry } from "../src/engine.js";
+import { createRegistry, registerAll } from "../src/engine.js";
 
 import markdoc from "../src/languages/markdoc";
 
 const registry = createRegistry();
 
-registry.register(markdoc.register);
+registerAll(registry, markdoc);
 
 const highlight = (code: string) =>
   registry.highlight(code, { language: "markdoc" }).value;
@@ -50,4 +50,28 @@ test("markdoc highlights comment tags", () => {
   expect(result).toContain(
     '<span class="hljs-comment">{% comment %} note {% /comment %}</span>',
   );
+});
+
+test("markdoc does not treat a table separator as YAML frontmatter", () => {
+  const result = highlight(`{% table %}
+* Col
+---
+* Cell
+{% /table %}
+`);
+
+  expect(result).toContain('<span class="hljs-title function_">table</span>');
+  expect(result).toContain('<span class="hljs-template-tag">/</span>');
+});
+
+test("markdoc still highlights YAML frontmatter at the start", () => {
+  const result = highlight(`---
+title: Hello
+---
+
+# Hi
+`);
+
+  expect(result).toContain('<span class="language-yaml">');
+  expect(result).toContain('<span class="hljs-attr">title:</span>');
 });
