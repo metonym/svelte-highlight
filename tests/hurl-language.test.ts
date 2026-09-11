@@ -56,3 +56,23 @@ HTTP 201
     '<span class="hljs-string">https://example.org/api/users</span>',
   );
 });
+
+test("hurl highlights a wildcard HTTP status", () => {
+  const result = highlight("GET https://example.com\nHTTP *\n");
+
+  expect(result).toContain('<span class="hljs-keyword">HTTP</span>');
+  expect(result).toContain('<span class="hljs-literal">*</span>');
+});
+
+test("hurl still highlights a numeric HTTP status", () => {
+  const result = highlight("GET https://example.com\nHTTP 200\n");
+
+  expect(result).toContain('<span class="hljs-number">200</span>');
+});
+
+test("hurl highlights an HTTP version on the status line", () => {
+  const result = highlight("GET https://example.com\nHTTP/2 200\n");
+
+  expect(result).toContain('<span class="hljs-keyword">HTTP/2</span>');
+  expect(result).toContain('<span class="hljs-number">200</span>');
+});
