@@ -11,7 +11,16 @@ const JQ_BUILT_INS =
   "rtrimstr explode implode split splits join ascii_downcase ascii_upcase test match capture scan " +
   "sub gsub recurse recurse_down walk transpose limit first last nth until while repeat isnan " +
   "isinfinite infinite nan now todate fromdate strftime strptime mktime gmtime localtime " +
-  "input_line_number modulemeta combinations halt halt_error break";
+  "input_line_number modulemeta combinations halt halt_error break " +
+  // Type filters, `del`, math, streaming, SQL-style helpers, and the jq 1.7
+  // (`abs`, `pick`, `toarray`, `trim`/`ltrim`/`rtrim`, `have_decnum`,
+  // `have_literal_numbers`) and 1.8 (`trimstr`, `skip`) additions.
+  "del bsearch indices index rindex numbers strings booleans nulls arrays objects " +
+  "iterables scalars stderr isnormal trim ltrim rtrim trimstr abs toarray pick skip " +
+  "have_decnum have_literal_numbers tostream fromstream truncate_stream " +
+  "input_filename builtins ascii floor ceil round sqrt pow log log2 log10 exp exp2 " +
+  "exp10 fabs trunc significand todateiso8601 fromdateiso8601 dateadd datesub date " +
+  "strflocaltime IN INDEX GROUP_BY UNIQUE_BY ANY ALL";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineJq(hljs) {
