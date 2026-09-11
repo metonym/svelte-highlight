@@ -52,6 +52,12 @@ const CODEQL_KEYWORDS = [
   "transient",
   "library",
   "deprecated",
+  "additional",
+  "extensible",
+  "overlay",
+  "signature",
+  "strictcount",
+  "strictsum",
 ];
 
 const CODEQL_TYPES = "boolean int float string date";
