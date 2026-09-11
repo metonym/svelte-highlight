@@ -14,6 +14,7 @@ const CIVET_KEYWORDS = [
   "not",
   "is",
   "isnt",
+  "comptime",
 ];
 
 const XML_TAG_BEGIN = /\B<[A-Za-z][\w:.-]*/;
@@ -87,6 +88,51 @@ function defineCivet(hljs) {
     end: /###/,
   };
 
+  // A `#` opens a line comment only when followed by whitespace or the end
+  // of the line: `#radius` is a private class field, not a comment.
+  const HASH_COMMENT = hljs.COMMENT(/#(?=\s|$)/, /$/);
+
+  // `///` heredoc regex: whitespace-insensitive, may contain `#` comments,
+  // closes at `///` plus flags. Listed before the comment modes, which
+  // would otherwise see `//`.
+  const BLOCK_REGEX = {
+    className: "regexp",
+    begin: /\/\/\//,
+    end: /\/\/\/[a-z]*/,
+    contains: [HASH_COMMENT],
+  };
+
+  // `"""` / `'''` block strings, with `${}` interpolation.
+  const BLOCK_STRING = {
+    className: "string",
+    variants: [
+      { begin: /"""/, end: /"""/ },
+      { begin: /'''/, end: /'''/ },
+    ],
+    contains: [
+      hljs.BACKSLASH_ESCAPE,
+      { className: "subst", begin: /\$\{/, end: /\}/ },
+    ],
+  };
+
+  // `for each x of xs` / `for own k in obj`: `each` and `own` are only
+  // keywords right after `for`, so they are matched as a bounded pair
+  // rather than added to the keyword table.
+  const FOR_MODIFIER = {
+    begin: [/\bfor\b/, /\s+/, /(?:each|own)\b/],
+    beginScope: { 1: "keyword", 3: "keyword" },
+    relevance: 0,
+  };
+
+  // `operator plus(a, b) ...` declares a custom infix operator; the name
+  // is only styled in this position so `operator` stays a plain identifier
+  // elsewhere.
+  const OPERATOR_DECL = {
+    begin: [/\boperator\b/, /\s+/, /[A-Za-z_$][\w$]*/],
+    beginScope: { 1: "keyword", 3: "title.function" },
+    relevance: 0,
+  };
+
   const jsxElement = {
     begin: XML_TAG_BEGIN,
     end: XML_TAG_END,
@@ -119,8 +165,12 @@ function defineCivet(hljs) {
     },
     contains: [
       jsxElement,
+      BLOCK_REGEX,
+      BLOCK_STRING,
       BLOCK_COMMENT,
-      hljs.HASH_COMMENT_MODE,
+      HASH_COMMENT,
+      FOR_MODIFIER,
+      OPERATOR_DECL,
       DECLARATION_OP,
       PIPE_OP,
       ARROW_OP,
