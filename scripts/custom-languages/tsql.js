@@ -57,6 +57,18 @@ const TSQL_EXTRA_KEYWORDS = [
   "SCHEMABINDING",
   "OVER",
   "PARTITION",
+  // MERGE clauses, window frames, and the SET options that open most
+  // procedures.
+  "MATCHED",
+  "TARGET",
+  "SOURCE",
+  "UNBOUNDED",
+  "PRECEDING",
+  "FOLLOWING",
+  "NOCOUNT",
+  "XACT_ABORT",
+  "OPTION",
+  "RECOMPILE",
 ];
 
 const TSQL_EXTRA_TYPES = [
@@ -112,6 +124,45 @@ const TSQL_EXTRA_BUILTINS = [
   "JSON_VALUE",
   "JSON_QUERY",
   "JSON_MODIFY",
+  // SQL Server 2022 additions.
+  "GREATEST",
+  "LEAST",
+  "DATE_BUCKET",
+  "DATETRUNC",
+  "GENERATE_SERIES",
+  "JSON_OBJECT",
+  "JSON_ARRAY",
+  "JSON_PATH_EXISTS",
+  "ISJSON",
+  "APPROX_PERCENTILE_CONT",
+  "APPROX_PERCENTILE_DISC",
+  "APPROX_COUNT_DISTINCT",
+  // CATCH-block error functions and common scalar helpers.
+  "ERROR_MESSAGE",
+  "ERROR_NUMBER",
+  "ERROR_LINE",
+  "ERROR_PROCEDURE",
+  "ERROR_SEVERITY",
+  "ERROR_STATE",
+  "FORMAT",
+  "EOMONTH",
+  "DATEFROMPARTS",
+  "DATETIMEFROMPARTS",
+  "SYSUTCDATETIME",
+  "GETUTCDATE",
+  "CHARINDEX",
+  "PATINDEX",
+  "STUFF",
+  "QUOTENAME",
+  "REPLICATE",
+  "CONCAT_WS",
+  "HASHBYTES",
+  "CHECKSUM",
+  "ISNUMERIC",
+  "OBJECT_NAME",
+  "SCHEMA_NAME",
+  "DB_NAME",
+  "SUSER_SNAME",
   "sp_executesql",
   "sp_help",
   "sp_rename",
@@ -158,6 +209,14 @@ function register(hljs) {
     relevance: 0,
   };
 
+  // `OUTPUT $action` in MERGE, plus the `$IDENTITY`/`$ROWGUID` column
+  // aliases.
+  const PSEUDO_COLUMN = {
+    className: "variable",
+    begin: /\$(?:action|IDENTITY|ROWGUID)\b/,
+    relevance: 5,
+  };
+
   const MULTI_WORD_KEYWORD = {
     className: "keyword",
     begin: /\b(?:WITH\s+TIES|FOR\s+JSON|FOR\s+XML)\b/,
@@ -182,6 +241,7 @@ function register(hljs) {
       BRACKETED_IDENTIFIER,
       N_STRING,
       TEMP_TABLE,
+      PSEUDO_COLUMN,
       MULTI_WORD_KEYWORD,
       ...base.contains,
     ],
