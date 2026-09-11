@@ -184,6 +184,7 @@ const HLJS_PATCH_NAMES = [
   "javascript",
   "python",
   "rust",
+  "typescript",
 ] as const;
 
 export type HljsPatch = {
