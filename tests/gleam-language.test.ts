@@ -50,3 +50,25 @@ test("gleam highlights operators", () => {
   expect(result).toContain('<span class="hljs-operator">|&gt;</span>');
   expect(result).toContain('<span class="hljs-operator">&lt;&gt;</span>');
 });
+
+test("gleam highlights arrow operators in use bindings, case clauses, and return types", () => {
+  const result = highlight(
+    'pub fn f(x: Int) -> String {\n  use conn <- db.with_conn(pool)\n  case x { 1 -> "a" _ -> "b" }\n}',
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-operator">-&gt;</span> <span class="hljs-type">String</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">use</span> conn <span class="hljs-operator">&lt;-</span> db',
+  );
+  expect(result).toContain(
+    '<span class="hljs-number">1</span> <span class="hljs-operator">-&gt;</span>',
+  );
+});
+
+test("gleam keeps comparison operators unstyled", () => {
+  const result = highlight("let ok = a < b && c > d");
+
+  expect(result).not.toContain("hljs-operator");
+});
