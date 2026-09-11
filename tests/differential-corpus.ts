@@ -334,7 +334,14 @@ db: {
   shape: cylinder
 }
 server -> db: query
-x.direction: right`,
+x.direction: right
+suspend model: {
+  cache.shape: cylinder
+}
+unsuspend model
+label: |md
+  **docs**
+|`,
   datalog: `// transitive closure over an edge relation
 .decl edge(x: symbol, y: symbol)
 .decl path(x: symbol, y: symbol)

@@ -62,3 +62,32 @@ test("d2 recognizes layers, scenarios, and steps as keywords", () => {
   expect(result).toContain('<span class="hljs-keyword">scenarios</span>');
   expect(result).toContain('<span class="hljs-keyword">steps</span>');
 });
+
+test("d2 highlights suspend and unsuspend instead of folding them into the next key", () => {
+  const result = highlight(
+    "suspend model: {\n  db.shape: cylinder\n}\nunsuspend model",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">suspend</span>');
+  expect(result).toContain('<span class="hljs-keyword">unsuspend</span>');
+  expect(result).not.toContain('<span class="hljs-attr">suspend model</span>');
+});
+
+// biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
+test("d2 highlights ${} substitutions and |md block strings", () => {
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
+  const result = highlight('x: "${primary}"\nlabel: |md\n  **hi**\n|');
+
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
+  expect(result).toContain('<span class="hljs-subst">${primary}</span>');
+  expect(result).toContain('<span class="hljs-string">|md\n  **hi**\n|</span>');
+});
+
+test("d2 still highlights a quoted label that is not a block string", () => {
+  const result = highlight('x: "not a block"');
+
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;not a block&quot;</span>',
+  );
+  expect(result).not.toContain('<span class="hljs-string">|');
+});
