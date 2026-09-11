@@ -1,5 +1,13 @@
+// Includes `opaque`/`unfolding` (Agda 2.6.4), `interleaved mutual`
+// (2.6.2), the `inductive`/`coinductive` record modifiers, and the
+// reflection commands (`quote`, `unquoteDecl`, `tactic`).
 const AGDA_KEYWORDS =
-  "module where import data record field constructor postulate open using renaming hiding public private variable mutual instance abstract macro pattern rewrite with in let do case of infix infixl infixr";
+  "module where import data record field constructor postulate open using renaming hiding public private variable mutual instance abstract macro pattern rewrite with in let do case of infix infixl infixr " +
+  "opaque unfolding interleaved inductive coinductive forall syntax primitive tactic quote quoteTerm unquote unquoteDecl unquoteDef overlap";
+
+// The universes. `Setω` is left out: `ω` is outside hljs's default `\w`
+// keyword pattern.
+const AGDA_BUILT_INS = "Set Prop";
 
 // Type and constructor names are frequently a single Unicode symbol (`ℕ`,
 // `⊤`, `⊥`) rather than an ASCII word, so the capture used for `data`/`record`
@@ -36,9 +44,18 @@ function defineAgda(hljs) {
     contains: [hljs.BACKSLASH_ESCAPE],
   };
 
+  // Decimal with optional fraction/exponent (`3.5e2`) and hex (`0x2A`).
   const NUMBER = {
     className: "number",
-    begin: /\b\d+(?:\.\d+)?\b/,
+    begin: /\b(?:0x[\da-fA-F]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b/,
+    relevance: 0,
+  };
+
+  // `'a'`, `'\n'`, `'\x41'`. Exactly one character (or escape) between the
+  // quotes, so the prime in `x'` never opens one.
+  const CHAR = {
+    className: "string",
+    begin: /'(?:[^'\\\n]|\\(?:x[\da-fA-F]+|.))'/,
     relevance: 0,
   };
 
@@ -60,6 +77,7 @@ function defineAgda(hljs) {
     unicodeRegex: true,
     keywords: {
       keyword: AGDA_KEYWORDS,
+      built_in: AGDA_BUILT_INS,
     },
     contains: [
       hljs.COMMENT(/--/, /$/),
@@ -67,6 +85,7 @@ function defineAgda(hljs) {
       NESTED_COMMENT,
       DEF_HEADER,
       STRING,
+      CHAR,
       UNICODE_OPERATOR,
       NUMBER,
     ],
