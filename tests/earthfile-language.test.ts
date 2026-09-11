@@ -55,3 +55,18 @@ test("earthfile highlights FROM via dockerfile", () => {
 
   expect(result).toContain("hljs-keyword");
 });
+
+test("earthfile highlights FROM DOCKERFILE as one command", () => {
+  const result = highlight(
+    "vendor:\n    FROM DOCKERFILE -f Dockerfile.vendor .",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">FROM DOCKERFILE</span>');
+});
+
+test("earthfile FROM image lines are unchanged", () => {
+  const result = highlight("FROM alpine:3.19");
+
+  expect(result).toContain('<span class="hljs-keyword">FROM</span>');
+  expect(result).not.toContain("FROM DOCKERFILE");
+});
