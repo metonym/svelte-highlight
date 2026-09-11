@@ -1115,6 +1115,12 @@ contract Token {
     function transfer(address to, uint256 amount) public {
         require(msg.sender == owner);
         balances[to] += amount;
+        assembly ("memory-safe") {
+            let p := mload(0x40)
+            switch amount
+            case 0 { mstore(p, 1) }
+            default { mstore(p, 2) }
+        }
     }
 }`,
   sparql: `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
