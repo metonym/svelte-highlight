@@ -24,11 +24,11 @@ function defineRon(hljs) {
     relevance: 0,
   };
 
-  const RAW_STRING = {
+  const RAW_STRING = hljs.END_SAME_AS_BEGIN({
     className: "string",
-    begin: /r#*"/,
-    end: /"#*/,
-  };
+    begin: /r(#*)"/,
+    end: /"(#*)/,
+  });
 
   const BYTE_STRING = {
     className: "string",
@@ -77,8 +77,8 @@ function defineRon(hljs) {
       CHAR,
       STRUCT_NAME,
       FIELD_NAME,
-      PASCAL_CASE_LITERAL,
       NUMBER,
+      PASCAL_CASE_LITERAL,
     ],
   };
 }
