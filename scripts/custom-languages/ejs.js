@@ -9,6 +9,14 @@ function defineEjs(hljs) {
     subLanguage: "xml",
     contains: [
       hljs.COMMENT("<%#", "%>"),
+      // `<%%` and `%%>` emit a literal `<%` / `%>`. The opener must be
+      // consumed before the scriptlet rule below sees its leading `<%`, or
+      // the rest of the line is highlighted as JavaScript.
+      {
+        className: "meta",
+        begin: /<%%|%%>/,
+        relevance: 0,
+      },
       {
         begin: /<%[-_=]?/,
         end: /[-_]?%>/,
