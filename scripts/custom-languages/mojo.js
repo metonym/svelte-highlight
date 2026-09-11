@@ -1,7 +1,7 @@
 const MOJO_KEYWORDS =
   "fn struct var let inout owned borrowed mut alias trait impl def if elif " +
   "else for while return from import as raise try except finally with yield " +
-  "and or not in is pass continue break class";
+  "and or not in is pass continue break class raises out deinit imm ref";
 
 const MOJO_TYPES =
   "Int Float64 String Bool SIMD UInt UInt8 UInt16 UInt32 UInt64 Int8 Int16 " +
@@ -21,18 +21,18 @@ function defineMojo(hljs) {
   };
 
   const FUNCTION = {
-    begin: [/\bfn\b/, /\s+/, /[A-Za-z_]\w*/],
+    begin: [/\b(?:fn|def)\b/, /\s+/, /[A-Za-z_]\w*(?=\s*\()/],
     beginScope: { 1: "keyword", 3: "title.function" },
   };
 
   const STRUCT = {
-    begin: [/\bstruct\b/, /\s+/, /[A-Za-z_]\w*/],
+    begin: [/\bstruct\b/, /\s+/, /[A-Za-z_]\w*(?=\s*:)/],
     beginScope: { 1: "keyword", 3: "title.class" },
   };
 
   const OWNERSHIP = {
     className: "keyword",
-    begin: /\b(?:inout|owned|borrowed)\b/,
+    begin: /\b(?:inout|owned|borrowed|out|deinit|imm|ref)\b/,
     relevance: 10,
   };
 
