@@ -93,3 +93,18 @@ test("promql highlights @ start() and @ end()", () => {
   expect(result).toContain('<span class="hljs-operator">@</span>');
   expect(result).toContain('<span class="hljs-built_in">start</span>');
 });
+
+test("promql highlights compound durations as a single number token", () => {
+  const result = highlight("rate(x[1h30m]) offset 1d12h");
+
+  expect(result).toContain('<span class="hljs-number">1h30m</span>');
+  expect(result).toContain('<span class="hljs-number">1d12h</span>');
+  expect(result).not.toContain('<span class="hljs-number">1h</span>30m');
+});
+
+test("promql highlights compound durations inside a subquery range", () => {
+  const result = highlight("max_over_time(x[1h30m:5m]) and y[5m:]");
+
+  expect(result).toContain('<span class="hljs-number">1h30m:5m</span>');
+  expect(result).toContain('<span class="hljs-number">5m:</span>');
+});
