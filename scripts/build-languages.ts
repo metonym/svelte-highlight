@@ -180,6 +180,7 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
  * "exported from highlight.js" count); only its `register` differs.
  */
 const HLJS_PATCH_NAMES = [
+  "c",
   "go",
   "javascript",
   "python",
