@@ -249,7 +249,15 @@ result := x |> double
 unless result is 0
   console.log "not zero"
 add := (a, b) => a + b
-@name = "civet"`,
+@name = "civet"
+re := ///
+  ^\\d+  # digits only
+///gi
+banner := """
+  hello \${@name}
+  """
+for each n of [1, 2]
+  console.log n`,
   cisco: `! configure the uplink interface
 interface GigabitEthernet0/0/1
  description Uplink to core
