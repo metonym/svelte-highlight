@@ -57,3 +57,34 @@ export function loadX(ptr: usize): i32 {
   expect(result).toContain('<span class="hljs-built_in">idof</span>');
   expect(result).not.toContain("language-xml");
 });
+
+test("assemblyscript highlights isize and the type-operation builtins", () => {
+  const result = highlight(
+    'function f(z: isize, p: usize): u32 {\n  return sizeof<T>() + offsetof<Vec>("x") + alignof<T>() + nameof<T>().length;\n}\nlet v = instantiate<Vec>(1);\nif (isInteger<T>()) unreachable();\nassert(v != null, "msg");',
+  );
+
+  expect(result).toContain('<span class="hljs-type">isize</span>');
+  expect(result).toContain('<span class="hljs-type">usize</span>');
+  expect(result).toContain(
+    '<span class="hljs-built_in">sizeof</span>&lt;T&gt;',
+  );
+  expect(result).toContain('<span class="hljs-built_in">offsetof</span>&lt;');
+  expect(result).toContain('<span class="hljs-built_in">alignof</span>&lt;');
+  expect(result).toContain('<span class="hljs-built_in">nameof</span>&lt;');
+  expect(result).toContain(
+    '<span class="hljs-built_in">instantiate</span>&lt;',
+  );
+  expect(result).toContain('<span class="hljs-built_in">isInteger</span>&lt;');
+  expect(result).toContain('<span class="hljs-built_in">unreachable</span>');
+  expect(result).toContain('<span class="hljs-built_in">assert</span>');
+});
+
+test("assemblyscript leaves ordinary TypeScript identifiers to the typescript grammar", () => {
+  const result = highlight(
+    "const size = 1;\nlet isIntegerish = true;\nconst obj = { sizeof: 2 };",
+  );
+
+  expect(result).not.toContain('hljs-built_in">size');
+  expect(result).not.toContain('hljs-built_in">isIntegerish');
+  expect(result).not.toContain('hljs-built_in">sizeof');
+});
