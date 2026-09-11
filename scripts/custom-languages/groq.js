@@ -20,7 +20,11 @@ function defineGroq(hljs) {
 
   const PARAMETER = {
     className: "variable",
-    begin: /\$[A-Za-z_]\w*/,
+    variants: [
+      { begin: /\$[A-Za-z_]\w*/ },
+      // `@` (the value being evaluated) and `^` / `^.^` (enclosing scopes).
+      { begin: /\^(?:\.\^)*|@/ },
+    ],
     relevance: 0,
   };
 
@@ -45,11 +49,12 @@ function defineGroq(hljs) {
   };
 
   // pipe chaining idiom (*[...] | order(name) | [0...10]) and boolean
-  // operators && || ! (not the `!=` comparison operator). `||` is tried
-  // before the bare pipe so chained pipes and logical-or aren't split.
+  // operators && || ! (not the `!=` comparison operator), plus the `=>`
+  // arrow of `select(cond => value, ...)`. `||` is tried before the bare
+  // pipe so chained pipes and logical-or aren't split.
   const OPERATOR = {
     className: "operator",
-    begin: /&&|\|\||\||!(?!=)/,
+    begin: /&&|\|\||=>|\||!(?!=)/,
     relevance: 0,
   };
 
