@@ -58,3 +58,29 @@ test("lookml highlights comments and strings", () => {
     '<span class="hljs-string">&quot;Orders&quot;</span>',
   );
 });
+
+test("lookml highlights refinements and access_grant / aggregate_table blocks", () => {
+  const result = highlight(
+    "view: +orders {\n  measure: extra {\n    type: count\n  }\n}\naccess_grant: can_view {\n  user_attribute: department\n}\nexplore: orders {\n  aggregate_table: sales_monthly {\n    query: {\n      dimensions: [id]\n    }\n  }\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">view</span>');
+  expect(result).toContain('<span class="hljs-title class_">+orders</span>');
+  expect(result).toContain('<span class="hljs-keyword">access_grant</span>');
+  expect(result).toContain('<span class="hljs-title class_">can_view</span>');
+  expect(result).toContain('<span class="hljs-keyword">aggregate_table</span>');
+  expect(result).toContain(
+    '<span class="hljs-title class_">sales_monthly</span>',
+  );
+});
+
+test("lookml does not let sql_table_name swallow a later sql field", () => {
+  const result = highlight(
+    "view: orders {\n  sql_table_name: schema.orders\n  dimension: id {\n    sql: SELECT id ;;\n  }\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-attr">sql_table_name</span>');
+  expect(result).toContain('<span class="hljs-keyword">dimension</span>');
+  expect(result).toContain('<span class="hljs-title class_">id</span>');
+  expect(result).toContain('<span class="hljs-attr">sql:</span>');
+});
