@@ -9,13 +9,16 @@ const BPFTRACE_KEYWORDS = [
   "union",
   "enum",
   "sizeof",
+  "import",
+  "let",
+  "macro",
 ];
 
 const BPFTRACE_BUILT_INS =
-  "printf print clear zero delete exit time str ntop kaddr uaddr reg system cat signal strncmp join ksym usym hist lhist count sum avg min max stats cgroupid buf strftime path override bswap macaddr";
+  "printf print clear zero delete exit time str ntop kaddr uaddr reg system cat signal strncmp join ksym usym hist lhist count sum avg min max stats cgroupid buf strftime path override bswap macaddr write_user";
 
 const BPFTRACE_BUILT_IN_VARS =
-  "pid tid uid gid nsecs elapsed cpu comm kstack ustack args retval func probe curtask rand cgroup";
+  "pid tid uid gid nsecs elapsed cpu comm kstack ustack args retval func probe curtask rand cgroup leader_tid leader_comm";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineBpftrace(hljs) {
@@ -34,7 +37,7 @@ function defineBpftrace(hljs) {
   const PROBE = {
     className: "title.function",
     begin:
-      /\b(?:BEGIN|END|kprobe|kretprobe|uprobe|uretprobe|tracepoint|usdt|profile|interval|software|hardware|kfunc|kretfunc|fentry|fexit|iter|watchpoint|rawtracepoint)(?::[\w*./-]*)*/,
+      /\b(?:BEGIN|END|kprobe|kretprobe|uprobe|uretprobe|tracepoint|usdt|profile|interval|software|hardware|kfunc|kretfunc|fentry|fexit|iter|watchpoint|rawtracepoint)(?::[\w*./@-]*)*/,
     relevance: 10,
   };
 
