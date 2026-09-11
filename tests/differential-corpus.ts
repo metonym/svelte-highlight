@@ -330,12 +330,17 @@ RETURN
     )
 -- computes filtered sales total`,
   dhall: `-- a simple record with a function
+{- block {- nested -} comment -}
 let increment : Natural -> Natural
       = \\(x : Natural) -> Natural/fold x 1 (\\(_ : Natural) -> x + 1)
 
 let isReady : Bool = True
 
-in  { count = increment 5, ready = isReady }`,
+let banner = ''
+  ''\${not-interpolated} but \${isReady}
+  ''
+
+in  { count = increment 5, ready = isReady, since = 2024-01-15T12:30:00Z }`,
   dotenv: `# application configuration
 export NODE_ENV=production
 DATABASE_URL="postgres://\${HOST}:\${PORT}/db"
