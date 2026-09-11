@@ -54,3 +54,16 @@ test("ink highlights inline conditional sequences as subst", () => {
     '<span class="hljs-subst">{x &gt; 3: warm | cold}</span>',
   );
 });
+
+test("ink does not treat EXTERNAL arguments as a label", () => {
+  const result = highlight("EXTERNAL play_sound(name)");
+
+  expect(result).toContain('<span class="hljs-keyword">EXTERNAL</span>');
+  expect(result).not.toContain('<span class="hljs-symbol">(name)</span>');
+});
+
+test("ink still highlights a choice label", () => {
+  const result = highlight("* (open_door) Open the door");
+
+  expect(result).toContain('<span class="hljs-symbol">(open_door)</span>');
+});

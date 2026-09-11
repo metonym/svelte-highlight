@@ -24,16 +24,25 @@ function defineInk(hljs) {
     relevance: 0,
   };
 
+  // Labels sit on the choice/gather marker (`* (name)`, `- (name)`), not
+  // after an identifier (`play_sound(name)`). Combined with the marker so
+  // we don't need a lookbehind.
+  const CHOICE_WITH_LABEL = {
+    begin: [/^\s*(?:\*\s*)+|^\s*(?:\+\s*)+/, /\(\s*[\w]+\s*\)/],
+    beginScope: { 1: "bullet", 2: "symbol" },
+    relevance: 0,
+  };
+
+  const GATHER_WITH_LABEL = {
+    begin: [/^\s*-(?!>)\s*/, /\(\s*[\w]+\s*\)/],
+    beginScope: { 1: "bullet", 2: "symbol" },
+    relevance: 0,
+  };
+
   const CHOICE_TEXT = {
     className: "string",
     begin: /\[/,
     end: /\]/,
-  };
-
-  const LABEL = {
-    className: "symbol",
-    begin: /\(\s*[\w]+\s*\)/,
-    relevance: 0,
   };
 
   const DIVERT_ARROW = {
@@ -100,10 +109,11 @@ function defineInk(hljs) {
       hljs.C_BLOCK_COMMENT_MODE,
       KNOT,
       STITCH,
+      CHOICE_WITH_LABEL,
+      GATHER_WITH_LABEL,
       CHOICE_MARKER,
       GATHER_MARKER,
       CHOICE_TEXT,
-      LABEL,
       DIVERT_ARROW,
       TODO_COMMENT,
       LOGIC_LINE,
