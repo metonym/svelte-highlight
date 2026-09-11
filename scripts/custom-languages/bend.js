@@ -20,6 +20,7 @@ const BEND_KEYWORDS = [
   "do",
   "ask",
   "hvm",
+  "fork",
   "import",
   "from",
   "as",
@@ -44,7 +45,7 @@ function defineBend(hljs) {
   const BLOCK_COMMENT = {
     className: "comment",
     begin: /#\{/,
-    end: /\}#/,
+    end: /#\}/,
   };
 
   const TAG = {

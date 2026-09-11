@@ -42,3 +42,26 @@ test("bend highlights comments and numbers", () => {
   expect(result).toContain('<span class="hljs-comment"># a comment</span>');
   expect(result).toContain('<span class="hljs-number">24</span>');
 });
+
+test("bend closes #{ block comments at #} instead of swallowing the rest of the file", () => {
+  const result = highlight("#{ note #}\ndef walk():\n  return 1");
+
+  expect(result).toContain('<span class="hljs-comment">#{ note #}</span>');
+  expect(result).toContain('<span class="hljs-keyword">def</span>');
+});
+
+test("bend highlights fork in a bend block", () => {
+  const result = highlight(
+    "bend x = n:\n  when x > 0:\n    fork walk(x - 1)\n  else:\n    x",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">fork</span>');
+  expect(result).toContain('<span class="hljs-keyword">bend</span>');
+});
+
+test("bend still treats a hash line as a line comment", () => {
+  const result = highlight("# a comment\nx = 24");
+
+  expect(result).toContain('<span class="hljs-comment"># a comment</span>');
+  expect(result).toContain('<span class="hljs-number">24</span>');
+});
