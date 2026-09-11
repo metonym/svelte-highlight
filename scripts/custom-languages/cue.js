@@ -1,4 +1,5 @@
-const CUE_KEYWORDS = "package import if for in let";
+// `div mod quo rem` are CUE's word-form arithmetic operators.
+const CUE_KEYWORDS = "package import if for in let div mod quo rem";
 
 const CUE_TYPES =
   "string bytes bool int float number uint uint8 uint16 uint32 uint64 uint128 int8 int16 int32 int64 int128 float32 float64 rune";
@@ -52,15 +53,23 @@ function defineCue(hljs) {
     ],
   };
 
-  const OPERATOR = {
-    className: "operator",
-    begin: />=|<=|!=|=~|!~|\||&/,
+  // Bottom (`_|_`) must be tried before OPERATOR claims its `|`.
+  const BOTTOM = {
+    className: "literal",
+    begin: /_\|_/,
     relevance: 0,
   };
 
+  const OPERATOR = {
+    className: "operator",
+    begin: />=|<=|==|!=|=~|!~|\||&|<|>/,
+    relevance: 0,
+  };
+
+  // `field?:` (optional, since 0.1) and `field!:` (required, CUE 0.6).
   const OPTIONAL_FIELD = {
     className: "operator",
-    begin: /\?(?=\s*:)/,
+    begin: /[?!](?=\s*:)/,
     relevance: 0,
   };
 
@@ -92,6 +101,7 @@ function defineCue(hljs) {
       DEFINITION,
       NUMBER,
       OPTIONAL_FIELD,
+      BOTTOM,
       OPERATOR,
     ],
   };
