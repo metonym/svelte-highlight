@@ -60,12 +60,21 @@ function defineSmithy(hljs) {
     relevance: 0,
   };
 
+  // Smithy 2.0 elided members: `$cityId` inside a `for Resource` or mixin
+  // structure body. `\B` keeps `Foo$count` (a member shape ID) as-is.
+  const ELIDED_MEMBER = {
+    className: "variable",
+    begin: /\B\$[A-Za-z_]\w*/,
+    relevance: 0,
+  };
+
   return {
     name: "Smithy",
     aliases: ["smithy"],
     keywords: {
       keyword: SMITHY_KEYWORDS,
       type: SMITHY_TYPES,
+      literal: "true false null",
     },
     contains: [
       VERSION_CONTROL,
@@ -75,6 +84,7 @@ function defineSmithy(hljs) {
       TRAIT,
       SHAPE_ID,
       INLINE_SHAPE,
+      ELIDED_MEMBER,
       hljs.C_NUMBER_MODE,
     ],
   };

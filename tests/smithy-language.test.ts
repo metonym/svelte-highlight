@@ -45,3 +45,33 @@ test("smithy highlights built-in types and strings", () => {
     '<span class="hljs-string">&quot;2024-01-01&quot;</span>',
   );
 });
+
+test("smithy highlights node value literals", () => {
+  const result = highlight(
+    "structure Foo {\n    flag: Boolean = true\n    @default(null)\n    other: Boolean = false\n}",
+  );
+
+  expect(result).toContain('= <span class="hljs-literal">true</span>');
+  expect(result).toContain('(<span class="hljs-literal">null</span>)');
+  expect(result).toContain('= <span class="hljs-literal">false</span>');
+});
+
+test("smithy highlights elided members but not member shape IDs", () => {
+  const result = highlight(
+    'operation GetCity {\n    input := for City {\n        @required\n        $cityId\n    }\n}\napply Foo$count @documentation("x")',
+  );
+
+  expect(result).toContain('<span class="hljs-variable">$cityId</span>');
+  expect(result).toContain('<span class="hljs-keyword">apply</span> Foo$count');
+  expect(result).not.toContain('Foo<span class="hljs-variable">$count');
+  expect(result).toContain('<span class="hljs-keyword">for</span> City');
+});
+
+test("smithy keeps the version control statement as meta", () => {
+  const result = highlight('$version: "2.0"\nnamespace com.example');
+
+  expect(result).toContain(
+    '<span class="hljs-meta">$version: &quot;2.0&quot;</span>',
+  );
+  expect(result).not.toContain('hljs-variable">$version');
+});
