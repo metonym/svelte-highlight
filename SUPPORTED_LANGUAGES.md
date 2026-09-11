@@ -1436,6 +1436,8 @@
 
 ## go (`go`)
 
+> Exported from highlight.js with svelte-highlight patches on top (see `scripts/hljs-patches/go.js`)
+
 ```html
 <script>
   // direct import (recommended)
