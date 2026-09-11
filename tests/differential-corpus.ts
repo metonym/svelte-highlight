@@ -377,7 +377,8 @@ build:
     <li><%= user.name %></li>
   <% }); %>
 </ul>
-<p><%- rawHtml %></p>`,
+<p><%- rawHtml %></p>
+<p>Literal: <%% not code %%> <%= ok _%></p>`,
   agda: `-- naturals and a simple proof
 {-# OPTIONS --safe #-}
 data ℕ : Set where
