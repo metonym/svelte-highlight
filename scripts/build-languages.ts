@@ -183,6 +183,7 @@ const HLJS_PATCH_NAMES = [
   "go",
   "javascript",
   "python",
+  "rust",
 ] as const;
 
 export type HljsPatch = {
