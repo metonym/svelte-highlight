@@ -54,25 +54,41 @@ function defineJmespath(hljs) {
     relevance: 0,
   };
 
+  const PIPE = {
+    className: "operator",
+    begin: /\|\|?/,
+    relevance: 0,
+  };
+
+  // Comparators and the boolean operators `&&` / `!` (`||` is handled by
+  // PIPE above).
+  const COMPARISON = {
+    className: "operator",
+    begin: /==|!=|<=|>=|<|>|&&|!/,
+    relevance: 0,
+  };
+
   const BRACKET_FIELD = {
     // Index, slice, flatten, filter, and multi-select-list expressions:
-    // [0], [1:3], [], [?age > `30`]
+    // [0], [1:3], [], [?age > `30`]. A filter is a full expression, so the
+    // built-in table and the operator/reference modes apply inside it too;
+    // without them `[?contains(name, 'a') && age > `30`]` was one flat
+    // property span.
     className: "property",
     begin: /\[/,
     end: /\]/,
+    keywords: { built_in: JMESPATH_BUILT_INS },
     contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
       RAW_STRING,
       QUOTED_IDENTIFIER,
       JSON_LITERAL,
+      CURRENT_NODE,
+      EXPRESSION_REF,
+      PIPE,
+      COMPARISON,
       NUMBER,
       "self",
     ]),
-    relevance: 0,
-  };
-
-  const PIPE = {
-    className: "operator",
-    begin: /\|\|?/,
     relevance: 0,
   };
 
@@ -91,6 +107,7 @@ function defineJmespath(hljs) {
       BRACKET_FIELD,
       FIELD,
       PIPE,
+      COMPARISON,
       NUMBER,
     ],
   };
