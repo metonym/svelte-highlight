@@ -40,7 +40,7 @@ const VERSE_KEYWORDS = [
 ];
 
 const VERSE_TYPES =
-  "int float string void char agent player creative_device vector3 rotation";
+  "int float string void char agent player creative_device vector3 rotation message";
 
 const VERSE_LITERALS = "true false";
 
@@ -62,7 +62,7 @@ function defineVerse(hljs) {
   const SPECIFIER = {
     className: "meta",
     begin:
-      /<(?:decides|transacts|suspends|public|internal|override|native|computes|varies|constructor|unique|final|abstract)>/,
+      /<(?:decides|transacts|suspends|public|private|protected|internal|override|native|computes|varies|constructor|unique|final|abstract|concrete|persistable|localizes)>/,
     relevance: 5,
   };
 
