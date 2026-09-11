@@ -75,3 +75,23 @@ test("prql highlights numbers with underscores", () => {
 
   expect(result).toContain('<span class="hljs-number">1_000_000</span>');
 });
+
+test("prql highlights from_text, r-strings, and exponentiation", () => {
+  const result = highlight(
+    'from_text format:csv r"a,b"\nderive powered = amount ** 2',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">from_text</span>');
+  expect(result).toContain('<span class="hljs-string">r&quot;a,b&quot;</span>');
+  expect(result).toContain('<span class="hljs-operator">**</span>');
+});
+
+test("prql still highlights f-strings and does not treat ** as two multiplies", () => {
+  const fString = highlight('derive greeting = f"Hello, {name}!"');
+  const pow = highlight("derive x = a ** b");
+
+  expect(fString).toContain('<span class="hljs-string">f&quot;Hello, ');
+  expect(pow).not.toContain(
+    '<span class="hljs-operator">*</span><span class="hljs-operator">*</span>',
+  );
+});
