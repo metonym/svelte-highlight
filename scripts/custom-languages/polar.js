@@ -1,6 +1,7 @@
 const POLAR_KEYWORDS =
   "allow if and or not in matches forall resource actor " +
-  "has_permission has_role has_relation cut debug print new type";
+  "has_permission has_role has_relation cut debug print new type " +
+  "iff test setup assert assert_not permissions roles relations";
 
 const POLAR_LITERALS = "true false nil";
 

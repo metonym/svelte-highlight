@@ -49,3 +49,27 @@ test("polar highlights nested resource relations", () => {
     '<span class="hljs-title class_">Organization</span>',
   );
 });
+
+test("polar highlights resource fields and iff tests", () => {
+  const result = highlight(
+    'resource Repository {\n  permissions = ["read"];\n  roles = ["member"];\n  relations = { parent: Organization };\n}\n\ntest "access" {\n  setup { has_role(User{"a"}, "member", Repository{"r"}); }\n  assert allow(User{"a"}, action: String, Repository{"r"}) iff action in ["read"];\n  assert_not allow(User{"b"}, "push", Repository{"r"});\n}',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">permissions</span>');
+  expect(result).toContain('<span class="hljs-keyword">roles</span>');
+  expect(result).toContain('<span class="hljs-keyword">relations</span>');
+  expect(result).toContain('<span class="hljs-keyword">test</span>');
+  expect(result).toContain('<span class="hljs-keyword">setup</span>');
+  expect(result).toContain('<span class="hljs-keyword">assert</span>');
+  expect(result).toContain('<span class="hljs-keyword">iff</span>');
+  expect(result).toContain('<span class="hljs-keyword">assert_not</span>');
+});
+
+test("polar still highlights allow and does not treat on as a keyword", () => {
+  const result = highlight(
+    'allow(actor: User, "read", resource: Document) if has_permission(actor, "read", resource);\n"maintainer" if "owner" on "parent";',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">allow</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">on</span>');
+});
