@@ -50,3 +50,16 @@ test("mermaid highlights nested subgraphs", () => {
   expect(result).toContain('<span class="hljs-keyword">subgraph</span>');
   expect(result).toContain('<span class="hljs-keyword">end</span>');
 });
+
+test("mermaid highlights doubled node shapes as one string", () => {
+  const result = highlight("flowchart LR\n  C((End))\n  D[(DB)]");
+
+  expect(result).toContain('<span class="hljs-string">((End))</span>');
+  expect(result).toContain('<span class="hljs-string">[(DB)]</span>');
+});
+
+test("mermaid still highlights single-bracket node text", () => {
+  const result = highlight("flowchart LR\n  A[Start]");
+
+  expect(result).toContain('<span class="hljs-string">[Start]</span>');
+});

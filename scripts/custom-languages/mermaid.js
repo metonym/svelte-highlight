@@ -36,10 +36,18 @@ function defineMermaid(hljs) {
     relevance: 0,
   };
 
+  // Longer fences first: `((End))` / `[(DB)]` would otherwise close at the
+  // inner `)` / `]` and leave the matching delimiter unstyled.
   const NODE_TEXT = {
     className: "string",
-    begin: /[[{(]/,
-    end: /[\])}]/,
+    variants: [
+      { begin: /\(\(/, end: /\)\)/ },
+      { begin: /\{\{/, end: /\}\}/ },
+      { begin: /\[\[/, end: /\]\]/ },
+      { begin: /\[\(/, end: /\)\]/ },
+      { begin: /\(\[/, end: /\]\)/ },
+      { begin: /[[{(]/, end: /[\])}]/ },
+    ],
     contains: [STRING],
     relevance: 0,
   };
