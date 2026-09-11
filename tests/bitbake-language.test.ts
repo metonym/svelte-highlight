@@ -47,3 +47,44 @@ test("bitbake highlights comments", () => {
 
   expect(result).toContain('<span class="hljs-comment"># a comment</span>');
 });
+
+test("bitbake highlights inherit_defer and include_all", () => {
+  const result = highlight(
+    "inherit_defer python3targetconfig\ninclude_all recipes-extra/*.inc",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">inherit_defer</span>');
+  expect(result).toContain('<span class="hljs-keyword">include_all</span>');
+});
+
+test("bitbake highlights python task bodies as python, not bash", () => {
+  const result = highlight(
+    "python do_configure() {\n    d.setVar('X', '1')\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">python</span>');
+  expect(result).toContain(
+    '<span class="hljs-title function_">do_configure</span>',
+  );
+  expect(result).toContain('<span class="language-python">');
+  expect(result).not.toContain('<span class="language-bash">');
+});
+
+test("bitbake shell functions are unchanged", () => {
+  const result = highlight("do_install() {\n    install -d dest\n}");
+
+  expect(result).toContain(
+    '<span class="hljs-title function_">do_install</span>',
+  );
+  expect(result).toContain('<span class="language-bash">');
+});
+
+test("bitbake highlights expanded overrides on assignment", () => {
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: BitBake override expansion
+  const result = highlight('RDEPENDS:${PN} += "bash"');
+
+  expect(result).toContain(
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: BitBake override expansion
+    '<span class="hljs-built_in">RDEPENDS:${PN}</span>',
+  );
+});
