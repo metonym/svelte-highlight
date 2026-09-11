@@ -1,13 +1,13 @@
 const CQL_KEYWORDS =
-  "SELECT FROM WHERE INSERT INTO VALUES UPDATE SET DELETE CREATE TABLE KEYSPACE TYPE INDEX CUSTOM MATERIALIZED VIEW ALTER DROP TRUNCATE USE GRANT REVOKE BATCH APPLY BEGIN LOGGED UNLOGGED IF NOT EXISTS PRIMARY KEY WITH ALLOW FILTERING ORDER BY ASC DESC LIMIT PER PARTITION USING TTL TIMESTAMP CONSISTENCY LEVEL AND OR IN CONTAINS ENTRY TOKEN CLUSTERING COMPACT STORAGE REPLICATION DURABLE_WRITES ADD RENAME TO COLUMNFAMILY ROLE LOGIN SUPERUSER PASSWORD NOSUPERUSER FUNCTION AGGREGATE LANGUAGE CALLED INPUT RETURNS ON DISTINCT AS JSON DEFAULT UNSET NULL";
+  "SELECT FROM WHERE INSERT INTO VALUES UPDATE SET DELETE CREATE TABLE KEYSPACE TYPE INDEX CUSTOM MATERIALIZED VIEW ALTER DROP TRUNCATE USE GRANT REVOKE BATCH APPLY BEGIN LOGGED UNLOGGED IF NOT EXISTS PRIMARY KEY WITH ALLOW FILTERING ORDER BY ASC DESC LIMIT PER PARTITION USING TTL TIMESTAMP CONSISTENCY LEVEL AND OR IN CONTAINS ENTRY TOKEN CLUSTERING COMPACT STORAGE REPLICATION DURABLE_WRITES ADD RENAME TO COLUMNFAMILY ROLE LOGIN SUPERUSER PASSWORD NOSUPERUSER FUNCTION AGGREGATE LANGUAGE CALLED INPUT RETURNS ON DISTINCT AS JSON DEFAULT UNSET NULL STATIC ANN";
 
 const CQL_TYPES =
-  "ascii bigint blob boolean counter date decimal double duration float frozen inet int list map set smallint text time timestamp timeuuid tinyint tuple uuid varchar varint";
+  "ascii bigint blob boolean counter date decimal double duration float frozen inet int list map set smallint text time timestamp timeuuid tinyint tuple uuid varchar varint vector";
 
 const CQL_LITERALS = "true false null";
 
 const CQL_FUNCTIONS =
-  "count writetime now dateof unixtimestampof totimestamp mintimeuuid maxtimeuuid tounixtimestamp toDate toTimestamp blobasint intasblob";
+  "count writetime now dateof unixtimestampof totimestamp mintimeuuid maxtimeuuid tounixtimestamp toDate toTimestamp blobasint intasblob similarity_cosine similarity_dot_product similarity_euclidean";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineCql(hljs) {

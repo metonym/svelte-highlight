@@ -91,3 +91,25 @@ test("cql highlights line and block comments", () => {
     '<span class="hljs-comment">/* fetch active users */</span>',
   );
 });
+
+test("cql highlights VECTOR columns and ANN search", () => {
+  const result = highlight(
+    "CREATE TABLE t (id UUID PRIMARY KEY, v VECTOR <FLOAT, 5> STATIC);\nSELECT similarity_cosine(v, [0.1, 0.2]) FROM t ORDER BY v ANN OF [0.1, 0.2] LIMIT 3;",
+  );
+
+  expect(result).toContain('<span class="hljs-type">VECTOR</span>');
+  expect(result).toContain('<span class="hljs-keyword">STATIC</span>');
+  expect(result).toContain('<span class="hljs-keyword">ANN</span>');
+  expect(result).toContain(
+    '<span class="hljs-built_in">similarity_cosine</span>',
+  );
+});
+
+test("cql still highlights UUID types and does not treat OF as a keyword", () => {
+  const result = highlight(
+    "CREATE TABLE users (id UUID PRIMARY KEY);\nSELECT * FROM t ORDER BY v ANN OF [0.1];",
+  );
+
+  expect(result).toContain('<span class="hljs-type">UUID</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">OF</span>');
+});
