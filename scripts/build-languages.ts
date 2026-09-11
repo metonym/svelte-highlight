@@ -185,6 +185,7 @@ const HLJS_PATCH_NAMES = [
   "go",
   "java",
   "javascript",
+  "kotlin",
   "python",
   "rust",
   "typescript",
