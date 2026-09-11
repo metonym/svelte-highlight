@@ -124,7 +124,17 @@ function defineRaku(hljs) {
     className: "string",
     begin: /\b[qQ]\{/,
     end: /\}/,
-    contains: [hljs.BACKSLASH_ESCAPE],
+    contains: [
+      hljs.BACKSLASH_ESCAPE,
+      {
+        begin: /\{/,
+        end: /\}/,
+        contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+          hljs.BACKSLASH_ESCAPE,
+          "self",
+        ]),
+      },
+    ],
   };
 
   const WORD_QUOTE = {
