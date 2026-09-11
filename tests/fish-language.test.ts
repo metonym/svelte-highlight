@@ -51,3 +51,14 @@ test("fish highlights bare command substitution", () => {
     '<span class="hljs-subst">(count <span class="hljs-variable">$files</span>)</span>',
   );
 });
+
+test("fish only styles the function name as a title, not its options", () => {
+  const result = highlight(
+    'function greet --argument-names who -d "say hi"\n    echo $who\nend',
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">function</span> <span class="hljs-title function_">greet</span> --argument-names who -d <span class="hljs-string">&quot;say hi&quot;</span>',
+  );
+  expect(result).not.toContain('<span class="hljs-title function_">who</span>');
+});

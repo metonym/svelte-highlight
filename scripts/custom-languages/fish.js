@@ -43,11 +43,13 @@ function defineFish(hljs) {
     contains: [hljs.BACKSLASH_ESCAPE],
   };
 
+  // A single bounded match (keyword + whitespace + name): the previous
+  // `end: /$/` form kept the title matcher live for the rest of the line,
+  // styling every word of `function greet --argument-names who -d "hi"`
+  // as a function title.
   const FUNCTION = {
-    beginKeywords: "function",
-    end: /$/,
-    excludeBegin: true,
-    contains: [{ className: "title function_", begin: /[A-Za-z_][\w-]*/ }],
+    begin: [/\bfunction\b/, /\s+/, /[A-Za-z_][\w-]*/],
+    beginScope: { 1: "keyword", 3: "title function_" },
   };
 
   return {
