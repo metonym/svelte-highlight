@@ -91,3 +91,35 @@ test("gdscript highlights numeric literals", () => {
   expect(result).toContain('<span class="hljs-number">1_000_000</span>');
   expect(result).toContain('<span class="hljs-number">.5</span>');
 });
+
+test("gdscript highlights void returns, match guards, and packed vector4", () => {
+  const result = highlight(
+    'func cry() -> void:\n\tmatch action:\n\t\t"jump" when speed > 0:\n\t\t\tpass\nvar packed: PackedVector4Array',
+  );
+
+  expect(result).toContain('<span class="hljs-type">void</span>');
+  expect(result).toContain('<span class="hljs-keyword">when</span>');
+  expect(result).toContain('<span class="hljs-type">PackedVector4Array</span>');
+});
+
+test("gdscript highlights raw strings including the r prefix", () => {
+  const result = highlight('var raw := r"C:\\\\tmp"');
+
+  expect(result).toContain(
+    '<span class="hljs-string">r&quot;C:\\\\tmp&quot;</span>',
+  );
+});
+
+test("gdscript does not treat whenever, avoid, or r = as the new forms", () => {
+  const result = highlight('whenever = 1\navoid = 2\nr = "hi"');
+
+  expect(result).toContain("whenever =");
+  expect(result).not.toContain('<span class="hljs-keyword">when</span>ever');
+  expect(result).toContain("avoid =");
+  expect(result).not.toContain('<span class="hljs-type">void</span>');
+  expect(result).toContain("r =");
+  expect(result).toContain('<span class="hljs-string">&quot;hi&quot;</span>');
+  expect(result).not.toContain(
+    '<span class="hljs-string">r&quot;hi&quot;</span>',
+  );
+});

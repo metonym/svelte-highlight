@@ -1,8 +1,8 @@
 const GDSCRIPT_KEYWORDS =
-  "if elif else for while match break continue pass return class class_name extends is in as self super signal func static const enum var breakpoint await assert and or not preload";
+  "if elif else for while match when break continue pass return class class_name extends is in as self super signal func static const enum var breakpoint await assert and or not preload";
 
 const GDSCRIPT_TYPES =
-  "bool int float String StringName Vector2 Vector2i Vector3 Vector3i Vector4 Vector4i Rect2 Rect2i Transform2D Transform3D Plane Quaternion AABB Basis Projection Color NodePath RID Object Callable Signal Dictionary Array Variant PackedByteArray PackedInt32Array PackedInt64Array PackedFloat32Array PackedFloat64Array PackedStringArray PackedVector2Array PackedVector3Array PackedColorArray";
+  "void bool int float String StringName Vector2 Vector2i Vector3 Vector3i Vector4 Vector4i Rect2 Rect2i Transform2D Transform3D Plane Quaternion AABB Basis Projection Color NodePath RID Object Callable Signal Dictionary Array Variant PackedByteArray PackedInt32Array PackedInt64Array PackedFloat32Array PackedFloat64Array PackedStringArray PackedVector2Array PackedVector3Array PackedVector4Array PackedColorArray";
 
 const GDSCRIPT_LITERALS = "true false null";
 
@@ -25,7 +25,12 @@ function defineGDScript(hljs) {
   const STRING = {
     className: "string",
     variants: [
+      { begin: /\br"""/, end: /"""/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /\br'''/, end: /'''/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /\br"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /\br'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
       { begin: /"""/, end: /"""/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /'''/, end: /'''/, contains: [hljs.BACKSLASH_ESCAPE] },
       { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
       { begin: /'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
     ],
