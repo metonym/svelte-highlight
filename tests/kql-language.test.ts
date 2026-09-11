@@ -42,7 +42,7 @@ test("kql highlights string operators", () => {
 test("kql highlights negated string operators", () => {
   const result = highlight('Event | where Source !contains "test"');
 
-  expect(result).toContain('<span class="hljs-operator">contains</span>');
+  expect(result).toContain('<span class="hljs-operator">!contains</span>');
 });
 
 test("kql highlights single and verbatim string literals", () => {
@@ -95,4 +95,61 @@ test("kql highlights let statements and variables", () => {
 
   expect(result).toContain('<span class="hljs-keyword">let</span>');
   expect(result).toContain('<span class="hljs-variable">threshold</span>');
+});
+
+test("kql highlights more hyphenated and tabular operators", () => {
+  const result = highlight(
+    "T | project-away A | project-rename B = C | make-series n = count() on Ts step 1h | print x = 1 | lookup kind=leftouter U on Id | invoke F() | serialize",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">project-away</span>');
+  expect(result).toContain('<span class="hljs-keyword">project-rename</span>');
+  expect(result).toContain('<span class="hljs-keyword">make-series</span>');
+  expect(result).toContain('<span class="hljs-keyword">print</span>');
+  expect(result).toContain('<span class="hljs-keyword">lookup</span>');
+  expect(result).toContain('<span class="hljs-keyword">invoke</span>');
+  expect(result).toContain('<span class="hljs-keyword">serialize</span>');
+  expect(result).not.toContain(
+    '<span class="hljs-keyword">project</span>-away',
+  );
+});
+
+test("kql highlights negated and case-insensitive operators as one token", () => {
+  const result = highlight(
+    'T | where A !has "x" and B in~ ("y") and C !in (1) and D !~ "z" and E != 1',
+  );
+
+  expect(result).toContain('<span class="hljs-operator">!has</span>');
+  expect(result).toContain('<span class="hljs-operator">in~</span>');
+  expect(result).toContain('<span class="hljs-operator">!in</span>');
+  expect(result).toContain('D !~ <span class="hljs-string">');
+  expect(result).toContain("E != <span");
+});
+
+test("kql highlights datetime and timespan literals as one number", () => {
+  const result = highlight(
+    "T | where Ts > datetime(2024-01-15T10:30:00Z) and D > time(1.02:03:04) and X == datetime(now())",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-built_in">datetime</span>(<span class="hljs-number">2024-01-15T10:30:00Z</span>)',
+  );
+  expect(result).toContain(
+    '<span class="hljs-built_in">time</span>(<span class="hljs-number">1.02:03:04</span>)',
+  );
+  expect(result).toContain(
+    '<span class="hljs-built_in">datetime</span>(<span class="hljs-built_in">now</span>())',
+  );
+});
+
+test("kql highlights multi-line strings and join-side references", () => {
+  const result = highlight(
+    "print s = ```line one\nline two```\n| lookup U on $left.Id == $right.Id",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-string">```line one\nline two```</span>',
+  );
+  expect(result).toContain('<span class="hljs-variable">$left</span>');
+  expect(result).toContain('<span class="hljs-variable">$right</span>');
 });
