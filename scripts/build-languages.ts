@@ -179,7 +179,9 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
  * holes upstream hasn't. The grammar keeps its hljs identity (license banner,
  * "exported from highlight.js" count); only its `register` differs.
  */
-const HLJS_PATCH_NAMES = [] as const;
+const HLJS_PATCH_NAMES = [
+  "go",
+] as const;
 
 export type HljsPatch = {
   name: string;
