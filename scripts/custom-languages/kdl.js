@@ -4,9 +4,17 @@ const KDL_LITERALS = "true false null";
 function defineKdl(hljs) {
   const STRING = {
     className: "string",
+    // KDL 2.0 forms first (longest opener wins): `#"""..."""#` and
+    // `#"..."#` raw strings with one or two hashes, and `"""` multi-line
+    // strings; then the KDL 1.0 `r#"..."#` raw form and plain strings.
     variants: [
-      { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /##"""/, end: /"""##/ },
+      { begin: /#"""/, end: /"""#/ },
+      { begin: /"""/, end: /"""/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /##"/, end: /"##/ },
+      { begin: /#"/, end: /"#/ },
       { begin: /r#+"/, end: /"#+/ },
+      { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
     ],
   };
 
