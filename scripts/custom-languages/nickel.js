@@ -1,5 +1,11 @@
 const NICKEL_KEYWORDS =
-  "let in if then else fun match import default doc optional priority force rec forall not";
+  "let in if then else fun match import default doc optional priority force not_exported rec forall not";
+
+// Words that RECORD_FIELD must leave to the keyword table even when an `=`
+// follows: metadata keywords (`| default = "web"`) and type names in an
+// annotated field (`port : Number = 8080`).
+const NICKEL_NOT_A_FIELD =
+  /(?!(?:default|doc|optional|priority|force|not_exported|Number|String|Bool|Array|Dyn)\b)/;
 
 const NICKEL_TYPES = "Number String Bool Array Dyn";
 
@@ -62,8 +68,18 @@ function defineNickel(hljs) {
     relevance: 0,
   };
 
+  // The `=` must not be the start of `==` or of a `=>` arrow, or every
+  // `fun p =>` parameter and `match` arm pattern would become a field.
   const RECORD_FIELD = {
-    begin: [/[A-Za-z_][\w-]*/, /\s*/, /=(?!=)/],
+    begin: [
+      // The `\b` keeps the excluded words from matching one character in
+      // (`d` + `efault`).
+      new RegExp(
+        String.raw`\b` + NICKEL_NOT_A_FIELD.source + /[A-Za-z_][\w-]*/.source,
+      ),
+      /\s*/,
+      /=(?![=>])/,
+    ],
     beginScope: { 1: "attr", 3: "operator" },
     relevance: 0,
   };
@@ -73,9 +89,11 @@ function defineNickel(hljs) {
   // Matching `let` together with the bound name (starting earlier than
   // RECORD_FIELD's own match on just the name) lets this mode claim the
   // name first, styling it as a binding rather than a record key.
+  // `let rec f = ...` (recursive bindings, Nickel 1.x): `rec` is a keyword,
+  // not the bound name. The `\b` keeps `let recurse = ...` whole.
   const LET_BINDING = {
-    begin: [/\blet\b/, /\s+/, /[A-Za-z_][\w-]*/],
-    beginScope: { 1: "keyword", 3: "variable" },
+    begin: [/\blet\b/, /\s+/, /(?:rec\b)?/, /\s*/, /[A-Za-z_][\w-]*/],
+    beginScope: { 1: "keyword", 3: "keyword", 5: "variable" },
     relevance: 0,
   };
 

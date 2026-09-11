@@ -66,3 +66,44 @@ test("nickel highlights multiline strings with variable %-count delimiters", () 
     '<span class="hljs-string">m%%&quot;text with &quot;% inside&quot;%%</span>',
   );
 });
+
+test("nickel does not treat fun parameters or match arms as record fields", () => {
+  const result = highlight(
+    "f = fun p => p\nm = match { 'Ok x => x, _ => null }\ne = a == b",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">fun</span> p =&gt; p');
+  expect(result).toContain(
+    '<span class="hljs-symbol">&#x27;Ok</span> x =&gt; x',
+  );
+  expect(result).toContain("_ =&gt; <span");
+  expect(result).toContain('<span class="hljs-attr">f</span>');
+  expect(result).toContain('<span class="hljs-attr">e</span>');
+  expect(result).not.toContain('<span class="hljs-attr">p</span>');
+  expect(result).not.toContain('<span class="hljs-attr">a</span>');
+});
+
+test("nickel keeps metadata keywords and annotated types out of the field rule", () => {
+  const result = highlight(
+    'name | doc "x" | default = "web",\nport : Number = 8080,\nreal-default = 1',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">default</span> =');
+  expect(result).toContain('<span class="hljs-type">Number</span> =');
+  expect(result).toContain('<span class="hljs-attr">real-default</span>');
+  expect(result).not.toContain('<span class="hljs-attr">default</span>');
+});
+
+test("nickel highlights let rec bindings", () => {
+  const result = highlight(
+    "let rec fact = fun n => n in\nlet recurse = 1 in\nlet { a, .. } = r in a",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">let</span> <span class="hljs-keyword">rec</span> <span class="hljs-variable">fact</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">let</span> <span class="hljs-variable">recurse</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">let</span> { a, .. }');
+});
