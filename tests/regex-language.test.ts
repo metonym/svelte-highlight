@@ -51,3 +51,16 @@ test("regex highlights backreferences and inline comments", () => {
   expect(result).toContain('<span class="hljs-symbol">\\1</span>');
   expect(result).toContain('<span class="hljs-comment">(?#note)</span>');
 });
+
+test("regex highlights unicode and control escapes", () => {
+  const result = highlight(String.raw`\u1234\cA`);
+
+  expect(result).toContain('<span class="hljs-built_in">\\u1234</span>');
+  expect(result).toContain('<span class="hljs-built_in">\\cA</span>');
+});
+
+test("regex still highlights a two-digit hex escape", () => {
+  const result = highlight(String.raw`\x41`);
+
+  expect(result).toContain('<span class="hljs-built_in">\\x41</span>');
+});
