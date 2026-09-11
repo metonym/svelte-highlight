@@ -105,3 +105,74 @@ test("hlsl does not mistake array indexing for an attribute", () => {
 
   expect(result).not.toContain('<span class="hljs-meta">');
 });
+
+test("hlsl highlights mixed-case system-value semantics as one span", () => {
+  const result = highlight(
+    "void CSMain(uint3 tid : SV_DispatchThreadID, uint id : SV_VertexID)",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-attr">SV_DispatchThreadID</span>',
+  );
+  expect(result).toContain('<span class="hljs-attr">SV_VertexID</span>');
+  expect(result).not.toContain('<span class="hljs-attr">SV_D</span>');
+});
+
+test("hlsl does not treat a mixed-case base class as a semantic", () => {
+  const result = highlight("class Lambert : IShade { };");
+
+  expect(result).not.toContain('<span class="hljs-attr">');
+  expect(result).toContain('<span class="hljs-keyword">class</span>');
+});
+
+test("hlsl highlights long integer suffixes", () => {
+  const result = highlight(
+    "int64_t a = 0x1FFFll; uint64_t b = 12ull; int c = 3l;",
+  );
+
+  expect(result).toContain('<span class="hljs-type">int64_t</span>');
+  expect(result).toContain('<span class="hljs-number">0x1FFFll</span>');
+  expect(result).toContain('<span class="hljs-number">12ull</span>');
+  expect(result).toContain('<span class="hljs-number">3l</span>');
+});
+
+test("hlsl highlights storage and interpolation modifiers", () => {
+  const result = highlight(
+    "groupshared uint hist[256];\nprecise float p = 1.0;\nnointerpolation uint id : ID;\nsnorm float s;",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">groupshared</span>');
+  expect(result).toContain('<span class="hljs-keyword">precise</span>');
+  expect(result).toContain('<span class="hljs-keyword">nointerpolation</span>');
+  expect(result).toContain('<span class="hljs-keyword">snorm</span>');
+});
+
+test("hlsl highlights HLSL 2021 declarations and sized types", () => {
+  const result = highlight(
+    "template<typename T> T Square(T x) { return x * x; }\ninterface IShade { };\nenum class Kind : uint { A };\nexport float16_t Half(uint16_t2 v);",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">template</span>');
+  expect(result).toContain('<span class="hljs-keyword">typename</span>');
+  expect(result).toContain('<span class="hljs-keyword">interface</span>');
+  expect(result).toContain('<span class="hljs-keyword">enum</span>');
+  expect(result).toContain('<span class="hljs-keyword">export</span>');
+  expect(result).toContain('<span class="hljs-type">float16_t</span>');
+  expect(result).toContain('<span class="hljs-type">uint16_t2</span>');
+});
+
+test("hlsl highlights wave, atomic, barrier and raytracing intrinsics", () => {
+  const result = highlight(
+    "RaytracingAccelerationStructure scene : register(t2);\nuint s = WaveActiveSum(v);\nInterlockedAdd(buf[0], 1u);\nGroupMemoryBarrierWithGroupSync();\nTraceRay(scene, RAY_FLAG_NONE, 0xFF, 0, 0, 0, ray, payload);",
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">WaveActiveSum</span>');
+  expect(result).toContain('<span class="hljs-built_in">InterlockedAdd</span>');
+  expect(result).toContain(
+    '<span class="hljs-built_in">GroupMemoryBarrierWithGroupSync</span>',
+  );
+  expect(result).toContain('<span class="hljs-built_in">TraceRay</span>');
+  expect(result).toContain(
+    '<span class="hljs-type">RaytracingAccelerationStructure</span>',
+  );
+});
