@@ -3784,6 +3784,8 @@
 
 ## swift (`swift`)
 
+> Exported from highlight.js with svelte-highlight patches on top (see `scripts/hljs-patches/swift.js`)
+
 ```html
 <script>
   // direct import (recommended)
