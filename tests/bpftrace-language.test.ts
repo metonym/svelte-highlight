@@ -46,3 +46,33 @@ test("bpftrace highlights comments and includes", () => {
     '<span class="hljs-meta">#include &lt;linux/sched.h&gt;</span>',
   );
 });
+
+test("bpftrace highlights statement probes without treating @file as a map", () => {
+  const result = highlight(
+    "uprobe:/bin/bash@bash.c:42\n{\n  @hits = count();\n}",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-title function_">uprobe:/bin/bash@bash.c:42</span>',
+  );
+  expect(result).toContain('<span class="hljs-variable">@hits</span>');
+});
+
+test("bpftrace highlights import, let, macro, and 0.26 builtins", () => {
+  const result = highlight(
+    'import "helpers.bt"\nlet @start = nsecs;\nmacro add(a, b) { a + b }\nBEGIN { write_user($p, $src, 8); printf("%s", leader_comm); }',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">import</span>');
+  expect(result).toContain('<span class="hljs-keyword">let</span>');
+  expect(result).toContain('<span class="hljs-keyword">macro</span>');
+  expect(result).toContain('<span class="hljs-built_in">write_user</span>');
+  expect(result).toContain('<span class="hljs-built_in">leader_comm</span>');
+});
+
+test("bpftrace still highlights a map named like a source file", () => {
+  const result = highlight("@bash = count();");
+
+  expect(result).toContain('<span class="hljs-variable">@bash</span>');
+  expect(result).not.toContain("hljs-title function_");
+});
