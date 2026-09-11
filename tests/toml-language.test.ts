@@ -68,3 +68,21 @@ test("toml highlights boolean literals", () => {
   expect(result).toContain('<span class="hljs-literal">true</span>');
   expect(result).toContain('<span class="hljs-literal">false</span>');
 });
+
+test("toml highlights datetimes and times with optional seconds", () => {
+  const result = highlight(
+    "short_dt = 2010-02-03 14:15\nshort_t = 14:15\nfull = 2024-01-02T10:00:00Z",
+  );
+
+  expect(result).toContain('<span class="hljs-number">2010-02-03 14:15</span>');
+  expect(result).toContain('<span class="hljs-number">14:15</span>');
+  expect(result).toContain(
+    '<span class="hljs-number">2024-01-02T10:00:00Z</span>',
+  );
+});
+
+test("toml local dates without a time are unchanged", () => {
+  const result = highlight("date = 2024-01-02");
+
+  expect(result).toContain('<span class="hljs-number">2024-01-02</span>');
+});
