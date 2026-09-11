@@ -1,5 +1,7 @@
+// `catch` is the try/catch form added in 2022; `optional` marks optional
+// function parameters.
 const POWERQUERY_KEYWORDS =
-  "let in each|5 if then else try otherwise error as is meta section shared and or not type nullable";
+  "let in each|5 if then else try otherwise catch error as is meta section shared and or not type nullable optional";
 
 const POWERQUERY_LITERALS = "true false null";
 
@@ -47,9 +49,11 @@ function definePowerQuery(hljs) {
     ],
   };
 
+  // `...` (the "not implemented" expression and open record type marker)
+  // and `??` (null coalescing) come before their shorter prefixes.
   const OPERATOR = {
     className: "operator",
-    begin: /=>|\.\.|@|&|\?/,
+    begin: /=>|\.\.\.|\.\.|@|&|\?\?|\?/,
     relevance: 0,
   };
 
