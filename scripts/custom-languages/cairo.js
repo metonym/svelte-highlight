@@ -1,5 +1,5 @@
 const CAIRO_KEYWORDS =
-  "fn let mut const if else loop while for return match struct enum trait impl mod use pub extern type ref in of as self Self break continue where dyn move box nopanic implicits";
+  "fn let mut const if else loop while for return match struct enum trait impl mod use pub extern type ref in of as self Self super crate break continue where dyn move box nopanic implicits";
 
 const CAIRO_TYPES =
   "felt252 u8 u16 u32 u64 u128 u256 usize i8 i16 i32 i64 i128 bool Array Span Option Result ContractAddress ClassHash ByteArray";
@@ -40,9 +40,21 @@ function defineCairo(hljs) {
     beginScope: { 1: "keyword", 3: "title.function" },
   };
 
+  // Short strings (`'hello'`) are felt252 literals; Cairo has no char or
+  // lifetime syntax, so a single-quoted run is always one of these.
+  const SHORT_STRING = {
+    className: "string",
+    begin: /'/,
+    end: /'/,
+    contains: [hljs.BACKSLASH_ESCAPE],
+  };
+
+  // Inline macros from the corelib (`println!`, `format!`, `selector!`, the
+  // `assert_*!` family) alongside the original `panic!`/`assert!`/`array!`.
   const MACRO = {
     className: "built_in",
-    begin: /\b(?:panic|assert|array)!/,
+    begin:
+      /\b(?:panic|assert(?:_eq|_ne|_lt|_le|_gt|_ge)?|array|println|print|format|write|writeln|consteval_int|selector)!/,
     relevance: 0,
   };
 
@@ -65,6 +77,7 @@ function defineCairo(hljs) {
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
       hljs.QUOTE_STRING_MODE,
+      SHORT_STRING,
       ATTRIBUTE,
       MACRO,
       SYSCALL,

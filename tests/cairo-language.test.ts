@@ -59,3 +59,39 @@ test("cairo highlights common Starknet syscalls as built-ins", () => {
     '<span class="hljs-built_in">get_block_timestamp</span>',
   );
 });
+
+test("cairo highlights felt252 short strings", () => {
+  const result = highlight(
+    "const SHORT: felt252 = 'hello';\nreturn Result::Err('zero');\nlet b: ByteArray = \"long\";",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-string">&#x27;hello&#x27;</span>',
+  );
+  expect(result).toContain('<span class="hljs-string">&#x27;zero&#x27;</span>');
+  expect(result).toContain('<span class="hljs-string">&quot;long&quot;</span>');
+});
+
+test("cairo highlights corelib inline macros", () => {
+  const result = highlight(
+    'println!("v = {}", v);\nlet s = format!("{}", x);\nassert_eq!(a, b);\nlet sel = selector!("transfer");\nlet println = 1;',
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">println!</span>(');
+  expect(result).toContain('<span class="hljs-built_in">format!</span>(');
+  expect(result).toContain('<span class="hljs-built_in">assert_eq!</span>(');
+  expect(result).toContain('<span class="hljs-built_in">selector!</span>(');
+  // Without the bang it is a plain identifier.
+  expect(result).toContain('<span class="hljs-keyword">let</span> println = ');
+});
+
+test("cairo highlights super and crate path keywords", () => {
+  const result = highlight(
+    "impl CounterImpl of super::ICounter<ContractState> {}\npub(crate) fn helper() {}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">super</span>::');
+  expect(result).toContain(
+    '<span class="hljs-keyword">pub</span>(<span class="hljs-keyword">crate</span>)',
+  );
+});
