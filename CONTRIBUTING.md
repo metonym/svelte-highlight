@@ -56,6 +56,37 @@ Steps 1/2/6/8/9/10/11 are stubbed out by the scaffold script (some as working co
 
 Split the work into two commits, matching how every language pair in this repo's history has landed: a `feat(languages): …` commit covering steps 1-7 (grammar, registration, differential snippet, count bump, build output, language test, updated snapshots), and a `docs(languages): …` commit covering steps 8-11 (preview snippets, preview page, `LanguagePreview.svelte` wiring, `hiddenRoutes`).
 
+### Patching an hljs-derived grammar
+
+Most shipped grammars come straight from `highlight.js` and are converted to the engine's IR at build time. When one of them has a bug or lags the language it targets (a new Go builtin, a new Python statement form), don't fork it into a custom grammar: add a **patch** that wraps the stock grammar and adjusts it.
+
+1. Write `scripts/hljs-patches/<name>.js`:
+
+   ```js
+   import base from "highlight.js/lib/languages/<name>";
+
+   /**
+    * One bullet per fix, so the divergence from upstream is documented.
+    * @type {import("highlight.js").LanguageFn}
+    */
+   function register(hljs) {
+     const lang = base(hljs);
+     // mutate `lang` (keywords, contains, ...) and return it
+     return lang;
+   }
+
+   export const <name> = { name: "<name>", register };
+   export default <name>;
+   ```
+
+   Two rules of thumb: (a) the stock grammar's keyword arrays are often module-level constants shared by every call, so *replace* them on `lang.keywords` rather than pushing into them; (b) locate the mode you're changing with a `find` on a stable property and `throw` if it's missing, so an upstream `highlight.js` bump that reshapes the grammar fails the build instead of silently dropping the patch.
+2. Append `"<name>",` to `HLJS_PATCH_NAMES` in `scripts/build-languages.ts`. The name must be an hljs built-in that isn't also a custom grammar (the build asserts this). The grammar keeps its hljs identity in `SUPPORTED_LANGUAGES.md` (with a note pointing at the patch) and its license banner.
+3. Run `bun run build:lib`. `tests/differential.test.ts` uses the patched grammar under real `highlight.js` as the baseline for that language, so the engine's output must stay byte-identical to hljs running your patch.
+4. Add `tests/<name>-grammar-patch.test.ts`: register the patch on a fresh `hljs` instance and the converted `src/languages/<name>.js` on a `createRegistry()`, assert the two agree, then assert the specific `<span class="hljs-...">` fragments the patch introduces (follow `tests/go-grammar-patch.test.ts`). Include at least one "unchanged" case for neighbouring syntax the patch must not disturb.
+5. Run `bun test tests/languages.test.ts tests/languages-golden.test.ts --update-snapshots` if the golden sample for that grammar changed.
+
+Note that custom grammars which embed an hljs built-in (`astro`, `svelte`, `vue`, `tsrx`, ... import `highlight.js/lib/languages/typescript` directly) still embed the *stock* grammar when run under real `highlight.js`; at runtime in this package the embed resolves by name to the patched grammar. The converter registers patched grammars last for the same reason: those customs re-register the stock built-in as a side effect.
+
 ### Using the scaffold script
 
 ```sh
