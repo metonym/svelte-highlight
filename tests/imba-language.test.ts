@@ -42,3 +42,33 @@ test("imba highlights an inline css block", () => {
 
   expect(result).toContain('<span class="hljs-keyword">css</span>');
 });
+
+test("imba highlights import, declare, rescue, and true/false", () => {
+  const result = highlight(
+    'import { api } from "./api"\ndeclare name\nlet ok = rescue true\n',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">import</span>');
+  expect(result).toContain('<span class="hljs-keyword">declare</span>');
+  expect(result).toContain('<span class="hljs-keyword">rescue</span>');
+  expect(result).toContain('<span class="hljs-literal">true</span>');
+});
+
+test("imba does not let a nested css block swallow later declarations and tags", () => {
+  const result = highlight(
+    'tag Card\n  css .card\n    padding: 8px\n  def render\n    <self.card>\n      <div.title> "Hello"\n',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">def</span>');
+  expect(result).toContain('<span class="hljs-keyword">tag</span>');
+  expect(result).toContain('<span class="hljs-tag">&lt;self');
+  expect(result).toContain('<span class="hljs-selector-class">.card</span>');
+});
+
+test("imba does not treat an assignment to css as a style block", () => {
+  const result = highlight("let css = 1\ndef render\n  yes");
+
+  expect(result).toContain('<span class="hljs-keyword">let</span> css =');
+  expect(result).toContain('<span class="hljs-keyword">def</span>');
+  expect(result).toContain('<span class="hljs-literal">yes</span>');
+});
