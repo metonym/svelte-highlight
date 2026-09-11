@@ -73,7 +73,7 @@ function defineSparql(hljs) {
   // alternatives in order rather than matching longest-first.
   const OPERATOR = {
     className: "operator",
-    begin: /&&|\|\||!=|<=|>=|[!=<>+\-*/^|?]/,
+    begin: /&&|\|\||!=|<=|>=|\^\^|[!=<>+\-*/^|?]/,
     relevance: 0,
   };
 
