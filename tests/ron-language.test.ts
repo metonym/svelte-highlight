@@ -53,3 +53,29 @@ test("ron highlights strings, numbers, and comments", () => {
   );
   expect(result).toContain('<span class="hljs-number">1920</span>');
 });
+
+test("ron raw strings close at the matching hash count", () => {
+  const result = highlight('raw: r#"hello "world""#');
+
+  expect(result).toContain(
+    '<span class="hljs-string">r#&quot;hello &quot;world&quot;&quot;#</span>',
+  );
+});
+
+test("ron hashless raw strings and quoted strings are unchanged", () => {
+  const result = highlight('a: r"simple"\nb: "hello"');
+
+  expect(result).toContain(
+    '<span class="hljs-string">r&quot;simple&quot;</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;hello&quot;</span>',
+  );
+});
+
+test("ron highlights NaN as a number, not a PascalCase literal", () => {
+  const result = highlight("x: NaN\ndifficulty: Hard");
+
+  expect(result).toContain('<span class="hljs-number">NaN</span>');
+  expect(result).toContain('<span class="hljs-literal">Hard</span>');
+});
