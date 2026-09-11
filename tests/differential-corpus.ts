@@ -1495,6 +1495,8 @@ rule SuspiciousExecutable : malware
     strings:
         $a = "malicious_string" nocase
         $hex = { E2 34 ?? C8 }
+        $jump = { 6A 40 [4-6] ~90 ( 55 | 56 ) 8? // trailing comment
+                  8B }
         $re = /evil[0-9]+/i
 
     condition:

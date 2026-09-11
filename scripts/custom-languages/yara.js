@@ -18,9 +18,13 @@ const YARA_KEYWORDS = [
   "contains",
   "icontains",
   "startswith",
+  "istartswith",
   "endswith",
+  "iendswith",
+  "iequals",
   "matches",
   "defined",
+  "with",
   "ascii",
   "wide",
   "nocase",
@@ -72,13 +76,33 @@ function defineYara(hljs) {
 
   const MODULE_PREFIX = {
     className: "built_in",
-    begin: /\b(?:pe|math|hash)\.[A-Za-z_]\w*/,
+    begin:
+      /\b(?:pe|elf|macho|dotnet|dex|math|hash|time|string|console|magic|cuckoo)\.[A-Za-z_]\w*/,
     relevance: 0,
   };
 
   const NUMBER = {
     className: "number",
-    begin: /\b0x[0-9a-fA-F]+\b|\b\d+(?:KB|MB)?\b/,
+    begin: /\b0x[0-9a-fA-F]+\b|\b\d+\.\d+\b|\b\d+(?:KB|MB)?\b/,
+    relevance: 0,
+  };
+
+  // `$name = { 6A ?? [4-6] ~90 ( 55 | 56 ) }`: the opening brace is part of
+  // `begin`, so the plain NUMBER rule (which styled `40` but not `6A`)
+  // never sees the body; every byte, wildcard (`??`, `8?`) and not-byte
+  // (`~90`) is one number token and jumps/alternation stay plain.
+  const HEX_STRING = {
+    begin: [/\$[A-Za-z_]\w*/, /\s*=\s*/, /\{/],
+    beginScope: { 1: "variable" },
+    end: /\}/,
+    contains: [
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+      {
+        className: "number",
+        begin: /~?[0-9A-Fa-f?]{2}(?![\w?])/,
+      },
+    ],
     relevance: 0,
   };
 
@@ -97,6 +121,7 @@ function defineYara(hljs) {
       RULE_HEADER,
       SECTION,
       MODULE_PREFIX,
+      HEX_STRING,
       STRING_ID,
       REGEX_LITERAL,
       NUMBER,
