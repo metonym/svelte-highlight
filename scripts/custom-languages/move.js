@@ -1,5 +1,6 @@
+// `enum`, `match`, and `macro` arrived with the Move 2024 edition.
 const MOVE_KEYWORDS =
-  "module script fun public entry native struct has let mut if else while loop return abort break continue use friend const acquires spec as move copy while invariant assume aborts_if ensures requires schema include phantom";
+  "module script fun public entry native struct enum match macro has let mut if else while loop return abort break continue use friend const acquires spec as move copy while invariant assume aborts_if ensures requires schema include phantom";
 
 const MOVE_ABILITIES = "copy drop store key";
 
@@ -55,6 +56,14 @@ function defineMove(hljs) {
     beginScope: { 1: "keyword", 3: "title.function" },
   };
 
+  // `public(package)` (Move 2024) and `public(friend)`: the visibility
+  // modifier is matched as one unit so `package` stays a plain identifier
+  // elsewhere (`use sui::package;`).
+  const VISIBILITY = {
+    begin: [/\bpublic\b/, /\(/, /(?:package|friend)/, /\)/],
+    beginScope: { 1: "keyword", 3: "keyword" },
+  };
+
   return {
     name: "Move",
     aliases: ["move"],
@@ -76,6 +85,7 @@ function defineMove(hljs) {
       ATTRIBUTE,
       MODULE_PATH,
       ADDRESS,
+      VISIBILITY,
       FUNCTION,
       TYPE,
       NUMBER,

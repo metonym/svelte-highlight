@@ -56,3 +56,33 @@ test("move highlights module <addr>::<name> path declarations", () => {
   expect(result).toContain('<span class="hljs-title class_">message</span>');
   expect(result).toContain('<span class="hljs-title class_">coin</span>');
 });
+
+test("move highlights Move 2024 enum, match, and macro keywords", () => {
+  const result = highlight(
+    "public enum Shape has copy, drop { Point, Rect(u32, u32) }\nmacro fun apply<$T>($f: |$T| -> $T, $x: $T): $T { $f($x) }\nlet s = match (shape) { Shape::Point => 0 };",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">enum</span> <span class="hljs-type">Shape</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">macro</span> <span class="hljs-keyword">fun</span> <span class="hljs-title function_">apply</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">match</span> (shape)');
+});
+
+test("move highlights public(package) and public(friend) visibility", () => {
+  const result = highlight(
+    "public(package) fun bump(self: &mut Counter) {}\npublic(friend) fun peek() {}\nuse sui::package;\nlet package = 1;",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">public</span>(<span class="hljs-keyword">package</span>) <span class="hljs-keyword">fun</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">public</span>(<span class="hljs-keyword">friend</span>)',
+  );
+  // `package` outside the visibility modifier stays a plain identifier.
+  expect(result).toContain("sui::package;");
+  expect(result).toContain('<span class="hljs-keyword">let</span> package = ');
+});
