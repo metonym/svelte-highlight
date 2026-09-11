@@ -24,8 +24,15 @@ function defineHurl(hljs) {
   };
 
   const STATUS_LINE = {
-    begin: [/^HTTP\b/, /\s+/, /\d{3}/],
+    begin: [/^HTTP(?:\/[\d.]+)?\b/, /\s+/, /\d{3}/],
     beginScope: { 1: "keyword", 3: "number" },
+    relevance: 10,
+  };
+
+  // `HTTP *` (Hurl 4) accepts any status; keep it distinct from `HTTP 200`.
+  const WILDCARD_STATUS = {
+    begin: [/^HTTP(?:\/[\d.]+)?\b/, /\s+/, /\*/],
+    beginScope: { 1: "keyword", 3: "literal" },
     relevance: 10,
   };
 
@@ -61,6 +68,7 @@ function defineHurl(hljs) {
     contains: [
       hljs.HASH_COMMENT_MODE,
       SECTION,
+      WILDCARD_STATUS,
       STATUS_LINE,
       REQUEST_LINE,
       STRING,

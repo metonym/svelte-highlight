@@ -628,6 +628,8 @@ HTTP 200
 [Asserts]
 jsonpath "$.id" == 1
 header "Content-Type" contains "json"
+GET https://example.org/health
+HTTP *
 `,
   jinja: `{# greeting #}
 {% macro hello(name) %}
