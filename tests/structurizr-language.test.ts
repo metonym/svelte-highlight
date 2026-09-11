@@ -49,3 +49,16 @@ test("structurizr highlights strings and comments", () => {
     '<span class="hljs-string">&quot;System Landscape&quot;</span>',
   );
 });
+
+test("structurizr highlights configuration scope", () => {
+  const result = highlight("configuration {\n  scope landscape\n}");
+
+  expect(result).toContain('<span class="hljs-keyword">scope</span>');
+  expect(result).toContain('<span class="hljs-literal">landscape</span>');
+});
+
+test("structurizr still highlights softwareSystem", () => {
+  const result = highlight('softwareSystem = softwareSystem "Banking"');
+
+  expect(result).toContain('<span class="hljs-keyword">softwareSystem</span>');
+});

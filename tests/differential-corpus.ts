@@ -1580,6 +1580,10 @@ end note
       autoLayout lr
     }
   }
+
+  configuration {
+    scope landscape
+  }
 }
 `,
   org: `* TODO Write quarterly report [#A]           :work:report:

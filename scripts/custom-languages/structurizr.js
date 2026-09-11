@@ -60,6 +60,7 @@ const STRUCTURIZR_KEYWORDS = [
   "dashed",
   "routing",
   "position",
+  "scope",
 ];
 
 const STRUCTURIZR_PREPROCESSOR = [
@@ -78,7 +79,7 @@ const STRUCTURIZR_PREPROCESSOR = [
   "!relationships",
 ];
 
-const STRUCTURIZR_LITERALS = "this hierarchical flat tb bt lr rl";
+const STRUCTURIZR_LITERALS = "this hierarchical flat tb bt lr rl landscape";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineStructurizr(hljs) {
