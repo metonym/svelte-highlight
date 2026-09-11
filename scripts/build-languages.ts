@@ -182,6 +182,7 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
 const HLJS_PATCH_NAMES = [
   "go",
   "javascript",
+  "python",
 ] as const;
 
 export type HljsPatch = {
