@@ -45,6 +45,9 @@ const KOKA_KEYWORDS = [
   "infixr",
   "as",
   "is",
+  "fip",
+  "fbip",
+  "hole",
 ];
 
 const KOKA_LITERALS = "True False Nothing Just";
@@ -89,7 +92,12 @@ function defineKoka(hljs) {
       CHAR,
       EFFECT_TYPE,
       OPTIONAL_PARAM,
-      hljs.C_NUMBER_MODE,
+      {
+        className: "number",
+        begin:
+          /-?\b(?:0x[0-9a-fA-F_]+|\d[\d_]*(?:\.\d[\d_]*)?(?:[eE][+-]?\d+)?)\b/,
+        relevance: 0,
+      },
     ],
   };
 }

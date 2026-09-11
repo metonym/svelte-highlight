@@ -47,3 +47,27 @@ test("koka highlights strings and numbers", () => {
     '<span class="hljs-string">&quot;hello&quot;</span>',
   );
 });
+
+test("koka highlights fip, fbip, and hole", () => {
+  const result = highlight(
+    "fip fun inc(x : int) : int\n  x + 1\nfbip fun cons(x : a, xs : list<a>) : list<a>\n  Cons(x, hole)",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">fip</span>');
+  expect(result).toContain('<span class="hljs-keyword">fbip</span>');
+  expect(result).toContain('<span class="hljs-keyword">hole</span>');
+});
+
+test("koka highlights hex literals with digit separators", () => {
+  const result = highlight("val x = 0xFF_00\nval y = 1_000");
+
+  expect(result).toContain('<span class="hljs-number">0xFF_00</span>');
+  expect(result).toContain('<span class="hljs-number">1_000</span>');
+});
+
+test("koka does not treat hole inside an identifier as a keyword", () => {
+  const result = highlight("val threshold = 1");
+
+  expect(result).not.toContain('<span class="hljs-keyword">hole</span>');
+  expect(result).toContain('<span class="hljs-keyword">val</span>');
+});
