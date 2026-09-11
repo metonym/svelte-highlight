@@ -41,3 +41,15 @@ test("ejs highlights the surrounding html", () => {
 
   expect(result).toContain('<span class="hljs-tag">');
 });
+
+test("ejs treats <%% and %%> as literal delimiters, not scriptlets", () => {
+  const result = highlight("<p><%% if (x) %%> <%= x %></p>");
+
+  expect(result).toContain('<span class="hljs-meta">&lt;%%</span>');
+  expect(result).toContain('<span class="hljs-meta">%%&gt;</span>');
+  // The text between the literals is not JavaScript ...
+  expect(result).not.toContain('<span class="hljs-keyword">if</span>');
+  // ... while the real output tag after it still is.
+  expect(result).toContain('<span class="hljs-template-tag">&lt;%=</span>');
+  expect(result).toContain('<span class="hljs-template-tag">%&gt;</span>');
+});
