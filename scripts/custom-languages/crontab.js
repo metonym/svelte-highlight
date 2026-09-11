@@ -3,8 +3,20 @@ import bashRegister from "highlight.js/lib/languages/bash";
 const CRON_NICKNAMES =
   "reboot|yearly|annually|monthly|weekly|daily|midnight|hourly";
 
-const CRON_NAME_ALT =
-  "(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC|SUN|MON|TUE|WED|THU|FRI|SAT)";
+// Month and day names are case-insensitive per crontab(5) (`MON-FRI`,
+// `mon-fri`), but the grammar itself is not, so each letter is spelled as a
+// two-case class.
+const CRON_NAMES =
+  "JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC SUN MON TUE WED THU FRI SAT";
+
+const CRON_NAME_ALT = `(?:${CRON_NAMES.split(" ")
+  .map((name) =>
+    name
+      .split("")
+      .map((c) => `[${c}${c.toLowerCase()}]`)
+      .join(""),
+  )
+  .join("|")})`;
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineCrontab(hljs) {
@@ -15,13 +27,15 @@ function defineCrontab(hljs) {
     relevance: 0,
   };
 
+  // `~` is cronie's random operator (`0~30`, `~30`, `30~`, a bare `~`),
+  // stable since cronie 1.5 and valid anywhere a value or range is.
   const fieldContains = (/** @type {number} */ stepRelevance) => [
     {
       className: "number",
-      begin: /[*\d][\d,-]*\/\d+/,
+      begin: /[*\d~][\d,~-]*\/\d+/,
       relevance: stepRelevance,
     },
-    { className: "number", begin: /[*\d][\d,-]*/, relevance: 0 },
+    { className: "number", begin: /[*\d~][\d,~-]*/, relevance: 0 },
     {
       className: "built_in",
       begin: new RegExp(`${CRON_NAME_ALT}(?:-${CRON_NAME_ALT})?`),
@@ -53,8 +67,10 @@ function defineCrontab(hljs) {
     starts: field3,
     relevance: 0,
   };
+  // crontab(5) ignores leading blanks, so an indented (column-aligned)
+  // entry is still a schedule line.
   const field1 = {
-    begin: /^(?=[*\dA-Za-z])/,
+    begin: /^[ \t]*(?=[*\d~A-Za-z])/,
     end: /\s+/,
     contains: fieldContains(0),
     starts: field2,
