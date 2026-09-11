@@ -1622,6 +1622,12 @@ title: Getting Started
 Set the $name variable before calling {% if(equals($name, "")) %}validate(){% /if %}.
 {% /callout %}
 
+{% table %}
+* Column
+---
+* Cell
+{% /table %}
+
 {% partial file="footer.md" /%}
 `,
   powerquery: `let
