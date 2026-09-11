@@ -80,7 +80,12 @@ function defineKcl(hljs) {
       DECORATOR,
       CHECK_BLOCK,
       SCHEMA_NAME,
-      hljs.C_NUMBER_MODE,
+      {
+        className: "number",
+        begin:
+          /-?\b(?:0[xX][0-9a-fA-F]+|0[oO][0-7]+|0[bB][01]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)(?:n|u|m|[kKMGTP]|Ki|Mi|Gi|Ti|Pi)?\b/,
+        relevance: 0,
+      },
     ],
   };
 }
