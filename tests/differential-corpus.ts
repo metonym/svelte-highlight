@@ -806,10 +806,13 @@ sum(rate({job="app"} |= "error" [5m])) by (job)`,
   luau: `-- typed greeting
 export type Point = { x: number, y: number }
 
+@native
 local function add(a: number, b: number): number
   continue
   return (a + b) :: number
 end
+
+local msg = \`Hello {name}, {n // 2}!\`
 `,
   marko: `<!-- greeting widget -->
 class {
