@@ -27,7 +27,7 @@
   "devDependencies": {
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/svelte": "^8.1.2",
-    "@biomejs/biome": "2.5.12",
+    "@biomejs/biome": "2.5.13",
     "@jridgewell/trace-mapping": "^0.3.31",
     "@playwright/experimental-ct-svelte": "1.58.2",
     "@playwright/test": "1.61.1",
