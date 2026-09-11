@@ -51,3 +51,19 @@ test("powerquery highlights strings with doubled-quote escapes", () => {
 
   expect(result).toContain('<span class="hljs-subst">&quot;&quot;</span>');
 });
+
+test("powerquery highlights try/catch, optional parameters, and ... / ??", () => {
+  const result = highlight(
+    "let f = (x as number, optional y as text) => try x catch (e) => e[Message], g = (...) => ..., z = a ?? 0 in f",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">catch</span>');
+  expect(result).toContain('<span class="hljs-keyword">optional</span>');
+  expect(result).toContain('<span class="hljs-operator">...</span>');
+  expect(result).toContain('<span class="hljs-operator">??</span>');
+  // A two-dot range is still two numbers, not the new `...` operator.
+  expect(highlight("{1..3}")).toContain(
+    '<span class="hljs-number">1.</span><span class="hljs-number">.3</span>',
+  );
+  expect(highlight("a[b]?")).toContain('<span class="hljs-operator">?</span>');
+});
