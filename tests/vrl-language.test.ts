@@ -40,3 +40,34 @@ test("vrl highlights keywords, literals, and comments", () => {
   expect(result).toContain('<span class="hljs-literal">true</span>');
   expect(result).toContain('<span class="hljs-literal">null</span>');
 });
+
+test("vrl highlights floats and digit separators instead of eating the decimal as a path", () => {
+  const result = highlight(".n = 1.5e-2\n.n = 1_000");
+
+  expect(result).toContain('<span class="hljs-number">1.5e-2</span>');
+  expect(result).toContain('<span class="hljs-number">1_000</span>');
+  expect(result).not.toContain('<span class="hljs-property">.</span>5e');
+});
+
+test("vrl highlights raw, regex, and timestamp literals and return", () => {
+  const result = highlight(
+    "return s'no escapes'\n.pat = r'(?P<w>\\\\w+)'\n.t = t'2024-01-02T03:04:05Z'",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">return</span>');
+  expect(result).toContain(
+    '<span class="hljs-string">s&#x27;no escapes&#x27;</span>',
+  );
+  expect(result).toContain("hljs-regexp");
+  expect(result).toContain(
+    '<span class="hljs-string">t&#x27;2024-01-02T03:04:05Z&#x27;</span>',
+  );
+});
+
+test("vrl does not treat != as a fallible bang", () => {
+  const result = highlight("err != null");
+
+  expect(result).toContain('<span class="hljs-operator">!=</span>');
+  expect(result).not.toContain('<span class="hljs-operator">!</span>=');
+  expect(result).toContain('<span class="hljs-literal">null</span>');
+});

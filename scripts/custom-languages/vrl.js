@@ -1,4 +1,4 @@
-const VRL_KEYWORDS = "if else for while abort";
+const VRL_KEYWORDS = "if else for while abort return then";
 
 const VRL_LITERALS = "true false null";
 
@@ -13,14 +13,22 @@ const VRL_BUILT_INS =
 function defineVrl(hljs) {
   const STRING = {
     className: "string",
-    begin: /"/,
-    end: /"/,
-    contains: [hljs.BACKSLASH_ESCAPE],
+    variants: [
+      { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
+      { begin: /s'/, end: /'/ },
+      { begin: /t'/, end: /'/ },
+    ],
+  };
+
+  const REGEX = {
+    className: "regexp",
+    begin: /r'/,
+    end: /'/,
   };
 
   const NUMBER = {
     className: "number",
-    begin: /-?\b\d+(?:\.\d+)?\b/,
+    begin: /-?\b\d(?:_?\d)*(?:\.\d(?:_?\d)*)?(?:[eE][+-]?\d+)?\b/,
     relevance: 0,
   };
 
@@ -39,9 +47,15 @@ function defineVrl(hljs) {
     relevance: 5,
   };
 
+  const NOT_EQUAL = {
+    className: "operator",
+    begin: /!=/,
+    relevance: 0,
+  };
+
   const NEGATION = {
     className: "operator",
-    begin: /!/,
+    begin: /!(?!=)/,
     relevance: 0,
   };
 
@@ -55,7 +69,7 @@ function defineVrl(hljs) {
   // The bare root-event reference: `. = parse_json!(.message)`
   const ROOT = {
     className: "property",
-    begin: /\./,
+    begin: /\.(?![0-9A-Za-z_])/,
     relevance: 0,
   };
 
@@ -70,12 +84,14 @@ function defineVrl(hljs) {
     contains: [
       hljs.HASH_COMMENT_MODE,
       STRING,
+      REGEX,
       FALLIBLE_CALL,
       COALESCE,
       FIELD,
-      ROOT,
-      NEGATION,
       NUMBER,
+      ROOT,
+      NOT_EQUAL,
+      NEGATION,
     ],
   };
 }
