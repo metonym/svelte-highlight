@@ -20,6 +20,12 @@ const ROC_KEYWORDS = [
   "where",
   "implements",
   "crash",
+  "and",
+  "or",
+  "match",
+  "for",
+  "while",
+  "break",
 ];
 
 const ROC_BUILT_INS = "dbg expect";
@@ -28,9 +34,10 @@ const ROC_BUILT_INS = "dbg expect";
 function defineRoc(hljs) {
   const INTERPOLATION = {
     className: "subst",
-    begin: /\$\(/,
-    end: /\)/,
-    contains: ["self"],
+    variants: [
+      { begin: /\$\(/, end: /\)/, contains: ["self"] },
+      { begin: /\$\{/, end: /\}/, contains: ["self"] },
+    ],
   };
 
   const STRING = {
@@ -65,6 +72,12 @@ function defineRoc(hljs) {
     relevance: 0,
   };
 
+  const EFFECTFUL = {
+    className: "title.function",
+    begin: /[A-Za-z_][\w]*!/,
+    relevance: 0,
+  };
+
   const NUMBER = {
     className: "number",
     begin: /\b(?:0x[0-9a-fA-F_]+|\d[\d_]*(?:\.[\d_]+)?)\b/,
@@ -73,7 +86,7 @@ function defineRoc(hljs) {
 
   const OPERATOR = {
     className: "operator",
-    begin: /<-|->|\|>/,
+    begin: /<-|->|\|>|=>|\?\?|\?/,
     relevance: 0,
   };
 
@@ -84,7 +97,7 @@ function defineRoc(hljs) {
       keyword: ROC_KEYWORDS,
       built_in: ROC_BUILT_INS,
     },
-    contains: [COMMENT, APP_HEADER, STRING, TAG, OPERATOR, NUMBER],
+    contains: [COMMENT, APP_HEADER, STRING, EFFECTFUL, TAG, OPERATOR, NUMBER],
   };
 }
 

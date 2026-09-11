@@ -41,3 +41,33 @@ test("roc highlights keywords and built-ins", () => {
   expect(result).toContain('<span class="hljs-keyword">is</span>');
   expect(result).toContain('<span class="hljs-built_in">dbg</span>');
 });
+
+test("roc highlights dollar-brace interpolation and and/or/match", () => {
+  const interp = "$" + "{name}";
+  const result = highlight(
+    'match n {\n  _ => "Hello, ' +
+      interp +
+      '!"\n}\nif a and b or c then crash ""\n',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">match</span>');
+  expect(result).toContain('<span class="hljs-keyword">and</span>');
+  expect(result).toContain('<span class="hljs-keyword">or</span>');
+  expect(result).toContain('<span class="hljs-operator">=&gt;</span>');
+  expect(result).toContain('<span class="hljs-subst">$' + "{name}</span>");
+});
+
+test("roc highlights effectful names and the ?? operator", () => {
+  const result = highlight("n = I64.from_str(first) ?? 0\necho!(n)");
+
+  expect(result).toContain('<span class="hljs-operator">??</span>');
+  expect(result).toContain('<span class="hljs-title function_">echo!</span>');
+});
+
+test("roc still interpolates $(name) and does not treat android as and", () => {
+  const result = highlight('msg = "Hello, $(name)!"\nandroid = 1');
+
+  expect(result).toContain('<span class="hljs-subst">$(name)</span>');
+  expect(result).toContain("android =");
+  expect(result).not.toContain('<span class="hljs-keyword">and</span>roid');
+});
