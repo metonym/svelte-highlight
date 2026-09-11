@@ -72,24 +72,50 @@ function defineHeex(hljs) {
   // leading-`.`/`:` forms -- dotted, capitalized *module* components
   // (`<MyAppWeb.CoreComponents.button>`) already start with a letter and are
   // handled by the "html" subLanguage without help.
+  const TAG_INTERNALS = [
+    createAttrInterpolation(/:[a-zA-Z_][\w-]*/, "keyword"),
+    createAttrInterpolation(/[a-zA-Z_][\w-]*/, "attr"),
+    {
+      className: "string",
+      variants: [
+        { begin: /"/, end: /"/ },
+        { begin: /'/, end: /'/ },
+      ],
+    },
+    { className: "attr", begin: /[a-zA-Z_][\w-]*/, relevance: 0 },
+  ];
+
   const COMPONENT_TAG = {
     className: "tag",
     begin: /<\/?[.:][A-Za-z_][\w.-]*/,
     end: /\/?>/,
-    contains: [
-      createAttrInterpolation(/:[a-zA-Z_][\w-]*/, "keyword"),
-      createAttrInterpolation(/[a-zA-Z_][\w-]*/, "attr"),
-      {
-        className: "string",
-        variants: [
-          { begin: /"/, end: /"/ },
-          { begin: /'/, end: /'/ },
-        ],
-      },
-      { className: "attr", begin: /[a-zA-Z_][\w-]*/, relevance: 0 },
-    ],
+    contains: TAG_INTERNALS,
     relevance: 10,
   };
+
+  // `<script>` and `<style>` bodies are raw text to HEEx (LiveView 1.0):
+  // `{ }` is not interpolation there, only `<%= %>` and `<%!-- --%>` still
+  // are. Without these, every CSS rule block and JS function body was
+  // highlighted as Elixir by CURLY_INTERPOLATION. Same two-stage shape as
+  // html.js's own modes: the opener still takes `{...}` attribute values,
+  // and `returnEnd` leaves the closing tag to the html sublanguage.
+  /**
+   * @param {string} name
+   * @param {string} subLanguage
+   */
+  const createRawTextTag = (name, subLanguage) => ({
+    className: "tag",
+    begin: new RegExp(String.raw`<${name}(?=\s|>)`),
+    end: />/,
+    keywords: { name },
+    contains: TAG_INTERNALS,
+    starts: {
+      end: new RegExp(`</${name}>`),
+      returnEnd: true,
+      subLanguage,
+      contains: [COMMENT, EEX_TAG],
+    },
+  });
 
   return {
     name: "HEEx",
@@ -98,6 +124,8 @@ function defineHeex(hljs) {
     contains: [
       COMMENT,
       EEX_TAG,
+      createRawTextTag("style", "css"),
+      createRawTextTag("script", "javascript"),
       createAttrInterpolation(/:[a-zA-Z_][\w-]*/, "keyword"),
       createAttrInterpolation(/[a-zA-Z_][\w-]*/, "attr"),
       COMPONENT_TAG,
