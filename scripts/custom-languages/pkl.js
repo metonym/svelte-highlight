@@ -1,10 +1,14 @@
 const PKL_KEYWORDS =
   "abstract amends as class const else extends external fixed for function hidden if import in is let local module new open out outer read super this throw trace typealias when";
 
+// `unknown` (top) and `nothing` (bottom) are types, not values, so they sit
+// here rather than in the literal table. `Bytes` arrived in Pkl 0.29.
 const PKL_TYPES =
-  "String Int Float Boolean Number Listing Mapping List Map Set Collection Pair Dynamic Object Class Module Null Any Duration DataSize";
+  "String Int Float Boolean Number Listing Mapping List Map Set Collection Pair Dynamic Object Class Module Null Any Duration DataSize " +
+  "unknown nothing Regex IntSeq Typed TypeAlias Resource Bytes " +
+  "Int8 Int16 Int32 UInt UInt8 UInt16 UInt32";
 
-const PKL_LITERALS = "true false null nothing unknown";
+const PKL_LITERALS = "true false null";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function definePkl(hljs) {
@@ -41,6 +45,18 @@ function definePkl(hljs) {
     ]),
   };
 
+  // In a `#"..."#` string the escape prefix is `\#`, so `\(x)` is literal
+  // text and `\#(x)` is the interpolation.
+  const POUND_INTERPOLATION = {
+    className: "subst",
+    begin: /\\#\(/,
+    end: /\)/,
+    keywords: { keyword: PKL_KEYWORDS, literal: PKL_LITERALS },
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      NESTED_PARENS,
+    ]),
+  };
+
   const STRING = {
     className: "string",
     variants: [
@@ -53,8 +69,8 @@ function definePkl(hljs) {
         // would never fire.
         contains: [INTERPOLATION, hljs.BACKSLASH_ESCAPE],
       },
-      { begin: /#"""/, end: /"""#/ },
-      { begin: /#"/, end: /"#/ },
+      { begin: /#"""/, end: /"""#/, contains: [POUND_INTERPOLATION] },
+      { begin: /#"/, end: /"#/, contains: [POUND_INTERPOLATION] },
       {
         begin: /"/,
         end: /"/,
@@ -74,6 +90,13 @@ function definePkl(hljs) {
     beginScope: { 1: "keyword", 3: "title.function" },
   };
 
+  // `class Foo` / `typealias Foo`: the declared name, bounded to the one
+  // identifier after the keyword.
+  const CLASS = {
+    begin: [/\b(?:class|typealias)\b/, /\s+/, /[a-zA-Z_]\w*/],
+    beginScope: { 1: "keyword", 3: "title.class" },
+  };
+
   return {
     name: "Pkl",
     aliases: ["pkl"],
@@ -88,6 +111,7 @@ function definePkl(hljs) {
       ANNOTATION,
       STRING,
       FUNCTION,
+      CLASS,
       NUMBER,
     ],
   };
