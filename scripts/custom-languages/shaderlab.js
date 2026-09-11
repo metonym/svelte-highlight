@@ -29,6 +29,22 @@ const SHADERLAB_KEYWORDS = [
   "SetTexture",
   "BindChannels",
   "Conservative",
+  "BlendOp",
+  "ZClip",
+  "ReadMask",
+  "WriteMask",
+  "Fail",
+  "ZFail",
+  "CompFront",
+  "CompBack",
+  "PassFront",
+  "PassBack",
+  "FailFront",
+  "FailBack",
+  "ZFailFront",
+  "ZFailBack",
+  "Dependency",
+  "PackageRequirements",
 ];
 
 const SHADERLAB_TYPES = "Range Color Float Vector Int Cube CubeArray Integer";
@@ -53,6 +69,30 @@ const SHADERLAB_LITERALS = [
   "RGBA|0",
   "RGB|0",
   "A|0",
+  "GEqual|0",
+  "True|0",
+  "False|0",
+  // Remaining blend factors.
+  "SrcColor|0",
+  "OneMinusSrcColor|0",
+  "DstAlpha|0",
+  "OneMinusDstAlpha|0",
+  "OneMinusDstColor|0",
+  "SrcAlphaSaturate|0",
+  // BlendOp operations.
+  "Add|0",
+  "Sub|0",
+  "RevSub|0",
+  "Min|0",
+  "Max|0",
+  // Stencil operations.
+  "Keep|0",
+  "Replace|0",
+  "IncrSat|0",
+  "DecrSat|0",
+  "Invert|0",
+  "IncrWrap|0",
+  "DecrWrap|0",
 ];
 
 /** @param {import("highlight.js").HLJSApi} hljs */
@@ -79,6 +119,15 @@ function defineShaderlab(hljs) {
   const ATTRIBUTE = {
     className: "meta",
     begin: /\[[A-Za-z]\w*(?:\([^)\n]*\))?\]/,
+    relevance: 0,
+  };
+
+  // A render-state command can read a property instead of a literal:
+  // `Cull [_Cull]`, `Blend [_SrcBlend] [_DstBlend]`. The underscore
+  // keeps it apart from the `[Attribute]` form above.
+  const PROPERTY_REFERENCE = {
+    begin: [/\[/, /_[A-Za-z]\w*/, /\]/],
+    beginScope: { 2: "variable" },
     relevance: 0,
   };
 
@@ -122,6 +171,7 @@ function defineShaderlab(hljs) {
       SHADER_HEADER,
       STRING,
       ATTRIBUTE,
+      PROPERTY_REFERENCE,
       PROPERTY_NAME,
       NUMERIC_TYPE,
       hljs.C_NUMBER_MODE,
