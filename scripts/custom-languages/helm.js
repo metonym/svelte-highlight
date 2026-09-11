@@ -2,10 +2,10 @@ import yamlRegister from "highlight.js/lib/languages/yaml";
 import gotmpl from "./gotmpl.js";
 
 const HELM_BUILT_INS =
-  "include required toYaml nindent indent quote default tpl lookup trunc trimSuffix upper lower b64enc sha256sum";
+  "include required toYaml toYamlPretty mustToYaml fromYaml fromYamlArray toJson mustToJson fromJson fromJsonArray toToml fromToml mustToToml nindent indent quote default tpl lookup trunc trimSuffix upper lower b64enc sha256sum fail dict";
 
 const HELM_ROOTS =
-  /\.(?:Values|Release|Chart|Capabilities|Files)\b(?:\.[A-Za-z_][\w.]*)?/;
+  /\.(?:Values|Release|Chart|Capabilities|Files|Template)\b(?:\.[A-Za-z_][\w.]*)?/;
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineHelm(hljs) {
