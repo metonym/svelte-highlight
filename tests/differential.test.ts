@@ -29,6 +29,7 @@ import sql from "highlight.js/lib/languages/sql";
 import typescript from "highlight.js/lib/languages/typescript";
 import xml from "highlight.js/lib/languages/xml";
 import yaml from "highlight.js/lib/languages/yaml";
+import { HLJS_PATCHES } from "../scripts/build-languages.ts";
 import {
   createRegistry,
   registerAll,
@@ -409,6 +410,17 @@ for (const mod of customModules) {
   // built-in's alias and skip registering the actual custom grammar,
   // silently comparing against the wrong baseline. registerLanguage's own
   // direct assignment makes unconditional (re-)registration safe here.
+  hljs.registerLanguage(lang.name, lang.register as any);
+}
+
+// hljs built-ins that ship with a svelte-highlight patch on top
+// (scripts/hljs-patches/): the baseline is the *patched* grammar run by real
+// hljs, exactly as the customs above use their own hljs-mode source.
+const patchModules = await Promise.all(
+  HLJS_PATCHES.map((patch) => import(patch.path)),
+);
+for (const mod of patchModules) {
+  const lang = mod.default as { name: string; register: unknown };
   hljs.registerLanguage(lang.name, lang.register as any);
 }
 

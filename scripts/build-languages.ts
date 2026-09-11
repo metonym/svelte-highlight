@@ -172,11 +172,34 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
     path: `${import.meta.dir}/custom-languages/${name}.js`,
   }));
 
+/**
+ * hljs built-ins shipped with a svelte-highlight patch on top: each
+ * `hljs-patches/<name>.js` wraps `highlight.js/lib/languages/<name>` and
+ * exports `<name>` as `{ name, register }`, fixing bugs or filling syntax
+ * holes upstream hasn't. The grammar keeps its hljs identity (license banner,
+ * "exported from highlight.js" count); only its `register` differs.
+ */
+const HLJS_PATCH_NAMES = [] as const;
+
+export type HljsPatch = {
+  name: string;
+  path: string;
+};
+
+export const HLJS_PATCHES: readonly HljsPatch[] = HLJS_PATCH_NAMES.map(
+  (name) => ({
+    name,
+    path: `${import.meta.dir}/hljs-patches/${name}.js`,
+  }),
+);
+
 export type LanguageEntry = {
   name: string;
   moduleName: string;
   kind: "custom" | "hljs";
   customPath?: string;
+  /** Set on an hljs entry whose grammar is wrapped by `hljs-patches/<name>.js`. */
+  patchPath?: string;
 };
 
 function getModuleName(name: string) {
@@ -194,16 +217,30 @@ function getModuleName(name: string) {
  */
 export function buildLanguageEntries(): LanguageEntry[] {
   const customNames = new Set(CUSTOM_LANGUAGES.map(({ name }) => name));
+  const patchByName = new Map(HLJS_PATCHES.map((patch) => [patch.name, patch]));
+  const hljsNames = new Set(hljs.listLanguages());
+
+  for (const name of patchByName.keys()) {
+    if (!hljsNames.has(name) || customNames.has(name)) {
+      throw new Error(
+        `build-languages: hljs patch "${name}" must target an hljs built-in that is not also a custom grammar`,
+      );
+    }
+  }
 
   return [
     ...hljs
       .listLanguages()
       .filter((name) => !customNames.has(name))
-      .map((name) => ({
-        name,
-        moduleName: getModuleName(name),
-        kind: "hljs" as const,
-      })),
+      .map((name) => {
+        const patch = patchByName.get(name);
+        return {
+          name,
+          moduleName: getModuleName(name),
+          kind: "hljs" as const,
+          ...(patch ? { patchPath: patch.path } : {}),
+        };
+      }),
     ...CUSTOM_LANGUAGES.map(({ name, moduleName, path }) => ({
       name,
       moduleName,
@@ -223,6 +260,14 @@ export async function buildLanguages() {
   >(
     await Promise.all(
       CUSTOM_LANGUAGES.map(
+        async ({ name, path }) => [name, await Bun.file(path).text()] as const,
+      ),
+    ),
+  );
+
+  const patchContents = new Map<HljsPatch["name"], string>(
+    await Promise.all(
+      HLJS_PATCHES.map(
         async ({ name, path }) => [name, await Bun.file(path).text()] as const,
       ),
     ),
@@ -279,9 +324,12 @@ export async function buildLanguages() {
         content: customLanguageContents.get(name) ?? "",
       });
     } else {
+      const patchNote = entry.patchPath
+        ? `> Exported from highlight.js with svelte-highlight patches on top (see \`scripts/hljs-patches/${name}.js\`)\n\n`
+        : "";
       markdown += `## ${name} (\`${moduleName}\`)
 
-\`\`\`html
+${patchNote}\`\`\`html
 <script>
   // direct import (recommended)
   import ${moduleName} from "svelte-highlight/languages/${name}";
@@ -293,7 +341,9 @@ export async function buildLanguages() {
 
       files.push({
         path: `src/languages/${name}.js`,
-        content: `import register from "highlight.js/lib/languages/${name}";\n
+        content:
+          patchContents.get(name) ??
+          `import register from "highlight.js/lib/languages/${name}";\n
 export const ${moduleName} = { name: "${name}", register };
 export default ${moduleName};\n`,
       });
