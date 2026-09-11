@@ -47,3 +47,35 @@ test("crontab highlights comments", () => {
     '<span class="hljs-comment"># run backups nightly</span>',
   );
 });
+
+test("crontab highlights an indented schedule line", () => {
+  const result = highlight("  15 2 * * * /usr/bin/indented");
+
+  expect(result).toContain(
+    '  <span class="hljs-number">15</span> <span class="hljs-number">2</span> <span class="hljs-number">*</span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-number">*</span> /usr/bin/indented',
+  );
+});
+
+test("crontab highlights cronie random ranges as numbers", () => {
+  const result = highlight("0 3~5 * * * /usr/bin/a\n5 ~ * * * /usr/bin/b");
+
+  expect(result).toContain('<span class="hljs-number">3~5</span>');
+  expect(result).toContain('<span class="hljs-number">~</span>');
+});
+
+test("crontab highlights lowercase month and day names as built-ins", () => {
+  const result = highlight("0 9 1 jan-mar sun /usr/bin/x");
+
+  expect(result).toContain('<span class="hljs-built_in">jan-mar</span>');
+  expect(result).toContain('<span class="hljs-built_in">sun</span>');
+});
+
+test("crontab keeps a bare word schedule field unstyled", () => {
+  const result = highlight("0 9 * * foo /usr/bin/x");
+
+  expect(result).not.toContain('hljs-built_in">foo');
+  expect(result).toContain('<span class="hljs-number">*</span> foo ');
+});
