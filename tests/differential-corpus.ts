@@ -147,6 +147,14 @@ example.com {
 		lb_policy round_robin
 	}
 	file_server
+}
+
+:8080 {
+	respond <<HTML
+		<h1>{host}</h1>
+		HTML 200
+	respond \`raw
+	text\` 201
 }`,
   bqn: `# double each number and sum
 Double ⇐ ×2
