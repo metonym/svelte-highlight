@@ -33,9 +33,12 @@ function defineGleam(hljs) {
     relevance: 0,
   };
 
+  // `|>` pipe, `<>` string concat, `->` (fn return types and case clause
+  // arrows), `<-` (`use` bindings). Ordered so `<-` and `<>` are tried before
+  // any bare `<` comparison could split them.
   const OPERATOR = {
     className: "operator",
-    begin: /\|>|<>/,
+    begin: /\|>|<>|->|<-/,
     relevance: 0,
   };
 
