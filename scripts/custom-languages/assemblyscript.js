@@ -1,11 +1,19 @@
 import typescriptRegister from "highlight.js/lib/languages/typescript";
 
-const AS_TYPES = "i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|usize|v128|bool";
+const AS_TYPES = "i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|isize|usize|v128|bool";
 
 const AS_DECORATORS =
   "inline|external|global|operator|lazy|unmanaged|final|unsafe";
 
-const AS_BUILTINS = "changetype|unchecked|idof|load|store";
+// Builtins that take a type argument (`sizeof<T>()`, `instantiate<T>(...)`,
+// the `is*<T>()` type checks) and are styled together with their `<`.
+const AS_GENERIC_BUILTINS =
+  "changetype|idof|sizeof|offsetof|alignof|nameof|instantiate|select|" +
+  "isInteger|isFloat|isSigned|isReference|isString|isArray|isArrayLike|" +
+  "isFunction|isNullable|isDefined|isConstant|isManaged|isVoid";
+
+const AS_BUILTINS =
+  "changetype|unchecked|idof|load|store|unreachable|abort|assert|trace";
 
 /** @param {import("highlight.js").HLJSApi} _hljs */
 function defineAssemblyscript(_hljs) {
@@ -22,7 +30,7 @@ function defineAssemblyscript(_hljs) {
   };
 
   const genericBuiltin = {
-    begin: [/\b(?:changetype|idof)\b/, /\s*</],
+    begin: [new RegExp(String.raw`\b(?:${AS_GENERIC_BUILTINS})\b`), /\s*</],
     beginScope: { 1: "built_in" },
     end: />/,
     contains: [wasmType],
