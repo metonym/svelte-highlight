@@ -1,11 +1,20 @@
 const KQL_KEYWORDS =
-  "where project extend summarize join order by take limit distinct top sort render let union parse evaluate as asc desc nulls first last on kind hint.strategy hint.shufflekey with withsource step from to";
+  "where project extend summarize join order by take limit distinct top sort render let union parse evaluate as asc desc nulls first last on kind hint.strategy hint.shufflekey with withsource step from to " +
+  "print lookup invoke serialize scan declare search find fork facet partition consume getschema sample";
 
 const KQL_HYPHENATED_KEYWORDS = [
   "mv-expand",
   "mv-apply",
   "parse-where",
   "parse-kv",
+  "project-away",
+  "project-keep",
+  "project-rename",
+  "project-reorder",
+  "make-series",
+  "top-nested",
+  "top-hitters",
+  "sample-distinct",
 ];
 
 const KQL_OPERATORS =
@@ -29,9 +38,18 @@ function defineKql(hljs) {
         begin: /@'/,
         end: /'/,
       },
+      // Multi-line string literals.
+      { begin: /```/, end: /```/ },
       { begin: /"/, end: /"/, contains: [hljs.BACKSLASH_ESCAPE] },
       { begin: /'/, end: /'/, contains: [hljs.BACKSLASH_ESCAPE] },
     ],
+  };
+
+  // `$left` / `$right` in join and lookup conditions.
+  const JOIN_SIDE = {
+    className: "variable",
+    begin: /\$(?:left|right)\b/,
+    relevance: 0,
   };
 
   const TIMESPAN = {
@@ -50,9 +68,14 @@ function defineKql(hljs) {
     relevance: 0,
   };
 
-  const DATETIME_FUNC = {
-    className: "built_in",
-    begin: /\b(?:datetime|timespan)(?=\s*\()/,
+  // `datetime(2024-01-15T10:30:00Z)` / `time(1.02:03:04)` literals: the
+  // digit-leading argument is one number instead of being chopped into
+  // `2024`, `01`, ... Any other argument (`datetime(now())`,
+  // `datetime("2024-01-15")`) fails the multi-match and falls through to
+  // FUNCTION below, which styles just the name.
+  const DATETIME_LITERAL = {
+    begin: [/\b(?:datetime|timespan|time)\b/, /\s*\(\s*/, /\d[^)\s]*/, /\s*\)/],
+    beginScope: { 1: "built_in", 3: "number" },
     relevance: 0,
   };
 
@@ -94,7 +117,12 @@ function defineKql(hljs) {
     aliases: ["kql", "kusto"],
     case_insensitive: false,
     keywords: {
-      $pattern: "[\\w.]+",
+      // The optional `!` prefix and `~` suffix let the negated and
+      // case-insensitive operators (`!has`, `in~`, `!in~`) in KQL_OPERATORS
+      // match as one token; with a plain `[\w.]+` pattern those entries
+      // could never fire. `!=` and `!~` have no word run, so they stay
+      // unmatched.
+      $pattern: "!?[\\w.]+~?",
       keyword: KQL_KEYWORDS,
       operator: KQL_OPERATORS,
       built_in: KQL_FUNCTIONS,
@@ -106,7 +134,8 @@ function defineKql(hljs) {
       LET,
       PIPE,
       HYPHENATED_KEYWORD,
-      DATETIME_FUNC,
+      JOIN_SIDE,
+      DATETIME_LITERAL,
       FUNCTION,
       TIMESPAN,
       NUMBER,
