@@ -43,3 +43,19 @@ test("raku highlights declarator docs and pod comments", () => {
     '<span class="hljs-comment">#| doubles a number</span>',
   );
 });
+
+test("raku balances nested braces inside q{} strings", () => {
+  const result = highlight("my $q = q{foo {bar} baz}; say $name;");
+
+  expect(result).toContain('<span class="hljs-string">q{foo {bar} baz}</span>');
+  expect(result).toContain('<span class="hljs-keyword">say</span>');
+  expect(result).toContain('<span class="hljs-variable">$name</span>');
+});
+
+test("raku does not let a nested brace close a q{} string early", () => {
+  const result = highlight("my $q = q{a {b} c};\nmy $n = 1;");
+
+  expect(result).toContain('<span class="hljs-variable">$n</span>');
+  expect(result).toContain('<span class="hljs-number">1</span>');
+  expect(result).not.toContain("c};");
+});

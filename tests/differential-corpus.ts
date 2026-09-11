@@ -1030,6 +1030,7 @@ class Point {
 
 my $p = Point.new(x => 1, y => 2);
 say $p.x ~~ $p.y;
+my $q = q{foo {bar} baz};
 `,
   rego: `package authz
 
