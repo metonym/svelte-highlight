@@ -1,5 +1,5 @@
 const BICEP_KEYWORDS =
-  "targetScope resource module param var output existing for in if func type import metadata assert provider extends with using as";
+  "targetScope resource module param var output existing for in if else func type import export extension metadata assert provider extends with using as from";
 
 const BICEP_TYPES = "string int bool object array secureString secureObject";
 
@@ -45,7 +45,11 @@ function defineBicep(hljs) {
   };
 
   const DECLARATION = {
-    begin: [/\b(?:resource|module|param|output|var)\b/, /\s+/, /[A-Za-z_]\w*/],
+    begin: [
+      /\b(?:resource|module|param|output|var|func|type)\b/,
+      /\s+/,
+      /[A-Za-z_]\w*/,
+    ],
     beginScope: { 1: "keyword", 3: "title" },
   };
 
