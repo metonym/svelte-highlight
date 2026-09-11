@@ -40,3 +40,22 @@ test("codeql highlights keywords and types", () => {
   expect(result).toContain('<span class="hljs-keyword">predicate</span>');
   expect(result).toContain('<span class="hljs-type">int</span>');
 });
+
+test("codeql highlights additional, overlay, signature, and extensible", () => {
+  const result = highlight(
+    "overlay[local]\nadditional predicate isLocal() { any() }\nextensible class Source extends Node {}\nsignature module ConfigSig { predicate isSource(); }",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">overlay</span>');
+  expect(result).toContain('<span class="hljs-keyword">additional</span>');
+  expect(result).toContain('<span class="hljs-keyword">extensible</span>');
+  expect(result).toContain('<span class="hljs-keyword">signature</span>');
+});
+
+test("codeql still highlights predicate and does not restyle identifiers named extra", () => {
+  const result = highlight("predicate isEven(int x) { x % 2 = 0 }");
+
+  expect(result).toContain('<span class="hljs-keyword">predicate</span>');
+  expect(result).toContain('<span class="hljs-type">int</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">isEven</span>');
+});
