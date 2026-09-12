@@ -35,3 +35,4 @@ export {
   easeOutSine,
   linear,
 } from "./typewriter-easing.js";
+export { default as WrapToggle } from "./WrapToggle.svelte";

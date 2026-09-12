@@ -39,3 +39,4 @@ export {
   easeOutSine,
   linear,
 } from "./typewriter-easing";
+export { default as WrapToggle } from "./WrapToggle.svelte";
