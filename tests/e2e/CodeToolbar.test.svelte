@@ -19,7 +19,13 @@
 <svelte:head>{@html atomOneDark}</svelte:head>
 
 <div style="height: 200px; overflow-y: auto;" data-testid="scroll-container">
-  <Highlight language={typescript} {code} {wrap} let:highlighted let:languageName>
+  <Highlight
+    language={typescript}
+    {code}
+    {wrap}
+    let:highlighted
+    let:languageName
+  >
     <CodeToolbar {languageName} title="app.ts">
       <WrapToggle bind:wrap />
       <CopyButton {code} absolute={false} />
