@@ -19,3 +19,23 @@
 <CodeWindow variant="plain" title="plain.ts" data-testid="plain">
   <Highlight language={typescript} {code} />
 </CodeWindow>
+
+<div style="width: 160px">
+  <CodeWindow
+    variant="macos"
+    title="a-very-long-file-name-that-overflows.ts"
+    data-testid="narrow-macos"
+  >
+    <Highlight language={typescript} {code} />
+  </CodeWindow>
+</div>
+
+<div style="width: 160px">
+  <CodeWindow
+    variant="terminal"
+    title="a-very-long-file-name-that-overflows.ts"
+    data-testid="narrow-terminal"
+  >
+    <Highlight language={typescript} {code} />
+  </CodeWindow>
+</div>

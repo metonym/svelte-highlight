@@ -9,17 +9,25 @@
 <div class="code-window {variant}" {...$$restProps}>
   <div class="titlebar">
     {#if variant === "macos"}
-      <span class="dots" aria-hidden="true">
-        <span class="dot close"></span>
-        <span class="dot minimize"></span>
-        <span class="dot maximize"></span>
+      <span class="titlebar-lead">
+        <span class="dots" aria-hidden="true">
+          <span class="dot close"></span>
+          <span class="dot minimize"></span>
+          <span class="dot maximize"></span>
+        </span>
       </span>
     {:else if variant === "terminal"}
-      <span class="prompt" aria-hidden="true">&gt;_</span>
+      <span class="titlebar-lead">
+        <span class="prompt" aria-hidden="true">&gt;_</span>
+      </span>
     {/if}
 
     {#if title}
       <span class="title" {title}>{title}</span>
+    {/if}
+
+    {#if variant !== "plain"}
+      <span class="titlebar-end"></span>
     {/if}
   </div>
 
@@ -84,12 +92,24 @@
     color: var(--prompt-color, inherit);
   }
 
+  .titlebar-lead,
+  .titlebar-end {
+    display: flex;
+    align-items: center;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .titlebar-end {
+    justify-content: flex-end;
+  }
+
   .title {
-    /* Center title across titlebar, ignoring dots/prompt. */
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    max-width: 70%;
+    /* Sandwiched between equal-width .titlebar-lead/.titlebar-end, so it
+       centers in the space actually left over instead of the full bar. */
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: center;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

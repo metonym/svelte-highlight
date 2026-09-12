@@ -222,6 +222,38 @@ test("CodeWindow - truncated title carries a native tooltip", async ({
   await expect(plain.locator(".title")).toHaveAttribute("title", "plain.ts");
 });
 
+test("CodeWindow - long title never overlaps the leading chrome at narrow widths", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeWindow);
+
+  const narrowMacos = page.getByTestId("narrow-macos");
+  const narrowTerminal = page.getByTestId("narrow-terminal");
+
+  const pairs = [
+    [narrowMacos, ".dots"],
+    [narrowTerminal, ".prompt"],
+  ] as const;
+
+  const boxes = await Promise.all(
+    pairs.map(([window, leadSelector]) =>
+      Promise.all([
+        window.locator(leadSelector).boundingBox(),
+        window.locator(".title").boundingBox(),
+      ]),
+    ),
+  );
+
+  for (const [leadBox, titleBox] of boxes) {
+    if (!leadBox || !titleBox) {
+      throw new Error("expected bounding boxes for lead chrome and title");
+    }
+
+    expect(titleBox.x).toBeGreaterThanOrEqual(leadBox.x + leadBox.width);
+  }
+});
+
 test("AnsiOutput - renders styled spans inside a terminal window", async ({
   mount,
   page,
