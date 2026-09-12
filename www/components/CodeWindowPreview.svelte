@@ -100,6 +100,19 @@ $ npm run build`;
 {/each}
 
 <p class="mb-5">
+  The title bar is a three-column flex row, so a long title stays centered
+  without overlapping the traffic-light dots even in a narrow window:
+</p>
+
+<div class="mb-5" style="max-width: 220px">
+  <HighlightStyle theme={atomOneDark}>
+    <CodeWindow variant="macos" title="a-very-long-component-name.svelte">
+      <Highlight language={typescript} code={tsCode} />
+    </CodeWindow>
+  </HighlightStyle>
+</div>
+
+<p class="mb-5">
   Every part of the chrome is themable with style props. The window is square by
   default; give it rounded corners with
   <code class="code">--window-radius</code>

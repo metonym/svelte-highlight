@@ -1598,6 +1598,8 @@ added 1 package in 1.2s`;
 
 ### Theming the chrome
 
+The title bar is a three-column flex row (leading chrome, title, a mirrored trailing spacer), so the title stays centered in the space actually left over without overlapping the dots or prompt even at narrow widths -- this doesn't apply to `plain`, which has no leading chrome to mirror.
+
 Every part of the chrome is driven by CSS variables (see [`CodeWindow` variables](#codewindow-variables)). Pass them as style props to restyle the window without `:global` overrides. For example, give the default square window rounded corners with `--window-radius`:
 
 ```svelte
