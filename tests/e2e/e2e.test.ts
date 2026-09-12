@@ -254,6 +254,30 @@ test("CodeWindow - long title never overlaps the leading chrome at narrow widths
   }
 });
 
+test("CodeWindow - titlebar slot renders custom content in the title bar", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeWindow);
+
+  const withToolbar = page.getByTestId("with-toolbar");
+  const toolbarSlot = withToolbar.getByTestId("toolbar-slot");
+
+  await expect(toolbarSlot).toBeVisible();
+
+  const titlebarBox = await withToolbar.locator(".titlebar").boundingBox();
+  const toolbarBox = await toolbarSlot.boundingBox();
+
+  if (!titlebarBox || !toolbarBox) {
+    throw new Error("expected bounding boxes for titlebar and slot content");
+  }
+
+  expect(toolbarBox.y).toBeGreaterThanOrEqual(titlebarBox.y);
+  expect(toolbarBox.y + toolbarBox.height).toBeLessThanOrEqual(
+    titlebarBox.y + titlebarBox.height,
+  );
+});
+
 test("AnsiOutput - renders styled spans inside a terminal window", async ({
   mount,
   page,
