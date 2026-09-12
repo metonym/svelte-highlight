@@ -3,6 +3,7 @@ import AnsiOutputContrast from "./AnsiOutput.contrast.test.svelte";
 import AnsiOutputLink from "./AnsiOutput.link.test.svelte";
 import AnsiOutputStreaming from "./AnsiOutput.streaming.test.svelte";
 import AnsiOutput from "./AnsiOutput.test.svelte";
+import CodeToolbar from "./CodeToolbar.test.svelte";
 import CodeWindow from "./CodeWindow.test.svelte";
 import CopyButtonAbsolute from "./CopyButton.absolute.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
@@ -175,6 +176,86 @@ test("HighlightStyle - falls back to the auto-hash when scopeClass is an empty s
     "color",
     "rgb(220, 198, 224)",
   );
+});
+
+test("CodeToolbar - renders a language badge and title", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeToolbar);
+
+  const badge = page.locator('[data-language="typescript"]');
+  await expect(badge).toBeVisible();
+  await expect(badge).toHaveText("typescript");
+
+  const title = page.locator('[title="app.ts"]');
+  await expect(title).toHaveText("app.ts");
+});
+
+test("CodeToolbar - stays pinned to the top while its container scrolls", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeToolbar);
+
+  const toolbar = page.getByRole("toolbar");
+  const before = await toolbar.boundingBox();
+  expect(before).not.toBeNull();
+
+  await expect(page.getByText("line0")).toBeInViewport();
+
+  const container = page.getByTestId("scroll-container");
+  await container.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+
+  const after = await toolbar.boundingBox();
+  expect(after).not.toBeNull();
+  expect(Math.abs((after?.y ?? 0) - (before?.y ?? 0))).toBeLessThan(2);
+
+  await expect(page.getByText("line0")).not.toBeInViewport();
+  await expect(page.getByText("line199")).toBeInViewport();
+});
+
+test("CodeToolbar - WrapToggle flips aria-pressed and the bound wrap", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeToolbar);
+
+  const codeLine = page.locator("table pre").first();
+  await expect(codeLine).toHaveCSS("white-space", "pre");
+
+  const wrapButton = page.getByRole("button", { name: "Wrap" });
+  await wrapButton.click();
+
+  await expect(wrapButton).toHaveAttribute("aria-pressed", "true");
+  await expect(wrapButton).toHaveAttribute("aria-label", "Wrapped");
+  await expect(codeLine).toHaveCSS("white-space", "pre-wrap");
+});
+
+test("CodeToolbar - CopyButton inside it copies the code", async ({
+  mount,
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName !== "chromium",
+    "Clipboard permissions are Chromium-only",
+  );
+
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+
+  await mount(CodeToolbar);
+
+  await page.getByRole("button", { name: "Copy" }).click();
+
+  const clipboard = await page.evaluate(() => navigator.clipboard.readText());
+  const expected = Array.from(
+    { length: 200 },
+    (_, i) => `const line${i} = ${i};`,
+  ).join("\n");
+  expect(clipboard).toBe(expected);
 });
 
 test("CodeWindow - renders each variant wrapping a Highlight", async ({
