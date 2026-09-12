@@ -173,11 +173,16 @@
           if (diffLine.type === "ctx") {
             oldNumber = oldLine++;
             newNumber = newLine++;
+            // A ctx line occupies a slot in both the before and after
+            // reconstructions, so both indices must advance even though its
+            // HTML is only read from one of them -- otherwise a later add
+            // line reads a stale (pre-ctx) afterTokLines slot.
             html = renderLine(
               /** @type {import("./engine.d.ts").LineToken[]} */ (
                 beforeTokLines[beforeIdx++]
               ),
             );
+            afterIdx++;
           } else if (diffLine.type === "del") {
             oldNumber = oldLine++;
             state = "removed";
@@ -262,6 +267,10 @@
   }
 </script>
 
+<!-- The only interactive elements inside are real <button>s (already
+     keyboard-operable); this div only delegates their click events. -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div on:click={handleClick}>
   <LineNumbers
     {...$$restProps}

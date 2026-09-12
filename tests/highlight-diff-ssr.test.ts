@@ -86,4 +86,35 @@ diff --git a/two.ts b/two.ts
 
     expect(body).toContain("hljs-keyword");
   });
+
+  it("keeps add-line content aligned to its own row when a ctx line separates two changes in one hunk", async () => {
+    const { default: HighlightDiff } = await compileForServer();
+
+    // A ctx line between two add/del pairs: the after-side reconstruction is
+    // [ctx, add, ctx, add], so the second add must read index 3, not 1 --
+    // regression coverage for a bug where ctx lines only advanced the
+    // before-side index, shifting every later add onto the wrong row.
+    const before = "const a = 1;\nconst mid = 0;\nconst b = 2;";
+    const after = "const a = 100;\nconst mid = 0;\nconst b = 200;";
+
+    const { body } = render(HighlightDiff, {
+      props: { before, after, language: typescript },
+    });
+
+    const addMarkerIndex = body.indexOf('data-diff="add"');
+    const firstAddRow = body.slice(addMarkerIndex, addMarkerIndex + 200);
+    expect(firstAddRow).toContain("100");
+    expect(firstAddRow).not.toContain("200");
+
+    const secondAddMarkerIndex = body.indexOf(
+      'data-diff="add"',
+      addMarkerIndex + 1,
+    );
+    const secondAddRow = body.slice(
+      secondAddMarkerIndex,
+      secondAddMarkerIndex + 200,
+    );
+    expect(secondAddRow).toContain("200");
+    expect(secondAddRow).not.toContain("100");
+  });
 });
