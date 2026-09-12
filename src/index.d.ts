@@ -3,6 +3,7 @@ export type { HighlightActionParameters } from "./action";
 export { highlight } from "./action";
 export type { AnsiColor, AnsiSegment, AnsiStyle } from "./ansi";
 export { parseAnsi } from "./ansi";
+export { default as CodeToolbar } from "./CodeToolbar.svelte";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { stripDiffMarkers, stripPrompts } from "./copy-transforms";
@@ -38,3 +39,4 @@ export {
   easeOutSine,
   linear,
 } from "./typewriter-easing";
+export { default as WrapToggle } from "./WrapToggle.svelte";
