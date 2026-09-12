@@ -32,4 +32,8 @@
 
 <style>
   @import "./langtag.css";
+
+  pre {
+    direction: ltr;
+  }
 </style>
