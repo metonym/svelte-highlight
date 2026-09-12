@@ -4,6 +4,7 @@ import AnsiOutputLink from "./AnsiOutput.link.test.svelte";
 import AnsiOutputStreaming from "./AnsiOutput.streaming.test.svelte";
 import AnsiOutput from "./AnsiOutput.test.svelte";
 import CodeWindow from "./CodeWindow.test.svelte";
+import CopyButtonAbsolute from "./CopyButton.absolute.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
@@ -1081,6 +1082,18 @@ test("CopyButton - transform strips decoration before copying and reporting on:c
   const clipboard = await page.evaluate(() => navigator.clipboard.readText());
   expect(clipboard).toBe("npm i\nadded 1 package");
   await expect(page.getByTestId("detail")).toHaveText("npm i\nadded 1 package");
+});
+
+test("CopyButton - absolute false lays out inline instead of overlaying", async ({
+  mount,
+  page,
+}) => {
+  await mount(CopyButtonAbsolute);
+
+  await expect(page.getByRole("button", { name: "Copy" })).toHaveCSS(
+    "position",
+    "static",
+  );
 });
 
 test("HighlightEditable - renders an editable, highlighted block", async ({
