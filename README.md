@@ -1552,7 +1552,7 @@ The action dispatches `highlighted` (`detail: { html, language }`) on success an
 
 Wrap a code block in `CodeWindow` to frame it with window chrome. It's purely cosmetic; the default slot renders your content unchanged.
 
-Use the `variant` prop to choose the chrome style: `"macos"` (default) renders traffic-light dots, `"terminal"` renders a prompt, and `"plain"` renders just the title bar. The optional `title` is shown in the title bar.
+Use the `variant` prop to choose the chrome style: `"macos"` (default) renders traffic-light dots, `"terminal"` renders a prompt, and `"plain"` renders just the title bar. The optional `title` is shown in the title bar, and is also exposed as a native tooltip via the HTML `title` attribute so a truncated title is readable on hover or focus.
 
 ```svelte
 <script>
