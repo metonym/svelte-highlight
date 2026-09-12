@@ -39,3 +39,8 @@
     <Highlight language={typescript} {code} />
   </CodeWindow>
 </div>
+
+<CodeWindow variant="macos" title="example.ts" data-testid="with-toolbar">
+  <Highlight language={typescript} {code} />
+  <span slot="titlebar" data-testid="toolbar-slot">tools</span>
+</CodeWindow>

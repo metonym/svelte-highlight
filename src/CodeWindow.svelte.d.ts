@@ -128,6 +128,11 @@ export type CodeWindowEvents = {};
 
 export type CodeWindowSlots = {
   default: {};
+
+  /**
+   * Optional content rendered in the mirrored trailing region of the title bar.
+   */
+  titlebar: {};
 };
 
 export default class CodeWindow extends SvelteComponentTyped<

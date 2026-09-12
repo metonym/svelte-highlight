@@ -27,7 +27,11 @@
     {/if}
 
     {#if variant !== "plain"}
-      <span class="titlebar-end"></span>
+      <!-- titlebar content wider than the leading chrome will unbalance the
+           centering above -- an accepted trade-off, not a bug. -->
+      <span class="titlebar-end"><slot name="titlebar" /></span>
+    {:else}
+      <slot name="titlebar" />
     {/if}
   </div>
 
