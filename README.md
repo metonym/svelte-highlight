@@ -2127,7 +2127,7 @@ Pass `diff` (unified diff text, parsed with `parseUnifiedDiff`) or `before`/`aft
 <HighlightDiff {before} {after} language={typescript} />
 ```
 
-`gutter` controls which line-number column(s) render: `"both"` (default) shows the new-file number plus the old-file number in a secondary column to its left; `"new"` shows only the new-file number; `"none"` hides numbers but keeps the markers and code. `context` (default `Infinity`) collapses a maximal run of consecutive unchanged lines longer than it behind a single "N unchanged lines" button, which expands to individual rows on click -- pass a small number (e.g. `3`) for large files with small changes. `hunkHeaders` (default `true`) renders a row for each hunk's `@@ ... @@` header and, when `diff` provides a path, each file's header.
+`gutter` controls which line-number column(s) render: `"both"` (default) shows the new-file number plus the old-file number in a secondary column to its left -- the two-column convention GitHub, GitLab, and Bitbucket use in their unified diff view; `"new"` shows only the new-file number, blank for removed lines; `"unified"` is a single column like `"new"`, but falls back to the old-file number for removed lines instead of leaving them blank; `"none"` hides numbers but keeps the markers and code. `context` (default `Infinity`) collapses a maximal run of consecutive unchanged lines longer than it behind a single "N unchanged lines" button, which expands to individual rows on click -- pass a small number (e.g. `3`) for large files with small changes. `hunkHeaders` (default `true`) renders a row for each hunk's `@@ ... @@` header and, when `diff` provides a path, each file's header.
 
 ### Copying the result
 
@@ -2419,7 +2419,7 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | before      | `string`                      | `undefined`      |
 | after       | `string`                      | `undefined`      |
 | language    | `LanguageType<string>`        | N/A (required)   |
-| gutter      | `"both" \| "new" \| "none"`   | `"both"`         |
+| gutter      | `"both" \| "new" \| "unified" \| "none"` | `"both"` |
 | context     | `number`                      | `Infinity`       |
 | hunkHeaders | `boolean`                     | `true`           |
 

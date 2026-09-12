@@ -41,11 +41,15 @@ export type HighlightDiffProps = HTMLAttributes<HTMLDivElement> & {
   /**
    * Which gutter number column(s) to show. `"both"` shows the new-file
    * number (primary column) and the old-file number (secondary column to
-   * its left); `"new"` shows only the new-file number; `"none"` hides
-   * numbers entirely but keeps the `+`/`-` markers and code.
+   * its left) -- the two-column convention GitHub, GitLab, and Bitbucket
+   * use in their unified diff view. `"new"` shows only the new-file
+   * number, blank for removed lines. `"unified"` is a single column like
+   * `"new"`, but falls back to the old-file number for removed lines
+   * instead of leaving it blank. `"none"` hides numbers entirely but
+   * keeps the `+`/`-` markers and code.
    * @default "both"
    */
-  gutter?: "both" | "new" | "none";
+  gutter?: "both" | "new" | "unified" | "none";
 
   /**
    * A maximal run of consecutive unchanged (`"ctx"`) lines longer than this

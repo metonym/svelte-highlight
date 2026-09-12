@@ -16,7 +16,7 @@
   /** @type {import("./languages").LanguageType<string>} */
   export let language;
 
-  /** @type {"both" | "new" | "none"} */
+  /** @type {"both" | "new" | "unified" | "none"} */
   export let gutter = "both";
 
   /** @type {number} */
@@ -123,7 +123,9 @@
     const pushRow = (html, newNumber, oldNumber, state) => {
       const index = lines.length;
       lines.push(html);
-      numbers.push(gutter === "none" ? null : newNumber);
+      if (gutter === "none") numbers.push(null);
+      else if (gutter === "unified") numbers.push(newNumber ?? oldNumber);
+      else numbers.push(newNumber);
       secondaryNumbers?.push(oldNumber);
       if (state) lineStates[index] = state;
     };

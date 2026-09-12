@@ -117,4 +117,27 @@ diff --git a/two.ts b/two.ts
     expect(secondAddRow).toContain("200");
     expect(secondAddRow).not.toContain("100");
   });
+
+  it("gutter=unified renders one gutter column, falling back to the old-file number for removed lines", async () => {
+    const { default: HighlightDiff } = await compileForServer();
+
+    const before = "const a = 1;\nconst b = 2;";
+    const after = "const a = 2;\nconst b = 2;";
+
+    const { body } = render(HighlightDiff, {
+      props: { before, after, gutter: "unified", language: typescript },
+    });
+
+    // One gutter <td> per row (not two, like "both" would render).
+    const rowCount = (body.match(/<tr/g) ?? []).length;
+    const gutterCellCount = (body.match(/<td aria-hidden="true"/g) ?? [])
+      .length;
+    expect(gutterCellCount).toBe(rowCount);
+
+    // The removed line has no new-file number, so it falls back to its
+    // old-file number (1) instead of a blank cell.
+    const delMarkerIndex = body.indexOf('data-diff="del"');
+    const delRow = body.slice(delMarkerIndex - 400, delMarkerIndex);
+    expect(delRow).toContain(">1<");
+  });
 });

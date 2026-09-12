@@ -7,7 +7,8 @@
   export let before: string | undefined = undefined;
   export let after: string | undefined = undefined;
   export let context: number | undefined = undefined;
-  export let gutter: "both" | "new" | "none" | undefined = undefined;
+  export let gutter: "both" | "new" | "unified" | "none" | undefined =
+    undefined;
 </script>
 
 <svelte:head> {@html horizonDark} </svelte:head>
