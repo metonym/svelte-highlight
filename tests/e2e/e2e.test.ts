@@ -61,6 +61,7 @@ import LineNumbersMultilineSpan from "./LineNumbers.multilineSpan.test.svelte";
 import LineNumbersRtl from "./LineNumbers.rtl.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
+import MarkdownStream from "./MarkdownStream.test.svelte";
 import ScopedStyle from "./ScopedStyle.test.svelte";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
 import Typewriter from "./Typewriter.test.svelte";
@@ -2653,4 +2654,105 @@ test("FileTabs - the active tab scrolls into view when set programmatically", as
   expect(tabBox.x + tabBox.width).toBeLessThanOrEqual(
     tablistBox.x + tablistBox.width + 1,
   );
+});
+
+test("MarkdownStream - streams prose and two fences with the right languages", async ({
+  mount,
+  page,
+}) => {
+  await mount(MarkdownStream);
+
+  await page.getByTestId("append-chunk").click();
+  await page.getByTestId("append-chunk").click();
+  await page.getByTestId("append-chunk").click();
+
+  const container = page.getByTestId("markdown-stream");
+  const fences = container.locator("pre");
+  await expect(fences).toHaveCount(2);
+
+  // typescript resolved for the first fence, not plaintext.
+  await expect(fences.nth(0).locator(".hljs-keyword").first()).toHaveText(
+    "const",
+  );
+  // python resolved for the second fence, not plaintext.
+  await expect(fences.nth(1).locator(".hljs-string").first()).toHaveText(
+    '"hi"',
+  );
+
+  const prose = container.locator(".shl-md-text");
+  await expect(prose).toHaveCount(2);
+  await expect(prose.nth(0)).toHaveText("Here is a reply.");
+  await expect(prose.nth(1)).toHaveText("And a script.");
+});
+
+test("MarkdownStream - regeneration keeps earlier fence elements", async ({
+  mount,
+  page,
+}) => {
+  await mount(MarkdownStream);
+
+  await page.getByTestId("append-chunk").click();
+  await page.getByTestId("append-chunk").click();
+  await page.getByTestId("append-chunk").click();
+
+  const container = page.getByTestId("markdown-stream");
+  const firstFenceHandle = await container
+    .locator("pre")
+    .nth(0)
+    .elementHandle();
+
+  await page.getByTestId("regenerate").click();
+
+  expect(await firstFenceHandle?.evaluate((el) => el.isConnected)).toBe(true);
+  await expect(container.locator("pre").nth(1)).toContainText('"hello, world"');
+});
+
+test("MarkdownStream - a complete done buffer highlights without a later text change", async ({
+  mount,
+  page,
+}) => {
+  await mount(MarkdownStream);
+  await page.getByTestId("start-complete").click();
+
+  const container = page.getByTestId("markdown-stream");
+  await expect(container.locator("pre")).toHaveCount(1);
+  await expect(container.locator(".hljs-keyword").first()).toHaveText(
+    "function",
+  );
+});
+
+test("MarkdownStream - unknown language falls back to plaintext without errors", async ({
+  mount,
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  await mount(MarkdownStream);
+  await page.getByTestId("start-unknown").click();
+
+  const container = page.getByTestId("markdown-stream");
+  await expect(container.locator("pre")).toHaveCount(1);
+  await expect(container.locator("pre code")).toHaveText("custom text");
+  expect(errors).toEqual([]);
+});
+
+test("MarkdownStream - caret only on the last open fence", async ({
+  mount,
+  page,
+}) => {
+  await mount(MarkdownStream);
+
+  // First fence (ts) opens and closes within a single chunk; the second
+  // (py) fence's closing fence hasn't arrived yet, so it's the only open
+  // fence while streaming.
+  await page.getByTestId("append-chunk").click();
+  await page.getByTestId("append-chunk").click();
+
+  const container = page.getByTestId("markdown-stream");
+  await expect(container.locator("pre")).toHaveCount(2);
+  await expect(container.locator(".highlight-stream-caret")).toHaveCount(1);
+  await expect(
+    container.locator("pre").nth(1).locator(".highlight-stream-caret"),
+  ).toHaveCount(1);
 });

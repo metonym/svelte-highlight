@@ -17,6 +17,7 @@ export { default as HighlightVirtual } from "./HighlightVirtual.svelte";
 export { default as LineNumbers } from "./LineNumbers.svelte";
 export type { LanguageName, LanguageType } from "./languages";
 export { LanguageLoadError, loadLanguage } from "./load-language";
+export { default as MarkdownStream } from "./MarkdownStream.svelte";
 export {
   dualStyle,
   scopeClassFor,
