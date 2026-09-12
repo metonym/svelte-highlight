@@ -26,6 +26,7 @@ import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestrictio
 import HighlightAutoNoCandidate from "./HighlightAuto.noCandidate.test.svelte";
 import HighlightAutoSecondBest from "./HighlightAuto.secondBest.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
+import HighlightDiff from "./HighlightDiff.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
@@ -59,6 +60,7 @@ import LineNumbersLineStates from "./LineNumbers.lineStates.test.svelte";
 import LineNumbersLinesInput from "./LineNumbers.linesInput.test.svelte";
 import LineNumbersMultilineSpan from "./LineNumbers.multilineSpan.test.svelte";
 import LineNumbersRtl from "./LineNumbers.rtl.test.svelte";
+import LineNumbersSecondaryNumbers from "./LineNumbers.secondaryNumbers.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
 import MarkdownStream from "./MarkdownStream.test.svelte";
@@ -879,6 +881,161 @@ test("LineNumbers - lineStates colors added/removed lines and exempts focus line
   await expect(rows.nth(0)).toHaveClass(/dimmed/);
   await expect(rows.nth(3)).toHaveClass(/dimmed/);
   await expect(rows.nth(0).locator("pre")).toHaveCSS("opacity", "0.4");
+});
+
+test("LineNumbers - numbers and secondaryNumbers override the gutter with blanks for null entries", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersSecondaryNumbers);
+
+  const secondary = await page
+    .locator("tbody > tr > td:nth-child(1)")
+    .allTextContents();
+  const primary = await page
+    .locator("tbody > tr > td:nth-child(2)")
+    .allTextContents();
+
+  expect(primary.map((text) => text.trim())).toEqual([
+    "10",
+    "",
+    "12",
+    "13",
+    "",
+  ]);
+  expect(secondary.map((text) => text.trim())).toEqual(["1", "2", "", "", "5"]);
+});
+
+test("LineNumbers - omitting numbers and secondaryNumbers keeps the existing single auto-incrementing gutter", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbers);
+
+  await expect(page.locator("tbody > tr")).toHaveCount(1);
+  await expect(page.locator("td.hljs")).toHaveCount(1);
+  await expect(page.locator("td.hljs").first()).toHaveText("1");
+});
+
+test("HighlightDiff - renders added and removed line backgrounds with +/- markers", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, {
+    props: {
+      before: "const a = 1;\nconst b = 2;",
+      after: "const a = 2;\nconst b = 2;",
+    },
+  });
+
+  // 1 hunk-header row (hunkHeaders defaults to true) + del/add/ctx.
+  const rows = page.locator("tbody > tr");
+  await expect(rows).toHaveCount(4);
+
+  const markers = await page.locator(".shl-diff-marker").allTextContents();
+  expect(markers).toEqual(["-", "+", " "]);
+
+  await expect(rows.nth(1).locator("td:last-child .line-background")).toHaveCSS(
+    "background-color",
+    "rgba(231, 76, 60, 0.15)",
+  );
+  await expect(rows.nth(2).locator("td:last-child .line-background")).toHaveCSS(
+    "background-color",
+    "rgba(46, 204, 113, 0.15)",
+  );
+  await expect(rows.nth(3).locator(".line-background")).toHaveCount(0);
+});
+
+test("HighlightDiff - shows independent old and new line number gutters", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, {
+    props: {
+      before: "const a = 1;\nconst b = 2;",
+      after: "const a = 2;\nconst b = 2;",
+      gutter: "both",
+    },
+  });
+
+  const secondary = await page
+    .locator("tbody > tr > td:nth-child(1)")
+    .allTextContents();
+  const primary = await page
+    .locator("tbody > tr > td:nth-child(2)")
+    .allTextContents();
+
+  // 1 hunk-header row (both numbers null) + del/add/ctx.
+  expect(secondary.map((text) => text.trim())).toEqual(["", "1", "", "2"]);
+  expect(primary.map((text) => text.trim())).toEqual(["", "", "1", "2"]);
+});
+
+test("HighlightDiff - a collapsed unchanged run expands on click", async ({
+  mount,
+  page,
+}) => {
+  const fileLines = Array.from(
+    { length: 40 },
+    (_, i) => `const line${i + 1} = ${i + 1};`,
+  );
+  const before = fileLines.join("\n");
+  const afterLines = [...fileLines];
+  afterLines[19] = "const line20 = 999;";
+  const after = afterLines.join("\n");
+
+  await mount(HighlightDiff, {
+    props: { before, after, context: 3 },
+  });
+
+  const collapsedButtons = page.locator("[data-diff-collapsed]");
+  await expect(collapsedButtons).toHaveCount(2);
+  await expect(collapsedButtons.first()).toHaveText("19 unchanged lines");
+  await expect(collapsedButtons.last()).toHaveText("20 unchanged lines");
+
+  await collapsedButtons.first().click();
+
+  await expect(page.locator("[data-diff-collapsed]")).toHaveCount(1);
+  const ctxCount = await page
+    .locator('.shl-diff-marker[data-diff="ctx"]')
+    .count();
+  expect(ctxCount).toBeGreaterThanOrEqual(19);
+});
+
+test("HighlightDiff - before/after props render the same rows as an equivalent unified diff", async ({
+  mount,
+  page,
+}) => {
+  const before = "const a = 1;\nconst b = 2;";
+  const after = "const a = 2;\nconst b = 2;";
+  // No "---"/"+++"/"diff --git" headers, so this parses with undefined
+  // paths, matching before/after mode's lack of a file-header row.
+  const diff = "@@ -1,2 +1,2 @@\n-const a = 1;\n+const a = 2;\n const b = 2;\n";
+
+  const beforeAfterComponent = await mount(HighlightDiff, {
+    props: { before, after },
+  });
+  const beforeAfterMarkers = await page
+    .locator(".shl-diff-marker")
+    .evaluateAll((els) =>
+      els.map((el) => [el.getAttribute("data-diff"), el.textContent]),
+    );
+  const beforeAfterNumbers = await page
+    .locator("tbody > tr > td:nth-child(1), tbody > tr > td:nth-child(2)")
+    .allTextContents();
+  await beforeAfterComponent.unmount();
+
+  await mount(HighlightDiff, { props: { diff } });
+  const diffMarkers = await page
+    .locator(".shl-diff-marker")
+    .evaluateAll((els) =>
+      els.map((el) => [el.getAttribute("data-diff"), el.textContent]),
+    );
+  const diffNumbers = await page
+    .locator("tbody > tr > td:nth-child(1), tbody > tr > td:nth-child(2)")
+    .allTextContents();
+
+  expect(beforeAfterMarkers).toEqual(diffMarkers);
+  expect(beforeAfterNumbers).toEqual(diffNumbers);
 });
 
 test("Language tag styling", async ({ mount, page }) => {

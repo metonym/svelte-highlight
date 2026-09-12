@@ -79,6 +79,28 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
     lineStates?: Record<number, "highlighted" | "focus" | "added" | "removed">;
 
     /**
+     * Per-row primary gutter number, indexed like `lines`. Overrides
+     * `i + startingLineNumber`; `null` renders a blank cell for that row
+     * (e.g. an added line has no old-file number). A unified diff needs
+     * this because hunks start at arbitrary offsets and no single formula
+     * produces the right number for every row.
+     * @default undefined
+     * @example [10, null, 12, 13, null]
+     */
+    numbers?: (number | null)[];
+
+    /**
+     * Per-row secondary gutter number, indexed like `lines`. When set,
+     * renders an extra gutter column to the left of the primary one (order:
+     * secondary, primary, code) and becomes the sticky
+     * `inset-inline-start: 0` column instead of the primary gutter. `null`
+     * renders a blank cell, same as `numbers`.
+     * @default undefined
+     * @example [1, 2, null, null, 5]
+     */
+    secondaryNumbers?: (number | null)[];
+
+    /**
      * Line number text color.
      * Defaults to the current theme color applied to `.hljs code`.
      * @default currentColor
