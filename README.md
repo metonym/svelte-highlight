@@ -917,6 +917,12 @@ Use `--copy-*` style props to customize the button.
 />
 ```
 
+Set `absolute={false}` to lay the button out in normal document flow instead of overlaying its container.
+
+```svelte
+<CopyButton {code} absolute={false} />
+```
+
 ### With Line Numbers
 
 Compose `CopyButton` with `LineNumbers` by wrapping both in a relatively-positioned container.
@@ -2300,6 +2306,7 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | timeout    | `number`                                   | `2000`                                       |
 | text       | `string`                                   | `"Copy"`                                     |
 | copiedText | `string`                                   | `"Copied!"`                                  |
+| absolute   | `boolean`                                  | `true`                                       |
 
 `$$restProps` are forwarded to the top-level `button` element.
 
