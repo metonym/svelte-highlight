@@ -140,6 +140,7 @@
 
   pre {
     margin: 0;
+    direction: ltr;
   }
 
   table,
