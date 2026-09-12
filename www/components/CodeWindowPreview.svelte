@@ -2,10 +2,12 @@
   import { THEME_MODULE_NAME } from "@www/constants";
   import Highlight, {
     CodeWindow,
+    FileTabs,
     HighlightStyle,
     HighlightSvelte,
   } from "svelte-highlight";
   import bash from "svelte-highlight/languages/bash";
+  import javascript from "svelte-highlight/languages/javascript";
   import json from "svelte-highlight/languages/json";
   import typescript from "svelte-highlight/languages/typescript";
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
@@ -24,6 +26,17 @@ added 1 package in 1.2s
 $ npm run build`;
 
   const tsCode = "const add = (a: number, b: number) => a + b;";
+
+  const titlebarSources = {
+    "App.svelte": { language: typescript, code: tsCode },
+    "index.js": {
+      language: javascript,
+      code: "export default add;",
+    },
+  };
+
+  const titlebarFiles = Object.keys(titlebarSources);
+  let titlebarActive = titlebarFiles[0];
 
   const snippet = `<script>
   import Highlight, { CodeWindow } from "svelte-highlight";
@@ -135,3 +148,25 @@ $ npm run build`;
     <Highlight language={typescript} code={tsCode} />
   </CodeWindow>
 </HighlightStyle>
+
+<p class="mb-5 mt-5">
+  Fill the <code class="code">titlebar</code> slot to add custom toolbar
+  content, like a <code class="code">FileTabs</code> strip, to the mirrored
+  trailing region of the title bar:
+</p>
+
+<div class="mb-5">
+  <HighlightStyle theme={atomOneDark}>
+    <CodeWindow variant="macos">
+      <FileTabs
+        files={titlebarFiles}
+        bind:active={titlebarActive}
+        slot="titlebar"
+      />
+      <Highlight
+        language={titlebarSources[titlebarActive].language}
+        code={titlebarSources[titlebarActive].code}
+      />
+    </CodeWindow>
+  </HighlightStyle>
+</div>

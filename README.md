@@ -1675,6 +1675,34 @@ Or layer a `CopyButton` over it by wrapping both in a relatively-positioned cont
 </div>
 ```
 
+Put a `FileTabs` strip in the `titlebar` slot to switch between files without leaving the title bar:
+
+```svelte
+<script>
+  import Highlight, { CodeWindow, FileTabs } from "svelte-highlight";
+  import javascript from "svelte-highlight/languages/javascript";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const sources = {
+    "App.svelte": { language: typescript, code: "const answer = 42;" },
+    "index.js": { language: javascript, code: "export default answer;" },
+  };
+
+  const files = Object.keys(sources);
+  let active = files[0];
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<CodeWindow variant="macos">
+  <FileTabs {files} bind:active slot="titlebar" />
+  <Highlight language={sources[active].language} code={sources[active].code} />
+</CodeWindow>
+```
+
 ## Animation
 
 Use `Typewriter` inside `Highlight`'s default slot with the `highlighted` prop. It prints the code one character at a time, syntax highlighting included. A blinking caret marks the end of the typed text and hides when typing stops.
@@ -2314,6 +2342,10 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | title   | `string`                           | `""`          |
 
 `$$restProps` are forwarded to the top-level `div` element.
+
+#### Slots
+
+- **titlebar**: optional content rendered in the mirrored trailing region of the title bar (empty by default, which keeps the title centered)
 
 #### CSS Variables
 
