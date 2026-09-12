@@ -43,6 +43,26 @@
    */
   export let lineStates = {};
 
+  /**
+   * Per-row primary gutter number, indexed like `lines`. Overrides
+   * `i + startingLineNumber`; `null` renders a blank cell for that row
+   * (e.g. an added line has no old-file number). A unified diff needs this
+   * because hunks start at arbitrary offsets and no single formula produces
+   * the right number for every row.
+   * @type {(number | null)[] | undefined}
+   */
+  export let numbers = undefined;
+
+  /**
+   * Per-row secondary gutter number, indexed like `lines`. When set, renders
+   * an extra gutter column to the left of the primary one (order: secondary,
+   * primary, code) and becomes the sticky `inset-inline-start: 0` column
+   * instead of the primary gutter. `null` renders a blank cell, same as
+   * `numbers`.
+   * @type {(number | null)[] | undefined}
+   */
+  export let secondaryNumbers = undefined;
+
   /** @type {import('./languages').LanguageName | (string & {})} */
   export let languageName = "plaintext";
 
@@ -78,15 +98,30 @@
     return undefined;
   }
 
+  /** @param {(number | null)[] | undefined} values */
+  function maxDigits(values) {
+    let max = 0;
+    for (const value of values ?? []) {
+      if (value == null) continue;
+      const len = value.toString().length;
+      if (len > max) max = len;
+    }
+    return max;
+  }
+
   $: renderedLines = lines ?? splitLines(highlighted ?? "");
   $: stateByIndex = buildStateByIndex(highlightedLines, lineStates);
   $: focusMode = stateByIndex.size > 0;
-  $: len_digits = (
+  $: defaultDigits = (
     startingLineNumber +
     (lineCount ?? renderedLines.length) -
     1
   ).toString().length;
-  $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
+  $: primaryDigits = numbers ? maxDigits(numbers) : defaultDigits;
+  $: len = primaryDigits - MIN_DIGITS < 1 ? MIN_DIGITS : primaryDigits;
+  $: secondaryDigits = maxDigits(secondaryNumbers);
+  $: secondaryLen =
+    secondaryDigits - MIN_DIGITS < 1 ? MIN_DIGITS : secondaryDigits;
 </script>
 
 <div
@@ -102,22 +137,42 @@
   <table>
     <tbody class:hljs={true}>
       {#each renderedLines as line, i}
-        {@const lineNumber = i + startingLineNumber}
+        {@const lineNumber = numbers ? numbers[i] : i + startingLineNumber}
+        {@const secondaryLineNumber = secondaryNumbers?.[i]}
         {@const lineState = stateByIndex.get(i)}
         {@const background = lineBackground(lineState)}
         <tr class:dimmed={focusMode && !lineState}>
+          {#if secondaryNumbers}
+            <td
+              aria-hidden="true"
+              class:hljs={true}
+              class:hideBorder
+              style:position="sticky"
+              style:inset-inline-start="0"
+              style:text-align="end"
+              style:user-select="none"
+              style:width={`calc(${secondaryLen} * var(--line-number-digit-width, 0.6em))`}
+            >
+              <code style:color="var(--line-number-color, currentColor)">
+                {secondaryLineNumber ?? ""}
+              </code>
+              {#if background}
+                <div class:line-background={true} style:background></div>
+              {/if}
+            </td>
+          {/if}
           <td
             aria-hidden="true"
             class:hljs={true}
             class:hideBorder
-            style:position="sticky"
-            style:inset-inline-start="0"
+            style:position={secondaryNumbers ? undefined : "sticky"}
+            style:inset-inline-start={secondaryNumbers ? undefined : "0"}
             style:text-align="end"
             style:user-select="none"
             style:width={`calc(${len} * var(--line-number-digit-width, 0.6em))`}
           >
             <code style:color="var(--line-number-color, currentColor)">
-              {lineNumber}
+              {lineNumber ?? ""}
             </code>
             {#if background}
               <div class:line-background={true} style:background></div>

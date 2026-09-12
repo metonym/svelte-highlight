@@ -59,6 +59,7 @@ import LineNumbersLineStates from "./LineNumbers.lineStates.test.svelte";
 import LineNumbersLinesInput from "./LineNumbers.linesInput.test.svelte";
 import LineNumbersMultilineSpan from "./LineNumbers.multilineSpan.test.svelte";
 import LineNumbersRtl from "./LineNumbers.rtl.test.svelte";
+import LineNumbersSecondaryNumbers from "./LineNumbers.secondaryNumbers.test.svelte";
 import LineNumbers from "./LineNumbers.test.svelte";
 import LineNumbersWrapLines from "./LineNumbers.wrapLines.test.svelte";
 import MarkdownStream from "./MarkdownStream.test.svelte";
@@ -808,6 +809,40 @@ test("LineNumbers - lineStates colors added/removed lines and exempts focus line
   await expect(rows.nth(0)).toHaveClass(/dimmed/);
   await expect(rows.nth(3)).toHaveClass(/dimmed/);
   await expect(rows.nth(0).locator("pre")).toHaveCSS("opacity", "0.4");
+});
+
+test("LineNumbers - numbers and secondaryNumbers override the gutter with blanks for null entries", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbersSecondaryNumbers);
+
+  const secondary = await page
+    .locator("tbody > tr > td:nth-child(1)")
+    .allTextContents();
+  const primary = await page
+    .locator("tbody > tr > td:nth-child(2)")
+    .allTextContents();
+
+  expect(primary.map((text) => text.trim())).toEqual([
+    "10",
+    "",
+    "12",
+    "13",
+    "",
+  ]);
+  expect(secondary.map((text) => text.trim())).toEqual(["1", "2", "", "", "5"]);
+});
+
+test("LineNumbers - omitting numbers and secondaryNumbers keeps the existing single auto-incrementing gutter", async ({
+  mount,
+  page,
+}) => {
+  await mount(LineNumbers);
+
+  await expect(page.locator("tbody > tr")).toHaveCount(1);
+  await expect(page.locator("td.hljs")).toHaveCount(1);
+  await expect(page.locator("td.hljs").first()).toHaveText("1");
 });
 
 test("Language tag styling", async ({ mount, page }) => {
