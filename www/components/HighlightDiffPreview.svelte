@@ -1,6 +1,7 @@
 <script>
   import DiffBeforeAfter from "@components/HighlightDiff/BeforeAfter.svelte";
   import DiffUnified from "@components/HighlightDiff/Unified.svelte";
+  import DiffUnifiedGutter from "@components/HighlightDiff/UnifiedGutter.svelte";
   import { Column, Row } from "carbon-components-svelte";
 </script>
 
@@ -14,4 +15,11 @@
     <h3>Before/after, with a collapsed unchanged run</h3>
   </Column>
   <Column xlg={12} lg={12} md={12}> <DiffBeforeAfter /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}>
+    <h3>gutter="unified" (single column, falls back to the old-file number)</h3>
+  </Column>
+  <Column xlg={12} lg={12} md={12}> <DiffUnifiedGutter /> </Column>
 </Row>
