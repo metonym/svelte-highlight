@@ -1846,7 +1846,89 @@ Per-chunk work is O(tail), not O(stream length so far): finished output is seale
 {/each}
 ```
 
-Every segment's `id` is stable across both `append` (growing the buffer) and a full `set` (a regenerated buffer, keyed by common prefix) for everything before the first change, so the keyed `{#each}` never re-mounts a fence's `HighlightStream` just because more text arrived elsewhere in the document -- only the segment that actually changed gets a new instance. A `MarkdownStream` component that wraps this pattern is a separate deliverable; `createFenceSplitter` is the headless primitive underneath it.
+Every segment's `id` is stable across both `append` (growing the buffer) and a full `set` (a regenerated buffer, keyed by common prefix) for everything before the first change, so the keyed `{#each}` never re-mounts a fence's `HighlightStream` just because more text arrived elsewhere in the document -- only the segment that actually changed gets a new instance.
+
+### `MarkdownStream`
+
+`MarkdownStream` wraps the pattern above: pass it a growing Markdown `text` buffer and it drives one `HighlightStream` per fence for you, keyed by the splitter's stable ids. Prose renders as plain text by default -- it's not a Markdown renderer, just a router for fenced code.
+
+```svelte
+<script>
+  import { MarkdownStream } from "svelte-highlight";
+  import github from "svelte-highlight/styles/github";
+
+  let text = "";
+  let done = false;
+
+  // Wire this up to your streaming source (fetch, WebSocket, SSE, ...).
+  async function stream() {
+    for (const chunk of chunks) {
+      text += chunk;
+      await new Promise((r) => setTimeout(r, 30));
+    }
+    done = true;
+  }
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<MarkdownStream {text} {done} />
+```
+
+`done` is forwarded to every fence's `HighlightStream` as `done || !segment.open`, so a trailing fence still open when the overall stream ends is treated as closed. The caret only ever renders on the last open fence, and `doneText`'s completion announcement fires once, from the last fence, rather than once per fence.
+
+Override the `text` slot to render real Markdown prose (headings, lists, inline code) with a library of your choice, leaving fences to `MarkdownStream`:
+
+```svelte
+<script>
+  import { MarkdownStream } from "svelte-highlight";
+  import { renderInlineMarkdown } from "./your-markdown-renderer.js";
+</script>
+
+<MarkdownStream {text} {done}>
+  <div slot="text" let:segment>{@html renderInlineMarkdown(segment.text)}</div>
+</MarkdownStream>
+```
+
+By default, `resolveLanguage` dynamically imports one grammar per language seen via `loadLanguage`, falling back to plaintext while loading and for an unrecognized fence language. Pass your own `resolveLanguage` to restrict resolution to a fixed set of languages -- for example, everything else falls back to plaintext instead of fetching an arbitrary grammar chunk:
+
+```svelte
+<script>
+  import { MarkdownStream, loadLanguage } from "svelte-highlight";
+
+  const ALLOWED = new Set(["typescript", "javascript", "bash", "json"]);
+
+  function resolveLanguage(lang) {
+    return lang && ALLOWED.has(lang) ? loadLanguage(lang) : undefined;
+  }
+</script>
+
+<MarkdownStream {text} {done} {resolveLanguage} />
+```
+
+That still dynamically imports each allowed language's grammar on first use. For an app that wants no dynamic chunks at all -- everything bundled up front, same tradeoff as [Loading a language by name](#loading-a-language-by-name) -- map the allowlist to statically imported grammars instead:
+
+```svelte
+<script>
+  import { MarkdownStream } from "svelte-highlight";
+  import bash from "svelte-highlight/languages/bash";
+  import javascript from "svelte-highlight/languages/javascript";
+  import json from "svelte-highlight/languages/json";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  const GRAMMARS = { typescript, javascript, bash, json };
+
+  function resolveLanguage(lang) {
+    return lang ? GRAMMARS[lang] : undefined;
+  }
+</script>
+
+<MarkdownStream {text} {done} {resolveLanguage} />
+```
+
+See [Code-splitting](#code-splitting) for the tradeoffs between a static import (bundled up front, no request-time latency) and `loadLanguage` (smaller initial bundle, one chunk fetched per language actually seen).
 
 ## Large documents
 
@@ -2421,6 +2503,44 @@ Use `bind:this`, then call `scrollToLine(line)` -- works in both `virtualize` an
   on:highlight={(e) => console.log(e.detail.highlighted)}
   on:done={() => console.log("stream finished")}
 />
+```
+
+### `MarkdownStream`
+
+#### Props
+
+| Name            | Type                                                                     | Default value                       |
+| :-------------- | :------------------------------------------------------------------------ | :----------------------------------- |
+| text            | `string`                                                                   | `""`                                  |
+| done            | `boolean`                                                                  | `false`                               |
+| resolveLanguage | `(lang: string \| undefined, segment: FenceSegment) => LanguageType \| Promise<LanguageType> \| undefined` | resolves via `loadLanguage`, falling back to plaintext |
+| caret           | `boolean`                                                                  | `true`                                |
+| autoScroll      | `boolean`                                                                  | `true`                                |
+| doneText        | `string`                                                                   | `"Code finished streaming"`           |
+
+`$$restProps` are forwarded to the top-level `div` element. `resolveLanguage` results are cached per canonical language name for the component's lifetime. `doneText` is announced once, by the last fence only, once `done` becomes `true`; set it to `""` to disable the announcement.
+
+#### Slots
+
+| Name | Props                | Fallback                                                          |
+| :--- | :-------------------- | :----------------------------------------------------------------- |
+| text | `segment`             | `<div class="shl-md-text">{segment.text}</div>`                    |
+| fence | `segment`, `language` | `<HighlightStream code={segment.code} {language} done={done \|\| !segment.open} caret={...} autoScroll={autoScroll} doneText={...} />` |
+
+#### Dispatched Events
+
+- **on:fence**: fired once, the first time a fence segment appears, with `{ id, lang }`
+- **on:done**: fired once when `done` becomes `true`
+
+#### CSS Variables
+
+| Variable                | Description                          | Default value |
+| :----------------------- | :------------------------------------ | :------------- |
+| --md-gap                 | Gap between prose and fence segments  | `1em`           |
+| --md-text-white-space    | `white-space` of the default prose block | `pre-wrap`   |
+
+```svelte
+<MarkdownStream {text} {done} on:fence={(e) => console.log(e.detail.lang)} />
 ```
 
 ### `HighlightVirtual`

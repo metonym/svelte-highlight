@@ -38,6 +38,8 @@
   import Streaming from "@components/LineNumbers/Streaming.svelte";
   import StyleProps from "@components/LineNumbers/StyleProps.svelte";
   import WrapLines from "@components/LineNumbers/WrapLines.svelte";
+  import MarkdownStreamBasic from "@components/MarkdownStream/Basic.svelte";
+  import MarkdownStreamRegenerate from "@components/MarkdownStream/Regenerate.svelte";
   import ScopedStyle from "@components/ScopedStyle.svelte";
   import ScopedStyleAuto from "@components/ScopedStyleAuto.svelte";
   import ScopedStyleSvelte from "@components/ScopedStyleSvelte.svelte";
@@ -769,10 +771,40 @@ export { add, mul };\`,
       hideCloseButton
       kind="info"
       title="Note:"
-      subtitle="Headless: createFenceSplitter has no Svelte dependency. A MarkdownStream component wrapping this pattern is a separate deliverable."
+      subtitle="Headless: createFenceSplitter has no Svelte dependency. MarkdownStream, below, wraps this exact pattern into a component."
     />
   </Column>
   <Column xlg={10} lg={10} md={12}> <HighlightStreamMarkdownFences /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">MarkdownStream</code>
+      wraps the pattern above: pass it a growing <code class="code">text</code>
+      buffer and it drives one <code class="code">HighlightStream</code> per
+      fence for you, keyed by the splitter's stable ids. Prose renders as plain
+      text by default -- it's not a Markdown renderer, just a router for fenced
+      code.
+    </p>
+    <InlineNotification
+      lowContrast
+      hideCloseButton
+      kind="info"
+      title="Note:"
+      subtitle="done is forwarded to every fence as done || !segment.open, the caret only ever renders on the last open fence, and doneText's completion announcement fires once, from the last fence."
+    />
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <MarkdownStreamBasic /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      A non-append change to <code class="code">text</code>—an LLM regenerating
+      the last fence, say—is handled by the splitter's
+      <code class="code">set</code>, not just <code class="code">append</code>.
+      Earlier segments keep their id (and DOM node); only the fence that
+      actually changed gets a new
+      <code class="code">HighlightStream</code>
+      instance.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <MarkdownStreamRegenerate /> </Column>
 </Row>
 
 <Row class="mb-9">
