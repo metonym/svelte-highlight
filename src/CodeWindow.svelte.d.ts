@@ -9,7 +9,8 @@ export type CodeWindowProps = HTMLAttributes<HTMLDivElement> & {
   variant?: "macos" | "terminal" | "plain";
 
   /**
-   * Title bar text.
+   * Title bar text. Also becomes the title bar's native HTML `title`
+   * attribute, so a truncated title is readable as a hover/focus tooltip.
    * @default ""
    */
   title?: string;

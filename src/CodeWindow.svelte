@@ -19,7 +19,7 @@
     {/if}
 
     {#if title}
-      <span class="title">{title}</span>
+      <span class="title" {title}>{title}</span>
     {/if}
   </div>
 

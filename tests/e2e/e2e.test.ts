@@ -207,6 +207,21 @@ test("CodeWindow - renders each variant wrapping a Highlight", async ({
   await expect(plain.locator(".prompt")).toHaveCount(0);
 });
 
+test("CodeWindow - truncated title carries a native tooltip", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeWindow);
+
+  const macos = page.getByTestId("macos");
+  const terminal = page.getByTestId("terminal");
+  const plain = page.getByTestId("plain");
+
+  await expect(macos.locator(".title")).toHaveAttribute("title", "example.ts");
+  await expect(terminal.locator(".title")).toHaveAttribute("title", "bash");
+  await expect(plain.locator(".title")).toHaveAttribute("title", "plain.ts");
+});
+
 test("AnsiOutput - renders styled spans inside a terminal window", async ({
   mount,
   page,
