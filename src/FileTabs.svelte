@@ -146,9 +146,9 @@
         aria-controls="{baseId}-panel"
         tabindex={file === active ? 0 : -1}
         {...{
-          // Spread sidesteps Biome `useValidAriaValues` on templated booleans.
-          "aria-selected": file === active,
-        }}
+    // Spread sidesteps Biome `useValidAriaValues` on templated booleans.
+    "aria-selected": file === active,
+  }}
         on:click={() => selectTab(file)}
         on:keydown={(event) => handleKeydown(event, index)}
       >

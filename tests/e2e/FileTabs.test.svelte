@@ -46,9 +46,9 @@
     {files}
     bind:active
     on:change={(event) => {
-      lastChange = event.detail.active;
-      changeCount += 1;
-    }}
+    lastChange = event.detail.active;
+    changeCount += 1;
+  }}
     let:active
   >
     {#if active && sources[active]}

@@ -64,11 +64,11 @@
     copiedText="Copied!"
     copy={(code) => navigator.clipboard.writeText(code)}
     on:copy={(e) => {
-      console.log(e.detail.code);
-    }}
+    console.log(e.detail.code);
+  }}
     on:error={(e) => {
-      console.error(e.detail.error);
-    }}
+    console.error(e.detail.error);
+  }}
     --copy-top="0.5em"
     --copy-right="0.5em"
     --copy-size="2em"
