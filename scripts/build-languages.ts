@@ -163,6 +163,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "renpy",
   "url",
   "semver",
+  "harlowe",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
