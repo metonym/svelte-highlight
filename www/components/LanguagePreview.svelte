@@ -84,6 +84,7 @@
   import { kvPreviewSnippets } from "@www/preview/kv-preview-snippets";
   import { ldscriptPreviewSnippets } from "@www/preview/ldscript-preview-snippets";
   import { leanPreviewSnippets } from "@www/preview/lean-preview-snippets";
+  import { likec4PreviewSnippets } from "@www/preview/likec4-preview-snippets";
   import { liquidPreviewSnippets } from "@www/preview/liquid-preview-snippets";
   import { logPreviewSnippets } from "@www/preview/log-preview-snippets";
   import { logqlPreviewSnippets } from "@www/preview/logql-preview-snippets";
@@ -250,6 +251,7 @@
   import kv from "svelte-highlight/languages/kv";
   import ldscript from "svelte-highlight/languages/ldscript";
   import lean from "svelte-highlight/languages/lean";
+  import likec4 from "svelte-highlight/languages/likec4";
   import liquid from "svelte-highlight/languages/liquid";
   import log from "svelte-highlight/languages/log";
   import logql from "svelte-highlight/languages/logql";
@@ -499,6 +501,7 @@
     gnuplot: { lang: gnuplot, snippets: gnuplotPreviewSnippets },
     asymptote: { lang: asymptote, snippets: asymptotePreviewSnippets },
     dbml: { lang: dbml, snippets: dbmlPreviewSnippets },
+    likec4: { lang: likec4, snippets: likec4PreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
