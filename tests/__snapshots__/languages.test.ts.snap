@@ -38,6 +38,7 @@ exports[`Languages 1`] = `
   "bpftrace",
   "bqn",
   "brainfuck",
+  "bsv",
   "c",
   "c3",
   "caddy",

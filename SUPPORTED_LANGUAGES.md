@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 354 languages: 193 exported from highlight.js@11.12.0, 161 custom grammars added by svelte-highlight
+> 355 languages: 193 exported from highlight.js@11.12.0, 162 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -459,6 +459,20 @@
 
   // base import
   import { brainfuck } from "svelte-highlight/languages";
+</script>
+```
+
+## bsv (`bsv`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import bsv from "svelte-highlight/languages/bsv";
+
+  // base import
+  import { bsv } from "svelte-highlight/languages";
 </script>
 ```
 
