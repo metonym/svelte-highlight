@@ -2143,4 +2143,10 @@ box "Stop" "(done)" fit
 arrow down 50%
 circle "ok" rad 0.3 fill lightblue
 line from Start.s to Stop.n then right`,
+  nomnoml: `#direction: right
+#stroke: #33322E
+
+[<actor> User] -> [System]
+[System] -:> [Database|save(); load()]
+[System] <:-- [<abstract> Record|id: int]`,
 };
