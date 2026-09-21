@@ -180,6 +180,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "veryl",
   "gnuplot",
   "asymptote",
+  "dbml",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

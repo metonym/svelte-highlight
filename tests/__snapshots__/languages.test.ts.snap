@@ -79,6 +79,7 @@ exports[`Languages 1`] = `
   "dart",
   "datalog",
   "dax",
+  "dbml",
   "delphi",
   "dhall",
   "dialog",
