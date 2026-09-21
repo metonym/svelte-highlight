@@ -35,6 +35,7 @@
   import { dafnyPreviewSnippets } from "@www/preview/dafny-preview-snippets";
   import { datalogPreviewSnippets } from "@www/preview/datalog-preview-snippets";
   import { daxPreviewSnippets } from "@www/preview/dax-preview-snippets";
+  import { dbmlPreviewSnippets } from "@www/preview/dbml-preview-snippets";
   import { dhallPreviewSnippets } from "@www/preview/dhall-preview-snippets";
   import { dialogPreviewSnippets } from "@www/preview/dialog-preview-snippets";
   import { djotPreviewSnippets } from "@www/preview/djot-preview-snippets";
@@ -200,6 +201,7 @@
   import dafny from "svelte-highlight/languages/dafny";
   import datalog from "svelte-highlight/languages/datalog";
   import dax from "svelte-highlight/languages/dax";
+  import dbml from "svelte-highlight/languages/dbml";
   import dhall from "svelte-highlight/languages/dhall";
   import dialog from "svelte-highlight/languages/dialog";
   import djot from "svelte-highlight/languages/djot";
@@ -496,6 +498,7 @@
     veryl: { lang: veryl, snippets: verylPreviewSnippets },
     gnuplot: { lang: gnuplot, snippets: gnuplotPreviewSnippets },
     asymptote: { lang: asymptote, snippets: asymptotePreviewSnippets },
+    dbml: { lang: dbml, snippets: dbmlPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
