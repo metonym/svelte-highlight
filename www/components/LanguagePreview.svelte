@@ -143,6 +143,7 @@
   import { versePreviewSnippets } from "@www/preview/verse-preview-snippets";
   import { vrlPreviewSnippets } from "@www/preview/vrl-preview-snippets";
   import { vyperPreviewSnippets } from "@www/preview/vyper-preview-snippets";
+  import { wdlPreviewSnippets } from "@www/preview/wdl-preview-snippets";
   import { wgslPreviewSnippets } from "@www/preview/wgsl-preview-snippets";
   import { witPreviewSnippets } from "@www/preview/wit-preview-snippets";
   import { yangPreviewSnippets } from "@www/preview/yang-preview-snippets";
@@ -294,6 +295,7 @@
   import verse from "svelte-highlight/languages/verse";
   import vrl from "svelte-highlight/languages/vrl";
   import vyper from "svelte-highlight/languages/vyper";
+  import wdl from "svelte-highlight/languages/wdl";
   import wgsl from "svelte-highlight/languages/wgsl";
   import wit from "svelte-highlight/languages/wit";
   import yang from "svelte-highlight/languages/yang";
@@ -457,6 +459,7 @@
     choicescript: { lang: choicescript, snippets: choicescriptPreviewSnippets },
     dialog: { lang: dialog, snippets: dialogPreviewSnippets },
     nextflow: { lang: nextflow, snippets: nextflowPreviewSnippets },
+    wdl: { lang: wdl, snippets: wdlPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
