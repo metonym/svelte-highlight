@@ -1968,4 +1968,20 @@ caveat has_valid_ip(user_ip ipaddress) {
   user_ip.in_cidr("192.168.0.0/16")
 }
 `,
+  openfga: `# a document-sharing authorization model
+model
+  schema 1.1
+
+type user
+
+type organization
+  relations
+    define member: [user]
+
+type document
+  relations
+    define owner: [user]
+    define viewer: [user, user:*] or owner or member from organization
+    define can_share: viewer but not owner
+`,
 };

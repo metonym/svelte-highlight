@@ -221,6 +221,7 @@ exports[`Languages 1`] = `
   "objectivec",
   "ocaml",
   "odin",
+  "openfga",
   "openscad",
   "org",
   "oxygene",

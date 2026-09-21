@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 352 languages: 193 exported from highlight.js@11.12.0, 159 custom grammars added by svelte-highlight
+> 353 languages: 193 exported from highlight.js@11.12.0, 160 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2833,6 +2833,20 @@
 
   // base import
   import { odin } from "svelte-highlight/languages";
+</script>
+```
+
+## openfga (`openfga`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import openfga from "svelte-highlight/languages/openfga";
+
+  // base import
+  import { openfga } from "svelte-highlight/languages";
 </script>
 ```
 
