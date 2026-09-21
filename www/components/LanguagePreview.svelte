@@ -13,6 +13,7 @@
   import { blueprintPreviewSnippets } from "@www/preview/blueprint-preview-snippets";
   import { bpftracePreviewSnippets } from "@www/preview/bpftrace-preview-snippets";
   import { bqnPreviewSnippets } from "@www/preview/bqn-preview-snippets";
+  import { bsvPreviewSnippets } from "@www/preview/bsv-preview-snippets";
   import { c3PreviewSnippets } from "@www/preview/c3-preview-snippets";
   import { caddyPreviewSnippets } from "@www/preview/caddy-preview-snippets";
   import { cairoPreviewSnippets } from "@www/preview/cairo-preview-snippets";
@@ -173,6 +174,7 @@
   import blueprint from "svelte-highlight/languages/blueprint";
   import bpftrace from "svelte-highlight/languages/bpftrace";
   import bqn from "svelte-highlight/languages/bqn";
+  import bsv from "svelte-highlight/languages/bsv";
   import c3 from "svelte-highlight/languages/c3";
   import caddy from "svelte-highlight/languages/caddy";
   import cairo from "svelte-highlight/languages/cairo";
@@ -481,6 +483,7 @@
     spicedb: { lang: spicedb, snippets: spicedbPreviewSnippets },
     openfga: { lang: openfga, snippets: openfgaPreviewSnippets },
     casbin: { lang: casbin, snippets: casbinPreviewSnippets },
+    bsv: { lang: bsv, snippets: bsvPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
