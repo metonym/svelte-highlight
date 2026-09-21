@@ -29,6 +29,7 @@
   import { cuePreviewSnippets } from "@www/preview/cue-preview-snippets";
   import { cypherPreviewSnippets } from "@www/preview/cypher-preview-snippets";
   import { d2PreviewSnippets } from "@www/preview/d2-preview-snippets";
+  import { dafnyPreviewSnippets } from "@www/preview/dafny-preview-snippets";
   import { datalogPreviewSnippets } from "@www/preview/datalog-preview-snippets";
   import { daxPreviewSnippets } from "@www/preview/dax-preview-snippets";
   import { dhallPreviewSnippets } from "@www/preview/dhall-preview-snippets";
@@ -183,6 +184,7 @@
   import cue from "svelte-highlight/languages/cue";
   import cypher from "svelte-highlight/languages/cypher";
   import d2 from "svelte-highlight/languages/d2";
+  import dafny from "svelte-highlight/languages/dafny";
   import datalog from "svelte-highlight/languages/datalog";
   import dax from "svelte-highlight/languages/dax";
   import dhall from "svelte-highlight/languages/dhall";
@@ -463,6 +465,7 @@
     nextflow: { lang: nextflow, snippets: nextflowPreviewSnippets },
     wdl: { lang: wdl, snippets: wdlPreviewSnippets },
     alloy: { lang: alloy, snippets: alloyPreviewSnippets },
+    dafny: { lang: dafny, snippets: dafnyPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
