@@ -207,6 +207,7 @@ exports[`Languages 1`] = `
   "move",
   "n1ql",
   "nestedtext",
+  "nextflow",
   "nginx",
   "nickel",
   "nim",

@@ -710,6 +710,8 @@ true false null
 /regex/ #hashtag @annotation"
 `;
 
+exports[`golden snapshot: nextflow 1`] = `"<span class="hljs-keyword">def</span> <span class="hljs-keyword">include</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">as</span> <span class="hljs-keyword">params</span> <span class="hljs-keyword">emit</span> <span class="hljs-keyword">publishDir</span> <span class="hljs-keyword">container</span> <span class="hljs-keyword">cpus</span> <span class="hljs-keyword">memory</span> <span class="hljs-keyword">time</span> <span class="hljs-keyword">tag</span> <span class="hljs-keyword">label</span> <span class="hljs-keyword">errorStrategy</span> <span class="hljs-keyword">conda</span> <span class="hljs-keyword">cache</span> <span class="hljs-keyword">storeDir</span> <span class="hljs-literal">true</span> <span class="hljs-literal">false</span> <span class="hljs-literal">null</span> <span class="hljs-built_in">Channel</span> <span class="hljs-built_in">fromPath</span> <span class="hljs-built_in">fromFilePairs</span> <span class="hljs-built_in">of</span> <span class="hljs-built_in">map</span> <span class="hljs-built_in">filter</span> <span class="hljs-built_in">collect</span> <span class="hljs-built_in">flatten</span> <span class="hljs-built_in">set</span> <span class="hljs-built_in">view</span>"`;
+
 exports[`golden snapshot: nginx 1`] = `
 "// <span class="hljs-attribute">comment</span>
 <span class="hljs-string">&quot;string&quot;</span> <span class="hljs-string">&#x27;string&#x27;</span> <span class="hljs-number">123</span> <span class="hljs-number">3</span>.<span class="hljs-number">14</span>
