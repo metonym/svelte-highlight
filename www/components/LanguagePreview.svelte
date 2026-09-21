@@ -11,6 +11,7 @@
   import { bicepPreviewSnippets } from "@www/preview/bicep-preview-snippets";
   import { bitbakePreviewSnippets } from "@www/preview/bitbake-preview-snippets";
   import { bladePreviewSnippets } from "@www/preview/blade-preview-snippets";
+  import { blockdiagPreviewSnippets } from "@www/preview/blockdiag-preview-snippets";
   import { blueprintPreviewSnippets } from "@www/preview/blueprint-preview-snippets";
   import { bpftracePreviewSnippets } from "@www/preview/bpftrace-preview-snippets";
   import { bqnPreviewSnippets } from "@www/preview/bqn-preview-snippets";
@@ -180,6 +181,7 @@
   import bicep from "svelte-highlight/languages/bicep";
   import bitbake from "svelte-highlight/languages/bitbake";
   import blade from "svelte-highlight/languages/blade";
+  import blockdiag from "svelte-highlight/languages/blockdiag";
   import blueprint from "svelte-highlight/languages/blueprint";
   import bpftrace from "svelte-highlight/languages/bpftrace";
   import bqn from "svelte-highlight/languages/bqn";
@@ -508,6 +510,7 @@
     likec4: { lang: likec4, snippets: likec4PreviewSnippets },
     pikchr: { lang: pikchr, snippets: pikchrPreviewSnippets },
     nomnoml: { lang: nomnoml, snippets: nomnomlPreviewSnippets },
+    blockdiag: { lang: blockdiag, snippets: blockdiagPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
