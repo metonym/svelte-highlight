@@ -86,6 +86,7 @@
   import { modelfilePreviewSnippets } from "@www/preview/modelfile-preview-snippets";
   import { mojoPreviewSnippets } from "@www/preview/mojo-preview-snippets";
   import { movePreviewSnippets } from "@www/preview/move-preview-snippets";
+  import { nextflowPreviewSnippets } from "@www/preview/nextflow-preview-snippets";
   import { nickelPreviewSnippets } from "@www/preview/nickel-preview-snippets";
   import { nushellPreviewSnippets } from "@www/preview/nushell-preview-snippets";
   import { odinPreviewSnippets } from "@www/preview/odin-preview-snippets";
@@ -237,6 +238,7 @@
   import modelfile from "svelte-highlight/languages/modelfile";
   import mojo from "svelte-highlight/languages/mojo";
   import move from "svelte-highlight/languages/move";
+  import nextflow from "svelte-highlight/languages/nextflow";
   import nickel from "svelte-highlight/languages/nickel";
   import nushell from "svelte-highlight/languages/nushell";
   import odin from "svelte-highlight/languages/odin";
@@ -454,6 +456,7 @@
     harlowe: { lang: harlowe, snippets: harlowePreviewSnippets },
     choicescript: { lang: choicescript, snippets: choicescriptPreviewSnippets },
     dialog: { lang: dialog, snippets: dialogPreviewSnippets },
+    nextflow: { lang: nextflow, snippets: nextflowPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);

@@ -190,6 +190,7 @@
     "/preview-harlowe": "Harlowe language preview",
     "/preview-choicescript": "ChoiceScript language preview",
     "/preview-dialog": "Dialog language preview",
+    "/preview-nextflow": "Nextflow language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
