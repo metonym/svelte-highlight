@@ -31,6 +31,7 @@
   import { datalogPreviewSnippets } from "@www/preview/datalog-preview-snippets";
   import { daxPreviewSnippets } from "@www/preview/dax-preview-snippets";
   import { dhallPreviewSnippets } from "@www/preview/dhall-preview-snippets";
+  import { dialogPreviewSnippets } from "@www/preview/dialog-preview-snippets";
   import { djotPreviewSnippets } from "@www/preview/djot-preview-snippets";
   import { dotenvPreviewSnippets } from "@www/preview/dotenv-preview-snippets";
   import { dtracePreviewSnippets } from "@www/preview/dtrace-preview-snippets";
@@ -181,6 +182,7 @@
   import datalog from "svelte-highlight/languages/datalog";
   import dax from "svelte-highlight/languages/dax";
   import dhall from "svelte-highlight/languages/dhall";
+  import dialog from "svelte-highlight/languages/dialog";
   import djot from "svelte-highlight/languages/djot";
   import dotenv from "svelte-highlight/languages/dotenv";
   import dtrace from "svelte-highlight/languages/dtrace";
@@ -451,6 +453,7 @@
     semver: { lang: semver, snippets: semverPreviewSnippets },
     harlowe: { lang: harlowe, snippets: harlowePreviewSnippets },
     choicescript: { lang: choicescript, snippets: choicescriptPreviewSnippets },
+    dialog: { lang: dialog, snippets: dialogPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
