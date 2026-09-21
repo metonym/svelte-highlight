@@ -130,6 +130,7 @@
   import { systemdPreviewSnippets } from "@www/preview/systemd-preview-snippets";
   import { templPreviewSnippets } from "@www/preview/templ-preview-snippets";
   import { textprotoPreviewSnippets } from "@www/preview/textproto-preview-snippets";
+  import { tlaplusPreviewSnippets } from "@www/preview/tlaplus-preview-snippets";
   import { tomlPreviewSnippets } from "@www/preview/toml-preview-snippets";
   import { traceqlPreviewSnippets } from "@www/preview/traceql-preview-snippets";
   import { tsqPreviewSnippets } from "@www/preview/tsq-preview-snippets";
@@ -285,6 +286,7 @@
   import systemd from "svelte-highlight/languages/systemd";
   import templ from "svelte-highlight/languages/templ";
   import textproto from "svelte-highlight/languages/textproto";
+  import tlaplus from "svelte-highlight/languages/tlaplus";
   import toml from "svelte-highlight/languages/toml";
   import traceql from "svelte-highlight/languages/traceql";
   import tsq from "svelte-highlight/languages/tsq";
@@ -469,6 +471,7 @@
     alloy: { lang: alloy, snippets: alloyPreviewSnippets },
     dafny: { lang: dafny, snippets: dafnyPreviewSnippets },
     fstar: { lang: fstar, snippets: fstarPreviewSnippets },
+    tlaplus: { lang: tlaplus, snippets: tlaplusPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
