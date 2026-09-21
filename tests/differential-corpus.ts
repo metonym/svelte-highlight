@@ -2063,4 +2063,15 @@ set xlabel 'time'
 plot 'data.dat' using 1:2 with lines title "raw", \\
      sin(x) * 2.0 lw 2
 `,
+  asymptote: `import graph;
+
+struct Point {
+  real x, y;
+}
+
+pair p = (0, 0);
+path g = (0, 0)..controls (1, 1) and (2, 0)..(3, 0);
+draw(g, red + linewidth(1));
+label("origin", p, N);
+`,
 };

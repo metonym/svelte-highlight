@@ -179,6 +179,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "spade",
   "veryl",
   "gnuplot",
+  "asymptote",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
