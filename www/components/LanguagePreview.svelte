@@ -16,6 +16,7 @@
   import { c3PreviewSnippets } from "@www/preview/c3-preview-snippets";
   import { caddyPreviewSnippets } from "@www/preview/caddy-preview-snippets";
   import { cairoPreviewSnippets } from "@www/preview/cairo-preview-snippets";
+  import { casbinPreviewSnippets } from "@www/preview/casbin-preview-snippets";
   import { cedarPreviewSnippets } from "@www/preview/cedar-preview-snippets";
   import { celPreviewSnippets } from "@www/preview/cel-preview-snippets";
   import { choicescriptPreviewSnippets } from "@www/preview/choicescript-preview-snippets";
@@ -175,6 +176,7 @@
   import c3 from "svelte-highlight/languages/c3";
   import caddy from "svelte-highlight/languages/caddy";
   import cairo from "svelte-highlight/languages/cairo";
+  import casbin from "svelte-highlight/languages/casbin";
   import cedar from "svelte-highlight/languages/cedar";
   import cel from "svelte-highlight/languages/cel";
   import choicescript from "svelte-highlight/languages/choicescript";
@@ -478,6 +480,7 @@
     tlaplus: { lang: tlaplus, snippets: tlaplusPreviewSnippets },
     spicedb: { lang: spicedb, snippets: spicedbPreviewSnippets },
     openfga: { lang: openfga, snippets: openfgaPreviewSnippets },
+    casbin: { lang: casbin, snippets: casbinPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
