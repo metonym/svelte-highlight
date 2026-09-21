@@ -123,6 +123,7 @@
   import { snortPreviewSnippets } from "@www/preview/snort-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
   import { sparqlPreviewSnippets } from "@www/preview/sparql-preview-snippets";
+  import { spicedbPreviewSnippets } from "@www/preview/spicedb-preview-snippets";
   import { splunkPreviewSnippets } from "@www/preview/splunk-preview-snippets";
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
   import { structurizrPreviewSnippets } from "@www/preview/structurizr-preview-snippets";
@@ -279,6 +280,7 @@
   import snort from "svelte-highlight/languages/snort";
   import solidity from "svelte-highlight/languages/solidity";
   import sparql from "svelte-highlight/languages/sparql";
+  import spicedb from "svelte-highlight/languages/spicedb";
   import splunk from "svelte-highlight/languages/splunk";
   import starlark from "svelte-highlight/languages/starlark";
   import structurizr from "svelte-highlight/languages/structurizr";
@@ -472,6 +474,7 @@
     dafny: { lang: dafny, snippets: dafnyPreviewSnippets },
     fstar: { lang: fstar, snippets: fstarPreviewSnippets },
     tlaplus: { lang: tlaplus, snippets: tlaplusPreviewSnippets },
+    spicedb: { lang: spicedb, snippets: spicedbPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
