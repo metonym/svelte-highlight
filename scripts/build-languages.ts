@@ -166,6 +166,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "harlowe",
   "choicescript",
   "dialog",
+  "nextflow",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

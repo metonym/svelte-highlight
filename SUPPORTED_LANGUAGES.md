@@ -2654,6 +2654,20 @@
 </script>
 ```
 
+## nextflow (`nextflow`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import nextflow from "svelte-highlight/languages/nextflow";
+
+  // base import
+  import { nextflow } from "svelte-highlight/languages";
+</script>
+```
+
 ## nginx (`nginx`)
 
 ```html

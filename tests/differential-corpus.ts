@@ -1826,4 +1826,31 @@ https://example.com/docs#installation`,
 		~(story started)
 	(endif)
 	%% Begin the adventure.`,
+  nextflow: `// align reads and emit a sorted bam
+process alignReads {
+    tag "\${sample_id}"
+    publishDir 'results/bam', mode: 'copy'
+    container 'quay.io/biocontainers/bwa:0.7.17'
+    cpus 4
+
+    input:
+    tuple val(sample_id), path(reads)
+
+    output:
+    path "\${sample_id}.sorted.bam", emit: bam
+
+    script:
+    """
+    bwa mem -t \${task.cpus} ref.fa \${reads} | samtools sort -o \${sample_id}.sorted.bam
+    """
+}
+
+workflow {
+    samples = Channel.fromFilePairs('data/*_{1,2}.fastq.gz')
+    outdir = params.outdir ?: 'results'
+
+    alignReads(samples)
+        .map { bam -> bam.name }
+        .view()
+}`,
 };
