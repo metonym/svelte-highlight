@@ -1806,4 +1806,7 @@ https://example.com/docs#installation`,
 1.0.0 - 2.9.9
 2.1.0-alpha.1+build.123
 *`,
+  harlowe: `(set: $health to 100)
+(if: $health > 50)[You feel strong.]
+[[Continue->NextRoom]]`,
 };
