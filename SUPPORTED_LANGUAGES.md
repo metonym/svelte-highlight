@@ -4314,6 +4314,20 @@
 </script>
 ```
 
+## wdl (`wdl`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import wdl from "svelte-highlight/languages/wdl";
+
+  // base import
+  import { wdl } from "svelte-highlight/languages";
+</script>
+```
+
 ## wgsl (`wgsl`)
 
 > Custom svelte-highlight language (not exported by highlight.js)

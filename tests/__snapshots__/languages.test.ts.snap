@@ -335,6 +335,7 @@ exports[`Languages 1`] = `
   "vue",
   "vyper",
   "wasm",
+  "wdl",
   "wgsl",
   "wit",
   "wren",

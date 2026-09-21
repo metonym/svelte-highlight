@@ -1853,4 +1853,39 @@ workflow {
         .map { bam -> bam.name }
         .view()
 }`,
+  wdl: `version 1.0
+
+# say hello to someone, with a configurable retry count
+task HelloWorld {
+    input {
+        String name
+        Int retries = 3
+    }
+
+    command <<<
+        echo "Hello, ~{name}!" >&2
+    >>>
+
+    output {
+        String message = read_string(stdout())
+    }
+
+    runtime {
+        docker: "ubuntu:20.04"
+    }
+}
+
+workflow Greet {
+    input {
+        Array[String] names
+    }
+
+    scatter (n in names) {
+        call HelloWorld { input: name = n }
+    }
+
+    output {
+        Array[String] messages = HelloWorld.message
+    }
+}`,
 };
