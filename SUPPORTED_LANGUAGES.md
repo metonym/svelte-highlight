@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 360 languages: 193 exported from highlight.js@11.12.0, 167 custom grammars added by svelte-highlight
+> 361 languages: 193 exported from highlight.js@11.12.0, 168 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2355,6 +2355,20 @@
 
   // base import
   import { less } from "svelte-highlight/languages";
+</script>
+```
+
+## likec4 (`likec4`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import likec4 from "svelte-highlight/languages/likec4";
+
+  // base import
+  import { likec4 } from "svelte-highlight/languages";
 </script>
 ```
 

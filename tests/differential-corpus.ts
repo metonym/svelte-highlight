@@ -2106,4 +2106,33 @@ TableGroup blog_tables {
   users
   posts
 }`,
+  likec4: `// checkout architecture
+specification {
+  element actor {
+    style {
+      shape person
+    }
+  }
+  element system
+  element component
+}
+
+model {
+  customer = actor 'Customer' {
+    description 'Places an order'
+  }
+  cloud = system 'Checkout' {
+    ui = component 'Web'
+    api = component 'API'
+    ui -> api 'requests'
+  }
+  customer -> ui 'opens'
+}
+
+views {
+  view index {
+    include *
+    exclude cloud.api
+  }
+}`,
 };

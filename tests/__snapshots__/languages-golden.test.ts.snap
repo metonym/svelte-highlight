@@ -597,6 +597,8 @@ exports[`golden snapshot: less 1`] = `
 /<span class="hljs-selector-tag">regex</span>/ <span class="hljs-selector-id">#hashtag</span> @<span class="hljs-selector-tag">annotation</span>"
 `;
 
+exports[`golden snapshot: likec4 1`] = `"<span class="hljs-keyword">specification</span> <span class="hljs-keyword">model</span> <span class="hljs-keyword">views</span> <span class="hljs-keyword">global</span> <span class="hljs-keyword">element</span> <span class="hljs-keyword">extend</span> <span class="hljs-keyword">view</span> <span class="hljs-keyword">include</span> <span class="hljs-keyword">exclude</span> <span class="hljs-keyword">deployment</span> <span class="hljs-keyword">relationship</span> <span class="hljs-keyword">metadata</span> <span class="hljs-keyword">description</span>"`;
+
 exports[`golden snapshot: liquid 1`] = `
 "<span class="language-xml">// comment
 &quot;string&quot; &#x27;string&#x27; 123 3.14
