@@ -174,6 +174,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "tlaplus",
   "spicedb",
   "openfga",
+  "casbin",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
