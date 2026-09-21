@@ -338,6 +338,7 @@ exports[`Languages 1`] = `
   "vcl",
   "verilog",
   "verse",
+  "veryl",
   "vhdl",
   "vim",
   "vrl",

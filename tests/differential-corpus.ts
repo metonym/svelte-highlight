@@ -2034,4 +2034,27 @@ entity blinky(clk: clock, rst: bool) -> bool {
     };
     count > duration / 2
 }`,
+  veryl: `pub module DataSelector #(
+    param Width: u32 = 8,
+) (
+    i_clk : input  clock           ,
+    i_rst : input  reset           ,
+    i_sel : input  logic           ,
+    i_data: input  logic<Width> [2],
+    o_data: output logic<Width>    ,
+) {
+    var r_data: logic<Width>;
+
+    always_ff {
+        if_reset {
+            r_data = 0;
+        } else if i_sel {
+            r_data = i_data[0];
+        } else {
+            r_data = i_data[1];
+        }
+    }
+
+    assign o_data = r_data;
+}`,
 };
