@@ -1888,4 +1888,20 @@ workflow Greet {
         Array[String] messages = HelloWorld.message
     }
 }`,
+  alloy: `abstract sig Person {
+  friends: set Person
+}
+
+sig Student extends Person {}
+
+-- everyone likes someone who likes them back
+pred hasFriend[p: Person] {
+  some f: p.friends | p in f.friends
+}
+
+assert NoSelfFriend {
+  all p: Person | p not in p.friends
+}
+
+check NoSelfFriend for 5`,
 };
