@@ -192,6 +192,7 @@
     "/preview-dialog": "Dialog language preview",
     "/preview-nextflow": "Nextflow language preview",
     "/preview-wdl": "WDL language preview",
+    "/preview-alloy": "Alloy language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
