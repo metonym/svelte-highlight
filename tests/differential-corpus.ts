@@ -1921,4 +1921,16 @@ method Factorial(n: nat) returns (result: nat)
 }
 
 datatype Option<T> = None | Some(value: T)`,
+  fstar: `(* factorial with a Lemma proving it's positive *)
+let rec factorial (n:nat) : nat =
+  if n = 0 then 1 else n * factorial (n - 1)
+
+val factorial_pos : n:nat -> Lemma (requires True) (ensures (factorial n >= 1))
+let rec factorial_pos n =
+  if n = 0 then () else factorial_pos (n - 1)
+
+noeq type stream (a:Type) = {
+  head: a;
+  tail: unit -> Tot (stream a);
+}`,
 };

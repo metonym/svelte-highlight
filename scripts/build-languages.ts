@@ -170,6 +170,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "wdl",
   "alloy",
   "dafny",
+  "fstar",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
