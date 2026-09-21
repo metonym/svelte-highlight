@@ -150,6 +150,7 @@
   import { vPreviewSnippets } from "@www/preview/v-preview-snippets";
   import { vclPreviewSnippets } from "@www/preview/vcl-preview-snippets";
   import { versePreviewSnippets } from "@www/preview/verse-preview-snippets";
+  import { verylPreviewSnippets } from "@www/preview/veryl-preview-snippets";
   import { vrlPreviewSnippets } from "@www/preview/vrl-preview-snippets";
   import { vyperPreviewSnippets } from "@www/preview/vyper-preview-snippets";
   import { wdlPreviewSnippets } from "@www/preview/wdl-preview-snippets";
@@ -311,6 +312,7 @@
   import v from "svelte-highlight/languages/v";
   import vcl from "svelte-highlight/languages/vcl";
   import verse from "svelte-highlight/languages/verse";
+  import veryl from "svelte-highlight/languages/veryl";
   import vrl from "svelte-highlight/languages/vrl";
   import vyper from "svelte-highlight/languages/vyper";
   import wdl from "svelte-highlight/languages/wdl";
@@ -487,6 +489,7 @@
     casbin: { lang: casbin, snippets: casbinPreviewSnippets },
     bsv: { lang: bsv, snippets: bsvPreviewSnippets },
     spade: { lang: spade, snippets: spadePreviewSnippets },
+    veryl: { lang: veryl, snippets: verylPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
