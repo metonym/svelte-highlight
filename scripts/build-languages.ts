@@ -172,6 +172,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "dafny",
   "fstar",
   "tlaplus",
+  "spicedb",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

@@ -1948,4 +1948,24 @@ Spec == Init /\\ [][Next]_count
 
 THEOREM Spec => []( count \\in Nat )
 ====`,
+  spicedb: `/** a document with viewer/editor permissions */
+definition user {}
+
+definition folder {
+  relation viewer: user
+}
+
+definition document {
+  relation parent: folder
+  relation viewer: user | user:*
+  relation editor: user
+  relation banned: user
+  permission view = viewer + editor + parent->view
+  permission edit = editor - banned
+}
+
+caveat has_valid_ip(user_ip ipaddress) {
+  user_ip.in_cidr("192.168.0.0/16")
+}
+`,
 };
