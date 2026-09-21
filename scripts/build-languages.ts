@@ -176,6 +176,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "openfga",
   "casbin",
   "bsv",
+  "spade",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

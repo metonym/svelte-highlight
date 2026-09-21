@@ -2024,4 +2024,14 @@ module mkGCD(ArithIO);
         return n;
     endmethod
 endmodule`,
+  spade: `// blinks an LED at half the clock's duration
+entity blinky(clk: clock, rst: bool) -> bool {
+    let duration = 100_000_000;
+    reg(clk) count: uint<28> reset(rst: 0) = if count == duration {
+        0
+    } else {
+        trunc(count + 1)
+    };
+    count > duration / 2
+}`,
 };
