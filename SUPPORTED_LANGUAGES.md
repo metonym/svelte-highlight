@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 350 languages: 193 exported from highlight.js@11.12.0, 157 custom grammars added by svelte-highlight
+> 351 languages: 193 exported from highlight.js@11.12.0, 158 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -3981,6 +3981,20 @@
 
   // base import
   import { thrift } from "svelte-highlight/languages";
+</script>
+```
+
+## tlaplus (`tlaplus`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import tlaplus from "svelte-highlight/languages/tlaplus";
+
+  // base import
+  import { tlaplus } from "svelte-highlight/languages";
 </script>
 ```
 
