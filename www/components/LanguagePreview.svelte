@@ -4,6 +4,7 @@
   import { angularPreviewSnippets } from "@www/preview/angular-preview-snippets";
   import { assemblyscriptPreviewSnippets } from "@www/preview/assemblyscript-preview-snippets";
   import { astroPreviewSnippets } from "@www/preview/astro-preview-snippets";
+  import { asymptotePreviewSnippets } from "@www/preview/asymptote-preview-snippets";
   import { bamlPreviewSnippets } from "@www/preview/baml-preview-snippets";
   import { bendPreviewSnippets } from "@www/preview/bend-preview-snippets";
   import { bibtexPreviewSnippets } from "@www/preview/bibtex-preview-snippets";
@@ -168,6 +169,7 @@
   import angular from "svelte-highlight/languages/angular";
   import assemblyscript from "svelte-highlight/languages/assemblyscript";
   import astro from "svelte-highlight/languages/astro";
+  import asymptote from "svelte-highlight/languages/asymptote";
   import baml from "svelte-highlight/languages/baml";
   import bend from "svelte-highlight/languages/bend";
   import bibtex from "svelte-highlight/languages/bibtex";
@@ -493,6 +495,7 @@
     spade: { lang: spade, snippets: spadePreviewSnippets },
     veryl: { lang: veryl, snippets: verylPreviewSnippets },
     gnuplot: { lang: gnuplot, snippets: gnuplotPreviewSnippets },
+    asymptote: { lang: asymptote, snippets: asymptotePreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
