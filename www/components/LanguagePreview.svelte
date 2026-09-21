@@ -101,6 +101,7 @@
   import { odinPreviewSnippets } from "@www/preview/odin-preview-snippets";
   import { openfgaPreviewSnippets } from "@www/preview/openfga-preview-snippets";
   import { orgPreviewSnippets } from "@www/preview/org-preview-snippets";
+  import { pikchrPreviewSnippets } from "@www/preview/pikchr-preview-snippets";
   import { pklPreviewSnippets } from "@www/preview/pkl-preview-snippets";
   import { plantumlPreviewSnippets } from "@www/preview/plantuml-preview-snippets";
   import { plsqlPreviewSnippets } from "@www/preview/plsql-preview-snippets";
@@ -268,6 +269,7 @@
   import odin from "svelte-highlight/languages/odin";
   import openfga from "svelte-highlight/languages/openfga";
   import org from "svelte-highlight/languages/org";
+  import pikchr from "svelte-highlight/languages/pikchr";
   import pkl from "svelte-highlight/languages/pkl";
   import plantuml from "svelte-highlight/languages/plantuml";
   import plsql from "svelte-highlight/languages/plsql";
@@ -502,6 +504,7 @@
     asymptote: { lang: asymptote, snippets: asymptotePreviewSnippets },
     dbml: { lang: dbml, snippets: dbmlPreviewSnippets },
     likec4: { lang: likec4, snippets: likec4PreviewSnippets },
+    pikchr: { lang: pikchr, snippets: pikchrPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
