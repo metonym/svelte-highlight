@@ -173,6 +173,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "fstar",
   "tlaplus",
   "spicedb",
+  "openfga",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
