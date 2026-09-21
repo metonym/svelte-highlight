@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 345 languages: 193 exported from highlight.js@11.12.0, 152 custom grammars added by svelte-highlight
+> 348 languages: 193 exported from highlight.js@11.12.0, 155 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -73,6 +73,20 @@
 
   // base import
   import { agda } from "svelte-highlight/languages";
+</script>
+```
+
+## alloy (`alloy`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import alloy from "svelte-highlight/languages/alloy";
+
+  // base import
+  import { alloy } from "svelte-highlight/languages";
 </script>
 ```
 
