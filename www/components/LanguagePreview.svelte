@@ -1,5 +1,6 @@
 <script>
   import { agdaPreviewSnippets } from "@www/preview/agda-preview-snippets";
+  import { alloyPreviewSnippets } from "@www/preview/alloy-preview-snippets";
   import { angularPreviewSnippets } from "@www/preview/angular-preview-snippets";
   import { assemblyscriptPreviewSnippets } from "@www/preview/assemblyscript-preview-snippets";
   import { astroPreviewSnippets } from "@www/preview/astro-preview-snippets";
@@ -153,6 +154,7 @@
   import { Column, Row } from "carbon-components-svelte";
   import { CopyButton, Highlight } from "svelte-highlight";
   import agda from "svelte-highlight/languages/agda";
+  import alloy from "svelte-highlight/languages/alloy";
   import angular from "svelte-highlight/languages/angular";
   import assemblyscript from "svelte-highlight/languages/assemblyscript";
   import astro from "svelte-highlight/languages/astro";
@@ -460,6 +462,7 @@
     dialog: { lang: dialog, snippets: dialogPreviewSnippets },
     nextflow: { lang: nextflow, snippets: nextflowPreviewSnippets },
     wdl: { lang: wdl, snippets: wdlPreviewSnippets },
+    alloy: { lang: alloy, snippets: alloyPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
