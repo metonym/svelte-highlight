@@ -199,6 +199,7 @@
     "/preview-spicedb": "SpiceDB language preview",
     "/preview-openfga": "OpenFGA language preview",
     "/preview-casbin": "Casbin language preview",
+    "/preview-bsv": "Bluespec SystemVerilog language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
