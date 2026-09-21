@@ -97,6 +97,7 @@
   import { movePreviewSnippets } from "@www/preview/move-preview-snippets";
   import { nextflowPreviewSnippets } from "@www/preview/nextflow-preview-snippets";
   import { nickelPreviewSnippets } from "@www/preview/nickel-preview-snippets";
+  import { nomnomlPreviewSnippets } from "@www/preview/nomnoml-preview-snippets";
   import { nushellPreviewSnippets } from "@www/preview/nushell-preview-snippets";
   import { odinPreviewSnippets } from "@www/preview/odin-preview-snippets";
   import { openfgaPreviewSnippets } from "@www/preview/openfga-preview-snippets";
@@ -265,6 +266,7 @@
   import move from "svelte-highlight/languages/move";
   import nextflow from "svelte-highlight/languages/nextflow";
   import nickel from "svelte-highlight/languages/nickel";
+  import nomnoml from "svelte-highlight/languages/nomnoml";
   import nushell from "svelte-highlight/languages/nushell";
   import odin from "svelte-highlight/languages/odin";
   import openfga from "svelte-highlight/languages/openfga";
@@ -505,6 +507,7 @@
     dbml: { lang: dbml, snippets: dbmlPreviewSnippets },
     likec4: { lang: likec4, snippets: likec4PreviewSnippets },
     pikchr: { lang: pikchr, snippets: pikchrPreviewSnippets },
+    nomnoml: { lang: nomnoml, snippets: nomnomlPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
