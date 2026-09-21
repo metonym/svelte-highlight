@@ -1819,4 +1819,11 @@ https://example.com/docs#installation`,
         *goto fight
     #Run away.
         *goto flee`,
+  dialog: `(program entry point)
+	(if) (bound $Room) (then)
+		(enter $Room)
+	(else)
+		~(story started)
+	(endif)
+	%% Begin the adventure.`,
 };

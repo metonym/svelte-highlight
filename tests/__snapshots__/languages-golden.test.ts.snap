@@ -228,6 +228,13 @@ exports[`golden snapshot: delphi 1`] = `"<span class="hljs-keyword">exports</spa
 
 exports[`golden snapshot: dhall 1`] = `"<span class="hljs-keyword">let</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">merge</span> <span class="hljs-keyword">toMap</span> <span class="hljs-keyword">assert</span> <span class="hljs-keyword">as</span> <span class="hljs-keyword">using</span> <span class="hljs-keyword">with</span> <span class="hljs-keyword">forall</span> <span class="hljs-keyword">Some</span> <span class="hljs-keyword">None</span> <span class="hljs-keyword">showConstructor</span> <span class="hljs-keyword">missing</span> <span class="hljs-type">Natural</span> <span class="hljs-type">Integer</span> <span class="hljs-type">Double</span> <span class="hljs-type">Text</span> <span class="hljs-type">Bool</span> <span class="hljs-type">Bytes</span> <span class="hljs-type">Date</span> <span class="hljs-type">Time</span> <span class="hljs-type">TimeZone</span> <span class="hljs-type">List</span> <span class="hljs-type">Optional</span> <span class="hljs-type">Type</span> <span class="hljs-type">Kind</span> <span class="hljs-type">Sort</span> <span class="hljs-literal">True</span> <span class="hljs-literal">False</span> <span class="hljs-literal">NaN</span> <span class="hljs-literal">Infinity</span> <span class="hljs-built_in">Natural/fold</span> <span class="hljs-built_in">Natural/build</span> <span class="hljs-built_in">Natural/isZero</span> <span class="hljs-built_in">Natural/even</span> <span class="hljs-built_in">Natural/odd</span> <span class="hljs-built_in">Natural/toInteger</span>"`;
 
+exports[`golden snapshot: dialog 1`] = `
+"// comment
+&quot;string&quot; &#x27;string&#x27; 123 3.14
+true false null
+/regex/ <span class="hljs-symbol">#hashtag</span> <span class="hljs-symbol">@annotation</span>"
+`;
+
 exports[`golden snapshot: diff 1`] = `
 "// comment
 &quot;string&quot; &#x27;string&#x27; 123 3.14
