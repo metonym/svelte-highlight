@@ -1933,4 +1933,19 @@ noeq type stream (a:Type) = {
   head: a;
   tail: unit -> Tot (stream a);
 }`,
+  tlaplus: `---- MODULE Counter ----
+EXTENDS Naturals
+
+VARIABLE count
+
+Init == count = 0
+
+(* the next-state relation
+   (* increments count by one *) *)
+Next == count' = count + 1
+
+Spec == Init /\\ [][Next]_count
+
+THEOREM Spec => []( count \\in Nat )
+====`,
 };

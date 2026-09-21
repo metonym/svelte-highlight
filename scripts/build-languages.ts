@@ -171,6 +171,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "alloy",
   "dafny",
   "fstar",
+  "tlaplus",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
