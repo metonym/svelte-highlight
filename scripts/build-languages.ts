@@ -178,6 +178,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "bsv",
   "spade",
   "veryl",
+  "gnuplot",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

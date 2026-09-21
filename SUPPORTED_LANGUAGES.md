@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 357 languages: 193 exported from highlight.js@11.12.0, 164 custom grammars added by svelte-highlight
+> 358 languages: 193 exported from highlight.js@11.12.0, 165 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1535,6 +1535,20 @@
 
   // base import
   import { gml } from "svelte-highlight/languages";
+</script>
+```
+
+## gnuplot (`gnuplot`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import gnuplot from "svelte-highlight/languages/gnuplot";
+
+  // base import
+  import { gnuplot } from "svelte-highlight/languages";
 </script>
 ```
 

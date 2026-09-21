@@ -2057,4 +2057,10 @@ entity blinky(clk: clock, rst: bool) -> bool {
 
     assign o_data = r_data;
 }`,
+  gnuplot: `set terminal png
+set title "Signal"
+set xlabel 'time'
+plot 'data.dat' using 1:2 with lines title "raw", \\
+     sin(x) * 2.0 lw 2
+`,
 };
