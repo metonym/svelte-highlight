@@ -47,6 +47,7 @@
   import { graphvizPreviewSnippets } from "@www/preview/graphviz-preview-snippets";
   import { groqPreviewSnippets } from "@www/preview/groq-preview-snippets";
   import { haproxyPreviewSnippets } from "@www/preview/haproxy-preview-snippets";
+  import { harlowePreviewSnippets } from "@www/preview/harlowe-preview-snippets";
   import { hclPreviewSnippets } from "@www/preview/hcl-preview-snippets";
   import { heexPreviewSnippets } from "@www/preview/heex-preview-snippets";
   import { helmPreviewSnippets } from "@www/preview/helm-preview-snippets";
@@ -195,6 +196,7 @@
   import graphviz from "svelte-highlight/languages/graphviz";
   import groq from "svelte-highlight/languages/groq";
   import haproxy from "svelte-highlight/languages/haproxy";
+  import harlowe from "svelte-highlight/languages/harlowe";
   import hcl from "svelte-highlight/languages/hcl";
   import heex from "svelte-highlight/languages/heex";
   import helm from "svelte-highlight/languages/helm";
@@ -445,6 +447,7 @@
     liquid: { lang: liquid, snippets: liquidPreviewSnippets },
     url: { lang: url, snippets: urlPreviewSnippets },
     semver: { lang: semver, snippets: semverPreviewSnippets },
+    harlowe: { lang: harlowe, snippets: harlowePreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
