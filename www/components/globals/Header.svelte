@@ -196,6 +196,7 @@
     "/preview-dafny": "Dafny language preview",
     "/preview-fstar": "F* language preview",
     "/preview-tlaplus": "TLA+ language preview",
+    "/preview-spicedb": "SpiceDB language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
