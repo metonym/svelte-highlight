@@ -76,6 +76,7 @@ exports[`Languages 1`] = `
   "dax",
   "delphi",
   "dhall",
+  "dialog",
   "diff",
   "django",
   "djot",
