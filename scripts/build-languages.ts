@@ -177,6 +177,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "casbin",
   "bsv",
   "spade",
+  "veryl",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
