@@ -188,6 +188,7 @@
     "/preview-semver": "Semver language preview",
     "/preview-define-theme": "defineTheme preview",
     "/preview-harlowe": "Harlowe language preview",
+    "/preview-choicescript": "ChoiceScript language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
