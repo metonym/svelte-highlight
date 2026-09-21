@@ -121,6 +121,7 @@ exports[`Languages 1`] = `
   "gleam",
   "glsl",
   "gml",
+  "gnuplot",
   "go",
   "golo",
   "gotmpl",
