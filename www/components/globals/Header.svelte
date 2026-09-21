@@ -189,6 +189,7 @@
     "/preview-define-theme": "defineTheme preview",
     "/preview-harlowe": "Harlowe language preview",
     "/preview-choicescript": "ChoiceScript language preview",
+    "/preview-dialog": "Dialog language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
