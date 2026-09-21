@@ -1809,4 +1809,14 @@ https://example.com/docs#installation`,
   harlowe: `(set: $health to 100)
 (if: $health > 50)[You feel strong.]
 [[Continue->NextRoom]]`,
+  choicescript: `*label start
+*if (strength > 50)
+    *set courage +10
+*else
+    *set courage -5
+*choice
+    #Fight the dragon.
+        *goto fight
+    #Run away.
+        *goto flee`,
 };

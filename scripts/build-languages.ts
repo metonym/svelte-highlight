@@ -164,6 +164,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "url",
   "semver",
   "harlowe",
+  "choicescript",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
