@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 351 languages: 193 exported from highlight.js@11.12.0, 158 custom grammars added by svelte-highlight
+> 352 languages: 193 exported from highlight.js@11.12.0, 159 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -3723,6 +3723,20 @@
 
   // base import
   import { sparql } from "svelte-highlight/languages";
+</script>
+```
+
+## spicedb (`spicedb`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import spicedb from "svelte-highlight/languages/spicedb";
+
+  // base import
+  import { spicedb } from "svelte-highlight/languages";
 </script>
 ```
 
