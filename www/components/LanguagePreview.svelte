@@ -50,6 +50,7 @@
   import { gdscriptPreviewSnippets } from "@www/preview/gdscript-preview-snippets";
   import { gdshaderPreviewSnippets } from "@www/preview/gdshader-preview-snippets";
   import { gleamPreviewSnippets } from "@www/preview/gleam-preview-snippets";
+  import { gnuplotPreviewSnippets } from "@www/preview/gnuplot-preview-snippets";
   import { gotmplPreviewSnippets } from "@www/preview/gotmpl-preview-snippets";
   import { graphvizPreviewSnippets } from "@www/preview/graphviz-preview-snippets";
   import { groqPreviewSnippets } from "@www/preview/groq-preview-snippets";
@@ -213,6 +214,7 @@
   import gdscript from "svelte-highlight/languages/gdscript";
   import gdshader from "svelte-highlight/languages/gdshader";
   import gleam from "svelte-highlight/languages/gleam";
+  import gnuplot from "svelte-highlight/languages/gnuplot";
   import gotmpl from "svelte-highlight/languages/gotmpl";
   import graphviz from "svelte-highlight/languages/graphviz";
   import groq from "svelte-highlight/languages/groq";
@@ -490,6 +492,7 @@
     bsv: { lang: bsv, snippets: bsvPreviewSnippets },
     spade: { lang: spade, snippets: spadePreviewSnippets },
     veryl: { lang: veryl, snippets: verylPreviewSnippets },
+    gnuplot: { lang: gnuplot, snippets: gnuplotPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);

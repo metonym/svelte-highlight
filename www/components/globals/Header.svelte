@@ -202,6 +202,7 @@
     "/preview-bsv": "Bluespec SystemVerilog language preview",
     "/preview-spade": "Spade language preview",
     "/preview-veryl": "Veryl language preview",
+    "/preview-gnuplot": "Gnuplot language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
