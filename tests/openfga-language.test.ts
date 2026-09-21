@@ -28,9 +28,7 @@ test("openfga highlights define declarations with the name as title.function", (
   const result = highlight("define viewer: [user]");
 
   expect(result).toContain('<span class="hljs-keyword">define</span>');
-  expect(result).toContain(
-    '<span class="hljs-title function_">viewer</span>',
-  );
+  expect(result).toContain('<span class="hljs-title function_">viewer</span>');
 });
 
 test("openfga highlights the or, from, and but-not operators", () => {
@@ -56,7 +54,5 @@ test("openfga does not mis-tag a relation name used elsewhere as a type", () => 
     "type organization\n  relations\n    define member: [user]",
   );
 
-  expect(result).not.toContain(
-    '<span class="hljs-title class_">member</span>',
-  );
+  expect(result).not.toContain('<span class="hljs-title class_">member</span>');
 });
