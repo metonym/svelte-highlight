@@ -2074,4 +2074,36 @@ path g = (0, 0)..controls (1, 1) and (2, 0)..(3, 0);
 draw(g, red + linewidth(1));
 label("origin", p, N);
 `,
+  dbml: `// blog schema
+Project blog {
+  database_type: 'PostgreSQL'
+  Note: 'Posts and authors'
+}
+
+Table users {
+  id integer [pk, increment]
+  username varchar(32) [not null, unique]
+  created_at timestamp [default: \`now()\`]
+}
+
+Enum post_status {
+  draft
+  published
+}
+
+Table posts {
+  id integer [pk]
+  user_id integer [not null]
+  status post_status
+  indexes {
+    (user_id, status) [name: 'user_status']
+  }
+}
+
+Ref: posts.user_id > users.id
+
+TableGroup blog_tables {
+  users
+  posts
+}`,
 };
