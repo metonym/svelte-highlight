@@ -2149,4 +2149,19 @@ line from Start.s to Stop.n then right`,
 [<actor> User] -> [System]
 [System] -:> [Database|save(); load()]
 [System] <:-- [<abstract> Record|id: int]`,
+  blockdiag: `// request path
+blockdiag {
+  browser -> web -> db;
+  web [label = "API", color = "lightblue"];
+  group {
+    web; db;
+  }
+}
+
+nwdiag {
+  network dmz {
+    address = "192.168.0.0/24"
+    web01 [address = "192.168.0.1"];
+  }
+}`,
 };

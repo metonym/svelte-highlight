@@ -34,6 +34,7 @@ exports[`Languages 1`] = `
   "bicep",
   "bitbake",
   "blade",
+  "blockdiag",
   "blueprint",
   "bnf",
   "bpftrace",

@@ -184,6 +184,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "likec4",
   "pikchr",
   "nomnoml",
+  "blockdiag",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
