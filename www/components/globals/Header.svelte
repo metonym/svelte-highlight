@@ -205,6 +205,7 @@
     "/preview-gnuplot": "Gnuplot language preview",
     "/preview-asymptote": "Asymptote language preview",
     "/preview-dbml": "DBML language preview",
+    "/preview-likec4": "LikeC4 language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
