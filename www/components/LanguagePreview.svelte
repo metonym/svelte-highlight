@@ -93,6 +93,7 @@
   import { nickelPreviewSnippets } from "@www/preview/nickel-preview-snippets";
   import { nushellPreviewSnippets } from "@www/preview/nushell-preview-snippets";
   import { odinPreviewSnippets } from "@www/preview/odin-preview-snippets";
+  import { openfgaPreviewSnippets } from "@www/preview/openfga-preview-snippets";
   import { orgPreviewSnippets } from "@www/preview/org-preview-snippets";
   import { pklPreviewSnippets } from "@www/preview/pkl-preview-snippets";
   import { plantumlPreviewSnippets } from "@www/preview/plantuml-preview-snippets";
@@ -251,6 +252,7 @@
   import nickel from "svelte-highlight/languages/nickel";
   import nushell from "svelte-highlight/languages/nushell";
   import odin from "svelte-highlight/languages/odin";
+  import openfga from "svelte-highlight/languages/openfga";
   import org from "svelte-highlight/languages/org";
   import pkl from "svelte-highlight/languages/pkl";
   import plantuml from "svelte-highlight/languages/plantuml";
@@ -475,6 +477,7 @@
     fstar: { lang: fstar, snippets: fstarPreviewSnippets },
     tlaplus: { lang: tlaplus, snippets: tlaplusPreviewSnippets },
     spicedb: { lang: spicedb, snippets: spicedbPreviewSnippets },
+    openfga: { lang: openfga, snippets: openfgaPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
