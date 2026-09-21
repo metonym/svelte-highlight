@@ -203,6 +203,7 @@
     "/preview-spade": "Spade language preview",
     "/preview-veryl": "Veryl language preview",
     "/preview-gnuplot": "Gnuplot language preview",
+    "/preview-asymptote": "Asymptote language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
