@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 353 languages: 193 exported from highlight.js@11.12.0, 160 custom grammars added by svelte-highlight
+> 354 languages: 193 exported from highlight.js@11.12.0, 161 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -539,6 +539,20 @@
 
   // base import
   import { capnproto } from "svelte-highlight/languages";
+</script>
+```
+
+## casbin (`casbin`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import casbin from "svelte-highlight/languages/casbin";
+
+  // base import
+  import { casbin } from "svelte-highlight/languages";
 </script>
 ```
 
