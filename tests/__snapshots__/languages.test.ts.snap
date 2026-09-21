@@ -237,6 +237,7 @@ exports[`Languages 1`] = `
   "pgsql",
   "php",
   "phpTemplate",
+  "pikchr",
   "pkl",
   "plaintext",
   "plantuml",

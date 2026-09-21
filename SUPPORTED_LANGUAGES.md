@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 361 languages: 193 exported from highlight.js@11.12.0, 168 custom grammars added by svelte-highlight
+> 362 languages: 193 exported from highlight.js@11.12.0, 169 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -3041,6 +3041,20 @@
 
   // base import
   import { phpTemplate } from "svelte-highlight/languages";
+</script>
+```
+
+## pikchr (`pikchr`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import pikchr from "svelte-highlight/languages/pikchr";
+
+  // base import
+  import { pikchr } from "svelte-highlight/languages";
 </script>
 ```
 

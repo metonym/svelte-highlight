@@ -2135,4 +2135,12 @@ views {
     exclude cloud.api
   }
 }`,
+  pikchr: `# start and stop
+box "Start" fit
+arrow
+box "Stop" "(done)" fit
+
+arrow down 50%
+circle "ok" rad 0.3 fill lightblue
+line from Start.s to Stop.n then right`,
 };

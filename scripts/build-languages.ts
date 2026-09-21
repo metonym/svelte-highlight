@@ -182,6 +182,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "asymptote",
   "dbml",
   "likec4",
+  "pikchr",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
