@@ -125,6 +125,7 @@
   import { smithyPreviewSnippets } from "@www/preview/smithy-preview-snippets";
   import { snortPreviewSnippets } from "@www/preview/snort-preview-snippets";
   import { solidityPreviewSnippets } from "@www/preview/solidity-preview-snippets";
+  import { spadePreviewSnippets } from "@www/preview/spade-preview-snippets";
   import { sparqlPreviewSnippets } from "@www/preview/sparql-preview-snippets";
   import { spicedbPreviewSnippets } from "@www/preview/spicedb-preview-snippets";
   import { splunkPreviewSnippets } from "@www/preview/splunk-preview-snippets";
@@ -285,6 +286,7 @@
   import smithy from "svelte-highlight/languages/smithy";
   import snort from "svelte-highlight/languages/snort";
   import solidity from "svelte-highlight/languages/solidity";
+  import spade from "svelte-highlight/languages/spade";
   import sparql from "svelte-highlight/languages/sparql";
   import spicedb from "svelte-highlight/languages/spicedb";
   import splunk from "svelte-highlight/languages/splunk";
@@ -484,6 +486,7 @@
     openfga: { lang: openfga, snippets: openfgaPreviewSnippets },
     casbin: { lang: casbin, snippets: casbinPreviewSnippets },
     bsv: { lang: bsv, snippets: bsvPreviewSnippets },
+    spade: { lang: spade, snippets: spadePreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
