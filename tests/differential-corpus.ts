@@ -2000,4 +2000,28 @@ e = some(where (p.eft == allow))
 [matchers]
 m = g(r.sub, p.sub) && keyMatch2(r.obj, p.obj) && r.act == p.act
 `,
+  bsv: `// Euclidean GCD: subtract the smaller register from the larger each cycle
+interface ArithIO;
+    method Action start(Bit#(32) n, Bit#(32) m);
+    method Bit#(32) result;
+endinterface
+
+module mkGCD(ArithIO);
+    Reg#(Bit#(32)) n <- mkRegU;
+    Reg#(Bit#(32)) m <- mkRegU;
+
+    rule swap (n > m && m != 0);
+        n <= m;
+        m <= n;
+    endrule
+
+    method Action start(Bit#(32) in_n, Bit#(32) in_m) if (m == 0);
+        n <= in_n;
+        m <= in_m;
+    endmethod
+
+    method Bit#(32) result if (m == 0);
+        return n;
+    endmethod
+endmodule`,
 };
