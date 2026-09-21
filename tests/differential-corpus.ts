@@ -1904,4 +1904,21 @@ assert NoSelfFriend {
 }
 
 check NoSelfFriend for 5`,
+  dafny: `// factorial with a loop invariant
+method Factorial(n: nat) returns (result: nat)
+  requires n >= 0
+  ensures result >= 1
+{
+  result := 1;
+  var i := 0;
+  while i < n
+    invariant 0 <= i <= n
+    decreases n - i
+  {
+    i := i + 1;
+    result := result * i;
+  }
+}
+
+datatype Option<T> = None | Some(value: T)`,
 };

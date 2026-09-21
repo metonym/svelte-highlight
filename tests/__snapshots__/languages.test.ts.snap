@@ -72,6 +72,7 @@ exports[`Languages 1`] = `
   "cypher",
   "d",
   "d2",
+  "dafny",
   "dart",
   "datalog",
   "dax",
