@@ -200,6 +200,7 @@
     "/preview-openfga": "OpenFGA language preview",
     "/preview-casbin": "Casbin language preview",
     "/preview-bsv": "Bluespec SystemVerilog language preview",
+    "/preview-spade": "Spade language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
