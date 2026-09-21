@@ -43,6 +43,7 @@
   import { fennelPreviewSnippets } from "@www/preview/fennel-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
   import { fluxPreviewSnippets } from "@www/preview/flux-preview-snippets";
+  import { fstarPreviewSnippets } from "@www/preview/fstar-preview-snippets";
   import { gbnfPreviewSnippets } from "@www/preview/gbnf-preview-snippets";
   import { gdscriptPreviewSnippets } from "@www/preview/gdscript-preview-snippets";
   import { gdshaderPreviewSnippets } from "@www/preview/gdshader-preview-snippets";
@@ -198,6 +199,7 @@
   import fennel from "svelte-highlight/languages/fennel";
   import fish from "svelte-highlight/languages/fish";
   import flux from "svelte-highlight/languages/flux";
+  import fstar from "svelte-highlight/languages/fstar";
   import gbnf from "svelte-highlight/languages/gbnf";
   import gdscript from "svelte-highlight/languages/gdscript";
   import gdshader from "svelte-highlight/languages/gdshader";
@@ -466,6 +468,7 @@
     wdl: { lang: wdl, snippets: wdlPreviewSnippets },
     alloy: { lang: alloy, snippets: alloyPreviewSnippets },
     dafny: { lang: dafny, snippets: dafnyPreviewSnippets },
+    fstar: { lang: fstar, snippets: fstarPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);

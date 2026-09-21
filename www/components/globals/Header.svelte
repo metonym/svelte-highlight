@@ -194,6 +194,7 @@
     "/preview-wdl": "WDL language preview",
     "/preview-alloy": "Alloy language preview",
     "/preview-dafny": "Dafny language preview",
+    "/preview-fstar": "F* language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
