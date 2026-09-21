@@ -181,6 +181,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "gnuplot",
   "asymptote",
   "dbml",
+  "likec4",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
