@@ -207,6 +207,7 @@
     "/preview-dbml": "DBML language preview",
     "/preview-likec4": "LikeC4 language preview",
     "/preview-pikchr": "Pikchr language preview",
+    "/preview-nomnoml": "Nomnoml language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
