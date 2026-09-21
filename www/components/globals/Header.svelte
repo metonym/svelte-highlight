@@ -201,6 +201,7 @@
     "/preview-casbin": "Casbin language preview",
     "/preview-bsv": "Bluespec SystemVerilog language preview",
     "/preview-spade": "Spade language preview",
+    "/preview-veryl": "Veryl language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
