@@ -17,6 +17,7 @@
   import { cairoPreviewSnippets } from "@www/preview/cairo-preview-snippets";
   import { cedarPreviewSnippets } from "@www/preview/cedar-preview-snippets";
   import { celPreviewSnippets } from "@www/preview/cel-preview-snippets";
+  import { choicescriptPreviewSnippets } from "@www/preview/choicescript-preview-snippets";
   import { ciscoPreviewSnippets } from "@www/preview/cisco-preview-snippets";
   import { civetPreviewSnippets } from "@www/preview/civet-preview-snippets";
   import { clarityPreviewSnippets } from "@www/preview/clarity-preview-snippets";
@@ -166,6 +167,7 @@
   import cairo from "svelte-highlight/languages/cairo";
   import cedar from "svelte-highlight/languages/cedar";
   import cel from "svelte-highlight/languages/cel";
+  import choicescript from "svelte-highlight/languages/choicescript";
   import cisco from "svelte-highlight/languages/cisco";
   import civet from "svelte-highlight/languages/civet";
   import clarity from "svelte-highlight/languages/clarity";
@@ -448,6 +450,7 @@
     url: { lang: url, snippets: urlPreviewSnippets },
     semver: { lang: semver, snippets: semverPreviewSnippets },
     harlowe: { lang: harlowe, snippets: harlowePreviewSnippets },
+    choicescript: { lang: choicescript, snippets: choicescriptPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
