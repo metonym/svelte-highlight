@@ -20,6 +20,7 @@ exports[`Languages 1`] = `
   "aspectj",
   "assemblyscript",
   "astro",
+  "asymptote",
   "autohotkey",
   "autoit",
   "avrasm",
