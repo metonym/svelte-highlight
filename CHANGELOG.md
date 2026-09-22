@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.22.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.22.0) - 2026-09-21
+
+**Features**
+
+- add `MarkdownStream` for multi-fence chat output
+- add a `titlebar` slot to `CodeWindow`
+- add custom `alloy` language
+- add custom `asymptote` language
+- add custom `blockdiag` language
+- add custom `bsv` language
+- add custom `casbin` language
+- add custom `choicescript` language
+- add custom `dafny` language
+- add custom `dbml` language
+- add custom `dialog` language
+- add custom `fstar` language
+- add custom `gnuplot` language
+- add custom `harlowe` language
+- add custom `likec4` language
+- add custom `nextflow` language
+- add custom `nomnoml` language
+- add custom `openfga` language
+- add custom `pikchr` language
+- add custom `spade` language
+- add custom `spicedb` language
+- add custom `tlaplus` language
+- add custom `veryl` language
+- add custom `wdl` language
+
+**Fixes**
+
+- force LTR code text under `dir=rtl` containers
+- keep `CodeWindow` title clear of the chrome
+- give `CodeWindow`'s truncated title a native tooltip
+
 ## [7.21.1](https://github.com/metonym/svelte-highlight/releases/tag/v7.21.1) - 2026-09-11
 
 **Fixes**
