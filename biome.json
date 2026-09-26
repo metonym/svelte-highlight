@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -93,6 +93,16 @@
     }
   },
   "overrides": [
+    {
+      "includes": [
+        "src/LineNumbers.svelte",
+        "www/components/globals/Styles.svelte",
+        "tests/e2e/LineNumbers.linesInput.test.svelte"
+      ],
+      "formatter": {
+        "enabled": false
+      }
+    },
     {
       "includes": ["**/*.test.ts", "**/*.test.tsx"],
       "linter": {

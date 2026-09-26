@@ -68,8 +68,11 @@
   class={THEME_MODULE_NAME}
   style="height: 320px"
   on:windowchange={(e) => {
-    ({ start: windowStart, end: windowEnd, lineCount: windowLineCount } =
-      e.detail);
+    ({
+      start: windowStart,
+      end: windowEnd,
+      lineCount: windowLineCount,
+    } = e.detail);
   }}
 />
 
