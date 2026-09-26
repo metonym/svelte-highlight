@@ -69,6 +69,7 @@
     "/preview-d2": "D2 language preview",
     "/preview-bibtex": "BibTeX language preview",
     "/preview-ansi": "AnsiOutput preview",
+    "/preview-diff": "HighlightDiff preview",
     "/preview-dual-theme": "Dual light/dark HighlightStyle preview",
     "/preview-editable": "Editable highlight preview",
     "/preview-highlight-stream": "HighlightStream preview",

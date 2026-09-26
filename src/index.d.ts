@@ -9,6 +9,7 @@ export { stripDiffMarkers, stripPrompts } from "./copy-transforms";
 export { default as FileTabs } from "./FileTabs.svelte";
 export { default as Highlight, default } from "./Highlight.svelte";
 export { default as HighlightAuto } from "./HighlightAuto.svelte";
+export { default as HighlightDiff } from "./HighlightDiff.svelte";
 export { default as HighlightEditable } from "./HighlightEditable.svelte";
 export { default as HighlightStream } from "./HighlightStream.svelte";
 export { default as HighlightStyle } from "./HighlightStyle.svelte";
