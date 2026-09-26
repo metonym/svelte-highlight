@@ -41,6 +41,13 @@ export type CopyButtonProps = HTMLButtonAttributes & {
   copiedText?: string;
 
   /**
+   * Whether the button is positioned absolutely (overlaying its container)
+   * or laid out in normal document flow.
+   * @default true
+   */
+  absolute?: boolean;
+
+  /**
    * Top offset.
    * @default "0.5em"
    */
