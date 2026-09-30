@@ -146,9 +146,9 @@
         aria-controls="{baseId}-panel"
         tabindex={file === active ? 0 : -1}
         {...{
-    // Spread sidesteps Biome `useValidAriaValues` on templated booleans.
-    "aria-selected": file === active,
-  }}
+          // Spread sidesteps Biome `useValidAriaValues` on templated booleans.
+          "aria-selected": file === active,
+        }}
         on:click={() => selectTab(file)}
         on:keydown={(event) => handleKeydown(event, index)}
       >
@@ -161,7 +161,9 @@
     role="tabpanel"
     id="{baseId}-panel"
     class="tabpanel"
-    aria-labelledby={activeIndex === -1 ? undefined : `${baseId}-tab-${activeIndex}`}
+    aria-labelledby={activeIndex === -1
+      ? undefined
+      : `${baseId}-tab-${activeIndex}`}
   >
     <slot {active} />
   </div>
