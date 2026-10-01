@@ -161,7 +161,9 @@
     role="tabpanel"
     id="{baseId}-panel"
     class="tabpanel"
-    aria-labelledby={activeIndex === -1 ? undefined : `${baseId}-tab-${activeIndex}`}
+    aria-labelledby={activeIndex === -1
+      ? undefined
+      : `${baseId}-tab-${activeIndex}`}
   >
     <slot {active} />
   </div>

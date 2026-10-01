@@ -222,8 +222,8 @@ export { add, mul };\`,
     </p>
     <p class="mb-5">
       See the{" "}
-      <Link size="lg" href="/languages">Languages page</Link> for a list of
-      supported languages.
+      <Link size="lg" href="/languages">Languages page</Link>
+      for a list of supported languages.
     </p>
   </Column>
   <Column xlg={10} lg={10}>
@@ -246,8 +246,8 @@ export { add, mul };\`,
     </UnorderedList>
     <p class="mb-5">
       Refer to the{" "}
-      <Link size="lg" href="/styles">Styles page</Link> for a list of supported
-      styles.
+      <Link size="lg" href="/styles">Styles page</Link>
+      for a list of supported styles.
     </p>
     <p>
       CSS StyleSheets can also be externally linked from a Content Delivery
@@ -1041,8 +1041,8 @@ export { add, mul };\`,
     <p class="mb-5">This is also compatible with custom languages.</p>
     <p class="mb-5">
       See the{" "}
-      <Link size="lg" href="/languages">Languages page</Link> for a list of
-      supported languages.
+      <Link size="lg" href="/languages">Languages page</Link>
+      for a list of supported languages.
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
@@ -1085,8 +1085,8 @@ export { add, mul };\`,
     </UnorderedList>
     <p class="mb-5">
       See the{" "}
-      <Link size="lg" href="/languages">Languages page</Link> for a list of
-      supported languages.
+      <Link size="lg" href="/languages">Languages page</Link>
+      for a list of supported languages.
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
