@@ -558,6 +558,17 @@ These apply when `langtag` is set to `true`.
 | --tab-active-background | Background color of the active tab                               | the highlighted code's background              |
 | --tab-focus-outline     | Keyboard focus outline of a tab                                   | `2px solid currentColor`                       |
 
+### `HighlightDiff` variables
+
+| Variable                 | Description                                | Default value                     |
+| :------------------------ | :------------------------------------------ | :--------------------------------- |
+| --diff-add-background    | Background of added lines                  | `rgba(46, 204, 113, 0.15)`         |
+| --diff-del-background    | Background of removed lines                | `rgba(231, 76, 60, 0.15)`          |
+| --diff-marker-color      | Color of the `+`/`-` gutter markers        | `currentColor`                     |
+| --diff-hunk-background   | Background of hunk/file header rows        | `transparent`                      |
+| --diff-hunk-color        | Text color of hunk/file header rows        | `inherit`                          |
+| --diff-collapsed-color   | Text color of the collapsed-run button     | `inherit`                          |
+
 ## Svelte Syntax Highlighting
 
 Use the `HighlightSvelte` component for Svelte syntax highlighting. Its grammar understands Svelte 5 runes (`$state`, `$derived`, `$effect` and its suffixed forms, `$props.id`, `$inspect.trace`), store auto-subscription (`$store`, `$store()`, `$store.prop`), `lang="ts"`/`context="module"` script-block resolution, and directive shorthand (`on:`, `bind:`, `use:`, and friends) — genuinely ahead of generic HTML-plus-embedded-JS Svelte highlighting, which has no notion that runes exist.
@@ -764,6 +775,8 @@ Use `--line-added-background` and `--line-removed-background` to customize the b
   />
 </Highlight>
 ```
+
+`numbers` and `secondaryNumbers` override the gutter with explicit per-row values (`null` for a blank cell) instead of the default `i + startingLineNumber` sequence -- see [Diffs](#diffs), which uses them to show independent old-file/new-file line numbers side by side.
 
 ### Custom Styles
 
@@ -2097,6 +2110,64 @@ Browser Cmd+F can't see rows a virtualized view (`HighlightVirtual`, `HighlightS
 
 `highlightMatches(root, matches, { current, name })` paints `matches` into `root`, restricted to whatever rows are currently rendered there -- resolved per match's line via `[data-line]` (the row shape `HighlightVirtual`/`HighlightStream` render), then the `line`-th `.line` element (the shape `highlightFence`/fenced code renders), then the whole `<code>` split on `"\n"`; matches whose line resolves to nothing are skipped. It uses the CSS Custom Highlight API when available (two `Highlight`s: `name`, defaulting to `"shl-search"`, and `${name}-current` for the match at index `current`), or falls back to wrapping text in `<mark data-shl-search>` (plus `data-shl-search-current`) when it isn't. It paints once per call and returns `{ dispose() }` -- there's no diffing against a previous call, so a consumer disposes and re-runs it after the rendered window changes (`on:windowchange`) or the query changes (`onChange`), as in the example above. It's a no-op on the server. `import "svelte-highlight/search.css"` is optional and styles both highlight names via the `--search-match-background`/`--search-current-background` CSS variables; passing a custom `name` bypasses it, since the stylesheet only targets the default names.
 
+## Diffs
+
+`HighlightDiff` renders a unified diff or a before/after pair with syntax-highlighted payload lines, `+`/`-` gutter markers, and independent old-file/new-file line numbers -- the piece `stripDiffMarkers` (a `CopyButton` copy transform, see [Copy Button](#copy-button)) doesn't cover, since that's a prefix-stripping heuristic with no hunk awareness or rendering.
+
+Pass `diff` (unified diff text, parsed with `parseUnifiedDiff`) or `before`/`after` (diffed with `diffLines`) -- `diff` wins if both are given.
+
+```svelte
+<script>
+  import { HighlightDiff } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+
+  const diff = `--- a/greet.ts
++++ b/greet.ts
+@@ -1,3 +1,3 @@
+ function greet(name: string) {
+-  return "Hello, " + name;
++  return "Hello, " + name + "!";
+ }
+`;
+</script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
+
+<HighlightDiff {diff} language={typescript} />
+```
+
+`before`/`after` tokenize the whole document on each side, so multi-line constructs (a block comment, a template literal) always highlight correctly -- `diff` tokenizes each hunk independently, since the full pre-/post-image files aren't available from diff text alone, so a construct spanning a hunk boundary can mis-tokenize:
+
+```svelte
+<script>
+  import { HighlightDiff } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  const before = `function greet(name: string) {
+  return "Hello, " + name;
+}`;
+  const after = `function greet(name: string) {
+  return "Hello, " + name + "!";
+}`;
+</script>
+
+<HighlightDiff {before} {after} language={typescript} />
+```
+
+`gutter` controls which line-number column(s) render: `"both"` (default) shows the new-file number plus the old-file number in a secondary column to its left -- the two-column convention GitHub, GitLab, and Bitbucket use in their unified diff view; `"new"` shows only the new-file number, blank for removed lines; `"unified"` is a single column like `"new"`, but falls back to the old-file number for removed lines instead of leaving them blank; `"none"` hides numbers but keeps the markers and code. `context` (default `Infinity`) collapses a maximal run of consecutive unchanged lines longer than it behind a single "N unchanged lines" button, which expands to individual rows on click -- pass a small number (e.g. `3`) for large files with small changes. `hunkHeaders` (default `true`) renders a row for each hunk's `@@ ... @@` header and, when `diff` provides a path, each file's header.
+
+### Copying the result
+
+`stripDiffMarkers` exists for hand-typed `+`/`-` snippets that were never structured diffs -- it strips a leading marker character by convention, with no idea whether a line actually came from a diff. A `HighlightDiff` rendered from `before`/`after` already has the clean text on hand, so pair it with `CopyButton` directly instead of running it through `stripDiffMarkers`:
+
+```svelte
+<HighlightDiff {before} {after} language={typescript} />
+<CopyButton code={after} />
+```
+
 ## Terminal Output
 
 Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) escape codes. Colors, bold, dim, italic, and underline become styled HTML, along with OSC 8 hyperlinks, carriage-return overwrites, and reverse/strikethrough. The parser is separate from highlight.js, so reach for it with build logs, CLI output, and test runners.
@@ -2283,6 +2354,8 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | startingLineNumber | `number`                                                     | `1`                                  |
 | highlightedLines   | `number[]`                                                   | `[]`                                 |
 | lineStates         | `Record<number, "highlighted" \| "focus" \| "added" \| "removed">` | `{}`                           |
+| numbers            | `(number \| null)[]`                                         | `undefined`                          |
+| secondaryNumbers   | `(number \| null)[]`                                         | `undefined`                          |
 | langtag            | `boolean`                                                    | `false`                              |
 | languageName       | `string`                                                     | `"plaintext"`                        |
 
@@ -2369,6 +2442,22 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | --prompt-font-family  | Font family of the terminal prompt       | `ui-monospace, monospace`           |
 | --prompt-font-weight  | Font weight of the terminal prompt       | `700`                               |
 | --prompt-color        | Color of the terminal prompt             | `inherit`                           |
+
+### `HighlightDiff`
+
+#### Props
+
+| Name        | Type                          | Default value   |
+| :---------- | :---------------------------- | :--------------- |
+| diff        | `string`                      | `undefined`      |
+| before      | `string`                      | `undefined`      |
+| after       | `string`                      | `undefined`      |
+| language    | `LanguageType<string>`        | N/A (required)   |
+| gutter      | `"both" \| "new" \| "unified" \| "none"` | `"both"` |
+| context     | `number`                      | `Infinity`       |
+| hunkHeaders | `boolean`                     | `true`           |
+
+No events or slots. `$$restProps` are forwarded to the underlying `LineNumbers` component.
 
 ### `AnsiOutput`
 
@@ -2677,7 +2766,7 @@ See it as a complete page in [examples/cdn](examples/cdn).
 
 ### Stability tiers
 
-- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `SearchMatch`, `SearchOptions`, `Search`, `createSearch`, `highlightMatches`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
+- **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `SearchMatch`, `SearchOptions`, `Search`, `createSearch`, `highlightMatches`, `DiffLine`, `DiffHunk`, `DiffFile`, `ParsedDiff`, `parseUnifiedDiff`, `diffLines`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
 - **Generated data, versioned with the library:** `GrammarIR`/`GrammarState`. These come from the build pipeline and are consumed by `registerAll`; treat them as opaque payloads whose field-level structure may change in any minor release. Always load grammars from the same package version as the engine.
 - **Experimental, may change in a minor release:** `createWorkerHighlighter`, `serveHighlighter`, `PostMessageTarget`, `WorkerHighlighter`, `WorkerSession`, `ServeHighlighterOptions` (`svelte-highlight/worker`). The wire protocol between the two halves is not part of the public contract — only the documented function behavior is.
 

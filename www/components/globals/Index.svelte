@@ -12,6 +12,8 @@
   import FileTabs from "@components/FileTabs.svelte";
   import HighlightWrap from "@components/Highlight/Wrap.svelte";
   import HighlightAction from "@components/HighlightAction.svelte";
+  import DiffBeforeAfter from "@components/HighlightDiff/BeforeAfter.svelte";
+  import DiffUnified from "@components/HighlightDiff/Unified.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
   import EditableComposition from "@components/HighlightEditable/Composition.svelte";
@@ -899,6 +901,31 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <AnsiOutputExamples /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h2 id="diffs">Diffs</h2> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">HighlightDiff</code>
+      renders a unified diff -- or a
+      <code class="code">before</code>/<code class="code">after</code>
+      pair -- with syntax-highlighted payload lines, +/- gutter markers, and
+      independent old-file/new-file line numbers.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <DiffUnified /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">before</code>/<code class="code">after</code>
+      diffs the whole documents with <code class="code">diffLines</code>, so
+      multi-line constructs always highlight correctly. A small
+      <code class="code">context</code>
+      collapses long unchanged runs behind a clickable "N unchanged lines"
+      button.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <DiffBeforeAfter /> </Column>
 </Row>
 
 <Row class="mb-9">
