@@ -558,6 +558,32 @@ These apply when `langtag` is set to `true`.
 | --tab-active-background | Background color of the active tab                               | the highlighted code's background              |
 | --tab-focus-outline     | Keyboard focus outline of a tab                                   | `2px solid currentColor`                       |
 
+### `CodeToolbar` variables
+
+| Variable              | Description                    | Default value                 |
+| :--------------------- | :------------------------------- | :------------------------------ |
+| --toolbar-background  | Background color of the toolbar| `inherit`                     |
+| --toolbar-color       | Text color of the toolbar      | `inherit`                     |
+| --toolbar-border      | Bottom border of the toolbar   | `1px solid rgba(0, 0, 0, 0.1)`|
+| --toolbar-padding     | Padding of the toolbar         | `0.5em 1em`                    |
+| --toolbar-gap         | Gap between toolbar children   | `0.5em`                        |
+| --toolbar-height      | Minimum height of the toolbar  | `2.5em`                        |
+| --toolbar-font-family | Font family of the toolbar     | `inherit`                     |
+| --toolbar-font-size   | Font size of the toolbar       | `inherit`                     |
+| --toolbar-z-index     | Stacking order of the toolbar  | `2`                            |
+
+### `WrapToggle` variables
+
+| Variable                    | Description                    | Default value  |
+| :---------------------------- | :-------------------------------- | :--------------- |
+| --wrap-toggle-gap           | Gap between the button's content | `0.4em`        |
+| --wrap-toggle-padding       | Padding of the button           | `0.5em 0.75em` |
+| --wrap-toggle-background    | Background color of the button  | `inherit`      |
+| --wrap-toggle-color         | Text color of the button        | `inherit`      |
+| --wrap-toggle-border-radius | Corner radius of the button     | `4px`          |
+| --wrap-toggle-border        | Border of the button            | `none`         |
+| --wrap-toggle-font-size     | Font size of the button         | `inherit`      |
+
 ## Svelte Syntax Highlighting
 
 Use the `HighlightSvelte` component for Svelte syntax highlighting. Its grammar understands Svelte 5 runes (`$state`, `$derived`, `$effect` and its suffixed forms, `$props.id`, `$inspect.trace`), store auto-subscription (`$store`, `$store()`, `$store.prop`), `lang="ts"`/`context="module"` script-block resolution, and directive shorthand (`on:`, `bind:`, `use:`, and friends) — genuinely ahead of generic HTML-plus-embedded-JS Svelte highlighting, which has no notion that runes exist.
@@ -915,6 +941,12 @@ Use `--copy-*` style props to customize the button.
   --copy-color="#fff"
   --copy-border-radius="8px"
 />
+```
+
+Set `absolute={false}` to lay the button out in normal document flow instead of overlaying its container.
+
+```svelte
+<CopyButton {code} absolute={false} />
 ```
 
 ### With Line Numbers
@@ -1703,6 +1735,61 @@ Put a `FileTabs` strip in the `titlebar` slot to switch between files without le
 </CodeWindow>
 ```
 
+## Code Toolbar
+
+Compose `CodeToolbar` inside `Highlight`'s default slot to add a sticky bar with a language badge on one side and controls -- like `WrapToggle` and `CopyButton` -- on the other. It's zero-JS layout: a `role="toolbar"` `<div>` with a `start` named slot for content next to the badge and an unnamed default slot for trailing controls, with no roving-tabindex/arrow-key navigation (children are ordinary tabbable buttons, per the lightweight [WAI-ARIA toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)).
+
+```svelte
+<script>
+  import Highlight, {
+    CodeToolbar,
+    CopyButton,
+    LineNumbers,
+    WrapToggle,
+  } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  const code = "const add = (a: number, b: number) => a + b;";
+
+  let wrap = false;
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<!-- max-height + overflow-y: auto give the container something to scroll,
+     which is what CodeToolbar's sticky positioning pins itself to. -->
+<div style="max-height: 320px; overflow-y: auto;">
+  <Highlight {code} language={typescript} {wrap} let:highlighted let:languageName>
+    <CodeToolbar {languageName} title="app.ts">
+      <WrapToggle bind:wrap />
+      <CopyButton {code} absolute={false} />
+    </CodeToolbar>
+    <LineNumbers {highlighted} wrapLines={wrap} />
+  </Highlight>
+</div>
+```
+
+`sticky` (default `true`) is what keeps the toolbar pinned; it only has something to stick to when a scrollable ancestor exists, which is why the recipe above wraps everything in the `max-height`/`overflow-y: auto` container -- `LineNumbers` sets no height of its own, so nothing scrolls without it.
+
+### Composing with CodeWindow
+
+The same recipe drops into `CodeWindow`'s default slot unchanged. The toolbar lives in the window body, above the code, rather than in the window's title bar:
+
+```svelte
+<CodeWindow variant="macos" title="example.ts">
+  <Highlight {code} language={typescript} {wrap} let:highlighted let:languageName>
+    <CodeToolbar {languageName} title="app.ts">
+      <WrapToggle bind:wrap />
+      <CopyButton {code} absolute={false} />
+    </CodeToolbar>
+    <LineNumbers {highlighted} wrapLines={wrap} />
+  </Highlight>
+</CodeWindow>
+```
+
 ## Animation
 
 Use `Typewriter` inside `Highlight`'s default slot with the `highlighted` prop. It prints the code one character at a time, syntax highlighting included. A blinking caret marks the end of the typed text and hides when typing stops.
@@ -2300,6 +2387,7 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | timeout    | `number`                                   | `2000`                                       |
 | text       | `string`                                   | `"Copy"`                                     |
 | copiedText | `string`                                   | `"Copied!"`                                  |
+| absolute   | `boolean`                                  | `true`                                       |
 
 `$$restProps` are forwarded to the top-level `button` element.
 
@@ -2369,6 +2457,66 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | --prompt-font-family  | Font family of the terminal prompt       | `ui-monospace, monospace`           |
 | --prompt-font-weight  | Font weight of the terminal prompt       | `700`                               |
 | --prompt-color        | Color of the terminal prompt             | `inherit`                           |
+
+### `CodeToolbar`
+
+#### Props
+
+| Name         | Type      | Default value |
+| :----------- | :-------- | :------------ |
+| languageName | `string`  | `undefined`    |
+| title        | `string`  | `""`           |
+| sticky       | `boolean` | `true`         |
+| label        | `string`  | `undefined`    |
+
+`$$restProps` are forwarded to the top-level `div` element.
+
+#### Slots
+
+- **start**: rendered next to the language badge/title
+- default: rendered in the trailing/"end" region
+
+#### CSS Variables
+
+| Variable              | Description                        | Default value                |
+| :--------------------- | :---------------------------------- | :---------------------------- |
+| --toolbar-background  | Background color of the toolbar    | `inherit`                    |
+| --toolbar-color        | Text color of the toolbar           | `inherit`                    |
+| --toolbar-border       | Bottom border of the toolbar        | `1px solid rgba(0, 0, 0, 0.1)`|
+| --toolbar-padding      | Padding of the toolbar              | `0.5em 1em`                   |
+| --toolbar-gap          | Gap between toolbar children        | `0.5em`                       |
+| --toolbar-height       | Minimum height of the toolbar       | `2.5em`                       |
+| --toolbar-font-family  | Font family of the toolbar          | `inherit`                    |
+| --toolbar-font-size    | Font size of the toolbar            | `inherit`                    |
+| --toolbar-z-index      | Stacking order of the toolbar       | `2`                           |
+
+### `WrapToggle`
+
+#### Props
+
+| Name        | Type      | Default value |
+| :---------- | :-------- | :------------- |
+| wrap        | `boolean` | `false`        |
+| text        | `string`  | `"Wrap"`       |
+| pressedText | `string`  | `"Wrapped"`    |
+
+`wrap` is bindable (`bind:wrap`). `$$restProps` are forwarded to the top-level `button` element.
+
+#### Slots
+
+- default: exposes `wrap`, falls back to `text` regardless of pressed state
+
+#### CSS Variables
+
+| Variable                     | Description                       | Default value |
+| :---------------------------- | :---------------------------------- | :------------- |
+| --wrap-toggle-gap            | Gap between the button's content  | `0.4em`        |
+| --wrap-toggle-padding        | Padding of the button             | `0.5em 0.75em` |
+| --wrap-toggle-background     | Background color of the button    | `inherit`      |
+| --wrap-toggle-color          | Text color of the button          | `inherit`      |
+| --wrap-toggle-border-radius  | Corner radius of the button       | `4px`          |
+| --wrap-toggle-border         | Border of the button              | `none`         |
+| --wrap-toggle-font-size      | Font size of the button           | `inherit`      |
 
 ### `AnsiOutput`
 

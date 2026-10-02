@@ -2,6 +2,9 @@
   /** @type {string} */
   export let code;
 
+  /** @type {boolean} */
+  export let absolute = true;
+
   /**
    * Override copy behavior. Defaults to `navigator.clipboard.writeText`.
    * @type {(code: string) => void | Promise<void>}
@@ -66,6 +69,7 @@
   on:click={handleClick}
   on:mouseenter
   on:mouseleave
+  style:position={absolute ? "absolute" : "static"}
   {...$$restProps}
 >
   <slot {copied} {copying}>
@@ -104,7 +108,6 @@
 
 <style>
   button {
-    position: absolute;
     top: var(--copy-top, 0.5em);
     right: var(--copy-right, 0.5em);
     display: flex;

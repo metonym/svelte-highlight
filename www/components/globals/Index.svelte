@@ -1,6 +1,9 @@
 <script>
   import AnsiOutputExamples from "@components/AnsiOutput/Examples.svelte";
   import CodeSnippet from "@components/CodeSnippet.svelte";
+  import CodeToolbarBasic from "@components/CodeToolbar/Basic.svelte";
+  import CodeToolbarInCodeWindow from "@components/CodeToolbar/InCodeWindow.svelte";
+  import CodeToolbarSticky from "@components/CodeToolbar/Sticky.svelte";
   import CodeWindowPreview from "@components/CodeWindowPreview.svelte";
   import CopyButtonBasic from "@components/CopyButton/Basic.svelte";
   import CopyButtonCustomFunction from "@components/CopyButton/CustomFunction.svelte";
@@ -630,6 +633,50 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <CodeWindowPreview /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h2 id="code-toolbar">Code Toolbar</h2> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      Compose <code class="code">CodeToolbar</code> inside
+      <code class="code">Highlight</code>'s default slot to add a sticky bar
+      with a language badge on one side and controls on the other. It's zero-JS
+      layout: a <code class="code">start</code> named slot for content next to
+      the badge, and an unnamed default slot for trailing controls like
+      <code class="code">WrapToggle</code>
+      and
+      <code class="code">CopyButton</code>.
+    </p>
+    <p class="mb-5">
+      <code class="code">sticky</code>
+      (default <code class="code">true</code>) pins the bar to the top of its
+      nearest scrolling ancestor -- wrap it and
+      <code class="code">LineNumbers</code>
+      in a <code class="code">max-height</code>/<code class="code"
+        >overflow-y: auto</code
+      >
+      container for genuine sticky behavior. No roving-tabindex/arrow-key
+      navigation: children are ordinary tabbable buttons.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CodeToolbarBasic /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      The same recipe drops into
+      <code class="code">CodeWindow</code>'s default slot unchanged -- the
+      toolbar lives in the window body, above the code, rather than in the
+      window's title bar.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CodeToolbarInCodeWindow /> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      With a scrollable container, the toolbar stays pinned to the top while the
+      code scrolls underneath it.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <CodeToolbarSticky /> </Column>
 </Row>
 
 <Row class="mb-9">
