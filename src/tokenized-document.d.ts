@@ -16,6 +16,8 @@ export interface TokenizedDocument {
   lineCount(): number;
   /** Highlighted HTML per line for [start, end) — same line HTML extendLines produces. Tokenizes lazily. */
   lineRange(start: number, end: number): string[];
+  /** Plain source text per line for [start, end), without the `"\n"`. Never triggers tokenization. */
+  textRange(start: number, end: number): string[];
   /** Lines tokenized so far (monotonically grows; for tests/introspection). */
   tokenizedThrough(): number;
   /**

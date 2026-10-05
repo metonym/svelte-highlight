@@ -1,4 +1,6 @@
+import javascript from "../src/languages/javascript.js";
 import { createSearch } from "../src/search.js";
+import { createTokenizedDocument } from "../src/tokenized-document.js";
 
 describe("createSearch", () => {
   it("matches case-insensitively by default", () => {
@@ -91,6 +93,19 @@ describe("createSearch", () => {
     const search = createSearch(doc);
     search.query("c");
     expect(search.matches()).toEqual([{ line: 0, start: 23, end: 24 }]);
+  });
+
+  it("matches a real TokenizedDocument the same as its plain source", () => {
+    const code = "const a = x < y; // Array<string> c\nfoo &amp; c\n";
+    const doc = createTokenizedDocument({ language: javascript });
+    doc.setCode(code);
+    const fromDoc = createSearch(doc);
+    const fromString = createSearch(code);
+    fromDoc.query("c");
+    fromString.query("c");
+    expect(fromDoc.matches()).toEqual(fromString.matches());
+    // Searching reads source text, so it doesn't tokenize the document.
+    expect(doc.tokenizedThrough()).toBe(0);
   });
 
   it("rescans only newly appended lines for a repeated query against a grown TokenizedDocument", () => {

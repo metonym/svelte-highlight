@@ -232,6 +232,19 @@ describe("TokenizedDocument: behavior", () => {
     expect(doc.tokenizedThrough()).toBe(0);
   });
 
+  it("textRange returns plain source lines and never tokenizes", () => {
+    const doc = createTokenizedDocument({ language: javascript });
+    const code = "const a = x < y;\n// Array<string> & more\n\nlast";
+    doc.setCode(code);
+    expect(doc.textRange(0, doc.lineCount())).toEqual(code.split("\n"));
+    expect(doc.textRange(1, 3)).toEqual(code.split("\n").slice(1, 3));
+    expect(doc.textRange(-5, 99)).toEqual(code.split("\n"));
+    expect(doc.textRange(2, 1)).toEqual([]);
+    doc.append("\n");
+    expect(doc.textRange(0, doc.lineCount())).toEqual(`${code}\n`.split("\n"));
+    expect(doc.tokenizedThrough()).toBe(0);
+  });
+
   it("laziness: lineRange(0, 40) leaves tokenizedThrough() bounded by one interval past 40", () => {
     const doc = createTokenizedDocument({
       language: javascript,
