@@ -48,6 +48,13 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { lineTokenRanges } from "./editable-css-paint.js";
   import { createDomLinePainter } from "./editable-dom-paint.js";
+  import {
+    createLineView,
+    editorNodeAtOffset,
+    lineStartOffset as lineStartIn,
+    nodeAtOffset,
+    renderLines as renderLineDom,
+  } from "./editable-line-dom.js";
   import { toRanges } from "./engine.js";
   import {
     highlightRules,
@@ -76,13 +83,10 @@
   // instead of indenting; cleared by any other keydown or blur.
   let tabTrapReleased = false;
 
-  // One <span> per line, painted incrementally (see `renderLines`).
-  /** @type {HTMLSpanElement[]} */
-  let lineEls = [];
-  /** @type {number[]} Rendered (plain-text) length of each line element. */
-  let lineLengths = [];
-  /** @type {string[]} Line HTML currently reflected in `lineEls`. */
-  let renderedLines = [];
+  // One <span> per line, painted incrementally (see `renderLines`): the
+  // line elements, their rendered (plain-text) lengths, and the line HTML
+  // they currently reflect.
+  const view = createLineView();
 
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
@@ -152,23 +156,24 @@
   // Character offset (same coordinate space as lineStartOffset/setSelection)
   // of the boundary (container, offsetInContainer) from a live Selection
   // Range, computed from integers instead of serializing the document.
-  // Exploits the fixed editor structure — one <span> per line (lineEls)
+  // Exploits the fixed editor structure — one <span> per line (view.lineEls)
   // joined by literal "\n" text nodes — so a boundary's line is derived
   // from its child position rather than a document-wide walk. Returns null
-  // whenever that structure doesn't hold (DOM drifted from lineEls/
-  // lineLengths ahead of renderLines' self-heal, or an unrecognized node),
+  // whenever that structure doesn't hold (DOM drifted from view.lineEls/
+  // view.lineLengths ahead of renderLines' self-heal, or an unrecognized node),
   // so the caller can fall back to the exact cloneRange/toString behavior.
   function offsetOfBoundary(container, offsetInContainer) {
-    const expectedChildren = lineEls.length === 0 ? 0 : lineEls.length * 2 - 1;
+    const expectedChildren =
+      view.lineEls.length === 0 ? 0 : view.lineEls.length * 2 - 1;
     if (editor.childNodes.length !== expectedChildren) return null;
 
     if (container === editor) {
-      if (lineEls.length === 0) return offsetInContainer === 0 ? 0 : null;
+      if (view.lineEls.length === 0) return offsetInContainer === 0 ? 0 : null;
       const lineIndex = offsetInContainer >> 1;
-      if (lineIndex >= lineEls.length) return null;
+      if (lineIndex >= view.lineEls.length) return null;
       return offsetInContainer % 2 === 0
         ? lineStartOffset(lineIndex)
-        : lineStartOffset(lineIndex) + lineLengths[lineIndex];
+        : lineStartOffset(lineIndex) + view.lineLengths[lineIndex];
     }
 
     // Walk up to the top-level child of `editor` containing the boundary.
@@ -187,14 +192,18 @@
     if (childIndex % 2 === 1) {
       // The "\n" separator following line `lineIndex`; it has no children,
       // so `container` must be the separator itself.
-      if (container !== node || lineIndex >= lineLengths.length) return null;
+      if (container !== node || lineIndex >= view.lineLengths.length)
+        return null;
       return (
-        lineStartOffset(lineIndex) + lineLengths[lineIndex] + offsetInContainer
+        lineStartOffset(lineIndex) +
+        view.lineLengths[lineIndex] +
+        offsetInContainer
       );
     }
 
     const span = node;
-    if (lineIndex >= lineEls.length || lineEls[lineIndex] !== span) return null;
+    if (lineIndex >= view.lineEls.length || view.lineEls[lineIndex] !== span)
+      return null;
 
     // Character offset of (container, offsetInContainer) within `span`,
     // walking only its ancestors up to `span` (bounded by that line's size).
@@ -236,17 +245,6 @@
     return sel ? sel.end : null;
   }
 
-  function nodeAtOffset(offset, root = editor) {
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-    let count = 0;
-    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-      const next = count + node.textContent.length;
-      if (offset <= next) return { node, offset: offset - count };
-      count = next;
-    }
-    return null;
-  }
-
   // Firefox's contenteditable undo manager treats a boundary set exactly at
   // a text node's start/end (setStart/setEnd with a text node + offset)
   // differently from the equivalent boundary expressed via the parent's
@@ -254,18 +252,35 @@
   // node, the former leaves Firefox unable to recognize a later native
   // undo (execCommand/Edit menu), which then silently does nothing. Prefer
   // the parent-anchored form whenever the offset lands on a node edge.
+  //
+  // An offset at the end of a "\n" separator (a direct editor child) is the
+  // start of the next line, so anchor it inside that line's <span> instead.
+  // After the separator but outside the span, Firefox types into a new
+  // stray text node, which renderLines' child-count check then repairs with
+  // a full rebuild of every line.
   function setRangeBoundary(range, side, node, offset) {
-    if (offset === 0) range[`set${side}Before`](node);
+    const nextLine = node.nextSibling;
+    if (
+      node.parentNode === editor &&
+      offset === node.textContent.length &&
+      nextLine?.nodeType === Node.ELEMENT_NODE
+    ) {
+      range[side === "Start" ? "setStart" : "setEnd"](nextLine, 0);
+    } else if (offset === 0) range[`set${side}Before`](node);
     else if (offset === node.textContent.length) range[`set${side}After`](node);
     else range[side === "Start" ? "setStart" : "setEnd"](node, offset);
   }
 
   function setSelection(start, end, root = editor) {
-    const from = nodeAtOffset(start, root);
+    const locate = (offset) =>
+      root === editor
+        ? editorNodeAtOffset(editor, view, offset)
+        : nodeAtOffset(root, offset);
+    const from = locate(start);
     if (!from) return;
     const range = document.createRange();
     setRangeBoundary(range, "Start", from.node, from.offset);
-    const to = end != null && end !== start ? nodeAtOffset(end, root) : null;
+    const to = end != null && end !== start ? locate(end) : null;
     if (to) setRangeBoundary(range, "End", to.node, to.offset);
     else range.collapse(true);
     const selection = window.getSelection();
@@ -276,9 +291,7 @@
   // Character offset (in the same space as getSelectionRange/setSelection)
   // where line `index` starts.
   function lineStartOffset(index) {
-    let start = index; // one "\n" separator per preceding line
-    for (let i = 0; i < index; i++) start += lineLengths[i];
-    return start;
+    return lineStartIn(view, index);
   }
 
   const setHtml = (el, line) => {
@@ -288,61 +301,26 @@
     el.textContent = line;
   };
 
-  // Patches `editor` to match `lines` (one <span> per line, joined by literal
-  // "\n" text nodes so caret offset math stays identical to a flat paint).
-  // Only lines whose content actually changed touch the DOM (assigned via
-  // `setContent`: innerHTML for the "dom" engine, textContent for
-  // "css-highlights"). Returns the index of the single changed line when
-  // nothing else shifted (used to scope caret restoration), or null.
+  // Patches `editor` to match `lines`; see editable-line-dom.js. Returns
+  // the index of the single changed line when nothing else shifted (used to
+  // scope caret restoration), or null.
   function renderLines(lines, setContent) {
-    // Some browsers can place a native selection boundary just outside a
-    // line's <span> (e.g. Firefox collapsing a select-all there); typing at
-    // that point inserts a stray sibling text node our diffing never touches.
-    // Detect the drift by child count and self-heal with a full rebuild.
-    const expectedChildren = lineEls.length === 0 ? 0 : lineEls.length * 2 - 1;
-    if (editor.childNodes.length !== expectedChildren) {
-      editor.textContent = "";
-      lineEls = [];
-      lineLengths = [];
-      renderedLines = [];
-      clearCssHighlights();
-    }
-
-    const prevLen = lineEls.length;
-    const newLen = lines.length;
-    const commonLen = Math.min(prevLen, newLen);
-
-    let changedIndex = null;
-    let changedCount = 0;
-    for (let i = 0; i < commonLen; i++) {
-      if (renderedLines[i] === lines[i]) continue;
-      setContent(lineEls[i], lines[i]);
-      lineLengths[i] = lineEls[i].textContent.length;
-      changedIndex = i;
-      changedCount++;
-    }
-
-    for (let i = prevLen; i < newLen; i++) {
-      if (lineEls.length > 0) editor.appendChild(document.createTextNode("\n"));
-      const span = document.createElement("span");
-      setContent(span, lines[i]);
-      editor.appendChild(span);
-      lineEls.push(span);
-      lineLengths.push(span.textContent.length);
-    }
-
-    while (lineEls.length > newLen) {
-      editor.removeChild(lineEls.pop());
-      lineLengths.pop();
-      clearLineHighlights(lineHighlightRanges.length - 1);
-      lineHighlightRanges.pop();
-      // Drop the separator that used to precede the removed line.
-      if (lineEls.length > 0) editor.removeChild(editor.lastChild);
-    }
-
-    renderedLines = lines;
-    return prevLen === newLen && changedCount === 1 ? changedIndex : null;
+    return renderLineDom(editor, view, lines, setContent, lineHooks);
   }
+
+  const lineHooks = {
+    onReset: () => clearCssHighlights(),
+    // Keeps css-highlights' per-line ranges aligned with the line elements
+    // (empty under the "dom" engine).
+    onSplice: (index, removed, inserted) => {
+      if (index >= lineHighlightRanges.length) return;
+      for (let i = index; i < index + removed; i++) clearLineHighlights(i);
+      lineHighlightRanges = lineHighlightRanges.slice(0, index).concat(
+        Array.from({ length: inserted }, () => []),
+        lineHighlightRanges.slice(index + removed),
+      );
+    },
+  };
 
   /** @type {Map<string, InstanceType<typeof Highlight>>} scope -> registered Highlight. */
   let cssHighlights = new Map();
@@ -380,11 +358,11 @@
   // so it never disturbs the caret.
   function paintLineHighlights(index, events) {
     clearLineHighlights(index);
-    const textNode = lineEls[index].firstChild;
+    const textNode = view.lineEls[index].firstChild;
     const next = [];
     if (textNode) {
       const lineStart = lineStartOffset(index);
-      const lineEnd = lineStart + lineLengths[index];
+      const lineEnd = lineStart + view.lineLengths[index];
       for (const token of lineTokenRanges(events, lineStart, lineEnd)) {
         const range = new Range();
         range.setStart(textNode, token.start);
@@ -404,10 +382,10 @@
   function paintAllLineHighlights(tokenRanges) {
     let tokenIndex = 0;
     let lineStart = 0;
-    for (let i = 0; i < lineEls.length; i++) {
+    for (let i = 0; i < view.lineEls.length; i++) {
       clearLineHighlights(i);
-      const lineEnd = lineStart + lineLengths[i];
-      const textNode = lineEls[i].firstChild;
+      const lineEnd = lineStart + view.lineLengths[i];
+      const textNode = view.lineEls[i].firstChild;
       const next = [];
       if (textNode) {
         while (
@@ -465,14 +443,14 @@
     restoringSelection = true;
     if (changedIndex != null) {
       const lineStart = lineStartOffset(changedIndex);
-      const lineEnd = lineStart + lineLengths[changedIndex];
+      const lineEnd = lineStart + view.lineLengths[changedIndex];
       const inLine = (offset) =>
         offset == null || (offset >= lineStart && offset <= lineEnd);
       if (start >= lineStart && start <= lineEnd && inLine(end)) {
         setSelection(
           start - lineStart,
           end == null ? end : end - lineStart,
-          lineEls[changedIndex],
+          view.lineEls[changedIndex],
         );
         restoringSelection = false;
         return;
