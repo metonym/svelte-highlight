@@ -53,6 +53,13 @@ describe("TokenizerLoopError", () => {
     expect(err.grammarName).toBe("fakelang");
     expect(err.iterations).toBe(500001);
   });
+
+  it("is not thrown for a large but well-formed input", () => {
+    // ~80k lines of plain JS takes over 500,000 iterations; a flat cap
+    // used to reject it even though every iteration made progress.
+    const code = "const a = 1; // c\n".repeat(80_000);
+    expect(() => registry.tokenize(code, "javascript")).not.toThrow();
+  });
 });
 
 describe("Registry contract", () => {

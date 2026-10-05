@@ -150,8 +150,11 @@ export class UnknownLanguageError extends Error {
 }
 
 /**
- * Thrown by `Tokenizer#run` once a parse exceeds 500,000 iterations,
- * guarding against a grammar bug that never advances `pos`.
+ * Thrown by `Tokenizer#run` once a parse exceeds both 500,000 iterations
+ * and three iterations per character consumed, guarding against a grammar
+ * bug that never advances `pos`. The per-character term keeps large inputs
+ * legal: real grammars take well under one iteration per character, and a
+ * flat cap rejected plain JS past ~80k lines.
  */
 export class TokenizerLoopError extends Error {
   /**
@@ -786,7 +789,7 @@ class Tokenizer {
     if (this.aborted) return;
     for (;;) {
       this.iterations++;
-      if (this.iterations > 500000) {
+      if (this.iterations > 500000 && this.iterations > this.pos * 3) {
         throw new TokenizerLoopError(this.program.ir.name, this.iterations);
       }
       const found = this.nextMatch();
