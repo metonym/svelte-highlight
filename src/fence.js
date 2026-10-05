@@ -139,6 +139,24 @@ export async function highlightFence({ code, lang, meta }) {
 }
 
 /**
+ * Whether the line spanning `[lineStart, lineEnd)` of `text` can be a fence
+ * line at all: up to 3 spaces, then a backtick or tilde. A char-code check,
+ * so the (overwhelmingly common) prose or code line skips both the line
+ * slice and the fence regexes below - see bench/fence-splitter.bench.ts.
+ * @param {string} text
+ * @param {number} lineStart
+ * @param {number} lineEnd
+ * @returns {boolean}
+ */
+function mayBeFence(text, lineStart, lineEnd) {
+  const maxIndent = Math.min(lineStart + 3, lineEnd);
+  let p = lineStart;
+  while (p < maxIndent && text.charCodeAt(p) === 32 /* " " */) p += 1;
+  const code = text.charCodeAt(p);
+  return code === 96 /* "`" */ || code === 126 /* "~" */;
+}
+
+/**
  * @param {string} line
  * @returns {{ indent: number; char: "`" | "~"; len: number; info: string } | null}
  */
@@ -167,14 +185,19 @@ function matchClosingFence(line, char, minLen) {
 }
 
 /**
- * @param {string} line
+ * The line spanning `[lineStart, lineEnd)` of `text`, minus up to `indent`
+ * leading spaces.
+ * @param {string} text
+ * @param {number} lineStart
+ * @param {number} lineEnd
  * @param {number} indent
  * @returns {string}
  */
-function stripIndent(line, indent) {
-  let strip = 0;
-  while (strip < indent && line[strip] === " ") strip += 1;
-  return line.slice(strip);
+function stripIndent(text, lineStart, lineEnd, indent) {
+  const maxStrip = Math.min(lineStart + indent, lineEnd);
+  let p = lineStart;
+  while (p < maxStrip && text.charCodeAt(p) === 32 /* " " */) p += 1;
+  return text.slice(p, lineEnd);
 }
 
 /**
@@ -183,13 +206,39 @@ function stripIndent(line, indent) {
  */
 
 /**
- * @param {{ char: "`" | "~"; len: number; indent: number; info: string; start: number; lines: string[] }} ctx
+ * An open fence being scanned. `code` holds its newline-terminated content
+ * lines only, already joined, so a resumed scan extends it instead of
+ * re-joining every line.
+ * @typedef {{ char: "`" | "~"; len: number; indent: number; info: string; start: number; code: string; lineCount: number }} FenceContext
+ */
+
+/**
+ * Where a scan stopped: `pos` is the start of the trailing line that wasn't
+ * newline-terminated yet (or the end of the text), and `proseStart`/`fence`
+ * describe the segment that line belongs to. Everything before `pos` is
+ * final - a newline-terminated line never changes on append - so `append`
+ * resumes from here instead of rescanning the whole last segment.
+ * @typedef {{ pos: number; proseStart: number; fence: FenceContext | null }} ScanState
+ */
+
+/**
+ * @param {number} offset
+ * @returns {ScanState}
+ */
+function scanStateAt(offset) {
+  return { pos: offset, proseStart: offset, fence: null };
+}
+
+/**
+ * @param {FenceContext} ctx
  * @param {number} id
  * @param {number} end
  * @param {boolean} open
+ * @param {string | undefined} partial Trailing content line not yet
+ *   terminated by a newline, if any.
  * @returns {FenceSegment}
  */
-function buildFenceSegment(ctx, id, end, open) {
+function buildFenceSegment(ctx, id, end, open, partial) {
   const infoMatch = /** @type {RegExpExecArray} */ (
     INFO_SPLIT_RE.exec(ctx.info)
   );
@@ -200,7 +249,12 @@ function buildFenceSegment(ctx, id, end, open) {
     lang: resolveLanguageName(ctx.info),
     info: ctx.info,
     meta: parseMeta(meta),
-    code: ctx.lines.join("\n"),
+    code:
+      partial === undefined
+        ? ctx.code
+        : ctx.lineCount === 0
+          ? partial
+          : `${ctx.code}\n${partial}`,
     open,
     start: ctx.start,
     end,
@@ -208,25 +262,30 @@ function buildFenceSegment(ctx, id, end, open) {
 }
 
 /**
- * Parses `text` from `offset` onward as if `offset` were the start of a
- * document (always begins in prose mode - valid since a segment boundary
- * never occurs mid-fence, only at a definite open/close/EOF point).
+ * Parses `text` from `state.pos` onward. A fresh `scanStateAt(offset)`
+ * treats `offset` as the start of a document (always begins in prose mode -
+ * valid since a segment boundary never occurs mid-fence, only at a definite
+ * open/close/EOF point); a state returned by an earlier call resumes that
+ * scan where it stopped.
  * @param {string} text
- * @param {number} offset
+ * @param {ScanState} state
  * @param {number} startId
- * @returns {{ segments: MarkdownSegment[]; nextId: number }}
+ * @returns {{ segments: MarkdownSegment[]; nextId: number; state: ScanState }}
  */
-function computeSegments(text, offset, startId) {
+function computeSegments(text, state, startId) {
   /** @type {MarkdownSegment[]} */
   const segments = [];
   let id = startId;
   const n = text.length;
-  let i = offset;
-  /** @type {"prose" | "fence"} */
-  let mode = "prose";
-  let proseStart = offset;
-  /** @type {{ char: "`" | "~"; len: number; indent: number; info: string; start: number; lines: string[] } | null} */
-  let fenceCtx = null;
+  let i = state.pos;
+  let proseStart = state.proseStart;
+  // Copied, since the content lines below extend it in place.
+  /** @type {FenceContext | null} */
+  let fenceCtx = state.fence === null ? null : { ...state.fence };
+  // Start of the trailing line not yet terminated by a newline, if any.
+  let resumePos = n;
+  /** @type {string | undefined} */
+  let partial;
 
   while (i < n) {
     const lineStart = i;
@@ -234,10 +293,12 @@ function computeSegments(text, offset, startId) {
     const hasNewline = nlIndex !== -1;
     const lineEnd = hasNewline ? nlIndex : n;
     const lineEndIncl = hasNewline ? nlIndex + 1 : n;
-    const line = text.slice(lineStart, lineEnd);
+    if (!hasNewline) resumePos = lineStart;
 
-    if (mode === "prose") {
-      const open = matchOpeningFence(line);
+    if (fenceCtx === null) {
+      const open = mayBeFence(text, lineStart, lineEnd)
+        ? matchOpeningFence(text.slice(lineStart, lineEnd))
+        : null;
       if (open !== null) {
         if (!hasNewline) {
           // Opening line not yet terminated by a newline: stays prose until
@@ -259,21 +320,27 @@ function computeSegments(text, offset, startId) {
           indent: open.indent,
           info: open.info,
           start: lineStart,
-          lines: [],
+          code: "",
+          lineCount: 0,
         };
-        mode = "fence";
-        i = lineEndIncl;
-        continue;
       }
       i = lineEndIncl;
       continue;
     }
 
-    // mode === "fence"
-    const ctx = /** @type {NonNullable<typeof fenceCtx>} */ (fenceCtx);
-    if (hasNewline && matchClosingFence(line, ctx.char, ctx.len)) {
-      segments.push(buildFenceSegment(ctx, id++, lineEndIncl, false));
-      mode = "prose";
+    if (
+      hasNewline &&
+      mayBeFence(text, lineStart, lineEnd) &&
+      matchClosingFence(
+        text.slice(lineStart, lineEnd),
+        fenceCtx.char,
+        fenceCtx.len,
+      )
+    ) {
+      segments.push(
+        buildFenceSegment(fenceCtx, id++, lineEndIncl, false, undefined),
+      );
+      fenceCtx = null;
       proseStart = lineEndIncl;
       i = lineEndIncl;
       continue;
@@ -281,20 +348,19 @@ function computeSegments(text, offset, startId) {
     // A same-line-terminated closer requires a newline (like an opener, a
     // still-unterminated closer-looking line might grow into content or a
     // longer/shorter run with the next chunk) - anything else is content.
-    ctx.lines.push(stripIndent(line, ctx.indent));
-    if (!hasNewline) break;
+    const content = stripIndent(text, lineStart, lineEnd, fenceCtx.indent);
+    if (!hasNewline) {
+      partial = content;
+      break;
+    }
+    fenceCtx.code =
+      fenceCtx.lineCount === 0 ? content : `${fenceCtx.code}\n${content}`;
+    fenceCtx.lineCount += 1;
     i = lineEndIncl;
   }
 
-  if (mode === "fence") {
-    segments.push(
-      buildFenceSegment(
-        /** @type {NonNullable<typeof fenceCtx>} */ (fenceCtx),
-        id++,
-        n,
-        true,
-      ),
-    );
+  if (fenceCtx !== null) {
+    segments.push(buildFenceSegment(fenceCtx, id++, n, true, partial));
   } else if (proseStart < n) {
     segments.push({
       id: id++,
@@ -305,7 +371,11 @@ function computeSegments(text, offset, startId) {
     });
   }
 
-  return { segments, nextId: id };
+  return {
+    segments,
+    nextId: id,
+    state: { pos: resumePos, proseStart, fence: fenceCtx },
+  };
 }
 
 /**
@@ -316,28 +386,41 @@ export function createFenceSplitter() {
   /** @type {MarkdownSegment[]} */
   let segments = [];
   let nextId = 1;
+  /** @type {ScanState} */
+  let scanState = scanStateAt(0);
 
   return {
     append(chunk) {
       if (chunk === "") return;
       text += chunk;
 
+      // The segment `scanState` stopped in is the last one - unless the
+      // text ended right after a closing fence line, in which case the scan
+      // starts a brand-new segment and every existing one is final.
       const last = segments[segments.length - 1];
-      const rescanFrom = last === undefined ? 0 : last.start;
-      const result = computeSegments(text, rescanFrom, nextId);
+      const tailStart =
+        scanState.fence === null ? scanState.proseStart : scanState.fence.start;
+      const continuesLast = last !== undefined && last.start === tailStart;
+      // Skipping an id when not continuing keeps ids identical to a rescan
+      // from `last.start`, which re-emits `last` and discards its new id.
+      const result = computeSegments(
+        text,
+        scanState,
+        last !== undefined && !continuesLast ? nextId + 1 : nextId,
+      );
       nextId = result.nextId;
+      scanState = result.state;
 
-      if (result.segments.length > 0 && last !== undefined) {
+      if (result.segments.length > 0 && continuesLast) {
         result.segments[0] = {
           .../** @type {MarkdownSegment} */ (result.segments[0]),
           id: last.id,
         };
       }
 
-      segments =
-        last === undefined
-          ? result.segments
-          : [...segments.slice(0, -1), ...result.segments];
+      segments = continuesLast
+        ? [...segments.slice(0, -1), ...result.segments]
+        : [...segments, ...result.segments];
     },
 
     set(newText) {
@@ -361,8 +444,9 @@ export function createFenceSplitter() {
         reuseCandidate === undefined ? 0 : reuseCandidate.start;
 
       text = newText;
-      const result = computeSegments(text, rebuildFrom, nextId);
+      const result = computeSegments(text, scanStateAt(rebuildFrom), nextId);
       nextId = result.nextId;
+      scanState = result.state;
 
       const first = result.segments[0];
       if (
@@ -390,6 +474,7 @@ export function createFenceSplitter() {
       text = "";
       segments = [];
       nextId = 1;
+      scanState = scanStateAt(0);
     },
   };
 }
