@@ -41,6 +41,7 @@ function countLines(text) {
  * @typedef {{
  *   kind: "string" | "array" | "tokenized";
  *   text?: string;
+ *   ensureLines?: () => unknown;
  *   lineCount(): number;
  *   lineRange(start: number, end: number): string[];
  * }} Adapter
@@ -57,15 +58,21 @@ function createAdapter(source) {
     /** @type {string[] | undefined} */
     let lines;
     let lineCount = -1;
+    const ensureLines = () => {
+      if (!lines) lines = source.split("\n");
+      return lines;
+    };
     return {
       kind: "string",
       text: source,
+      ensureLines,
       lineCount: () => {
+        if (lines) return lines.length;
         if (lineCount < 0) lineCount = countLines(source);
         return lineCount;
       },
       lineRange: (start, end) => {
-        if (!lines) lines = source.split("\n");
+        const lines = ensureLines();
         // Callers only read the result, so a full range can share `lines`.
         return start === 0 && end >= lines.length
           ? lines
@@ -331,6 +338,10 @@ export function createSearch(source) {
     lastText = text;
     lastOptions = normalized;
     hasQueried = true;
+    const scanWhole = adapter.text !== undefined && !normalized.regex;
+    // A regex scan splits a string source into lines anyway; splitting
+    // first makes lineCount() free instead of a second full pass.
+    if (pattern !== null && !scanWhole) adapter.ensureLines?.();
     lastScannedLineCount = adapter.lineCount();
 
     if (pattern === null) {
@@ -343,7 +354,7 @@ export function createSearch(source) {
 
     errorMessage = undefined;
     matches =
-      adapter.text !== undefined && !normalized.regex
+      scanWhole && adapter.text !== undefined
         ? scanText(
             adapter.text,
             text,
