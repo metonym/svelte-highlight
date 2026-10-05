@@ -3,25 +3,13 @@
  *
  * Tokenization via `reparseIncremental` is already incremental, but the
  * default `"dom"` engine still ran `renderHtml` + `splitLines` over the full
- * event stream every keystroke. For pure appends (typing at the end — the
- * common path when growing a document), a dedicated stream session feeds only
- * the new suffix through `extendLines`, so HTML work is O(delta) per keystroke
- * and O(n) total to type a document of size n. Mid-document edits re-render
- * only the lines whose events changed (`patchLineHtml`).
+ * event stream every keystroke. Now only the first paint does; every edit
+ * after it, append or mid-document, re-renders only the lines whose events
+ * changed (`patchLineHtml`).
  */
 
 import { CLOSE, extendLines, OPEN, renderHtml, TEXT } from "./engine.js";
 import { splitLines } from "./split-lines.js";
-
-/**
- * @param {string} previousCode
- * @param {string} nextCode
- */
-export function isPureAppend(previousCode, nextCode) {
-  return (
-    nextCode.length >= previousCode.length && nextCode.startsWith(previousCode)
-  );
-}
 
 /**
  * Full line-HTML paint via `renderHtml` + `splitLines` (the historical path).
@@ -58,9 +46,8 @@ export function linesFromStreamState(completedLines, previewLines, code) {
 }
 
 /**
- * @typedef {import("./engine.d.ts").Registry} Registry
  * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
- * @typedef {import("./engine.d.ts").StreamSession} StreamSession
+ * @typedef {import("./incremental-tokenize.js").EventReuse} EventReuse
  */
 
 /**
@@ -119,26 +106,44 @@ export function createPatchMemo() {
  * where the last call's ended, so repeated edits near one spot don't
  * re-walk the document before it.
  *
+ * Pass `reparseIncremental`'s `reuse` (when its `from` is `prevEvents`) to
+ * take the common prefix and suffix from it instead of comparing the two
+ * event arrays, which is O(document) per call.
+ *
  * @param {ScopeEvent[]} prevEvents
  * @param {string[]} prevLines
  * @param {ScopeEvent[]} events
  * @param {string} code
  * @param {PatchMemo} [memo]
+ * @param {EventReuse} [reuse]
  * @returns {string[]}
  */
-export function patchLineHtml(prevEvents, prevLines, events, code, memo) {
+export function patchLineHtml(
+  prevEvents,
+  prevLines,
+  events,
+  code,
+  memo,
+  reuse,
+) {
+  if (events === prevEvents) return prevLines;
   const prevCount = prevEvents.length;
   const count = events.length;
-  const shared = Math.min(prevCount, count);
   let prefix = 0;
-  while (prefix < shared && prevEvents[prefix] === events[prefix]) prefix++;
-  if (prefix === prevCount && prefix === count) return prevLines;
   let suffix = 0;
-  while (
-    suffix < shared - prefix &&
-    prevEvents[prevCount - 1 - suffix] === events[count - 1 - suffix]
-  ) {
-    suffix++;
+  if (reuse !== undefined && reuse.from === prevEvents) {
+    prefix = reuse.head;
+    suffix = reuse.tail;
+  } else {
+    const shared = Math.min(prevCount, count);
+    while (prefix < shared && prevEvents[prefix] === events[prefix]) prefix++;
+    if (prefix === prevCount && prefix === count) return prevLines;
+    while (
+      suffix < shared - prefix &&
+      prevEvents[prevCount - 1 - suffix] === events[count - 1 - suffix]
+    ) {
+      suffix++;
+    }
   }
 
   // The first changed line starts after the last "\n" before `prefix`.
@@ -250,194 +255,47 @@ export function patchLineHtml(prevEvents, prevLines, events, code, memo) {
 }
 
 /**
- * Stateful incremental painter driven by pure-append stream sessions.
+ * Stateful line-HTML painter: the first paint (and any paint after a
+ * language change) renders the whole document via `lineHtmlFromEvents`;
+ * every later one patches the previous lines via `patchLineHtml`.
  *
- * @param {{
- *   registry: Registry,
- * }} options
+ * Appends used to go through a separate stream session instead, which
+ * tokenized the document a second time at mount and again after every
+ * switch from mid-document editing back to appending. With
+ * `reparseIncremental`'s `reuse`, the patch path no longer compares the
+ * event arrays, so it costs about the same for appends and needs no
+ * second tokenizer: see dom-paint.bench.ts.
  */
-export function createDomLinePainter({ registry }) {
-  /** @type {StreamSession | undefined} */
-  let session;
-  let sessionLanguage = "";
-  let fedCode = "";
-  let renderedEventCount = 0;
+export function createDomLinePainter() {
+  let language = "";
+  /** @type {ScopeEvent[] | undefined} */
+  let prevEvents;
   /** @type {string[]} */
-  let openScopes = [];
-  let pendingHtml = "";
-  /** @type {string[]} */
-  let completedLines = [];
-  let lastUsedIncremental = false;
-  /** Whether the current session has already accepted at least one append. */
-  let hasAppended = false;
-  /**
-   * Mid-document edits mark the stream session dirty instead of eagerly
-   * re-tokenizing. The next pure append pays one full resync, then resumes
-   * O(delta) painting.
-   */
-  let needsResync = false;
-  /**
-   * Events and `lineHtmlFromEvents`-equivalent lines of the last
-   * mid-document paint, so the next one can `patchLineHtml` from them.
-   * @type {ScopeEvent[] | undefined}
-   */
-  let editEvents;
-  /** @type {string[] | undefined} */
-  let editLines;
-  const patchMemo = createPatchMemo();
-
-  /**
-   * @param {string} nextLanguage
-   * @returns {StreamSession}
-   */
-  function resetSession(nextLanguage) {
-    editEvents = undefined;
-    editLines = undefined;
-    session = registry.createSession(nextLanguage);
-    sessionLanguage = nextLanguage;
-    fedCode = "";
-    renderedEventCount = 0;
-    openScopes = [];
-    pendingHtml = "";
-    completedLines = [];
-    hasAppended = false;
-    needsResync = false;
-    return session;
-  }
-
-  /**
-   * Rebuild the stream session from `base` so a subsequent delta append can
-   * continue incrementally. Preserves `fedCode` across the reset.
-   * @param {string} languageName
-   * @param {string} base
-   * @returns {StreamSession}
-   */
-  function resyncSession(languageName, base) {
-    const fresh = resetSession(languageName);
-    session = fresh;
-    if (base.length > 0) {
-      fresh.append(base);
-      hasAppended = true;
-      consumeCommitted(fresh.events());
-    }
-    fedCode = base;
-    return fresh;
-  }
-
-  /**
-   * @param {ScopeEvent[]} committed
-   */
-  function consumeCommitted(committed) {
-    if (!session || committed.length <= renderedEventCount) return;
-    const result = extendLines(
-      committed.slice(renderedEventCount),
-      openScopes,
-      pendingHtml,
-    );
-    // push, not concat: concat copies the whole (ever-growing) array on
-    // every call, which is O(lines) per completed line - push is O(1)
-    // amortized (same reasoning as HighlightStream's sealed-chunk append).
-    for (const line of result.completedLines) completedLines.push(line);
-    openScopes = result.openScopes;
-    pendingHtml = result.pendingHtml;
-    renderedEventCount = committed.length;
-  }
-
-  /**
-   * @param {string} code
-   * @returns {string[]}
-   */
-  function linesForCurrentCode(code) {
-    if (!session) return linesFromStreamState([], [""], code);
-    const snapshot = session.snapshot();
-    /** @type {string[]} */
-    let previewLines = [pendingHtml];
-    if (snapshot.pos < fedCode.length) {
-      const preview = registry.resume(fedCode, sessionLanguage, snapshot);
-      const result = extendLines(preview.events, openScopes, pendingHtml);
-      previewLines = result.completedLines.concat(result.pendingHtml);
-    }
-    return linesFromStreamState(completedLines, previewLines, code);
-  }
+  let prevLines = [];
+  const memo = createPatchMemo();
 
   return {
     reset() {
-      session = undefined;
-      sessionLanguage = "";
-      fedCode = "";
-      renderedEventCount = 0;
-      openScopes = [];
-      pendingHtml = "";
-      completedLines = [];
-      lastUsedIncremental = false;
-      hasAppended = false;
-      needsResync = false;
-      editEvents = undefined;
-      editLines = undefined;
-    },
-    lastUsedIncremental() {
-      return lastUsedIncremental;
+      language = "";
+      prevEvents = undefined;
+      prevLines = [];
+      Object.assign(memo, createPatchMemo());
     },
     /**
-     * @param {ScopeEvent[]} events Full events from getEvents() — used only
-     *   for the non-append fallback path (mid-document edits).
+     * @param {ScopeEvent[]} events
      * @param {string} code
      * @param {string} languageName
+     * @param {EventReuse} [reuse] `reparseIncremental`'s result `reuse`
      * @returns {string[]}
      */
-    paint(events, code, languageName) {
-      if (
-        languageName !== sessionLanguage ||
-        (session === undefined && !needsResync)
-      ) {
-        session = resetSession(languageName);
-      }
-
-      if (!isPureAppend(fedCode, code)) {
-        lastUsedIncremental = false;
-        const lines =
-          editEvents === undefined || editLines === undefined
-            ? lineHtmlFromEvents(events, code)
-            : patchLineHtml(editEvents, editLines, events, code, patchMemo);
-        editEvents = events;
-        editLines = lines;
-        // Defer the O(n) stream resync until the next pure append. Until
-        // then the session is stale, so drop it - and its own copy of the
-        // document's events and line HTML - rather than keep it alive
-        // through mid-document editing.
-        needsResync = true;
-        if (session !== undefined) {
-          session = undefined;
-          renderedEventCount = 0;
-          openScopes = [];
-          pendingHtml = "";
-          completedLines = [];
-        }
-        fedCode = code;
-        return lines;
-      }
-
-      // The append path's lines come from the stream session, not
-      // `lineHtmlFromEvents`, so they can't seed `patchLineHtml`.
-      editEvents = undefined;
-      editLines = undefined;
-
-      if (needsResync || session === undefined) {
-        session = resyncSession(languageName, fedCode);
-      }
-
-      const hadContent = hasAppended;
-      if (code.length > fedCode.length) {
-        session.append(code.slice(fedCode.length));
-        fedCode = code;
-        hasAppended = true;
-        consumeCommitted(session.events());
-      } else if (code.length === 0 && fedCode.length === 0) {
-        // Empty document paint.
-      }
-
-      lastUsedIncremental = hadContent;
-      return linesForCurrentCode(code);
+    paint(events, code, languageName, reuse) {
+      prevLines =
+        prevEvents === undefined || languageName !== language
+          ? lineHtmlFromEvents(events, code)
+          : patchLineHtml(prevEvents, prevLines, events, code, memo, reuse);
+      prevEvents = events;
+      language = languageName;
+      return prevLines;
     },
   };
 }
