@@ -15,7 +15,7 @@ import {
   parseIncremental,
   reparseIncremental,
 } from "../src/incremental-tokenize.js";
-import { buildRegistry, jsSource } from "./_shared.ts";
+import { buildRegistry, jsLines, jsSource } from "./_shared.ts";
 
 const registry = await buildRegistry();
 
@@ -53,6 +53,44 @@ group("HighlightEditable paint: typing simulation", () => {
     task(
       `full repaint every keystroke @ ${length.toLocaleString()} chars typed`,
       () => typeWithFullRepaint(length),
+    );
+  }
+});
+
+// Typing in the middle of an already-open document: every keystroke is a
+// non-append edit, so the painter takes its mid-document path. Parse
+// states are precomputed so only painting is timed; one painter is reused
+// across samples, cycling from the last state back to the first (itself a
+// mid-document edit, a 12-character delete).
+function midDocumentStates(lines: number) {
+  const base = jsLines(lines);
+  const at = base.indexOf("\n", base.length >> 1) + 1;
+  const typed = "let x = 1; ";
+  const states = [parseIncremental(registry, "javascript", base)];
+  for (let i = 1; i <= typed.length; i++) {
+    const code = `${base.slice(0, at)}${typed.slice(0, i)}${base.slice(at)}`;
+    states.push(
+      reparseIncremental(
+        registry,
+        "javascript",
+        states[states.length - 1] as (typeof states)[number],
+        code,
+      ),
+    );
+  }
+  return states;
+}
+
+group("HighlightEditable paint: mid-document typing", () => {
+  for (const lines of [500, 2_000, 8_000]) {
+    const states = midDocumentStates(lines);
+    const painter = createDomLinePainter({ registry });
+    task(
+      `painter, ${states.length - 1} keystrokes @ ${lines.toLocaleString()} lines`,
+      () => {
+        for (const state of states)
+          painter.paint(state.events, state.code, "javascript");
+      },
     );
   }
 });
