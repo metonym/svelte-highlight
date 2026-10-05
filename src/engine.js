@@ -962,17 +962,65 @@ export function scopeToCssClass(name, prefix) {
 }
 
 /**
+ * Built `<span class="...">` open tags, by class prefix and then scope.
+ * Building one per OPEN event (`scopeToCssClass` plus a template string)
+ * cost about a quarter of renderHtml's time, though a document only has a
+ * few dozen distinct scopes (see bench/render.bench.ts). The vocabulary is
+ * bounded by the registered grammars, but `OPEN_TAG_LIMIT` caps it anyway
+ * so arbitrary class prefixes can't grow it without bound.
+ * @type {Map<string, Map<string, string>>}
+ */
+const openTagCache = new Map();
+const OPEN_TAG_LIMIT = 2048;
+let openTagCount = 0;
+
+/**
+ * The open-tag cache for `prefix`, to pass to `openTag`.
+ * @param {string} prefix
+ * @returns {Map<string, string>}
+ */
+function openTagsFor(prefix) {
+  let tags = openTagCache.get(prefix);
+  if (tags === undefined) {
+    tags = new Map();
+    openTagCache.set(prefix, tags);
+  }
+  return tags;
+}
+
+/**
+ * `<span class="...">` for `scope`, memoized in `tags` (from `openTagsFor`).
+ * @param {Map<string, string>} tags
+ * @param {string} scope
+ * @param {string} prefix
+ * @returns {string}
+ */
+function openTag(tags, scope, prefix) {
+  let tag = tags.get(scope);
+  if (tag === undefined) {
+    if (openTagCount >= OPEN_TAG_LIMIT) {
+      for (const cached of openTagCache.values()) cached.clear();
+      openTagCount = 0;
+    }
+    tag = `<span class="${scopeToCssClass(scope, prefix)}">`;
+    tags.set(scope, tag);
+    openTagCount++;
+  }
+  return tag;
+}
+
+/**
  * @param {ScopeEvent[]} events
  * @param {{ classPrefix?: string }} [options]
  * @returns {string} hljs-compatible HTML
  */
 export function renderHtml(events, { classPrefix = "hljs-" } = {}) {
+  const tags = openTagsFor(classPrefix);
   let out = "";
   for (const event of events) {
     if (event.t === TEXT) out += escapeHtml(event.v);
-    else if (event.t === OPEN) {
-      out += `<span class="${scopeToCssClass(event.s, classPrefix)}">`;
-    } else out += "</span>";
+    else if (event.t === OPEN) out += openTag(tags, event.s, classPrefix);
+    else out += "</span>";
   }
   return out;
 }
@@ -997,20 +1045,19 @@ export function extendLines(
   const stack = [...openScopes];
   /** @type {string[]} */
   const completedLines = [];
+  const openTags = openTagsFor(classPrefix);
   // Cache the concatenated open/close tag strings for the current stack so a
   // run of newlines between OPEN/CLOSE events reuses them instead of
   // re-joining the whole stack per line break.
   /** @type {string[]} */
-  const tags = stack.map(
-    (scope) => `<span class="${scopeToCssClass(scope, classPrefix)}">`,
-  );
+  const tags = stack.map((scope) => openTag(openTags, scope, classPrefix));
   let reopen = tags.join("");
   let closeAll = "</span>".repeat(stack.length);
   let current = pendingHtml;
   for (const event of newEvents) {
     if (event.t === OPEN) {
       stack.push(event.s);
-      const tag = `<span class="${scopeToCssClass(event.s, classPrefix)}">`;
+      const tag = openTag(openTags, event.s, classPrefix);
       tags.push(tag);
       reopen += tag;
       closeAll += "</span>";
