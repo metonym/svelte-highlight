@@ -204,8 +204,16 @@ describe("patchLineHtml", () => {
     let code = base;
     let state = parseIncremental(registry, languageName, code);
     painter.paint(state.events, code, languageName);
+    let at = 0;
     for (let step = 0; step < 60; step++) {
-      const at = Math.floor(random() * code.length);
+      // Half the edits land near the last one, like typing in one spot.
+      at =
+        random() < 0.5
+          ? Math.min(
+              code.length,
+              Math.max(0, at + Math.floor(random() * 5) - 2),
+            )
+          : Math.floor(random() * code.length);
       if (random() < 0.35 && code.length > 0) {
         const length = 1 + Math.floor(random() * 4);
         code = code.slice(0, at) + code.slice(at + length);

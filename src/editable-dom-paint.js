@@ -64,17 +64,36 @@ export function linesFromStreamState(completedLines, previewLines, code) {
  */
 
 /**
- * Number of "\n" in `code` before offset `end`.
+ * Number of "\n" in `code` within `[from, end)`.
  * @param {string} code
+ * @param {number} from
  * @param {number} end
  */
-function countNewlines(code, end) {
+function countNewlines(code, from, end) {
   let count = 0;
-  for (let i = code.indexOf("\n"); i !== -1 && i < end; ) {
+  for (let i = code.indexOf("\n", from); i !== -1 && i < end; ) {
     count++;
     i = code.indexOf("\n", i + 1);
   }
   return count;
+}
+
+/**
+ * Where `patchLineHtml`'s walk to the first changed line ended: the state
+ * after the first `index` events of `events`. Valid for a later call whose
+ * `prevEvents` is `events`, while `index` stays inside the unchanged prefix.
+ * @typedef {{
+ *   events: ScopeEvent[] | undefined,
+ *   index: number,
+ *   stack: string[],
+ *   offset: number,
+ *   newlines: number,
+ * }} PatchMemo
+ */
+
+/** @returns {PatchMemo} */
+export function createPatchMemo() {
+  return { events: undefined, index: 0, stack: [], offset: 0, newlines: 0 };
 }
 
 /**
@@ -96,13 +115,18 @@ function countNewlines(code, end) {
  * `renderHtml` + `splitLines` over it: see dom-paint.bench.ts's
  * mid-document group.
  *
+ * Pass the same `memo` across consecutive calls to resume that walk from
+ * where the last call's ended, so repeated edits near one spot don't
+ * re-walk the document before it.
+ *
  * @param {ScopeEvent[]} prevEvents
  * @param {string[]} prevLines
  * @param {ScopeEvent[]} events
  * @param {string} code
+ * @param {PatchMemo} [memo]
  * @returns {string[]}
  */
-export function patchLineHtml(prevEvents, prevLines, events, code) {
+export function patchLineHtml(prevEvents, prevLines, events, code, memo) {
   const prevCount = prevEvents.length;
   const count = events.length;
   const shared = Math.min(prevCount, count);
@@ -128,18 +152,35 @@ export function patchLineHtml(prevEvents, prevLines, events, code) {
     }
   }
 
-  // Scopes open at that line's start, and its offset into `code`.
+  // Scopes open at that line's start, and its offset into `code`, walked
+  // from the memo when it still lies in the unchanged prefix.
+  const resume =
+    memo !== undefined && memo.events === prevEvents && memo.index <= breakEvent
+      ? memo
+      : undefined;
   /** @type {string[]} */
-  const stack = [];
-  let offset = 0;
-  for (let i = 0; i < breakEvent; i++) {
+  const stack = resume ? resume.stack.slice() : [];
+  const walkFrom = resume ? resume.offset : 0;
+  let offset = walkFrom;
+  for (let i = resume ? resume.index : 0; i < breakEvent; i++) {
     const event = /** @type {ScopeEvent} */ (events[i]);
     if (event.t === OPEN) stack.push(event.s);
     else if (event.t === CLOSE) stack.pop();
     else offset += event.v.length;
   }
-  const firstLine =
-    breakEvent < 0 ? 0 : countNewlines(code, offset + breakAt + 1);
+  let firstLine = 0;
+  if (breakEvent >= 0) {
+    const newlines =
+      (resume ? resume.newlines : 0) + countNewlines(code, walkFrom, offset);
+    firstLine = newlines + countNewlines(code, offset, offset + breakAt + 1);
+    if (memo !== undefined) {
+      memo.events = events;
+      memo.index = breakEvent;
+      memo.stack = stack.slice();
+      memo.offset = offset;
+      memo.newlines = newlines;
+    }
+  }
 
   // Re-render from the line start: reopen its scopes, then its text.
   /** @type {ScopeEvent[]} */
@@ -177,7 +218,7 @@ export function patchLineHtml(prevEvents, prevLines, events, code) {
       const prev = /** @type {ScopeEvent} */ (prevEvents[i]);
       if (prev.t === OPEN) prevStack.push(prev.s);
       else if (prev.t === CLOSE) prevStack.pop();
-      else prevLineCount += countNewlines(prev.v, prev.v.length);
+      else prevLineCount += countNewlines(prev.v, 0, prev.v.length);
     }
 
     const openScopes = rendered.openScopes;
@@ -243,6 +284,7 @@ export function createDomLinePainter({ registry }) {
   let editEvents;
   /** @type {string[] | undefined} */
   let editLines;
+  const patchMemo = createPatchMemo();
 
   /**
    * @param {string} nextLanguage
@@ -356,7 +398,7 @@ export function createDomLinePainter({ registry }) {
         const lines =
           editEvents === undefined || editLines === undefined
             ? lineHtmlFromEvents(events, code)
-            : patchLineHtml(editEvents, editLines, events, code);
+            : patchLineHtml(editEvents, editLines, events, code, patchMemo);
         editEvents = events;
         editLines = lines;
         // Defer the O(n) stream resync until the next pure append. Until
