@@ -1,6 +1,5 @@
-import cssnano from "cssnano";
 import litePreset from "cssnano-preset-lite";
-import postcss, { type Plugin } from "postcss";
+import postcss, { type AcceptedPlugin, type Plugin } from "postcss";
 import discardDuplicates from "postcss-discard-duplicates";
 import { inlineCssVars } from "postcss-inline-css-vars";
 import mergeRules from "postcss-merge-rules";
@@ -9,6 +8,23 @@ import {
   type RemoveDeadDeclarationsStats,
   removeDeadDeclarations,
 } from "./remove-dead-declarations.ts";
+
+/**
+ * cssnano's lite preset as one postcss plugin, built the way
+ * `cssnano({ preset: litePreset(options) })` builds it (every plugin not
+ * marked `exclude`, in order). Skips importing `cssnano` itself: its entry
+ * eagerly requires cssnano-preset-default (svgo, caniuse-lite, ...) even
+ * when given a preset, ~60ms of load time this build never uses.
+ */
+const cssnanoLite = (options: Parameters<typeof litePreset>[0]) =>
+  postcss(
+    litePreset(options).plugins.flatMap(
+      ([plugin, pluginOptions]): AcceptedPlugin[] =>
+        pluginOptions === false || pluginOptions?.exclude
+          ? []
+          : [plugin(pluginOptions)],
+    ),
+  );
 
 /**
  * Raw styles from `highlight.js` are preprocessed for consistency.
@@ -33,30 +49,28 @@ export const preprocessStyles = (
     ...(options?.plugins ?? []),
     discardDuplicates(),
     mergeRules(),
-    cssnano({
-      preset: litePreset({
-        discardComments:
-          options?.discardComments === "preserve-license"
-            ? {
-                remove: (comment) => {
-                  if (LICENSE_OR_AUTHOR.test(comment)) {
-                    // Preserve license comments.
-                    return false;
-                  }
+    cssnanoLite({
+      discardComments:
+        options?.discardComments === "preserve-license"
+          ? {
+              remove: (comment) => {
+                if (LICENSE_OR_AUTHOR.test(comment)) {
+                  // Preserve license comments.
+                  return false;
+                }
 
-                  return true;
-                },
-              }
-            : options?.discardComments === "remove-all"
-              ? { removeAll: true }
-              : undefined,
-      }),
+                return true;
+              },
+            }
+          : options?.discardComments === "remove-all"
+            ? { removeAll: true }
+            : undefined,
     }),
   ]).process(css).css;
 };
 
 const stripCommentsProcessor = postcss([
-  cssnano({ preset: litePreset({ discardComments: { removeAll: true } }) }),
+  cssnanoLite({ discardComments: { removeAll: true } }),
 ]);
 
 /**
