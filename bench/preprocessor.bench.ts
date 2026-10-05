@@ -20,9 +20,12 @@ function fixture(matchCount: number) {
 `;
   const blocks: string[] = [];
   for (let i = 0; i < matchCount; i += 1) {
+    // No `{`/`}` in `code`: inside a quoted attribute Svelte reads them as
+    // an expression, the parse fails, and markup() bails out before
+    // matching anything (an earlier fixture here only measured that).
     blocks.push(
       `<p>section ${i}</p>`,
-      `<Highlight language={javascript} code="function f${i}(a, b) {\nreturn a + b + ${i};\n}" />`,
+      `<Highlight language={javascript} code="const sum${i} = a + b + ${i};\nconsole.log(sum${i});" />`,
     );
   }
   return `${header + blocks.join("\n")}\n`;
