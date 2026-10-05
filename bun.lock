@@ -17,8 +17,8 @@
         "@types/node": "^26.4.1",
         "@typescript/native-preview": "^7.0.0-dev.20260707.2",
         "astro": "^6.4.8",
-        "carbon-components-svelte": "^0.110.2",
-        "carbon-preprocess-svelte": "^0.11.44",
+        "carbon-components-svelte": "^0.113.0",
+        "carbon-preprocess-svelte": "^0.11.48",
         "cssnano": "^7.1.9",
         "cssnano-preset-lite": "^4.0.6",
         "highlight.js": "11.12.0",
@@ -137,7 +137,7 @@
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.27.4", "", { "os": "win32", "cpu": "x64" }, "sha512-+knoa0BDoeXgkNvvV1vvbZX4+hizelrkwmGJBdT17t8FNPwG2lKemmuMZlmaNQ3ws3DKKCxpb4zRZEIp3UxFCg=="],
 
-    "@ibm/telemetry-js": ["@ibm/telemetry-js@1.9.1", "", { "bin": { "ibmtelemetry": "dist/collect.js" } }, "sha512-qq8RPafUJHUQieXVCte1kbJEx6JctWzbA/YkXzopbfzIDRT2+hbR9QmgH+KH7bDDNRcDbdHWvHfwJKzThlMtPg=="],
+    "@ibm/telemetry-js": ["@ibm/telemetry-js@1.11.0", "", { "bin": { "ibmtelemetry": "dist/collect.js" } }, "sha512-RO/9j+URJnSfseWg9ZkEX9p+a3Ousd33DBU7rOafoZB08RqdzxFVYJ2/iM50dkBuD0o7WX7GYt1sLbNgCoE+pA=="],
 
     "@img/colour": ["@img/colour@1.1.0", "", {}, "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ=="],
 
@@ -375,9 +375,9 @@
 
     "caniuse-lite": ["caniuse-lite@1.0.30001788", "", {}, "sha512-6q8HFp+lOQtcf7wBK+uEenxymVWkGKkjFpCvw5W25cmMwEDU45p1xQFBQv8JDlMMry7eNxyBaR+qxgmTUZkIRQ=="],
 
-    "carbon-components-svelte": ["carbon-components-svelte@0.110.2", "", { "dependencies": { "@ibm/telemetry-js": "^1.5.0", "flatpickr": "4.6.9" } }, "sha512-2pFsT6loWnuJYjt0YPehaEkdJM4FN3d12+gtwfTtBfInN5R0ZJ9XUvt6TCSotUvy1VCm9BAgW84AmovqvNKXIg=="],
+    "carbon-components-svelte": ["carbon-components-svelte@0.113.0", "", { "dependencies": { "@ibm/telemetry-js": "^1.10.2", "flatpickr": "4.6.13" } }, "sha512-180YQvV/LD7dKlm2Cv5W+MZPP/JdTGYhEzmGwkq55z0fBWEiWSb1pk+15xmNg0ncI2tiUwZQa9z+515uLKzKjA=="],
 
-    "carbon-preprocess-svelte": ["carbon-preprocess-svelte@0.11.44", "", {}, "sha512-WWluRWwrgH6hrFtjsnN18MnKzzKuFLuOoIyfjZ41ZXGxkyw0AFGo2JIFPGPqWT15zaC53HyayYdCUMWHVCoVxw=="],
+    "carbon-preprocess-svelte": ["carbon-preprocess-svelte@0.11.48", "", { "bin": { "carbon-preprocess-svelte": "cli.js" } }, "sha512-55+5r5X/vEI7qe/zLLbl2Mr6qILf8h/vSDegn8kCLAK8MYFGivbgAvQJVVR1vUUV93oY270v6zzzxsZS8a4b/w=="],
 
     "ccount": ["ccount@2.0.1", "", {}, "sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg=="],
 
@@ -491,7 +491,7 @@
 
     "fill-range": ["fill-range@7.1.1", "", { "dependencies": { "to-regex-range": "^5.0.1" } }, "sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg=="],
 
-    "flatpickr": ["flatpickr@4.6.9", "", {}, "sha512-F0azNNi8foVWKSF+8X+ZJzz8r9sE1G4hl06RyceIaLvyltKvDl6vqk9Lm/6AUUCi5HWaIjiUbk7UpeE/fOXOpw=="],
+    "flatpickr": ["flatpickr@4.6.13", "", {}, "sha512-97PMG/aywoYpB4IvbvUJi0RQi8vearvU0oov1WW3k0WZPBMrTQVqekSX5CjSG/M4Q3i6A/0FKXC7RyAoAUUSPw=="],
 
     "flattie": ["flattie@1.1.1", "", {}, "sha512-9UbaD6XdAL97+k/n+N7JwX46K/M6Zc6KcFYskrYL8wbBV/Uyk0CTAMY0VT+qiK5PM7AIc9aTWYtq65U7T+aCNQ=="],
 
