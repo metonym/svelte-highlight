@@ -374,3 +374,42 @@ describe("reparseIncremental reuse", () => {
     ).toBeUndefined();
   });
 });
+
+describe("reparseIncremental windowed scans", () => {
+  // A long tail past the resume checkpoint makes the resumed parse window
+  // its scans (see `WINDOWED_MIN_TAIL`). Rare constructs at uneven gaps
+  // put the next match of many rules at many distances from the edit, so
+  // some land near a window's edge.
+  const rare = [
+    "const s = 'quoted';",
+    "/* block */",
+    "const n = 0x1F;",
+    "const t = `tpl`;",
+    "const r = /re+/g;",
+    "class A extends B {}",
+    "const a = <Foo>x</Foo>;",
+    "x = $1;",
+  ];
+  const lines: string[] = [];
+  for (let i = 0; i < 1500; i++) {
+    lines.push(
+      (i * i) % 23 === 0
+        ? (rare[i % rare.length] as string)
+        : "let value = compute(1, 2);",
+    );
+  }
+  const doc = `${lines.join("\n")}\n`;
+
+  for (const language of ["javascript", "typescript"]) {
+    it(`matches a full re-parse after edits all over a long ${language} doc`, () => {
+      const versions = [doc];
+      for (let k = 1; k <= 12; k++) {
+        const at = doc.indexOf("\n", Math.floor((doc.length * k) / 16)) + 1;
+        for (const text of ["x", "/*", '"', "<Foo>"]) {
+          versions.push(`${doc.slice(0, at)}${text}${doc.slice(at)}`, doc);
+        }
+      }
+      assertEditSequenceMatchesOneShot(language, versions);
+    });
+  }
+});

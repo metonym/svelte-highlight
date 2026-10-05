@@ -246,7 +246,9 @@ export interface Registry {
   tokenizeRanges(code: string, options: { language: string }): TokenRange[];
   createSession(
     language: string,
-    options?: { from?: { code: string; snapshot?: Snapshot } },
+    options?: {
+      from?: { code: string; snapshot?: Snapshot; windowed?: boolean };
+    },
   ): StreamSession;
   resume(
     code: string,

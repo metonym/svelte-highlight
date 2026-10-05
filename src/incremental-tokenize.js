@@ -93,6 +93,13 @@ function framesEqual(a, b) {
 export const CHECKPOINT_INTERVAL = 32;
 
 /**
+ * Shortest text past the resume checkpoint, in characters, for which
+ * `reparseIncremental` windows its scans (see `from.windowed` in
+ * engine.js's `createSession`).
+ */
+const WINDOWED_MIN_TAIL = 8192;
+
+/**
  * Full parse with a line checkpoint every `CHECKPOINT_INTERVAL` lines (and
  * always at the document end). First paint or language change.
  *
@@ -199,8 +206,18 @@ export function reparseIncremental(registry, language, previous, code) {
   const prefixLength = resumeCheckpoint.eventCount;
   // The full document is loaded so the tail can be walked with `advance()`
   // (see parseIncremental); tokenization still only proceeds line by line.
+  // The parse usually re-converges within a few lines, so over a long tail
+  // scans are windowed rather than run to the end of `code`: otherwise a
+  // rule with no match nearby scanned the whole tail, and a one-character
+  // edit cost time in proportion to the document. Over a short tail
+  // (typing at the end, say) plain scans are cheaper than the windowed
+  // bookkeeping. See bench/incremental.bench.ts.
   const session = registry.createSession(language, {
-    from: { code, snapshot: resumeCheckpoint },
+    from: {
+      code,
+      snapshot: resumeCheckpoint,
+      windowed: code.length - resumeCheckpoint.pos > WINDOWED_MIN_TAIL,
+    },
   });
   const checkpoints = previous.checkpoints.slice(0, resumeIndex + 1);
 
