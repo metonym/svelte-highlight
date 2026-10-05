@@ -107,7 +107,11 @@
       dispatchedWindowStart = start;
       dispatchedWindowEnd = end;
       dispatchedWindowLineCount = lineCount;
-      dispatch("windowchange", { start, end, lineCount });
+      // Dispatch once the new rows are in the DOM, so a listener that paints
+      // into them (e.g. search's highlightMatches) doesn't paint the old
+      // rows Svelte is about to replace.
+      const detail = { start, end, lineCount };
+      tick().then(() => dispatch("windowchange", detail));
     }
   }
 
