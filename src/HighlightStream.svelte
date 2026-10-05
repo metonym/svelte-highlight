@@ -66,6 +66,7 @@
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { extendLines } from "./engine.js";
   import { ensureRegistered, registry } from "./registry.js";
+  import { createFinalHighlighter } from "./stream-final-highlight.js";
   import { createCompletedHtmlBuffer } from "./stream-highlighted.js";
   import { computeStagedTailPreview } from "./stream-preview.js";
   import {
@@ -160,6 +161,8 @@
   // so `on:highlight` stays live mid-line; that concat copies the completed
   // string but avoids rebuilding it from sealed DOM chunks.
   const completedHtml = createCompletedHtmlBuffer();
+  // The `done` pass's full re-parse; see stream-final-highlight.js.
+  const finalHighlighter = createFinalHighlighter();
   // Completed lines not yet folded into a sealed chunk - bounded by
   // `SEAL_CHUNK_LINES`, so touching it every repaint stays O(1).
   /** @type {string[]} */
@@ -257,7 +260,11 @@
 
     if (done) {
       // Full re-parse for multi-line lookahead (heredocs, etc.).
-      highlighted = session.finish({ canonicalize: true }).value;
+      highlighted = finalHighlighter.highlight(
+        session,
+        fedCode,
+        sessionLanguageName,
+      );
     } else {
       // Newly committed events (append only tokenizes complete lines).
       const committed = session.events();
