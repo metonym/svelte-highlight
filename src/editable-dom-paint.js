@@ -268,15 +268,18 @@ export function createDomLinePainter({ registry }) {
    * continue incrementally. Preserves `fedCode` across the reset.
    * @param {string} languageName
    * @param {string} base
+   * @returns {StreamSession}
    */
   function resyncSession(languageName, base) {
-    session = resetSession(languageName);
+    const fresh = resetSession(languageName);
+    session = fresh;
     if (base.length > 0) {
-      session.append(base);
+      fresh.append(base);
       hasAppended = true;
-      consumeCommitted(session.events());
+      consumeCommitted(fresh.events());
     }
     fedCode = base;
+    return fresh;
   }
 
   /**
@@ -341,7 +344,10 @@ export function createDomLinePainter({ registry }) {
      * @returns {string[]}
      */
     paint(events, code, languageName) {
-      if (session === undefined || languageName !== sessionLanguage) {
+      if (
+        languageName !== sessionLanguage ||
+        (session === undefined && !needsResync)
+      ) {
         session = resetSession(languageName);
       }
 
@@ -353,8 +359,18 @@ export function createDomLinePainter({ registry }) {
             : patchLineHtml(editEvents, editLines, events, code);
         editEvents = events;
         editLines = lines;
-        // Defer the O(n) stream resync until the next pure append.
+        // Defer the O(n) stream resync until the next pure append. Until
+        // then the session is stale, so drop it - and its own copy of the
+        // document's events and line HTML - rather than keep it alive
+        // through mid-document editing.
         needsResync = true;
+        if (session !== undefined) {
+          session = undefined;
+          renderedEventCount = 0;
+          openScopes = [];
+          pendingHtml = "";
+          completedLines = [];
+        }
         fedCode = code;
         return lines;
       }
@@ -364,8 +380,8 @@ export function createDomLinePainter({ registry }) {
       editEvents = undefined;
       editLines = undefined;
 
-      if (needsResync) {
-        resyncSession(languageName, fedCode);
+      if (needsResync || session === undefined) {
+        session = resyncSession(languageName, fedCode);
       }
 
       const hadContent = hasAppended;
