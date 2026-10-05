@@ -260,6 +260,30 @@ export function createTokenizedDocument({
       return combined.slice(s - checkpoint.line, e - checkpoint.line);
     },
 
+    /**
+     * Plain source text per line for [start, end), sliced straight from
+     * `code` via `lineStartOffsets`. Never tokenizes - for consumers like
+     * `createSearch` that only need the text `lineRange` would decode back to.
+     * @param {number} start
+     * @param {number} end
+     * @returns {string[]}
+     */
+    textRange(start, end) {
+      const total = lineStartOffsets.length;
+      const s = Math.max(0, Math.min(start, total));
+      const e = Math.max(s, Math.min(end, total));
+      /** @type {string[]} */
+      const lines = [];
+      for (let i = s; i < e; i++) {
+        // Every line but the last ends one character before the next
+        // line's start (its "\n"); the last runs to the end of `code`.
+        const lineEnd =
+          i + 1 < total ? lineStartOffset(i + 1) - 1 : code.length;
+        lines.push(code.slice(lineStartOffset(i), lineEnd));
+      }
+      return lines;
+    },
+
     tokenizedThrough() {
       return committedLineCount;
     },

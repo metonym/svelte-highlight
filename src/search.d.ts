@@ -25,14 +25,16 @@ export interface SearchOptions {
 
 /**
  * A plain string (split on `"\n"`), an array of lines used as-is, or a
- * duck-typed `TokenizedDocument` (only `lineCount`/`lineRange` are used;
- * never checked via `instanceof`) whose highlighted-HTML lines are decoded
- * back to plain text before matching.
+ * duck-typed `TokenizedDocument` (only `lineCount`/`lineRange`/`textRange`
+ * are used; never checked via `instanceof`). Its plain text comes from
+ * `textRange` when present, else from `lineRange`'s highlighted-HTML lines
+ * decoded back to plain text.
  */
 export type SearchSource =
   | string
   | string[]
-  | Pick<TokenizedDocument, "lineCount" | "lineRange">;
+  | (Pick<TokenizedDocument, "lineCount" | "lineRange"> &
+      Partial<Pick<TokenizedDocument, "textRange">>);
 
 export interface Search {
   /** Runs a new search. Empty `text` clears matches without an error. */

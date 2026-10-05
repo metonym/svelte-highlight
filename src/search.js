@@ -47,6 +47,19 @@ function createAdapter(source) {
     };
   }
 
+  // A real TokenizedDocument can hand back its plain text directly. Going
+  // through lineRange() instead tokenizes every scanned line only to strip
+  // the markup again: in search.bench.ts's incremental group, tokenizing
+  // was ~95% of the scan's CPU profile.
+  const { textRange } = /** @type {{ textRange?: unknown }} */ (source);
+  if (typeof textRange === "function") {
+    return {
+      kind: "tokenized",
+      lineCount: () => source.lineCount(),
+      lineRange: (start, end) => textRange.call(source, start, end),
+    };
+  }
+
   return {
     kind: "tokenized",
     lineCount: () => source.lineCount(),
