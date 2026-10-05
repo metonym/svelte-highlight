@@ -85,11 +85,11 @@ export type MarkdownSegment = TextSegment | FenceSegment;
  */
 export interface FenceSplitter {
   /**
-   * Appends `chunk` to the buffer. O(chunk): only rescans from the start of
-   * the last segment, which by construction is the only one that can
-   * change. Only the last segment object may be replaced; every earlier
-   * segment object keeps its identity, so a keyed `{#each}` never re-mounts
-   * them.
+   * Appends `chunk` to the buffer. O(chunk): resumes scanning from the start
+   * of the last line not yet terminated by a newline, since only that line
+   * (and so only the last segment) can change. Only the last segment object
+   * may be replaced; every earlier segment object keeps its identity, so a
+   * keyed `{#each}` never re-mounts them.
    */
   append(chunk: string): void;
   /**
