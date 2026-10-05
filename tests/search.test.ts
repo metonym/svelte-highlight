@@ -81,6 +81,18 @@ describe("createSearch", () => {
     expect(search.matches()[0]).toEqual({ line: 0, start: 6, end: 11 });
   });
 
+  it("keeps escaped angle brackets in a TokenizedDocument line's plain text", () => {
+    const doc = {
+      lineCount: () => 1,
+      lineRange: () => [
+        'x &lt; y // Array&lt;string&gt; <span class="hljs-title">c</span>',
+      ],
+    };
+    const search = createSearch(doc);
+    search.query("c");
+    expect(search.matches()).toEqual([{ line: 0, start: 23, end: 24 }]);
+  });
+
   it("rescans only newly appended lines for a repeated query against a grown TokenizedDocument", () => {
     let lineCount = 100;
     const calls: Array<[number, number]> = [];

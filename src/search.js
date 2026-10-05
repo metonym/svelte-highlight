@@ -11,16 +11,18 @@ const TAG_RE = /<[^>]*>/g;
 const REGEX_SOURCE_LIMIT = 256;
 
 /**
- * Decodes the five entities `escapeHtml` (`./engine.js`) produces, then
- * strips tag markup - exact for this engine's rendered HTML, not a general
- * HTML parser.
+ * Strips tag markup, then decodes the five entities `escapeHtml`
+ * (`./engine.js`) produces - exact for this engine's rendered HTML, not a
+ * general HTML parser. Tags go first: decoding first would turn escaped
+ * source text like `Array&lt;string&gt;` back into `<string>`, which the
+ * tag pass would then delete.
  * @param {string} html
  * @returns {string}
  */
 function toPlainText(html) {
   return html
-    .replace(ENTITY_RE, (entity) => ENTITY_MAP[entity] ?? entity)
-    .replace(TAG_RE, "");
+    .replace(TAG_RE, "")
+    .replace(ENTITY_RE, (entity) => ENTITY_MAP[entity] ?? entity);
 }
 
 /**
