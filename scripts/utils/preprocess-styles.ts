@@ -54,3 +54,16 @@ export const preprocessStyles = (
     }),
   ]).process(css).css;
 };
+
+const stripCommentsProcessor = postcss([
+  cssnano({ preset: litePreset({ discardComments: { removeAll: true } }) }),
+]);
+
+/**
+ * Drop every comment (license ones too) from CSS that `preprocessStyles`
+ * already processed. Same output as re-running `preprocessStyles` on the
+ * source with `discardComments: "remove-all"`, but skips the second full
+ * plugin pass (var inlining, dead-declaration removal, rule merging).
+ */
+export const stripComments = (css: string) =>
+  stripCommentsProcessor.process(css).css;
