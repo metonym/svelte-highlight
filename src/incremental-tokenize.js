@@ -144,6 +144,21 @@ function findResumeIndex(checkpoints, maxPos) {
 }
 
 /**
+ * Pushes `source[from..]` onto `target`. The result used to be assembled by
+ * spreading a sliced prefix (`[...prefix, ...tail]`), which copied the
+ * O(document) prefix twice per edit; slicing once and pushing the rest
+ * copies it once (see bench/incremental.bench.ts).
+ * @param {ScopeEvent[]} target
+ * @param {ScopeEvent[]} source
+ * @param {number} from
+ */
+function appendEvents(target, source, from) {
+  for (let i = from; i < source.length; i++) {
+    target.push(/** @type {ScopeEvent} */ (source[i]));
+  }
+}
+
+/**
  * Re-tokenizes `code` given the previous parse of the same language.
  * @param {Registry} registry
  * @param {string} language
@@ -165,8 +180,8 @@ export function reparseIncremental(registry, language, previous, code) {
 
   // Prefix up to the resume checkpoint is unchanged (within diffText's common
   // prefix). restore() clears the session event log, so reattach prefix events
-  // separately.
-  const prefixEvents = previous.events.slice(0, resumeCheckpoint.eventCount);
+  // separately, when the result is assembled (see `appendEvents`).
+  const prefixLength = resumeCheckpoint.eventCount;
   // The full document is loaded so the tail can be walked with `advance()`
   // (see parseIncremental); tokenization still only proceeds line by line.
   const session = registry.createSession(language, {
@@ -231,7 +246,7 @@ export function reparseIncremental(registry, language, previous, code) {
       // snap.eventCount is session-local; shift to index the combined array.
       checkpoints.push({
         ...snap,
-        eventCount: snap.eventCount + prefixEvents.length,
+        eventCount: snap.eventCount + prefixLength,
       });
       linesSinceCheckpoint = 0;
     }
@@ -242,13 +257,11 @@ export function reparseIncremental(registry, language, previous, code) {
     const oldCheckpoint = /** @type {Snapshot} */ (
       previous.checkpoints[convergedAtOldIndex]
     );
-    const events = [
-      ...prefixEvents,
-      ...session.events(),
-      ...previous.events.slice(oldCheckpoint.eventCount),
-    ];
+    const events = previous.events.slice(0, prefixLength);
+    appendEvents(events, session.events(), 0);
+    appendEvents(events, previous.events, oldCheckpoint.eventCount);
     const eventOffset =
-      prefixEvents.length + session.events().length - oldCheckpoint.eventCount;
+      prefixLength + session.events().length - oldCheckpoint.eventCount;
     for (
       let i = convergedAtOldIndex + 1;
       i < previous.checkpoints.length;
@@ -265,10 +278,7 @@ export function reparseIncremental(registry, language, previous, code) {
   }
 
   const tail = session.finish();
-  return {
-    code,
-    language,
-    events: [...prefixEvents, ...tail.events],
-    checkpoints,
-  };
+  const events = previous.events.slice(0, prefixLength);
+  appendEvents(events, tail.events, 0);
+  return { code, language, events, checkpoints };
 }
