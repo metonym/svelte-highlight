@@ -175,26 +175,64 @@ export class TokenizerLoopError extends Error {
 /** Scope name prefix marking a sub-language boundary (`language:css`). */
 const LANGUAGE_SCOPE_PREFIX = "language:";
 
-const HTML_ESCAPE_RE = /[&<>"']/g;
-/** @type {Record<string, string>} */
-const HTML_ESCAPE_MAP = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#x27;",
-};
-
 /**
  * Five sequential `.replace()` passes (one per character) previously cost
  * ~87% of renderHtml's time, since every TEXT event runs through this. A
- * single regex pass, skipped entirely when there's nothing to escape, cuts
- * that to a fraction (see bench/render.bench.ts).
+ * single pass that returns `value` untouched when there's nothing to escape
+ * cuts that to a fraction. It scans char codes rather than calling a regex:
+ * most TEXT values are a few characters long, where a regex call's fixed
+ * cost dominated (see bench/render.bench.ts).
  * @param {string} value
  */
 export function escapeHtml(value) {
-  if (!HTML_ESCAPE_RE.test(value)) return value;
-  return value.replace(HTML_ESCAPE_RE, (char) => HTML_ESCAPE_MAP[char] ?? char);
+  for (let i = 0; i < value.length; i++) {
+    const code = value.charCodeAt(i);
+    // `>` (62) is the highest code point that needs escaping.
+    if (code <= 62 && htmlEscape(code) !== null)
+      return escapeHtmlFrom(value, i);
+  }
+  return value;
+}
+
+/**
+ * The entity for an escaped char code, or null if it needs no escaping.
+ * @param {number} code
+ * @returns {string | null}
+ */
+function htmlEscape(code) {
+  switch (code) {
+    case 38:
+      return "&amp;";
+    case 60:
+      return "&lt;";
+    case 62:
+      return "&gt;";
+    case 34:
+      return "&quot;";
+    case 39:
+      return "&#x27;";
+    default:
+      return null;
+  }
+}
+
+/**
+ * `escapeHtml`'s slow path, from the first index `start` that needs escaping.
+ * @param {string} value
+ * @param {number} start
+ */
+function escapeHtmlFrom(value, start) {
+  let out = value.slice(0, start);
+  let last = start;
+  for (let i = start; i < value.length; i++) {
+    const code = value.charCodeAt(i);
+    if (code > 62) continue;
+    const entity = htmlEscape(code);
+    if (entity === null) continue;
+    out += value.slice(last, i) + entity;
+    last = i + 1;
+  }
+  return out + value.slice(last);
 }
 
 /**
