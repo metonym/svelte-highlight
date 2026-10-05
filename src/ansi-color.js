@@ -146,20 +146,41 @@ export function colorToRgb(color) {
 }
 
 /**
+ * sRGB channel (0-255) to linear light.
+ * @param {number} c
+ * @returns {number}
+ */
+function linearChannel(c) {
+  const v = c / 255;
+  return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+}
+
+// `linearChannel` for every integer channel, so the per-segment contrast
+// check reads a table instead of calling `**` (see bench/ansi.bench.ts).
+const LINEAR = Array.from({ length: 256 }, (_, c) => linearChannel(c));
+
+/**
  * WCAG relative luminance.
  * @param {[number, number, number]} rgb
  * @returns {number}
  */
 export function luminance(rgb) {
-  const toLinear = (/** @type {number} */ c) => {
-    const v = c / 255;
-    return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
-  };
-  return (
-    0.2126 * toLinear(rgb[0]) +
-    0.7152 * toLinear(rgb[1]) +
-    0.0722 * toLinear(rgb[2])
-  );
+  // A channel outside the table (a truecolor value past 255) is computed
+  // directly, with the same result the table would hold.
+  const r = LINEAR[rgb[0]] ?? linearChannel(rgb[0]);
+  const g = LINEAR[rgb[1]] ?? linearChannel(rgb[1]);
+  const b = LINEAR[rgb[2]] ?? linearChannel(rgb[2]);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * WCAG contrast ratio from two relative luminances.
+ * @param {number} la
+ * @param {number} lb
+ * @returns {number}
+ */
+function luminanceRatio(la, lb) {
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
 /**
@@ -169,9 +190,22 @@ export function luminance(rgb) {
  * @returns {number}
  */
 export function contrastRatio(a, b) {
-  const la = luminance(a);
-  const lb = luminance(b);
-  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+  return luminanceRatio(luminance(a), luminance(b));
+}
+
+const BLACK_LUMINANCE = luminance(BLACK);
+const WHITE_LUMINANCE = luminance(WHITE);
+
+/**
+ * `readableForeground` for a background whose luminance is already known.
+ * @param {number} bgLuminance
+ * @returns {string}
+ */
+function readableForegroundFor(bgLuminance) {
+  return luminanceRatio(BLACK_LUMINANCE, bgLuminance) >=
+    luminanceRatio(WHITE_LUMINANCE, bgLuminance)
+    ? "#000000"
+    : "#ffffff";
 }
 
 /**
@@ -180,9 +214,29 @@ export function contrastRatio(a, b) {
  * @returns {string}
  */
 export function readableForeground(bg) {
-  return contrastRatio(BLACK, bg) >= contrastRatio(WHITE, bg)
-    ? "#000000"
-    : "#ffffff";
+  return readableForegroundFor(luminance(bg));
+}
+
+// Luminance of each named color's default and of the fallback foreground,
+// computed once: `foregroundCss` needs them for most segments with a
+// background, and re-parsing the hex string each time dominated the check.
+/** @type {Map<string, number>} */
+const NAMED_LUMINANCE = new Map(
+  Object.entries(ANSI_COLOR_DEFAULTS).map(([name, hex]) => [
+    name,
+    luminance(hexToRgb(hex)),
+  ]),
+);
+const FALLBACK_LUMINANCE = luminance(hexToRgb(FOREGROUND_FALLBACK));
+
+/**
+ * `luminance(colorToRgb(color))`, without re-parsing a named color's hex.
+ * @param {AnsiColor} color
+ * @returns {number}
+ */
+function colorLuminance(color) {
+  const named = "name" in color ? NAMED_LUMINANCE.get(color.name) : undefined;
+  return named ?? luminance(colorToRgb(color));
 }
 
 /**
@@ -195,11 +249,13 @@ export function foregroundCss(segment, autoContrast) {
   // Concealed text is rendered transparent (layout and copy text stay).
   if (segment.conceal) return "transparent";
   if (autoContrast && segment.bg) {
-    const bg = colorToRgb(segment.bg);
-    const fg = segment.fg
-      ? colorToRgb(segment.fg)
-      : hexToRgb(FOREGROUND_FALLBACK);
-    if (contrastRatio(fg, bg) < CONTRAST_TARGET) return readableForeground(bg);
+    // Each luminance is computed once and reused for both the contrast check
+    // and the black/white pick (it used to be computed up to three times).
+    const bg = colorLuminance(segment.bg);
+    const fg = segment.fg ? colorLuminance(segment.fg) : FALLBACK_LUMINANCE;
+    if (luminanceRatio(fg, bg) < CONTRAST_TARGET) {
+      return readableForegroundFor(bg);
+    }
   }
   return segment.fg ? cssColor(segment.fg) : undefined;
 }
