@@ -6,14 +6,15 @@
  * document, the same kind of typing-simulation comparison
  * incremental.bench.ts runs for parseIncremental/reparseIncremental.
  *
- * highlightMatches (the DOM-painting half of this module) isn't benched
- * here: it walks real DOM (TreeWalker, Range, CSS.highlights), which this
- * Bun-native bench environment has no shim for.
+ * highlightMatches (the DOM-painting half of this module) runs against
+ * bench/_fake-search-dom.ts, a minimal DOM shim, so its cost here is the tree
+ * walking and querying it does, not a browser's layout or paint.
  */
 import { group, task } from "ostia";
 import javascript from "../src/languages/javascript.js";
-import { createSearch } from "../src/search.js";
+import { createSearch, highlightMatches } from "../src/search.js";
 import { createTokenizedDocument } from "../src/tokenized-document.js";
+import { type FakeElement, h, installFakeDom } from "./_fake-search-dom.ts";
 import { jsLines } from "./_shared.ts";
 
 group("createSearch query() full rescan by document size", () => {
@@ -89,6 +90,92 @@ group(
     }
   },
 );
+
+const PAINT_LINES = 2_000;
+
+/** Line `i`'s plain text; every line has one "needle" to match. */
+function paintLine(i: number) {
+  return `  const value${i} = compute(${i}, "needle") + other_${i % 7};`;
+}
+
+/** One `<span>` per word or punctuation run, like highlighted tokens. */
+function tokenSpans(text: string) {
+  return (text.match(/\w+|\W+/g) ?? []).map((token) => h("span", {}, token));
+}
+
+/**
+ * A `<code>` of PAINT_LINES token-split lines. `rows` wraps each line in a
+ * `<span class="line" data-line="N">`, the way HighlightVirtual renders;
+ * without it, highlightMatches falls back to offsets into the whole
+ * `<code>`'s text.
+ */
+function paintFixture(rows: boolean) {
+  const code = h("code");
+  for (let i = 0; i < PAINT_LINES; i++) {
+    const tokens = tokenSpans(paintLine(i));
+    if (rows) {
+      code.appendChild(
+        h(
+          "span",
+          { className: "line", dataset: { line: String(i) } },
+          ...tokens,
+        ),
+      );
+    } else {
+      for (const token of tokens) code.appendChild(token);
+    }
+    code.appendChild(h("span", {}, "\n"));
+  }
+  return h("pre", {}, code);
+}
+
+/** `count` "needle" matches spread evenly over PAINT_LINES lines. */
+function paintMatches(count: number) {
+  return Array.from({ length: count }, (_, k) => {
+    const line = Math.floor((k * PAINT_LINES) / count);
+    const start = paintLine(line).indexOf("needle");
+    return { line, start, end: start + "needle".length };
+  });
+}
+
+const PAINT_LAYOUTS = [
+  ["[data-line] rows", true],
+  ["<code> fallback", false],
+] as const;
+
+group("highlightMatches() CSS highlights @ 2,000 lines", () => {
+  for (const [layout, rows] of PAINT_LAYOUTS) {
+    const root = paintFixture(rows) as unknown as Element;
+    for (const count of [250, 1_000]) {
+      const matches = paintMatches(count);
+      task(`${count.toLocaleString()} matches, ${layout}`, () => {
+        const registry = installFakeDom();
+        const paint = highlightMatches(root, matches, { current: 0 });
+        const size =
+          (registry.get("shl-search")?.size ?? 0) +
+          (registry.get("shl-search-current")?.size ?? 0);
+        paint.dispose();
+        return size;
+      });
+    }
+  }
+});
+
+// The <mark> fallback splits text nodes, so each run paints a fresh copy of
+// the fixture; building it is the same work on both sides of an A/B.
+group("highlightMatches() <mark> fallback @ 2,000 lines", () => {
+  for (const [layout, rows] of PAINT_LAYOUTS) {
+    for (const count of [250, 1_000]) {
+      const matches = paintMatches(count);
+      task(`${count.toLocaleString()} matches, ${layout}`, () => {
+        installFakeDom({ highlights: false });
+        const root: FakeElement = paintFixture(rows);
+        highlightMatches(root as unknown as Element, matches, { current: 0 });
+        return root.querySelectorAll("mark").length;
+      });
+    }
+  }
+});
 
 // Run this suite with `ostia bench bench/search.bench.ts` for a fast
 // feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.
