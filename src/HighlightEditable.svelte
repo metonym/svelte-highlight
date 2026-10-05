@@ -46,6 +46,7 @@
   export let theme = undefined;
 
   import { createEventDispatcher, onMount } from "svelte";
+  import { lineTokenRanges } from "./editable-css-paint.js";
   import { createDomLinePainter } from "./editable-dom-paint.js";
   import { toRanges } from "./engine.js";
   import {
@@ -374,39 +375,20 @@
     lineHighlightRanges = [];
   }
 
-  // Rebuilds only line `index`'s Highlight Range registrations from
-  // `tokenRanges` (absolute offsets into the full document); the line's text
-  // node itself is untouched by this, so it never disturbs the caret.
-  function paintLineHighlights(index, tokenRanges) {
+  // Rebuilds only line `index`'s Highlight Range registrations from the
+  // document's `events`; the line's text node itself is untouched by this,
+  // so it never disturbs the caret.
+  function paintLineHighlights(index, events) {
     clearLineHighlights(index);
     const textNode = lineEls[index].firstChild;
     const next = [];
     if (textNode) {
       const lineStart = lineStartOffset(index);
       const lineEnd = lineStart + lineLengths[index];
-      // `tokenRanges` is sorted by, and disjoint on, `start` (see the
-      // comment on `paintAllLineHighlights`), so `end` is monotonically
-      // increasing too. Binary-search the first range that can possibly
-      // intersect the line instead of scanning the whole document.
-      let lo = 0;
-      let hi = tokenRanges.length;
-      while (lo < hi) {
-        const mid = (lo + hi) >>> 1;
-        if (tokenRanges[mid].end <= lineStart) lo = mid + 1;
-        else hi = mid;
-      }
-      for (
-        let j = lo;
-        j < tokenRanges.length && tokenRanges[j].start < lineEnd;
-        j++
-      ) {
-        const token = tokenRanges[j];
-        const start = Math.max(token.start, lineStart) - lineStart;
-        const end = Math.min(token.end, lineEnd) - lineStart;
-        if (start === end) continue;
+      for (const token of lineTokenRanges(events, lineStart, lineEnd)) {
         const range = new Range();
-        range.setStart(textNode, start);
-        range.setEnd(textNode, end);
+        range.setStart(textNode, token.start);
+        range.setEnd(textNode, token.end);
         cssHighlightFor(token.scope).add(range);
         next.push({ scope: token.scope, range });
       }
@@ -458,12 +440,12 @@
 
   function paintCssHighlights() {
     const changedIndex = renderLines(code.split("\n"), setText);
-    const tokenRanges = toRanges(getEvents());
+    const events = getEvents();
 
     if (changedIndex == null) {
-      paintAllLineHighlights(tokenRanges);
+      paintAllLineHighlights(toRanges(events));
     } else {
-      paintLineHighlights(changedIndex, tokenRanges);
+      paintLineHighlights(changedIndex, events);
     }
     return changedIndex;
   }
