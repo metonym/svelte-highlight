@@ -237,9 +237,15 @@ describe("HighlightEditable pure-append paint cost", () => {
     });
   }
 
-  function typeAndPaint(createPainter: () => Painter, targetLength: number) {
-    const painter = createPainter();
+  /**
+   * Every keystroke's parse state while typing `targetLength` characters.
+   * Parsed up front so the timed loop below measures painting alone:
+   * reparseIncremental has its own per-keystroke cost, and timing it too
+   * pushed a passing painter's ratio past the limit on a noisy CI runner.
+   */
+  function typedStates(targetLength: number) {
     const source = jsSource(targetLength);
+    const states: Array<[unknown[], string]> = [];
     let code = "";
     let state: IncrementalParse | undefined;
     for (const ch of source) {
@@ -247,22 +253,35 @@ describe("HighlightEditable pure-append paint cost", () => {
       state = state
         ? reparseIncremental(registry, "javascript", state, code)
         : parseIncremental(registry, "javascript", code);
-      painter.paint(state.events, code, "javascript");
+      states.push([state.events, code]);
+    }
+    return states;
+  }
+
+  function paintAll(
+    createPainter: () => Painter,
+    states: Array<[unknown[], string]>,
+  ) {
+    const painter = createPainter();
+    for (const [events, code] of states) {
+      painter.paint(events, code, "javascript");
     }
   }
 
   it("keeps 4x more typed characters from costing anywhere near 4x^2 the time", async () => {
     const createPainter = await loadCreatePainter();
-    typeAndPaint(createPainter, 500); // warm up
+    paintAll(createPainter, typedStates(500)); // warm up
 
-    const small = medianTime(() => typeAndPaint(createPainter, 1000), 5);
-    const large = medianTime(() => typeAndPaint(createPainter, 4000), 5);
+    const smallStates = typedStates(1000);
+    const largeStates = typedStates(4000);
+    const small = medianTime(() => paintAll(createPainter, smallStates), 5);
+    const large = medianTime(() => paintAll(createPainter, largeStates), 5);
 
-    // Measured at this scale (median of 5 trials, needed for a stable
-    // reading): true O(delta)-per-keystroke painting costs ~4-7x for 4x
-    // more typing (fixed per-keystroke overhead keeps it above the ideal
-    // 4x); the O(document-length)-per-keystroke pattern this guards
-    // against costs ~13-17x. 9 sits clear of both with margin to spare.
+    // Measured at this scale (median of 5 trials, painting only): true
+    // O(delta)-per-keystroke painting costs ~4-5x for 4x more typing; the
+    // O(document-length)-per-keystroke pattern this guards against (the
+    // full-repaint baseline above) costs ~16x. 9 sits near the geometric
+    // middle, with about 2x margin each way.
     expect(large / Math.max(small, 1)).toBeLessThan(9);
   }, 15_000);
 });
