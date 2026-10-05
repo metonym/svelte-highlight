@@ -24,5 +24,26 @@ group("engine.tokenize()", () => {
   }
 });
 
+// Prose-like runs of plain words between rule matches, where the time goes
+// into Tokenizer#keywordProcess rather than rule scanning. SQL is also
+// case-insensitive, so every word is lowercased before its keyword lookup.
+const KEYWORD_DENSE = {
+  sql:
+    "SELECT name, total_amount, created_at FROM orders o INNER JOIN customers c " +
+    "ON o.customer_id = c.id WHERE status IS NOT NULL AND region IN (north, south) " +
+    "GROUP BY name ORDER BY created_at DESC;\n",
+  python:
+    "def compute(values, factor):\n" +
+    "    result = [value for value in values if value is not None and value > factor]\n" +
+    "    return sorted(result, key=lambda item: item, reverse=True)\n",
+};
+
+group("engine.tokenize() keyword-dense", () => {
+  for (const [language, unit] of Object.entries(KEYWORD_DENSE)) {
+    const code = sizedSlice(unit, 20_000);
+    task(`${language} @ 20,000 chars`, () => registry.tokenize(code, language));
+  }
+});
+
 // Run this suite with `ostia bench bench/tokenize.bench.ts` for a fast
 // feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.
