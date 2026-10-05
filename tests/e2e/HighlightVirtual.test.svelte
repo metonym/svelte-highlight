@@ -51,3 +51,10 @@
 >
   Scroll to line 2500
 </button>
+<button
+  type="button"
+  data-testid="center-2500"
+  on:click={() => ref.scrollToLine(2500, { align: "center" })}
+>
+  Center line 2500
+</button>

@@ -1980,7 +1980,7 @@ See [Code-splitting](#code-splitting) for the tradeoffs between a static import 
 
 The rendered `<pre>` is the scroll container itself -- size it with `style`/`class`/`$$restProps`, same as `Highlight`, but `white-space` can't be overridden this way: it's pinned to `pre` because the windowing math depends on a uniform line height. Content doesn't wrap (uniform line height is a v1 constraint, measured once from a rendered probe line). `overscan` (default `12`) controls how many extra lines render above/below the viewport; `checkpointInterval` (default `100`) controls how often the engine snapshots its parse state, trading a little memory for cheaper random access. Concretely, memory scales with `document lines / checkpointInterval` retained checkpoints, each holding a full engine snapshot plus open-scope/pending-HTML state -- and checkpoints are never evicted: they're retained for the entire lifetime of the `TokenizedDocument` instance, across any number of `append()` calls, until a `setCode()` call with unrelated content triggers a full reset. This is fine for the target "huge static document" use case, since checkpoints are bounded by that one document's size, but worth knowing for a long-lived instance that's repeatedly `setCode()`-reset with genuinely new documents rather than recreated. A consumer worried about retained memory can call `doc.checkpointCount()` directly rather than estimating it from `lineCount()`/`checkpointInterval`. Server-rendered output is the full document as plain escaped text (predictable cost for huge documents); the windowed, highlighted view takes over after hydration. In practice this means every page load flashes from unstyled monochrome text to highlighted, windowed content right after hydration, with no fade -- unlike `HighlightStream`'s default (non-`virtualize`) mode, which SSRs already-highlighted HTML. Nothing here requires a component change to soften today: since the container already needs an explicit size (`style`/`class`/`$$restProps`, above), reserving that same `min-height`/`height` up front prevents layout shift, and a CSS transition keyed off a `data-hydrated` attribute or class toggle you set yourself -- e.g. in `onMount` on a wrapping element -- can fade the flash instead of leaving it instant.
 
-`on:windowchange` fires with `{ start, end, lineCount }` whenever the rendered window moves, once the new rows are in the DOM, so you can show something like "lines *N*-*M* of *T*" or paint into the rows (as `highlightMatches` does) without counting DOM nodes yourself. `bind:this`, then call `scrollToLine(line)` to scroll a given line into view -- useful for a "jump to line" control -- without guessing at the line height yourself.
+`on:windowchange` fires with `{ start, end, lineCount }` whenever the rendered window moves, once the new rows are in the DOM, so you can show something like "lines *N*-*M* of *T*" or paint into the rows (as `highlightMatches` does) without counting DOM nodes yourself. `bind:this`, then call `scrollToLine(line, { align })` to scroll a given line into view -- useful for a "jump to line" control -- without guessing at the line height yourself.
 
 For custom virtualization, servers, or tests, `svelte-highlight/tokenized-document` exposes the same windowing primitive headlessly:
 
@@ -2081,7 +2081,7 @@ Browser Cmd+F can't see rows a virtualized view (`HighlightVirtual`, `HighlightS
 
   function next() {
     const match = search.next();
-    if (match) ref.scrollToLine(match.line);
+    if (match) ref.scrollToLine(match.line, { align: "center" });
   }
 </script>
 
@@ -2608,7 +2608,7 @@ Use `bind:this`, then call `scrollToLine(line)` -- works in both `virtualize` an
 
 #### Methods
 
-Use `bind:this`, then call `scrollToLine(line)`.
+Use `bind:this`, then call `scrollToLine(line, { align })`. It jumps without animation. `align` is `"start"` (default, line at the top edge) or `"center"` (line in the middle of the viewport).
 
 #### Dispatched Events
 

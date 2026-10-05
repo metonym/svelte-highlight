@@ -2481,6 +2481,32 @@ test("HighlightVirtual - windowchange fires after the new rows render", async ({
   await expect(page.getByTestId("rows-ready")).toHaveText("true");
 });
 
+test("HighlightVirtual - scrollToLine align center puts the line mid-viewport", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+
+  await page.getByTestId("center-2500").click();
+  const line = virtual.locator("[data-line='2500']");
+  await expect(line).toBeVisible();
+
+  // The line's middle sits within one line height of the viewport's middle.
+  const offset = await line.evaluate((el) => {
+    const container = el.closest("pre") as HTMLElement;
+    const box = container.getBoundingClientRect();
+    const row = el.getBoundingClientRect();
+    return {
+      delta: Math.abs(row.top + row.height / 2 - (box.top + box.height / 2)),
+      height: row.height,
+    };
+  });
+  expect(offset.delta).toBeLessThanOrEqual(offset.height);
+});
+
 test("Typewriter - animates then settles to the full highlighted content", async ({
   mount,
   page,

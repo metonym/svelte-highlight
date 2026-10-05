@@ -41,10 +41,14 @@
     unsubscribe();
   });
 
-  $: search.query(query);
-
   function jump(match) {
-    if (match) ref?.scrollToLine(match.line);
+    if (match) ref?.scrollToLine(match.line, { align: "center" });
+  }
+
+  // Follow the first match as the query changes, like a browser's find box.
+  $: {
+    search.query(query);
+    jump(search.current());
   }
 </script>
 
