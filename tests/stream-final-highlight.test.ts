@@ -2,42 +2,42 @@ import { createRegistry, registerAll } from "../src/engine.js";
 import javascript from "../src/languages/javascript.js";
 import { createFinalHighlighter } from "../src/stream-final-highlight.js";
 
-function streamedSession(code: string) {
+function countingRegistry() {
   const registry = createRegistry();
   registerAll(registry, javascript);
-  const session = registry.createSession("javascript");
-  session.append(code);
-  let finishCalls = 0;
-  const finish = session.finish.bind(session);
-  session.finish = (options) => {
-    finishCalls++;
-    return finish(options);
+  let highlightCalls = 0;
+  const counted = {
+    highlight(code: string, options: { language: string }) {
+      highlightCalls++;
+      return registry.highlight(code, options);
+    },
   };
-  return { registry, session, finishCalls: () => finishCalls };
+  return { registry, counted, highlightCalls: () => highlightCalls };
 }
 
 describe("createFinalHighlighter", () => {
-  it("matches a one-shot highlight", () => {
+  it("matches a streamed session's canonical finish", () => {
     const code = "const a = 1;\n/* multi\nline */\nlet b = 2;\n";
-    const { registry, session } = streamedSession(code);
+    const { registry } = countingRegistry();
+    const session = registry.createSession("javascript");
+    session.append(code);
     expect(
-      createFinalHighlighter().highlight(session, code, "javascript"),
-    ).toBe(registry.highlight(code, { language: "javascript" }).value);
+      createFinalHighlighter().highlight(registry, code, "javascript"),
+    ).toBe(session.finish({ canonicalize: true }).value);
   });
 
-  it("re-parses only when the fed code or language changes", () => {
+  it("re-parses only when the code or language changes", () => {
     const code = "let x = 1;\n";
-    const { session, finishCalls } = streamedSession(code);
+    const { counted, highlightCalls } = countingRegistry();
     const final = createFinalHighlighter();
-    const first = final.highlight(session, code, "javascript");
-    expect(final.highlight(session, code, "javascript")).toBe(first);
-    expect(finishCalls()).toBe(1);
+    const first = final.highlight(counted, code, "javascript");
+    expect(final.highlight(counted, code, "javascript")).toBe(first);
+    expect(highlightCalls()).toBe(1);
 
-    session.append("x++;\n");
-    final.highlight(session, `${code}x++;\n`, "javascript");
-    expect(finishCalls()).toBe(2);
+    final.highlight(counted, `${code}x++;\n`, "javascript");
+    expect(highlightCalls()).toBe(2);
 
-    final.highlight(session, `${code}x++;\n`, "js");
-    expect(finishCalls()).toBe(3);
+    final.highlight(counted, `${code}x++;\n`, "js");
+    expect(highlightCalls()).toBe(3);
   });
 });

@@ -223,8 +223,20 @@
       tailLines = unsealedLines;
       return;
     }
+    resetStreamingState();
     session = registry.createSession(language.name);
     sessionLanguageName = language.name;
+  }
+
+  // Drops the session and everything rendered from it. Also runs after the
+  // done pass: from then on the template shows only `highlighted`, and a
+  // repeat done pass reuses the memoized final HTML without a session, so a
+  // closed stream holds little more than its final HTML. If streaming
+  // resumes, ensureSession starts over from the whole buffer, which renders
+  // the same lines - bench/markdown-stream.bench.ts.
+  function resetStreamingState() {
+    session = undefined;
+    sessionLanguageName = "";
     fedCode = "";
     finalizedPendingHtml = "";
     finalizedOpenScopes = [];
@@ -252,20 +264,18 @@
   }
 
   function repaint() {
-    ensureSession();
-    if (code.length > fedCode.length) {
-      session.append(code.slice(fedCode.length));
-      fedCode = code;
-    }
-
     if (done) {
       // Full re-parse for multi-line lookahead (heredocs, etc.).
-      highlighted = finalHighlighter.highlight(
-        session,
-        fedCode,
-        sessionLanguageName,
-      );
+      ensureRegistered(language);
+      highlighted = finalHighlighter.highlight(registry, code, language.name);
+      if (session) resetStreamingState();
     } else {
+      ensureSession();
+      if (code.length > fedCode.length) {
+        session.append(code.slice(fedCode.length));
+        fedCode = code;
+      }
+
       // Newly committed events (append only tokenizes complete lines).
       const committed = session.events();
       if (committed.length > renderedCommittedCount) {

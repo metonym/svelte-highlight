@@ -1,24 +1,27 @@
 /**
  * HighlightStream's final pass once `done`: one full, canonicalizing
- * re-parse of everything fed so far, for the multi-line lookahead
- * (heredocs, etc.) the streaming parse can't resolve.
+ * re-parse of the whole buffer, for the multi-line lookahead (heredocs,
+ * etc.) the streaming parse can't resolve.
  *
- * The result is memoized on the fed code and language. The done pass can
- * re-run with neither changed: MarkdownStream re-renders its keyed
- * `{#each segments}` block on every chunk and hands each fence's
- * HighlightStream its `language` object again, which Svelte's legacy-mode
- * equality always treats as changed. Without the memo, every closed fence
- * re-parsed its whole code on every chunk streamed after it -
- * bench/stream-final-highlight.bench.ts.
+ * It's a one-shot `registry.highlight` - exactly what
+ * `session.finish({ canonicalize: true })` runs - so it needs no session.
+ * HighlightStream drops its streaming session once the pass is done, and a
+ * repeat pass doesn't build a new one.
+ *
+ * The result is memoized on the code and language. The done pass can
+ * re-run with neither changed (a parent re-renders and hands over its
+ * `language` object again, which Svelte's legacy-mode equality always
+ * treats as changed). Without the memo, each re-run re-parsed the whole
+ * code - bench/stream-final-highlight.bench.ts.
  */
 
 /**
- * @typedef {import("./engine.d.ts").StreamSession} StreamSession
+ * @typedef {{ highlight: (code: string, options: { language: string }) => { value: string } }} FinalRegistry
  */
 
 /**
  * @returns {{
- *   highlight: (session: StreamSession, fedCode: string, language: string) => string,
+ *   highlight: (registry: FinalRegistry, code: string, language: string) => string,
  * }}
  */
 export function createFinalHighlighter() {
@@ -30,18 +33,17 @@ export function createFinalHighlighter() {
 
   return {
     /**
-     * @param {StreamSession} session Fed exactly `fedCode`.
-     * @param {string} fedCode
+     * @param {FinalRegistry} registry Has `language` registered.
+     * @param {string} code
      * @param {string} language
      * @returns {string}
      */
-    highlight(session, fedCode, language) {
-      // `finish({ canonicalize: true })` is a pure function of the fed code
-      // and language - it re-parses from scratch and leaves the session
-      // untouched - so an unchanged pair can reuse the last result.
-      if (fedCode !== lastCode || language !== lastLanguage) {
-        lastHtml = session.finish({ canonicalize: true }).value;
-        lastCode = fedCode;
+    highlight(registry, code, language) {
+      // A pure function of the code and language, so an unchanged pair can
+      // reuse the last result.
+      if (code !== lastCode || language !== lastLanguage) {
+        lastHtml = registry.highlight(code, { language }).value;
+        lastCode = code;
         lastLanguage = language;
       }
       return lastHtml;

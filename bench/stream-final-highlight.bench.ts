@@ -1,10 +1,11 @@
 /**
- * stream-final-highlight.js: HighlightStream's `done` pass, re-run the way
- * MarkdownStream re-runs it. Every new chunk re-renders the keyed
- * `{#each segments}` block, which hands each fence's HighlightStream its
- * `language` object again; Svelte's legacy-mode equality treats any object
- * as changed, so every already-closed fence re-runs its done pass on every
- * chunk, not just once when it closes.
+ * stream-final-highlight.js: HighlightStream's `done` pass, re-run with
+ * unchanged code and language. MarkdownStream used to do this on every
+ * chunk: the keyed `{#each segments}` block handed each fence's
+ * HighlightStream its `language` object again, and Svelte's legacy-mode
+ * equality treats any object as changed. MarkdownStream no longer does
+ * (bench/markdown-stream.bench.ts), but any parent that re-renders with a
+ * fresh `language` object still does.
  */
 import { group, task } from "ostia";
 import { createFinalHighlighter } from "../src/stream-final-highlight.js";
@@ -17,27 +18,23 @@ const FENCE_COUNT = 10;
 const FENCE_SIZE = 1_000;
 const CHUNK_COUNT = 20;
 
-// Closed fences: each fully fed to its own session, as HighlightStream's
-// session is by the time its fence closes.
-const fences = Array.from({ length: FENCE_COUNT }, (_, i) => {
-  const code = sizedSlice(corpus.javascript.slice(i * FENCE_SIZE), FENCE_SIZE);
-  const session = registry.createSession(LANGUAGE);
-  session.append(code);
-  return { code, session };
-});
+// Closed fences: the code each HighlightStream holds once its fence closes.
+const fences = Array.from({ length: FENCE_COUNT }, (_, i) =>
+  sizedSlice(corpus.javascript.slice(i * FENCE_SIZE), FENCE_SIZE),
+);
 
 /** One MarkdownStream lifetime past the last fence: a fresh highlighter per
  * fence (one per HighlightStream instance), then one done-pass re-run per
  * fence per streamed chunk. */
 function rerunDonePasses() {
-  const instances = fences.map((fence) => ({
-    ...fence,
+  const instances = fences.map((code) => ({
+    code,
     highlighter: createFinalHighlighter(),
   }));
   let html = "";
   for (let chunk = 0; chunk < CHUNK_COUNT; chunk++) {
-    for (const { code, session, highlighter } of instances) {
-      html = highlighter.highlight(session, code, LANGUAGE);
+    for (const { code, highlighter } of instances) {
+      html = highlighter.highlight(registry, code, LANGUAGE);
     }
   }
   return html;
