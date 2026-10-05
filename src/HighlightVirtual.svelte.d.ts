@@ -41,6 +41,10 @@ export default class HighlightVirtual extends SvelteComponentTyped<
   HighlightVirtualEvents,
   Record<string, never>
 > {
-  /** Scroll a given line into the rendered window. */
-  scrollToLine(line: number): void;
+  /**
+   * Scroll a given line into the rendered window, without animation.
+   * `align` places the line at the viewport's top edge (default) or
+   * middle.
+   */
+  scrollToLine(line: number, options?: { align?: "start" | "center" }): void;
 }

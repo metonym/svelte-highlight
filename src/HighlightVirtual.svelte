@@ -184,12 +184,19 @@
   }
 
   /**
-   * Scroll a given line into the rendered window.
+   * Scroll a given line into the rendered window. Jumps instantly (sets
+   * `scrollTop`), so there's no scroll animation.
    * @param {number} line
+   * @param {{ align?: "start" | "center" }} [options] Where the line lands
+   *   in the viewport: the top edge (default) or the middle.
    */
-  export function scrollToLine(line) {
+  export function scrollToLine(line, options = {}) {
     if (!container) return;
-    const target = Math.max(0, Math.min(line, lineCount)) * lineHeight;
+    const lineTop = Math.max(0, Math.min(line, lineCount)) * lineHeight;
+    const target =
+      options.align === "center"
+        ? lineTop - (container.clientHeight - lineHeight) / 2
+        : lineTop;
     const maxScrollTop = Math.max(
       0,
       container.scrollHeight - container.clientHeight,
