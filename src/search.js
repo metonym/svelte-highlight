@@ -443,81 +443,131 @@ export function createSearch(source) {
   };
 }
 
+/** @typedef {{ container: Element; baseOffset: number }} LineScope */
+
 /**
- * Resolves the rendered row for `line`: `[data-line]` first, then the
- * `line`-th `.line` element (0-indexed), then the whole `<code>` (offsets
- * treated as absolute into its full `textContent`, split on `"\n"`).
+ * Returns a resolver for the rendered row of each `line`: `[data-line]`
+ * first, then the `line`-th `.line` element (0-indexed), then the whole
+ * `<code>` (offsets treated as absolute into its full `textContent`, split
+ * on `"\n"`).
+ *
+ * Each query runs at most once per paint and is then looked up per line.
+ * Running all three per matched line made a paint O(matched lines x DOM
+ * size): a missing `[data-line]` or the `.line` list scans the whole tree
+ * (bench/search.bench.ts, "highlightMatches()"). The `<mark>` fallback
+ * only adds `<mark>`s and splits text, so nothing it does between lines
+ * changes what these queries return.
  * @param {Element} root
- * @param {number} line
- * @param {Map<Element, number[]>} codeLineOffsets
- * @returns {{ container: Element; baseOffset: number } | undefined}
+ * @returns {(line: number) => LineScope | undefined}
  */
-function resolveLineScope(root, line, codeLineOffsets) {
-  const byDataLine = root.querySelector(`[data-line="${line}"]`);
-  if (byDataLine) return { container: byDataLine, baseOffset: 0 };
+function createLineScopeResolver(root) {
+  /** @type {Map<string, Element> | undefined} */
+  let byDataLine;
+  /** @type {NodeListOf<Element> | undefined} */
+  let lineElements;
+  /** @type {{ code: Element; offsets: number[] } | null | undefined} */
+  let fallback;
 
-  const byClass = root.querySelectorAll(".line")[line];
-  if (byClass) return { container: byClass, baseOffset: 0 };
-
-  const code = root.querySelector("code");
-  if (!code) return undefined;
-
-  let offsets = codeLineOffsets.get(code);
-  if (!offsets) {
-    offsets = [];
-    let consumed = 0;
-    for (const text of (code.textContent ?? "").split("\n")) {
-      offsets.push(consumed);
-      consumed += text.length + 1;
+  return (line) => {
+    if (!byDataLine) {
+      byDataLine = new Map();
+      for (const element of root.querySelectorAll("[data-line]")) {
+        const value = element.getAttribute("data-line");
+        // Keep the first in document order, as querySelector() would.
+        if (value !== null && !byDataLine.has(value)) {
+          byDataLine.set(value, element);
+        }
+      }
     }
-    codeLineOffsets.set(code, offsets);
-  }
+    const row = byDataLine.get(`${line}`);
+    if (row) return { container: row, baseOffset: 0 };
 
-  const baseOffset = offsets[line];
-  return baseOffset === undefined ? undefined : { container: code, baseOffset };
+    lineElements ??= root.querySelectorAll(".line");
+    const byClass = lineElements[line];
+    if (byClass) return { container: byClass, baseOffset: 0 };
+
+    if (fallback === undefined) {
+      const code = root.querySelector("code");
+      fallback = code && { code, offsets: lineOffsets(code) };
+    }
+    if (!fallback) return undefined;
+    const baseOffset = fallback.offsets[line];
+    return baseOffset === undefined
+      ? undefined
+      : { container: fallback.code, baseOffset };
+  };
 }
 
 /**
- * Walks `container`'s text nodes to find the (node, local offset) boundary
- * for an absolute character offset into its full text content.
- * @param {Node} container
- * @param {number} offset
- * @returns {{ node: Text; offset: number } | undefined}
+ * Start offset of each `"\n"`-separated line in `code`'s `textContent`.
+ * @param {Element} code
+ * @returns {number[]}
  */
-function resolveTextPosition(container, offset) {
+function lineOffsets(code) {
+  const offsets = [];
+  let consumed = 0;
+  for (const text of (code.textContent ?? "").split("\n")) {
+    offsets.push(consumed);
+    consumed += text.length + 1;
+  }
+  return offsets;
+}
+
+/**
+ * Resolves absolute character offsets into `container`'s text content to
+ * (text node, local offset) boundaries in one walk. An offset on the seam
+ * between two text nodes lands at the end of the earlier one. Offsets past
+ * the end of the text are left out of the result.
+ * @param {Node} container
+ * @param {number[]} offsets Ascending.
+ * @returns {Map<number, { node: Text; offset: number }>}
+ */
+function resolveTextPositions(container, offsets) {
+  /** @type {Map<number, { node: Text; offset: number }>} */
+  const positions = new Map();
   const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
   let consumed = 0;
   let node = /** @type {Text | null} */ (walker.nextNode());
-  while (node !== null) {
-    const length = node.data.length;
-    if (offset <= consumed + length) return { node, offset: offset - consumed };
-    consumed += length;
-    node = /** @type {Text | null} */ (walker.nextNode());
+  for (const offset of offsets) {
+    while (node !== null && offset > consumed + node.data.length) {
+      consumed += node.data.length;
+      node = /** @type {Text | null} */ (walker.nextNode());
+    }
+    if (node === null) break;
+    positions.set(offset, { node, offset: offset - consumed });
   }
-  return undefined;
+  return positions;
 }
 
 /**
- * @param {{ container: Element; baseOffset: number }} scope
- * @param {number} start
- * @param {number} end
- * @returns {Range | undefined}
+ * Wraps `node`'s `[localStart, localEnd)` in a `<mark>`, splitting it as
+ * needed. When `localStart > 0`, `node` keeps the text before it.
+ * @param {Text} node
+ * @param {number} localStart
+ * @param {number} localEnd
+ * @param {boolean} isCurrent
+ * @returns {HTMLElement}
  */
-function resolveRange(scope, start, end) {
-  const from = resolveTextPosition(scope.container, scope.baseOffset + start);
-  const to = resolveTextPosition(scope.container, scope.baseOffset + end);
-  if (!from || !to) return undefined;
-  const range = new Range();
-  range.setStart(from.node, from.offset);
-  range.setEnd(to.node, to.offset);
-  return range;
+function wrapInMark(node, localStart, localEnd, isCurrent) {
+  let middle = node;
+  if (localEnd < node.data.length) middle.splitText(localEnd);
+  if (localStart > 0) middle = middle.splitText(localStart);
+
+  const mark = document.createElement("mark");
+  mark.dataset.shlSearch = "";
+  if (isCurrent) mark.dataset.shlSearchCurrent = "";
+  middle.replaceWith(mark);
+  mark.appendChild(middle);
+  return mark;
 }
 
 /**
  * Wraps a match's text in one `<mark>` per text node it spans, splitting
  * nodes as needed. Re-walks `scope.container` fresh each call, so callers
- * must process matches within a scope in descending `start` order.
- * @param {{ container: Element; baseOffset: number }} scope
+ * must process matches within a scope in descending `start` order. Only
+ * used when the one-pass `wrapSpansInMarks` can't be (see
+ * `highlightMatches`).
+ * @param {LineScope} scope
  * @param {number} start
  * @param {number} end
  * @param {boolean} isCurrent
@@ -552,28 +602,108 @@ function wrapMatchInMarks(scope, start, end, isCurrent) {
     const overlapEnd = Math.min(globalEnd, nodeEnd);
     if (overlapStart >= overlapEnd) continue;
 
-    const localStart = overlapStart - nodeStart;
-    const localEnd = overlapEnd - nodeStart;
-
-    let middle = textNode;
-    if (localEnd < length) middle.splitText(localEnd);
-    if (localStart > 0) middle = middle.splitText(localStart);
-
-    const mark = document.createElement("mark");
-    mark.dataset.shlSearch = "";
-    if (isCurrent) mark.dataset.shlSearchCurrent = "";
-    middle.replaceWith(mark);
-    mark.appendChild(middle);
-    marks.push(mark);
+    marks.push(
+      wrapInMark(
+        textNode,
+        overlapStart - nodeStart,
+        overlapEnd - nodeStart,
+        isCurrent,
+      ),
+    );
   }
 
   return marks;
+}
+
+/** @typedef {{ start: number; end: number; isCurrent: boolean }} MarkSpan */
+
+/**
+ * Wraps every span in `container` in `<mark>`s with one walk of its text
+ * nodes, where `wrapMatchInMarks` re-walks the container per match. Spans
+ * are absolute offsets into the container's text, sorted by descending
+ * `start`, non-empty, and non-overlapping. Going back to front, a split
+ * only ever touches text after every span still to come, and the node a
+ * split starts from keeps its own start offset, so the offsets indexed up
+ * front stay valid for the rest of the pass.
+ * @param {Element} container
+ * @param {MarkSpan[]} spans
+ * @param {HTMLElement[]} marks Receives the created `<mark>`s.
+ */
+function wrapSpansInMarks(container, spans, marks) {
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+  /** @type {Text[]} */
+  const nodes = [];
+  /** @type {number[]} */
+  const starts = [];
+  let consumed = 0;
+  let node = /** @type {Text | null} */ (walker.nextNode());
+  while (node !== null) {
+    nodes.push(node);
+    starts.push(consumed);
+    consumed += node.data.length;
+    node = /** @type {Text | null} */ (walker.nextNode());
+  }
+
+  // Last node that starts before the current span's end.
+  let last = nodes.length - 1;
+  for (const { start, end, isCurrent } of spans) {
+    while (last >= 0 && /** @type {number} */ (starts[last]) >= end) last -= 1;
+    let first = last;
+    while (
+      first >= 0 &&
+      /** @type {number} */ (starts[first]) +
+        /** @type {Text} */ (nodes[first]).data.length >
+        start
+    ) {
+      first -= 1;
+    }
+    for (let i = first + 1; i <= last; i += 1) {
+      const textNode = /** @type {Text} */ (nodes[i]);
+      const nodeStart = /** @type {number} */ (starts[i]);
+      const overlapStart = Math.max(start, nodeStart);
+      const overlapEnd = Math.min(end, nodeStart + textNode.data.length);
+      if (overlapStart >= overlapEnd) continue;
+      marks.push(
+        wrapInMark(
+          textNode,
+          overlapStart - nodeStart,
+          overlapEnd - nodeStart,
+          isCurrent,
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Whether any of `containers` sits inside another one.
+ * @param {Iterable<Element>} containers
+ * @param {Element} root
+ * @returns {boolean}
+ */
+function anyNested(containers, root) {
+  const set = new Set(containers);
+  for (const container of set) {
+    for (
+      let p = container.parentElement;
+      p && p !== root;
+      p = p.parentElement
+    ) {
+      if (set.has(p)) return true;
+    }
+  }
+  return false;
 }
 
 /**
  * Paints `matches` into `root` (the currently-rendered rows only): the CSS
  * Custom Highlight API when available, else `<mark data-shl-search>`
  * wrapping. One full paint per call - repaint-on-change is the caller's job.
+ *
+ * Text positions are resolved with one walk per row container, not one
+ * per match: with the `<code>` fallback every line shares one container,
+ * and a walk from its first text node per match made a paint O(matches x
+ * text nodes) (bench/search.bench.ts, "highlightMatches()").
  * @param {Element} root
  * @param {readonly import("./search.d.ts").SearchMatch[]} matches
  * @param {{ current?: number; name?: string }} [options]
@@ -594,8 +724,13 @@ export function highlightMatches(
     byLine.set(match.line, list);
   });
 
-  /** @type {Map<Element, number[]>} */
-  const codeLineOffsets = new Map();
+  const resolveScope = createLineScopeResolver(root);
+  /** @type {Map<number, LineScope>} */
+  const scopes = new Map();
+  for (const line of byLine.keys()) {
+    const scope = resolveScope(line);
+    if (scope) scopes.set(line, scope);
+  }
 
   if ("highlights" in CSS) {
     const highlight = new Highlight();
@@ -603,12 +738,42 @@ export function highlightMatches(
     CSS.highlights.set(name, highlight);
     CSS.highlights.set(`${name}-current`, currentHighlight);
 
+    /** @type {Map<Element, number[]>} */
+    const offsetsByContainer = new Map();
     for (const [line, lineMatches] of byLine) {
-      const scope = resolveLineScope(root, line, codeLineOffsets);
+      const scope = scopes.get(line);
       if (!scope) continue;
+      let offsets = offsetsByContainer.get(scope.container);
+      if (!offsets) {
+        offsets = [];
+        offsetsByContainer.set(scope.container, offsets);
+      }
+      for (const { start, end } of lineMatches) {
+        offsets.push(scope.baseOffset + start, scope.baseOffset + end);
+      }
+    }
+    /** @type {Map<Element, Map<number, { node: Text; offset: number }>>} */
+    const positionsByContainer = new Map();
+    for (const [container, offsets] of offsetsByContainer) {
+      offsets.sort((a, b) => a - b);
+      positionsByContainer.set(
+        container,
+        resolveTextPositions(container, offsets),
+      );
+    }
+
+    // Ranges go in the same order as before: by line, then match order.
+    for (const [line, lineMatches] of byLine) {
+      const scope = scopes.get(line);
+      if (!scope) continue;
+      const positions = positionsByContainer.get(scope.container);
       for (const { start, end, index } of lineMatches) {
-        const range = resolveRange(scope, start, end);
-        if (!range) continue;
+        const from = positions?.get(scope.baseOffset + start);
+        const to = positions?.get(scope.baseOffset + end);
+        if (!from || !to) continue;
+        const range = new Range();
+        range.setStart(from.node, from.offset);
+        range.setEnd(to.node, to.offset);
         if (index === current) currentHighlight.add(range);
         else highlight.add(range);
       }
@@ -625,14 +790,64 @@ export function highlightMatches(
   /** @type {HTMLElement[]} */
   const createdMarks = [];
 
+  /** @type {Map<Element, MarkSpan[]>} */
+  const spansByContainer = new Map();
   for (const [line, lineMatches] of byLine) {
-    const scope = resolveLineScope(root, line, codeLineOffsets);
+    const scope = scopes.get(line);
     if (!scope) continue;
-    const descending = [...lineMatches].sort((a, b) => b.start - a.start);
-    for (const { start, end, index } of descending) {
-      createdMarks.push(
-        ...wrapMatchInMarks(scope, start, end, index === current),
-      );
+    let spans = spansByContainer.get(scope.container);
+    if (!spans) {
+      spans = [];
+      spansByContainer.set(scope.container, spans);
+    }
+    for (const { start, end, index } of lineMatches) {
+      // An empty or inverted span never overlaps any text, so it never
+      // split or wrapped anything.
+      if (end <= start) continue;
+      spans.push({
+        start: scope.baseOffset + start,
+        end: scope.baseOffset + end,
+        isCurrent: index === current,
+      });
+    }
+  }
+
+  // The one-pass wrap gives the same DOM as the per-match wrap only when
+  // no two spans cover the same text, so the order they're wrapped in
+  // can't matter. Within one container that means disjoint spans, which
+  // is what `createSearch` returns. Spans in nested containers (a `<code>`
+  // fallback line around rendered `[data-line]` rows) aren't cheap to
+  // compare, so those paints, like any with overlapping spans, keep the
+  // per-match wrap in its old order.
+  let onePass = !anyNested(spansByContainer.keys(), root);
+  for (const spans of spansByContainer.values()) {
+    if (!onePass) break;
+    spans.sort((a, b) => b.start - a.start);
+    for (let i = 1; i < spans.length; i += 1) {
+      if (
+        /** @type {MarkSpan} */ (spans[i]).end >
+        /** @type {MarkSpan} */ (spans[i - 1]).start
+      ) {
+        onePass = false;
+        break;
+      }
+    }
+  }
+
+  if (onePass) {
+    for (const [container, spans] of spansByContainer) {
+      wrapSpansInMarks(container, spans, createdMarks);
+    }
+  } else {
+    for (const [line, lineMatches] of byLine) {
+      const scope = scopes.get(line);
+      if (!scope) continue;
+      const descending = [...lineMatches].sort((a, b) => b.start - a.start);
+      for (const { start, end, index } of descending) {
+        createdMarks.push(
+          ...wrapMatchInMarks(scope, start, end, index === current),
+        );
+      }
     }
   }
 
