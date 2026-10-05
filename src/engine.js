@@ -69,7 +69,23 @@ import {
  * earliest guard-passing match at or after the position `this.pos` had when
  * it was computed (or `null` if none exists in `this.code` as of `codeLen`
  * characters). See `Tokenizer#nextMatch`'s cache-hit checks.
- * @typedef {{ codeLen: number, match: RegExpExecArray | null }} MatchCache
+ *
+ * A windowed tokenizer (see `Tokenizer#windowed`) also sets `until` and
+ * `level`. With `match: null`, `until` is the end of the window it scanned:
+ * no guard-passing match starts before it. `until` is `Infinity` once a scan
+ * reached the end of the code. `level` picks the window size for the next
+ * scan (see `scanWindowed`).
+ * @typedef {{
+ *   codeLen: number,
+ *   match: RegExpExecArray | null,
+ *   until?: number,
+ *   level?: number,
+ * }} MatchCache
+ */
+
+/**
+ * A windowed tokenizer's `MatchCache`, which always has `until`/`level`.
+ * @typedef {Required<MatchCache>} WindowCache
  */
 
 /**
@@ -124,6 +140,54 @@ const MAX_KEYWORD_HITS = 7;
  * re-tokenizes the winner over the full `code` before returning.
  */
 const DETECT_SAMPLE_LIMIT = 8000;
+
+/**
+ * Window sizes for `Tokenizer#scanWindowed`: `WINDOW_BASE << level` match
+ * start positions, for `level` in `[0, WINDOW_LEVELS)`. Past the last level
+ * the scan runs to the end of the code, as an unwindowed scan does. A
+ * window scan reads more slowly per character than a plain `exec` (which
+ * can skip ahead for a literal first character), so the windows stay small
+ * and an edit that never re-converges soon falls back to plain scans (see
+ * bench/incremental.bench.ts).
+ */
+const WINDOW_BASE = 256;
+const WINDOW_LEVELS = 5;
+
+/**
+ * Window regexes by source regex and level (see `windowRegExp`).
+ * @type {WeakMap<RegExp, RegExp[]>}
+ */
+const windowRegExps = new WeakMap();
+
+/**
+ * A sticky regex that, run at `lastIndex = from`, matches the shortest run
+ * of up to `(WINDOW_BASE << level) - 1` characters after which `re` matches.
+ * So `from + match[0].length` is the first position in the window where an
+ * attempt of `re` succeeds, with the same result an unbounded `re.exec`
+ * from `from` would find there: the lookahead sees the whole code, so
+ * anchors, `\b`, and lookarounds behave exactly as in `re`. The prefix is
+ * non-capturing, so `re`'s group numbers and backreferences don't shift.
+ * @param {RegExp} re
+ * @param {number} level
+ * @returns {RegExp}
+ */
+function windowRegExp(re, level) {
+  let byLevel = windowRegExps.get(re);
+  if (byLevel === undefined) {
+    byLevel = [];
+    windowRegExps.set(re, byLevel);
+  }
+  let windowRe = byLevel[level];
+  if (windowRe === undefined) {
+    const span = (WINDOW_BASE << level) - 1;
+    windowRe = new RegExp(
+      `[\\s\\S]{0,${span}}?(?=(?:${re.source}))`,
+      `${re.flags.replace("g", "")}y`,
+    );
+    byLevel[level] = windowRe;
+  }
+  return windowRe;
+}
 
 // Tokenizer#isTrulyOpeningTag lookaheads.
 const XML_TAG_DEFAULT_PARAM_RE = /^\s*=/;
@@ -301,6 +365,16 @@ class Tokenizer {
     ];
     this.aborted = false;
     this.iterations = 0;
+    /**
+     * Whether begin/end scans search a bounded window past the cursor
+     * instead of running to the end of the code (see `nextMatchWindowed`).
+     * Set for a parse resumed after an edit, which usually stops a few
+     * lines later: a rule with no match nearby otherwise scanned the whole
+     * tail of the document, so a one-character edit cost time in
+     * proportion to the document (see bench/incremental.bench.ts). Never
+     * set in detect mode, so the windowed path ignores `illegal`.
+     */
+    this.windowed = false;
     /**
      * Embedded-language parse state, carried across segments by name - but
      * only for the *same* embedding occurrence (matched by `beginPos`, the
@@ -764,6 +838,213 @@ class Tokenizer {
     return best;
   }
 
+  /**
+   * The end-pattern guard for `frame` (see `nextMatch`).
+   * @param {Frame} frame
+   * @returns {((m: RegExpExecArray) => boolean) | null}
+   */
+  endGuard(frame) {
+    return frame.state.endSameAsBegin ? (m) => m[1] === frame.beginMatch : null;
+  }
+
+  /**
+   * Whether a windowed cache still answers "first match at or after
+   * `pos`": a match `pos` hasn't passed, or a miss whose window reaches
+   * past `pos` in unchanged code.
+   * @param {WindowCache} cache
+   * @returns {boolean}
+   */
+  isWindowValid(cache) {
+    if (cache.match !== null) return cache.match.index >= this.pos;
+    return cache.codeLen === this.code.length && cache.until > this.pos;
+  }
+
+  /**
+   * `execValid` over a window of `WINDOW_BASE << cache.level` start
+   * positions from `from`, written into `cache`: the first guard-passing
+   * match in the window, or a miss with `until` at the window's end. A
+   * window that reaches the end of the code, or a level past the last,
+   * gives the same answer as `execValid` (`until` is `Infinity`). Matches
+   * come from `re.exec` itself, so they're the same objects an unwindowed
+   * scan returns (see `windowRegExp`).
+   * @param {WindowCache} cache
+   * @param {RegExp} re
+   * @param {number} from
+   * @param {((m: RegExpExecArray) => boolean) | null} guard
+   */
+  scanWindowed(cache, re, from, guard) {
+    const code = this.code;
+    cache.codeLen = code.length;
+    cache.until = Number.POSITIVE_INFINITY;
+    const size = WINDOW_BASE << cache.level;
+    // A window reaching the end of the code saves nothing, and a plain
+    // `exec` scans faster: near the end of a document (typing at the end,
+    // say) every scan is plain. Under the `u` flag a window could start
+    // inside a surrogate pair, where the window regex and `re` might step
+    // differently; scan plainly there too.
+    if (
+      cache.level >= WINDOW_LEVELS ||
+      from + size > code.length ||
+      re.unicode
+    ) {
+      cache.match = this.execValid(re, from, guard);
+      return;
+    }
+    const windowRe = windowRegExp(re, cache.level);
+    let start = from;
+    for (;;) {
+      windowRe.lastIndex = start;
+      const found = windowRe.exec(code);
+      if (found === null) {
+        cache.match = null;
+        // The window covered every start up to `code.length` inclusive.
+        if (start + size <= code.length) cache.until = start + size;
+        return;
+      }
+      const at = start + found[0].length;
+      re.lastIndex = at;
+      const match = re.exec(code);
+      if (match === null || match.index !== at) {
+        // Unreachable: the lookahead just matched `re` at `at`. Kept so a
+        // regex engine quirk can't change output, only cost.
+        cache.match = this.execValid(re, from, guard);
+        return;
+      }
+      if (!guard || guard(match)) {
+        cache.match = match;
+        return;
+      }
+      if (at >= code.length) {
+        cache.match = null;
+        return;
+      }
+      start = at + 1;
+    }
+  }
+
+  /**
+   * `nextMatch` for a windowed tokenizer (see `windowed`). A cached miss
+   * only rules out matches before its `until`, so its window is widened
+   * (twice the size, from `until`) while the rule could still beat the
+   * best match so far, then the candidates are compared again. Windows
+   * never widen past `stopAt`: `run` stops before any lexeme at or past
+   * it, so when nothing can start earlier this returns a match at or past
+   * `stopAt` (not necessarily the earliest) or null. Detect mode never
+   * runs windowed, so `illegal` is not scanned.
+   * @param {number} stopAt
+   * @returns {RegExpExecArray | null}
+   */
+  nextMatchWindowed(stopAt) {
+    const rules = this.top.state.rules;
+    const states = this.program.states;
+    const frames = this.frames;
+    const beginCache = /** @type {(WindowCache | undefined)[]} */ (
+      this.beginCache
+    );
+    for (;;) {
+      /** @type {RegExpExecArray | null} */
+      let best = null;
+      let bestIndex = Number.POSITIVE_INFINITY;
+      /** @type {MatchKind} */
+      let bestKind = "begin";
+      /** @type {number | null} */
+      let bestData = null;
+      let minUntil = Number.POSITIVE_INFINITY;
+      for (let i = 0; i < rules.length; i++) {
+        const ruleIdx = /** @type {number} */ (rules[i]);
+        let cache = beginCache[ruleIdx];
+        if (cache === undefined) {
+          cache = { codeLen: -1, match: null, until: 0, level: 0 };
+          beginCache[ruleIdx] = cache;
+        }
+        if (!this.isWindowValid(cache)) {
+          // A miss whose window `pos` has passed: widen the next one.
+          if (cache.match === null && cache.codeLen === this.code.length) {
+            cache.level++;
+          }
+          const child = /** @type {CompiledState} */ (states[ruleIdx]);
+          this.scanWindowed(
+            cache,
+            /** @type {RegExp} */ (child.beginRe),
+            this.pos,
+            this.beginGuard(child),
+          );
+        }
+        const match = cache.match;
+        if (match === null) {
+          if (cache.until < minUntil) minUntil = cache.until;
+        } else if (match.index < bestIndex) {
+          best = match;
+          bestIndex = match.index;
+          bestData = ruleIdx;
+        }
+      }
+      for (let d = frames.length - 1; d >= 1; d--) {
+        const frame = /** @type {Frame} */ (frames[d]);
+        const endRe = frame.state.endRe;
+        if (endRe) {
+          let cache = /** @type {WindowCache | undefined} */ (frame.endCache);
+          if (cache === undefined) {
+            cache = { codeLen: -1, match: null, until: 0, level: 0 };
+            frame.endCache = cache;
+          }
+          if (!this.isWindowValid(cache)) {
+            if (cache.match === null && cache.codeLen === this.code.length) {
+              cache.level++;
+            }
+            this.scanWindowed(cache, endRe, this.pos, this.endGuard(frame));
+          }
+          const match = cache.match;
+          if (match === null) {
+            if (cache.until < minUntil) minUntil = cache.until;
+          } else if (match.index < bestIndex) {
+            best = match;
+            bestIndex = match.index;
+            bestKind = "end";
+            bestData = d;
+          }
+        }
+        if (!frame.state.endsWithParent) break;
+      }
+      // Every unresolved rule starts strictly after `limit`, so it can
+      // neither beat nor tie the best match, nor start before `stopAt`.
+      // (`minUntil` stays Infinity when every rule is resolved.)
+      const limit = Math.min(bestIndex, stopAt - 1);
+      if (minUntil > limit || minUntil === Number.POSITIVE_INFINITY) {
+        this.matchKind = bestKind;
+        this.matchData = bestData;
+        return best;
+      }
+      for (let i = 0; i < rules.length; i++) {
+        const ruleIdx = /** @type {number} */ (rules[i]);
+        const cache = /** @type {WindowCache} */ (beginCache[ruleIdx]);
+        if (cache.match !== null || cache.until > limit) continue;
+        const child = /** @type {CompiledState} */ (states[ruleIdx]);
+        cache.level++;
+        this.scanWindowed(
+          cache,
+          /** @type {RegExp} */ (child.beginRe),
+          cache.until,
+          this.beginGuard(child),
+        );
+      }
+      for (let d = frames.length - 1; d >= 1; d--) {
+        const frame = /** @type {Frame} */ (frames[d]);
+        const cache = /** @type {WindowCache | undefined} */ (frame.endCache);
+        if (cache && cache.match === null && cache.until <= limit) {
+          cache.level++;
+          this.scanWindowed(
+            cache,
+            /** @type {RegExp} */ (frame.state.endRe),
+            cache.until,
+            this.endGuard(frame),
+          );
+        }
+        if (!frame.state.endsWithParent) break;
+      }
+    }
+  }
+
   // --- state transitions ---
 
   /**
@@ -881,7 +1162,9 @@ class Tokenizer {
       if (this.iterations > 500000 && this.iterations > this.pos * 3) {
         throw new TokenizerLoopError(this.program.ir.name, this.iterations);
       }
-      const match = this.nextMatch();
+      const match = this.windowed
+        ? this.nextMatchWindowed(stopAt)
+        : this.nextMatch();
       if (!match) break;
       if (match.index >= stopAt) return;
 
@@ -1487,8 +1770,11 @@ export function createRegistry() {
      * resumes at `snapshot` when given (otherwise from the start). Used by
      * incremental-tokenize.js, which knows the whole document and steps
      * through it with `advance()`; further `append()` calls still extend it.
+     * `from.windowed` bounds each pattern scan to a window that grows past
+     * the cursor (see `Tokenizer#windowed`), for callers that expect to
+     * stop soon, like a reparse after an edit. Output is unchanged.
      * @param {string} language
-     * @param {{ from?: { code: string, snapshot?: Snapshot } }} [options]
+     * @param {{ from?: { code: string, snapshot?: Snapshot, windowed?: boolean } }} [options]
      * @returns {StreamSession}
      */
     createSession(language, { from } = {}) {
@@ -1508,6 +1794,7 @@ export function createRegistry() {
       if (from) {
         tokenizer.code = from.code;
         if (from.snapshot) tokenizer.restore(from.snapshot);
+        if (from.windowed) tokenizer.windowed = true;
       }
       /**
        * Lazily built on the first `replace()` call; stays null for sessions
