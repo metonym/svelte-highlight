@@ -4,7 +4,11 @@ import { createRegistry, extendLines, registerAll } from "../src/engine.js";
 import * as languages from "../src/languages/index.js";
 import javascript from "../src/languages/javascript.js";
 import { createCompletedHtmlBuffer } from "../src/stream-highlighted.js";
-import { extendLinesAfterPatch, regenerate } from "../src/stream-regenerate.js";
+import {
+  extendLinesAfterPatch,
+  regenerate,
+  walkStart,
+} from "../src/stream-regenerate.js";
 import {
   buildSealedChunkHtml,
   pushSealedChunk,
@@ -191,6 +195,38 @@ describe("extendLinesAfterPatch", () => {
       kept: 0,
       result: full,
     });
+  });
+});
+
+describe("walkStart", () => {
+  it("starts the walk later with the same result as from the top", () => {
+    const code = Array.from({ length: 300 }, (_, i) =>
+      i % 9 === 0 ? `/* ${i}\n*/` : `let v${i} = \`${i}\`;`,
+    ).join("\n");
+    const session = registry.createSession("javascript");
+    session.append(`${code}\n`);
+    let fed = `${code}\n`;
+    let started = 0;
+    for (const fraction of [0.9, 0.5, 0.95, 0.2]) {
+      const previous = session.events();
+      const at = fed.lastIndexOf("\n", fed.length * fraction) + 1;
+      const kept = session.replace(at, at + 3, "x");
+      fed = `${fed.slice(0, at)}x${fed.slice(at + 3)}`;
+      // Every CHUNK_LINES-th line start before the change.
+      const lineStarts: number[] = [];
+      let line = 0;
+      for (let i = fed.indexOf("\n"); i !== -1 && i < at; ) {
+        if (++line % CHUNK_LINES === 0) lineStarts.push(i + 1);
+        i = fed.indexOf("\n", i + 1);
+      }
+      const from = walkStart(session, kept, lineStarts);
+      if (from) started++;
+      const events = session.events();
+      expect(extendLinesAfterPatch(events, previous, lineStarts, from)).toEqual(
+        extendLinesAfterPatch(events, previous, lineStarts),
+      );
+    }
+    expect(started).toBeGreaterThan(0);
   });
 });
 

@@ -1835,11 +1835,16 @@ export function createRegistry() {
          * reusing the unaffected suffix when tokenizer state reconverges.
          * Does not support a `replace()` across a language change; create a
          * new session for that instead.
+         *
+         * Returns how many leading `events()` entries are the same objects
+         * as before the call. The first call re-parses, so it returns 0.
          * @param {number} from
          * @param {number} to
          * @param {string} text
+         * @returns {number}
          */
         replace(from, to, text) {
+          const first = !incremental;
           if (!incremental) {
             incremental = parseIncremental(
               /** @type {Registry} */ (registry),
@@ -1847,11 +1852,12 @@ export function createRegistry() {
               fed,
             );
           }
+          const previous = incremental;
           const newCode = fed.slice(0, from) + text + fed.slice(to);
           incremental = reparseIncremental(
             /** @type {Registry} */ (registry),
             language,
-            incremental,
+            previous,
             newCode,
           );
           fed = newCode;
@@ -1870,13 +1876,74 @@ export function createRegistry() {
           // the events up to the checkpoint's own count, then run the live
           // tokenizer once - exactly what `append()` does for newly fed
           // complete lines - to resolve it the same way.
-          tokenizer.events = incremental.events.slice(
-            0,
-            lastCheckpoint.eventCount,
-          );
+          //
+          // The events are truncated in place rather than copied, which
+          // copied every event before the change a second time (see
+          // bench/stream-repaint.bench.ts). `reparseIncremental` returns a
+          // fresh array, so the events `events()` returned before this call
+          // stay as they were. It leaves `incremental.events` holding this
+          // session's events past the last checkpoint, which the next
+          // re-parse doesn't keep: it resumes at or before that checkpoint,
+          // and whatever it carries over past it is cut off here again.
+          tokenizer.events = incremental.events;
+          tokenizer.events.length = lastCheckpoint.eventCount;
           tokenizer.run();
           staged = fed.slice(tokenizer.pos);
           stagedNewline = staged.lastIndexOf("\n");
+          if (first) return 0;
+          if (incremental === previous) return lastCheckpoint.eventCount;
+          return incremental.reuse?.head ?? 0;
+        },
+        /**
+         * The last of the last `replace()`'s checkpoints (none before the
+         * first) within both limits: a point where rendering can resume,
+         * since `events()[0, eventCount)` covers the text before `textPos`
+         * and leaves `scopes` open. Lets stream-regenerate.js skip its walk
+         * over the events before a change.
+         *
+         * At a checkpoint the open scopes are the scoped frames' (begin
+         * and end matches open and close them, and keyword and
+         * sub-language runs are balanced), and the text not yet emitted is
+         * `buffer`, which ends at `pos`. Checkpoints only move forward, so
+         * this is a binary search.
+         * @param {{ eventCount?: number, textPos?: number }} limits
+         * @returns {{ textPos: number, eventCount: number, scopes: string[] } | undefined}
+         */
+        checkpointBefore({
+          eventCount = Number.POSITIVE_INFINITY,
+          textPos = Number.POSITIVE_INFINITY,
+        }) {
+          const list = incremental ? incremental.checkpoints : [];
+          let lo = 0;
+          let hi = list.length - 1;
+          /** @type {Snapshot | undefined} */
+          let found;
+          while (lo <= hi) {
+            const mid = (lo + hi) >> 1;
+            const checkpoint = /** @type {Snapshot} */ (list[mid]);
+            if (
+              checkpoint.eventCount <= eventCount &&
+              checkpoint.pos - checkpoint.buffer.length <= textPos
+            ) {
+              found = checkpoint;
+              lo = mid + 1;
+            } else {
+              hi = mid - 1;
+            }
+          }
+          if (!found) return undefined;
+          /** @type {string[]} */
+          const scopes = [];
+          for (const frame of found.frames) {
+            const scope =
+              frame.idx === 0 ? undefined : program.states[frame.idx]?.scope;
+            if (scope) scopes.push(scope);
+          }
+          return {
+            textPos: found.pos - found.buffer.length,
+            eventCount: found.eventCount,
+            scopes,
+          };
         },
         /**
          * Multi-line lookahead (e.g. ruby heredocs) may need the full text

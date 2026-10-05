@@ -189,8 +189,17 @@ export interface StreamSession {
    * unaffected tokenized regions where state reconverges (see
    * `incremental-tokenize.js`). The resulting `events()` are always
    * identical to a fresh session fed the resulting text from scratch,
-   * computed cheaper. Does not support replacing across a language change. */
-  replace(from: number, to: number, text: string): void;
+   * computed cheaper. Does not support replacing across a language change.
+   * Returns how many leading `events()` entries are the same objects as
+   * before the call (0 on the first call, which re-parses). */
+  replace(from: number, to: number, text: string): number;
+  /** The last of the last `replace()`'s checkpoints (none before the first)
+   * within both limits: `events()[0, eventCount)` covers the text before
+   * `textPos` and leaves `scopes` open, so rendering can resume there. */
+  checkpointBefore(limits: {
+    eventCount?: number;
+    textPos?: number;
+  }): { textPos: number; eventCount: number; scopes: string[] } | undefined;
   finish(options?: { canonicalize?: boolean }): HighlightResult;
   snapshot(): Snapshot;
   events(): ScopeEvent[];

@@ -142,4 +142,56 @@ end
 
     expectMatchesOneShot(session, finalCode, "javascript");
   });
+
+  it("returns how many leading events it kept as the same objects", () => {
+    let code = "";
+    for (let i = 0; i < CHECKPOINT_INTERVAL * 4; i++) {
+      code += `const v${i} = \`${i}\`; /* ${i} */\n`;
+    }
+    const session = registry.createSession("javascript");
+    session.append(code);
+    const at = code.length - 40;
+    // The first call re-parses everything.
+    expect(session.replace(at, at + 1, "x")).toBe(0);
+    const before = session.events();
+    const kept = session.replace(at, at + 1, "y");
+    expect(kept).toBeGreaterThan(0);
+    const after = session.events();
+    for (let i = 0; i < kept; i++) expect(after[i]).toBe(before[i] as never);
+  });
+});
+
+describe("StreamSession#checkpointBefore", () => {
+  it("names points where the events cover the text and leave the scopes open", () => {
+    let code = "";
+    for (let i = 0; i < CHECKPOINT_INTERVAL * 4; i++) {
+      code +=
+        i % 7 === 0 ? `/* open\n${i}\n*/\n` : `const v${i} = \`a\n${i}\`;\n`;
+    }
+    const session = registry.createSession("javascript");
+    expect(session.checkpointBefore({})).toBeUndefined();
+    session.append(code);
+    session.replace(code.length - 3, code.length - 2, "x");
+    const events = session.events();
+    let seen = 0;
+    for (let eventCount = 0; eventCount <= events.length; eventCount += 97) {
+      const checkpoint = session.checkpointBefore({ eventCount });
+      if (!checkpoint) continue;
+      expect(checkpoint.eventCount).toBeLessThanOrEqual(eventCount);
+      let textPos = 0;
+      const scopes: string[] = [];
+      for (const event of events.slice(0, checkpoint.eventCount)) {
+        if (event.t === 0) textPos += event.v.length;
+        else if (event.t === 1) scopes.push(event.s);
+        else scopes.pop();
+      }
+      expect(checkpoint.textPos).toBe(textPos);
+      expect(checkpoint.scopes).toEqual(scopes);
+      expect(session.checkpointBefore({ textPos: checkpoint.textPos })).toEqual(
+        checkpoint,
+      );
+      seen++;
+    }
+    expect(seen).toBeGreaterThan(4);
+  });
 });
