@@ -107,8 +107,14 @@ export function createTokenizedDocument({
 
   /** @param {number} scanFrom Character offset to resume scanning from. */
   function extendLineOffsets(scanFrom) {
-    for (let i = scanFrom; i < code.length; i++) {
-      if (code.charCodeAt(i) === 10) lineStartOffsets.push(i + 1);
+    // indexOf jumps between line breaks natively instead of testing every
+    // character in JS.
+    for (
+      let i = code.indexOf("\n", scanFrom);
+      i !== -1;
+      i = code.indexOf("\n", i + 1)
+    ) {
+      lineStartOffsets.push(i + 1);
     }
   }
 
