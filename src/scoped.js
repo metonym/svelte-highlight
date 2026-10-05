@@ -112,41 +112,43 @@ function rewriteBlock(prelude, body, transform) {
  */
 function rewriteRules(css, transform) {
   let out = "";
-  let prelude = "";
+  // The prelude is always the contiguous run since the last rule ended, so
+  // it's sliced out once instead of built up a char at a time (see
+  // bench/scoped.bench.ts).
+  let preludeStart = 0;
   let i = 0;
   while (i < css.length) {
     const ch = css[i];
     if (ch === "/" && css[i + 1] === "*") {
       const end = css.indexOf("*/", i + 2);
-      const stop = end === -1 ? css.length : end + 2;
-      prelude += css.slice(i, stop);
-      i = stop;
+      i = end === -1 ? css.length : end + 2;
       continue;
     }
     if (ch === '"' || ch === "'") {
-      const stop = findStringEnd(css, i);
-      prelude += css.slice(i, stop);
-      i = stop;
+      i = findStringEnd(css, i);
       continue;
     }
     if (ch === "{") {
       const bodyEnd = findBlockEnd(css, i + 1);
-      out += rewriteBlock(prelude, css.slice(i + 1, bodyEnd), transform);
-      prelude = "";
+      out += rewriteBlock(
+        css.slice(preludeStart, i),
+        css.slice(i + 1, bodyEnd),
+        transform,
+      );
       i = bodyEnd + 1;
+      preludeStart = i;
       continue;
     }
     if (ch === ";") {
       // Blockless at-rule (@import): emit as-is.
-      out += prelude + ch;
-      prelude = "";
       i += 1;
+      out += css.slice(preludeStart, i);
+      preludeStart = i;
       continue;
     }
-    prelude += ch;
     i += 1;
   }
-  return out + prelude;
+  return out + css.slice(preludeStart);
 }
 
 /**
