@@ -133,6 +133,46 @@ function applySgr(style, params) {
 }
 
 /**
+ * SGR parameters from `text.slice(start, end)` (the body between `ESC[` and
+ * `m`): `;`-separated integers, with an empty part meaning 0.
+ *
+ * The common all-digits body is parsed in place by char code, skipping the
+ * split/map/filter chain's three array allocations per sequence (see
+ * bench/ansi.bench.ts). Anything else (sign, `.`, `:`, whitespace, or a part
+ * too long to accumulate exactly) falls back to that chain, so `Number()`'s
+ * edge cases keep the same result.
+ * @param {string} text
+ * @param {number} start
+ * @param {number} end
+ * @returns {number[]}
+ */
+function parseSgrParams(text, start, end) {
+  /** @type {number[]} */
+  const params = [];
+  let value = 0;
+  let digits = 0;
+  for (let k = start; k < end; k += 1) {
+    const code = text.charCodeAt(k);
+    if (code === 0x3b) {
+      params.push(value);
+      value = 0;
+      digits = 0;
+    } else if (code >= 0x30 && code <= 0x39 && digits < 15) {
+      value = value * 10 + (code - 0x30);
+      digits += 1;
+    } else {
+      return text
+        .slice(start, end)
+        .split(";")
+        .map((part) => (part === "" ? 0 : Number(part)))
+        .filter((n) => Number.isInteger(n));
+    }
+  }
+  params.push(value);
+  return params;
+}
+
+/**
  * Build a segment from `text` and active fields in `style`.
  * @param {string} text
  * @param {AnsiStyle} style
@@ -249,12 +289,7 @@ export function parseAnsi(text) {
       if (final === "m") {
         // SGR applies to text that follows.
         flush();
-        const body = text.slice(i + 2, j);
-        const params = body
-          .split(";")
-          .map((part) => (part === "" ? 0 : Number(part)))
-          .filter((n) => Number.isInteger(n));
-        applySgr(style, params);
+        applySgr(style, parseSgrParams(text, i + 2, j));
       }
       // Non-SGR CSI sequences (cursor moves, etc.) are skipped.
       i = j + 1;
@@ -451,12 +486,7 @@ export function createAnsiSession() {
         const final = input[j];
         if (final === "m") {
           flush();
-          const body = input.slice(i + 2, j);
-          const params = body
-            .split(";")
-            .map((part) => (part === "" ? 0 : Number(part)))
-            .filter((n) => Number.isInteger(n));
-          applySgr(style, params);
+          applySgr(style, parseSgrParams(input, i + 2, j));
         }
         i = j + 1;
         continue;
