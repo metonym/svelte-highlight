@@ -16,6 +16,7 @@
     "test:static-app": "bun run build:lib && bun run package && cd tests/e2e/static-app && bun install && bun run test",
     "test:types": "tsgo",
     "bench": "ostia bench bench/*.bench.ts",
+    "bench:ab": "bun scripts/bench-ab.ts",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "fix": "biome check --write .",
