@@ -64,14 +64,42 @@ function indexedRgb(index) {
 }
 
 /**
+ * `indexedHex` results by palette index, filled on first use. A colored log
+ * repeats the same few indices, and building each string costs a few
+ * array allocations (see bench/ansi.bench.ts).
+ * @type {string[]}
+ */
+const INDEXED_HEX = [];
+
+/**
  * 256-color index to hex.
  * @param {number} index
  * @returns {string}
  */
 export function indexedHex(index) {
+  const cached = INDEXED_HEX[index];
+  if (cached !== undefined) return cached;
   const [r, g, b] = indexedRgb(index);
-  return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+  const hex = `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+  // Cache only the 240 real palette slots, so an out-of-range index can't
+  // grow the table.
+  if (Number.isInteger(index) && index >= 16 && index <= 255) {
+    INDEXED_HEX[index] = hex;
+  }
+  return hex;
 }
+
+/**
+ * `cssColor`'s `var(--ansi-<name>, <default>)` string for each of the 16
+ * named colors, built once instead of per segment.
+ * @type {Map<string, string>}
+ */
+const NAMED_CSS = new Map(
+  Object.entries(ANSI_COLOR_DEFAULTS).map(([name, hex]) => [
+    name,
+    `var(--ansi-${name}, ${hex})`,
+  ]),
+);
 
 /**
  * Parsed color to CSS (named colors use `--ansi-*` vars).
@@ -80,7 +108,10 @@ export function indexedHex(index) {
  */
 export function cssColor(color) {
   if ("name" in color) {
-    return `var(--ansi-${color.name}, ${ANSI_COLOR_DEFAULTS[color.name]})`;
+    return (
+      NAMED_CSS.get(color.name) ??
+      `var(--ansi-${color.name}, ${ANSI_COLOR_DEFAULTS[color.name]})`
+    );
   }
   if ("rgb" in color) {
     return `rgb(${color.rgb[0]}, ${color.rgb[1]}, ${color.rgb[2]})`;
