@@ -222,6 +222,22 @@ function stripIndent(text, lineStart, lineEnd, indent) {
  */
 
 /**
+ * A copy of `slice` that owns only its own characters. A slice of the
+ * splitter's buffer is a substring that keeps the whole buffer alive - and
+ * since `append` grows a new buffer every chunk, each closed segment would
+ * pin its own full copy of the text as it stood when the segment closed
+ * (bench/markdown-stream.bench.ts --alloc: a finished 51 KB stream kept
+ * 1.26 MB alive, 865 KB with copies). `structuredClone` copies in both V8 and
+ * JSC at memcpy speed; rope tricks like `` ` ${s}`.slice(1) `` don't, since
+ * JSC slices a rope's fiber without flattening it.
+ * @param {string} slice
+ * @returns {string}
+ */
+function ownCopy(slice) {
+  return structuredClone(slice);
+}
+
+/**
  * @param {number} offset
  * @returns {ScanState}
  */
@@ -251,7 +267,11 @@ function buildFenceSegment(ctx, id, end, open, partial) {
     meta: parseMeta(meta),
     code:
       partial === undefined
-        ? ctx.code
+        ? open
+          ? ctx.code
+          : // Final, so copied (see `ownCopy`): a one-line body is a slice
+            // of the buffer, a longer one a rope of slices.
+            ownCopy(ctx.code)
         : ctx.lineCount === 0
           ? partial
           : `${ctx.code}\n${partial}`,
@@ -309,7 +329,10 @@ function computeSegments(text, state, startId) {
           segments.push({
             id: id++,
             kind: "text",
-            text: text.slice(proseStart, lineStart),
+            // Closed for good, so it gets its own copy (see `ownCopy`). The
+            // open tail below stays a cheap slice: it is rebuilt on every
+            // append and only ever pins the current buffer.
+            text: ownCopy(text.slice(proseStart, lineStart)),
             start: proseStart,
             end: lineStart,
           });
@@ -318,7 +341,9 @@ function computeSegments(text, state, startId) {
           char: open.char,
           len: open.len,
           indent: open.indent,
-          info: open.info,
+          // Copied once (see `ownCopy`), so the info, meta and title of
+          // every segment built from this fence don't pin the buffer.
+          info: ownCopy(open.info),
           start: lineStart,
           code: "",
           lineCount: 0,
