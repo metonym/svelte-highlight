@@ -64,34 +64,31 @@ export function findBlockEnd(css, start) {
 export function splitTopLevel(str, delim) {
   const parts = [];
   let depth = 0;
-  let current = "";
+  // Each part is the contiguous run since the last delimiter, so it's sliced
+  // out once rather than built up a char at a time (see
+  // bench/scoped.bench.ts).
+  let partStart = 0;
   let i = 0;
   while (i < str.length) {
     const ch = str[i];
     if (ch === "/" && str[i + 1] === "*") {
       const end = str.indexOf("*/", i + 2);
-      const stop = end === -1 ? str.length : end + 2;
-      current += str.slice(i, stop);
-      i = stop;
+      i = end === -1 ? str.length : end + 2;
       continue;
     }
     if (ch === '"' || ch === "'") {
-      const stop = findStringEnd(str, i);
-      current += str.slice(i, stop);
-      i = stop;
+      i = findStringEnd(str, i);
       continue;
     }
     if (ch === "(" || ch === "[") depth += 1;
     else if (ch === ")" || ch === "]") depth -= 1;
 
     if (ch === delim && depth === 0) {
-      parts.push(current);
-      current = "";
-    } else {
-      current += ch;
+      parts.push(str.slice(partStart, i));
+      partStart = i + 1;
     }
     i += 1;
   }
-  parts.push(current);
+  parts.push(str.slice(partStart));
   return parts;
 }

@@ -97,37 +97,43 @@ export function highlightRules(theme) {
   const css = match ? (match[2] ?? "") : theme;
 
   let out = "";
+  // Comments are dropped from the prelude, so it's assembled from the
+  // slices between them (`runStart` marks the current one) rather than a
+  // char at a time (see bench/scoped.bench.ts).
   let prelude = "";
+  let runStart = 0;
   let i = 0;
   while (i < css.length) {
     const ch = css[i];
     if (ch === "/" && css[i + 1] === "*") {
+      prelude += css.slice(runStart, i);
       const end = css.indexOf("*/", i + 2);
       i = end === -1 ? css.length : end + 2;
+      runStart = i;
       continue;
     }
     if (ch === '"' || ch === "'") {
-      const stop = findStringEnd(css, i);
-      prelude += css.slice(i, stop);
-      i = stop;
+      i = findStringEnd(css, i);
       continue;
     }
     if (ch === "{") {
+      prelude += css.slice(runStart, i);
       const bodyEnd = findBlockEnd(css, i + 1);
       if (!prelude.trim().startsWith("@")) {
         out += highlightRulesFor(prelude, css.slice(i + 1, bodyEnd));
       }
       prelude = "";
       i = bodyEnd + 1;
+      runStart = i;
       continue;
     }
     if (ch === ";") {
       // Blockless at-rule (@import, etc.): nothing to convert.
       prelude = "";
       i += 1;
+      runStart = i;
       continue;
     }
-    prelude += ch;
     i += 1;
   }
   return out;
