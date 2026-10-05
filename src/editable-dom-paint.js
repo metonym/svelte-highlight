@@ -6,10 +6,11 @@
  * event stream every keystroke. For pure appends (typing at the end — the
  * common path when growing a document), a dedicated stream session feeds only
  * the new suffix through `extendLines`, so HTML work is O(delta) per keystroke
- * and O(n) total to type a document of size n.
+ * and O(n) total to type a document of size n. Mid-document edits re-render
+ * only the lines whose events changed (`patchLineHtml`).
  */
 
-import { extendLines, renderHtml } from "./engine.js";
+import { CLOSE, extendLines, OPEN, renderHtml, TEXT } from "./engine.js";
 import { splitLines } from "./split-lines.js";
 
 /**
@@ -63,6 +64,151 @@ export function linesFromStreamState(completedLines, previewLines, code) {
  */
 
 /**
+ * Number of "\n" in `code` before offset `end`.
+ * @param {string} code
+ * @param {number} end
+ */
+function countNewlines(code, end) {
+  let count = 0;
+  for (let i = code.indexOf("\n"); i !== -1 && i < end; ) {
+    count++;
+    i = code.indexOf("\n", i + 1);
+  }
+  return count;
+}
+
+/**
+ * Same result as `lineHtmlFromEvents(events, code)`, given `prevLines` =
+ * `lineHtmlFromEvents(prevEvents, prevCode)`, but only re-renders the lines
+ * whose events changed and reuses `prevLines`' strings for the rest.
+ *
+ * `reparseIncremental` keeps the unchanged head and converged tail of the
+ * event stream as the same event objects, so the changed region is found
+ * by identity: a common prefix and suffix of `===` events. Events are
+ * immutable, and a line's HTML depends only on its own events plus the
+ * scopes open at its start, so:
+ * - every line that ends before the first changed event is unchanged;
+ * - every line after the first "\n" in the common suffix is unchanged too,
+ *   if the same scopes are open at that "\n" on both sides (checked).
+ * Only the lines between are rendered, via `extendLines` from the scopes
+ * open at the first changed line's start. Mid-document typing then costs
+ * pointer compares and a stack walk over the document instead of
+ * `renderHtml` + `splitLines` over it: see dom-paint.bench.ts's
+ * mid-document group.
+ *
+ * @param {ScopeEvent[]} prevEvents
+ * @param {string[]} prevLines
+ * @param {ScopeEvent[]} events
+ * @param {string} code
+ * @returns {string[]}
+ */
+export function patchLineHtml(prevEvents, prevLines, events, code) {
+  const prevCount = prevEvents.length;
+  const count = events.length;
+  const shared = Math.min(prevCount, count);
+  let prefix = 0;
+  while (prefix < shared && prevEvents[prefix] === events[prefix]) prefix++;
+  if (prefix === prevCount && prefix === count) return prevLines;
+  let suffix = 0;
+  while (
+    suffix < shared - prefix &&
+    prevEvents[prevCount - 1 - suffix] === events[count - 1 - suffix]
+  ) {
+    suffix++;
+  }
+
+  // The first changed line starts after the last "\n" before `prefix`.
+  let breakEvent = prefix - 1;
+  let breakAt = -1;
+  for (; breakEvent >= 0; breakEvent--) {
+    const event = /** @type {ScopeEvent} */ (events[breakEvent]);
+    if (event.t === TEXT) {
+      breakAt = event.v.lastIndexOf("\n");
+      if (breakAt !== -1) break;
+    }
+  }
+
+  // Scopes open at that line's start, and its offset into `code`.
+  /** @type {string[]} */
+  const stack = [];
+  let offset = 0;
+  for (let i = 0; i < breakEvent; i++) {
+    const event = /** @type {ScopeEvent} */ (events[i]);
+    if (event.t === OPEN) stack.push(event.s);
+    else if (event.t === CLOSE) stack.pop();
+    else offset += event.v.length;
+  }
+  const firstLine =
+    breakEvent < 0 ? 0 : countNewlines(code, offset + breakAt + 1);
+
+  // Re-render from the line start: reopen its scopes, then its text.
+  /** @type {ScopeEvent[]} */
+  const region = stack.map((s) => ({ t: OPEN, s }));
+  if (breakEvent >= 0) {
+    const event = /** @type {{ v: string }} */ (events[breakEvent]);
+    region.push({ t: TEXT, v: event.v.slice(breakAt + 1) });
+  }
+
+  // The first "\n" in the common suffix ends the last line to re-render.
+  let endEvent = count - suffix;
+  let endAt = -1;
+  for (; endEvent < count; endEvent++) {
+    const event = /** @type {ScopeEvent} */ (events[endEvent]);
+    if (event.t === TEXT) {
+      endAt = event.v.indexOf("\n");
+      if (endAt !== -1) break;
+    }
+  }
+
+  if (endAt !== -1) {
+    for (let i = breakEvent + 1; i < endEvent; i++) {
+      region.push(/** @type {ScopeEvent} */ (events[i]));
+    }
+    const event = /** @type {{ v: string }} */ (events[endEvent]);
+    region.push({ t: TEXT, v: event.v.slice(0, endAt + 1) });
+    const rendered = extendLines(region, [], "");
+
+    // Walk the old side of the same span: the scopes open at that "\n",
+    // and how many old lines the re-rendered ones replace.
+    const prevStack = stack.slice();
+    let prevLineCount = 1;
+    const prevEndEvent = endEvent - count + prevCount;
+    for (let i = breakEvent + 1; i < prevEndEvent; i++) {
+      const prev = /** @type {ScopeEvent} */ (prevEvents[i]);
+      if (prev.t === OPEN) prevStack.push(prev.s);
+      else if (prev.t === CLOSE) prevStack.pop();
+      else prevLineCount += countNewlines(prev.v, prev.v.length);
+    }
+
+    const openScopes = rendered.openScopes;
+    let sameScopes = openScopes.length === prevStack.length;
+    for (let i = 0; sameScopes && i < openScopes.length; i++) {
+      sameScopes = openScopes[i] === prevStack[i];
+    }
+    if (sameScopes) {
+      return prevLines
+        .slice(0, firstLine)
+        .concat(
+          rendered.completedLines,
+          prevLines.slice(firstLine + prevLineCount),
+        );
+    }
+    // Different scopes reach the tail: re-render through the end instead.
+    region.length = stack.length + (breakEvent >= 0 ? 1 : 0);
+  }
+
+  for (let i = breakEvent + 1; i < count; i++) {
+    region.push(/** @type {ScopeEvent} */ (events[i]));
+  }
+  const rendered = extendLines(region, [], "");
+  return linesFromStreamState(
+    prevLines.slice(0, firstLine).concat(rendered.completedLines),
+    [rendered.pendingHtml],
+    code,
+  );
+}
+
+/**
  * Stateful incremental painter driven by pure-append stream sessions.
  *
  * @param {{
@@ -89,12 +235,22 @@ export function createDomLinePainter({ registry }) {
    * O(delta) painting.
    */
   let needsResync = false;
+  /**
+   * Events and `lineHtmlFromEvents`-equivalent lines of the last
+   * mid-document paint, so the next one can `patchLineHtml` from them.
+   * @type {ScopeEvent[] | undefined}
+   */
+  let editEvents;
+  /** @type {string[] | undefined} */
+  let editLines;
 
   /**
    * @param {string} nextLanguage
    * @returns {StreamSession}
    */
   function resetSession(nextLanguage) {
+    editEvents = undefined;
+    editLines = undefined;
     session = registry.createSession(nextLanguage);
     sessionLanguage = nextLanguage;
     fedCode = "";
@@ -171,6 +327,8 @@ export function createDomLinePainter({ registry }) {
       lastUsedIncremental = false;
       hasAppended = false;
       needsResync = false;
+      editEvents = undefined;
+      editLines = undefined;
     },
     lastUsedIncremental() {
       return lastUsedIncremental;
@@ -189,12 +347,22 @@ export function createDomLinePainter({ registry }) {
 
       if (!isPureAppend(fedCode, code)) {
         lastUsedIncremental = false;
-        const lines = lineHtmlFromEvents(events, code);
+        const lines =
+          editEvents === undefined || editLines === undefined
+            ? lineHtmlFromEvents(events, code)
+            : patchLineHtml(editEvents, editLines, events, code);
+        editEvents = events;
+        editLines = lines;
         // Defer the O(n) stream resync until the next pure append.
         needsResync = true;
         fedCode = code;
         return lines;
       }
+
+      // The append path's lines come from the stream session, not
+      // `lineHtmlFromEvents`, so they can't seed `patchLineHtml`.
+      editEvents = undefined;
+      editLines = undefined;
 
       if (needsResync) {
         resyncSession(languageName, fedCode);
