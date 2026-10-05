@@ -26,16 +26,51 @@ function toPlainText(html) {
 }
 
 /**
+ * @param {string} text
+ * @returns {number}
+ */
+function countLines(text) {
+  let count = 1;
+  for (let i = text.indexOf("\n"); i !== -1; i = text.indexOf("\n", i + 1)) {
+    count += 1;
+  }
+  return count;
+}
+
+/**
+ * @typedef {{
+ *   kind: "string" | "array" | "tokenized";
+ *   text?: string;
+ *   lineCount(): number;
+ *   lineRange(start: number, end: number): string[];
+ * }} Adapter
+ */
+
+/**
  * @param {import("./search.d.ts").SearchSource} source
- * @returns {{ kind: "string" | "array" | "tokenized"; lineCount(): number; lineRange(start: number, end: number): string[] }}
+ * @returns {Adapter}
  */
 function createAdapter(source) {
   if (typeof source === "string") {
-    const lines = source.split("\n");
+    // Split lazily: literal queries scan `text` whole (see `scanText`), and
+    // splitting was ~70% of a full rescan's CPU profile in search.bench.ts.
+    /** @type {string[] | undefined} */
+    let lines;
+    let lineCount = -1;
     return {
       kind: "string",
-      lineCount: () => lines.length,
-      lineRange: (start, end) => lines.slice(start, end),
+      text: source,
+      lineCount: () => {
+        if (lineCount < 0) lineCount = countLines(source);
+        return lineCount;
+      },
+      lineRange: (start, end) => {
+        if (!lines) lines = source.split("\n");
+        // Callers only read the result, so a full range can share `lines`.
+        return start === 0 && end >= lines.length
+          ? lines
+          : lines.slice(start, end);
+      },
     };
   }
 
@@ -124,6 +159,64 @@ function optionsEqual(a, b) {
     a.caseSensitive === b.caseSensitive &&
     a.wholeWord === b.wholeWord
   );
+}
+
+/**
+ * Finds a literal `query`'s matches with one pass of `pattern` over the
+ * whole `source` string instead of one per split line, mapping each match
+ * back to its line as it goes. Same result as per-line scanning: the
+ * escaped literal can't match across a "\n" (one containing "\n" never
+ * matches a single line, so it returns nothing), and `\b` sees the "\n"
+ * before a line as the same non-word boundary as the line's start.
+ *
+ * A case-sensitive, non-whole-word query is a plain substring search, so
+ * it skips the regex for `indexOf` (non-overlapping, like the `g` regex).
+ * @param {string} source
+ * @param {string} query
+ * @param {RegExp} pattern
+ * @param {boolean} exact case-sensitive and not whole-word
+ * @returns {import("./search.d.ts").SearchMatch[]}
+ */
+function scanText(source, query, pattern, exact) {
+  /** @type {import("./search.d.ts").SearchMatch[]} */
+  const found = [];
+  if (query.includes("\n")) return found;
+  let line = 0;
+  let lineStart = 0;
+  let nextBreak = source.indexOf("\n");
+  /**
+   * @param {number} index
+   * @param {number} length
+   */
+  const record = (index, length) => {
+    while (nextBreak !== -1 && nextBreak < index) {
+      line += 1;
+      lineStart = nextBreak + 1;
+      nextBreak = source.indexOf("\n", lineStart);
+    }
+    const start = index - lineStart;
+    found.push({ line, start, end: start + length });
+  };
+  if (exact) {
+    const length = query.length;
+    for (
+      let index = source.indexOf(query);
+      index !== -1;
+      index = source.indexOf(query, index + length)
+    ) {
+      record(index, length);
+    }
+    return found;
+  }
+  pattern.lastIndex = 0;
+  for (
+    let match = pattern.exec(source);
+    match !== null;
+    match = pattern.exec(source)
+  ) {
+    record(match.index, match[0].length);
+  }
+  return found;
 }
 
 /**
@@ -249,7 +342,15 @@ export function createSearch(source) {
     }
 
     errorMessage = undefined;
-    matches = scanRange(0, lastScannedLineCount, pattern);
+    matches =
+      adapter.text !== undefined && !normalized.regex
+        ? scanText(
+            adapter.text,
+            text,
+            pattern,
+            normalized.caseSensitive && !normalized.wholeWord,
+          )
+        : scanRange(0, lastScannedLineCount, pattern);
     currentIndex = matches.length > 0 ? 0 : undefined;
     notify();
   }

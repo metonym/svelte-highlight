@@ -65,6 +65,52 @@ describe("createSearch", () => {
     expect(search.prev()).toBeUndefined();
   });
 
+  it("finds the same literal matches in a string as in its split lines", () => {
+    const code = [
+      "foo Foo FOO_foo foofoo",
+      "\tfoo\r",
+      "",
+      "a.b a.b.c (x) [y] foo.bar",
+      "İstanbul ıi ſ K k straße STRASSE",
+      "foo",
+      "😀foo😀 é é",
+      "",
+    ].join("\n");
+    const queries = [
+      "foo",
+      "FOO",
+      "o",
+      "oo",
+      "a.b",
+      "(x)",
+      "[y]",
+      "\r",
+      "\t",
+      "i",
+      "s",
+      "k",
+      "ss",
+      "😀",
+      "e",
+      "foo\nbar",
+      "\n",
+      " ",
+    ];
+    const lines = code.split("\n");
+    for (const query of queries) {
+      for (const caseSensitive of [false, true]) {
+        for (const wholeWord of [false, true]) {
+          const options = { caseSensitive, wholeWord };
+          const fromString = createSearch(code);
+          const fromLines = createSearch(lines);
+          fromString.query(query, options);
+          fromLines.query(query, options);
+          expect(fromString.matches()).toEqual(fromLines.matches());
+        }
+      }
+    }
+  });
+
   it("matches a string[] source's entries directly", () => {
     const search = createSearch(["const a = 1;", "const b = 2;"]);
     search.query("const");
