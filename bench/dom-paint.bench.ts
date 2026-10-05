@@ -95,5 +95,23 @@ group("HighlightEditable paint: mid-document typing", () => {
   }
 });
 
+// What a painter keeps alive once editing moves mid-document: open a
+// document (first paint, the append path), then make one mid-document
+// edit. Each call's painter is kept, so `--alloc` (heap retained per call)
+// shows the painter's footprint.
+const keptPainters: unknown[] = [];
+group("HighlightEditable paint: retained after a mid-document edit", () => {
+  const [opened, edited] = midDocumentStates(2_000) as [
+    ReturnType<typeof parseIncremental>,
+    ReturnType<typeof parseIncremental>,
+  ];
+  task("painter @ 2,000 lines", () => {
+    const painter = createDomLinePainter({ registry });
+    painter.paint(opened.events, opened.code, "javascript");
+    painter.paint(edited.events, edited.code, "javascript");
+    keptPainters.push(painter);
+  });
+});
+
 // Run this suite with `ostia bench bench/dom-paint.bench.ts` for a fast
 // feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.
