@@ -75,11 +75,16 @@ export function computeStagedTailPreview({
   // Valid only for a pure append since the checkpoint: the committed session
   // must not have advanced (no newline completed, so openScopes/pendingHtml
   // - the checkpoint's base state - are still current) and `fedCode` must
-  // still start with the code the checkpoint was taken against.
+  // still start with the code the checkpoint was taken against. Only the
+  // part past the committed position needs comparing: `session` already
+  // covers everything before it and must match `fedCode` there anyway. A
+  // whole-buffer compare made every call O(stream), not O(line) -
+  // bench/stream-repaint.bench.ts.
   const canResume =
     cache !== undefined &&
     cache.committedPos === snapshot.pos &&
-    fedCode.startsWith(cache.fedCode);
+    fedCode.length >= cache.fedCode.length &&
+    fedCode.startsWith(cache.fedCode.slice(snapshot.pos), snapshot.pos);
 
   const baseSnapshot = canResume ? cache.snapshot : snapshot;
   const baseOpenScopes = canResume ? cache.openScopes : openScopes;
