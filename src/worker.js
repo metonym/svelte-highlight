@@ -132,6 +132,12 @@ export function serveHighlighter(
       }
       case "session.snapshot": {
         const session = getSession(msg.sessionId);
+        // `want` names the one field the client reads, so `snapshot()`
+        // doesn't structured-clone every event so far just to drop them -
+        // bench/worker.bench.ts. Without it (an older client), reply with
+        // both.
+        if (msg.want === "snapshot") return { snapshot: session.snapshot() };
+        if (msg.want === "events") return { events: session.events() };
         return { snapshot: session.snapshot(), events: session.events() };
       }
       default:
@@ -258,13 +264,19 @@ function createRemoteHighlighter(worker) {
       async snapshot() {
         if (pendingAppend) await pendingAppend.promise;
         await created;
-        const { snapshot } = await send("session.snapshot", { sessionId });
+        const { snapshot } = await send("session.snapshot", {
+          sessionId,
+          want: "snapshot",
+        });
         return snapshot;
       },
       async events() {
         if (pendingAppend) await pendingAppend.promise;
         await created;
-        const { events } = await send("session.snapshot", { sessionId });
+        const { events } = await send("session.snapshot", {
+          sessionId,
+          want: "events",
+        });
         return events;
       },
     };
