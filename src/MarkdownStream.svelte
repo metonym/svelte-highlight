@@ -101,11 +101,19 @@
    * that only closed over `resolvedLanguages` would not re-run when a
    * grammar finished loading (Svelte 3/4, and Svelte 5's `untrack` of
    * helper bodies).
+   *
+   * Takes the cache key, not the segment, so the result doesn't depend on
+   * the segment object. Svelte 5's legacy mode marks every keyed `{#each}`
+   * item as changed whenever `segments` changes, and treats any object as
+   * changed. A `language` read off the segment would reach every closed
+   * fence's HighlightStream on every chunk. Through the (string) key, it
+   * only changes when the key or a grammar does -
+   * tests/markdown-stream-updates.test.ts.
    * @param {Record<string, import("./languages").LanguageType<string>>} languages
-   * @param {import("./fence.d.ts").FenceSegment} segment
+   * @param {string} key
    */
-  function languageFor(languages, segment) {
-    return languages[cacheKey(segment.lang)] ?? plaintext;
+  function languageFor(languages, key) {
+    return languages[key] ?? plaintext;
   }
 
   // Feed the splitter, then re-read its (identity-stable) segment list.
@@ -166,19 +174,18 @@
 
 <div class="shl-md" aria-busy={!done} {...$$restProps}>
   {#each segments as segment (segment.id)}
+    {@const languageKey =
+      segment.kind === "fence" ? cacheKey(segment.lang) : ""}
+    {@const language = languageFor(resolvedLanguages, languageKey)}
     {#if segment.kind === "text"}
       <slot name="text" {segment}>
         <div class="shl-md-text">{segment.text}</div>
       </slot>
     {:else}
-      <slot
-        name="fence"
-        {segment}
-        language={languageFor(resolvedLanguages, segment)}
-      >
+      <slot name="fence" {segment} {language}>
         <HighlightStream
           code={segment.code}
-          language={languageFor(resolvedLanguages, segment)}
+          {language}
           done={done || !segment.open}
           caret={caret && segment.id === lastOpenFenceId}
           {autoScroll}
