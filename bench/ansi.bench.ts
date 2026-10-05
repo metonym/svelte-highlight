@@ -1,13 +1,13 @@
 /**
  * ansi.js's parseAnsi() and ansi-color.js's per-segment class/style
- * computation - the two passes AnsiOutput.svelte's reactive `$: segments =
- * parsed.map(...)` runs on every `text` change. No prior baseline exists
- * for the color-math half: it used to live inline in the component's
- * `<script>`, which isn't reachable from bench/ or tests/ at all.
+ * computation - the two passes behind AnsiOutput.svelte - plus the
+ * component's own per-chunk pipeline (ansi-output.js), which only redoes
+ * the class/style step for segments the session reports as changed.
  */
 import { group, task } from "ostia";
 import { createAnsiSession, parseAnsi } from "../src/ansi.js";
 import { classNames, inlineStyle } from "../src/ansi-color.js";
+import { createAnsiOutput } from "../src/ansi-output.js";
 
 const FG_CODES = [
   "\x1b[31m",
@@ -112,6 +112,25 @@ group("repeated append: createAnsiSession vs re-parsing on every chunk", () => {
       for (const piece of chunks) {
         accumulated += piece;
         latest = parseAnsi(accumulated);
+      }
+      return latest;
+    });
+  }
+});
+
+// What AnsiOutput itself pays per streamed chunk: the session parse plus
+// the class/style step for the template, with `text` growing by one chunk
+// per update the way a live-tailed prop does.
+group("repeated append: AnsiOutput update per chunk", () => {
+  for (const count of [2_000, 20_000]) {
+    const chunks = chunk(ansiSource(count), CHUNK_BYTES);
+    task(`${count.toLocaleString()} segments`, () => {
+      const output = createAnsiOutput();
+      let text = "";
+      let latest: unknown;
+      for (const piece of chunks) {
+        text += piece;
+        latest = output.update(text, true);
       }
       return latest;
     });

@@ -57,6 +57,14 @@ export type AnsiSegment = {
  */
 export declare function parseAnsi(text: string): AnsiSegment[];
 
+/** Changed segments from {@link AnsiSession.delta}. */
+export interface AnsiDelta {
+  /** Index of the first changed segment. */
+  start: number;
+  /** Segments from `start` to the end, including the live trailing one. */
+  segments: AnsiSegment[];
+}
+
 /** An incremental ANSI parser session; see {@link createAnsiSession}. */
 export interface AnsiSession {
   /** Feed the next chunk of text into the session. */
@@ -66,6 +74,16 @@ export interface AnsiSession {
    * buffered-but-not-yet-flushed text. Does not mutate session state.
    */
   segments(): AnsiSegment[];
+  /**
+   * What changed since the previous `delta()` call (or since the session
+   * started): `segments().slice(start)`, the same tail `segments()` would
+   * return from index `start`. Every segment before `start` is unchanged
+   * since the previous call, so a consumer that mirrors the segments can
+   * truncate its copy to `start` and append `segments`, paying for the
+   * new segments instead of the whole output. A `\r` overwrite can move
+   * `start` below the previous call's end. Does not affect `segments()`.
+   */
+  delta(): AnsiDelta;
   /**
    * Flush remaining buffered text and drop any still-pending incomplete
    * sequence, then return the final segments. Calling `append()` after

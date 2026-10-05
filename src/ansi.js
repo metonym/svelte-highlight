@@ -443,6 +443,10 @@ export function createAnsiSession() {
   // resolve once more input arrived.
   let pending = "";
   let finished = false;
+  // Lowest index in `segments` that changed since the last delta() call.
+  // flush() only ever pushes at or above it, so only resetLine(), which
+  // pops and truncates settled segments, has to lower it.
+  let changedFrom = 0;
 
   const flush = () => {
     if (buffer) {
@@ -459,15 +463,13 @@ export function createAnsiSession() {
     }
     buffer = "";
     let last = segments.pop();
-    while (last !== undefined) {
-      const segmentBreak = last.text.lastIndexOf("\n");
-      if (segmentBreak === -1) {
-        last = segments.pop();
-        continue;
-      }
-      last.text = last.text.slice(0, segmentBreak + 1);
+    while (last !== undefined && last.text.lastIndexOf("\n") === -1) {
+      last = segments.pop();
+    }
+    if (segments.length < changedFrom) changedFrom = segments.length;
+    if (last !== undefined) {
+      last.text = last.text.slice(0, last.text.lastIndexOf("\n") + 1);
       segments.push(last);
-      return;
     }
   };
 
@@ -627,6 +629,15 @@ export function createAnsiSession() {
       const result = segments.slice();
       if (buffer) result.push(toSegment(buffer, style, link));
       return result;
+    },
+    delta() {
+      const start = changedFrom;
+      const changed = segments.slice(start);
+      if (buffer) changed.push(toSegment(buffer, style, link));
+      // The live trailing segment (index `segments.length`) is rebuilt from
+      // `buffer` on every call, so the next delta() always re-sends it.
+      changedFrom = segments.length;
+      return { start, segments: changed };
     },
     finish() {
       if (!finished) {
