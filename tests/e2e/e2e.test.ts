@@ -1453,6 +1453,34 @@ test("HighlightEditable - only repaints the edited line, leaving others' DOM con
   expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
 });
 
+test("HighlightEditable - Enter mid-document keeps later lines' DOM connected", async ({
+  mount,
+  page,
+}) => {
+  const lines = Array.from({ length: 20 }, (_, i) => `line ${i}`).join("\n");
+  await mount(HighlightEditable, { props: { initialCode: lines } });
+
+  const editor = page.locator("[contenteditable='true']");
+  // A line's content nodes, unlike its <span>, are replaced by a rewrite.
+  const lastLine = await editor
+    .locator("> span")
+    .last()
+    .evaluateHandle((el) => el.firstChild);
+
+  // Wherever the click lands in line 10, Enter splits it there and the
+  // caret moves to the new line, so the typed "Z" follows the "\n".
+  await editor.locator("> span").nth(10).click();
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Z");
+
+  const code = await page.getByTestId("code").getAttribute("data-value");
+  expect(code?.split("\n")).toHaveLength(21);
+  expect(code?.replace("\nZ", "")).toBe(lines);
+  await expect(editor.locator("> span")).toHaveCount(21);
+  // The lines below shifted down one index without being rewritten.
+  expect(await lastLine.evaluate((node) => node?.isConnected)).toBe(true);
+});
+
 test("HighlightEditable - handles bursts of typing on a large document within budget", async ({
   mount,
   page,
@@ -1546,6 +1574,52 @@ test("HighlightEditable css-highlights engine - unrelated lines stay connected a
   const code = await page.getByTestId("code").getAttribute("data-value");
   expect(code).toHaveLength(lines.length + 20);
   expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
+});
+
+test("HighlightEditable css-highlights engine - Enter mid-document repaints shifted lines", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const lines = Array.from({ length: 6 }, (_, i) => `const a${i} = ${i};`).join(
+    "\n",
+  );
+  await mount(HighlightEditableCssHighlights, {
+    props: { initialCode: lines },
+  });
+
+  const editor = page.locator("[contenteditable='true']");
+  // A line's content nodes, unlike its <span>, are replaced by a rewrite.
+  const lastLine = await editor
+    .locator("> span")
+    .last()
+    .evaluateHandle((el) => el.firstChild);
+  await editor.locator("> span").nth(2).click();
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Z");
+
+  const code = await page.getByTestId("code").getAttribute("data-value");
+  expect(code?.replace("\nZ", "")).toBe(lines);
+  await expect(editor.locator("> span")).toHaveCount(7);
+  expect(await lastLine.evaluate((node) => node?.isConnected)).toBe(true);
+
+  // Every line still has its "const" keyword painted, and no range points
+  // at a detached text node.
+  const painted = await page.evaluate(() => {
+    const name = [...CSS.highlights.keys()].find((key) =>
+      key.endsWith("-keyword"),
+    );
+    const ranges = name ? [...(CSS.highlights.get(name) ?? [])] : [];
+    return {
+      count: ranges.length,
+      connected: ranges.every((range) => range.startContainer.isConnected),
+    };
+  });
+  expect(painted).toEqual({ count: 6, connected: true });
 });
 
 test("HighlightEditable css-highlights engine - falls back to the DOM engine without CSS.highlights", async ({
