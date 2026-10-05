@@ -75,3 +75,58 @@ describe("diffText", () => {
     ).toBe(after);
   });
 });
+
+describe("diffText on long inputs", () => {
+  /** Reference: the plain one-character-at-a-time trim. */
+  function referenceDiff(before: string, after: string) {
+    const minLength = Math.min(before.length, after.length);
+    let prefix = 0;
+    while (prefix < minLength && before[prefix] === after[prefix]) prefix++;
+    const high = before.charCodeAt(prefix - 1);
+    if (high >= 0xd800 && high <= 0xdbff) prefix--;
+    let suffix = 0;
+    while (
+      suffix < minLength - prefix &&
+      before[before.length - 1 - suffix] === after[after.length - 1 - suffix]
+    )
+      suffix++;
+    const low = before.charCodeAt(before.length - suffix);
+    if (low >= 0xdc00 && low <= 0xdfff) suffix--;
+    return {
+      start: prefix,
+      removed: before.slice(prefix, before.length - suffix),
+      inserted: after.slice(prefix, after.length - suffix),
+    };
+  }
+
+  it("matches a per-character trim across chunk boundaries", () => {
+    let seed = 7;
+    const random = () => {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed / 0x7fffffff;
+    };
+    const units = ["a", "ab", "\n", "😀", "function x() {}\n"];
+    for (let round = 0; round < 200; round++) {
+      let before = "";
+      const length = Math.floor(random() * 20_000);
+      while (before.length < length) {
+        before += units[Math.floor(random() * units.length)];
+      }
+      const at = Math.floor(random() * (before.length + 1));
+      const removeLength = Math.floor(random() * 6);
+      const insert = ["", "a", "😀", "x\ny", "aaaa"][round % 5] as string;
+      const after =
+        before.slice(0, at) + insert + before.slice(at + removeLength);
+      expect(diffText(before, after)).toEqual(referenceDiff(before, after));
+    }
+  });
+
+  it("matches on long repetitive inputs", () => {
+    for (const n of [4095, 4096, 4097, 16_384, 20_000]) {
+      const before = "a".repeat(n);
+      for (const after of [`${before}a`, before.slice(1), `b${before}`]) {
+        expect(diffText(before, after)).toEqual(referenceDiff(before, after));
+      }
+    }
+  });
+});
