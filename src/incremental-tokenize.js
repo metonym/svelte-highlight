@@ -16,11 +16,26 @@ import { diffText } from "./text-diff.js";
  */
 
 /**
+ * What a reparse kept from the previous parse: `events[0, head)` and its
+ * last `tail` events are the same objects as `from`'s first `head` and last
+ * `tail`. Lets a consumer holding output derived from `from` (e.g.
+ * `patchLineHtml`) find the changed span without comparing the event
+ * arrays.
+ * @typedef {{
+ *   from: ScopeEvent[],
+ *   head: number,
+ *   tail: number,
+ * }} EventReuse
+ */
+
+/**
+ * `reuse` is set by `reparseIncremental` when it resumed from `previous`.
  * @typedef {{
  *   code: string,
  *   language: string,
  *   events: ScopeEvent[],
  *   checkpoints: Snapshot[],
+ *   reuse?: EventReuse,
  * }} IncrementalParse
  */
 
@@ -274,11 +289,17 @@ export function reparseIncremental(registry, language, previous, code) {
         eventCount: old.eventCount + eventOffset,
       });
     }
-    return { code, language, events, checkpoints };
+    const reuse = {
+      from: previous.events,
+      head: prefixLength,
+      tail: previous.events.length - oldCheckpoint.eventCount,
+    };
+    return { code, language, events, checkpoints, reuse };
   }
 
   const tail = session.finish();
   const events = previous.events.slice(0, prefixLength);
   appendEvents(events, tail.events, 0);
-  return { code, language, events, checkpoints };
+  const reuse = { from: previous.events, head: prefixLength, tail: 0 };
+  return { code, language, events, checkpoints, reuse };
 }

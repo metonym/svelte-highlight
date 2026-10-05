@@ -1,6 +1,5 @@
 import {
   createDomLinePainter,
-  isPureAppend,
   lineHtmlFromEvents,
   patchLineHtml,
 } from "../src/editable-dom-paint.js";
@@ -20,24 +19,10 @@ function eventsFor(code: string) {
   return registry.tokenize(code, "javascript").events;
 }
 
-describe("isPureAppend", () => {
-  it("accepts growth at the end only", () => {
-    expect(isPureAppend("ab", "abc")).toBe(true);
-    expect(isPureAppend("", "x")).toBe(true);
-    expect(isPureAppend("ab", "ab")).toBe(true);
-  });
-
-  it("rejects mid-document edits and deletes", () => {
-    expect(isPureAppend("abc", "ab")).toBe(false);
-    expect(isPureAppend("abc", "xabc")).toBe(false);
-    expect(isPureAppend("abc", "axc")).toBe(false);
-  });
-});
-
 describe("createDomLinePainter", () => {
   it("matches the historical renderHtml+splitLines path on a one-shot paint", () => {
     const code = "function add(a, b) {\n  return a + b;\n}\n";
-    const painter = createDomLinePainter({ registry });
+    const painter = createDomLinePainter();
     const events = eventsFor(code);
     // First paint is a pure append from "" → code, still must match historical.
     expect(painter.paint(events, code, "javascript")).toEqual(
@@ -45,8 +30,8 @@ describe("createDomLinePainter", () => {
     );
   });
 
-  it("uses the incremental path across pure appends and matches full paint", () => {
-    const painter = createDomLinePainter({ registry });
+  it("patches across pure appends and matches full paint", () => {
+    const painter = createDomLinePainter();
     let state = parseIncremental(registry, "javascript", "");
     let code = "";
 
@@ -62,27 +47,30 @@ describe("createDomLinePainter", () => {
     for (const chunk of steps) {
       code += chunk;
       state = reparseIncremental(registry, "javascript", state, code);
-      const lines = painter.paint(state.events, code, "javascript");
+      const lines = painter.paint(
+        state.events,
+        code,
+        "javascript",
+        state.reuse,
+      );
       expect(lines).toEqual(lineHtmlFromEvents(state.events, code));
     }
-    expect(painter.lastUsedIncremental()).toBe(true);
   });
 
-  it("falls back to a full rebuild after a mid-document edit", () => {
-    const painter = createDomLinePainter({ registry });
+  it("matches full paint after a mid-document edit", () => {
+    const painter = createDomLinePainter();
     let code = "const a = 1;\nconst b = 2;\n";
     let state = parseIncremental(registry, "javascript", code);
-    painter.paint(state.events, code, "javascript");
+    painter.paint(state.events, code, "javascript", state.reuse);
 
     code = "const a = 99;\nconst b = 2;\n";
     state = reparseIncremental(registry, "javascript", state, code);
-    const lines = painter.paint(state.events, code, "javascript");
+    const lines = painter.paint(state.events, code, "javascript", state.reuse);
     expect(lines).toEqual(lineHtmlFromEvents(state.events, code));
-    expect(painter.lastUsedIncremental()).toBe(false);
   });
 
   it("character-by-character append stays equivalent to full paint", () => {
-    const painter = createDomLinePainter({ registry });
+    const painter = createDomLinePainter();
     const target =
       "export function sum(xs) {\n  return xs.reduce((a, b) => a + b, 0);\n}\n";
     let state = parseIncremental(registry, "javascript", "");
@@ -90,81 +78,88 @@ describe("createDomLinePainter", () => {
     for (let i = 1; i <= target.length; i++) {
       code = target.slice(0, i);
       state = reparseIncremental(registry, "javascript", state, code);
-      const lines = painter.paint(state.events, code, "javascript");
+      const lines = painter.paint(
+        state.events,
+        code,
+        "javascript",
+        state.reuse,
+      );
       expect(lines).toEqual(lineHtmlFromEvents(state.events, code));
     }
-    expect(painter.lastUsedIncremental()).toBe(true);
   });
 
-  it("resumes incremental paint after append → mid-edit → append", () => {
-    const painter = createDomLinePainter({ registry });
+  it("matches full paint across append → mid-edit → append", () => {
+    const painter = createDomLinePainter();
     let code = "const a = 1;\n";
     let state = parseIncremental(registry, "javascript", code);
-    expect(painter.paint(state.events, code, "javascript")).toEqual(
-      lineHtmlFromEvents(state.events, code),
-    );
+    expect(
+      painter.paint(state.events, code, "javascript", state.reuse),
+    ).toEqual(lineHtmlFromEvents(state.events, code));
 
     code += "const b = 2;\n";
     state = reparseIncremental(registry, "javascript", state, code);
-    expect(painter.paint(state.events, code, "javascript")).toEqual(
-      lineHtmlFromEvents(state.events, code),
-    );
-    expect(painter.lastUsedIncremental()).toBe(true);
+    expect(
+      painter.paint(state.events, code, "javascript", state.reuse),
+    ).toEqual(lineHtmlFromEvents(state.events, code));
 
     code = "const a = 99;\nconst b = 2;\n";
     state = reparseIncremental(registry, "javascript", state, code);
-    expect(painter.paint(state.events, code, "javascript")).toEqual(
-      lineHtmlFromEvents(state.events, code),
-    );
-    expect(painter.lastUsedIncremental()).toBe(false);
+    expect(
+      painter.paint(state.events, code, "javascript", state.reuse),
+    ).toEqual(lineHtmlFromEvents(state.events, code));
 
     code += "const c = 3;\n";
     state = reparseIncremental(registry, "javascript", state, code);
-    expect(painter.paint(state.events, code, "javascript")).toEqual(
-      lineHtmlFromEvents(state.events, code),
-    );
+    expect(
+      painter.paint(state.events, code, "javascript", state.reuse),
+    ).toEqual(lineHtmlFromEvents(state.events, code));
 
     code += "console.log(a + b + c);\n";
     state = reparseIncremental(registry, "javascript", state, code);
-    expect(painter.paint(state.events, code, "javascript")).toEqual(
-      lineHtmlFromEvents(state.events, code),
-    );
-    expect(painter.lastUsedIncremental()).toBe(true);
+    expect(
+      painter.paint(state.events, code, "javascript", state.reuse),
+    ).toEqual(lineHtmlFromEvents(state.events, code));
   });
 
-  it("does not call session.append on every mid-document edit", () => {
-    let appendCount = 0;
+  it("never tokenizes: the first paint and later edits reuse the parse", () => {
+    let sessions = 0;
     const createSession = registry.createSession.bind(registry);
     registry.createSession = ((...args: Parameters<typeof createSession>) => {
-      const session = createSession(...args);
-      const append = session.append.bind(session);
-      session.append = (chunk: string) => {
-        appendCount++;
-        return append(chunk);
-      };
-      return session;
+      sessions++;
+      return createSession(...args);
     }) as typeof registry.createSession;
 
     try {
-      const painter = createDomLinePainter({ registry });
+      const painter = createDomLinePainter();
       let code = "const a = 1;\nconst b = 2;\nconst c = 3;\n";
-      painter.paint(eventsFor(code), code, "javascript");
-      const appendsAfterInit = appendCount;
-      expect(appendsAfterInit).toBeGreaterThan(0);
-
-      // Use one-shot tokenize (not reparseIncremental) so the spy only
-      // observes painter-driven createSession/append calls.
-      for (let i = 0; i < 20; i++) {
-        code = `const a = ${i};\nconst b = 2;\nconst c = 3;\n`;
-        const events = eventsFor(code);
-        const lines = painter.paint(events, code, "javascript");
-        expect(lines).toEqual(lineHtmlFromEvents(events, code));
+      const events = eventsFor(code);
+      painter.paint(events, code, "javascript");
+      for (const next of ["const a = 9;\n", "const d = 4;\n"]) {
+        code = next === "const d = 4;\n" ? code + next : next + code;
+        const nextEvents = eventsFor(code);
+        expect(painter.paint(nextEvents, code, "javascript")).toEqual(
+          lineHtmlFromEvents(nextEvents, code),
+        );
       }
-      // Mid-edits must not eagerly resync (createSession + append per keystroke).
-      expect(appendCount).toBe(appendsAfterInit);
+      expect(sessions).toBe(0);
     } finally {
       registry.createSession = createSession;
     }
+  });
+
+  it("repaints from scratch after a language change or reset", () => {
+    const painter = createDomLinePainter();
+    const code = "x = 1\n";
+    painter.paint(eventsFor(code), code, "javascript");
+    const python = registry.tokenize(code, "python").events;
+    expect(painter.paint(python, code, "python")).toEqual(
+      lineHtmlFromEvents(python, code),
+    );
+    painter.reset();
+    const js = eventsFor(code);
+    expect(painter.paint(js, code, "javascript")).toEqual(
+      lineHtmlFromEvents(js, code),
+    );
   });
 });
 
@@ -198,9 +193,14 @@ describe("patchLineHtml", () => {
     "```",
   ];
 
-  function fuzz(languageName: string, base: string, seed: number) {
+  function fuzz(
+    languageName: string,
+    base: string,
+    seed: number,
+    withReuse = true,
+  ) {
     const random = rng(seed);
-    const painter = createDomLinePainter({ registry });
+    const painter = createDomLinePainter();
     let code = base;
     let state = parseIncremental(registry, languageName, code);
     painter.paint(state.events, code, languageName);
@@ -222,7 +222,12 @@ describe("patchLineHtml", () => {
         code = code.slice(0, at) + text + code.slice(at);
       }
       state = reparseIncremental(registry, languageName, state, code);
-      const lines = painter.paint(state.events, code, languageName);
+      const lines = painter.paint(
+        state.events,
+        code,
+        languageName,
+        withReuse ? state.reuse : undefined,
+      );
       expect(lines).toEqual(lineHtmlFromEvents(state.events, code));
     }
   }
@@ -234,6 +239,8 @@ describe("patchLineHtml", () => {
         6,
       );
     for (let seed = 1; seed <= 12; seed++) fuzz("javascript", js, seed);
+    // Without `reuse`, the changed span comes from comparing events.
+    for (let seed = 1; seed <= 4; seed++) fuzz("javascript", js, seed, false);
     for (const language of ["xml", "markdown", "css", "python", "svelte"]) {
       const snippet = CUSTOM_SNIPPETS[language] ?? js;
       for (let seed = 1; seed <= 4; seed++) fuzz(language, snippet, seed);

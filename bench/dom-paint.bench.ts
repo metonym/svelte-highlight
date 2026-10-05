@@ -21,7 +21,7 @@ const registry = await buildRegistry();
 
 function typeWithIncrementalPainter(targetLength: number) {
   const source = jsSource(targetLength);
-  const painter = createDomLinePainter({ registry });
+  const painter = createDomLinePainter();
   let code = "";
   let state: ReturnType<typeof parseIncremental> | undefined;
   for (const ch of source) {
@@ -29,7 +29,7 @@ function typeWithIncrementalPainter(targetLength: number) {
     state = state
       ? reparseIncremental(registry, "javascript", state, code)
       : parseIncremental(registry, "javascript", code);
-    painter.paint(state.events, code, "javascript");
+    painter.paint(state.events, code, "javascript", state.reuse);
   }
 }
 
@@ -84,14 +84,36 @@ function midDocumentStates(lines: number) {
 group("HighlightEditable paint: mid-document typing", () => {
   for (const lines of [500, 2_000, 8_000]) {
     const states = midDocumentStates(lines);
-    const painter = createDomLinePainter({ registry });
+    const painter = createDomLinePainter();
     task(
       `painter, ${states.length - 1} keystrokes @ ${lines.toLocaleString()} lines`,
       () => {
         for (const state of states)
-          painter.paint(state.events, state.code, "javascript");
+          painter.paint(state.events, state.code, "javascript", state.reuse);
       },
     );
+  }
+});
+
+// Opening a document: the component's first parse and first paint, then
+// the same plus one keystroke typed at the end (the first append after
+// mount).
+group("HighlightEditable paint: mount", () => {
+  for (const lines of [2_000, 8_000]) {
+    const code = jsLines(lines);
+    const typed = `${code}x`;
+    const label = `@ ${lines.toLocaleString()} lines`;
+    task(`parse + first paint ${label}`, () => {
+      const state = parseIncremental(registry, "javascript", code);
+      createDomLinePainter().paint(state.events, code, "javascript");
+    });
+    task(`parse + first paint + 1 char appended ${label}`, () => {
+      const state = parseIncremental(registry, "javascript", code);
+      const painter = createDomLinePainter();
+      painter.paint(state.events, code, "javascript");
+      const next = reparseIncremental(registry, "javascript", state, typed);
+      painter.paint(next.events, typed, "javascript", next.reuse);
+    });
   }
 });
 
@@ -106,9 +128,9 @@ group("HighlightEditable paint: retained after a mid-document edit", () => {
     ReturnType<typeof parseIncremental>,
   ];
   task("painter @ 2,000 lines", () => {
-    const painter = createDomLinePainter({ registry });
+    const painter = createDomLinePainter();
     painter.paint(opened.events, opened.code, "javascript");
-    painter.paint(edited.events, edited.code, "javascript");
+    painter.paint(edited.events, edited.code, "javascript", edited.reuse);
     keptPainters.push(painter);
   });
 });

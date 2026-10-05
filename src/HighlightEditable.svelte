@@ -96,9 +96,9 @@
   /** @type {import("./incremental-tokenize.js").IncrementalParse | undefined} */
   let incrementalParse;
 
-  // DOM-engine line HTML: pure appends feed a stream session so renderHtml is
-  // not re-run over the whole document on every keystroke.
-  const domLinePainter = createDomLinePainter({ registry });
+  // DOM-engine line HTML: after the first paint, each edit re-renders only
+  // the lines whose events changed, not the whole document.
+  const domLinePainter = createDomLinePainter();
 
   function getEvents() {
     incrementalParse = incrementalParse
@@ -432,7 +432,12 @@
     if (resolvedEngineValue === "css-highlights") return paintCssHighlights();
     const events = getEvents();
     return renderLines(
-      domLinePainter.paint(events, code, language.name),
+      domLinePainter.paint(
+        events,
+        code,
+        language.name,
+        incrementalParse?.reuse,
+      ),
       setHtml,
     );
   }

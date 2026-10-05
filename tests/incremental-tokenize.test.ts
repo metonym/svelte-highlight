@@ -6,6 +6,7 @@ import {
 } from "../src/engine.js";
 import {
   CHECKPOINT_INTERVAL,
+  type IncrementalParse,
   parseIncremental,
   reparseIncremental,
 } from "../src/incremental-tokenize.js";
@@ -47,8 +48,30 @@ function assertEditSequenceMatchesOneShot(
   expect(render(state.events)).toEqual(oneShotRender(first, language));
 
   for (const code of rest) {
+    const previous = state;
     state = reparseIncremental(registry, language, state, code);
     expect(render(state.events)).toEqual(oneShotRender(code, language));
+    if (state !== previous) expectReuseHolds(previous, state);
+  }
+}
+
+/** `next.reuse` names events that really are `previous`'s, by identity. */
+function expectReuseHolds(previous: IncrementalParse, next: IncrementalParse) {
+  const reuse = next.reuse;
+  if (!reuse) throw new Error("reparse result has no reuse");
+  expect(reuse.from).toBe(previous.events);
+  const prevCount = previous.events.length;
+  const count = next.events.length;
+  expect(reuse.head + reuse.tail).toBeLessThanOrEqual(
+    Math.min(prevCount, count),
+  );
+  for (let i = 0; i < reuse.head; i++) {
+    expect(next.events[i]).toBe(previous.events[i] as never);
+  }
+  for (let i = 1; i <= reuse.tail; i++) {
+    expect(next.events[count - i]).toBe(
+      previous.events[prevCount - i] as never,
+    );
   }
 }
 
@@ -316,5 +339,38 @@ describe("parseIncremental checkpoint density", () => {
     } finally {
       registry.createSession = createSession;
     }
+  });
+});
+
+describe("reparseIncremental reuse", () => {
+  const code = "function add(a, b) {\n  return a + b;\n}\n".repeat(200);
+
+  it("reports the reused head and converged tail of a mid-document edit", () => {
+    const state = parseIncremental(registry, "javascript", code);
+    const at = code.indexOf("\n", code.length >> 1) + 1;
+    const edited = `${code.slice(0, at)}x${code.slice(at)}`;
+    const next = reparseIncremental(registry, "javascript", state, edited);
+    expectReuseHolds(state, next);
+    const head = next.reuse?.head ?? 0;
+    const tail = next.reuse?.tail ?? 0;
+    expect(head).toBeGreaterThan(0);
+    expect(tail).toBeGreaterThan(0);
+    // Everything but a few lines around the edit is reused.
+    expect(next.events.length - head - tail).toBeLessThan(
+      next.events.length / 10,
+    );
+  });
+
+  it("reports no tail when the edit never re-converges", () => {
+    const state = parseIncremental(registry, "javascript", code);
+    const next = reparseIncremental(registry, "javascript", state, `/*${code}`);
+    expectReuseHolds(state, next);
+    expect(next.reuse?.tail).toBe(0);
+  });
+
+  it("is absent from a full parse", () => {
+    expect(
+      parseIncremental(registry, "javascript", code).reuse,
+    ).toBeUndefined();
   });
 });
