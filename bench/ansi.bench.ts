@@ -31,6 +31,24 @@ function ansiSource(segmentCount: number) {
   return out;
 }
 
+/**
+ * Log-shaped terminal output: a short colored level tag, then a long run of
+ * plain text per line. Unlike `ansiSource`'s one-word segments, the cost
+ * here is dominated by copying plain text, not by escape sequences.
+ */
+function logSource(lineCount: number) {
+  const levels = [
+    "\x1b[32mINFO\x1b[0m",
+    "\x1b[33mWARN\x1b[0m",
+    "\x1b[31mERROR\x1b[0m",
+  ];
+  let out = "";
+  for (let i = 0; i < lineCount; i++) {
+    out += `${levels[i % levels.length]} [worker-${i % 8}] request ${i} handled in ${i % 97}ms: GET /api/v1/items?page=${i}\n`;
+  }
+  return out;
+}
+
 const SEGMENT_COUNTS = [200, 2_000, 20_000];
 
 group("parseAnsi()", () => {
@@ -38,6 +56,8 @@ group("parseAnsi()", () => {
     const source = ansiSource(count);
     task(`${count.toLocaleString()} segments`, () => parseAnsi(source));
   }
+  const logs = logSource(5_000);
+  task("5,000 log lines", () => parseAnsi(logs));
 });
 
 group("classNames() + inlineStyle() over parsed segments", () => {
