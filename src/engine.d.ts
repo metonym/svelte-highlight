@@ -213,8 +213,9 @@ export class UnknownLanguageError extends Error {
 }
 
 /**
- * Thrown by the tokenizer once a parse exceeds 500,000 iterations,
- * guarding against a grammar bug that never advances position.
+ * Thrown by the tokenizer once a parse exceeds both 500,000 iterations
+ * and three iterations per character consumed, guarding against a grammar
+ * bug that never advances position.
  */
 export class TokenizerLoopError extends Error {
   constructor(grammarName: string, iterations: number);
