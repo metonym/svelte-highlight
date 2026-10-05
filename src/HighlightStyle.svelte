@@ -132,7 +132,19 @@
   let registry;
 
   function unregister() {
-    registry?.update((owners) => owners.filter((owner) => owner !== token));
+    if (!registry) return;
+    let empty = false;
+    registry.update((owners) => {
+      const remaining = owners.filter((owner) => owner !== token);
+      empty = remaining.length === 0;
+      return remaining;
+    });
+    // Drop the key once its last owner leaves. Keys embed the full theme
+    // CSS, so a long-lived app that cycles themes would otherwise keep
+    // every theme it ever showed.
+    if (empty && registries.get(registeredKey) === registry) {
+      registries.delete(registeredKey);
+    }
   }
 
   $: {
