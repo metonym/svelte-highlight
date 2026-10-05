@@ -23,7 +23,43 @@ import { diffText } from "./text-diff.js";
  * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
  * @typedef {import("./engine.d.ts").StreamSession} StreamSession
  * @typedef {ReturnType<typeof import("./stream-highlighted.js").createCompletedHtmlBuffer>} CompletedHtmlBuffer
+ * @typedef {NonNullable<ReturnType<StreamSession["checkpointBefore"]>>} Checkpoint
  */
+
+/**
+ * Where `extendLinesAfterPatch` can start its walk after a `replace()`
+ * that kept the first `keptEvents` events (see `StreamSession#replace`):
+ * the last checkpoint before the break of the last line start that
+ * certainly survives. Those events match the previous ones by identity,
+ * so the walk from the top would only have confirmed them. Undefined when
+ * no line start is that early.
+ *
+ * Before, every regenerate walked every event before the change, about a
+ * fifth of a regenerate at 8,000 lines (bench/stream-repaint.bench.ts).
+ * A session's first `replace()` re-parses and keeps no events, so the
+ * first regenerate still walks from the top.
+ * @param {StreamSession} session
+ * @param {number} keptEvents
+ * @param {number[]} lineStarts Ascending.
+ * @returns {Checkpoint | undefined}
+ */
+export function walkStart(session, keptEvents, lineStarts) {
+  // The text the kept events cover ends at the last checkpoint they reach.
+  const kept = session.checkpointBefore({ eventCount: keptEvents });
+  if (!kept) return undefined;
+  // The last line start whose break lies in that text.
+  let last = -1;
+  while (
+    last + 1 < lineStarts.length &&
+    /** @type {number} */ (lineStarts[last + 1]) - 1 < kept.textPos
+  ) {
+    last++;
+  }
+  if (last < 0) return undefined;
+  return session.checkpointBefore({
+    textPos: /** @type {number} */ (lineStarts[last]) - 1,
+  });
+}
 
 /**
  * Offsets of the line starts every `chunkLines` lines in `text`, at most
@@ -76,12 +112,22 @@ function sameEvent(a, b) {
  * Returns how many of `lineStarts` are kept (rendering resumes at
  * `lineStarts[kept - 1]`, or at the top if 0) and `extendLines`' result
  * from there.
+ *
+ * `from`, when given, is a point known to follow only events that match
+ * `previousEvents` (see `walkStart`), so the walk starts there instead of
+ * at the top, with the same result.
  * @param {ScopeEvent[]} events
  * @param {ScopeEvent[]} previousEvents
  * @param {number[]} lineStarts
+ * @param {Checkpoint} [from]
  * @returns {{ kept: number, result: ReturnType<typeof extendLines> }}
  */
-export function extendLinesAfterPatch(events, previousEvents, lineStarts) {
+export function extendLinesAfterPatch(
+  events,
+  previousEvents,
+  lineStarts,
+  from,
+) {
   let kept = 0;
   // Where line `lineStarts[kept - 1]` starts: its line break's event, the
   // break's index in it, and the scopes open there.
@@ -90,9 +136,22 @@ export function extendLinesAfterPatch(events, previousEvents, lineStarts) {
   /** @type {string[]} */
   let resumeStack = [];
   /** @type {string[]} */
-  const stack = [];
-  let pos = 0;
-  for (let i = 0; i < events.length && kept < lineStarts.length; i++) {
+  const stack = from ? [...from.scopes] : [];
+  let pos = from ? from.textPos : 0;
+  let recorded = false;
+  // Line breaks before `from` are passed; `walkStart` picks `from` before
+  // the break of the last line start kept, so the walk still records it.
+  while (
+    kept < lineStarts.length &&
+    /** @type {number} */ (lineStarts[kept]) - 1 < pos
+  ) {
+    kept++;
+  }
+  for (
+    let i = from ? from.eventCount : 0;
+    i < events.length && kept < lineStarts.length;
+    i++
+  ) {
     const event = /** @type {ScopeEvent} */ (events[i]);
     if (!sameEvent(event, previousEvents[i])) break;
     if (event.t === OPEN) {
@@ -109,9 +168,15 @@ export function extendLinesAfterPatch(events, previousEvents, lineStarts) {
         resumeAt = /** @type {number} */ (lineStarts[kept]) - 1 - pos;
         resumeStack = [...stack];
         kept++;
+        recorded = true;
       }
       pos = end;
     }
+  }
+  // Unreachable with `walkStart`'s `from`; kept so a bad one costs a full
+  // walk instead of wrong output.
+  if (from && kept > 0 && !recorded) {
+    return extendLinesAfterPatch(events, previousEvents, lineStarts);
   }
   if (kept === 0) return { kept, result: extendLines(events, [], "") };
 
@@ -160,15 +225,17 @@ export function regenerate({
 }) {
   const previousEvents = session.events();
   const { start, removed, inserted } = diffText(fedCode, code);
-  session.replace(start, start + removed.length, inserted);
+  const keptEvents = session.replace(start, start + removed.length, inserted);
   const events = session.events();
 
   // Keep the sealed chunks that end before the changed line, as far as
   // the patched events still match.
+  const lineStarts = chunkStarts(code, start, chunkLines, sealedChunks.length);
   const { kept: keptChunks, result } = extendLinesAfterPatch(
     events,
     previousEvents,
-    chunkStarts(code, start, chunkLines, sealedChunks.length),
+    lineStarts,
+    keptEvents > 0 ? walkStart(session, keptEvents, lineStarts) : undefined,
   );
 
   let sealedLineCount = keptChunks * chunkLines;
