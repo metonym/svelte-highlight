@@ -273,6 +273,16 @@ class Tokenizer {
      */
     this.beginCache = [];
     /**
+     * Memoized `illegal`-pattern scans (detect mode only), indexed by state
+     * index. Like `beginCache`, a state's next illegal match doesn't depend
+     * on the frame. Uncached, every lexeme re-ran the pattern from `pos`,
+     * and a pattern with no match left (the common case for a candidate
+     * that won't abort) scanned the whole remaining sample each time:
+     * quadratic in sample length (see bench/auto-detect.bench.ts).
+     * @type {(MatchCache | undefined)[]}
+     */
+    this.illegalCache = [];
+    /**
      * Tag names with no `</name` at or after the recorded position. See
      * `hasClosingTag`.
      * @type {Map<string, number>}
@@ -657,12 +667,16 @@ class Tokenizer {
       if (!frame.state.endsWithParent) break;
     }
     if (this.detect && state.illegalRe) {
-      consider(
-        this.execValid(state.illegalRe, this.pos, null),
-        pri + 1,
-        "illegal",
-        null,
-      );
+      const stateIdx = this.top.idx;
+      let cache = this.illegalCache[stateIdx];
+      if (!this.isCacheValid(cache)) {
+        cache = {
+          codeLen: this.code.length,
+          match: this.execValid(state.illegalRe, this.pos, null),
+        };
+        this.illegalCache[stateIdx] = cache;
+      }
+      consider(cache.match, pri + 1, "illegal", null);
     }
     return best === null
       ? null
