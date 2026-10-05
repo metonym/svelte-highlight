@@ -4,7 +4,7 @@ import { $, Glob } from "bun";
 import { createMarkdown } from "./utils/create-markdown.ts";
 import { fillSimilarityGaps } from "./utils/fill-similarity-gaps.ts";
 import { inlineCssUrls } from "./utils/inline-css-urls.ts";
-import { preprocessStyles } from "./utils/preprocess-styles.ts";
+import { preprocessStyles, stripComments } from "./utils/preprocess-styles.ts";
 import {
   BACKTICK,
   DEFAULT_STRING,
@@ -144,8 +144,11 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
       export default ${moduleName};\n`;
 
       // Scope each theme for docs previews (`class={moduleName}` on the `<pre>`).
+      // Strip comments from the already-processed CSS rather than running
+      // the whole postcss pipeline a second time just to drop license
+      // comments; the scoped output is byte-identical.
       const scopedStyle = scopeStylesheet(
-        preprocessStyles(content, { discardComments: "remove-all", plugins }),
+        stripComments(cssMinified),
         moduleName,
       );
 
