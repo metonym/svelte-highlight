@@ -26,5 +26,19 @@ group("diffText()", () => {
   }
 });
 
+// A small editor buffer, where any per-call setup cost would show.
+const SMALL = 1_000;
+const small = jsSource(SMALL);
+const smallCases: Record<string, string> = {
+  "append at end": `${small}x`,
+  "edit in the middle": `${small.slice(0, SMALL / 2)}x${small.slice(SMALL / 2)}`,
+};
+
+group(`diffText() @ ${SMALL.toLocaleString()} chars`, () => {
+  for (const [name, after] of Object.entries(smallCases)) {
+    task(name, () => diffText(small, after));
+  }
+});
+
 // Run this suite with `ostia bench bench/text-diff.bench.ts` for a fast
 // feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.
