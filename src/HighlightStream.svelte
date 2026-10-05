@@ -369,11 +369,9 @@
       dispatchedWindowStart = vStart;
       dispatchedWindowEnd = vEnd;
       dispatchedWindowLineCount = vLineCount;
-      dispatch("windowchange", {
-        start: vStart,
-        end: vEnd,
-        lineCount: vLineCount,
-      });
+      // Dispatch once the new rows are in the DOM (see HighlightVirtual).
+      const detail = { start: vStart, end: vEnd, lineCount: vLineCount };
+      tick().then(() => dispatch("windowchange", detail));
     }
   }
 

@@ -2464,6 +2464,23 @@ test("HighlightVirtual - scrollToLine scrolls a given line into the rendered win
   await expect(virtual.locator("[data-line='2500']")).toBeVisible();
 });
 
+test("HighlightVirtual - windowchange fires after the new rows render", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+  await page.getByTestId("scroll-to-2500").click();
+  await expect(virtual.locator("[data-line='2500']")).toBeVisible();
+  await virtual.evaluate((el) => {
+    el.scrollTop += 900;
+  });
+  await expect(page.getByTestId("window")).not.toContainText('"start":2495');
+  await expect(page.getByTestId("rows-ready")).toHaveText("true");
+});
+
 test("Typewriter - animates then settles to the full highlighted content", async ({
   mount,
   page,
