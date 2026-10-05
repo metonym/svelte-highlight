@@ -37,6 +37,21 @@ group("createSearch query() mode cost @ 20,000 lines", () => {
   task("regex", () => createSearch(code).query("a \\+ b", { regex: true }));
 });
 
+// Typing into a find box: one createSearch, then a query() per keystroke as
+// the text grows, so the per-query scan cost isn't hidden behind the
+// one-time cost of building the search.
+group("createSearch query() per keystroke on one search @ 20,000 lines", () => {
+  const code = jsLines(20_000);
+  const search = createSearch(code);
+  const keystrokes = ["r", "re", "ret", "retu", "retur", "return"];
+  task("literal, typing 'return'", () => {
+    for (const text of keystrokes) search.query(text);
+  });
+  task("regex, typing 'return'", () => {
+    for (const text of keystrokes) search.query(text, { regex: true });
+  });
+});
+
 function incrementalRepeatedQuery(totalLines: number, steps: number) {
   const doc = createTokenizedDocument({ language: javascript });
   const search = createSearch(doc);
