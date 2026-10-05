@@ -109,7 +109,10 @@ import {
  */
 
 /**
- * @typedef {{ match: RegExpExecArray, kind: "begin" | "end" | "illegal", data: number | null }} MatchResult
+ * Which kind of pattern produced `nextMatch`'s winner. Its `matchData` is
+ * the rule's state index for "begin", the frame depth for "end", and null
+ * for "illegal".
+ * @typedef {"begin" | "end" | "illegal"} MatchKind
  */
 
 const MAX_KEYWORD_HITS = 7;
@@ -289,6 +292,10 @@ class Tokenizer {
      */
     this.noClosingTag = new Map();
     this.noClosingTagCodeLen = 0;
+    /** Kind of the last `nextMatch` winner. @type {MatchKind} */
+    this.matchKind = "begin";
+    /** Data of the last `nextMatch` winner. @type {number | null} */
+    this.matchData = null;
   }
 
   /** @returns {Frame} */
@@ -491,8 +498,11 @@ class Tokenizer {
    * boundary re-scans every rule's pattern from scratch. A cached match stays
    * valid until `this.pos` passes it; a cached miss stays valid until the
    * code grows (streaming append).
+   * Returns a plain boolean, not a `cache is MatchCache` predicate, so a
+   * stale cache isn't narrowed to `undefined` where `nextMatch` refreshes
+   * it in place.
    * @param {MatchCache | undefined} cache
-   * @returns {cache is MatchCache}
+   * @returns {boolean}
    */
   isCacheValid(cache) {
     if (!cache) return false;
@@ -586,83 +596,92 @@ class Tokenizer {
 
   /**
    * The next lexeme: earliest match wins; ties break by priority (begin
-   * rules in order, then ends innermost-first, then illegal).
-   * @returns {MatchResult | null}
+   * rules in order, then ends innermost-first, then illegal). Returns the
+   * winning match and leaves its kind/data in `matchKind`/`matchData`.
+   *
+   * Runs once per lexeme, so it allocates nothing on cache hits: no
+   * `consider()` closure over mutable locals, no `{ match, kind, data }`
+   * result object, and stale caches are refreshed in place (see
+   * bench/tokenize.bench.ts).
+   * @returns {RegExpExecArray | null}
    */
   nextMatch() {
     /** @type {RegExpExecArray | null} */
     let best = null;
-    let bestPri = Number.POSITIVE_INFINITY;
-    /** @type {"begin" | "end" | "illegal" | ""} */
-    let bestKind = "";
+    let bestIndex = Number.POSITIVE_INFINITY;
+    /** @type {MatchKind} */
+    let bestKind = "begin";
     /** @type {number | null} */
     let bestData = null;
-    /**
-     * @param {RegExpExecArray | null} match
-     * @param {number} pri
-     * @param {"begin" | "end" | "illegal"} kind
-     * @param {number | null} data
-     */
-    const consider = (match, pri, kind, data) => {
-      if (!match) return;
-      if (
-        best === null ||
-        match.index < best.index ||
-        (match.index === best.index && pri < bestPri)
-      ) {
-        best = match;
-        bestPri = pri;
-        bestKind = kind;
-        bestData = data;
-      }
-    };
 
     const state = this.top.state;
-    for (let i = 0; i < state.rules.length; i++) {
+    const rules = state.rules;
+    const states = this.program.states;
+    // Begin rules come first and in priority order, so among them a strict
+    // `<` keeps the earliest rule on ties.
+    for (let i = 0; i < rules.length; i++) {
       // rules[i] is in-bounds by the loop condition.
-      const ruleIdx = /** @type {number} */ (state.rules[i]);
-      const child = /** @type {CompiledState} */ (this.program.states[ruleIdx]);
+      const ruleIdx = /** @type {number} */ (rules[i]);
       let cache = this.beginCache[ruleIdx];
       // Guard closures (this.beginGuard(child)) are only built on a cache
       // miss - passing them in as a pre-built thunk, as this used to via a
       // shared cachedMatch() helper, allocated one on every call regardless
       // of hit/miss, since JS evaluates argument expressions eagerly.
       if (!this.isCacheValid(cache)) {
-        cache = {
-          codeLen: this.code.length,
-          match: this.execValid(
-            // Every state referenced from a `rules` list has a `begin` pattern.
-            /** @type {RegExp} */ (child.beginRe),
-            this.pos,
-            this.beginGuard(child),
-          ),
-        };
-        this.beginCache[ruleIdx] = cache;
+        const child = /** @type {CompiledState} */ (states[ruleIdx]);
+        const match = this.execValid(
+          // Every state referenced from a `rules` list has a `begin` pattern.
+          /** @type {RegExp} */ (child.beginRe),
+          this.pos,
+          this.beginGuard(child),
+        );
+        if (cache) {
+          cache.codeLen = this.code.length;
+          cache.match = match;
+        } else {
+          cache = { codeLen: this.code.length, match };
+          this.beginCache[ruleIdx] = cache;
+        }
       }
-      consider(cache.match, i, "begin", ruleIdx);
+      const match = /** @type {MatchCache} */ (cache).match;
+      if (match !== null && match.index < bestIndex) {
+        best = match;
+        bestIndex = match.index;
+        bestData = ruleIdx;
+      }
     }
-    // End candidates walk outward while `endsWithParent` chains allow.
-    let pri = state.rules.length;
+    // End candidates walk outward while `endsWithParent` chains allow. They
+    // rank below every begin rule and innermost-first, so they also only win
+    // with a strictly earlier index.
     for (let d = this.frames.length - 1; d >= 1; d--) {
       // d ranges over [1, frames.length - 1], always in bounds.
       const frame = /** @type {Frame} */ (this.frames[d]);
-      if (frame.state.endRe) {
+      const endRe = frame.state.endRe;
+      if (endRe) {
         let cache = frame.endCache;
         if (!this.isCacheValid(cache)) {
-          cache = {
-            codeLen: this.code.length,
-            match: this.execValid(
-              /** @type {RegExp} */ (frame.state.endRe),
-              this.pos,
-              frame.state.endSameAsBegin
-                ? (/** @type {RegExpExecArray} */ m) =>
-                    m[1] === frame.beginMatch
-                : null,
-            ),
-          };
-          frame.endCache = cache;
+          const match = this.execValid(
+            endRe,
+            this.pos,
+            frame.state.endSameAsBegin
+              ? (/** @type {RegExpExecArray} */ m) => m[1] === frame.beginMatch
+              : null,
+          );
+          if (cache) {
+            cache.codeLen = this.code.length;
+            cache.match = match;
+          } else {
+            cache = { codeLen: this.code.length, match };
+            frame.endCache = cache;
+          }
         }
-        consider(cache.match, pri++, "end", d);
+        const match = /** @type {MatchCache} */ (cache).match;
+        if (match !== null && match.index < bestIndex) {
+          best = match;
+          bestIndex = match.index;
+          bestKind = "end";
+          bestData = d;
+        }
       }
       if (!frame.state.endsWithParent) break;
     }
@@ -670,23 +689,25 @@ class Tokenizer {
       const stateIdx = this.top.idx;
       let cache = this.illegalCache[stateIdx];
       if (!this.isCacheValid(cache)) {
-        cache = {
-          codeLen: this.code.length,
-          match: this.execValid(state.illegalRe, this.pos, null),
-        };
-        this.illegalCache[stateIdx] = cache;
+        const match = this.execValid(state.illegalRe, this.pos, null);
+        if (cache) {
+          cache.codeLen = this.code.length;
+          cache.match = match;
+        } else {
+          cache = { codeLen: this.code.length, match };
+          this.illegalCache[stateIdx] = cache;
+        }
       }
-      consider(cache.match, pri + 1, "illegal", null);
+      const match = /** @type {MatchCache} */ (cache).match;
+      if (match !== null && match.index < bestIndex) {
+        best = match;
+        bestKind = "illegal";
+        bestData = null;
+      }
     }
-    return best === null
-      ? null
-      : {
-          match: best,
-          // consider() only assigns bestKind alongside best, so bestKind is
-          // never "" once best is non-null.
-          kind: /** @type {"begin" | "end" | "illegal"} */ (bestKind),
-          data: bestData,
-        };
+    this.matchKind = bestKind;
+    this.matchData = bestData;
+    return best;
   }
 
   // --- state transitions ---
@@ -720,7 +741,7 @@ class Tokenizer {
    * @returns {number}
    */
   doBegin(match, idx) {
-    // idx comes from nextMatch's "begin" data, which is always a valid
+    // idx comes from nextMatch's "begin" matchData, which is always a valid
     // program.states index (see the ruleIdx comment above).
     const state = /** @type {CompiledState} */ (this.program.states[idx]);
     const lexeme = match[0];
@@ -806,31 +827,29 @@ class Tokenizer {
       if (this.iterations > 500000 && this.iterations > this.pos * 3) {
         throw new TokenizerLoopError(this.program.ir.name, this.iterations);
       }
-      const found = this.nextMatch();
-      if (!found) break;
-      if (found.match.index >= stopAt) return;
+      const match = this.nextMatch();
+      if (!match) break;
+      if (match.index >= stopAt) return;
 
       const framesBefore = this.frames.length;
       const topBefore = this.top;
-      this.buffer += this.code.slice(this.pos, found.match.index);
+      this.buffer += this.code.slice(this.pos, match.index);
 
       let consumed;
-      if (found.kind === "illegal") {
+      const kind = this.matchKind;
+      if (kind === "illegal") {
         this.aborted = true;
         return;
-      } else if (found.kind === "begin") {
-        // consider() only passes null data for "illegal"; "begin" always
+      } else if (kind === "begin") {
+        // nextMatch() only leaves null data for "illegal"; "begin" always
         // carries the numeric rule index.
-        consumed = this.doBegin(
-          found.match,
-          /** @type {number} */ (found.data),
-        );
+        consumed = this.doBegin(match, /** @type {number} */ (this.matchData));
       } else {
         // Same invariant as above: "end" always carries the numeric depth.
-        consumed = this.doEnd(found.match, /** @type {number} */ (found.data));
+        consumed = this.doEnd(match, /** @type {number} */ (this.matchData));
       }
 
-      let next = found.match.index + consumed;
+      let next = match.index + consumed;
       if (
         next === this.pos &&
         this.frames.length === framesBefore &&
