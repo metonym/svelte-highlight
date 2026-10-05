@@ -201,6 +201,22 @@ function toSegment(text, style, link) {
 
 const ESC = "\x1b";
 
+/**
+ * Index of the next ESC or `\r` at or after `from` (or `text.length`):
+ * the end of a run of plain text the parsers can copy as-is.
+ * @param {string} text
+ * @param {number} from
+ */
+function plainRunEnd(text, from) {
+  let j = from;
+  while (j < text.length) {
+    const code = text.charCodeAt(j);
+    if (code === 0x1b || code === 0x0d) break;
+    j += 1;
+  }
+  return j;
+}
+
 // Schemes allowed as OSC 8 hyperlink targets. Anything else (javascript:,
 // data:, vbscript:, scheme-less strings) is rejected like an empty uri.
 const ALLOWED_LINK_SCHEMES = ["http:", "https:", "mailto:"];
@@ -393,8 +409,11 @@ export function parseAnsi(text) {
       continue;
     }
 
-    buffer += ch;
-    i += 1;
+    // Plain text: append the whole run up to the next ESC or \r as one
+    // slice instead of one char at a time (see bench/ansi.bench.ts).
+    const runEnd = plainRunEnd(text, i + 1);
+    buffer += text.slice(i, runEnd);
+    i = runEnd;
   }
 
   flush();
@@ -591,8 +610,9 @@ export function createAnsiSession() {
         continue;
       }
 
-      buffer += ch;
-      i += 1;
+      const runEnd = plainRunEnd(input, i + 1);
+      buffer += input.slice(i, runEnd);
+      i = runEnd;
     }
 
     return "";
