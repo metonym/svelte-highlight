@@ -152,7 +152,8 @@ export interface HighlightResult {
  * versions: a snapshot produced by an older or newer version of this
  * package may be rejected on resume. Callers that persist snapshots across
  * deploys (windowing, long-lived streaming sessions) should pin the engine
- * version or be prepared to discard stale snapshots.
+ * version or be prepared to discard stale snapshots. Treat a snapshot as
+ * read-only: it may share state with the tokenizer that produced it.
  */
 export interface Snapshot {
   pos: number;
