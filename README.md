@@ -2170,6 +2170,22 @@ parseAnsi("\x1b[31merror\x1b[0m");
 // => [{ text: "error", fg: { name: "red" } }]
 ```
 
+For streamed output, `createAnsiSession` from `svelte-highlight/ansi` parses chunk by chunk and keeps sequences that straddle a chunk boundary intact. Call `delta()` after each `append()` to get only what changed: truncate your copy of the segments to `start`, then append `segments`.
+
+```js
+import { createAnsiSession } from "svelte-highlight/ansi";
+
+const session = createAnsiSession();
+const segments = [];
+
+session.append("\x1b[31merr");
+session.append("or\x1b[0m done");
+const { start, segments: changed } = session.delta();
+segments.length = start;
+segments.push(...changed);
+// => [{ text: "error", fg: { name: "red" } }, { text: " done" }]
+```
+
 ## File Tabs
 
 `FileTabs` groups code snippets behind a tab strip, like files in an editor. Pass file names as `files`, then use `let:active` in the default slot to render the matching snippet.

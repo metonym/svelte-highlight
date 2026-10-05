@@ -14,37 +14,13 @@
    */
   export let wrap = false;
 
-  import { createAnsiSession } from "./ansi.js";
-  import { classNames, inlineStyle } from "./ansi-color.js";
+  import { createAnsiOutput } from "./ansi-output.js";
 
-  let session = createAnsiSession();
-  // Prefix of `text` already fed to `session`. If `text` stops starting
-  // with this, treat it as a restart (not an append) and re-parse fresh.
-  let fedText = "";
-  let parsed = [];
-
-  // Re-parsing the whole string on every change is O(n^2) over a growing
-  // (live-tailed or streamed) `text`, so only feed the new suffix when
-  // `text` grows by a pure append; anything else gets a fresh session.
-  $: {
-    if (text.startsWith(fedText)) {
-      if (text.length > fedText.length) {
-        session.append(text.slice(fedText.length));
-        fedText = text;
-      }
-    } else {
-      session = createAnsiSession();
-      session.append(text);
-      fedText = text;
-    }
-    parsed = session.segments();
-  }
-  $: segments = parsed.map((segment) => ({
-    text: segment.text,
-    class: classNames(segment),
-    style: inlineStyle(segment, autoContrast),
-    link: segment.link,
-  }));
+  const output = createAnsiOutput();
+  // `update()` hands back the same array, patched in place. Reassigning it
+  // still invalidates `segments`: legacy-mode equality treats any object
+  // as changed.
+  $: segments = output.update(text, autoContrast);
 </script>
 
 <pre class="ansi" class:wrap {...$$restProps}><code
