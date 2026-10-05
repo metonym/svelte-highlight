@@ -4,7 +4,7 @@
  * (see css-paint.bench.ts).
  */
 
-import { toRanges } from "./engine.js";
+import { CLOSE, OPEN, TEXT, toRanges } from "./engine.js";
 
 /**
  * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
@@ -22,31 +22,42 @@ import { toRanges } from "./engine.js";
  * @returns {TokenRange[]}
  */
 export function lineTokenRanges(events, lineStart, lineEnd) {
-  const tokenRanges = toRanges(events);
-  /** @type {TokenRange[]} */
-  const ranges = [];
-  // `tokenRanges` is sorted by, and disjoint on, `start`, so `end` is
-  // monotonically increasing too. Binary-search the first range that can
-  // possibly intersect the line instead of scanning the whole document.
-  let lo = 0;
-  let hi = tokenRanges.length;
-  while (lo < hi) {
-    const mid = (lo + hi) >>> 1;
-    if (/** @type {TokenRange} */ (tokenRanges[mid]).end <= lineStart) {
-      lo = mid + 1;
-    } else hi = mid;
+  // Rather than run `toRanges` over the whole document (one object per
+  // token) and clip, walk to the line tracking only the open scopes and
+  // the offset, then run `toRanges` over just the line: its scopes
+  // reopened, then its events with the first and last text cut to the
+  // line. css-paint.bench.ts: ~4x faster at a mid-document line, ~1.8x
+  // at the last line, and O(line) instead of O(document) at the first.
+  /** @type {ScopeEvent[]} */
+  const line = [];
+  let offset = 0;
+  let i = 0;
+  for (; i < events.length; i++) {
+    const event = /** @type {ScopeEvent} */ (events[i]);
+    if (event.t === OPEN) line.push(event);
+    else if (event.t === CLOSE) line.pop();
+    else if (offset + event.v.length > lineStart) break;
+    else offset += event.v.length;
   }
-  for (
-    let j = lo;
-    j < tokenRanges.length &&
-    /** @type {TokenRange} */ (tokenRanges[j]).start < lineEnd;
-    j++
-  ) {
-    const token = /** @type {TokenRange} */ (tokenRanges[j]);
-    const start = Math.max(token.start, lineStart) - lineStart;
-    const end = Math.min(token.end, lineEnd) - lineStart;
-    if (start === end) continue;
-    ranges.push({ start, end, scope: token.scope });
+  for (; i < events.length && offset < lineEnd; i++) {
+    const event = /** @type {ScopeEvent} */ (events[i]);
+    if (event.t !== TEXT) {
+      line.push(event);
+      continue;
+    }
+    const length = event.v.length;
+    line.push(
+      offset >= lineStart && offset + length <= lineEnd
+        ? event
+        : {
+            t: TEXT,
+            v: event.v.slice(
+              Math.max(lineStart - offset, 0),
+              Math.min(lineEnd - offset, length),
+            ),
+          },
+    );
+    offset += length;
   }
-  return ranges;
+  return toRanges(line);
 }
