@@ -280,6 +280,14 @@ class Tokenizer {
     this.openScopes = 0;
     /** @type {Record<string, number>} */
     this.kwHits = Object.create(null);
+    /**
+     * Whether `kwHits` is shared with a snapshot, so the next keyword hit
+     * must copy it before writing. `snapshot()` and `restore()` copied it
+     * on every call, about 9% of a streaming repaint, though most frames
+     * never hit a keyword before the next snapshot (see
+     * bench/stream-repaint.bench.ts).
+     */
+    this.kwHitsShared = false;
     /** @type {Frame[]} */
     this.frames = [
       {
@@ -416,7 +424,7 @@ class Tokenizer {
     // so it is non-null whenever `keywords` is set.
     const keywordRe = /** @type {RegExp} */ (state.keywordRe);
     const caseInsensitive = this.program.ir.caseInsensitive;
-    const kwHits = this.kwHits;
+    let kwHits = this.kwHits;
     let textStart = 0;
     keywordRe.lastIndex = 0;
     let match = keywordRe.exec(text);
@@ -427,6 +435,13 @@ class Tokenizer {
       if (data) {
         const [kind, keywordRelevance] = data;
         this.text(text.substring(textStart, match.index));
+        if (this.kwHitsShared) {
+          // Copied into a null-prototype object before any read, so a
+          // restored plain-object snapshot can't leak `constructor` etc.
+          kwHits = Object.assign(Object.create(null), kwHits);
+          this.kwHits = kwHits;
+          this.kwHitsShared = false;
+        }
         const hits = (kwHits[word] || 0) + 1;
         kwHits[word] = hits;
         if (hits <= MAX_KEYWORD_HITS) this.relevance += keywordRelevance;
@@ -927,11 +942,14 @@ class Tokenizer {
    * @returns {Snapshot}
    */
   snapshot() {
+    // Shared, not copied: the next keyword hit copies it (see
+    // `kwHitsShared`). Callers treat snapshots as read-only.
+    this.kwHitsShared = true;
     return {
       pos: this.pos,
       buffer: this.buffer,
       relevance: this.relevance,
-      kwHits: { ...this.kwHits },
+      kwHits: this.kwHits,
       frames: this.frames.map((f) => ({
         idx: f.idx,
         beginMatch: f.beginMatch,
@@ -960,7 +978,9 @@ class Tokenizer {
     this.pos = snap.pos;
     this.buffer = snap.buffer;
     this.relevance = snap.relevance;
-    this.kwHits = Object.assign(Object.create(null), snap.kwHits);
+    // Shared until the next keyword hit, like `snapshot()`.
+    this.kwHits = snap.kwHits;
+    this.kwHitsShared = true;
     this.frames = snap.frames.map((f) => ({
       idx: f.idx,
       // f.idx was captured from this same program's frames by snapshot(),
@@ -1477,6 +1497,13 @@ export function createRegistry() {
       let tokenizer = new Tokenizer(this, program);
       const registry = this;
       let staged = "";
+      /**
+       * Index of the last `\n` in `staged`, or -1. Kept up to date so
+       * `append()` only searches the new text: a `staged.lastIndexOf()`
+       * rescanned the whole open line on every append, O(n^2) over a long
+       * single-line stream (see bench/stream-long-line.bench.ts).
+       */
+      let stagedNewline = -1;
       let fed = from ? from.code : "";
       if (from) {
         tokenizer.code = from.code;
@@ -1492,11 +1519,13 @@ export function createRegistry() {
         /** @param {string} text */
         append(text) {
           fed += text;
+          const textNewline = text.lastIndexOf("\n");
+          if (textNewline >= 0) stagedNewline = staged.length + textNewline;
           staged += text;
-          const newline = staged.lastIndexOf("\n");
-          if (newline >= 0) {
-            tokenizer.code += staged.slice(0, newline + 1);
-            staged = staged.slice(newline + 1);
+          if (stagedNewline >= 0) {
+            tokenizer.code += staged.slice(0, stagedNewline + 1);
+            staged = staged.slice(stagedNewline + 1);
+            stagedNewline = -1;
             tokenizer.run();
           }
         },
@@ -1560,6 +1589,7 @@ export function createRegistry() {
           );
           tokenizer.run();
           staged = fed.slice(tokenizer.pos);
+          stagedNewline = staged.lastIndexOf("\n");
         },
         /**
          * Multi-line lookahead (e.g. ruby heredocs) may need the full text
@@ -1571,13 +1601,31 @@ export function createRegistry() {
           if (canonicalize) return registry.highlight(fed, { language });
           tokenizer.code += staged;
           staged = "";
+          stagedNewline = -1;
           tokenizer.run();
           const result = tokenizer.finish();
+          const events = result.events;
+          // `value` renders on first read: the live preview
+          // (stream-preview.js) and incremental-tokenize.js only read
+          // `events`, and rendering the whole document's HTML they then
+          // dropped was wasted work (see bench/stream-repaint.bench.ts,
+          // bench/incremental.bench.ts). A later append() pushes onto
+          // this same array, so render only what finish() returned.
+          const eventCount = events.length;
+          /** @type {string | undefined} */
+          let value;
           return {
             language,
             relevance: result.relevance,
-            events: result.events,
-            value: renderHtml(result.events),
+            events,
+            get value() {
+              value ??= renderHtml(
+                events.length === eventCount
+                  ? events
+                  : events.slice(0, eventCount),
+              );
+              return value;
+            },
           };
         },
         snapshot: () => tokenizer.snapshot(),

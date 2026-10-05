@@ -5,7 +5,8 @@
  * ~200 KB single-line document in small chunks re-tokenizes the whole open
  * line each time: O(line length) per call, O(n^2) over the stream. The
  * one-shot `registry.highlight` case is the reference point a fixed-cost
- * preview should approach.
+ * preview should approach. The bare `session.append()` task isolates the
+ * session's own cost, and the 1 MB case shows how each one scales.
  */
 import { group, task } from "ostia";
 import { computeStagedTailPreview } from "../src/stream-preview.js";
@@ -35,12 +36,12 @@ function longLineJson(targetLength: number) {
   return `[${items.join(",")}]`;
 }
 
-const code = longLineJson(200_000);
+const SIZES = [200_000, 1_000_000];
 
 /** Feeds `code` through the streaming preview helper in fixed-size chunks,
  * exactly as HighlightStream's repaint() drives stream-preview.js on every
  * animation frame while a chunk is streaming in. */
-function streamPreview() {
+function streamPreview(code: string) {
   const session = registry.createSession(LANGUAGE);
   let fedCode = "";
   const openScopes: string[] = [];
@@ -67,12 +68,27 @@ function streamPreview() {
   }
 }
 
-group("stream-preview.js: 200 KB single-line JSON, 1 KB chunks", () => {
-  task("computeStagedTailPreview() per chunk", () => streamPreview());
-  task("reference: one-shot registry.highlight()", () =>
-    registry.highlight(code, { language: LANGUAGE }),
-  );
-});
+/** Appends `code` to a bare session in fixed-size chunks, with no preview:
+ * isolates the session's own per-append cost on a line that never ends. */
+function streamAppend(code: string) {
+  const session = registry.createSession(LANGUAGE);
+  for (let i = 0; i < code.length; i += CHUNK_SIZE) {
+    session.append(code.slice(i, i + CHUNK_SIZE));
+  }
+  return session.events().length;
+}
+
+for (const size of SIZES) {
+  const code = longLineJson(size);
+  const label = `${size / 1_000} KB`;
+  group(`stream-preview.js: ${label} single-line JSON, 1 KB chunks`, () => {
+    task("computeStagedTailPreview() per chunk", () => streamPreview(code));
+    task("session.append() per chunk", () => streamAppend(code));
+    task("reference: one-shot registry.highlight()", () =>
+      registry.highlight(code, { language: LANGUAGE }),
+    );
+  });
+}
 
 // Run this suite with `ostia bench --isolate bench/stream-long-line.bench.ts`
 // for a fast feedback loop; `bun run bench` runs every *.bench.ts suite for a
