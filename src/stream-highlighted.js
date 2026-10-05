@@ -11,6 +11,7 @@
  * @returns {{
  *   appendLines: (lines: string[]) => void,
  *   reset: () => void,
+ *   truncate: (lines: number) => void,
  *   toString: () => string,
  *   lineCount: number,
  * }}
@@ -30,6 +31,22 @@ export function createCompletedHtmlBuffer() {
     reset() {
       html = "";
       lineCount = 0;
+    },
+    /**
+     * Keeps the first `lines` lines. Walks back from the end, so the cost
+     * scales with the lines dropped, not the lines kept.
+     * @param {number} lines
+     */
+    truncate(lines) {
+      if (lines >= lineCount) return;
+      let end = html.length;
+      for (let n = lineCount; n > lines; n--) {
+        end = html.lastIndexOf("\n", end - 1);
+      }
+      // With `lines === 0`, the walk passes the first line, which has no
+      // "\n" before it, and `end` is -1.
+      html = lines === 0 ? "" : html.slice(0, end);
+      lineCount = lines;
     },
     toString() {
       return html;
