@@ -358,6 +358,12 @@ class Tokenizer {
   }
 
   /**
+   * Splits `text` into keyword and plain-text events. Plain runs are sliced
+   * straight out of `text` rather than rebuilt by `+=` per word, which made
+   * every non-keyword word a string concatenation (see
+   * bench/tokenize.bench.ts). A keyword hit always ends the current TEXT
+   * event, even a relevance-only (`_`-prefixed) one, which stays in the
+   * next plain run.
    * @param {string} text
    * @param {CompiledState} state
    */
@@ -366,42 +372,37 @@ class Tokenizer {
       this.text(text);
       return;
     }
+    if (text === "") return;
     const keywords = state.keywords;
     // keywordRe is always compiled alongside keywords (see compileProgram),
     // so it is non-null whenever `keywords` is set.
     const keywordRe = /** @type {RegExp} */ (state.keywordRe);
-    let lastIndex = 0;
-    let buf = "";
+    const caseInsensitive = this.program.ir.caseInsensitive;
+    const kwHits = this.kwHits;
+    let textStart = 0;
     keywordRe.lastIndex = 0;
     let match = keywordRe.exec(text);
     while (match) {
-      buf += text.substring(lastIndex, match.index);
-      const word = this.program.ir.caseInsensitive
-        ? match[0].toLowerCase()
-        : match[0];
+      const lexeme = match[0];
+      const word = caseInsensitive ? lexeme.toLowerCase() : lexeme;
       const data = keywords[word];
       if (data) {
         const [kind, keywordRelevance] = data;
-        this.text(buf);
-        buf = "";
-        this.kwHits[word] = (this.kwHits[word] || 0) + 1;
-        if (this.kwHits[word] <= MAX_KEYWORD_HITS) {
-          this.relevance += keywordRelevance;
-        }
-        if (kind.startsWith("_")) {
-          // relevance-only keyword, not highlighted
-          buf += match[0];
+        this.text(text.substring(textStart, match.index));
+        const hits = (kwHits[word] || 0) + 1;
+        kwHits[word] = hits;
+        if (hits <= MAX_KEYWORD_HITS) this.relevance += keywordRelevance;
+        if (kind.charCodeAt(0) === 95) {
+          // "_": relevance-only keyword, not highlighted
+          textStart = match.index;
         } else {
-          this.emitKeyword(match[0], kind);
+          this.emitKeyword(lexeme, kind);
+          textStart = keywordRe.lastIndex;
         }
-      } else {
-        buf += match[0];
       }
-      lastIndex = keywordRe.lastIndex;
       match = keywordRe.exec(text);
     }
-    buf += text.substring(lastIndex);
-    this.text(buf);
+    this.text(textStart === 0 ? text : text.substring(textStart));
   }
 
   /** @param {CompiledState} state */
