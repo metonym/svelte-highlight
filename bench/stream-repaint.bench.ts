@@ -11,6 +11,7 @@ import { group, task } from "ostia";
 import { extendLines } from "../src/engine.js";
 import { createCompletedHtmlBuffer } from "../src/stream-highlighted.js";
 import { computeStagedTailPreview } from "../src/stream-preview.js";
+import { regenerate } from "../src/stream-regenerate.js";
 import {
   buildSealedChunkHtml,
   pushSealedChunk,
@@ -104,6 +105,68 @@ group(
     task("one repaint per chunk", streamRepaint);
   },
 );
+
+// A regenerate: the stream's tail is rewritten, not appended to.
+// HighlightStream hands that to regenerate() (src/stream-regenerate.js),
+// which patches the session and re-renders the lines. Each task alternates
+// between two endings on one long-lived stream, so after warmup each call
+// is one steady-state regenerate.
+const corpusLines = sizedSlice(corpus.javascript, 400_000)
+  .split("\n")
+  .map((line) => `${line}\n`);
+
+function createRegenerateStream(fedCode: string) {
+  const session = registry.createSession(LANGUAGE);
+  session.append(fedCode);
+  const result = extendLines(session.events(), [], "");
+  const completedHtml = createCompletedHtmlBuffer();
+  completedHtml.appendLines(result.completedLines);
+  let sealedChunks: string[] = [];
+  let unsealedLines = result.completedLines;
+  let sealedLineCount = 0;
+  while (unsealedLines.length >= SEAL_CHUNK_LINES) {
+    sealedChunks = pushSealedChunk(
+      sealedChunks,
+      buildSealedChunkHtml(
+        unsealedLines.slice(0, SEAL_CHUNK_LINES),
+        sealedLineCount,
+      ),
+    );
+    sealedLineCount += SEAL_CHUNK_LINES;
+    unsealedLines = unsealedLines.slice(SEAL_CHUNK_LINES);
+  }
+  return { session, fedCode, sealedChunks, completedHtml };
+}
+
+function regenerateTask(lineCount: number, tailLines: number) {
+  const headLines = corpusLines.slice(0, lineCount - tailLines);
+  const endings = [
+    [...headLines, ...corpusLines.slice(lineCount - tailLines, lineCount)],
+    [...headLines, ...corpusLines.slice(lineCount, lineCount + tailLines)],
+  ].map((lines) => lines.join(""));
+  const stream = createRegenerateStream(endings[0] as string);
+  let count = 0;
+  return () => {
+    count++;
+    const next = endings[count % 2] as string;
+    const result = regenerate({
+      session: stream.session,
+      fedCode: stream.fedCode,
+      code: next,
+      sealedChunks: stream.sealedChunks,
+      completedHtml: stream.completedHtml,
+      chunkLines: SEAL_CHUNK_LINES,
+    });
+    stream.fedCode = next;
+    stream.sealedChunks = result.sealedChunks;
+    return { ...result, completed: stream.completedHtml.toString() };
+  };
+}
+
+group(`HighlightStream regenerate: ${LANGUAGE}`, () => {
+  task("2,000 lines, last 10% rewritten", regenerateTask(2_000, 200));
+  task("8,000 lines, last 200 lines rewritten", regenerateTask(8_000, 200));
+});
 
 // Run this suite with `ostia bench bench/stream-repaint.bench.ts` for a fast
 // feedback loop; `bun run bench` runs every *.bench.ts suite for a
