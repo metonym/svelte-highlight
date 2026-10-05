@@ -7,6 +7,10 @@ export default defineConfig({
   timeout: 10_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
+  // A worker's first test on a cold CI runner sometimes spends its whole
+  // timeout setting up the page. One retry absorbs that, and it's what
+  // makes `trace: "on-first-retry"` below record anything.
+  retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 3 : undefined,
   reporter: "html",
   use: {
