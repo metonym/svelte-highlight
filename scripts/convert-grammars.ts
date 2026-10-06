@@ -108,7 +108,6 @@ export async function convertGrammars() {
   }
 
   let clean = 0;
-  let unminifiedBytes = 0;
   let minifiedBytes = 0;
   const warningsByLanguage: [string, string[]][] = [];
   const failed: [string, string][] = [];
@@ -139,7 +138,6 @@ export async function convertGrammars() {
         register: ir,
       };
       let irJson = JSON.stringify(moduleExport);
-      unminifiedBytes += JSON.stringify(moduleExport, null, 2).length;
       minifiedBytes += irJson.length;
 
       // Custom grammars used to self-register sublanguage deps via hljs side
@@ -198,10 +196,7 @@ MIT license.
     `convert-grammars: ${entries.length} grammars, ${clean} clean, ` +
       `${warningsByLanguage.length} with warnings, ${failed.length} failed`,
   );
-  console.log(
-    `IR size: ${(minifiedBytes / 1024).toFixed(0)} KB minified, ` +
-      `${(unminifiedBytes / 1024).toFixed(0)} KB pretty-printed`,
-  );
+  console.log(`IR size: ${(minifiedBytes / 1024).toFixed(0)} KB minified`);
   if (warningsByLanguage.length > 0) {
     console.log("\nconversion warnings:");
     for (const [name, warnings] of warningsByLanguage) {
