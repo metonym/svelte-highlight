@@ -45,14 +45,15 @@ jobs:
       - name: Cache the base tree
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
-          path: node_modules/.cache/ostia/ab/${{ steps.base.outputs.sha }}
+          # ostia names the tree <sha>-<hash of the --base-setup commands>.
+          path: node_modules/.cache/ostia/ab/${{ steps.base.outputs.sha }}-*
           key: ostia-ab-${{ runner.os }}-${{ steps.base.outputs.sha }}
 
       - name: Run bench:ab
         id: ab
         run: |
           set +e
-          bun bench:ab --base ${{ steps.base.outputs.sha }} \
+          bun bench:ab --base ${{ steps.base.outputs.sha }} --progress \
             bench/tokenize.bench.ts bench/render.bench.ts \
             bench/incremental.bench.ts bench/search.bench.ts \
             bench/text-diff.bench.ts bench/ansi.bench.ts \
