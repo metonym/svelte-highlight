@@ -1978,7 +1978,7 @@ See [Code-splitting](#code-splitting) for the tradeoffs between a static import 
 <HighlightVirtual language={json} code={hugeLogDump} style="height: 480px" />
 ```
 
-It's tested up to 500,000 lines (about 24 MB of TypeScript). The first paint takes milliseconds at any size. A first jump far ahead has to tokenize everything before it once: about 0.9 s to the end of 100k lines of TypeScript and 3.8 s for 500k, in Chrome on an M4 Max. After that, jumps anywhere take a few milliseconds. The [large files](https://svhe.onrender.com/preview-large-file) page lets you try it.
+It's tested up to 500,000 lines (about 24 MB of TypeScript). The first paint takes milliseconds at any size. Tokenizing is lazy, so a first jump far ahead tokenizes everything before it: about 0.9 s to the end of 100k lines of TypeScript and 3.8 s for 500k, in Chrome on an M4 Max. After that, jumps anywhere take a few milliseconds. Add `tokenizeAhead` (`<HighlightVirtual tokenizeAhead ... />`) to tokenize the rest of the document in idle time after the first paint, a few milliseconds per slice, so far jumps are fast from the start. It's off by default because it retains memory for the whole document up front, about 117 MB per 100k lines of TypeScript today. `on:tokenize` reports its progress as `{ through, lineCount }`. The [large files](https://svhe.onrender.com/preview-large-file) page lets you try it.
 
 The rendered `<pre>` is the scroll container itself -- size it with `style`/`class`/`$$restProps`, same as `Highlight`, but `white-space` can't be overridden this way: it's pinned to `pre` because the windowing math depends on a uniform line height. Content doesn't wrap (uniform line height is a v1 constraint, measured once from a rendered probe line). `overscan` (default `12`) controls how many extra lines render above/below the viewport; `checkpointInterval` (default `100`) controls how often the engine snapshots its parse state, trading a little memory for cheaper random access. Concretely, memory scales with `document lines / checkpointInterval` retained checkpoints, each holding a full engine snapshot plus open-scope/pending-HTML state -- and checkpoints are never evicted: they're retained for the entire lifetime of the `TokenizedDocument` instance, across any number of `append()` calls, until a `setCode()` call with unrelated content triggers a full reset. This is fine for the target "huge static document" use case, since checkpoints are bounded by that one document's size, but worth knowing for a long-lived instance that's repeatedly `setCode()`-reset with genuinely new documents rather than recreated. A consumer worried about retained memory can call `doc.checkpointCount()` directly rather than estimating it from `lineCount()`/`checkpointInterval`. Server-rendered output is the full document as plain escaped text (predictable cost for huge documents); the windowed, highlighted view takes over after hydration. In practice this means every page load flashes from unstyled monochrome text to highlighted, windowed content right after hydration, with no fade -- unlike `HighlightStream`'s default (non-`virtualize`) mode, which SSRs already-highlighted HTML. Nothing here requires a component change to soften today: since the container already needs an explicit size (`style`/`class`/`$$restProps`, above), reserving that same `min-height`/`height` up front prevents layout shift, and a CSS transition keyed off a `data-hydrated` attribute or class toggle you set yourself -- e.g. in `onMount` on a wrapping element -- can fade the flash instead of leaving it instant.
 
@@ -2605,6 +2605,7 @@ Use `bind:this`, then call `scrollToLine(line)` -- works in both `virtualize` an
 | language           | { name: `string`; register: `object` } | N/A (required) |
 | overscan           | `number`                                       | `12`           |
 | checkpointInterval | `number`                                       | `100`          |
+| tokenizeAhead      | `boolean`                                      | `false`        |
 
 `$$restProps` are forwarded to the top-level `pre` element (the scroll container -- size it with `style`/`class`, but `white-space` is pinned to `pre` and can't be overridden this way).
 
@@ -2615,6 +2616,7 @@ Use `bind:this`, then call `scrollToLine(line, { align })`. It jumps without ani
 #### Dispatched Events
 
 - **on:windowchange**: fired whenever the rendered window changes, once the new rows are in the DOM, with `{ start, end, lineCount }`
+- **on:tokenize**: fired after each idle slice of `tokenizeAhead`, with `{ through, lineCount }`; `through === lineCount` once the whole document is tokenized
 
 ```svelte
 <HighlightVirtual language={json} code={hugeLogDump} style="height: 480px" />

@@ -17,6 +17,7 @@
   /** @type {import("../../src/HighlightVirtual.svelte").default} */
   let ref;
   let win = { start: 0, end: 0, lineCount: 0 };
+  let tokenized = { through: 0, lineCount: 0 };
   // Whether the window's first row was already in the DOM when
   // windowchange fired, for every dispatch so far.
   let rowsReady = true;
@@ -40,9 +41,11 @@
   data-testid="virtual"
   style="height: 300px; width: 600px;"
   on:windowchange={onWindowChange}
+  on:tokenize={(e) => (tokenized = e.detail)}
   {...$$restProps}
 />
 <pre data-testid="window">{JSON.stringify(win)}</pre>
+<pre data-testid="tokenized">{JSON.stringify(tokenized)}</pre>
 <pre data-testid="rows-ready">{rowsReady}</pre>
 <button
   type="button"

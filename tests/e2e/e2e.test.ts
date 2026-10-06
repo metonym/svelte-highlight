@@ -2500,6 +2500,39 @@ test("HighlightVirtual - scrollToLine scrolls a given line into the rendered win
   await expect(virtual.locator("[data-line='2500']")).toBeVisible();
 });
 
+test("HighlightVirtual - tokenizeAhead tokenizes the rest in idle time", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual, { props: { tokenizeAhead: true } });
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+  // 5,000 lines plus the empty line after the trailing newline.
+  await expect(page.getByTestId("tokenized")).toHaveText(
+    '{"through":5001,"lineCount":5001}',
+  );
+
+  await page.getByTestId("scroll-to-2500").click();
+  await expect(virtual.locator("[data-line='2500']")).toContainText(
+    "line 2500",
+  );
+});
+
+test("HighlightVirtual - tokenizes only on demand by default", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightVirtual);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+  await page.waitForTimeout(500);
+  await expect(page.getByTestId("tokenized")).toHaveText(
+    '{"through":0,"lineCount":0}',
+  );
+});
+
 test("HighlightVirtual - windowchange fires after the new rows render", async ({
   mount,
   page,

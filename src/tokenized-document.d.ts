@@ -21,6 +21,12 @@ export interface TokenizedDocument {
   /** Lines tokenized so far (monotonically grows; for tests/introspection). */
   tokenizedThrough(): number;
   /**
+   * Tokenize and checkpoint through `line` without rendering, so a later
+   * `lineRange` there is cheap (e.g. tokenizing ahead in idle time).
+   * Returns true once the whole document has been fed.
+   */
+  tokenizeThrough(line: number): boolean;
+  /**
    * Number of retained engine checkpoints; one is created every
    * `checkpointInterval` lines of tokenized content and never evicted (see
    * the memory-tradeoff note in the README's "Large documents" section).
