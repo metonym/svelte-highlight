@@ -211,9 +211,16 @@ describe("HighlightStream highlighted rematerialize policy", () => {
 
 describe("HighlightEditable pure-append paint cost", () => {
   type Painter = {
-    paint(events: unknown[], code: string, languageName: string): string[];
+    paint(
+      events: unknown[],
+      code: string,
+      languageName: string,
+      reuse?: IncrementalParse["reuse"],
+    ): string[];
     reset(): void;
   };
+
+  type TypedState = [unknown[], string, IncrementalParse["reuse"]];
 
   async function loadCreatePainter(): Promise<() => Painter> {
     const mod = await tryImport("../src/editable-dom-paint.js");
@@ -245,7 +252,7 @@ describe("HighlightEditable pure-append paint cost", () => {
    */
   function typedStates(targetLength: number) {
     const source = jsSource(targetLength);
-    const states: Array<[unknown[], string]> = [];
+    const states: TypedState[] = [];
     let code = "";
     let state: IncrementalParse | undefined;
     for (const ch of source) {
@@ -253,18 +260,18 @@ describe("HighlightEditable pure-append paint cost", () => {
       state = state
         ? reparseIncremental(registry, "javascript", state, code)
         : parseIncremental(registry, "javascript", code);
-      states.push([state.events, code]);
+      states.push([state.events, code, state.reuse]);
     }
     return states;
   }
 
-  function paintAll(
-    createPainter: () => Painter,
-    states: Array<[unknown[], string]>,
-  ) {
+  function paintAll(createPainter: () => Painter, states: TypedState[]) {
     const painter = createPainter();
-    for (const [events, code] of states) {
-      painter.paint(events, code, "javascript");
+    // Pass `reuse` as HighlightEditable does. Without it the painter falls
+    // back to comparing whole event arrays, which is O(document) per
+    // keystroke, so the guard measured a path the component never takes.
+    for (const [events, code, reuse] of states) {
+      painter.paint(events, code, "javascript", reuse);
     }
   }
 
@@ -274,14 +281,28 @@ describe("HighlightEditable pure-append paint cost", () => {
 
     const smallStates = typedStates(1000);
     const largeStates = typedStates(4000);
-    const small = medianTime(() => paintAll(createPainter, smallStates), 5);
-    const large = medianTime(() => paintAll(createPainter, largeStates), 5);
+    // Small and large trials alternate, and each side keeps its fastest
+    // run. Noise only ever adds time, so the minimum is the steadiest
+    // reading, and alternating keeps a slow stretch of a busy CI runner
+    // from landing on one side only.
+    let small = Number.POSITIVE_INFINITY;
+    let large = Number.POSITIVE_INFINITY;
+    for (let trial = 0; trial < 7; trial++) {
+      small = Math.min(
+        small,
+        medianTime(() => paintAll(createPainter, smallStates), 1),
+      );
+      large = Math.min(
+        large,
+        medianTime(() => paintAll(createPainter, largeStates), 1),
+      );
+    }
 
-    // Measured at this scale (median of 5 trials, painting only): true
+    // Measured at this scale (painting only, with reuse): true
     // O(delta)-per-keystroke painting costs ~4-5x for 4x more typing; the
     // O(document-length)-per-keystroke pattern this guards against (the
     // full-repaint baseline above) costs ~16x. 9 sits near the geometric
     // middle, with about 2x margin each way.
-    expect(large / Math.max(small, 1)).toBeLessThan(9);
+    expect(large / small).toBeLessThan(9);
   }, 15_000);
 });
