@@ -46,7 +46,7 @@
   export let theme = undefined;
 
   import { createEventDispatcher, onMount } from "svelte";
-  import { lineTokenRanges } from "./editable-css-paint.js";
+  import { lineTokenRanges, retokenizedEnd } from "./editable-css-paint.js";
   import { createDomLinePainter } from "./editable-dom-paint.js";
   import {
     createLineView,
@@ -326,6 +326,8 @@
   let cssHighlights = new Map();
   /** @type {{ scope: string; range: Range }[][]} Ranges registered per line. */
   let lineHighlightRanges = [];
+  /** @type {import("./engine.d.ts").ScopeEvent[] | undefined} The events the registered ranges reflect. */
+  let cssPaintedEvents;
 
   function cssHighlightFor(scope) {
     let highlight = cssHighlights.get(scope);
@@ -351,38 +353,25 @@
     }
     cssHighlights = new Map();
     lineHighlightRanges = [];
+    cssPaintedEvents = undefined;
   }
 
-  // Rebuilds only line `index`'s Highlight Range registrations from the
-  // document's `events`; the line's text node itself is untouched by this,
-  // so it never disturbs the caret.
-  function paintLineHighlights(index, events) {
-    clearLineHighlights(index);
-    const textNode = view.lineEls[index].firstChild;
-    const next = [];
-    if (textNode) {
-      const lineStart = lineStartOffset(index);
-      const lineEnd = lineStart + view.lineLengths[index];
-      for (const token of lineTokenRanges(events, lineStart, lineEnd)) {
-        const range = new Range();
-        range.setStart(textNode, token.start);
-        range.setEnd(textNode, token.end);
-        cssHighlightFor(token.scope).add(range);
-        next.push({ scope: token.scope, range });
-      }
-    }
-    lineHighlightRanges[index] = next;
-  }
-
-  // Repaints every line from `tokenRanges` in a single forward sweep rather
-  // than rescanning the full (document-sized) range array per line: since
+  // Rebuilds the Highlight Range registrations of the lines from `first`
+  // (starting at document offset `base`) through the one ending at offset
+  // `end`, from `tokenRanges` (relative to `base`); the lines' text nodes
+  // are untouched by this, so it never disturbs the caret. One forward
+  // sweep rather than rescanning the range array per line: since
   // `toRanges` emits ranges sorted by, and disjoint on, document offset,
   // `tokenIndex` only ever advances, so total work is O(lines + tokens)
   // instead of O(lines * tokens).
-  function paintAllLineHighlights(tokenRanges) {
+  function paintLineHighlights(first, base, end, tokenRanges) {
     let tokenIndex = 0;
     let lineStart = 0;
-    for (let i = 0; i < view.lineEls.length; i++) {
+    for (
+      let i = first;
+      i < view.lineEls.length && base + lineStart <= end;
+      i++
+    ) {
       clearLineHighlights(i);
       const lineEnd = lineStart + view.lineLengths[i];
       const textNode = view.lineEls[i].firstChild;
@@ -418,12 +407,30 @@
 
   function paintCssHighlights() {
     const changedIndex = renderLines(code.split("\n"), setText);
+    const previousEvents = cssPaintedEvents;
     const events = getEvents();
+    cssPaintedEvents = events;
 
     if (changedIndex == null) {
-      paintAllLineHighlights(toRanges(events));
+      paintLineHighlights(0, 0, code.length, toRanges(events));
     } else {
-      paintLineHighlights(changedIndex, events);
+      // Only one line's text changed, but its tokens can change the lines
+      // after it too (typing `/*`), so repaint through the line where the
+      // re-parse converged with the last paint's.
+      const base = lineStartOffset(changedIndex);
+      const end = retokenizedEnd(
+        code,
+        events,
+        previousEvents,
+        incrementalParse?.reuse,
+        base,
+      );
+      paintLineHighlights(
+        changedIndex,
+        base,
+        end,
+        lineTokenRanges(events, base, end),
+      );
     }
     return changedIndex;
   }

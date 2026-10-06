@@ -1,5 +1,10 @@
-import { lineTokenRanges } from "../src/editable-css-paint.js";
+import { lineTokenRanges, retokenizedEnd } from "../src/editable-css-paint.js";
 import { createRegistry, registerAll, toRanges } from "../src/engine.js";
+import {
+  CHECKPOINT_INTERVAL,
+  parseIncremental,
+  reparseIncremental,
+} from "../src/incremental-tokenize.js";
 import * as languages from "../src/languages/index.js";
 import { CUSTOM_SNIPPETS } from "./differential-corpus.ts";
 
@@ -47,5 +52,96 @@ describe("lineTokenRanges", () => {
       "<script>\nlet a = 1;\n</script>\n<style>\np { color: red }\n</style>",
       "xml",
     );
+  });
+});
+
+describe("retokenizedEnd", () => {
+  let code = "";
+  for (let i = 0; i < CHECKPOINT_INTERVAL * 4; i++) {
+    code += i === 12 ? "const v = 1; */\n" : `const v${i} = ${i};\n`;
+  }
+  const lines = code.split("\n");
+
+  /** Replaces line `index`'s text, the edit HighlightEditable paints one line for. */
+  function editLine(index: number, text: string) {
+    const next = [...lines];
+    next[index] = text;
+    const nextCode = next.join("\n");
+    const previous = parseIncremental(registry, "javascript", code);
+    const parse = reparseIncremental(
+      registry,
+      "javascript",
+      previous,
+      nextCode,
+    );
+    const from = index === 0 ? 0 : lines.slice(0, index).join("\n").length + 1;
+    return { previous, parse, nextCode, from };
+  }
+
+  it("leaves every later line's ranges as they were", () => {
+    const edits: [number, string][] = [
+      [10, "/* const v10 = 10;"],
+      [10, "const v10 = `10;"],
+      [40, "const v40 = 41;"],
+      [CHECKPOINT_INTERVAL * 2, "const s = 'x';"],
+      [lines.length - 2, "const last = 0;"],
+    ];
+    for (const [index, text] of edits) {
+      const { previous, parse, nextCode, from } = editLine(index, text);
+      const end = retokenizedEnd(
+        nextCode,
+        parse.events,
+        previous.events,
+        parse.reuse,
+        from,
+      );
+      const lineEnd = nextCode.indexOf("\n", from);
+      expect(end).toBeGreaterThanOrEqual(
+        lineEnd === -1 ? nextCode.length : lineEnd,
+      );
+      // Same lines either side of the edited one, so a later line moves
+      // by the edited line's change in length.
+      const shift = text.length - (lines[index] as string).length;
+      let lineStart = 0;
+      for (const line of nextCode.split("\n")) {
+        if (lineStart > end) {
+          const lineEnd = lineStart + line.length;
+          expect(lineTokenRanges(parse.events, lineStart, lineEnd)).toEqual(
+            lineTokenRanges(
+              previous.events,
+              lineStart - shift,
+              lineEnd - shift,
+            ),
+          );
+        }
+        lineStart += line.length + 1;
+      }
+    }
+  });
+
+  it("reaches past the edited line when the edit opens a comment", () => {
+    const { previous, parse, nextCode, from } = editLine(
+      10,
+      "/* const v10 = 10;",
+    );
+    const end = retokenizedEnd(
+      nextCode,
+      parse.events,
+      previous.events,
+      parse.reuse,
+      from,
+    );
+    // The comment runs through the `*/` on line 12.
+    expect(end).toBeGreaterThanOrEqual(nextCode.indexOf("*/"));
+  });
+
+  it("covers the rest of the document when the reuse isn't from the painted events", () => {
+    const { parse, nextCode, from } = editLine(40, "const v40 = 41;");
+    expect(retokenizedEnd(nextCode, parse.events, [], parse.reuse, from)).toBe(
+      nextCode.length,
+    );
+    expect(
+      retokenizedEnd(nextCode, parse.events, undefined, undefined, from),
+    ).toBe(nextCode.length);
   });
 });
