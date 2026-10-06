@@ -5,6 +5,7 @@
  */
 
 import { CLOSE, OPEN, TEXT, toRanges } from "./engine.js";
+import { sharedEvents } from "./incremental-tokenize.js";
 
 /**
  * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
@@ -66,10 +67,10 @@ export function lineTokenRanges(events, lineStart, lineEnd) {
 /**
  * Where the lines whose token ranges may have changed end, after an edit
  * that starts on the line at offset `from`: the "\n" ending the line where
- * the re-parse converged with `previousEvents` (`reuse`'s tail starts), or
- * the end of `code` when it never converged or `reuse` isn't relative to
- * `previousEvents`. Every later line has the same events as before, with
- * the same scopes open at its start, so its ranges still hold.
+ * `events` rejoin `previousEvents` (the first of their shared trailing
+ * events, see `sharedEvents`), or the end of `code` when they never do or
+ * different scopes are open there. Every later line has the same events as
+ * before, with the same scopes open at its start, so its ranges still hold.
  * @param {string} code
  * @param {ScopeEvent[]} events
  * @param {ScopeEvent[] | undefined} previousEvents
@@ -78,18 +79,40 @@ export function lineTokenRanges(events, lineStart, lineEnd) {
  * @returns {number}
  */
 export function retokenizedEnd(code, events, previousEvents, reuse, from) {
+  if (previousEvents === undefined) return code.length;
+  const { prefix, suffix } = sharedEvents(previousEvents, events, reuse);
+  if (suffix === 0) return code.length;
+
+  // The shared prefix opens the same scopes on both sides, so walk it
+  // once, then each side's changed events.
+  /** @type {string[]} */
+  const scopes = [];
+  let offset = 0;
+  for (let i = 0; i < prefix; i++) {
+    const event = /** @type {ScopeEvent} */ (events[i]);
+    if (event.t === OPEN) scopes.push(event.s);
+    else if (event.t === CLOSE) scopes.pop();
+    else offset += event.v.length;
+  }
+  const prevScopes = scopes.slice();
+  for (let i = prefix; i < events.length - suffix; i++) {
+    const event = /** @type {ScopeEvent} */ (events[i]);
+    if (event.t === OPEN) scopes.push(event.s);
+    else if (event.t === CLOSE) scopes.pop();
+    else offset += event.v.length;
+  }
+  for (let i = prefix; i < previousEvents.length - suffix; i++) {
+    const event = /** @type {ScopeEvent} */ (previousEvents[i]);
+    if (event.t === OPEN) prevScopes.push(event.s);
+    else if (event.t === CLOSE) prevScopes.pop();
+  }
   if (
-    reuse === undefined ||
-    reuse.from !== previousEvents ||
-    reuse.tail === 0
+    scopes.length !== prevScopes.length ||
+    scopes.some((scope, i) => scope !== prevScopes[i])
   ) {
     return code.length;
   }
-  let tailStart = 0;
-  for (let i = 0; i < events.length - reuse.tail; i++) {
-    const event = /** @type {ScopeEvent} */ (events[i]);
-    if (event.t === TEXT) tailStart += event.v.length;
-  }
-  const newline = code.indexOf("\n", Math.max(tailStart, from));
+
+  const newline = code.indexOf("\n", Math.max(offset, from));
   return newline === -1 ? code.length : newline;
 }
