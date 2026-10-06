@@ -97,7 +97,6 @@ export function createTokenizedDocument({
   /** @type {string[]} */
   let openScopesStack = [];
   let pendingHtmlStr = "";
-  let renderedEventCount = 0;
 
   /** @type {Checkpoint[]} */
   let checkpoints = [];
@@ -140,7 +139,6 @@ export function createTokenizedDocument({
     committedLineCount = 0;
     openScopesStack = [];
     pendingHtmlStr = "";
-    renderedEventCount = 0;
     checkpoints = [
       {
         line: 0,
@@ -179,18 +177,18 @@ export function createTokenizedDocument({
       fedOffset = batchEndOffset;
       fedLineCount = batchEndLine;
 
-      const committedEvents = session.events();
-      if (committedEvents.length > renderedEventCount) {
-        const result = extendLines(
-          committedEvents.slice(renderedEventCount),
-          openScopesStack,
-          pendingHtmlStr,
-          { classPrefix },
-        );
+      // Each event is only needed once, to extend the line state; taking
+      // them keeps the session from retaining the whole document's events
+      // (~140 MB per 100k lines of TypeScript). Windows resume from
+      // checkpoint snapshots with fresh events (see lineRange).
+      const newEvents = session.takeEvents();
+      if (newEvents.length > 0) {
+        const result = extendLines(newEvents, openScopesStack, pendingHtmlStr, {
+          classPrefix,
+        });
         committedLineCount += result.completedLines.length;
         openScopesStack = result.openScopes;
         pendingHtmlStr = result.pendingHtml;
-        renderedEventCount = committedEvents.length;
       }
 
       checkpoints.push({

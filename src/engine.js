@@ -2009,6 +2009,20 @@ export function createRegistry() {
         },
         snapshot: () => tokenizer.snapshot(),
         events: () => tokenizer.events,
+        /**
+         * Returns the events produced since the last call and lets the
+         * session forget them, so a long session doesn't hold every event
+         * it ever made (~140 MB per 100k lines of TypeScript). For callers
+         * that consume events once, like TokenizedDocument. Afterward,
+         * `events()`, `finish()`, and snapshot `eventCount`s only cover
+         * later events, so don't mix it with `replace()`.
+         * @returns {ScopeEvent[]}
+         */
+        takeEvents() {
+          const taken = tokenizer.events;
+          tokenizer.events = [];
+          return taken;
+        },
       };
     },
 

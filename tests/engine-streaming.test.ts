@@ -63,6 +63,24 @@ describe("streaming sessions", () => {
     });
   }
 
+  it("takeEvents hands over new events once and forgets them", () => {
+    // Fed the same chunks, since chunking itself splits TEXT differently.
+    const keeping = registry.createSession("javascript");
+    const taking = registry.createSession("javascript");
+    const taken: unknown[] = [];
+    for (let i = 0; i < JS_CODE.length; i += 5) {
+      keeping.append(JS_CODE.slice(i, i + 5));
+      taking.append(JS_CODE.slice(i, i + 5));
+      const batch = taking.takeEvents();
+      for (const event of batch) taken.push(event);
+      // The session keeps nothing it has handed over.
+      expect(taking.events()).toHaveLength(0);
+    }
+
+    expect(taken).toEqual(keeping.events());
+    expect(taking.takeEvents()).toEqual([]);
+  });
+
   it("ruby heredocs (multi-line lookahead) canonicalize on finish", () => {
     const oneShot = registry.highlight(RUBY_CODE, { language: "ruby" }).value;
     const session = registry.createSession("ruby");

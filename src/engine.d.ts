@@ -207,6 +207,11 @@ export interface StreamSession {
   finish(options?: { canonicalize?: boolean }): HighlightResult;
   snapshot(): Snapshot;
   events(): ScopeEvent[];
+  /** Returns the events produced since the last call and forgets them, so a
+   * long session doesn't retain every event. Afterward `events()`,
+   * `finish()`, and snapshot `eventCount`s only cover later events; don't
+   * mix with `replace()`. */
+  takeEvents(): ScopeEvent[];
 }
 
 /** The compiled program `Registry#get` returns; opaque other than its source IR's identity. */
