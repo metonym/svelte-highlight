@@ -1,0 +1,101 @@
+# Non-blocking perf check: pairs the PR's merge result against its base
+# with `bun bench:ab` (ostia ab), then posts the table to the job summary
+# and a single updated PR comment. ostia alternates base and candidate in
+# one process, so shared-runner noise mostly cancels out.
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "bench/**"
+      - "scripts/**"
+      - "package.json"
+      - "bun.lock"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bench-ab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    continue-on-error: true
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # bench:ab extracts the base commit with `git archive`.
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+
+      - name: Install dependencies
+        run: bun ci
+
+      - name: Generate grammars, styles, and themes
+        run: bun scripts/index.ts
+
+      # On pull_request, HEAD is the merge commit; its first parent is the
+      # base branch tip.
+      - name: Resolve base commit
+        id: base
+        run: echo "sha=$(git rev-parse HEAD^1)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the base tree
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: node_modules/.cache/ostia/ab/${{ steps.base.outputs.sha }}
+          key: ostia-ab-${{ runner.os }}-${{ steps.base.outputs.sha }}
+
+      - name: Run bench:ab
+        id: ab
+        run: |
+          set +e
+          bun bench:ab --base ${{ steps.base.outputs.sha }} \
+            bench/tokenize.bench.ts bench/render.bench.ts \
+            bench/incremental.bench.ts bench/search.bench.ts \
+            bench/text-diff.bench.ts bench/ansi.bench.ts \
+            --format markdown --export-json ab.json > ab.md
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+          cat ab.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: bench-ab
+          path: |
+            ab.md
+            ab.json
+
+      # GITHUB_TOKEN can't comment on PRs from forks; those get the job
+      # summary and artifact only.
+      - name: Comment on the PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          EXIT: ${{ steps.ab.outputs.exit }}
+        run: |
+          marker="<!-- bench-ab -->"
+          case "$EXIT" in
+            0) verdict="No confirmed regressions." ;;
+            1) verdict="ostia flagged a regression. Check the table." ;;
+            *) verdict="bench:ab didn't finish (exit $EXIT). See the job log." ;;
+          esac
+          {
+            echo "$marker"
+            echo "### Perf A/B vs base"
+            echo
+            echo "$verdict Non-blocking; see the run for details."
+            echo
+            # Drop ostia's top-level heading; the comment has its own.
+            sed '/^# Profile Report$/d' ab.md
+          } > comment.md
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" \
+              -F body=@comment.md > /dev/null
+          else
+            gh pr comment "$PR" --body-file comment.md
+          fi

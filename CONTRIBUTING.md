@@ -133,3 +133,18 @@ bun test tests/languages.test.ts tests/languages-golden.test.ts tests/<name>-lan
 bun run test:types
 bun fix:changed
 ```
+
+## Benchmarks
+
+Suites live in `bench/*.bench.ts` and run on [ostia](https://github.com/metonym/ostia).
+
+```sh
+bun run bench                                  # every suite
+bunx ostia bench bench/tokenize.bench.ts       # one suite
+bun bench:ab bench/tokenize.bench.ts           # working tree vs HEAD
+bun bench:ab --base origin/master bench/*.bench.ts
+```
+
+`bun bench:ab` wraps `ostia ab`. It runs base and candidate in one process, alternating, so machine noise mostly cancels. It also builds the base commit's generated grammars, styles, and themes, which `ostia ab` alone would miss. A change counts as a win only when ostia confirms it in fresh processes.
+
+Pull requests that touch `src/`, `bench/`, or `scripts/` also run a non-blocking `bench:ab` job (`.github/workflows/perf.yml`) on a subset of suites. It posts the table to the job summary and to one PR comment, updated on each push.
