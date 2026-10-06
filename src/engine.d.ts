@@ -185,6 +185,10 @@ export interface StreamSession {
   /** Tokenizes text loaded via `createSession`'s `from.code` up to (not
    * including) the first lexeme starting at or past `stopAt`. */
   advance(stopAt: number): void;
+  /** Same as `append(text.slice(fedLength))`, where `text` is everything
+   * fed so far plus more, ideally a slice of one larger string. Avoids
+   * re-flattening a concatenated string on every call. */
+  feed(text: string): void;
   /** Replaces `[from, to)` in the session's fed text with `text`, reusing
    * unaffected tokenized regions where state reconverges (see
    * `incremental-tokenize.js`). The resulting `events()` are always

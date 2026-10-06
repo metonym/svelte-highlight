@@ -170,8 +170,12 @@ export function createTokenizedDocument({
     while (committedLineCount < clampedTarget && fedLineCount < total) {
       const batchEndLine = Math.min(fedLineCount + checkpointInterval, total);
       const batchEndOffset = lineStartOffset(batchEndLine);
-      const chunk = code.slice(fedOffset, batchEndOffset);
-      if (chunk.length > 0) session.append(chunk);
+      // A slice of `code`, not the batch alone: append()-ing batches made
+      // the engine re-flatten the grown text on each one, so a jump to the
+      // end of a 500k-line file took 13.7 s instead of 3.3 s.
+      if (batchEndOffset > fedOffset) {
+        session.feed(code.slice(0, batchEndOffset));
+      }
       fedOffset = batchEndOffset;
       fedLineCount = batchEndLine;
 
