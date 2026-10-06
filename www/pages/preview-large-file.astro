@@ -1,0 +1,11 @@
+---
+import LargeFile from "@components/LargeFile/LargeFile.svelte";
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout
+  title="Large files"
+  description="Highlight a 100,000 to 500,000 line file with HighlightVirtual: windowed rendering, instant jumps, and live timing."
+>
+  <LargeFile client:only="svelte" />
+</Layout>
