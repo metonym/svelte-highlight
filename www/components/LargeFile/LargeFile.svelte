@@ -47,6 +47,7 @@
   let jumpTo = 0;
   /** @type {number | null} */
   let jumpMs = null;
+  let tokenized = { through: 0, lineCount: 0 };
 
   // The generators end with "\n", which the document counts as one more
   // (empty) line; leave it out of what the page shows and jumps to.
@@ -70,6 +71,7 @@
     ref?.scrollToLine(0);
     paintStart = performance.now();
     jumpMs = null;
+    tokenized = { through: 0, lineCount: 0 };
     language = SHAPES[shape].language;
     code = next;
     jumpTo = Math.floor(size / 2) + 1;
@@ -93,8 +95,8 @@
   }
 
   // scrollToLine tokenizes up to the target synchronously, so timing the
-  // call covers the work. The first jump far ahead pays for everything
-  // before it once; checkpoints make later jumps cheap.
+  // call covers the work: a few ms once tokenizeAhead has finished, longer
+  // for a far jump before then.
   /** @param {number} line */
   function jump(line) {
     if (!ref) return;
@@ -118,9 +120,9 @@
       tokenizes only what you scroll to, from checkpoints spaced through the
       document, and keeps a couple dozen line nodes in the DOM no matter how
       long the file is. Pick a size, load it, and jump around. The file is
-      generated in your browser. The first jump far ahead tokenizes everything
-      before it once, so it takes longer on the biggest files; jumps back are
-      instant.
+      generated in your browser. After the first paint, the rest of the file is
+      tokenized in idle time. Once that reaches 100%, any jump takes a few
+      milliseconds; a jump before then tokenizes the remaining gap first.
     </p>
   </Column>
 </Row>
@@ -166,6 +168,14 @@
         <dt>First paint</dt>
         <dd data-testid="first-paint">
           {stats ? formatMs(stats.paintMs) : "-"}
+        </dd>
+      </div>
+      <div>
+        <dt>Tokenized ahead</dt>
+        <dd data-testid="tokenized-ahead">
+          {tokenized.lineCount
+            ? `${Math.floor((tokenized.through / tokenized.lineCount) * 100)}%`
+            : "-"}
         </dd>
       </div>
       <div>
@@ -241,7 +251,9 @@
         {code}
         class={THEME_MODULE_NAME}
         style="height: 480px"
+        tokenizeAhead
         on:windowchange={onWindowChange}
+        on:tokenize={(event) => (tokenized = event.detail)}
       />
     </div>
   </Column>
