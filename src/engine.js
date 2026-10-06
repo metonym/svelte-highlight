@@ -1827,6 +1827,25 @@ export function createRegistry() {
           tokenizer.run(stopAt);
         },
         /**
+         * `append(text.slice(fedLength))`, given `text` (everything fed so
+         * far plus more) as a slice of one larger string. `append()` builds
+         * the grown text by concatenation, which the engine re-flattens
+         * before the next regex scan: feeding a long document in batches
+         * that way cost O(batches x length). Slicing shares the source
+         * string's storage instead (see bench/tokenized-document.bench.ts).
+         * @param {string} text
+         */
+        feed(text) {
+          fed = text;
+          const lineEnd = text.lastIndexOf("\n") + 1;
+          staged = text.slice(lineEnd);
+          stagedNewline = -1;
+          if (lineEnd > tokenizer.code.length) {
+            tokenizer.code = text.slice(0, lineEnd);
+            tokenizer.run();
+          }
+        },
+        /**
          * Replaces the fed text's `[from, to)` range with `text`, as if the
          * session had been fed the resulting string from the start.
          * Built on `incremental-tokenize.js`'s diff-and-resume re-parsing: an
