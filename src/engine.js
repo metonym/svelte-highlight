@@ -1879,13 +1879,19 @@ export function createRegistry() {
           //
           // The events are truncated in place rather than copied, which
           // copied every event before the change a second time (see
-          // bench/stream-repaint.bench.ts). `reparseIncremental` returns a
-          // fresh array, so the events `events()` returned before this call
-          // stay as they were. It leaves `incremental.events` holding this
-          // session's events past the last checkpoint, which the next
-          // re-parse doesn't keep: it resumes at or before that checkpoint,
-          // and whatever it carries over past it is cut off here again.
-          tokenizer.events = incremental.events;
+          // bench/stream-repaint.bench.ts). When the code changed,
+          // `reparseIncremental` returns a fresh array, so the events
+          // `events()` returned before this call stay as they were. When it
+          // didn't, it returns `previous` itself, whose events are the array
+          // `events()` and any `finish()` result handed out, so that one is
+          // copied instead. Either way `incremental.events` may hold events
+          // past the last checkpoint, which the next re-parse doesn't keep:
+          // it resumes at or before that checkpoint, and whatever it carries
+          // over past it is cut off here again.
+          tokenizer.events =
+            incremental === previous
+              ? incremental.events.slice(0, lastCheckpoint.eventCount)
+              : incremental.events;
           tokenizer.events.length = lastCheckpoint.eventCount;
           tokenizer.run();
           staged = fed.slice(tokenizer.pos);
