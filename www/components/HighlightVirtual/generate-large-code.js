@@ -1,8 +1,6 @@
 /**
- * A JSON array log dump, the "huge log file" shape HighlightVirtual targets.
- * One string per line (rather than an object with several keys) so a
- * 100k-line demo stays comfortably under the engine's per-parse iteration
- * ceiling - see the "one token per line" note on token density below.
+ * A JSON array log dump, the "huge log file" shape HighlightVirtual targets:
+ * one string per line.
  * @param {number} lines
  */
 export function generateJsonLog(lines) {
