@@ -508,6 +508,21 @@ export function highlightStatic(options = {}) {
         .filter((match) => match !== null);
       if (matches.length === 0) return;
 
+      // One import() per distinct language source per file. Every match on
+      // a file usually shares a few languages, and each import() call pays
+      // module-resolution overhead even when the module is cached. A
+      // rejected import still warns once per match, as before.
+      /** @type {Map<string, Promise<any>>} */
+      const languageModules = new Map();
+      const loadLanguageModule = (/** @type {string} */ source) => {
+        let loaded = languageModules.get(source);
+        if (!loaded) {
+          loaded = resolveLanguageModule(source, filename);
+          languageModules.set(source, loaded);
+        }
+        return loaded;
+      };
+
       const htmlByMatch = await Promise.all(
         matches.map(async (match) => {
           // Only ever read by the warn() paths below, and locate() scans
@@ -518,9 +533,8 @@ export function highlightStatic(options = {}) {
           /** @type {import("./languages").LanguageType<string>} */
           let language;
           try {
-            const languageModule = await resolveLanguageModule(
+            const languageModule = await loadLanguageModule(
               match.languageSource,
-              filename,
             );
             language = languageModule.default ?? languageModule;
           } catch (cause) {
