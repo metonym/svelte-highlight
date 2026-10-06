@@ -206,10 +206,13 @@ function stripIndent(text, lineStart, lineEnd, indent) {
  */
 
 /**
- * An open fence being scanned. `code` holds its newline-terminated content
- * lines only, already joined, so a resumed scan extends it instead of
- * re-joining every line.
- * @typedef {{ char: "`" | "~"; len: number; indent: number; info: string; start: number; code: string; lineCount: number }} FenceContext
+ * An open fence being scanned, with `lineCount` newline-terminated content
+ * lines so far. An unindented fence's lines sit back to back in the text, so
+ * they are tracked as the span `[codeStart, codeEnd)` and sliced from the
+ * current buffer when needed. An indented fence strips each line, so `code`
+ * holds its lines already joined instead, and a resumed scan extends it
+ * rather than re-joining every line.
+ * @typedef {{ char: "`" | "~"; len: number; indent: number; info: string; start: number; code: string; codeStart: number; codeEnd: number; lineCount: number }} FenceContext
  */
 
 /**
@@ -238,6 +241,21 @@ function ownCopy(slice) {
 }
 
 /**
+ * `ctx`'s newline-terminated content lines, joined. Slicing an unindented
+ * fence's lines from `text` keeps only the current buffer alive. Joining
+ * them as they arrive would make a rope of slices of every buffer `append`
+ * grew while the fence was open, pinning a full copy of the text as it
+ * stood each time a chunk finished a line.
+ * @param {FenceContext} ctx
+ * @param {string} text
+ * @returns {string}
+ */
+function fenceCode(ctx, text) {
+  if (ctx.indent > 0) return ctx.code;
+  return ctx.lineCount === 0 ? "" : text.slice(ctx.codeStart, ctx.codeEnd);
+}
+
+/**
  * @param {number} offset
  * @returns {ScanState}
  */
@@ -247,6 +265,7 @@ function scanStateAt(offset) {
 
 /**
  * @param {FenceContext} ctx
+ * @param {string} text
  * @param {number} id
  * @param {number} end
  * @param {boolean} open
@@ -254,7 +273,8 @@ function scanStateAt(offset) {
  *   terminated by a newline, if any.
  * @returns {FenceSegment}
  */
-function buildFenceSegment(ctx, id, end, open, partial) {
+function buildFenceSegment(ctx, text, id, end, open, partial) {
+  const code = fenceCode(ctx, text);
   const infoMatch = /** @type {RegExpExecArray} */ (
     INFO_SPLIT_RE.exec(ctx.info)
   );
@@ -268,13 +288,13 @@ function buildFenceSegment(ctx, id, end, open, partial) {
     code:
       partial === undefined
         ? open
-          ? ctx.code
-          : // Final, so copied (see `ownCopy`): a one-line body is a slice
-            // of the buffer, a longer one a rope of slices.
-            ownCopy(ctx.code)
+          ? code
+          : // Final, so copied (see `ownCopy`): an unindented body is a
+            // slice of the buffer, an indented one a rope of slices.
+            ownCopy(code)
         : ctx.lineCount === 0
           ? partial
-          : `${ctx.code}\n${partial}`,
+          : `${code}\n${partial}`,
     open,
     start: ctx.start,
     end,
@@ -331,7 +351,8 @@ function computeSegments(text, state, startId) {
             kind: "text",
             // Closed for good, so it gets its own copy (see `ownCopy`). The
             // open tail below stays a cheap slice: it is rebuilt on every
-            // append and only ever pins the current buffer.
+            // append and only ever pins the current buffer (as does an open
+            // unindented fence's code, see `fenceCode`).
             text: ownCopy(text.slice(proseStart, lineStart)),
             start: proseStart,
             end: lineStart,
@@ -346,6 +367,8 @@ function computeSegments(text, state, startId) {
           info: ownCopy(open.info),
           start: lineStart,
           code: "",
+          codeStart: 0,
+          codeEnd: 0,
           lineCount: 0,
         };
       }
@@ -363,7 +386,7 @@ function computeSegments(text, state, startId) {
       )
     ) {
       segments.push(
-        buildFenceSegment(fenceCtx, id++, lineEndIncl, false, undefined),
+        buildFenceSegment(fenceCtx, text, id++, lineEndIncl, false, undefined),
       );
       fenceCtx = null;
       proseStart = lineEndIncl;
@@ -378,14 +401,19 @@ function computeSegments(text, state, startId) {
       partial = content;
       break;
     }
-    fenceCtx.code =
-      fenceCtx.lineCount === 0 ? content : `${fenceCtx.code}\n${content}`;
+    if (fenceCtx.indent > 0) {
+      fenceCtx.code =
+        fenceCtx.lineCount === 0 ? content : `${fenceCtx.code}\n${content}`;
+    } else {
+      if (fenceCtx.lineCount === 0) fenceCtx.codeStart = lineStart;
+      fenceCtx.codeEnd = lineEnd;
+    }
     fenceCtx.lineCount += 1;
     i = lineEndIncl;
   }
 
   if (fenceCtx !== null) {
-    segments.push(buildFenceSegment(fenceCtx, id++, n, true, partial));
+    segments.push(buildFenceSegment(fenceCtx, text, id++, n, true, partial));
   } else if (proseStart < n) {
     segments.push({
       id: id++,

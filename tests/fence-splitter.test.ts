@@ -51,6 +51,18 @@ describe("createFenceSplitter - fixture-driven exactness", () => {
         expect(stripIds(streamed.segments())).toEqual(expected);
       }
     });
+
+    it(`"${name}" matches a rescan after every one-character append`, () => {
+      const streamed = createFenceSplitter();
+      for (let i = 1; i <= fixture.length; i++) {
+        streamed.append(fixture[i - 1] as string);
+        const whole = createFenceSplitter();
+        whole.set(fixture.slice(0, i));
+        expect(stripIds(streamed.segments())).toEqual(
+          stripIds(whole.segments()),
+        );
+      }
+    });
   }
 });
 
