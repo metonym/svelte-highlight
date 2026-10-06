@@ -159,6 +159,33 @@ end
     const after = session.events();
     for (let i = 0; i < kept; i++) expect(after[i]).toBe(before[i] as never);
   });
+
+  it("leaves earlier results intact when it restores the last replace()'s code", () => {
+    let code = "";
+    for (let i = 0; i < CHECKPOINT_INTERVAL * 2; i++) {
+      code += `const v${i} = ${i};\n`;
+    }
+    const session = registry.createSession("javascript");
+    session.append(code);
+    session.replace(0, 1, "C");
+    const replaced = `C${code.slice(1)}`;
+    const more = "const extra = `a\nb`;\n";
+    session.append(more);
+
+    // `finish()` hands out the live events array, as `events()` does.
+    const finished = session.finish();
+    const events = [...finished.events];
+
+    // Dropping the appended text brings back exactly the code of the last
+    // replace(), which `reparseIncremental` answers with its previous parse.
+    session.replace(replaced.length, replaced.length + more.length, "");
+
+    expect(finished.events).toEqual(events);
+    expect(finished.value).toBe(
+      registry.highlight(replaced + more, { language: "javascript" }).value,
+    );
+    expectMatchesOneShot(session, replaced, "javascript");
+  });
 });
 
 describe("StreamSession#checkpointBefore", () => {
