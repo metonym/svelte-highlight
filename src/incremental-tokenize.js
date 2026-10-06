@@ -29,6 +29,36 @@ import { diffText } from "./text-diff.js";
  */
 
 /**
+ * How many leading and trailing events an edit left as they were: the first
+ * `prefix` and last `suffix` of `events` are the same objects as in
+ * `prevEvents`, and the two never overlap on either side. Taken from
+ * `reuse` when it is relative to `prevEvents`, else found by comparing the
+ * arrays, which is O(document).
+ * @param {ScopeEvent[]} prevEvents
+ * @param {ScopeEvent[]} events
+ * @param {EventReuse} [reuse]
+ * @returns {{ prefix: number, suffix: number }}
+ */
+export function sharedEvents(prevEvents, events, reuse) {
+  if (reuse !== undefined && reuse.from === prevEvents) {
+    return { prefix: reuse.head, suffix: reuse.tail };
+  }
+  const prevCount = prevEvents.length;
+  const count = events.length;
+  const shared = Math.min(prevCount, count);
+  let prefix = 0;
+  while (prefix < shared && prevEvents[prefix] === events[prefix]) prefix++;
+  let suffix = 0;
+  while (
+    suffix < shared - prefix &&
+    prevEvents[prevCount - 1 - suffix] === events[count - 1 - suffix]
+  ) {
+    suffix++;
+  }
+  return { prefix, suffix };
+}
+
+/**
  * `reuse` is set by `reparseIncremental` when it resumed from `previous`.
  * @typedef {{
  *   code: string,

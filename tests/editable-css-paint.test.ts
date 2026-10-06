@@ -1,5 +1,12 @@
 import { lineTokenRanges, retokenizedEnd } from "../src/editable-css-paint.js";
-import { createRegistry, registerAll, toRanges } from "../src/engine.js";
+import {
+  CLOSE,
+  createRegistry,
+  OPEN,
+  registerAll,
+  TEXT,
+  toRanges,
+} from "../src/engine.js";
 import {
   CHECKPOINT_INTERVAL,
   parseIncremental,
@@ -133,6 +140,44 @@ describe("retokenizedEnd", () => {
     );
     // The comment runs through the `*/` on line 12.
     expect(end).toBeGreaterThanOrEqual(nextCode.indexOf("*/"));
+  });
+
+  it("finds the same end by comparing the events when there's no reuse", () => {
+    const { previous, parse, nextCode, from } = editLine(
+      10,
+      "/* const v10 = 10;",
+    );
+    expect(
+      retokenizedEnd(nextCode, parse.events, previous.events, undefined, from),
+    ).toBe(
+      retokenizedEnd(
+        nextCode,
+        parse.events,
+        previous.events,
+        parse.reuse,
+        from,
+      ),
+    );
+  });
+
+  it("covers the rest of the document when different scopes reach the shared tail", () => {
+    // The shared tail closes a string before the edit and a comment
+    // after it, so its lines' ranges change too.
+    const tail = [{ t: TEXT, v: "b\nc" }, { t: CLOSE }] as const;
+    const previousEvents = [
+      { t: OPEN, s: "string" } as const,
+      { t: TEXT, v: "a\n" } as const,
+      ...tail,
+    ];
+    const events = [
+      { t: OPEN, s: "comment" } as const,
+      { t: TEXT, v: "/a\n" } as const,
+      ...tail,
+    ];
+    const code = "/a\nb\nc";
+    expect(retokenizedEnd(code, events, previousEvents, undefined, 0)).toBe(
+      code.length,
+    );
   });
 
   it("covers the rest of the document when the reuse isn't from the painted events", () => {

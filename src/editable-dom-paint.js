@@ -9,6 +9,7 @@
  */
 
 import { CLOSE, extendLines, OPEN, renderHtml, TEXT } from "./engine.js";
+import { sharedEvents } from "./incremental-tokenize.js";
 import { splitLines } from "./split-lines.js";
 
 /**
@@ -129,22 +130,8 @@ export function patchLineHtml(
   if (events === prevEvents) return prevLines;
   const prevCount = prevEvents.length;
   const count = events.length;
-  let prefix = 0;
-  let suffix = 0;
-  if (reuse !== undefined && reuse.from === prevEvents) {
-    prefix = reuse.head;
-    suffix = reuse.tail;
-  } else {
-    const shared = Math.min(prevCount, count);
-    while (prefix < shared && prevEvents[prefix] === events[prefix]) prefix++;
-    if (prefix === prevCount && prefix === count) return prevLines;
-    while (
-      suffix < shared - prefix &&
-      prevEvents[prevCount - 1 - suffix] === events[count - 1 - suffix]
-    ) {
-      suffix++;
-    }
-  }
+  const { prefix, suffix } = sharedEvents(prevEvents, events, reuse);
+  if (prefix === prevCount && prefix === count) return prevLines;
 
   // The first changed line starts after the last "\n" before `prefix`.
   let breakEvent = prefix - 1;
