@@ -1,6 +1,6 @@
 /**
  * Engine vs hljs wall-time benchmark on large real files from this repo.
- * Budget: engine <= 1.5x hljs.
+ * Budget: engine <= 1.5x hljs, as the median of paired per-round ratios.
  *
  * Run: bun scripts/benchmark-engine.ts
  */
@@ -57,12 +57,26 @@ registry.register(cssLang.register);
 registry.register(markdownLang.register);
 
 function time(fn: () => void, iterations: number) {
-  // warm up (JIT, regex caches)
-  for (let i = 0; i < 3; i++) fn();
   const start = performance.now();
   for (let i = 0; i < iterations; i++) fn();
   return (performance.now() - start) / iterations;
 }
+
+function median(values: number[]) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = sorted.length >> 1;
+  return sorted.length % 2
+    ? (sorted[mid] as number)
+    : ((sorted[mid - 1] as number) + (sorted[mid] as number)) / 2;
+}
+
+// hljs and the engine run back to back within each round, and the budget
+// checks the median of the per-round ratios. A noisy shared CI runner can
+// slow one side for a moment; timing each side in one long block let a
+// single burst push a ratio past the budget (2.28x on CI for a case that
+// measures 0.85x locally). Pairing cancels drift, and the median drops the
+// odd bad round.
+const ROUNDS = 9;
 
 console.log("=== engine vs hljs: wall time per highlight() call ===\n");
 const rows: string[][] = [
@@ -71,16 +85,31 @@ const rows: string[][] = [
 
 let worstRatio = 0;
 for (const { language, label, code } of CASES) {
-  const iterations = code.length > 200_000 ? 5 : 15;
-  const hljsMs = time(() => hljs.highlight(code, { language }), iterations);
-  const engineMs = time(() => registry.tokenize(code, language), iterations);
-  const ratio = engineMs / hljsMs;
+  const iterations = code.length > 200_000 ? 2 : 5;
+  const runHljs = () => hljs.highlight(code, { language });
+  const runEngine = () => registry.tokenize(code, language);
+  // warm up (JIT, regex caches)
+  for (let i = 0; i < 3; i++) {
+    runHljs();
+    runEngine();
+  }
+  const hljsTimes: number[] = [];
+  const engineTimes: number[] = [];
+  const ratios: number[] = [];
+  for (let round = 0; round < ROUNDS; round++) {
+    const hljsMs = time(runHljs, iterations);
+    const engineMs = time(runEngine, iterations);
+    hljsTimes.push(hljsMs);
+    engineTimes.push(engineMs);
+    ratios.push(engineMs / hljsMs);
+  }
+  const ratio = median(ratios);
   worstRatio = Math.max(worstRatio, ratio);
   rows.push([
     label,
     String(code.length),
-    hljsMs.toFixed(2),
-    engineMs.toFixed(2),
+    median(hljsTimes).toFixed(2),
+    median(engineTimes).toFixed(2),
     `${ratio.toFixed(2)}x`,
     ratio <= 1.5 ? "OK" : "OVER BUDGET",
   ]);
