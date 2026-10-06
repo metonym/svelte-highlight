@@ -1,25 +1,11 @@
 <script context="module">
-  import { writable } from "svelte/store";
+  import { createStyleRegistry } from "./style-registry.js";
 
   const isBrowser = typeof document !== "undefined";
 
-  // Instances sharing a key queue up in registration order; only the oldest
-  // still-mounted instance renders the `<style>`. A store (rather than a
-  // plain ref count) means that when that instance unmounts, the remaining
-  // subscribers reactively re-derive a new owner instead of the tag being
-  // dropped while siblings still need it.
-  /** @type {Map<string, import("svelte/store").Writable<symbol[]>>} */
-  const registries = new Map();
-
-  /** @param {string} key */
-  function registryFor(key) {
-    let registry = registries.get(key);
-    if (!registry) {
-      registry = writable([]);
-      registries.set(key, registry);
-    }
-    return registry;
-  }
+  // Shared across instances: identical styles render one `<style>` tag,
+  // owned by the oldest still-mounted instance (see style-registry.js).
+  const styleRegistry = createStyleRegistry();
 </script>
 
 <script>
@@ -132,19 +118,7 @@
   let registry;
 
   function unregister() {
-    if (!registry) return;
-    let empty = false;
-    registry.update((owners) => {
-      const remaining = owners.filter((owner) => owner !== token);
-      empty = remaining.length === 0;
-      return remaining;
-    });
-    // Drop the key once its last owner leaves. Keys embed the full theme
-    // CSS, so a long-lived app that cycles themes would otherwise keep
-    // every theme it ever showed.
-    if (empty && registries.get(registeredKey) === registry) {
-      registries.delete(registeredKey);
-    }
+    if (registry) styleRegistry.unregister(registeredKey, registry, token);
   }
 
   $: {
@@ -152,8 +126,10 @@
     if (key !== registeredKey) {
       unregister();
       registeredKey = key;
-      registry = isBrowser && key !== undefined ? registryFor(key) : undefined;
-      registry?.update((owners) => [...owners, token]);
+      registry =
+        isBrowser && key !== undefined
+          ? styleRegistry.register(key, token)
+          : undefined;
     }
   }
 
