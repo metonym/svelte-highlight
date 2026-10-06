@@ -9,8 +9,10 @@ import { ensureRegistered, registry } from "./registry.js";
 
 const TOKEN_RE = /(\w+)="([^"]*)"|(\w+)=\{([^}]*)\}|\{([^}]*)\}|(\w+)/g;
 const WHITESPACE_RE = /\s+/;
-const OPENING_FENCE_RE = /^( {0,3})(`{3,}|~{3,})(.*)$/;
-const CLOSING_FENCE_RE = /^( {0,3})(`+|~+)( *)$/;
+// A line here excludes its "\n" but keeps a CRLF line's "\r", which `.`
+// doesn't match, so both allow one before the end.
+const OPENING_FENCE_RE = /^( {0,3})(`{3,}|~{3,})(.*)\r?$/;
+const CLOSING_FENCE_RE = /^( {0,3})(`+|~+)( *)\r?$/;
 const INFO_SPLIT_RE = /^(\S*)\s*([\s\S]*)$/;
 
 /**
