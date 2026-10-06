@@ -46,6 +46,7 @@ import HighlightStyleThemeSwitch from "./HighlightStyle.themeSwitch.test.svelte"
 import HighlightSvelteDispatchOnce from "./HighlightSvelte.dispatchOnce.test.svelte";
 import HighlightSvelteEmptyCode from "./HighlightSvelte.emptyCode.test.svelte";
 import HighlightSvelteEvents from "./HighlightSvelte.events.test.svelte";
+import HighlightVirtualLarge from "./HighlightVirtual.large.test.svelte";
 import HighlightVirtual from "./HighlightVirtual.test.svelte";
 import LangTagCopyButton from "./LangTag.copyButton.test.svelte";
 import LangTag from "./LangTag.test.svelte";
@@ -2219,6 +2220,41 @@ test("HighlightVirtual - renders a bounded number of line nodes for a 5,000-line
   await expect(virtual.locator("[data-line='0']")).toHaveText(
     "const x0 = 0; // line 0",
   );
+});
+
+test("HighlightVirtual - handles a 100,000-line document", async ({
+  mount,
+  page,
+  browserName,
+}) => {
+  // Tokenizing 100k lines is CPU-heavy, and CI runs browsers in parallel,
+  // so one browser keeps it from starving timing-sensitive tests. The
+  // windowing logic is browser-independent; the 5,000-line tests above
+  // cover every browser.
+  test.skip(browserName !== "chromium", "CPU-heavy; Chromium covers it");
+  // The first jump to the end tokenizes the whole document once.
+  test.slow();
+  await mount(HighlightVirtualLarge);
+
+  const virtual = page.getByTestId("virtual");
+  await expect(virtual.locator("[data-line='0']")).toBeVisible();
+  await expect(page.getByTestId("window")).toContainText('"lineCount":100002');
+
+  await page.getByTestId("to-end").click();
+  const last = virtual.locator("[data-line='100001']");
+  await expect(last).toBeVisible();
+  await expect(last).toHaveText("]");
+  await expect(virtual.locator("[data-line='100000']")).toContainText(
+    "processed item 99999",
+  );
+
+  await page.getByTestId("to-middle").click();
+  await expect(virtual.locator("[data-line='50001']")).toBeVisible();
+  await expect(virtual.locator("[data-line='50001']")).toContainText(
+    "processed item 50000",
+  );
+  // Still windowed: a couple dozen rows, not 100k.
+  expect(await virtual.locator("[data-line]").count()).toBeLessThan(100);
 });
 
 test("HighlightVirtual - shows correct content at top, middle, and bottom of the scroll range", async ({

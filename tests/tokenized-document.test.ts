@@ -348,6 +348,23 @@ describe("TokenizedDocument: behavior", () => {
     );
   });
 
+  it("tokenizes to the end of a 200,000-line document", () => {
+    const parts: string[] = [];
+    for (let i = 0; i < 200_000; i++) {
+      parts.push(`  "${i} INFO processed item ${i}",`);
+    }
+    const code = `[\n${parts.join("\n")}\n]`;
+    const doc = createTokenizedDocument({
+      language: languages.json as unknown as LanguageType<string>,
+    });
+    doc.setCode(code);
+    expect(doc.lineCount()).toBe(200_002);
+    const lines = doc.lineRange(199_999, 200_002);
+    expect(lines).toHaveLength(3);
+    expect(lines[0]).toContain("processed item 199998");
+    expect(lines[2]).toContain("]");
+  });
+
   it("empty document", () => {
     const doc = createTokenizedDocument({ language: javascript });
     doc.setCode("");
