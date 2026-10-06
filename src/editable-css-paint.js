@@ -9,6 +9,7 @@ import { CLOSE, OPEN, TEXT, toRanges } from "./engine.js";
 /**
  * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
  * @typedef {import("./engine.d.ts").TokenRange} TokenRange
+ * @typedef {import("./incremental-tokenize.js").EventReuse} EventReuse
  */
 
 /**
@@ -60,4 +61,35 @@ export function lineTokenRanges(events, lineStart, lineEnd) {
     offset += length;
   }
   return toRanges(line);
+}
+
+/**
+ * Where the lines whose token ranges may have changed end, after an edit
+ * that starts on the line at offset `from`: the "\n" ending the line where
+ * the re-parse converged with `previousEvents` (`reuse`'s tail starts), or
+ * the end of `code` when it never converged or `reuse` isn't relative to
+ * `previousEvents`. Every later line has the same events as before, with
+ * the same scopes open at its start, so its ranges still hold.
+ * @param {string} code
+ * @param {ScopeEvent[]} events
+ * @param {ScopeEvent[] | undefined} previousEvents
+ * @param {EventReuse | undefined} reuse
+ * @param {number} from
+ * @returns {number}
+ */
+export function retokenizedEnd(code, events, previousEvents, reuse, from) {
+  if (
+    reuse === undefined ||
+    reuse.from !== previousEvents ||
+    reuse.tail === 0
+  ) {
+    return code.length;
+  }
+  let tailStart = 0;
+  for (let i = 0; i < events.length - reuse.tail; i++) {
+    const event = /** @type {ScopeEvent} */ (events[i]);
+    if (event.t === TEXT) tailStart += event.v.length;
+  }
+  const newline = code.indexOf("\n", Math.max(tailStart, from));
+  return newline === -1 ? code.length : newline;
 }
