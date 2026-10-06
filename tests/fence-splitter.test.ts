@@ -33,6 +33,8 @@ const FIXTURES: Record<string, string> = {
     '```ts title="app.ts" {1,3}\nconst a = 1;\nconst b = 2;\nconst c = 3;\n```\n',
   "unterminated final fence": "Before.\n\n```js\nconst x = 1;\nstill going",
   "text ending inside an opening fence line": "Some prose.\n\n```ts",
+  "CRLF line endings":
+    "Before.\r\n\r\n```js\r\nconst x = 1;\r\n```\r\n\r\nAfter.\r\n",
 };
 
 describe("createFenceSplitter - fixture-driven exactness", () => {
@@ -163,6 +165,26 @@ describe("createFenceSplitter - resolveLanguageName integration", () => {
     const fence = splitter.segments()[0] as FenceSegment;
     expect(fence.lang).toBeUndefined();
     expect(fence.info).toBe("nope");
+  });
+});
+
+describe("createFenceSplitter - CRLF line endings", () => {
+  it("opens and closes fences on CRLF lines, keeping each line's \\r", () => {
+    const splitter = createFenceSplitter();
+    splitter.set(
+      "Before.\r\n```ts\r\nconst a = 1;\r\nconst b = 2;\r\n```\r\nAfter.\r\n",
+    );
+    const segments = splitter.segments();
+    expect(segments.map((segment) => segment.kind)).toEqual([
+      "text",
+      "fence",
+      "text",
+    ]);
+    const fence = segments[1] as FenceSegment;
+    expect(fence.info).toBe("ts");
+    expect(fence.lang).toBe("typescript");
+    expect(fence.code).toBe("const a = 1;\r\nconst b = 2;\r");
+    expect(fence.open).toBe(false);
   });
 });
 
