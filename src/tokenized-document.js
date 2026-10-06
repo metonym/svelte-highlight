@@ -297,6 +297,19 @@ export function createTokenizedDocument({
     },
 
     /**
+     * Tokenizes and checkpoints through `line` without rendering anything,
+     * so a later `lineRange` there is cheap. For tokenizing ahead in idle
+     * time (see HighlightVirtual's `tokenizeAhead`). Returns true once the
+     * whole document has been fed.
+     * @param {number} line
+     * @returns {boolean}
+     */
+    tokenizeThrough(line) {
+      ensureTokenizedThrough(line);
+      return fedLineCount >= lineStartOffsets.length;
+    },
+
+    /**
      * Number of retained engine checkpoints; one is created every
      * `checkpointInterval` lines of tokenized content and never evicted (see
      * the memory-tradeoff note in the README's "Large documents" section).

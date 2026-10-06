@@ -21,6 +21,16 @@
    */
   export let checkpointInterval = 100;
 
+  /**
+   * Tokenize the rest of the document in idle time after the first paint,
+   * so a far jump (scrollToLine, dragging the scrollbar) doesn't stall on
+   * tokenizing everything before it. Off by default: the engine session
+   * keeps every event it produces, so a full pass retains about 117 MB
+   * per 100k lines of TypeScript, even if nobody scrolls.
+   * @type {boolean}
+   */
+  export let tokenizeAhead = false;
+
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { createTokenizedDocument } from "./tokenized-document.js";
   import { watchLineHeight, windowRange } from "./virtual-window.js";
@@ -171,6 +181,62 @@
     lineCount = doc.lineCount();
     computeWindow();
     syncFromContainer();
+    scheduleTokenizeAhead();
+  }
+
+  $: if (hydrated) {
+    if (tokenizeAhead) scheduleTokenizeAhead();
+    else cancelTokenizeAhead();
+  }
+
+  // Idle-time tokenizing ahead. A first jump to the end of a 500k-line file
+  // otherwise tokenizes ~24 MB synchronously (seconds); after this pass,
+  // checkpoints cover the whole document and any jump is a few ms.
+  const requestIdle =
+    typeof requestIdleCallback === "function"
+      ? (/** @type {IdleRequestCallback} */ callback) =>
+          requestIdleCallback(callback, { timeout: 1000 })
+      : (/** @type {IdleRequestCallback} */ callback) =>
+          setTimeout(
+            () => callback({ didTimeout: false, timeRemaining: () => 8 }),
+            16,
+          );
+  const cancelIdle =
+    typeof cancelIdleCallback === "function"
+      ? cancelIdleCallback
+      : clearTimeout;
+
+  /** @type {any} */
+  let aheadHandle;
+  // Bumped on every (re)schedule so a callback from an older document stops.
+  let aheadGeneration = 0;
+
+  function cancelTokenizeAhead() {
+    aheadGeneration++;
+    if (aheadHandle !== undefined) cancelIdle(aheadHandle);
+    aheadHandle = undefined;
+  }
+
+  function scheduleTokenizeAhead() {
+    cancelTokenizeAhead();
+    if (!tokenizeAhead || !doc) return;
+    const generation = aheadGeneration;
+    /** @param {IdleDeadline} deadline */
+    const step = (deadline) => {
+      aheadHandle = undefined;
+      if (generation !== aheadGeneration || !doc) return;
+      let done = false;
+      // At least one batch per callback, so a busy page still progresses.
+      do {
+        done = doc.tokenizeThrough(doc.tokenizedThrough() + checkpointInterval);
+      } while (!done && deadline.timeRemaining() > 2);
+      dispatch("tokenize", {
+        through: done ? doc.lineCount() : doc.tokenizedThrough(),
+        lineCount: doc.lineCount(),
+      });
+      if (!done) aheadHandle = requestIdle(step);
+    };
+    aheadHandle = requestIdle(step);
   }
 
   // Scroll/resize/overscan/lineHeight-driven window recompute.
@@ -220,6 +286,7 @@
 
     return () => {
       cancelFrame();
+      cancelTokenizeAhead();
       resizeObserver?.disconnect();
     };
   });

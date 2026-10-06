@@ -27,6 +27,13 @@ export type HighlightVirtualProps = HTMLAttributes<HTMLPreElement> & {
    * @default 100
    */
   checkpointInterval?: number;
+
+  /**
+   * Tokenize the rest of the document in idle time after the first paint,
+   * so far jumps don't stall. Costs memory for the whole document up front.
+   * @default false
+   */
+  tokenizeAhead?: boolean;
 };
 
 export type HighlightVirtualEvents = {
@@ -34,6 +41,12 @@ export type HighlightVirtualEvents = {
    * Fired whenever the rendered window changes.
    */
   windowchange: CustomEvent<{ start: number; end: number; lineCount: number }>;
+
+  /**
+   * Fired after each idle slice of `tokenizeAhead`, with how many lines
+   * are tokenized so far. `through === lineCount` once it's done.
+   */
+  tokenize: CustomEvent<{ through: number; lineCount: number }>;
 };
 
 export default class HighlightVirtual extends SvelteComponentTyped<

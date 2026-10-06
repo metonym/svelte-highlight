@@ -256,6 +256,41 @@ describe("TokenizedDocument: behavior", () => {
     expect(doc.tokenizedThrough()).toBeLessThanOrEqual(140);
   });
 
+  it("tokenizeThrough tokenizes ahead without changing lineRange output", () => {
+    const code = generateLargeJsDocument(2000);
+    const ahead = createTokenizedDocument({
+      language: javascript,
+      checkpointInterval: 100,
+    });
+    ahead.setCode(code);
+
+    expect(ahead.tokenizeThrough(500)).toBe(false);
+    expect(ahead.tokenizedThrough()).toBeGreaterThanOrEqual(500);
+    expect(ahead.tokenizedThrough()).toBeLessThanOrEqual(600);
+
+    // Step the way HighlightVirtual's idle loop does, until it reports done.
+    let done = false;
+    for (let i = 0; i < 1000 && !done; i++) {
+      done = ahead.tokenizeThrough(ahead.tokenizedThrough() + 100);
+    }
+    expect(done).toBe(true);
+    expect(ahead.tokenizeThrough(ahead.lineCount())).toBe(true);
+
+    const lazy = createTokenizedDocument({
+      language: javascript,
+      checkpointInterval: 100,
+    });
+    lazy.setCode(code);
+    const total = lazy.lineCount();
+    for (const [start, end] of [
+      [0, 30],
+      [990, 1030],
+      [total - 30, total],
+    ] as const) {
+      expect(ahead.lineRange(start, end)).toEqual(lazy.lineRange(start, end));
+    }
+  });
+
   it("checkpointCount starts at 1 before anything is tokenized", () => {
     const doc = createTokenizedDocument({ language: javascript });
     doc.setCode(generateLargeJsDocument(500));
