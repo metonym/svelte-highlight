@@ -145,6 +145,6 @@ bun bench:ab bench/tokenize.bench.ts           # working tree vs HEAD
 bun bench:ab --base origin/master bench/*.bench.ts
 ```
 
-`bun bench:ab` wraps `ostia ab`. It runs base and candidate in one process, alternating, so machine noise mostly cancels. It also builds the base commit's generated grammars, styles, and themes, which `ostia ab` alone would miss. A change counts as a win only when ostia confirms it in fresh processes.
+`bun bench:ab` is `ostia ab --base-setup "bun scripts/index.ts"`. It runs base and candidate in one process, alternating, and times each suite in both orders, so machine noise mostly cancels. The setup command builds the base commit's generated grammars, styles, and themes, which git doesn't hold. A change counts as a win only when ostia confirms it in fresh processes. Add `--alloc` or `--peak-mem` to compare memory too.
 
 Pull requests that touch `src/`, `bench/`, or `scripts/` also run a non-blocking `bench:ab` job (`.github/workflows/perf.yml`) on a subset of suites. It posts the table to the job summary and to one PR comment, updated on each push.
