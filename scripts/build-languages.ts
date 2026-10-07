@@ -323,7 +323,7 @@ export async function buildLanguages() {
   for (const entry of entries) {
     const { name, moduleName, kind } = entry;
 
-    base += `export { default as ${moduleName} } from './${name}';\n`;
+    base += `export { default as ${moduleName} } from './${name}.js';\n`;
     baseTs += `export declare const ${moduleName}: LanguageType<"${name}">;\n`;
     languageNamesUnion += `  | "${name}"\n`;
     lang.push({ name, moduleName });

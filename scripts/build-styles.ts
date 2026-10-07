@@ -253,7 +253,7 @@ ${customNote}
   const base = styles
     .map(
       (style) =>
-        `export { default as ${style.moduleName} } from './${style.name}';\n`,
+        `export { default as ${style.moduleName} } from './${style.name}.js';\n`,
     )
     .join("");
 
