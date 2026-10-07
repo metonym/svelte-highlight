@@ -11,7 +11,7 @@
   export let wrap = false;
 
   import { afterUpdate, createEventDispatcher } from "svelte";
-  import svelte from "./languages/svelte";
+  import svelte from "./languages/svelte.js";
   import { ensureRegistered, registry } from "./registry.js";
 
   /**
