@@ -1,12 +1,4 @@
-/**
- * HighlightStream's default (non-virtualized) repaint loop, end to end, on
- * a multi-line document streamed in small LLM-token-sized chunks: one
- * repaint per chunk - append to the session, render newly completed lines
- * with extendLines, seal full chunks, compute the staged-tail preview, and
- * assemble the `highlight` event payload. Mirrors repaint() in
- * src/HighlightStream.svelte step for step, so per-frame work that grows
- * with the whole stream (instead of the chunk) shows up here.
- */
+/** HighlightStream's non-virtualized repaint loop (mirrors repaint()) and regenerate(). */
 import { group, task } from "ostia";
 import { extendLines } from "../src/engine.js";
 import { createCompletedHtmlBuffer } from "../src/stream-highlighted.js";
@@ -44,9 +36,7 @@ function streamRepaint() {
     end < code.length + CHUNK_SIZE;
     end += CHUNK_SIZE
   ) {
-    // The `code` prop as the parent would pass it after each chunk.
     const next = code.slice(0, end);
-    // ensureSession(): a pure append keeps the session.
     if (!next.startsWith(fedCode)) throw new Error("not an append");
     if (next.length > fedCode.length) {
       session.append(next.slice(fedCode.length));
@@ -106,11 +96,7 @@ group(
   },
 );
 
-// A regenerate: the stream's tail is rewritten, not appended to.
-// HighlightStream hands that to regenerate() (src/stream-regenerate.js),
-// which patches the session and re-renders the lines. Each task alternates
-// between two endings on one long-lived stream, so after warmup each call
-// is one steady-state regenerate.
+// Tail rewrites; each task alternates two endings on one long-lived stream.
 const corpusLines = sizedSlice(corpus.javascript, 400_000)
   .split("\n")
   .map((line) => `${line}\n`);
@@ -167,7 +153,3 @@ group(`HighlightStream regenerate: ${LANGUAGE}`, () => {
   task("2,000 lines, last 10% rewritten", regenerateTask(2_000, 200));
   task("8,000 lines, last 200 lines rewritten", regenerateTask(8_000, 200));
 });
-
-// Run this suite with `ostia bench bench/stream-repaint.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a
-// full-baseline run.

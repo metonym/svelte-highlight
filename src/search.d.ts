@@ -11,9 +11,8 @@ export interface SearchMatch {
 
 export interface SearchOptions {
   /**
-   * Treat `text` as a regular expression source instead of literal text.
-   * Capped at 256 characters; over the cap, or an invalid pattern, yields
-   * zero matches and sets `error()`.
+   * Treat `text` as a regex (max 256 chars). An invalid or over-long pattern
+   * yields zero matches and sets `error()`.
    * @default false
    */
   regex?: boolean;
@@ -24,11 +23,8 @@ export interface SearchOptions {
 }
 
 /**
- * A plain string (split on `"\n"`), an array of lines used as-is, or a
- * duck-typed `TokenizedDocument` (only `lineCount`/`lineRange`/`textRange`
- * are used; never checked via `instanceof`). Its plain text comes from
- * `textRange` when present, else from `lineRange`'s highlighted-HTML lines
- * decoded back to plain text.
+ * A string (split on `"\n"`), an array of lines, or a duck-typed
+ * `TokenizedDocument` (plain text via `textRange`, else stripped `lineRange` HTML).
  */
 export type SearchSource =
   | string
@@ -58,9 +54,8 @@ export interface Search {
 }
 
 /**
- * Headless find-in-document search over a plain string, a line array, or a
- * `TokenizedDocument` (incrementally rescanning only newly appended lines
- * when the same query is repeated against a grown document).
+ * Headless find-in-document search. Repeating a query on a grown
+ * `TokenizedDocument` only scans the appended lines.
  */
 export declare function createSearch(source: SearchSource): Search;
 
@@ -76,16 +71,10 @@ export interface HighlightMatchesOptions {
 }
 
 /**
- * Paints `matches` into `root`, restricted to whatever rows are currently
- * rendered there: resolved per match's line via `[data-line]`, then the
- * `line`-th `.line` element, then the whole `<code>` split on `"\n"`.
- * Matches whose line resolves to nothing are skipped.
- *
- * Uses the CSS Custom Highlight API when available (two `Highlight`s:
- * `name` and `${name}-current`), else wraps text in
- * `<mark data-shl-search>` (plus `data-shl-search-current`). A no-op on the
- * server. Paints once per call -- call `dispose()` and re-run to repaint
- * after the rendered window or the query changes.
+ * Paints `matches` into the rows currently rendered in `root` (found via
+ * `[data-line]`, then `.line`, then `<code>`), using the CSS Custom Highlight
+ * API or else `<mark data-shl-search>`. No-op on the server. Paints once;
+ * `dispose()` and re-run to repaint.
  */
 export declare function highlightMatches(
   root: Element,

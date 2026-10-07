@@ -6,16 +6,12 @@ export interface TypewriterUnit {
 }
 
 /**
- * Splits highlight.js output HTML into typing units: HTML tags carry zero
- * visible chars and are never split; text is grouped one visible char per
- * unit (a surrogate pair or an HTML entity counts as a single char).
+ * Splits highlighted HTML into units: whole tags (zero visible chars) or
+ * single visible chars (a surrogate pair or HTML entity counts as one).
  */
 export declare function tokenizeTypewriter(html: string): TypewriterUnit[];
 
-/**
- * Renders `units` into HTML once: tags pass through unchanged, each visible
- * unit is wrapped in a `typewriter-unit typewriter-hidden` span.
- */
+/** Wraps each visible unit in a `typewriter-unit typewriter-hidden` span. */
 export declare function buildUnitMarkup(units: TypewriterUnit[]): string;
 
 export interface TypewriterSplitter {
@@ -23,9 +19,8 @@ export interface TypewriterSplitter {
 }
 
 /**
- * Stateful incremental splitter: repeated `splitAt(count)` calls with a
- * non-decreasing `count` cost O(n) total instead of O(n^2). A `count` lower
- * than the last one served resets and replays from the start.
+ * Incremental splitter: non-decreasing `splitAt(count)` calls cost O(n)
+ * total; a lower `count` replays from the start.
  */
 export declare function createTypewriterSplitter(
   units: TypewriterUnit[],
@@ -33,13 +28,9 @@ export declare function createTypewriterSplitter(
 ): TypewriterSplitter;
 
 /**
- * Groups `units`' visible characters into words: a maximal run of
- * consecutive non-whitespace visible units, plus any visible whitespace
- * (` `, `\t`, `\r`, `\n`) immediately following it. A leading whitespace run
- * (with no preceding word) is its own word. Tags (`visible: 0`) are skipped
- * without resetting the current word. Returns the cumulative visible-unit
- * count at the end of each word; the last entry always equals the total
- * visible-unit count. Empty for zero visible units.
+ * Cumulative visible-unit count at the end of each word (a non-whitespace
+ * run plus trailing whitespace). Tags are skipped; the last entry equals the
+ * total.
  */
 export declare function computeWordBoundaries(
   units: TypewriterUnit[],

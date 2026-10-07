@@ -1,11 +1,4 @@
-/**
- * The rendering layer every component sits on top of: turning a tokenize()
- * event stream into HTML (renderHtml + splitLines, used by Highlight),
- * line-indexed HTML in one pass (extendLines, used by HighlightStream/
- * HighlightEditable), CSS Custom Highlight ranges (toRanges), or
- * line-indexed token objects (tokenLines). Same event stream in, four
- * different consumers - useful to see their relative cost side by side.
- */
+/** Event stream consumers side by side: renderHtml, splitLines, extendLines, toRanges, tokenLines. */
 import { group, task } from "ostia";
 import {
   extendLines,
@@ -36,6 +29,3 @@ group(
     task("splitLines (on pre-rendered HTML)", () => splitLines(html));
   },
 );
-
-// Run this suite with `ostia bench bench/render.bench.ts` for a fast feedback
-// loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

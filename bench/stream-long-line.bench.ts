@@ -1,13 +1,4 @@
-/**
- * stream-preview.js on a stream with no newline for a long stretch (streamed
- * single-line JSON, minified code, a long log line). `computeStagedTailPreview`
- * resumes from the last completed newline on every call, so re-feeding a
- * ~200 KB single-line document in small chunks re-tokenizes the whole open
- * line each time: O(line length) per call, O(n^2) over the stream. The
- * one-shot `registry.highlight` case is the reference point a fixed-cost
- * preview should approach. The bare `session.append()` task isolates the
- * session's own cost, and the 1 MB case shows how each one scales.
- */
+/** stream-preview.js on a newline-free stream (worst case: O(line) per chunk). */
 import { group, task } from "ostia";
 import { computeStagedTailPreview } from "../src/stream-preview.js";
 import { buildRegistry } from "./_shared.ts";
@@ -16,7 +7,6 @@ const registry = await buildRegistry();
 const LANGUAGE = "json";
 const CHUNK_SIZE = 1_000;
 
-/** A single-line ~200 KB JSON array; no newline until the very last byte. */
 function longLineJson(targetLength: number) {
   const items: string[] = [];
   let length = 2; // "[]"
@@ -38,9 +28,6 @@ function longLineJson(targetLength: number) {
 
 const SIZES = [200_000, 1_000_000];
 
-/** Feeds `code` through the streaming preview helper in fixed-size chunks,
- * exactly as HighlightStream's repaint() drives stream-preview.js on every
- * animation frame while a chunk is streaming in. */
 function streamPreview(code: string) {
   const session = registry.createSession(LANGUAGE);
   let fedCode = "";
@@ -53,9 +40,6 @@ function streamPreview(code: string) {
     session.append(chunk);
     fedCode += chunk;
 
-    // No newline completes until the final byte, so `session.events()`
-    // never grows and openScopes/pendingHtml never advance from their
-    // initial state - the worst case for a from-newline preview.
     ({ cache } = computeStagedTailPreview({
       registry,
       language: LANGUAGE,
@@ -68,8 +52,6 @@ function streamPreview(code: string) {
   }
 }
 
-/** Appends `code` to a bare session in fixed-size chunks, with no preview:
- * isolates the session's own per-append cost on a line that never ends. */
 function streamAppend(code: string) {
   const session = registry.createSession(LANGUAGE);
   for (let i = 0; i < code.length; i += CHUNK_SIZE) {
@@ -89,7 +71,3 @@ for (const size of SIZES) {
     );
   });
 }
-
-// Run this suite with `ostia bench --isolate bench/stream-long-line.bench.ts`
-// for a fast feedback loop; `bun run bench` runs every *.bench.ts suite for a
-// full-baseline run.

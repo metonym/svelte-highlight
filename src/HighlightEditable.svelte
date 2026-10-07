@@ -26,21 +26,15 @@
   export let readonly = false;
 
   /**
-   * Rendering engine. `"css-highlights"` (experimental) paints tokens via
-   * the CSS Custom Highlight API over plain-text line nodes instead of
-   * wrapping them in `<span>`s, so a repaint never replaces DOM the caret
-   * could be sitting in. Falls back to `"dom"` silently where
-   * `CSS.highlights` is unavailable; check the resolved engine with the
-   * exported `resolvedEngine()` method.
+   * Rendering engine. `"css-highlights"` (experimental) paints tokens via the
+   * CSS Custom Highlight API, falling back to `"dom"` where unsupported.
    * @type {"dom" | "css-highlights"}
    */
   export let engine = "dom";
 
   /**
-   * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
-   * from `svelte-highlight/themes/<theme>` — used only in
-   * `"css-highlights"` mode to generate `::highlight()` rules. Colors only
-   * (`color`/`background-color`); other declarations are dropped.
+   * Theme CSS or `ThemePalette` for `::highlight()` rules (`"css-highlights"`
+   * only). Colors only.
    * @type {string | import("./theme.d.ts").ThemePalette | undefined}
    */
   export let theme = undefined;
@@ -79,25 +73,17 @@
   let mounted = false;
   let restoringSelection = false;
 
-  // Set by Escape, consumed by the next Tab/Shift+Tab to release focus
-  // instead of indenting; cleared by any other keydown or blur.
+  // Set by Escape so the next Tab moves focus instead of indenting.
   let tabTrapReleased = false;
 
-  // One <span> per line, painted incrementally (see `renderLines`): the
-  // line elements, their rendered (plain-text) lengths, and the line HTML
-  // they currently reflect.
   const view = createLineView();
 
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
 
-  // Incremental re-tokenize via incremental-tokenize.js; reuses tail on
-  // convergence. getEvents() full-parses on first call and language change.
   /** @type {import("./incremental-tokenize.js").IncrementalParse | undefined} */
   let incrementalParse;
 
-  // DOM-engine line HTML: after the first paint, each edit re-renders only
-  // the lines whose events changed, not the whole document.
   const domLinePainter = createDomLinePainter();
 
   function getEvents() {
@@ -143,8 +129,6 @@
         )}</style>`
       : "";
 
-  // Sum of textContent.length for el's first `count` children — the
-  // character width, within el, of a boundary expressed as a child index.
   function sumChildLengths(el, count) {
     let total = 0;
     for (let i = 0; i < count && i < el.childNodes.length; i++) {
@@ -153,15 +137,9 @@
     return total;
   }
 
-  // Character offset (same coordinate space as lineStartOffset/setSelection)
-  // of the boundary (container, offsetInContainer) from a live Selection
-  // Range, computed from integers instead of serializing the document.
-  // Exploits the fixed editor structure — one <span> per line (view.lineEls)
-  // joined by literal "\n" text nodes — so a boundary's line is derived
-  // from its child position rather than a document-wide walk. Returns null
-  // whenever that structure doesn't hold (DOM drifted from view.lineEls/
-  // view.lineLengths ahead of renderLines' self-heal, or an unrecognized node),
-  // so the caller can fall back to the exact cloneRange/toString behavior.
+  // Character offset of a Selection boundary, derived from the line
+  // structure instead of serializing the document. Null when the DOM has
+  // drifted from `view`, so the caller falls back to cloneRange/toString.
   function offsetOfBoundary(container, offsetInContainer) {
     const expectedChildren =
       view.lineEls.length === 0 ? 0 : view.lineEls.length * 2 - 1;
@@ -176,7 +154,6 @@
         : lineStartOffset(lineIndex) + view.lineLengths[lineIndex];
     }
 
-    // Walk up to the top-level child of `editor` containing the boundary.
     let node = container;
     while (node.parentNode !== editor) {
       node = node.parentNode;
@@ -190,8 +167,7 @@
     const lineIndex = childIndex >> 1;
 
     if (childIndex % 2 === 1) {
-      // The "\n" separator following line `lineIndex`; it has no children,
-      // so `container` must be the separator itself.
+      // A "\n" separator has no children, so it must be `container` itself.
       if (container !== node || lineIndex >= view.lineLengths.length)
         return null;
       return (
@@ -205,8 +181,6 @@
     if (lineIndex >= view.lineEls.length || view.lineEls[lineIndex] !== span)
       return null;
 
-    // Character offset of (container, offsetInContainer) within `span`,
-    // walking only its ancestors up to `span` (bounded by that line's size).
     let charOffset =
       container.nodeType === Node.TEXT_NODE
         ? offsetInContainer
@@ -245,19 +219,10 @@
     return sel ? sel.end : null;
   }
 
-  // Firefox's contenteditable undo manager treats a boundary set exactly at
-  // a text node's start/end (setStart/setEnd with a text node + offset)
-  // differently from the equivalent boundary expressed via the parent's
-  // child index (setStartBefore/After): after our repaint rebuilds the text
-  // node, the former leaves Firefox unable to recognize a later native
-  // undo (execCommand/Edit menu), which then silently does nothing. Prefer
-  // the parent-anchored form whenever the offset lands on a node edge.
-  //
-  // An offset at the end of a "\n" separator (a direct editor child) is the
-  // start of the next line, so anchor it inside that line's <span> instead.
-  // After the separator but outside the span, Firefox types into a new
-  // stray text node, which renderLines' child-count check then repairs with
-  // a full rebuild of every line.
+  // Firefox: a boundary at a text node's edge breaks its native undo after
+  // a repaint, so anchor edges via setStartBefore/After. A boundary at a
+  // separator's end goes inside the next line's <span>, else Firefox types
+  // into a stray text node (forcing a full rebuild).
   function setRangeBoundary(range, side, node, offset) {
     const nextLine = node.nextSibling;
     if (
@@ -288,8 +253,6 @@
     selection.addRange(range);
   }
 
-  // Character offset (in the same space as getSelectionRange/setSelection)
-  // where line `index` starts.
   function lineStartOffset(index) {
     return lineStartIn(view, index);
   }
@@ -301,17 +264,12 @@
     el.textContent = line;
   };
 
-  // Patches `editor` to match `lines`; see editable-line-dom.js. Returns
-  // the index of the single changed line when nothing else shifted (used to
-  // scope caret restoration), or null.
   function renderLines(lines, setContent) {
     return renderLineDom(editor, view, lines, setContent, lineHooks);
   }
 
   const lineHooks = {
     onReset: () => clearCssHighlights(),
-    // Keeps css-highlights' per-line ranges aligned with the line elements
-    // (empty under the "dom" engine).
     onSplice: (index, removed, inserted) => {
       if (index >= lineHighlightRanges.length) return;
       for (let i = index; i < index + removed; i++) clearLineHighlights(i);
@@ -322,11 +280,11 @@
     },
   };
 
-  /** @type {Map<string, InstanceType<typeof Highlight>>} scope -> registered Highlight. */
+  /** @type {Map<string, InstanceType<typeof Highlight>>} */
   let cssHighlights = new Map();
-  /** @type {{ scope: string; range: Range }[][]} Ranges registered per line. */
+  /** @type {{ scope: string; range: Range }[][]} */
   let lineHighlightRanges = [];
-  /** @type {import("./engine.d.ts").ScopeEvent[] | undefined} The events the registered ranges reflect. */
+  /** @type {import("./engine.d.ts").ScopeEvent[] | undefined} */
   let cssPaintedEvents;
 
   function cssHighlightFor(scope) {
@@ -356,14 +314,9 @@
     cssPaintedEvents = undefined;
   }
 
-  // Rebuilds the Highlight Range registrations of the lines from `first`
-  // (starting at document offset `base`) through the one ending at offset
-  // `end`, from `tokenRanges` (relative to `base`); the lines' text nodes
-  // are untouched by this, so it never disturbs the caret. One forward
-  // sweep rather than rescanning the range array per line: since
-  // `toRanges` emits ranges sorted by, and disjoint on, document offset,
-  // `tokenIndex` only ever advances, so total work is O(lines + tokens)
-  // instead of O(lines * tokens).
+  // Re-registers ranges for lines from `first` (at offset `base`) through the
+  // one ending at `end`; `tokenRanges` are relative to `base`. They're sorted
+  // and disjoint, so `tokenIndex` only advances: O(lines + tokens).
   function paintLineHighlights(first, base, end, tokenRanges) {
     let tokenIndex = 0;
     let lineStart = 0;
@@ -414,9 +367,8 @@
     if (changedIndex == null) {
       paintLineHighlights(0, 0, code.length, toRanges(events));
     } else {
-      // Only one line's text changed, but its tokens can change the lines
-      // after it too (typing `/*`), so repaint through the line where the
-      // re-parse converged with the last paint's.
+      // One line's text changed, but its tokens can affect later lines
+      // (typing `/*`): repaint through where the re-parse converged.
       const base = lineStartOffset(changedIndex);
       const end = retokenizedEnd(
         code,
@@ -654,7 +606,6 @@
 
   function ensureFocus() {
     if (document.activeElement === editor) return;
-    // Restore selection after focus; default caret to end.
     const prior = getSelectionRange();
     editor.focus();
     if (prior) setSelection(prior.start, prior.end);
@@ -740,10 +691,8 @@
     return resolvedEngineValue;
   }
 
-  // WebKit dispatches a second beforeinput historyUndo/historyRedo shortly
-  // after the first for a single execCommand call; without this guard the
-  // second dispatch pops an extra history entry. The reset is deferred past
-  // the current task so a genuinely separate later undo still goes through.
+  // WebKit fires historyUndo/historyRedo twice per execCommand; ignore the
+  // repeat until the next task.
   let handlingNativeHistory = false;
   function runNativeHistory(action) {
     if (handlingNativeHistory) return;
@@ -756,10 +705,8 @@
 
   function onInput(event) {
     if (composing) return;
-    // Some engines (e.g. Chromium's execCommand path) never dispatch a
-    // cancelable beforeinput for native undo/redo, only this input event
-    // after the DOM already mutated. Re-render from our own snapshot rather
-    // than recording the browser's mutation as new typed content.
+    // Chromium's execCommand undo/redo skips cancelable beforeinput:
+    // re-render from our history instead of recording the mutation.
     if (event?.inputType === "historyUndo") {
       runNativeHistory(undo);
       return;
@@ -769,14 +716,9 @@
       return;
     }
     const previousCode = code;
-    // textContent (not innerText): innerText forces a synchronous layout
-    // and Firefox can return a stale value immediately after editing a text
-    // node last written via `textContent` (see setText in
-    // paintCssHighlights), losing the just-typed content. The `<pre>`
-    // wrapper's `white-space: pre` means every native text-insertion path
-    // (typing, execCommand insertText, paste/drop as plain text) already
-    // uses literal "\n" characters rather than <br> elements, so
-    // textContent loses nothing textContent would have kept anyway.
+    // Not innerText: it forces layout and Firefox can return a stale value
+    // after editing a node written via textContent. `white-space: pre`
+    // means native inserts use "\n", not <br>.
     code = editor.textContent.replace(TRAILING_NEWLINE, "");
     internalCode = code;
     const caret = getCaretOffset() ?? code.length;
@@ -829,8 +771,7 @@
     insertText(event.dataTransfer?.getData("text/plain") ?? "");
   }
 
-  // Edit-menu / execCommand undo-redo bypass onKeydown; intercept here so the
-  // browser doesn't mutate DOM that paint() has already rebuilt.
+  // Edit-menu / execCommand undo-redo bypass onKeydown.
   function onBeforeInput(event) {
     if (event.inputType === "historyUndo") {
       event.preventDefault();
@@ -846,10 +787,7 @@
     dispatch("blur", { code: getCode() });
   }
 
-  // Selection changes can only affect this editor while it holds focus, so
-  // only pay for the document-wide listener (range clone + full-content
-  // toString()) during that window instead of for the component's whole
-  // lifetime.
+  // Only listen to document-wide selectionchange while focused.
   function onFocusIn() {
     document.addEventListener("selectionchange", syncCaretToHistory);
   }

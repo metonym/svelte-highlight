@@ -1,7 +1,7 @@
 import { createRegistry, registerAll, tokenLines } from "./engine.js";
 import { resolveLanguageName } from "./fence.js";
 import { LanguageLoadError, loadLanguage } from "./load-language.js";
-import { ensureRegistered, registry as sharedRegistry } from "./registry.js";
+import { registry as sharedRegistry } from "./registry.js";
 
 /**
  * @typedef {import("./worker.d.ts").PostMessageTarget} PostMessageTarget
@@ -9,14 +9,13 @@ import { ensureRegistered, registry as sharedRegistry } from "./registry.js";
  * @typedef {import("./worker.d.ts").WorkerSession} WorkerSession
  * @typedef {import("./worker.d.ts").WorkerHighlighter} WorkerHighlighter
  * @typedef {import("./engine.d.ts").Registry} Registry
+ * @typedef {(name: string) => Promise<import("./languages/index.d.ts").LanguageType<string>>} LoadLanguageFn
  */
 
 /**
- * Resolves `name` to a canonical, registered language name on `registry`,
- * loading and registering the grammar on demand the first time it's seen.
- * Concurrent calls for the same (resolved) name share one in-flight load.
+ * Resolves aliases and registers grammars on demand; concurrent loads are shared.
  * @param {Registry} registry
- * @param {(name: string) => Promise<import("./languages/index.d.ts").LanguageType<string>>} loadLanguageFn
+ * @param {LoadLanguageFn} loadLanguageFn
  * @returns {(name: string) => Promise<string>}
  */
 function createLanguageResolver(registry, loadLanguageFn) {
@@ -61,10 +60,6 @@ function serializeError(error) {
 }
 
 /**
- * Installs an `onmessage` handler on `scope` that answers highlight and
- * streaming-session requests inside a worker (or any `postMessage`-shaped
- * target). Grammars register on demand the first time a language name is
- * seen, resolving aliases the same way `svelte-highlight/fence` does.
  * @param {PostMessageTarget} [scope]
  * @param {ServeHighlighterOptions} [options]
  */
@@ -72,10 +67,7 @@ export function serveHighlighter(
   scope = /** @type {any} */ (typeof self === "undefined" ? undefined : self),
   {
     registry = createRegistry(),
-    loadLanguage:
-      loadLanguageFn = /** @type {(name: string) => Promise<import("./languages/index.d.ts").LanguageType<string>>} */ (
-      loadLanguage
-    ),
+    loadLanguage: loadLanguageFn = /** @type {LoadLanguageFn} */ (loadLanguage),
   } = {},
 ) {
   const ensureLanguage = createLanguageResolver(registry, loadLanguageFn);
@@ -132,10 +124,7 @@ export function serveHighlighter(
       }
       case "session.snapshot": {
         const session = getSession(msg.sessionId);
-        // `want` names the one field the client reads, so `snapshot()`
-        // doesn't structured-clone every event so far just to drop them -
-        // bench/worker.bench.ts. Without it (an older client), reply with
-        // both.
+        // `want` avoids structured-cloning the unused field; older clients omit it.
         if (msg.want === "snapshot") return { snapshot: session.snapshot() };
         if (msg.want === "events") return { events: session.events() };
         return { snapshot: session.snapshot(), events: session.events() };
@@ -145,10 +134,7 @@ export function serveHighlighter(
     }
   }
 
-  // Processed strictly in arrival order: an async handler (e.g. one that
-  // loads a grammar) must fully settle before the next message is handled,
-  // so e.g. a session.create's registration always completes before a
-  // subsequent session.append for the same session is processed.
+  // Serialized, so e.g. session.create's grammar load settles before session.append.
   let queue = Promise.resolve();
 
   scope.onmessage = (event) => {
@@ -297,37 +283,10 @@ function createRemoteHighlighter(worker) {
   };
 }
 
-/**
- * Same resolve-then-register logic as `createLanguageResolver`, but against
- * `svelte-highlight/registry`'s shared singleton via `ensureRegistered`
- * (which also registers a grammar's embedded sub-languages) instead of an
- * arbitrary registry + `registerAll`.
- * @type {Map<string, Promise<string>>}
- */
-const localPending = new Map();
-
-/**
- * @param {string} name
- * @returns {Promise<string>}
- */
-async function ensureLocalLanguage(name) {
-  const resolved = resolveLanguageName(name);
-  if (resolved === undefined) throw new LanguageLoadError(name);
-  if (sharedRegistry.get(resolved) !== undefined) return resolved;
-
-  let promise = localPending.get(resolved);
-  if (promise === undefined) {
-    promise = (async () => {
-      const language = await loadLanguage(
-        /** @type {import("./languages/index.d.ts").LanguageName} */ (resolved),
-      );
-      ensureRegistered(language);
-      return resolved;
-    })();
-    localPending.set(resolved, promise);
-  }
-  return promise;
-}
+const ensureLocalLanguage = createLanguageResolver(
+  sharedRegistry,
+  /** @type {LoadLanguageFn} */ (loadLanguage),
+);
 
 /**
  * @returns {WorkerHighlighter}
@@ -377,12 +336,6 @@ function createLocalHighlighter() {
 }
 
 /**
- * The main-thread client for a `serveHighlighter` worker. Given a `worker`
- * (real `Worker`, or anything `postMessage`/`onmessage`-shaped), every call
- * round-trips through it. Given no `worker`, runs the identical API
- * in-process against `svelte-highlight/registry`'s shared singleton, so a
- * language loaded this way is visible to `<Highlight>` on the same page —
- * the SSR/tests fallback.
  * @param {PostMessageTarget} [worker]
  * @returns {WorkerHighlighter}
  */

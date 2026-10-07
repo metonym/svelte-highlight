@@ -1,11 +1,4 @@
-/**
- * editable-dom-paint.js: HighlightEditable's "dom" engine line-painting
- * cost. createDomLinePainter feeds pure-append edits through a streaming
- * session so paint work is O(delta) per keystroke; lineHtmlFromEvents is
- * the full-recompute path (renderHtml + splitLines over the whole event
- * stream), which is what a naive editable component pays on every
- * keystroke without the incremental painter.
- */
+/** HighlightEditable dom-engine painting: incremental painter vs full repaint per keystroke. */
 import { group, task } from "ostia";
 import {
   createDomLinePainter,
@@ -57,11 +50,8 @@ group("HighlightEditable paint: typing simulation", () => {
   }
 });
 
-// Typing in the middle of an already-open document: every keystroke is a
-// non-append edit, so the painter takes its mid-document path. Parse
-// states are precomputed so only painting is timed; one painter is reused
-// across samples, cycling from the last state back to the first (itself a
-// mid-document edit, a 12-character delete).
+// Precomputed parse states so only painting is timed; cycling back to the
+// first state is itself a mid-document edit.
 function midDocumentStates(lines: number) {
   const base = jsLines(lines);
   const at = base.indexOf("\n", base.length >> 1) + 1;
@@ -95,9 +85,6 @@ group("HighlightEditable paint: mid-document typing", () => {
   }
 });
 
-// Opening a document: the component's first parse and first paint, then
-// the same plus one keystroke typed at the end (the first append after
-// mount).
 group("HighlightEditable paint: mount", () => {
   for (const lines of [2_000, 8_000]) {
     const code = jsLines(lines);
@@ -117,10 +104,7 @@ group("HighlightEditable paint: mount", () => {
   }
 });
 
-// What a painter keeps alive once editing moves mid-document: open a
-// document (first paint, the append path), then make one mid-document
-// edit. Each call's painter is kept, so `--alloc` (heap retained per call)
-// shows the painter's footprint.
+// Painters are kept so `--alloc` shows each one's retained footprint.
 const keptPainters: unknown[] = [];
 group("HighlightEditable paint: retained after a mid-document edit", () => {
   const [opened, edited] = midDocumentStates(2_000) as [
@@ -134,6 +118,3 @@ group("HighlightEditable paint: retained after a mid-document edit", () => {
     keptPainters.push(painter);
   });
 });
-
-// Run this suite with `ostia bench bench/dom-paint.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

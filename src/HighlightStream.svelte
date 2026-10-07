@@ -1,7 +1,6 @@
 <script>
   /**
-   * Growing code buffer. Append chunks as they arrive; arbitrary chunk
-   * boundaries (mid-token, mid-line) are handled.
+   * Growing code buffer; chunks may split mid-token or mid-line.
    * @type {string}
    */
   export let code = "";
@@ -22,43 +21,32 @@
   export let caret = true;
 
   /**
-   * Keep the container scrolled to the bottom while streaming, unless the
-   * user has scrolled away from the bottom.
+   * Stick to the bottom while streaming, unless the user scrolls away.
    * @type {boolean}
    */
   export let autoScroll = false;
 
   /**
-   * Render only the lines within the scrolled viewport (plus `overscan`)
-   * instead of the whole growing buffer, so a long-running stream costs a
-   * bounded number of DOM nodes instead of one per line. Backed by
-   * `createTokenizedDocument` rather than the default sealed-chunk session,
-   * so output always reflects the streaming (non-canonicalized) parse, even
-   * once `done` - the same tradeoff `HighlightVirtual` makes. `on:highlight`
-   * is not dispatched in this mode, since materializing the full HTML on
-   * every repaint would defeat the point of windowing.
+   * Render only the lines in the viewport (plus `overscan`). Output stays the
+   * streaming parse even once `done`, and `on:highlight` is not dispatched.
    * @type {boolean}
    */
   export let virtualize = false;
 
   /**
-   * Extra lines rendered above and below the viewport when `virtualize` is
-   * set.
+   * Extra lines rendered above and below the viewport when `virtualize` is set.
    * @type {number}
    */
   export let overscan = 12;
 
   /**
-   * Lines between engine checkpoints when `virtualize` is set (forwarded to
-   * `createTokenizedDocument`).
+   * Lines between engine checkpoints when `virtualize` is set.
    * @type {number}
    */
   export let checkpointInterval = 100;
 
   /**
-   * Announced by a polite, visually-hidden live region once `done` becomes
-   * `true` - screen readers otherwise have no signal that a streamed block
-   * has stopped growing. Set to `""` to disable the announcement.
+   * Announced by a polite live region once `done`. Set to `""` to disable.
    * @type {string}
    */
   export let doneText = "Code finished streaming";
@@ -77,10 +65,8 @@
   import { createTokenizedDocument } from "./tokenized-document.js";
   import { watchLineHeight, windowRange } from "./virtual-window.js";
 
-  // Lines between sealed chunks. Once a chunk fills, its line spans are
-  // joined into one immutable HTML string and never touched again - keyed
-  // reconciliation for `{#each sealedChunks}` below only ever diffs the
-  // (constant-size) unsealed tail, not the whole stream.
+  // Full chunks become one immutable HTML string, so the keyed each-block
+  // only diffs the bounded unsealed tail.
   const SEAL_CHUNK_LINES = 256;
 
   const dispatch = createEventDispatcher();
@@ -96,17 +82,11 @@
 
   let mounted = false;
 
-  // Guards against re-dispatching `done` on every reactive re-run while it
-  // stays true; resets so a later restart (done set back to `false`) fires
-  // it again next time the stream finishes.
+  // Reset when `done` goes false so a restarted stream fires `done` again.
   let doneDispatched = false;
 
-  // Stick to bottom until the user scrolls away from it.
   let stickToBottom = true;
 
-  // `virtualize` state: a random-access tokenized document (rather than the
-  // sealed-chunk session above) windowed the same way `HighlightVirtual`
-  // windows a static document.
   /** @type {HTMLElement} */
   let probe;
   let vLineHeight = 16;
@@ -125,8 +105,7 @@
   let vEnd = 0;
   /** @type {string[]} */
   let vVisibleLines = [];
-  // Last { start, end, lineCount } dispatched as `windowchange`, so a
-  // recompute that lands on the same window doesn't re-dispatch.
+  // Last `windowchange` detail, to skip re-dispatching an unchanged window.
   /** @type {number | undefined} */
   let dispatchedWindowStart;
   /** @type {number | undefined} */
@@ -137,38 +116,27 @@
   /** @type {ReturnType<typeof registry.createSession> | undefined} */
   let session;
   let sessionLanguageName = "";
-  // Prefix of `code` already fed to `session`. If `code` stops starting with
-  // this, treat it as a restart (new stream or language change).
+  // Prefix of `code` already fed to `session`.
   let fedCode = "";
 
-  // Incremental line rendering via extendLines.
   let finalizedPendingHtml = "";
   /** @type {string[]} */
   let finalizedOpenScopes = [];
   let renderedCommittedCount = 0;
-  // Mid-line checkpoint for the staged-tail preview; see stream-preview.js.
   /** @type {import("./stream-preview.d.ts").PreviewCache | undefined} */
   let previewCache;
 
-  // Sealed (finished, immutable) chunks of `SEAL_CHUNK_LINES` line spans
-  // each, pre-joined into one HTML string apiece - `sealedChunks` is never
-  // mutated in place, only appended to, and past entries are never rebuilt.
+  // Append-only: past entries are never rebuilt.
   /** @type {string[]} */
   let sealedChunks = [];
   let sealedLineCount = 0;
-  // Append-only completed line HTML for the `highlight` event payload.
-  // Completed lines are concatenated once as they finalize (O(n) over the
-  // stream). Each repaint still assembles `highlighted = completed + preview`
-  // so `on:highlight` stays live mid-line; that concat copies the completed
-  // string but avoids rebuilding it from sealed DOM chunks.
+  // Completed lines for the `highlight` payload, so it isn't rebuilt per repaint.
   const completedHtml = createCompletedHtmlBuffer();
-  // The `done` pass's full re-parse; see stream-final-highlight.js.
   const finalHighlighter = createFinalHighlighter();
-  // Completed lines not yet folded into a sealed chunk - bounded by
-  // `SEAL_CHUNK_LINES`, so touching it every repaint stays O(1).
+  // Bounded by SEAL_CHUNK_LINES, so touching it every repaint stays O(1).
   /** @type {string[]} */
   let unsealedLines = [];
-  // unsealedLines + the live preview line(s); rendered by the tail each-block.
+  // unsealedLines + the live preview line(s).
   /** @type {string[]} */
   let tailLines = [];
 
@@ -182,9 +150,7 @@
     }
     ensureRegistered(language);
     if (session && sessionLanguageName === language.name) {
-      // Not a pure append (an LLM "regenerate the last paragraph", say):
-      // patch the session in place instead of restarting it and losing
-      // every sealed chunk.
+      // Not a pure append: patch in place rather than lose every sealed chunk.
       const next = regenerate({
         session,
         fedCode,
@@ -209,12 +175,8 @@
     sessionLanguageName = language.name;
   }
 
-  // Drops the session and everything rendered from it. Also runs after the
-  // done pass: from then on the template shows only `highlighted`, and a
-  // repeat done pass reuses the memoized final HTML without a session, so a
-  // closed stream holds little more than its final HTML. If streaming
-  // resumes, ensureSession starts over from the whole buffer, which renders
-  // the same lines - bench/markdown-stream.bench.ts.
+  // Also runs after the done pass, so a closed stream retains only its final
+  // HTML; resuming re-feeds the whole buffer.
   function resetStreamingState() {
     session = undefined;
     sessionLanguageName = "";
@@ -230,10 +192,6 @@
     tailLines = [];
   }
 
-  // Folds the first SEAL_CHUNK_LINES entries of `unsealedLines` into one new
-  // sealed chunk. Called in a loop, so a single repaint that completes many
-  // lines at once (a burst of chunks coalesced into one frame) still seals
-  // as many full chunks as are ready.
   function sealChunk() {
     const chunkLines = unsealedLines.slice(0, SEAL_CHUNK_LINES);
     sealedChunks = pushSealedChunk(
@@ -257,7 +215,6 @@
         fedCode = code;
       }
 
-      // Newly committed events (append only tokenizes complete lines).
       const committed = session.events();
       if (committed.length > renderedCommittedCount) {
         const result = extendLines(
@@ -275,7 +232,6 @@
         renderedCommittedCount = committed.length;
       }
 
-      // Staged tail: current line still streaming in, not newline-terminated.
       const { previewLines, cache } = computeStagedTailPreview({
         registry,
         language: sessionLanguageName,
@@ -289,8 +245,7 @@
 
       tailLines = [...unsealedLines, ...previewLines];
 
-      // Always assemble a live event payload (including mid-line preview).
-      // Trailing empty preview keeps a final `\n` when the stream ends a line.
+      // A trailing empty preview keeps a final `\n` when the stream ends a line.
       const completed = completedHtml.toString();
       highlighted =
         completedHtml.lineCount === 0
@@ -369,7 +324,7 @@
       dispatchedWindowStart = vStart;
       dispatchedWindowEnd = vEnd;
       dispatchedWindowLineCount = vLineCount;
-      // Dispatch once the new rows are in the DOM (see HighlightVirtual).
+      // Dispatch once the new rows are in the DOM.
       const detail = { start: vStart, end: vEnd, lineCount: vLineCount };
       tick().then(() => dispatch("windowchange", detail));
     }
@@ -397,9 +352,7 @@
     }
   }
 
-  // Mirrors `scrollToBottom`/the shrink-clamp in `HighlightVirtual`, merged:
-  // while streaming with `autoScroll`, stick to the (growing) bottom; once
-  // the user scrolls away, just keep the scroll position in bounds.
+  // Stick to the growing bottom, or clamp scrollTop if the document shrank.
   async function syncVirtualFromContainer() {
     await tick();
     if (!container) return;
@@ -446,9 +399,7 @@
     void code;
     void language;
     if (virtualize) {
-      // Content/window updates are handled by the virtualize-specific
-      // reactive blocks below; this block only tracks `done` dispatch so
-      // both modes share the same guard/reset semantics.
+      // Rendering is handled by the blocks below; only dispatch `done` here.
       if (mounted && done) {
         if (!doneDispatched) {
           doneDispatched = true;
@@ -471,9 +422,7 @@
     }
   }
 
-  // Rebuilds/updates the virtualized document whenever its content or shape
-  // changes. Deliberately separate from the scroll-driven block below, same
-  // reasoning as `HighlightVirtual`.
+  // Kept separate from the scroll block so scrolling never calls setCode().
   $: if (virtualize && mounted) {
     void code;
     void language;
@@ -485,7 +434,6 @@
     syncVirtualFromContainer();
   }
 
-  // Scroll/resize/overscan/lineHeight-driven window recompute.
   $: if (virtualize && mounted) {
     void overscan;
     void vLineHeight;
@@ -551,10 +499,6 @@
     display: block;
     position: relative;
     overflow: auto;
-    /* Row math assumes one line per fixed-height row, which only holds
-       under `white-space: pre`; $$restProps forwards inline styles to this
-       same element, so a consumer `style="white-space: pre-wrap"` would
-       otherwise silently break scrolling. */
     /* biome-ignore lint/complexity/noImportantStyles: must beat a consumer inline style, not just cascade order */
     white-space: pre !important;
     margin: 0;

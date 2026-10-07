@@ -4,8 +4,7 @@ import type { LanguageType } from "./languages";
 
 export type HighlightStreamProps = HTMLAttributes<HTMLPreElement> & {
   /**
-   * Growing code buffer. Append chunks as they arrive; arbitrary chunk
-   * boundaries (mid-token, mid-line) are handled.
+   * Growing code buffer; chunks may split mid-token or mid-line.
    * @default ""
    */
   code?: string;
@@ -31,20 +30,14 @@ export type HighlightStreamProps = HTMLAttributes<HTMLPreElement> & {
   caret?: boolean;
 
   /**
-   * Keep the container scrolled to the bottom while streaming, unless the
-   * user has scrolled away from the bottom.
+   * Stick to the bottom while streaming, unless the user scrolls away.
    * @default false
    */
   autoScroll?: boolean;
 
   /**
-   * Render only the lines within the scrolled viewport (plus `overscan`)
-   * instead of the whole growing buffer, so a long-running stream costs a
-   * bounded number of DOM nodes instead of one per line. Backed by
-   * `createTokenizedDocument` rather than the sealed-chunk session used
-   * otherwise, so output always reflects the streaming (non-canonicalized)
-   * parse, even once `done` -- the same tradeoff `HighlightVirtual` makes.
-   * `on:highlight` is not dispatched in this mode.
+   * Render only the lines in the viewport (plus `overscan`). Output stays the
+   * streaming parse even once `done`, and `on:highlight` is not dispatched.
    * @default false
    */
   virtualize?: boolean;
@@ -56,15 +49,13 @@ export type HighlightStreamProps = HTMLAttributes<HTMLPreElement> & {
   overscan?: number;
 
   /**
-   * Lines between engine checkpoints when `virtualize` is set (forwarded to
-   * `createTokenizedDocument`).
+   * Lines between engine checkpoints when `virtualize` is set.
    * @default 100
    */
   checkpointInterval?: number;
 
   /**
-   * Announced by a polite, visually-hidden live region once `done` becomes
-   * `true`. Set to `""` to disable the announcement.
+   * Announced by a polite live region once `done`. Set to `""` to disable.
    * @default "Code finished streaming"
    */
   doneText?: string;
@@ -82,7 +73,7 @@ export type HighlightStreamProps = HTMLAttributes<HTMLPreElement> & {
   "--caret-height"?: string;
 
   /**
-   * Gap between output and the caret.
+   * Gap before the caret.
    * @default "1px"
    */
   "--caret-gap"?: string;
@@ -109,15 +100,10 @@ export type HighlightStreamEvents = {
     highlighted: string;
   }>;
 
-  /**
-   * Fires after the final full highlight once `done` is set.
-   */
+  /** Fires after the final full highlight once `done` is set. */
   done: CustomEvent<null>;
 
-  /**
-   * Fires whenever the rendered window moves in `virtualize` mode (mount,
-   * scroll, resize, or new lines arriving). Not dispatched otherwise.
-   */
+  /** Fires whenever the rendered window changes; `virtualize` mode only. */
   windowchange: CustomEvent<{
     /** Index of the first rendered line (inclusive). */
     start: number;

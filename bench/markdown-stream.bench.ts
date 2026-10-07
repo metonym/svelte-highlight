@@ -1,10 +1,4 @@
-/**
- * MarkdownStream end to end: a 50 KB, 10-fence reply streamed in 88 chunks
- * through the real components, mounted on tests/svelte-dom.ts's minimal DOM.
- * Covers the per-chunk work every fence's HighlightStream does (or skips)
- * and what closed fences keep alive. Run with `--alloc` for the retained
- * heap of a finished stream.
- */
+/** MarkdownStream end to end on tests/svelte-dom.ts; run with `--alloc` for retained heap. */
 import path from "node:path";
 import { group, task } from "ostia";
 import javascript from "../src/languages/javascript.js";
@@ -39,8 +33,6 @@ const markdown = Array.from({ length: FENCE_COUNT }, (_, i) => {
 const chunkSize = Math.ceil(markdown.length / CHUNK_COUNT);
 const kept: Mounted[] = [];
 
-/** Streams the whole reply, then `done`, with an event-loop turn per chunk
- * (where `resolveLanguage`'s promise lands). */
 async function streamReply(): Promise<Mounted> {
   const stream = mountComponent(MarkdownStream, {
     resolveLanguage: () => javascript,
@@ -62,15 +54,13 @@ async function streamReply(): Promise<Mounted> {
 group(
   `MarkdownStream: ${Math.round(markdown.length / 1000)} KB, ${FENCE_COUNT} fences, ${CHUNK_COUNT} chunks`,
   () => {
-    // Both return the final HTML, so `bench:ab` checks it's unchanged.
+    // Returns the final HTML so `bench:ab` checks it's unchanged.
     task("stream to done", async () => {
       const stream = await streamReply();
       const html = stream.target.innerHTML;
       stream.destroy();
       return html;
     });
-    // Keeps every finished stream mounted, so `--alloc` reports what one
-    // keeps alive.
     task("stream to done, keep mounted", async () => {
       const stream = await streamReply();
       kept.push(stream);

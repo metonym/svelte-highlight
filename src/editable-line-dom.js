@@ -1,17 +1,12 @@
 /**
- * Line-element DOM helpers for HighlightEditable, kept out of the component
- * so they can be benchmarked and unit-tested against a fake DOM (see
- * line-dom.bench.ts).
- *
- * The editor holds one `<span>` per line, joined by literal "\n" text nodes
- * so caret offset math stays identical to a flat paint.
+ * Line-element DOM helpers for HighlightEditable. The editor holds one
+ * `<span>` per line, joined by literal "\n" text nodes.
  */
 
 /** `NodeFilter.SHOW_TEXT`, inlined so this module loads outside a browser. */
 const SHOW_TEXT = 4;
 
 /**
- * The editor's line elements and what they currently show.
  * @typedef {{
  *   lineEls: HTMLElement[],
  *   lineLengths: number[],
@@ -20,10 +15,9 @@ const SHOW_TEXT = 4;
  */
 
 /**
- * Callbacks for state kept per line outside the view (the css-highlights
- * engine's Highlight ranges): `onReset` after a full rebuild, `onSplice`
- * after lines `[index, index + removed)` were replaced by `inserted` new
- * line elements.
+ * Keeps per-line state outside the view in sync: `onReset` after a full
+ * rebuild, `onSplice` after lines `[index, index + removed)` were replaced by
+ * `inserted` new ones.
  * @typedef {{
  *   onReset: () => void,
  *   onSplice: (index: number, removed: number, inserted: number) => void,
@@ -36,7 +30,6 @@ export function createLineView() {
 }
 
 /**
- * Character offset (in the editor's flat text) where line `index` starts.
  * @param {LineView} view
  * @param {number} index
  */
@@ -48,7 +41,7 @@ export function lineStartOffset(view, index) {
 }
 
 /**
- * `array.splice(index, removed, ...items)`, without spreading a huge `items`
+ * `array.splice(index, removed, ...items)` without spreading a huge `items`
  * (a large paste) into call arguments.
  * @template T
  * @param {T[]} array
@@ -66,17 +59,10 @@ function spliceIn(array, index, removed, items) {
 }
 
 /**
- * Patches `editor` to match `lines`. Only lines whose content actually
- * changed touch the DOM (assigned via `setContent`: innerHTML for the "dom"
- * engine, textContent for "css-highlights"). Returns the index of the
- * single changed line when nothing else shifted (used to scope caret
- * restoration), or null.
- *
- * Lines are matched from both ends, not by index: the common leading and
- * trailing runs keep their elements, and only the middle is rewritten,
- * inserted, or removed. Enter or Backspace across a line break mid-document
- * then writes one line and inserts or removes one, instead of rewriting
- * every line below the edit: see line-dom.bench.ts.
+ * Patches `editor` to match `lines`, touching only changed lines. Lines are
+ * matched from both ends so Enter/Backspace mid-document doesn't rewrite
+ * every line below. Returns the index of the single changed line when
+ * nothing else shifted, or null.
  * @param {HTMLElement} editor
  * @param {LineView} view
  * @param {string[]} lines
@@ -86,10 +72,8 @@ function spliceIn(array, index, removed, items) {
  */
 export function renderLines(editor, view, lines, setContent, hooks) {
   const doc = /** @type {Document} */ (editor.ownerDocument);
-  // Some browsers can place a native selection boundary just outside a
-  // line's <span> (e.g. Firefox collapsing a select-all there); typing at
-  // that point inserts a stray sibling text node our diffing never touches.
-  // Detect the drift by child count and self-heal with a full rebuild.
+  // Typing at a selection boundary outside a line's <span> (e.g. Firefox
+  // after select-all) adds a stray text node: rebuild when the count drifts.
   const expectedChildren =
     view.lineEls.length === 0 ? 0 : view.lineEls.length * 2 - 1;
   if (editor.childNodes.length !== expectedChildren) {
@@ -105,8 +89,7 @@ export function renderLines(editor, view, lines, setContent, hooks) {
   const newLen = lines.length;
   const shared = Math.min(prevLen, newLen);
 
-  // `patchLineHtml` reuses unchanged lines' strings, so most of these
-  // compares end at a pointer check.
+  // Unchanged lines are usually the same string objects: pointer compares.
   let head = 0;
   while (head < shared && renderedLines[head] === lines[head]) head++;
   let tail = 0;
@@ -120,7 +103,6 @@ export function renderLines(editor, view, lines, setContent, hooks) {
   const newEnd = newLen - tail;
   const pairedEnd = Math.min(prevEnd, newEnd);
 
-  // Lines present on both sides of the middle reuse their element.
   let changedIndex = null;
   let changedCount = 0;
   for (let i = head; i < pairedEnd; i++) {
@@ -133,7 +115,6 @@ export function renderLines(editor, view, lines, setContent, hooks) {
   }
 
   if (newEnd > pairedEnd) {
-    // Insert the extra lines before the first trailing line, or append.
     const before = pairedEnd < prevLen ? lineEls[pairedEnd] : null;
     /** @type {HTMLElement[]} */
     const spans = [];
@@ -193,15 +174,9 @@ export function nodeAtOffset(root, offset) {
 }
 
 /**
- * `nodeAtOffset(editor, offset)` for an editor painted by `renderLines`,
- * without walking every text node before the caret's line.
- *
- * Every text node before the separator that precedes line `k` ends at or
- * before that line's start minus one, so for the last line `k` starting at
- * or before `offset`, none of them can match: the walk can start at that
- * separator with the count it would have reached there. The line is found
- * from `lineLengths` (integer adds) instead of the DOM: see
- * line-dom.bench.ts's Enter group.
+ * `nodeAtOffset(editor, offset)` for an editor painted by `renderLines`:
+ * finds the line from `lineLengths`, then walks from the separator before it
+ * instead of from the first text node.
  * @param {HTMLElement} editor
  * @param {LineView} view
  * @param {number} offset

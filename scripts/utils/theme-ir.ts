@@ -1,21 +1,3 @@
-/**
- * Pure classification/derivation helpers for compiling highlight.js theme
- * CSS into `--shl-*` custom property names (see `build-themes.ts`).
- *
- * Selector shapes recognized (anything else is "unsupported" and routed to
- * a theme's `extras`):
- * - `.hljs` — base scope.
- * - `.hljs-<scope>` — single scope.
- * - `.hljs-<a>.<b>[.<c>...]` — compound (no combinator between parts; the
- *   first part must be `hljs-`-prefixed, later parts may or may not be).
- * - `.hljs-<a> .hljs-<b>` — descendant (exactly two levels).
- *
- * The `--shl-*` var-name derivation itself (`varName`, `colorSchemeFor`,
- * ...) lives in `src/theme-vars.js`, shared with the runtime
- * theme-authoring API (`src/theme.js`) — re-exported here so existing
- * importers of this module are unaffected.
- */
-
 import {
   colorSchemeFor,
   SUPPORTED_PROPERTIES,
@@ -24,8 +6,6 @@ import {
 
 export { colorSchemeFor, SUPPORTED_PROPERTIES, varName };
 
-/** `background` is normalized to `background-color` — one property per
- * rule in the IR, regardless of which shorthand/longhand a theme used. */
 export function canonicalizeProperty(prop: string): string {
   const lower = prop.toLowerCase();
   return lower === "background" ? "background-color" : lower;
@@ -44,10 +24,8 @@ const DISALLOWED_CHARS = /[\s>+~:]/;
 const COMPOUND_PART = /^(?:hljs-)?[\w-]+$/;
 
 /**
- * Classify a single (already comma-split) selector. Internal whitespace is
- * normalized first so a descendant combinator expressed as a newline (an
- * artifact of some themes' source formatting) is treated the same as a
- * space.
+ * Shapes: `.hljs` (base), `.hljs-a` (single), `.hljs-a.b[.c]` (compound),
+ * `.hljs-a .hljs-b` (descendant); anything else goes to a theme's extras.
  */
 export function classifySelector(rawSelector: string): SelectorShape {
   const normalized = rawSelector.replace(/\s+/g, " ").trim();
@@ -77,12 +55,7 @@ export function classifySelector(rawSelector: string): SelectorShape {
   return { kind: "unsupported", scopes: [] };
 }
 
-/**
- * The scope a multi-scope selector's variable falls back to when the
- * theme never sets it — the compound's anchor class for compounds, the
- * rightmost (subject) class for descendants. `null` for shapes that don't
- * need a fallback (base/single have nothing more specific to lose to).
- */
+/** Fallback scope for compound (anchor) and descendant (subject) selectors. */
 export function subjectScope(shape: {
   kind: string;
   scopes: string[];
@@ -95,12 +68,7 @@ export function subjectScope(shape: {
 const SIMPLE_COLOR_VALUE =
   /^(#[0-9a-fA-F]{3,8}|rgba?\([^()]*\)|hsla?\([^()]*\)|[a-zA-Z]+)$/;
 
-/**
- * Whether a `background`/`background-color` value is a plain color the var
- * contract can represent. Gradients, images, and multi-token shorthands
- * (position/repeat/image + trailing color) fail this and are routed to
- * extras instead of being torn apart.
- */
+/** Gradients, images and multi-token shorthands go to extras instead. */
 export function isSimpleColorValue(value: string): boolean {
   return SIMPLE_COLOR_VALUE.test(value.trim());
 }

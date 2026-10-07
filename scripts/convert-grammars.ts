@@ -20,22 +20,60 @@ const licenseBanner = (name: string) =>
  */
 `;
 
-/** Drops the default `relevance: 1` from every state; engine.js re-defaults it on load. */
-function stripDefaults(ir: GrammarIR): GrammarIR {
-  for (const state of ir.states) {
-    if (state.relevance === 1) {
-      // biome-ignore lint/performance/noDelete: one-time build-step compaction, not a hot path
-      delete (state as { relevance?: number }).relevance;
+/**
+ * Drops default fields and replaces keyword maps with indexes into deduped,
+ * word-grouped `keywordTables` (expanded back by engine.js `compileProgram`).
+ */
+function compactIR({
+  caseInsensitive,
+  unicode,
+  disableAutodetect,
+  states,
+  ...ir
+}: GrammarIR): GrammarIR {
+  const keywordTables: Array<Array<[string, number, string]>> = [];
+  const tableIndex = new Map<string, number>();
+  const tableFor = (keywords: Record<string, [string, number]>) => {
+    // Consecutive runs, not full groups, so expansion keeps key order.
+    const groups: Array<[string, number, string[]]> = [];
+    for (const [word, [scope, relevance]] of Object.entries(keywords)) {
+      if (word.includes(" ")) throw new Error(`keyword "${word}" has a space`);
+      const last = groups.at(-1);
+      if (last?.[0] === scope && last[1] === relevance) last[2].push(word);
+      else groups.push([scope, relevance, [word]]);
     }
-  }
-  return ir;
+    const table = groups.map(
+      ([scope, relevance, words]): [string, number, string] => [
+        scope,
+        relevance,
+        words.join(" "),
+      ],
+    );
+    const key = JSON.stringify(table);
+    let index = tableIndex.get(key);
+    if (index === undefined) {
+      index = keywordTables.push(table) - 1;
+      tableIndex.set(key, index);
+    }
+    return index;
+  };
+  return {
+    ...ir,
+    ...(caseInsensitive && { caseInsensitive }),
+    ...(unicode && { unicode }),
+    ...(disableAutodetect && { disableAutodetect }),
+    states: states.map(({ relevance, rules, keywords, ...state }) => ({
+      ...state,
+      ...(relevance !== 1 && { relevance }),
+      ...(rules?.length && { rules }),
+      ...(keywords !== undefined && {
+        keywords: typeof keywords === "number" ? keywords : tableFor(keywords),
+      }),
+    })),
+    ...(keywordTables.length > 0 && { keywordTables }),
+  };
 }
 
-/**
- * Fixed `subLanguage` embed targets for this grammar. Single name (astro ->
- * typescript) or a fixed candidate list (html -> css for `<style>` tags).
- * Empty `subLanguage: []` (markdown fenced blocks) is omitted: no fixed name.
- */
 function collectSubLanguageDependencies(ir: GrammarIR): string[] {
   const names = new Set<string>();
   for (const state of ir.states) {
@@ -51,15 +89,11 @@ function collectSubLanguageDependencies(ir: GrammarIR): string[] {
   return [...names];
 }
 
-/**
- * Converts every shipped grammar to plain-JSON IR, overwriting the `register`
- * field of each `src/languages/<name>.js` module from buildLanguages().
- */
+/** Rewrites each `src/languages/<name>.js` from buildLanguages() as JSON IR. */
 export async function convertGrammars() {
   console.time("convert grammars");
   const entries = buildLanguageEntries();
 
-  // Fresh import so we read files buildLanguages() just wrote.
   const index = (await import(
     "../src/languages/index.js"
   )) as unknown as Record<string, LanguageModule>;
@@ -70,28 +104,20 @@ export async function convertGrammars() {
     return mod;
   }
 
-  // One hljs instance so sublanguage refs resolve in any conversion order.
-  // Patched hljs built-ins (scripts/hljs-patches/) go last: several custom
-  // grammars re-register the stock built-in they embed (e.g. astro registers
-  // stock typescript) as a side effect of their own registration, and the
-  // last registration for a name wins.
+  // Patched built-ins register last: custom grammars re-register the stock
+  // built-ins they embed (astro -> typescript), and the last one wins.
   const hljs = hljsCore.newInstance();
-  const patchedEntries = entries.filter((entry) => entry.patchPath);
-  for (const entry of entries) {
-    if (entry.patchPath) continue;
-    const mod = getModule(entry);
-    hljs.registerLanguage(mod.name, mod.register);
-  }
-  for (const entry of patchedEntries) {
+  for (const entry of [
+    ...entries.filter((entry) => !entry.patchPath),
+    ...entries.filter((entry) => entry.patchPath),
+  ]) {
     const mod = getModule(entry);
     hljs.registerLanguage(mod.name, mod.register);
   }
 
   const entryByName = new Map(entries.map((entry) => [entry.name, entry]));
 
-  // Raw source text of each hljs-derived grammar's own file, for recovering
-  // data (see convert-language.js's `extractBeginWordSet`) that a callback's
-  // own `toString()` can't expose because it lives in an outer module scope.
+  // Module source recovers outer-scope data a callback's `toString()` can't.
   const hljsSources = new Map<string, string>();
   for (const entry of entries) {
     if (entry.kind !== "hljs") continue;
@@ -102,8 +128,7 @@ export async function convertGrammars() {
       );
       hljsSources.set(entry.name, readFileSync(path, "utf8"));
     } catch {
-      // Best-effort: convertLanguage falls back to a warning if an
-      // extraction that needed this source is unavailable.
+      // Best-effort: convertLanguage warns if it needed the source.
     }
   }
 
@@ -127,7 +152,7 @@ export async function convertGrammars() {
         failed.push([entry.name, (error as Error).message]);
         return null;
       }
-      stripDefaults(ir);
+      ir = compactIR(ir);
 
       if (warnings.length === 0) clean++;
       else warningsByLanguage.push([entry.name, warnings]);
@@ -140,9 +165,7 @@ export async function convertGrammars() {
       let irJson = JSON.stringify(moduleExport);
       minifiedBytes += irJson.length;
 
-      // Custom grammars used to self-register sublanguage deps via hljs side
-      // effects. Import the same closure here for registerAll. hljs built-ins
-      // are unchanged: cross-built-in embedding was never wired up.
+      // Custom grammars import their sublanguage deps for registerAll.
       let importLines = "";
       if (entry.kind === "custom") {
         const depEntries = collectSubLanguageDependencies(ir)
@@ -163,9 +186,8 @@ export async function convertGrammars() {
       }
 
       const banner = entry.kind === "hljs" ? licenseBanner(entry.name) : "";
-      // Cast, not contextual type: keyword tables can name keys "constructor"
-      // or "toString" (kotlin, nix), which conflict with Object.prototype
-      // under contextual typing.
+      // Cast, not contextual type: keys like "constructor" (kotlin, nix)
+      // conflict with Object.prototype under contextual typing.
       const typeName = `import("./index.d.ts").LanguageType<"${entry.name}">`;
       const content = `${importLines}${banner}export const ${entry.moduleName} = /** @type {${typeName}} */ (${irJson});
 export default ${entry.moduleName};

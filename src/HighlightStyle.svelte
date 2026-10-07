@@ -3,8 +3,7 @@
 
   const isBrowser = typeof document !== "undefined";
 
-  // Shared across instances: identical styles render one `<style>` tag,
-  // owned by the oldest still-mounted instance (see style-registry.js).
+  // Identical styles across instances render one `<style>` tag.
   const styleRegistry = createStyleRegistry();
 </script>
 
@@ -18,57 +17,40 @@
   } from "./theme-style.js";
 
   /**
-   * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
-   * from `svelte-highlight/themes/<theme>` — the latter is applied by
-   * inlining `--shl-*` vars on the wrapper element instead of injecting a
-   * scoped `<style>` tag.
-   * @example
-   * import a11yDark from "svelte-highlight/styles/a11y-dark";
-   * @example
-   * import atomOneDark from "svelte-highlight/themes/atom-one-dark";
+   * Theme CSS (`svelte-highlight/styles/<theme>`) or a `ThemePalette`
+   * (`svelte-highlight/themes/<theme>`, applied as inline vars).
    * @type {string | import("./theme.d.ts").ThemePalette}
    */
   export let theme = undefined;
 
   /**
-   * Light theme CSS/palette. With `dark`, overrides `theme`. Must be the
-   * same type (string or `ThemePalette`) as `dark`.
+   * Light theme; with `dark`, overrides `theme`. Same type as `dark`.
    * @type {string | import("./theme.d.ts").ThemePalette | undefined}
    */
   export let light = undefined;
 
   /**
-   * Dark theme CSS/palette; pair with `light`.
+   * Dark theme; pair with `light`.
    * @type {string | import("./theme.d.ts").ThemePalette | undefined}
    */
   export let dark = undefined;
 
   /**
-   * Theme switch: `"auto"` | `"light"` | `"dark"` | CSS selector for dark.
-   * On the `ThemePalette` path this controls the inlined `color-scheme`
-   * (`"auto"` -> `light dark`); any other string is treated as the legacy
-   * app-controlled mode, and no `color-scheme` is inlined — set it on your
-   * own selector instead (e.g. `[data-theme="dark"] { color-scheme: dark }`).
+   * `"auto"` | `"light"` | `"dark"` | a CSS selector that gates dark.
    * @type {"auto" | "light" | "dark" | string}
    */
   export let mode = "auto";
 
-  /** Scope class for prefixed selectors. Inert on the `ThemePalette` path
-   * (kept for back-compat / slot access), since there's no scoped
-   * `<style>` tag to match against. */
+  /** Wrapper class the scoped selectors target. */
   export let scopeClass = undefined;
 
   /**
-   * CSP nonce attached to the injected `<style>` tag, for a `style-src`
-   * policy that requires one. Unneeded (and has no effect) on a single
-   * `ThemePalette` (`theme`, no `light`/`dark` pair): that path only ever
-   * sets inline vars on the wrapper, never injects a `<style>` tag.
+   * CSP nonce for the injected `<style>` tag.
    * @type {string | undefined}
    */
   export let nonce = undefined;
 
-  // Captured once: a consumer-supplied scopeClass is honored for the
-  // lifetime of the instance instead of being overwritten by the hash below.
+  // Captured once so a consumer-supplied class is never overwritten.
   const hasOwnScopeClass = scopeClass !== undefined && scopeClass !== "";
 
   $: usingPair = light !== undefined && dark !== undefined;
@@ -87,11 +69,7 @@
         : scopeClassFor(theme ?? `${light}${dark}`);
   }
 
-  // The <svelte:head>-injected <style> content. Empty for a single
-  // ThemePalette (inline vars only, no light-dark() to fall back from). For
-  // an object pair it's a light-dark()-gated @supports override, keyed into
-  // the same ownership registry as the legacy string path so identical
-  // pairs dedupe their tag too.
+  // <svelte:head> content; empty for a single ThemePalette (inline vars only).
   $: style = hasTheme
     ? usingObjectPair
       ? dualPaletteSupportsStyle(scopeClass, light, dark, mode, nonce)
@@ -102,10 +80,8 @@
           : scopeStyle(theme, scopeClass, nonce)
     : "";
 
-  // Inline vars applied to the wrapper element; undefined (no `style`
-  // attribute) on the legacy scoped-<style> path. For an object pair this
-  // is the plain light-only baseline — light-dark() support upgrades it via
-  // the `style` tag above.
+  // For an object pair: light-only baseline, upgraded by `style` where
+  // light-dark() is supported.
   $: inlineStyle = usingObjectPair
     ? lightFallbackStyle(light, dark)
     : usingObjectTheme

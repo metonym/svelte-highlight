@@ -1,11 +1,4 @@
-/**
- * Append-only buffer for completed (line-finalized) stream HTML.
- *
- * Appending newly completed line HTML is O(n) over the whole stream. Callers
- * still assemble `highlighted = completed + preview` each repaint so the
- * `highlight` event stays live mid-line; that assembly copies the completed
- * string but does not rebuild it from sealed DOM chunks.
- */
+/** Append-only buffer of completed stream lines' HTML, joined by "\n". */
 
 /**
  * @returns {{
@@ -33,8 +26,7 @@ export function createCompletedHtmlBuffer() {
       lineCount = 0;
     },
     /**
-     * Keeps the first `lines` lines. Walks back from the end, so the cost
-     * scales with the lines dropped, not the lines kept.
+     * Keeps the first `lines` lines; cost scales with the lines dropped.
      * @param {number} lines
      */
     truncate(lines) {
@@ -43,8 +35,7 @@ export function createCompletedHtmlBuffer() {
       for (let n = lineCount; n > lines; n--) {
         end = html.lastIndexOf("\n", end - 1);
       }
-      // With `lines === 0`, the walk passes the first line, which has no
-      // "\n" before it, and `end` is -1.
+      // `end` is -1 when `lines === 0` (the first line has no leading "\n").
       html = lines === 0 ? "" : html.slice(0, end);
       lineCount = lines;
     },

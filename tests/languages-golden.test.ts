@@ -18,16 +18,15 @@ const SAMPLE_PREFIXES: Record<string, string> = {
   "erlang-repl": "1> ",
 };
 
-// The IR's root state (states[0], the top-level language definition - see
-// convertLanguage's initial `visit(language)` call) stores the grammar's own
-// keyword table pre-parsed (word -> [kind, relevance]), the same table
-// `hljs.getLanguage(name).keywords` exposed before. Deeper states can carry
-// their own highly contextual keyword tables (e.g. hljs's html grammar
-// matches "style"/"script" as tag names only inside an opening tag); those
-// aren't representative standalone samples, so only the root table is used.
-function extractKeywords(language: LanguageType<string>): string[] {
-  const rootKeywords = language.register.states[0]?.keywords;
-  return rootKeywords ? Object.keys(rootKeywords) : [];
+// Only the root state's keyword table is a representative sample; deeper
+// states carry contextual tables (e.g. html's tag names inside a tag).
+function extractKeywords({ register }: LanguageType<string>): string[] {
+  const keywords = register.states[0]?.keywords;
+  if (keywords === undefined) return [];
+  if (typeof keywords === "object") return Object.keys(keywords);
+  return (register.keywordTables?.[keywords] ?? []).flatMap(([, , words]) =>
+    words.split(" "),
+  );
 }
 
 // The grammar's own compiled keyword table doubles as a canonical sample:

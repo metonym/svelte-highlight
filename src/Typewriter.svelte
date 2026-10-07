@@ -1,20 +1,11 @@
 <script>
-  /**
-   * Highlighted HTML from `Highlight`'s `highlighted` slot.
-   * @type {string}
-   */
+  /** @type {string} */
   export let highlighted = "";
 
-  /**
-   * Milliseconds between characters.
-   * @type {number}
-   */
+  /** @type {number} */
   export let speed = 30;
 
-  /**
-   * Pause with `false`; resume picks up where it left off.
-   * @type {boolean}
-   */
+  /** @type {boolean} */
   export let play = true;
 
   import { createEventDispatcher, onMount } from "svelte";
@@ -26,29 +17,15 @@
     tokenizeTypewriter as tokenize,
   } from "./typewriter-units.js";
 
-  /**
-   * Reveal-progress curve: maps elapsed-time fraction (0-1) to
-   * revealed-fraction (0-1). Total typing duration is always
-   * `speed * <visible character count>` regardless of curve -- only the
-   * pacing within that duration changes. Import a named curve
-   * (`easeOutQuad`, `easeInOutCubic`, ...) or pass your own function.
-   * @type {(t: number) => number}
-   */
+  /** @type {(t: number) => number} */
   export let easing = linear;
 
-  /**
-   * Reveal granularity. `"char"` reveals one character at a time; `"word"`
-   * reveals a full word per step -- e.g. for a ChatGPT-style token-by-token
-   * reveal. Total duration and easing are unaffected -- only which
-   * character counts `revealed` may land on.
-   * @type {"char" | "word"}
-   */
+  /** @type {"char" | "word"} */
   export let granularity = "char";
 
   const dispatch = createEventDispatcher();
 
-  // Above this many visible units, per-unit spans (one element per char)
-  // stop paying for themselves; fall back to the old whole-string rebuild.
+  // Above this many units, per-char spans cost more than whole-string rebuilds.
   const UNIT_THRESHOLD = 20000;
 
   const EMPTY_PARTS = { head: "", tail: "" };
@@ -59,54 +36,38 @@
   /** @type {boolean} */
   let doneFired = false;
 
-  /**
-   * Number of visible characters currently revealed. Read-only in practice:
-   * overwritten every frame by the tick loop, but exported so `bind:revealed`
-   * can observe it (e.g. for a progress bar).
-   * @type {number}
-   */
+  /** Exported only for `bind:revealed`; overwritten every frame. @type {number} */
   export let revealed = 0;
 
-  /**
-   * Total number of visible characters in `highlighted`. Read-only in
-   * practice: overwritten every reactive flush from `units`, but exported so
-   * `bind:total` can observe it (e.g. for a progress bar).
-   * @type {number}
-   */
+  /** Exported only for `bind:total`; derived from `units`. @type {number} */
   export let total = 0;
 
   /** @type {number | undefined} */
   let rafId;
 
-  /** Active ms elapsed for the current run (excludes paused time). @type {number} */
+  /** Excludes paused time. @type {number} */
   let elapsedMs = 0;
 
-  /** `performance.now()` at the last tick, or `undefined` right after a (re)start. @type {number | undefined} */
+  /** `undefined` right after a (re)start. @type {number | undefined} */
   let frameTime;
 
   /** @type {string | undefined} */
   let prevHighlighted;
 
-  /** Container for the per-unit spans (unit-reveal path only). @type {HTMLElement} */
+  /** @type {HTMLElement} */
   let contentEl;
 
   /** @type {HTMLElement[]} */
   let unitEls = [];
 
-  /** The `units` array currently painted into `contentEl`. */
   let paintedUnits;
 
-  /** How many leading units already had `typewriter-hidden` removed. */
   let revealedInDom = 0;
 
-  /** The unit currently marked with the caret, if any. @type {HTMLElement | undefined} */
+  /** @type {HTMLElement | undefined} */
   let caretMark;
 
-  /**
-   * Bring `contentEl` in sync with `units`/`revealed` in O(1) amortized work:
-   * a fresh `units` value triggers one full (re)paint; otherwise only the
-   * units newly revealed since the last call are touched.
-   */
+  /** Full repaint only when `units` changes; otherwise reveals new units only. */
   function syncUnitDom() {
     if (!contentEl) return;
 
@@ -116,11 +77,8 @@
       paintedUnits = units;
       revealedInDom = 0;
       caretMark = undefined;
-      // Resolve `currentColor` to a literal value now, while `contentEl`
-      // itself carries the theme's base foreground (nothing has recolored
-      // it yet). Stored as a custom property, it stays correct even once
-      // the caret mark lands inside a colored hljs token span, where a live
-      // `currentColor` would pick up that token's color instead.
+      // Resolve to a literal so the caret inside a colored token span keeps
+      // the base foreground (a live `currentColor` would inherit the token's).
       contentEl.style.setProperty(
         "--typewriter-caret-fg",
         getComputedStyle(contentEl).color,
@@ -132,7 +90,6 @@
       revealedInDom++;
     }
 
-    // Skip the class churn on frames where `revealed` didn't advance.
     const next = revealed < total ? unitEls[revealed] : undefined;
     if (next !== caretMark) {
       caretMark?.classList.remove("typewriter-caret");
@@ -142,7 +99,7 @@
   }
 
   /**
-   * Largest value in sorted `boundaries` that is `<= target`, or `0` if none.
+   * Largest value in sorted `boundaries` that is `<= target`, or `0`.
    * @param {number} target
    * @param {number[]} boundaries
    * @returns {number}
@@ -177,13 +134,7 @@
   }
 
   /**
-   * One animation frame: advance `elapsedMs` by the real time since the last
-   * frame (zero on the first frame after a start/resume, so pausing never
-   * counts the paused gap), then derive `revealed` from `easing` applied to
-   * the elapsed fraction of the total duration. Total duration is always
-   * `speed * total`, so only the pacing within it -- not its length --
-   * depends on `easing`. Clamped to `[0, total]` since a custom `easing` may
-   * overshoot outside `[0, 1]` (e.g. a "back"/"elastic" curve).
+   * Clamped to `[0, total]` since a custom `easing` may overshoot `[0, 1]`.
    * @param {number} now
    */
   function tick(now) {
@@ -216,7 +167,6 @@
     rafId = requestAnimationFrame(tick);
   }
 
-  /** Start/stop/retime the typing loop. */
   function sync() {
     stopLoop();
     if (!mounted) return;
@@ -231,9 +181,6 @@
   }
 
   $: units = tokenize(highlighted);
-  // `splitter` must be rebuilt whenever `units` does, from the same
-  // `highlighted` string `units` was tokenized from -- both are recomputed
-  // together in the same reactive flush whenever `highlighted` changes.
   $: splitter = createTypewriterSplitter(units, highlighted);
   $: total = units.reduce((sum, unit) => sum + unit.visible, 0);
   $: wordBoundaries =
@@ -241,7 +188,7 @@
   $: bigInput = total > UNIT_THRESHOLD;
   $: useUnitReveal = mounted && !bigInput;
 
-  // Restart when `highlighted` changes.
+  // Restart when `highlighted` changes; `void useUnitReveal` orders this after it.
   $: if (highlighted !== prevHighlighted) {
     prevHighlighted = highlighted;
     doneFired = false;
@@ -251,13 +198,12 @@
     sync();
   }
 
-  // Re-sync on play/speed/easing/mount. Skip `total` (handled above).
   $: {
     void [play, speed, easing, mounted, useUnitReveal];
     sync();
   }
 
-  // SSR / slow-path: full content up front, splitter only when actually needed.
+  // SSR: full content up front.
   $: parts = useUnitReveal
     ? EMPTY_PARTS
     : mounted
@@ -299,21 +245,12 @@
     animation: typewriter-blink var(--caret-blink, 1s) step-end infinite;
   }
 
-  /* `.typewriter-unit`/`.typewriter-hidden` only ever exist inside the
-       `{@html}`-free, JS-painted `contentEl`, so they're invisible to Svelte's
-       static analysis and must stay unscoped. */
+  /* JS-painted into `contentEl`, so must stay unscoped. */
   :global(.typewriter-unit.typewriter-hidden) {
     visibility: hidden;
   }
 
-  /* The caret rides the next-to-reveal (still hidden) unit's ::before, so it
-       never requires moving a real DOM node -- one class add/remove per tick.
-       That unit can land inside a still-open hljs token span (e.g. mid-
-       keyword), where `currentColor` would resolve to that token's color
-       instead of the theme's base foreground. `--typewriter-caret-fg` is set
-       on `contentEl` as a literal resolved color (not the `currentColor`
-       keyword) in `syncUnitDom`, so it survives that nesting unaffected by
-       descendant `color` overrides. */
+  /* Caret rides the next hidden unit's ::before, so no DOM node moves. */
   :global(.typewriter-unit.typewriter-caret)::before {
     content: "";
     visibility: visible;

@@ -2,7 +2,6 @@ import { version as hljsVersion } from "highlight.js/package.json" with {
   type: "json",
 };
 
-/** Creates header metadata for supported languages/styles */
 export const createMarkdown = (
   type: "Languages" | "Styles" | "Themes",
   len: number,

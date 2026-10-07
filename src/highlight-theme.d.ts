@@ -1,10 +1,8 @@
 import type { ThemePalette } from "./theme.d.ts";
 
 /**
- * Convert a theme's `.hljs-<scope>` color/background-color rules into
- * `::highlight(hljs-<scope>)` rules. Font-style, font-weight, and any
- * property other than color/background-color are dropped (the API's
- * cross-browser envelope), as are compound and descendant selectors.
+ * Convert a theme's `.hljs-<scope>` rules into `::highlight(hljs-<scope>)`
+ * rules. Only color/background-color on single-class selectors are kept.
  */
 export function highlightRules(theme: string): string;
 

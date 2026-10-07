@@ -2,7 +2,6 @@ const HIGH_SURROGATE_MIN = 0xd800;
 const HIGH_SURROGATE_MAX = 0xdbff;
 const LOW_SURROGATE_MIN = 0xdc00;
 const LOW_SURROGATE_MAX = 0xdfff;
-// Chunk sizes for galloping over a shared prefix/suffix (see commonPrefix).
 const GALLOP_MAX = 4096;
 const GALLOP_MIN = 16;
 
@@ -17,23 +16,16 @@ function isLowSurrogate(code) {
 }
 
 /**
- * Length of the shared prefix of `a` and `b`, capped at `max`.
- *
- * The first GALLOP_MIN characters are compared one at a time, so inputs
- * that differ early never pay for a slice. Past that, it gallops in native
- * string compares, from GALLOP_MAX-character chunks down to GALLOP_MIN,
- * instead of one JS iteration per character: the prefix is the whole
- * document on a pure append, the common case while typing. A larger step
- * fails at most once before shrinking, so each level after the first costs
- * O(step). text-diff.bench.ts: ~25x faster on a 50k-character append,
- * ~5x on a 1k one.
+ * Length of the shared prefix, capped at `max`. After GALLOP_MIN single-char
+ * compares (so early differences never slice), gallops in native string
+ * compares with shrinking chunks: on a pure append the prefix is the whole
+ * document.
  * @param {string} a
  * @param {string} b
  * @param {number} max
  */
 function commonPrefix(a, b, max) {
-  // charCodeAt (not bracket indexing), so no 1-character string is
-  // allocated per position compared.
+  // charCodeAt avoids allocating a 1-character string per compare.
   let n = 0;
   while (n < GALLOP_MIN && n < max && a.charCodeAt(n) === b.charCodeAt(n)) n++;
   if (n < GALLOP_MIN) return n;
@@ -47,8 +39,6 @@ function commonPrefix(a, b, max) {
 }
 
 /**
- * Length of the shared suffix of `a` and `b`, capped at `max`. Mirrors
- * `commonPrefix`.
  * @param {string} a
  * @param {string} b
  * @param {number} max
@@ -78,9 +68,7 @@ function commonSuffix(a, b, max) {
 }
 
 /**
- * Diffs two strings down to a common-prefix/suffix trim. Trims on Unicode
- * code points (never splitting a surrogate pair between the shared prefix
- * or suffix and the changed middle).
+ * Common-prefix/suffix trim that never splits a surrogate pair.
  * @param {string} before
  * @param {string} after
  * @returns {{ start: number; removed: string; inserted: string }}

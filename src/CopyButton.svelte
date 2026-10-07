@@ -2,17 +2,10 @@
   /** @type {string} */
   export let code;
 
-  /**
-   * Override copy behavior. Defaults to `navigator.clipboard.writeText`.
-   * @type {(code: string) => void | Promise<void>}
-   */
+  /** @type {(code: string) => void | Promise<void>} */
   export let copy = (code) => navigator.clipboard.writeText(code);
 
-  /**
-   * Transform `code` before it is passed to `copy`. Defaults to identity.
-   * The transformed string is what `on:copy` reports in `detail.code`.
-   * @type {(code: string) => string}
-   */
+  /** @type {(code: string) => string} */
   export let transform = (code) => code;
 
   /** @type {number} */
@@ -38,7 +31,6 @@
   let timeoutId;
 
   async function handleClick() {
-    // Ignore clicks while copying or showing "Copied".
     if (copying || copied) return;
 
     try {

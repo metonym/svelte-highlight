@@ -2,27 +2,19 @@ import type { ScopeEvent } from "./engine.d.ts";
 
 export type EventTransform = (events: ScopeEvent[]) => ScopeEvent[];
 
-/**
- * Runs `events` through each of `fns` in order, threading each transform's
- * output into the next. `transformEvents(events, [])` is a no-op.
- */
+/** Run `events` through each of `fns` in order. */
 export function transformEvents(
   events: ScopeEvent[],
   fns: EventTransform[],
 ): ScopeEvent[];
 
 /**
- * Wraps every match of `pattern` in its own `OPEN`/`CLOSE` pair of `scope`
- * (default `"mark"`). Only rewrites the interior of individual `TEXT`
- * leaves, so it can't unbalance existing `OPEN`/`CLOSE` nesting. Throws if
- * `pattern` doesn't have the `g` flag.
+ * Wrap every match of `pattern` (within single `TEXT` events) in `scope`
+ * (default `"mark"`). Throws if `pattern` lacks the `g` flag.
  */
 export function markPattern(pattern: RegExp, scope?: string): EventTransform;
 
-/**
- * Marks tabs and/or trailing whitespace. Composed entirely from
- * `markPattern` via `transformEvents` - no new matching logic.
- */
+/** Mark tabs and/or trailing whitespace. */
 export function markWhitespace(options?: {
   tabs?: boolean;
   trailingSpace?: boolean;
@@ -31,13 +23,8 @@ export function markWhitespace(options?: {
 }): EventTransform;
 
 /**
- * Wraps each 1-indexed line named in `lines` in an `OPEN`/`CLOSE` pair of
- * its literal scope (`"mark" | "ins" | "del"`, matching `ParsedMeta.lines`
- * in `fence.d.ts`, so `renderHtml` needs no changes to render it). A scope
- * already open when the line starts, or still open past its end, is
- * resumed inside the wrapper - the same "resume" trick `extendLines` uses
- * for per-line HTML, applied here to the raw event stream. Lines absent
- * from `lines` pass through unwrapped; `markLines({})` is a no-op.
+ * Wrap each 1-indexed line in `lines` in its scope (`"mark" | "ins" |
+ * "del"`). Scopes spanning the line boundary are resumed inside the wrapper.
  */
 export function markLines(
   lines: Record<number, "mark" | "ins" | "del">,

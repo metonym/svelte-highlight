@@ -1,10 +1,4 @@
-/**
- * Reveal-progress curves for `Typewriter`'s `easing` prop: each maps an
- * elapsed-time fraction (0 to 1) to a revealed-fraction (0 to 1). Total
- * typing duration is always `speed * <visible character count>` regardless
- * of which curve is used -- only the pacing within that duration changes.
- * Formulas from easings.net.
- */
+// `Typewriter` easing curves (formulas from easings.net).
 
 /** @param {number} t @returns {number} */
 export function linear(t) {

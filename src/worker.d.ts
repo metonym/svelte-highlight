@@ -20,6 +20,10 @@ export interface ServeHighlighterOptions {
   loadLanguage?: (name: string) => Promise<LanguageType<string>>;
 }
 
+/**
+ * Answers `createWorkerHighlighter` requests on `scope` (default: `self`),
+ * loading grammars on demand and resolving aliases like `svelte-highlight/fence`.
+ */
 export declare function serveHighlighter(
   scope?: PostMessageTarget,
   options?: ServeHighlighterOptions,
@@ -40,6 +44,10 @@ export interface WorkerHighlighter {
   terminate(): void;
 }
 
+/**
+ * Client for a `serveHighlighter` worker. Without `worker`, runs in-process
+ * against the shared `svelte-highlight/registry` (SSR/tests fallback).
+ */
 export declare function createWorkerHighlighter(
   worker?: PostMessageTarget,
 ): WorkerHighlighter;

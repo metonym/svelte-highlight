@@ -3,9 +3,7 @@ import type { HTMLAttributes } from "svelte/elements";
 import type { LanguageType } from "./languages";
 
 export type HighlightVirtualProps = HTMLAttributes<HTMLPreElement> & {
-  /**
-   * Code to render.
-   */
+  /** Code to render. */
   code: any;
 
   /**
@@ -37,9 +35,7 @@ export type HighlightVirtualProps = HTMLAttributes<HTMLPreElement> & {
 };
 
 export type HighlightVirtualEvents = {
-  /**
-   * Fired whenever the rendered window changes.
-   */
+  /** Fired whenever the rendered window changes. */
   windowchange: CustomEvent<{ start: number; end: number; lineCount: number }>;
 
   /**
@@ -56,8 +52,7 @@ export default class HighlightVirtual extends SvelteComponentTyped<
 > {
   /**
    * Scroll a given line into the rendered window, without animation.
-   * `align` places the line at the viewport's top edge (default) or
-   * middle.
+   * `align` places it at the viewport's top (default) or middle.
    */
   scrollToLine(line: number, options?: { align?: "start" | "center" }): void;
 }

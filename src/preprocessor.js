@@ -3,8 +3,7 @@ import { pathToFileURL } from "node:url";
 import { parse } from "svelte/compiler";
 import { ensureRegistered, registry } from "./registry.js";
 
-// Bare specifiers resolve via this package's own subpath exports (Node self-reference).
-// Relative paths are only for this repo's own internal dev/testing.
+// Relative paths are only for this repo's own dev/testing.
 const HIGHLIGHT_SOURCE_RE = /^svelte-highlight(\/.*\.svelte)?$/;
 const HIGHLIGHT_RELATIVE_RE = /\/Highlight\.svelte$/;
 const LANGUAGE_SOURCE_RE = /^svelte-highlight\/languages\//;
@@ -39,9 +38,6 @@ function collectDefaultImports(ast) {
 }
 
 /**
- * Recursively collect every Component/RegularElement in the fragment tree,
- * including those nested inside control-flow blocks.
- *
  * @param {import("svelte/compiler").AST.Fragment | null | undefined} fragment
  * @param {import("svelte/compiler").AST.ElementLike[]} out
  */
@@ -104,8 +100,7 @@ function getStaticStringExpression(expression) {
 }
 
 /**
- * The attribute's sole value node; `null` for boolean attributes and for
- * values mixing several parts (`class="a {b}"`).
+ * `null` for boolean attributes and multi-part values (`class="a {b}"`).
  * @param {import("svelte/compiler").AST.Attribute} attribute
  */
 function getSingleAttributeValue(attribute) {
@@ -140,8 +135,7 @@ function getIdentifierAttribute(attribute) {
 }
 
 /**
- * `null` unless the attribute is a bare flag (`langtag`) or a static
- * boolean literal (`langtag={true}`/`langtag={false}`).
+ * `null` unless a bare flag or a `{true}`/`{false}` literal.
  * @param {import("svelte/compiler").AST.Attribute} attribute
  */
 function getStaticBooleanAttribute(attribute) {
@@ -169,10 +163,8 @@ function matchHighlightElement(element, imports) {
   /** @type {Map<string, import("svelte/compiler").AST.Attribute>} */
   const attrs = new Map();
   for (const attribute of element.attributes) {
-    // Reject spread attributes and any directive (bind:, on:, use:, class:, etc.) -
-    // none of these can be safely replicated in static HTML.
+    // Spreads and directives can't be replicated in static HTML.
     if (attribute.type !== "Attribute") return null;
-    // Reject any attribute outside the supported set.
     if (
       attribute.name !== "language" &&
       attribute.name !== "code" &&
@@ -196,8 +188,6 @@ function matchHighlightElement(element, imports) {
   const languageSource = imports.get(languageLocalName);
   if (!languageSource || !isLanguageImportSource(languageSource)) return null;
 
-  // Bare `langtag` or a static boolean literal only - anything else (a
-  // variable, an expression) disqualifies the usage, same as `code`/`language`.
   const langtagAttr = attrs.get("langtag");
   let langtag = false;
   if (langtagAttr) {
@@ -238,21 +228,16 @@ function escapeText(value) {
 }
 
 /**
+ * 1-indexed line of `index` in `content`.
  * @param {string} content
  * @param {number} index
  */
-function locate(content, index) {
+function lineAt(content, index) {
   let line = 1;
-  let lastNewline = -1;
-
   for (let i = 0; i < index; i += 1) {
-    if (content[i] === "\n") {
-      line += 1;
-      lastNewline = i;
-    }
+    if (content[i] === "\n") line += 1;
   }
-
-  return { line, column: index - lastNewline };
+  return line;
 }
 
 /**
@@ -269,19 +254,14 @@ function defaultWarn(message, details) {
 }
 
 /**
- * Escape literal `{`/`}` so Svelte's compiler (which re-parses the preprocessed markup) treats
- * them as text instead of the start/end of a template expression. Needed because the highlighted
- * source can legitimately contain braces (CSS rules, JS/TS blocks and objects, JSON, etc.).
- *
+ * Svelte re-parses preprocessed markup, so literal braces must be escaped.
  * @param {string} html
  */
 function escapeSvelteBraces(html) {
   return html.replace(/[{}]/g, (char) => (char === "{" ? "{'{'}" : "{'}'}"));
 }
 
-// The same declarations `.langtag::after` uses (src/langtag.css), each backed by
-// the matching `--langtag-*` custom property, so a themed static usage needs no
-// stylesheet - see `matchHighlightElement`'s `langtag` handling.
+// Inline copy of `.langtag::after` (src/langtag.css), so static usage needs no stylesheet.
 const LANGTAG_BADGE_STYLE =
   "position:absolute;top:var(--langtag-top, 0);right:var(--langtag-right, 0);" +
   "display:flex;align-items:center;justify-content:center;" +
@@ -349,12 +329,8 @@ function positionAt(lineStarts, index) {
 }
 
 /**
- * Splices non-overlapping replacements into `content` and produces a matching
- * (source-map v3) sourcemap. Every edit here replaces a whole element with a
- * self-contained HTML string, so there's nothing finer-grained to map inside
- * a replacement - one segment per edit boundary is as accurate as mapping
- * every character, and far cheaper to produce.
- *
+ * Splices replacements into `content` with a v3 sourcemap. Each edit replaces
+ * a whole element, so one segment per edit boundary is enough.
  * @param {string} content
  * @param {{ start: number; end: number; replacement: string }[]} edits sorted by `start`, non-overlapping
  */
@@ -377,13 +353,8 @@ function applyEdits(content, edits) {
   }
 
   /**
-   * Appends `text` to the output, advancing genLine/genCol across any
-   * newlines it contains. When `origLine` is given (unedited text only -
-   * a replacement's interior lines have no original counterpart), marks
-   * the start of each new line at column 0 against the next original line.
-   *
    * @param {string} text
-   * @param {number} [origLine]
+   * @param {number} [origLine] Only for unedited text: maps each new line's start.
    */
   function advance(text, origLine) {
     let from = 0;
@@ -461,13 +432,9 @@ function applyEdits(content, edits) {
  */
 
 /**
- * Build-time preprocessor: replaces `<Highlight code="..." language={lang} />` with
- * pre-rendered highlight.js HTML when `code` and `language` are known at compile time.
- * Dynamic usages keep the runtime component without a warning.
- *
- * If a usage looks static but fails to resolve or highlight, it still falls back and
- * `onWarn` runs (default: `console.warn`).
- *
+ * Replaces static `<Highlight code="..." language={lang} />` usages with
+ * pre-rendered HTML. Dynamic usages are left as-is; static ones that fail
+ * fall back and call `onWarn` (default: `console.warn`).
  * @param {HighlightStaticOptions} [options]
  * @returns {import("svelte/compiler").PreprocessorGroup}
  */
@@ -508,10 +475,7 @@ export function highlightStatic(options = {}) {
         .filter((match) => match !== null);
       if (matches.length === 0) return;
 
-      // One import() per distinct language source per file. Every match on
-      // a file usually shares a few languages, and each import() call pays
-      // module-resolution overhead even when the module is cached. A
-      // rejected import still warns once per match, as before.
+      // One import() per distinct source; import() pays resolution cost even when cached.
       /** @type {Map<string, Promise<any>>} */
       const languageModules = new Map();
       const loadLanguageModule = (/** @type {string} */ source) => {
@@ -525,10 +489,8 @@ export function highlightStatic(options = {}) {
 
       const htmlByMatch = await Promise.all(
         matches.map(async (match) => {
-          // Only ever read by the warn() paths below, and locate() scans
-          // `content` from the start, so resolve it lazily: computing it up
-          // front made the happy path O(content length) per match.
-          const line = () => locate(content, match.element.start).line;
+          // Lazy: lineAt() is O(content) and only needed when warning.
+          const line = () => lineAt(content, match.element.start);
 
           /** @type {import("./languages").LanguageType<string>} */
           let language;
@@ -575,14 +537,11 @@ export function highlightStatic(options = {}) {
         const { start, end } = match.element;
         const previous = edits.at(-1);
 
-        // Matched elements can't nest (they require an empty slot) and
-        // collectElements visits them in source order, so this should
-        // never actually trigger - kept as a defensive fallback so one
-        // malformed range can't take down the whole preprocessor pass.
+        // Defensive: matches can't nest and arrive in source order.
         if (start >= end || (previous && start < previous.end)) {
           warn("failed to apply the static replacement", {
             filename,
-            line: locate(content, start).line,
+            line: lineAt(content, start),
             cause: new Error("invalid or overlapping replacement range"),
           });
           continue;

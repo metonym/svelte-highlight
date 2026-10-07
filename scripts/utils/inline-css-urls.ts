@@ -25,10 +25,7 @@ export function mimeFromExt(ext: string): string {
   return MIME_TYPES[normalized];
 }
 
-/**
- * Replaces relative `url(./filename)` references with base64 data URLs.
- * Reads assets from `baseDir` (the highlight.js styles directory for each theme).
- */
+/** Replaces `url(./file)` references with base64 data URLs read from `baseDir`. */
 export async function inlineCssUrls(
   css: string,
   baseDir: string,

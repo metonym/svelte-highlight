@@ -269,8 +269,7 @@ describe("paletteToCss", () => {
       roles: { foreground: "#fff", background: "#000" },
     });
     const css = paletteToCss(palette);
-    expect(css).toContain(":root{");
-    expect(css).toContain('[data-shl-theme="midnight"]{');
+    expect(css).toContain(':root,[data-shl-theme="midnight"]{');
   });
 
   it("omits the :root block when root: false", () => {
@@ -279,7 +278,7 @@ describe("paletteToCss", () => {
       roles: { foreground: "#fff", background: "#000" },
     });
     const css = paletteToCss(palette, { root: false });
-    expect(css).not.toContain(":root{");
+    expect(css).not.toContain(":root");
     expect(css).toContain('[data-shl-theme="midnight"]{');
   });
 

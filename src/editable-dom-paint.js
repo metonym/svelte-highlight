@@ -1,20 +1,18 @@
-/**
- * Incremental DOM-engine paint helpers for HighlightEditable.
- *
- * Tokenization via `reparseIncremental` is already incremental, but the
- * default `"dom"` engine still ran `renderHtml` + `splitLines` over the full
- * event stream every keystroke. Now only the first paint does; every edit
- * after it, append or mid-document, re-renders only the lines whose events
- * changed (`patchLineHtml`).
- */
+/** Incremental line-HTML paint for HighlightEditable's `"dom"` engine. */
 
 import { CLOSE, extendLines, OPEN, renderHtml, TEXT } from "./engine.js";
 import { sharedEvents } from "./incremental-tokenize.js";
 import { splitLines } from "./split-lines.js";
 
 /**
- * Full line-HTML paint via `renderHtml` + `splitLines` (the historical path).
- * @param {import("./engine.d.ts").ScopeEvent[]} events
+ * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
+ * @typedef {import("./incremental-tokenize.js").EventReuse} EventReuse
+ */
+
+/**
+ * Full line-HTML paint, plus the editor's phantom empty line when `code` is
+ * empty or ends in "\n".
+ * @param {ScopeEvent[]} events
  * @param {string} code
  * @returns {string[]}
  */
@@ -25,34 +23,6 @@ export function lineHtmlFromEvents(events, code) {
 }
 
 /**
- * Build the visible line list from incremental extendLines state, matching
- * `lineHtmlFromEvents` (including the historical phantom trailing newline
- * when `code` is empty or ends in `\n`).
- *
- * @param {string[]} completedLines
- * @param {string[]} previewLines unsealed + pending preview from resume
- * @param {string} code
- * @returns {string[]}
- */
-export function linesFromStreamState(completedLines, previewLines, code) {
-  /** @type {string[]} */
-  const lines = completedLines.concat(previewLines);
-  // Historical paint does `html + "\n"` before splitLines when the source ends
-  // on a line boundary, which yields one extra empty caret line beyond the
-  // stream-style completed+pending list.
-  if (code === "" || code.endsWith("\n")) {
-    lines.push("");
-  }
-  return lines;
-}
-
-/**
- * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
- * @typedef {import("./incremental-tokenize.js").EventReuse} EventReuse
- */
-
-/**
- * Number of "\n" in `code` within `[from, end)`.
  * @param {string} code
  * @param {number} from
  * @param {number} end
@@ -67,9 +37,9 @@ function countNewlines(code, from, end) {
 }
 
 /**
- * Where `patchLineHtml`'s walk to the first changed line ended: the state
- * after the first `index` events of `events`. Valid for a later call whose
- * `prevEvents` is `events`, while `index` stays inside the unchanged prefix.
+ * Walk state after the first `index` events of `events`, reusable by a later
+ * `patchLineHtml` whose `prevEvents` is `events` while `index` stays in the
+ * unchanged prefix.
  * @typedef {{
  *   events: ScopeEvent[] | undefined,
  *   index: number,
@@ -80,36 +50,22 @@ function countNewlines(code, from, end) {
  */
 
 /** @returns {PatchMemo} */
-export function createPatchMemo() {
+function createPatchMemo() {
   return { events: undefined, index: 0, stack: [], offset: 0, newlines: 0 };
 }
 
 /**
  * Same result as `lineHtmlFromEvents(events, code)`, given `prevLines` =
- * `lineHtmlFromEvents(prevEvents, prevCode)`, but only re-renders the lines
+ * `lineHtmlFromEvents(prevEvents, prevCode)`, but re-renders only the lines
  * whose events changed and reuses `prevLines`' strings for the rest.
  *
- * `reparseIncremental` keeps the unchanged head and converged tail of the
- * event stream as the same event objects, so the changed region is found
- * by identity: a common prefix and suffix of `===` events. Events are
- * immutable, and a line's HTML depends only on its own events plus the
- * scopes open at its start, so:
- * - every line that ends before the first changed event is unchanged;
- * - every line after the first "\n" in the common suffix is unchanged too,
- *   if the same scopes are open at that "\n" on both sides (checked).
- * Only the lines between are rendered, via `extendLines` from the scopes
- * open at the first changed line's start. Mid-document typing then costs
- * pointer compares and a stack walk over the document instead of
- * `renderHtml` + `splitLines` over it: see dom-paint.bench.ts's
- * mid-document group.
+ * Unchanged events are shared by identity (`reparseIncremental`), and a
+ * line's HTML depends only on its events plus the scopes open at its start,
+ * so lines before the first changed event, and after the first "\n" in the
+ * shared suffix (if the same scopes are open there), are kept.
  *
- * Pass the same `memo` across consecutive calls to resume that walk from
- * where the last call's ended, so repeated edits near one spot don't
- * re-walk the document before it.
- *
- * Pass `reparseIncremental`'s `reuse` (when its `from` is `prevEvents`) to
- * take the common prefix and suffix from it instead of comparing the two
- * event arrays, which is O(document) per call.
+ * `memo` resumes the walk to the first changed line across calls; `reuse`
+ * (when its `from` is `prevEvents`) avoids an O(document) array compare.
  *
  * @param {ScopeEvent[]} prevEvents
  * @param {string[]} prevLines
@@ -144,8 +100,7 @@ export function patchLineHtml(
     }
   }
 
-  // Scopes open at that line's start, and its offset into `code`, walked
-  // from the memo when it still lies in the unchanged prefix.
+  // Scopes open at that line's start and its offset into `code`.
   const resume =
     memo !== undefined && memo.events === prevEvents && memo.index <= breakEvent
       ? memo
@@ -234,24 +189,16 @@ export function patchLineHtml(
     region.push(/** @type {ScopeEvent} */ (events[i]));
   }
   const rendered = extendLines(region, [], "");
-  return linesFromStreamState(
-    prevLines.slice(0, firstLine).concat(rendered.completedLines),
-    [rendered.pendingHtml],
-    code,
-  );
+  const lines = prevLines
+    .slice(0, firstLine)
+    .concat(rendered.completedLines, [rendered.pendingHtml]);
+  if (code === "" || code.endsWith("\n")) lines.push(""); // phantom line
+  return lines;
 }
 
 /**
- * Stateful line-HTML painter: the first paint (and any paint after a
- * language change) renders the whole document via `lineHtmlFromEvents`;
- * every later one patches the previous lines via `patchLineHtml`.
- *
- * Appends used to go through a separate stream session instead, which
- * tokenized the document a second time at mount and again after every
- * switch from mid-document editing back to appending. With
- * `reparseIncremental`'s `reuse`, the patch path no longer compares the
- * event arrays, so it costs about the same for appends and needs no
- * second tokenizer: see dom-paint.bench.ts.
+ * Stateful line-HTML painter: full render on the first paint and after a
+ * language change, `patchLineHtml` otherwise.
  */
 export function createDomLinePainter() {
   let language = "";
@@ -272,7 +219,7 @@ export function createDomLinePainter() {
      * @param {ScopeEvent[]} events
      * @param {string} code
      * @param {string} languageName
-     * @param {EventReuse} [reuse] `reparseIncremental`'s result `reuse`
+     * @param {EventReuse} [reuse]
      * @returns {string[]}
      */
     paint(events, code, languageName, reuse) {

@@ -27,8 +27,6 @@
     {/if}
 
     {#if variant !== "plain"}
-      <!-- titlebar content wider than the leading chrome will unbalance the
-           centering above -- an accepted trade-off, not a bug. -->
       <span class="titlebar-end"><slot name="titlebar" /></span>
     {:else}
       <slot name="titlebar" />
@@ -109,8 +107,7 @@
   }
 
   .title {
-    /* Sandwiched between equal-width .titlebar-lead/.titlebar-end, so it
-       centers in the space actually left over instead of the full bar. */
+    /* Equal-width lead/end siblings keep this centered in the leftover space. */
     flex: 1 1 0;
     min-width: 0;
     text-align: center;
@@ -121,7 +118,6 @@
   }
 
   .plain .title {
-    /* Plain variant: no chrome, left-align title. */
     position: static;
     left: auto;
     transform: none;

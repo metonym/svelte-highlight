@@ -1,34 +1,19 @@
 /**
- * Stability tiers for this module's exports:
+ * All exports are semver-stable except `GrammarIR`/`GrammarState` (generated
+ * data) and `Snapshot` (stable within one version only).
  *
- * - **Stable (semver-governed):** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`,
- *   `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`,
- *   `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `scopeToCssClass`,
- *   `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`,
- *   `Registry` and all its methods, `createRegistry`, `registerAll`,
- *   `StreamSession`, `Snapshot` (see its own doc comment for a narrower
- *   guarantee), `UnknownLanguageError`, `TokenizerLoopError`.
- * - **Generated data (structure versioned with the library):** `GrammarIR`,
- *   `GrammarState` (see their doc comment).
- *
- * Event grammar: a well-formed `ScopeEvent[]` stream is balanced (every
- * `OPEN` has a matching later `CLOSE`, properly nested) and its `TEXT`
- * values, concatenated in order, equal the tokenized source.
+ * A `ScopeEvent[]` stream is balanced (`OPEN`/`CLOSE` properly nested) and its
+ * `TEXT` values concatenate to the tokenized source.
  */
 
 /**
- * Grammar IR produced by `scripts/utils/convert-language.ts` at build time.
- * Plain JSON: no functions, no highlight.js code.
- *
- * Generated data, not a hand-authored API: produced by the build pipeline
- * (`scripts/convert-grammars.ts`) and consumed by `registerAll`. Treat as an
- * opaque payload - field-level structure may change in any minor release.
- * Grammars should always come from the same package version as the engine.
+ * Generated grammar IR (plain JSON). Treat as opaque: its structure may change
+ * in any minor release, so use grammars from the same package version.
  */
 export interface GrammarState {
-  /** Omitted when it's the default (1) - see convert-language.ts's compaction. */
+  /** Defaults to 1. */
   relevance?: number;
-  rules: number[];
+  rules?: number[];
   scope?: string;
   begin?: string;
   end?: string;
@@ -40,14 +25,10 @@ export interface GrammarState {
   returnBegin?: boolean;
   returnEnd?: boolean;
   subLanguage?: string | string[];
-  /**
-   * Only enforced during auto-detection (`tokenizeAuto`/`highlightAuto`);
-   * inert on an explicit-language `tokenize()`/`highlight()`/`createSession()`/
-   * `resume()` call, so mid-stream text that would trip `illegal` under hljs's
-   * `ignoreIllegals: false` default is never rejected once the language is named.
-   */
+  /** Only enforced during auto-detection. */
   illegal?: string;
-  keywords?: Record<string, [string, number]>;
+  /** A word -> [scope, relevance] map, or an index into `GrammarIR.keywordTables`. */
+  keywords?: Record<string, [string, number]> | number;
   keywordPattern?: string;
   wrapScope?: string;
   captureScopes?: Record<string, string | null>;
@@ -62,16 +43,18 @@ export interface GrammarState {
   starts?: number;
 }
 
-/** Generated data - see `GrammarState`'s doc comment for the stability caveat. */
+/** Generated data; see `GrammarState`. */
 // biome-ignore lint/style/useNamingConvention: "IR" (intermediate representation) is an established term throughout this codebase's docs
 export interface GrammarIR {
   name: string;
-  caseInsensitive: boolean;
-  unicode: boolean;
+  caseInsensitive?: boolean;
+  unicode?: boolean;
   aliases?: string[];
-  disableAutodetect: boolean;
+  disableAutodetect?: boolean;
   supersetOf?: string;
   states: GrammarState[];
+  /** Keyword tables shared by index, as `[scope, relevance, "word word ..."]` groups. */
+  keywordTables?: Array<Array<[string, number, string]>>;
 }
 
 export type ScopeEvent = { t: 0; v: string } | { t: 1; s: string } | { t: 2 };
@@ -82,11 +65,7 @@ export const CLOSE: 2;
 
 export function escapeHtml(value: string): string;
 
-/**
- * `renderHtml`'s internal scope-name-to-class-name conversion: splits
- * compound scopes (e.g. `"title.class_"` -> `"hljs-title class_"`) and maps
- * the `language-*` embedded-language convention.
- */
+/** Scope name to CSS classes, e.g. `"title.class_"` -> `"hljs-title class_"`. */
 export function scopeToCssClass(name: string, prefix: string): string;
 
 export interface TokenRange {
@@ -117,11 +96,8 @@ export interface LineToken {
 }
 
 /**
- * Line-indexed `{ text, scopes }` tokens - the structured alternative to
- * re-splitting `renderHtml`'s output (see `src/split-lines.js`). Splits
- * solely on LF; see `tokenLines`'s JSDoc in `engine.js` for the exact
- * newline and edge-case semantics (CRLF, trailing newline, empty input),
- * which are chosen to match `splitLines` line-for-line.
+ * Line-indexed tokens, split only on LF to match `splitLines` on
+ * `renderHtml` output line-for-line.
  */
 export function tokenLines(events: ScopeEvent[]): LineToken[][];
 
@@ -147,13 +123,8 @@ export interface HighlightResult {
 }
 
 /**
- * Serializable parse checkpoint; JSON round-trips (see `Registry#resume`)
- * within one installed library version. Not guaranteed stable across
- * versions: a snapshot produced by an older or newer version of this
- * package may be rejected on resume. Callers that persist snapshots across
- * deploys (windowing, long-lived streaming sessions) should pin the engine
- * version or be prepared to discard stale snapshots. Treat a snapshot as
- * read-only: it may share state with the tokenizer that produced it.
+ * Serializable parse checkpoint for `Registry#resume`. Only valid within one
+ * package version, and read-only (it may share state with its tokenizer).
  */
 export interface Snapshot {
   pos: number;
@@ -163,10 +134,8 @@ export interface Snapshot {
   frames: { idx: number; beginMatch: string | undefined; beginPos: number }[];
   openScopes: number;
   eventCount: number;
-  /** Per sub-language name, the carried continuation - scoped to the
-   * embedding occurrence that began at `beginPos` (see `Tokenizer`'s
-   * `subContinuations` field). A later occurrence of the same name that
-   * began elsewhere starts fresh rather than inheriting this state. */
+  /** Embedded-language state by name, resumed only by the occurrence that
+   * began at `beginPos`. */
   subContinuations: Record<
     string,
     {
@@ -182,24 +151,18 @@ export interface Snapshot {
 
 export interface StreamSession {
   append(text: string): void;
-  /** Tokenizes text loaded via `createSession`'s `from.code` up to (not
-   * including) the first lexeme starting at or past `stopAt`. */
+  /** Tokenizes preloaded `from.code` up to the first lexeme at or past `stopAt`. */
   advance(stopAt: number): void;
-  /** Same as `append(text.slice(fedLength))`, where `text` is everything
-   * fed so far plus more, ideally a slice of one larger string. Avoids
-   * re-flattening a concatenated string on every call. */
+  /** Like `append(text.slice(fedLength))`, where `text` extends everything
+   * fed so far; avoids repeated string concatenation. */
   feed(text: string): void;
-  /** Replaces `[from, to)` in the session's fed text with `text`, reusing
-   * unaffected tokenized regions where state reconverges (see
-   * `incremental-tokenize.js`). The resulting `events()` are always
-   * identical to a fresh session fed the resulting text from scratch,
-   * computed cheaper. Does not support replacing across a language change.
-   * Returns how many leading `events()` entries are the same objects as
-   * before the call (0 on the first call, which re-parses). */
+  /** Replaces fed `[from, to)` with `text`, re-parsing only what changed;
+   * `events()` match a fresh session. Returns how many leading `events()`
+   * entries are unchanged objects (0 on the first call). */
   replace(from: number, to: number, text: string): number;
-  /** The last of the last `replace()`'s checkpoints (none before the first)
-   * within both limits: `events()[0, eventCount)` covers the text before
-   * `textPos` and leaves `scopes` open, so rendering can resume there. */
+  /** Latest `replace()` checkpoint within both limits, where rendering can
+   * resume: `events()[0, eventCount)` covers text before `textPos` and leaves
+   * `scopes` open. */
   checkpointBefore(limits: {
     eventCount?: number;
     textPos?: number;
@@ -207,24 +170,20 @@ export interface StreamSession {
   finish(options?: { canonicalize?: boolean }): HighlightResult;
   snapshot(): Snapshot;
   events(): ScopeEvent[];
-  /** Returns the events produced since the last call and forgets them, so a
-   * long session doesn't retain every event. Afterward `events()`,
-   * `finish()`, and snapshot `eventCount`s only cover later events; don't
-   * mix with `replace()`. */
+  /** Returns and forgets events since the last call. Afterward `events()`,
+   * `finish()`, and `eventCount`s cover only later events; don't mix with
+   * `replace()`. */
   takeEvents(): ScopeEvent[];
 }
 
-/** The compiled program `Registry#get` returns; opaque other than its source IR's identity. */
+/** Opaque compiled grammar. */
 export interface CompiledProgram {
   ir: GrammarIR;
 }
 
 /**
  * Thrown by `tokenize`, `highlight`, `tokenizeRanges`, and `createSession`
- * when `language` isn't registered. Distinct from `LanguageLoadError`
- * (`svelte-highlight`/`svelte-highlight/load-language`), which fires from a
- * grammar module's dynamic `import()` failure, not a registry lookup.
- * `resume()` does not throw this - see its own doc comment.
+ * for an unregistered `language` (not by `resume`).
  */
 export class UnknownLanguageError extends Error {
   constructor(language: string);
@@ -232,9 +191,8 @@ export class UnknownLanguageError extends Error {
 }
 
 /**
- * Thrown by the tokenizer once a parse exceeds both 500,000 iterations
- * and three iterations per character consumed, guarding against a grammar
- * bug that never advances position.
+ * Thrown when a parse exceeds 500,000 iterations and 3 per character
+ * consumed, i.e. a grammar that stops advancing.
  */
 export class TokenizerLoopError extends Error {
   constructor(grammarName: string, iterations: number);

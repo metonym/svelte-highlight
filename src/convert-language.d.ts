@@ -6,11 +6,11 @@ export interface ConvertResult {
 }
 
 /**
+ * Converts a registered hljs grammar to the engine IR.
  * @param hljs instance (e.g. from `highlight.js/lib/core`) with the grammar
- *   (and any sublanguages it embeds) already registered
- * @param name
- * @param grammarSource raw source text of the grammar's own file, used only
- *   to recover data that the compiled mode tree doesn't expose
+ *   and its sublanguages registered
+ * @param grammarSource raw source of the grammar's file, to recover data the
+ *   compiled mode tree doesn't expose
  */
 export function convertLanguage(
   hljs: unknown,

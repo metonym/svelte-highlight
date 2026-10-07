@@ -39,7 +39,7 @@
 
   $: {
     ensureRegistered(language);
-    const source = typeof code === "string" ? code : String(code ?? "");
+    const source = String(code ?? "");
     const result = registry.highlight(source, { language: language.name });
     highlighted = result.value;
     events = result.events;

@@ -2,184 +2,62 @@ import { $ } from "bun";
 
 console.time("package");
 await $`rm -rf package; mkdir package`;
-await Bun.write("./package/package.json", Bun.file("./package.json"));
-await Bun.write("./package/README.md", Bun.file("./README.md"));
-await Bun.write("./package/LICENSE", Bun.file("./LICENSE"));
-await Bun.write(
-  "./package/LICENSE.highlight.txt",
-  Bun.file("./LICENSE.highlight.txt"),
-);
+await $`cp README.md LICENSE LICENSE.highlight.txt package; cp -r src/ package`;
 
-await $`cp -r ./src/ ./package`;
-
-const pkgJson = await Bun.file("./package/package.json").json();
-
+const pkgJson = await Bun.file("./package.json").json();
 pkgJson.scripts = undefined;
 pkgJson.devDependencies = undefined;
 
-pkgJson.exports = {
-  ".": {
-    types: "./index.d.ts",
-    svelte: "./index.js",
-  },
-  "./static": {
-    types: "./static.d.ts",
-    import: "./static.js",
-  },
-  "./static.js": {
-    types: "./static.d.ts",
-    import: "./static.js",
-  },
-  "./fence": {
-    types: "./fence.d.ts",
-    import: "./fence.js",
-  },
-  "./fence.js": {
-    types: "./fence.d.ts",
-    import: "./fence.js",
-  },
-  "./*.svelte": {
-    types: "./*.svelte.d.ts",
-    import: "./*.svelte",
-  },
-  "./styles/*.css": {
-    import: "./styles/*.css",
-  },
-  "./styles": {
-    types: "./styles/index.d.ts",
-    import: "./styles/index.js",
-  },
-  "./styles/*": {
-    types: "./styles/*.d.ts",
-    import: "./styles/*.js",
-  },
-  "./styles/*.js": {
-    types: "./styles/*.d.ts",
-    import: "./styles/*.js",
-  },
-  "./themes": {
-    types: "./themes/index.d.ts",
-    import: "./themes/index.js",
-  },
-  "./themes/*": {
-    types: "./themes/*.d.ts",
-    import: "./themes/*.js",
-  },
-  "./themes/*.js": {
-    types: "./themes/*.d.ts",
-    import: "./themes/*.js",
-  },
-  "./themes/*.css": {
-    import: "./themes/*.css",
-  },
-  "./theme": {
-    types: "./theme.d.ts",
-    default: "./theme.js",
-  },
-  "./theme/textmate": {
-    types: "./textmate-theme.d.ts",
-    default: "./textmate-theme.js",
-  },
-  "./languages": {
-    types: "./languages/index.d.ts",
-    import: "./languages/index.js",
-  },
-  "./languages/*": {
-    types: "./languages/*.d.ts",
-    import: "./languages/*.js",
-  },
-  "./languages/*.js": {
-    types: "./languages/*.d.ts",
-    import: "./languages/*.js",
-  },
-  "./engine": {
-    types: "./engine.d.ts",
-    default: "./engine.js",
-  },
-  "./engine.js": {
-    types: "./engine.d.ts",
-    default: "./engine.js",
-  },
-  "./tokenized-document": {
-    types: "./tokenized-document.d.ts",
-    default: "./tokenized-document.js",
-  },
-  "./tokenized-document.js": {
-    types: "./tokenized-document.d.ts",
-    default: "./tokenized-document.js",
-  },
-  "./typewriter-units": {
-    types: "./typewriter-units.d.ts",
-    default: "./typewriter-units.js",
-  },
-  "./typewriter-units.js": {
-    types: "./typewriter-units.d.ts",
-    default: "./typewriter-units.js",
-  },
-  "./registry": {
-    types: "./registry.d.ts",
-    default: "./registry.js",
-  },
-  "./registry.js": {
-    types: "./registry.d.ts",
-    default: "./registry.js",
-  },
-  "./ansi": {
-    types: "./ansi.d.ts",
-    default: "./ansi.js",
-  },
-  "./copy-transforms": {
-    types: "./copy-transforms.d.ts",
-    default: "./copy-transforms.js",
-  },
-  "./load-language": {
-    types: "./load-language.d.ts",
-    default: "./load-language.js",
-  },
-  "./scoped": {
-    types: "./scoped.d.ts",
-    default: "./scoped.js",
-  },
-  "./compat": {
-    types: "./compat.d.ts",
-    default: "./compat.js",
-  },
-  "./compat.js": {
-    types: "./compat.d.ts",
-    default: "./compat.js",
-  },
-  "./transformers": {
-    types: "./transformers.d.ts",
-    default: "./transformers.js",
-  },
-  "./transformers.js": {
-    types: "./transformers.d.ts",
-    default: "./transformers.js",
-  },
-  "./worker": { types: "./worker.d.ts", import: "./worker.js" },
-  "./worker.js": { types: "./worker.d.ts", import: "./worker.js" },
-  "./search": {
-    types: "./search.d.ts",
-    import: "./search.js",
-  },
-  "./search.js": {
-    types: "./search.d.ts",
-    import: "./search.js",
-  },
-  "./search.css": {
-    import: "./search.css",
-  },
-  "./package.json": "./package.json",
+/** Exports `./<name>` (and `./<name>.js` when `withJs`) from `<file>.js`. */
+const entry = (
+  name: string,
+  file: string,
+  condition: "import" | "default",
+  withJs = true,
+) => {
+  const target = { types: `./${file}.d.ts`, [condition]: `./${file}.js` };
+  return [
+    [`./${name}`, target],
+    ...(withJs ? [[`./${name}.js`, target]] : []),
+  ] as const;
 };
 
-// Svelte entry point is deprecated but we preserve it for backwards compatibility.
+pkgJson.exports = Object.fromEntries([
+  [".", { types: "./index.d.ts", svelte: "./index.js" }],
+  ...entry("static", "static", "import"),
+  ...entry("fence", "fence", "import"),
+  ["./*.svelte", { types: "./*.svelte.d.ts", import: "./*.svelte" }],
+  ["./styles/*.css", { import: "./styles/*.css" }],
+  ...entry("styles", "styles/index", "import", false),
+  ...entry("styles/*", "styles/*", "import"),
+  ...entry("themes", "themes/index", "import", false),
+  ...entry("themes/*", "themes/*", "import"),
+  ["./themes/*.css", { import: "./themes/*.css" }],
+  ...entry("theme", "theme", "default", false),
+  ...entry("theme/textmate", "textmate-theme", "default", false),
+  ...entry("languages", "languages/index", "import", false),
+  ...entry("languages/*", "languages/*", "import"),
+  ...entry("engine", "engine", "default"),
+  ...entry("tokenized-document", "tokenized-document", "default"),
+  ...entry("typewriter-units", "typewriter-units", "default"),
+  ...entry("registry", "registry", "default"),
+  ...entry("ansi", "ansi", "default", false),
+  ...entry("copy-transforms", "copy-transforms", "default", false),
+  ...entry("load-language", "load-language", "default", false),
+  ...entry("scoped", "scoped", "default", false),
+  ...entry("compat", "compat", "default"),
+  ...entry("transformers", "transformers", "default"),
+  ...entry("worker", "worker", "import"),
+  ...entry("search", "search", "import"),
+  ["./search.css", { import: "./search.css" }],
+  ["./package.json", "./package.json"],
+]);
+
+// `svelte` is the deprecated pre-exports entry point, kept for old tooling.
 pkgJson.svelte = "./index.js";
 pkgJson.types = "./index.d.ts";
 
-// Most modern bundlers know if standalone StyleSheets are used.
-// We specify it here to be sure so that it will not be mistakenly tree-shaken.
-// `cp -r ./src/ ./package` flattens src/ into the package root, so these
-// globs must match the published layout, not the source layout.
+// Paths are relative to the published root (src/ is copied flat).
 pkgJson.sideEffects = [
   "styles/*.css",
   "themes/*.css",

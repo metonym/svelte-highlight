@@ -3,32 +3,19 @@ import type { LanguageType } from "./languages";
 
 export type HighlightActionParameters = {
   /**
-   * Language used to highlight the element's contents. When omitted, the
-   * action reads a `language-xxx` class off the node itself (the
-   * Prism/highlight.js Markdown convention) and resolves it via
-   * `loadLanguage`. No `language` prop and no matching class dispatches
-   * `error` and leaves the content untouched.
+   * Grammar to use. When omitted, a `language-xxx` class on the node is
+   * loaded via `loadLanguage`; with neither, dispatches `error`.
    */
   language?: LanguageType<string>;
 
-  /**
-   * Code to highlight. When omitted, the element's
-   * current `textContent` is highlighted.
-   */
+  /** Code to highlight. Defaults to the element's initial `textContent`. */
   code?: string;
 };
 
 /**
- * Highlight element contents in place with highlight.js.
+ * Highlights an element's contents in place. Use on the `<code>` inside a
+ * `<pre>` so theme CSS applies.
  *
- * Should be placed on the `<code>` element inside a `<pre>`, matching the
- * theme CSS's `.hljs code` selector -- elsewhere (directly on `<pre>`, or a
- * non-`<pre><code>` element) it still highlights but may not be visually
- * targeted by the active theme.
- *
- * Dispatches two events on the node:
- * - `highlighted`: `detail: { html: string; language: string }`, after a
- *   successful highlight.
- * - `error`: `detail: { error: unknown }`, after a failed highlight.
+ * Dispatches `highlighted` (`{ html, language }`) or `error` (`{ error }`).
  */
 export declare const highlight: Action<HTMLElement, HighlightActionParameters>;

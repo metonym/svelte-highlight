@@ -11,11 +11,8 @@ const TAG_RE = /<[^>]*>/g;
 const REGEX_SOURCE_LIMIT = 256;
 
 /**
- * Strips tag markup, then decodes the five entities `escapeHtml`
- * (`./engine.js`) produces - exact for this engine's rendered HTML, not a
- * general HTML parser. Tags go first: decoding first would turn escaped
- * source text like `Array&lt;string&gt;` back into `<string>`, which the
- * tag pass would then delete.
+ * Inverse of the engine's `escapeHtml` output, not a general HTML parser.
+ * Strip tags before decoding, or escaped `&lt;string&gt;` would be deleted as a tag.
  * @param {string} html
  * @returns {string}
  */
@@ -53,8 +50,7 @@ function countLines(text) {
  */
 function createAdapter(source) {
   if (typeof source === "string") {
-    // Split lazily: literal queries scan `text` whole (see `scanText`), and
-    // splitting was ~70% of a full rescan's CPU profile in search.bench.ts.
+    // Split lazily: literal queries scan `text` whole (see `scanText`).
     /** @type {string[] | undefined} */
     let lines;
     let lineCount = -1;
@@ -89,10 +85,7 @@ function createAdapter(source) {
     };
   }
 
-  // A real TokenizedDocument can hand back its plain text directly. Going
-  // through lineRange() instead tokenizes every scanned line only to strip
-  // the markup again: in search.bench.ts's incremental group, tokenizing
-  // was ~95% of the scan's CPU profile.
+  // Prefer textRange(): lineRange() would tokenize each line only to strip the markup.
   const { textRange } = /** @type {{ textRange?: unknown }} */ (source);
   if (typeof textRange === "function") {
     return {
@@ -169,15 +162,9 @@ function optionsEqual(a, b) {
 }
 
 /**
- * Finds a literal `query`'s matches with one pass of `pattern` over the
- * whole `source` string instead of one per split line, mapping each match
- * back to its line as it goes. Same result as per-line scanning: the
- * escaped literal can't match across a "\n" (one containing "\n" never
- * matches a single line, so it returns nothing), and `\b` sees the "\n"
- * before a line as the same non-word boundary as the line's start.
- *
- * A case-sensitive, non-whole-word query is a plain substring search, so
- * it skips the regex for `indexOf` (non-overlapping, like the `g` regex).
+ * Scans a literal query over the whole string in one pass, mapping matches
+ * back to lines. Equivalent to per-line scanning: a literal can't span "\n",
+ * and `\b` treats "\n" like a line start. `exact` uses `indexOf` instead.
  * @param {string} source
  * @param {string} query
  * @param {RegExp} pattern
@@ -191,10 +178,7 @@ function scanText(source, query, pattern, exact) {
   let line = 0;
   let lineStart = 0;
   let nextBreak = source.indexOf("\n");
-  /**
-   * @param {number} index
-   * @param {number} length
-   */
+  /** @type {(index: number, length: number) => void} */
   const record = (index, length) => {
     while (nextBreak !== -1 && nextBreak < index) {
       line += 1;
@@ -331,17 +315,16 @@ export function createSearch(source) {
         return;
       }
 
-      // Shrink: fall through to a full rescan below.
+      // Shrunk: fall through to a full rescan.
     }
 
     const { pattern, error } = compilePattern(text, normalized);
     lastText = text;
     lastOptions = normalized;
     hasQueried = true;
-    const scanWhole = adapter.text !== undefined && !normalized.regex;
-    // A regex scan splits a string source into lines anyway; splitting
-    // first makes lineCount() free instead of a second full pass.
-    if (pattern !== null && !scanWhole) adapter.ensureLines?.();
+    const wholeText = normalized.regex ? undefined : adapter.text;
+    // Split before lineCount() so it doesn't need a second full pass.
+    if (pattern !== null && wholeText === undefined) adapter.ensureLines?.();
     lastScannedLineCount = adapter.lineCount();
 
     if (pattern === null) {
@@ -354,14 +337,14 @@ export function createSearch(source) {
 
     errorMessage = undefined;
     matches =
-      scanWhole && adapter.text !== undefined
-        ? scanText(
-            adapter.text,
+      wholeText === undefined
+        ? scanRange(0, lastScannedLineCount, pattern)
+        : scanText(
+            wholeText,
             text,
             pattern,
             normalized.caseSensitive && !normalized.wholeWord,
-          )
-        : scanRange(0, lastScannedLineCount, pattern);
+          );
     currentIndex = matches.length > 0 ? 0 : undefined;
     notify();
   }
@@ -446,17 +429,9 @@ export function createSearch(source) {
 /** @typedef {{ container: Element; baseOffset: number }} LineScope */
 
 /**
- * Returns a resolver for the rendered row of each `line`: `[data-line]`
- * first, then the `line`-th `.line` element (0-indexed), then the whole
- * `<code>` (offsets treated as absolute into its full `textContent`, split
- * on `"\n"`).
- *
- * Each query runs at most once per paint and is then looked up per line.
- * Running all three per matched line made a paint O(matched lines x DOM
- * size): a missing `[data-line]` or the `.line` list scans the whole tree
- * (bench/search.bench.ts, "highlightMatches()"). The `<mark>` fallback
- * only adds `<mark>`s and splits text, so nothing it does between lines
- * changes what these queries return.
+ * Resolves a line's rendered row: `[data-line]`, then the `line`-th `.line`,
+ * then the whole `<code>` split on `"\n"`. Each DOM query runs at most once per
+ * paint; `<mark>` wrapping between lines can't change their results.
  * @param {Element} root
  * @returns {(line: number) => LineScope | undefined}
  */
@@ -473,7 +448,7 @@ function createLineScopeResolver(root) {
       byDataLine = new Map();
       for (const element of root.querySelectorAll("[data-line]")) {
         const value = element.getAttribute("data-line");
-        // Keep the first in document order, as querySelector() would.
+        // First in document order wins, as with querySelector().
         if (value !== null && !byDataLine.has(value)) {
           byDataLine.set(value, element);
         }
@@ -499,7 +474,6 @@ function createLineScopeResolver(root) {
 }
 
 /**
- * Start offset of each `"\n"`-separated line in `code`'s `textContent`.
  * @param {Element} code
  * @returns {number[]}
  */
@@ -514,10 +488,8 @@ function lineOffsets(code) {
 }
 
 /**
- * Resolves absolute character offsets into `container`'s text content to
- * (text node, local offset) boundaries in one walk. An offset on the seam
- * between two text nodes lands at the end of the earlier one. Offsets past
- * the end of the text are left out of the result.
+ * Maps absolute text offsets to (text node, offset) in one walk. A seam
+ * offset lands at the end of the earlier node; offsets past the end are omitted.
  * @param {Node} container
  * @param {number[]} offsets Ascending.
  * @returns {Map<number, { node: Text; offset: number }>}
@@ -540,8 +512,6 @@ function resolveTextPositions(container, offsets) {
 }
 
 /**
- * Wraps `node`'s `[localStart, localEnd)` in a `<mark>`, splitting it as
- * needed. When `localStart > 0`, `node` keeps the text before it.
  * @param {Text} node
  * @param {number} localStart
  * @param {number} localEnd
@@ -562,11 +532,8 @@ function wrapInMark(node, localStart, localEnd, isCurrent) {
 }
 
 /**
- * Wraps a match's text in one `<mark>` per text node it spans, splitting
- * nodes as needed. Re-walks `scope.container` fresh each call, so callers
- * must process matches within a scope in descending `start` order. Only
- * used when the one-pass `wrapSpansInMarks` can't be (see
- * `highlightMatches`).
+ * Re-walks `scope.container` per call, so callers must go in descending
+ * `start` order within a scope. Fallback for when `wrapSpansInMarks` can't be used.
  * @param {LineScope} scope
  * @param {number} start
  * @param {number} end
@@ -618,13 +585,9 @@ function wrapMatchInMarks(scope, start, end, isCurrent) {
 /** @typedef {{ start: number; end: number; isCurrent: boolean }} MarkSpan */
 
 /**
- * Wraps every span in `container` in `<mark>`s with one walk of its text
- * nodes, where `wrapMatchInMarks` re-walks the container per match. Spans
- * are absolute offsets into the container's text, sorted by descending
- * `start`, non-empty, and non-overlapping. Going back to front, a split
- * only ever touches text after every span still to come, and the node a
- * split starts from keeps its own start offset, so the offsets indexed up
- * front stay valid for the rest of the pass.
+ * One-walk `<mark>` wrapping. `spans` must be non-empty, non-overlapping, and
+ * sorted by descending `start`: going back to front, splits only affect text
+ * after every remaining span, so the up-front node offsets stay valid.
  * @param {Element} container
  * @param {MarkSpan[]} spans
  * @param {HTMLElement[]} marks Receives the created `<mark>`s.
@@ -676,7 +639,6 @@ function wrapSpansInMarks(container, spans, marks) {
 }
 
 /**
- * Whether any of `containers` sits inside another one.
  * @param {Iterable<Element>} containers
  * @param {Element} root
  * @returns {boolean}
@@ -696,14 +658,7 @@ function anyNested(containers, root) {
 }
 
 /**
- * Paints `matches` into `root` (the currently-rendered rows only): the CSS
- * Custom Highlight API when available, else `<mark data-shl-search>`
- * wrapping. One full paint per call - repaint-on-change is the caller's job.
- *
- * Text positions are resolved with one walk per row container, not one
- * per match: with the `<code>` fallback every line shares one container,
- * and a walk from its first text node per match made a paint O(matches x
- * text nodes) (bench/search.bench.ts, "highlightMatches()").
+ * Resolves positions with one walk per container, not per match.
  * @param {Element} root
  * @param {readonly import("./search.d.ts").SearchMatch[]} matches
  * @param {{ current?: number; name?: string }} [options]
@@ -762,7 +717,6 @@ export function highlightMatches(
       );
     }
 
-    // Ranges go in the same order as before: by line, then match order.
     for (const [line, lineMatches] of byLine) {
       const scope = scopes.get(line);
       if (!scope) continue;
@@ -801,8 +755,7 @@ export function highlightMatches(
       spansByContainer.set(scope.container, spans);
     }
     for (const { start, end, index } of lineMatches) {
-      // An empty or inverted span never overlaps any text, so it never
-      // split or wrapped anything.
+      // Empty/inverted spans wrap nothing.
       if (end <= start) continue;
       spans.push({
         start: scope.baseOffset + start,
@@ -812,13 +765,9 @@ export function highlightMatches(
     }
   }
 
-  // The one-pass wrap gives the same DOM as the per-match wrap only when
-  // no two spans cover the same text, so the order they're wrapped in
-  // can't matter. Within one container that means disjoint spans, which
-  // is what `createSearch` returns. Spans in nested containers (a `<code>`
-  // fallback line around rendered `[data-line]` rows) aren't cheap to
-  // compare, so those paints, like any with overlapping spans, keep the
-  // per-match wrap in its old order.
+  // One-pass wrapping matches per-match wrapping only for disjoint spans.
+  // Nested containers (`<code>` fallback around `[data-line]` rows) or
+  // overlapping spans fall back to per-match wrapping.
   let onePass = !anyNested(spansByContainer.keys(), root);
   for (const spans of spansByContainer.values()) {
     if (!onePass) break;

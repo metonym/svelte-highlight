@@ -1,48 +1,28 @@
 export interface ParsedMeta {
-  /** 1-indexed line number -> the last-applied state for that line. */
+  /** 1-indexed line number -> state (last directive wins). */
   lines: Record<number, "mark" | "ins" | "del">;
   title?: string;
   showLineNumbers?: boolean;
 }
 
 /**
- * Parses the Expressive Code / Shiki-style meta-string vocabulary from a
- * Markdown/MDX code fence's info-string suffix, e.g. for
- * ` ```ts title="app.ts" {1,3-5} ins={7} showLineNumbers `, `meta` is
- * `title="app.ts" {1,3-5} ins={7} showLineNumbers`.
- *
- * Recognizes a bare `{<ranges>}` (state `"mark"`), `mark=`/`ins=`/`del=`
- * (each combinable), `title="<text>"`, and the bare `showLineNumbers` flag.
- * A line number named by more than one directive resolves to whichever
- * directive appears later in the string. Unknown tokens are ignored.
+ * Parses an Expressive Code / Shiki-style fence meta string, e.g.
+ * `title="app.ts" {1,3-5} ins={7} showLineNumbers`. Supports `{ranges}`
+ * (mark), `mark=`/`ins=`/`del=`, `title=`, and `showLineNumbers`; ignores the rest.
  */
 export declare function parseMeta(meta: string): ParsedMeta;
 
 /**
- * Resolves a Markdown fence info string's language word (or a bare grammar
- * name) to its canonical grammar name, e.g. `"ts"` or `"TypeScript"` ->
- * `"typescript"`. Trims, lowercases, and takes only the first
- * whitespace-delimited word, so passing a full info string like
- * `"ts title=\"app.ts\""` works. Returns `undefined` when the word doesn't
- * match a shipped grammar name or alias.
+ * Resolves a fence info string's first word to a canonical grammar name
+ * (`"ts"` -> `"typescript"`, case-insensitive), or `undefined` if unknown.
  */
 export declare function resolveLanguageName(name: string): string | undefined;
 
 /**
- * Highlights a single Markdown/MDX code fence into hljs-compatible HTML,
- * for use from framework adapters (mdsvex, markdown-it, rehype, ...) that
- * process fences outside the Svelte compiler.
- *
- * Renders each source line as `<span class="line">`, decorated with
- * `data-line-state="mark" | "ins" | "del"` per `meta`'s directives (see
- * `parseMeta`), wrapped in a `<pre class="hljs" data-language="...">` that
- * carries `data-title`/`data-show-line-numbers` when `meta` sets them.
- *
- * `lang` accepts either the grammar's canonical file name (e.g.
- * `"typescript"`) or a known alias (e.g. `"ts"`) - resolved internally via
- * `resolveLanguageName`. Rejects with `LanguageLoadError`
- * (`Unknown language: "<lang>"`) when neither resolves to a shipped
- * grammar.
+ * Highlights one Markdown code fence to hljs-compatible HTML (for mdsvex,
+ * markdown-it, rehype, ...): `<span class="line">` per line with
+ * `data-line-state` from `meta`, inside `<pre class="hljs">`. `lang` may be a
+ * grammar name or alias; rejects with `LanguageLoadError` if unknown.
  */
 export declare function highlightFence(options: {
   code: string;
@@ -78,26 +58,18 @@ export interface FenceSegment {
 export type MarkdownSegment = TextSegment | FenceSegment;
 
 /**
- * Headless, streaming CommonMark fence splitter: turns a growing Markdown
- * string into prose (`text`) and fenced-code (`fence`) segments with stable,
- * increasing `id`s, so each fence can drive its own highlighter and survive
- * both `append` and a regenerated buffer via `set` without losing identity.
+ * Streaming CommonMark fence splitter: splits growing Markdown into `text`
+ * and `fence` segments with stable `id`s across `append` and `set`.
  */
 export interface FenceSplitter {
   /**
-   * Appends `chunk` to the buffer. O(chunk): resumes scanning from the start
-   * of the last line not yet terminated by a newline, since only that line
-   * (and so only the last segment) can change. Only the last segment object
-   * may be replaced; every earlier segment object keeps its identity, so a
-   * keyed `{#each}` never re-mounts them.
+   * Appends `chunk` in O(chunk). Only the last segment object may be
+   * replaced; earlier ones keep their identity.
    */
   append(chunk: string): void;
   /**
-   * Replaces the whole buffer with `text`. Segments before the first point
-   * of divergence from the previous text keep their id and object identity.
-   * The first rebuilt segment reuses its old id when its `kind` and (for a
-   * fence) `info` are unchanged, so a regenerated fence keeps driving the
-   * same highlighter instance. A no-op when `text` equals the current text.
+   * Replaces the buffer. Segments before the first divergence keep their
+   * identity; the first rebuilt one keeps its id if `kind` and `info` match.
    */
   set(text: string): void;
   /** The current segments. Same array identity until the next mutation. */

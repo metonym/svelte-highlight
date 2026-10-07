@@ -1,48 +1,33 @@
 /**
- * Engine vs hljs wall-time benchmark on large real files from this repo.
- * Budget: engine <= 1.5x hljs, as the median of paired per-round ratios.
- *
- * Run: bun scripts/benchmark-engine.ts
+ * Engine vs hljs wall time on large repo files; fails when the median
+ * paired per-round ratio exceeds 1.5x hljs.
  */
-import { readdirSync } from "node:fs";
 import coreFactory from "highlight.js/lib/core";
 import css from "highlight.js/lib/languages/css";
 import javascript from "highlight.js/lib/languages/javascript";
 import markdown from "highlight.js/lib/languages/markdown";
+import { getCorpus } from "../bench/_shared.ts";
 import { createRegistry } from "../src/engine.js";
 import cssLang from "../src/languages/css.js";
 import javascriptLang from "../src/languages/javascript.js";
 import markdownLang from "../src/languages/markdown.js";
 
-async function concat(dir: string, filter: (name: string) => boolean) {
-  const names = readdirSync(dir).filter(filter);
-  const contents = await Promise.all(
-    names.map((name) => Bun.file(`${dir}/${name}`).text()),
-  );
-  return contents.join("\n");
-}
-
+const corpus = await getCorpus();
 const CASES: { language: string; label: string; code: string }[] = [
   {
     language: "javascript",
     label: "src/*.js + *.svelte concatenated",
-    code: [
-      await concat("src", (name) => name.endsWith(".js")),
-      await concat("src", (name) => name.endsWith(".svelte")),
-    ].join("\n"),
+    code: corpus.javascript,
   },
   {
     language: "css",
     label: "src/styles/*.css concatenated",
-    code: await concat("src/styles", (name) => name.endsWith(".css")),
+    code: corpus.css,
   },
   {
     language: "markdown",
     label: "README.md + SUPPORTED_LANGUAGES.md",
-    code: [
-      await Bun.file("README.md").text(),
-      await Bun.file("SUPPORTED_LANGUAGES.md").text(),
-    ].join("\n"),
+    code: corpus.markdown,
   },
 ];
 
@@ -70,12 +55,7 @@ function median(values: number[]) {
     : ((sorted[mid - 1] as number) + (sorted[mid] as number)) / 2;
 }
 
-// hljs and the engine run back to back within each round, and the budget
-// checks the median of the per-round ratios. A noisy shared CI runner can
-// slow one side for a moment; timing each side in one long block let a
-// single burst push a ratio past the budget (2.28x on CI for a case that
-// measures 0.85x locally). Pairing cancels drift, and the median drops the
-// odd bad round.
+// Paired rounds cancel shared-runner drift; the median drops bad rounds.
 const ROUNDS = 9;
 
 console.log("=== engine vs hljs: wall time per highlight() call ===\n");
@@ -88,7 +68,6 @@ for (const { language, label, code } of CASES) {
   const iterations = code.length > 200_000 ? 2 : 5;
   const runHljs = () => hljs.highlight(code, { language });
   const runEngine = () => registry.tokenize(code, language);
-  // warm up (JIT, regex caches)
   for (let i = 0; i < 3; i++) {
     runHljs();
     runEngine();

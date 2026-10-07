@@ -1,8 +1,3 @@
-/**
- * Scope highlight.js theme CSS under a class.
- * Used by HighlightStyle and the docs styles build.
- */
-
 import {
   findBlockEnd,
   findStringEnd,
@@ -10,7 +5,7 @@ import {
   splitTopLevel,
 } from "./css-walk.js";
 
-// @media, @supports, etc.: recurse into the block body.
+// At-rules whose body holds nested rules to scope.
 const GROUP_AT_RULES = new Set([
   "media",
   "supports",
@@ -78,7 +73,6 @@ function rewriteSelectorList(selectorList, transform) {
   return splitTopLevel(selectorList, ",")
     .map((selector) => {
       const [leading, core, trailing] = splitTrivia(selector);
-      // Whitespace/comments only.
       if (core === "") return selector;
       return `${leading}${transform(core)}${trailing}`;
     })
@@ -96,7 +90,6 @@ function rewriteBlock(prelude, body, transform) {
     const match = AT_RULE_NAME.exec(trimmed);
     const name = match?.[1]?.toLowerCase() ?? "";
     if (GROUP_AT_RULES.has(name)) {
-      // @media etc.: scope nested rules.
       return `${prelude}{${rewriteRules(body, transform)}}`;
     }
     // @keyframes, @font-face: leave body alone.
@@ -106,15 +99,12 @@ function rewriteBlock(prelude, body, transform) {
 }
 
 /**
- * Walk CSS rules and run `transform` on each selector.
  * @param {string} css
  * @param {(selector: string) => string} transform
  */
 function rewriteRules(css, transform) {
   let out = "";
-  // The prelude is always the contiguous run since the last rule ended, so
-  // it's sliced out once instead of built up a char at a time (see
-  // bench/scoped.bench.ts).
+  // Prelude is sliced once from `preludeStart`, not built char by char.
   let preludeStart = 0;
   let i = 0;
   while (i < css.length) {
@@ -152,8 +142,6 @@ function rewriteRules(css, transform) {
 }
 
 /**
- * Walk CSS and rewrite each selector with `transform`.
- *
  * @param {string} css Raw CSS (not `<style>`-wrapped).
  * @param {(selector: string) => string} transform
  * @returns {string}
@@ -163,12 +151,9 @@ export function scopeSelectors(css, transform) {
 }
 
 /**
- * Prefix theme selectors with `.<scope> `. Keeps a `<style>` wrapper when present.
- *
  * @param {string} style Theme CSS (optionally `<style>`-wrapped).
- * @param {string} scope Scope class name without a leading `.`.
- * @param {string} [nonce] CSP nonce for the `<style>` tag. Ignored when
- *   `style` has no `<style>` wrapper to attach it to.
+ * @param {string} scope Class name without a leading `.`.
+ * @param {string} [nonce]
  * @returns {string}
  */
 export function scopeStyle(style, scope, nonce) {
@@ -181,7 +166,7 @@ export function scopeStyle(style, scope, nonce) {
 }
 
 /**
- * Scope under `.scope`, strip any `<style>` wrapper, return bare CSS.
+ * Bare scoped CSS (any `<style>` wrapper stripped).
  * @param {string} style
  * @param {string} scope
  * @param {string} [prefix]
@@ -197,18 +182,11 @@ function scopedBody(style, scope, prefix = "") {
 }
 
 /**
- * Build a combined light/dark stylesheet scoped under `.scope`.
- *
- * - `"auto"` wraps each theme in `@media (prefers-color-scheme: …)`.
- * - `"light"` / `"dark"` emit only that single theme.
- * - any other string is treated as a CSS selector that gates the dark block
- *   (light stays the default), e.g. `[data-theme="dark"]`.
- *
- * @param {string} light Light theme CSS (optionally `<style>`-wrapped).
- * @param {string} dark Dark theme CSS (optionally `<style>`-wrapped).
- * @param {string} scope Scope class name without a leading `.`.
- * @param {string} [mode] `"auto"` | `"light"` | `"dark"` | a CSS selector.
- * @param {string} [nonce] CSP nonce for the `<style>` tag.
+ * @param {string} light
+ * @param {string} dark
+ * @param {string} scope
+ * @param {string} [mode] `"auto"` | `"light"` | `"dark"` | a dark-gating selector.
+ * @param {string} [nonce]
  * @returns {string}
  */
 export function dualStyle(
@@ -236,8 +214,6 @@ export function dualStyle(
 }
 
 /**
- * Hash of the theme string. Same theme gives the same class (SSR-safe).
- *
  * @param {string} theme
  * @param {string} [prefix]
  * @returns {string}

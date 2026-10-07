@@ -1,11 +1,5 @@
-/**
- * Composable transforms over a tokenized `ScopeEvent[]` stream, meant to run
- * between `Registry#tokenize` and a renderer (`renderHtml`/`toRanges`/
- * `tokenLines`). Every transform here preserves the engine's event-stream
- * invariant (see engine.d.ts's top doc comment): `TEXT` values concatenated
- * in order still equal the tokenized source, and the stream stays balanced -
- * every `OPEN` has a matching later `CLOSE`, properly nested.
- */
+// Every transform keeps the event-stream invariant: TEXT still concatenates
+// to the source and OPEN/CLOSE stay balanced and properly nested.
 
 /**
  * @typedef {import("./engine.d.ts").ScopeEvent} ScopeEvent
@@ -105,10 +99,8 @@ export function markLines(lines) {
     const reopenScopes = () => {
       for (const scope of openScopes) out.push({ t: OPEN, s: scope });
     };
-    // A scope already open (or still open past the wrapped line) is
-    // "resumed" by closing it, opening the wrapper, then reopening it
-    // inside - the only way the wrapper's OPEN/CLOSE stays a validly
-    // nested pair instead of straddling it.
+    // Close open scopes, open the wrapper, reopen them inside, so the
+    // wrapper nests validly instead of straddling them.
     const startWrap = () => {
       closeOpenScopes();
       out.push({ t: OPEN, s: /** @type {string} */ (lines[line]) });
@@ -120,7 +112,7 @@ export function markLines(lines) {
       closeOpenScopes();
       out.push({ t: CLOSE });
       wrapping = false;
-      if (continueOpenScopes && openScopes.length > 0) reopenScopes();
+      if (continueOpenScopes) reopenScopes();
     };
     const maybeStartWrap = () => {
       if (!wrapping && lines[line] !== undefined) startWrap();

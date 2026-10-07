@@ -1,10 +1,4 @@
-/**
- * editable-line-dom.js: what HighlightEditable pays to bring its line
- * elements up to date after an edit, and to place the caret afterwards,
- * driven against a minimal fake DOM (_fake-dom.ts). Line HTML is real
- * engine output; unchanged lines keep their string identity across the
- * edit, as `patchLineHtml` returns them.
- */
+/** editable-line-dom.js line updates and caret placement on a fake DOM. */
 import { group, task } from "ostia";
 import { lineHtmlFromEvents } from "../src/editable-dom-paint.js";
 import {
@@ -26,11 +20,7 @@ const setText = (el: HTMLElement, line: string) => {
 };
 const hooks = { onReset() {}, onSplice() {} };
 
-/**
- * A `lines`-line document's line HTML, the same document after `edit` at
- * the start of its middle line, and the caret offset after the edit. The
- * edited lines reuse the original's strings outside the edit.
- */
+/** Line HTML before/after `edit` at the middle line; unchanged lines keep string identity. */
 function documents(lines: number, edit: string) {
   const code = jsLines(lines);
   const line = lines >> 1;
@@ -58,8 +48,6 @@ function documents(lines: number, edit: string) {
   };
 }
 
-// Enter at the start of a middle line, then Backspace: every later line
-// shifts down one index and back.
 group("HighlightEditable lines: Enter + Backspace mid-document", () => {
   for (const lines of [500, 2_000, 8_000]) {
     const docs = documents(lines, "\n");
@@ -87,8 +75,6 @@ group("HighlightEditable lines: Enter + Backspace mid-document", () => {
   }
 });
 
-// Typing within one middle line: the line count holds, so only that line
-// changes. A control for the path above.
 group("HighlightEditable lines: type + delete a character mid-document", () => {
   for (const lines of [500, 2_000, 8_000]) {
     const docs = documents(lines, "x");
@@ -101,6 +87,3 @@ group("HighlightEditable lines: type + delete a character mid-document", () => {
     });
   }
 });
-
-// Run this suite with `ostia bench bench/line-dom.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

@@ -1,7 +1,4 @@
 /**
- * Import VS Code / TextMate theme JSON (a parsed object — JSONC parsing is
- * the caller's job) into a `ThemePalette`.
- *
  * @typedef {import("./textmate-theme.d.ts").TextMateTheme} TextMateTheme
  * @typedef {import("./textmate-theme.d.ts").TextMateTokenColor} TextMateTokenColor
  * @typedef {import("./textmate-theme.d.ts").TextMateSemanticTokenStyle} TextMateSemanticTokenStyle
@@ -22,9 +19,7 @@ const WHITESPACE_RUN = /\s+/;
 const HAS_WHITESPACE = /\s/;
 
 /**
- * TextMate scope prefix -> hljs target scope key (in the same
- * dot/space-separated grammar `defineTheme`'s `scopes` option uses).
- * Starter table — extend if a well-known scope is obviously missing.
+ * TextMate scope prefix -> hljs scope key (`defineTheme` `scopes` syntax).
  * @type {Array<[string, string]>}
  */
 const STARTER_TABLE = [
@@ -61,8 +56,7 @@ const STARTER_TABLE = [
   ["markup.underline.link", "link"],
   ["markup.inserted", "addition"],
   ["markup.deleted", "deletion"],
-  // "deletion" is the closest visual analog hljs offers for invalid/illegal
-  // syntax — an approximation, not a semantic match.
+  // Closest visual analog, not a semantic match.
   ["invalid", "deletion"],
   ["markup.raw", "code"],
   ["markup.fenced_code", "code"],
@@ -75,10 +69,7 @@ const STARTER_ROWS = STARTER_TABLE.map(([prefix, target]) => ({
 }));
 
 /**
- * VS Code semantic token type -> hljs target scope key. Covers VS Code's
- * default semantic token types (`semanticTokenTypes`); modifiers and
- * language scoping are not resolved — a `semanticTokenColors` key matches
- * by base type only.
+ * VS Code semantic token base type -> hljs scope key.
  * @type {Record<string, string>}
  */
 const SEMANTIC_STARTER_TABLE = {
@@ -108,8 +99,7 @@ const SEMANTIC_STARTER_TABLE = {
 };
 
 /**
- * The most specific (longest segment-prefix) starter-table row matching
- * `scope`, or `null` if none does.
+ * Longest segment-prefix match, or `null`.
  * @param {string} scope
  */
 function bestMatch(scope) {
@@ -118,13 +108,7 @@ function bestMatch(scope) {
 
   for (const row of STARTER_ROWS) {
     if (row.segments.length > segments.length) continue;
-    let matches = true;
-    for (let i = 0; i < row.segments.length; i++) {
-      if (row.segments[i] !== segments[i]) {
-        matches = false;
-        break;
-      }
-    }
+    const matches = row.segments.every((s, i) => s === segments[i]);
     if (matches && (!best || row.segments.length > best.segments.length)) {
       best = row;
     }
@@ -241,9 +225,7 @@ export function fromTextMate(theme, options = {}) {
 
       const specificity = match.segments.length;
       const current = winnerSpecificity.get(match.target);
-      // Later entries win ties (VS Code order semantics); iterating
-      // tokenColors in array order means an equal-specificity match seen
-      // later always overwrites the current winner.
+      // Later entries win ties (VS Code semantics).
       if (current !== undefined && specificity < current) continue;
 
       winnerSpecificity.set(match.target, specificity);
@@ -255,8 +237,7 @@ export function fromTextMate(theme, options = {}) {
     applyTokenStyle(vars, parseScopeKey(target), style);
   }
 
-  // Second pass: semanticTokenColors overlays tokenColors, matching VS
-  // Code's own precedence when semantic highlighting is enabled.
+  // semanticTokenColors overlays tokenColors, as in VS Code.
   const semanticTokenColors = theme.semanticTokenColors ?? {};
   for (const [key, settings] of Object.entries(semanticTokenColors)) {
     const baseType = key.split(":")[0]?.split(".")[0] ?? "";
@@ -287,8 +268,6 @@ export function fromTextMate(theme, options = {}) {
 }
 
 /**
- * Convenience wrapper around `fromTextMate` that aggregates every `onWarn`
- * call instead of requiring the caller to collect them manually.
  * @param {TextMateTheme} theme
  * @returns {{ palette: ThemePalette, warnings: string[] }}
  */

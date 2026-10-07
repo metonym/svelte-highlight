@@ -4,14 +4,11 @@ import type { LanguageType } from "./languages";
 import type { ThemePalette } from "./theme.d.ts";
 
 export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
-  /**
-   * Editable code (`bind:code`).
-   */
+  /** Editable code (`bind:code`). */
   code?: string;
 
   /**
-   * highlight.js language module.
-   * Import languages from `svelte-highlight/languages/*`.
+   * Language module from `svelte-highlight/languages/*`.
    * @example
    * import typescript from "svelte-highlight/languages/typescript";
    */
@@ -24,43 +21,30 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
   tabSize?: number;
 
   /**
-   * Maximum number of undo snapshots retained. Older snapshots are dropped
-   * once the limit is exceeded.
+   * Maximum number of undo snapshots retained.
    * @default 200
    */
   historyLimit?: number;
 
   /**
-   * Keeps highlighting, caret placement, and selection active while
-   * blocking edits (typing, paste, drag-and-drop, Tab/Shift+Tab indent).
+   * Blocks edits while keeping highlighting, caret, and selection active.
    * @default false
    */
   readonly?: boolean;
 
   /**
    * Rendering engine. `"css-highlights"` (experimental) paints tokens via
-   * the CSS Custom Highlight API (`CSS.highlights`) over plain-text line
-   * nodes instead of wrapping them in `<span>`s, so a repaint never
-   * replaces DOM the caret could be sitting in. Falls back to `"dom"`
-   * silently where `CSS.highlights` is unavailable (Chrome 105+,
-   * Safari 17.2+, Firefox 140+); check what was actually used with the
-   * `resolvedEngine()` method.
-   *
-   * Colors only, and only for single-class `.hljs-<scope>` rules: compound
-   * (`.hljs-title.class_`) and descendant-selector (`.hljs-meta
-   * .hljs-keyword`) scopes have no `::highlight()` equivalent and get no
-   * color at all, not just plain weight/style.
+   * the CSS Custom Highlight API instead of `<span>`s (Chrome 105+, Safari
+   * 17.2+, Firefox 140+), falling back to `"dom"` elsewhere (see
+   * `resolvedEngine()`). Colors only, for single-class `.hljs-<scope>` rules.
    * @default "dom"
    */
   engine?: "dom" | "css-highlights";
 
   /**
-   * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
-   * from `svelte-highlight/themes/<theme>`, used only in
-   * `"css-highlights"` mode to generate `::highlight()` rules. Colors only
-   * (`color`/`background-color`); other declarations are dropped. Only
-   * single-class `.hljs-<scope>` rules convert — compound and
-   * descendant-selector scopes get no color at all.
+   * Theme CSS (`svelte-highlight/styles/<theme>`) or `ThemePalette`
+   * (`svelte-highlight/themes/<theme>`) for `"css-highlights"` mode. Only
+   * `color`/`background-color` of single-class `.hljs-<scope>` rules apply.
    * @example
    * import a11yDark from "svelte-highlight/styles/a11y-dark";
    * @example
@@ -88,19 +72,13 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
 };
 
 export type HighlightEditableEvents = {
-  /**
-   * Fired on each edit with current plain-text code.
-   */
+  /** Fired on each edit with the current code. */
   change: CustomEvent<{ code: string }>;
 
-  /**
-   * Fired when the editor loses focus with the current plain-text code.
-   */
+  /** Fired on blur with the current code. */
   blur: CustomEvent<{ code: string }>;
 
-  /**
-   * Undo/redo history. `entries` is oldest→newest; `index` is current.
-   */
+  /** Undo/redo history. `entries` is oldest→newest; `index` is current. */
   history: CustomEvent<{
     entries: { size: number }[];
     index: number;

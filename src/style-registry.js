@@ -1,14 +1,6 @@
-/**
- * Ownership registry for HighlightStyle's injected `<style>` tags, kept out
- * of the component so it can be unit-tested (see
- * tests/style-registry.test.ts).
- *
- * Instances sharing a key queue up in registration order; only the oldest
- * still-registered instance renders the `<style>`. A store (rather than a
- * plain ref count) means that when that instance leaves, the remaining
- * subscribers reactively re-derive a new owner instead of the tag being
- * dropped while siblings still need it.
- */
+// Owners of HighlightStyle's `<style>` tags, per key, in registration order.
+// Only the oldest renders; a store lets the rest re-derive a new owner when
+// it leaves.
 import { writable } from "svelte/store";
 
 /** @typedef {import("svelte/store").Writable<symbol[]>} Owners */
@@ -19,10 +11,9 @@ export function createStyleRegistry() {
 
   return {
     /**
-     * Adds `token` as the newest owner of `key`.
      * @param {string} key
      * @param {symbol} token
-     * @returns {Owners} The key's owner list, to subscribe to.
+     * @returns {Owners}
      */
     register(key, token) {
       let owners = registries.get(key);
@@ -35,11 +26,9 @@ export function createStyleRegistry() {
     },
 
     /**
-     * Removes `token` from `owners`, and drops `key` once its last owner
-     * leaves. Keys embed the full theme CSS, so a long-lived app that
-     * cycles themes would otherwise keep every theme it ever showed.
+     * Drops `key` once empty: keys embed full theme CSS and would otherwise leak.
      * @param {string} key
-     * @param {Owners} owners The store `register` returned for `key`.
+     * @param {Owners} owners
      * @param {symbol} token
      */
     unregister(key, owners, token) {
@@ -52,7 +41,6 @@ export function createStyleRegistry() {
       if (empty && registries.get(key) === owners) registries.delete(key);
     },
 
-    /** Number of keys with at least one owner. */
     get size() {
       return registries.size;
     },

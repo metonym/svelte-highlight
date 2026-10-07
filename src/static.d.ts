@@ -2,11 +2,8 @@ import type { PreprocessorGroup } from "svelte/compiler";
 
 export interface HighlightStaticOptions {
   /**
-   * Called when a usage looks static but fails to resolve or highlight (missing language
-   * module, `highlight.js` throw, etc.). It still falls back to runtime `Highlight`; this
-   * hook is for logging those failures.
-   *
-   * Defaults to `console.warn`.
+   * Called when a static-looking usage fails to resolve or highlight and
+   * falls back to the runtime `Highlight`. Defaults to `console.warn`.
    */
   onWarn?: (
     message: string,
@@ -14,11 +11,8 @@ export interface HighlightStaticOptions {
   ) => void;
 
   /**
-   * Called once per file with at least one shape-matched `<Highlight>` usage,
-   * after all of that file's usages have been resolved - the escape hatch for
-   * "how many usages actually went static," with aggregation across files
-   * left to the caller. A file with no `<Highlight>`-shaped usages doesn't
-   * trigger this at all.
+   * Called once per file that has matching `<Highlight>` usages, with how
+   * many were rendered statically.
    */
   onSummary?: (summary: {
     filename?: string;
@@ -29,10 +23,9 @@ export interface HighlightStaticOptions {
 }
 
 /**
- * Build-time preprocessor: replaces `<Highlight code="..." language={lang} />` with
- * pre-rendered highlight.js HTML when `code` and `language` are known at compile time.
- * Dynamic `code`/`language`, slot content, spread props, directives, and `langtag` keep
- * the runtime `Highlight` component.
+ * Build-time preprocessor: replaces `<Highlight code="..." language={lang} />`
+ * with pre-rendered HTML when `code` and `language` are static. Other usages
+ * keep the runtime component.
  *
  * @example
  * ```js

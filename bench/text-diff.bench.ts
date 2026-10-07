@@ -1,10 +1,4 @@
-/**
- * text-diff.js: diffText's common-prefix/suffix scan, the primitive
- * reparseIncremental uses to locate the resume point on every edit. Its
- * cost is O(shared prefix/suffix length), so the interesting axis isn't
- * document size alone but *how much of the document the scan has to walk
- * before finding a difference*.
- */
+/** diffText(): cost scales with how much shared prefix/suffix the scan walks. */
 import { group, task } from "ostia";
 import { diffText } from "../src/text-diff.js";
 import { jsSource } from "./_shared.ts";
@@ -26,7 +20,7 @@ group("diffText()", () => {
   }
 });
 
-// A small editor buffer, where any per-call setup cost would show.
+// Small buffer, where per-call setup cost would show.
 const SMALL = 1_000;
 const small = jsSource(SMALL);
 const smallCases: Record<string, string> = {
@@ -39,6 +33,3 @@ group(`diffText() @ ${SMALL.toLocaleString()} chars`, () => {
     task(name, () => diffText(small, after));
   }
 });
-
-// Run this suite with `ostia bench bench/text-diff.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

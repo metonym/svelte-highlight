@@ -1,9 +1,6 @@
-/**
- * Parse ANSI SGR escape codes into styled text segments.
- * Malformed sequences are dropped, not thrown.
- */
+// Malformed sequences are dropped, not thrown.
 
-// The 8 standard color names, indexed by their SGR offset (30-37 / 40-47).
+// Indexed by SGR offset (30-37 / 40-47).
 const COLOR_NAMES = [
   "black",
   "red",
@@ -20,7 +17,6 @@ const COLOR_NAMES = [
 /** @typedef {import("./ansi").AnsiStyle} AnsiStyle */
 
 /**
- * The themable name for a standard color offset (0-7).
  * @param {number} offset
  * @returns {string}
  */
@@ -29,7 +25,6 @@ function standardName(offset) {
 }
 
 /**
- * Map a 256-color index (0-15 → name, 16+ → index).
  * @param {number} index
  * @returns {AnsiColor}
  */
@@ -40,7 +35,6 @@ function paletteColor(index) {
 }
 
 /**
- * Apply SGR parameters to `style`.
  * @param {AnsiStyle} style
  * @param {number[]} params
  */
@@ -53,7 +47,6 @@ function applySgr(style, params) {
     if (code === undefined) continue;
 
     if (code === 0) {
-      // Reset all attributes.
       style.bold = undefined;
       style.dim = undefined;
       style.italic = undefined;
@@ -72,8 +65,7 @@ function applySgr(style, params) {
     } else if (code === 4) {
       style.underline = true;
     } else if (code === 21) {
-      // Spec says "double underline"; several emitters instead use 21 as
-      // "bold off". We follow the spec and treat it as underline.
+      // Spec: double underline (some emitters misuse it as "bold off").
       style.underline = true;
     } else if (code === 7) {
       style.reverse = true;
@@ -107,7 +99,7 @@ function applySgr(style, params) {
     } else if (code === 49) {
       style.bg = undefined;
     } else if (code === 38 || code === 48) {
-      // Extended color: `38;5;n` (256-color) or `38;2;r;g;b` (truecolor).
+      // `38;5;n` (256-color) or `38;2;r;g;b` (truecolor).
       const key = code === 38 ? "fg" : "bg";
       const mode = list[i + 1];
       if (mode === 5) {
@@ -128,19 +120,13 @@ function applySgr(style, params) {
         i += 4;
       }
     }
-    // Unknown codes: ignore.
   }
 }
 
 /**
- * SGR parameters from `text.slice(start, end)` (the body between `ESC[` and
- * `m`): `;`-separated integers, with an empty part meaning 0.
- *
- * The common all-digits body is parsed in place by char code, skipping the
- * split/map/filter chain's three array allocations per sequence (see
- * bench/ansi.bench.ts). Anything else (sign, `.`, `:`, whitespace, or a part
- * too long to accumulate exactly) falls back to that chain, so `Number()`'s
- * edge cases keep the same result.
+ * `;`-separated integers in `text.slice(start, end)`; an empty part is 0.
+ * All-digit bodies are parsed by char code to skip the split/map/filter
+ * allocations; anything else falls back to that chain for `Number()` parity.
  * @param {string} text
  * @param {number} start
  * @param {number} end
@@ -173,7 +159,6 @@ function parseSgrParams(text, start, end) {
 }
 
 /**
- * Build a segment from `text` and active fields in `style`.
  * @param {string} text
  * @param {AnsiStyle} style
  * @param {string} [link]
@@ -188,9 +173,7 @@ function toSegment(text, style, link) {
   if (style.underline) segment.underline = true;
   if (style.strikethrough) segment.strikethrough = true;
   if (style.conceal) segment.conceal = true;
-  // Reverse video swaps fg/bg on the emitted segment. `style.fg`/`style.bg`
-  // themselves are untouched, so a later SGR 27 (reverse off) restores the
-  // original mapping for text that follows.
+  // Swap only on output so a later SGR 27 restores the original mapping.
   const fg = style.reverse ? style.bg : style.fg;
   const bg = style.reverse ? style.fg : style.bg;
   if (fg) segment.fg = fg;
@@ -202,8 +185,7 @@ function toSegment(text, style, link) {
 const ESC = "\x1b";
 
 /**
- * Index of the next ESC or `\r` at or after `from` (or `text.length`):
- * the end of a run of plain text the parsers can copy as-is.
+ * Index of the next ESC or `\r` at or after `from` (or `text.length`).
  * @param {string} text
  * @param {number} from
  */
@@ -217,8 +199,20 @@ function plainRunEnd(text, from) {
   return j;
 }
 
-// Schemes allowed as OSC 8 hyperlink targets. Anything else (javascript:,
-// data:, vbscript:, scheme-less strings) is rejected like an empty uri.
+/**
+ * Index of the BEL or ST (`ESC \\`) ending a string sequence, or -1.
+ * @param {string} text
+ * @param {number} from
+ */
+function stringTerminator(text, from) {
+  for (let j = from; j < text.length; j += 1) {
+    if (text[j] === "\x07") return j;
+    if (text[j] === ESC && text[j + 1] === "\\") return j;
+  }
+  return -1;
+}
+
+// OSC 8 targets with any other scheme (javascript:, data:, ...) are dropped.
 const ALLOWED_LINK_SCHEMES = ["http:", "https:", "mailto:"];
 
 /**
@@ -234,200 +228,19 @@ function sanitizeLink(uri) {
 }
 
 /**
- * Parse ANSI-escaped terminal output into styled segments.
- *
  * @param {string} text Raw terminal output.
- * @returns {AnsiSegment[]} Styled text segments, in order.
+ * @returns {AnsiSegment[]}
  */
 export function parseAnsi(text) {
   if (!text) return [];
-
-  /** @type {AnsiSegment[]} */
-  const segments = [];
-  /** @type {AnsiStyle} */
-  const style = {};
-  let buffer = "";
-  /** @type {string | undefined} */
-  let link;
-
-  const flush = () => {
-    if (buffer) {
-      segments.push(toSegment(buffer, style, link));
-      buffer = "";
-    }
-  };
-
-  /**
-   * Handle a lone `\r`: per-line overwrite semantics. Full last-write-wins
-   * per character cell is overkill for a text renderer, so we use a
-   * simplification: discard everything back to the start of the current
-   * line (the last `\n`) so that subsequent text rebuilds the line fresh.
-   */
-  const resetLine = () => {
-    const bufferBreak = buffer.lastIndexOf("\n");
-    if (bufferBreak !== -1) {
-      buffer = buffer.slice(0, bufferBreak + 1);
-      return;
-    }
-    buffer = "";
-    let last = segments.pop();
-    while (last !== undefined) {
-      const segmentBreak = last.text.lastIndexOf("\n");
-      if (segmentBreak === -1) {
-        last = segments.pop();
-        continue;
-      }
-      last.text = last.text.slice(0, segmentBreak + 1);
-      segments.push(last);
-      return;
-    }
-  };
-
-  let i = 0;
-  while (i < text.length) {
-    const ch = text[i];
-
-    if (ch === ESC && text[i + 1] === "[") {
-      // Read a CSI sequence: parameters up to a final byte (0x40-0x7e).
-      let j = i + 2;
-      while (j < text.length) {
-        const code = text.charCodeAt(j);
-        if (code >= 0x40 && code <= 0x7e) break;
-        j += 1;
-      }
-
-      if (j >= text.length) {
-        // Unterminated: drop the rest.
-        break;
-      }
-
-      const final = text[j];
-      if (final === "m") {
-        // SGR applies to text that follows.
-        flush();
-        applySgr(style, parseSgrParams(text, i + 2, j));
-      }
-      // Non-SGR CSI sequences (cursor moves, etc.) are skipped.
-      i = j + 1;
-      continue;
-    }
-
-    if (ch === ESC && text[i + 1] === "]") {
-      // Read an OSC sequence: body up to a BEL or ST (`ESC \`) terminator.
-      let j = i + 2;
-      let terminatorLength = 0;
-      while (j < text.length) {
-        if (text[j] === "\x07") {
-          terminatorLength = 1;
-          break;
-        }
-        if (text[j] === ESC && text[j + 1] === "\\") {
-          terminatorLength = 2;
-          break;
-        }
-        j += 1;
-      }
-
-      if (terminatorLength === 0) {
-        // Unterminated: drop the rest.
-        break;
-      }
-
-      const body = text.slice(i + 2, j);
-      const firstSemi = body.indexOf(";");
-      const command = firstSemi === -1 ? body : body.slice(0, firstSemi);
-      if (command === "8" && firstSemi !== -1) {
-        // OSC 8 hyperlink: `8;params;uri`. An empty uri closes the link.
-        const rest = body.slice(firstSemi + 1);
-        const secondSemi = rest.indexOf(";");
-        if (secondSemi !== -1) {
-          flush();
-          const uri = rest.slice(secondSemi + 1);
-          link = uri ? sanitizeLink(uri) : undefined;
-        }
-      }
-      // Other OSC sequences (title/icon sets, unknown commands) carry no
-      // rendered state: strip them silently.
-      i = j + terminatorLength;
-      continue;
-    }
-
-    if (ch === ESC) {
-      const next = text[i + 1];
-
-      if (next === "P" || next === "X" || next === "^" || next === "_") {
-        // DCS/SOS/PM/APC: string-terminated body, like OSC.
-        let j = i + 2;
-        let terminatorLength = 0;
-        while (j < text.length) {
-          if (text[j] === "\x07") {
-            terminatorLength = 1;
-            break;
-          }
-          if (text[j] === ESC && text[j + 1] === "\\") {
-            terminatorLength = 2;
-            break;
-          }
-          j += 1;
-        }
-
-        if (terminatorLength === 0) {
-          // Unterminated: drop the rest.
-          break;
-        }
-
-        i = j + terminatorLength;
-        continue;
-      }
-
-      if (next !== undefined && "()*+-./".includes(next)) {
-        // Charset select: ESC, intermediate byte, designator byte.
-        i = Math.min(i + 3, text.length);
-        continue;
-      }
-
-      if (next === undefined) {
-        // Trailing lone ESC: nothing follows to interpret.
-        i += 1;
-        continue;
-      }
-
-      // Any other ESC <char> (cursor save/restore, reset, etc.): drop both.
-      i += 2;
-      continue;
-    }
-
-    if (ch === "\r") {
-      if (text[i + 1] === "\n") {
-        // Treat \r\n as \n.
-        buffer += "\n";
-        i += 2;
-        continue;
-      }
-      resetLine();
-      i += 1;
-      continue;
-    }
-
-    // Plain text: append the whole run up to the next ESC or \r as one
-    // slice instead of one char at a time (see bench/ansi.bench.ts).
-    const runEnd = plainRunEnd(text, i + 1);
-    buffer += text.slice(i, runEnd);
-    i = runEnd;
-  }
-
-  flush();
-  return segments;
+  const session = createAnsiSession();
+  session.append(text);
+  return session.finish();
 }
 
 /** @typedef {import("./ansi").AnsiSession} AnsiSession */
 
 /**
- * Create an incremental ANSI parser session for text arriving in chunks
- * (a live-tailed log, a streamed response). `finish()`'s output is
- * identical to calling `parseAnsi` once on the full concatenation of every
- * appended chunk.
- *
  * @returns {AnsiSession}
  */
 export function createAnsiSession() {
@@ -438,14 +251,11 @@ export function createAnsiSession() {
   let buffer = "";
   /** @type {string | undefined} */
   let link;
-  // Unconsumed tail from the previous append(): an incomplete sequence
-  // (split SGR/OSC 8, a lone trailing ESC or \r) that only made sense to
-  // resolve once more input arrived.
+  // Incomplete trailing sequence from the last append(), retried with more input.
   let pending = "";
   let finished = false;
-  // Lowest index in `segments` that changed since the last delta() call.
-  // flush() only ever pushes at or above it, so only resetLine(), which
-  // pops and truncates settled segments, has to lower it.
+  // Lowest index in `segments` changed since the last delta(); only
+  // resetLine() can lower it.
   let changedFrom = 0;
 
   const flush = () => {
@@ -455,6 +265,7 @@ export function createAnsiSession() {
     }
   };
 
+  // Lone `\r`: drop back to the last `\n` (a line-level overwrite).
   const resetLine = () => {
     const bufferBreak = buffer.lastIndexOf("\n");
     if (bufferBreak !== -1) {
@@ -474,13 +285,8 @@ export function createAnsiSession() {
   };
 
   /**
-   * Scan `input`, mutating style/link/buffer/segments as it goes. When
-   * `atEnd` is false (an `append()` mid-stream), a sequence that can't be
-   * resolved without more bytes than `input` has is left unconsumed and
-   * returned so the next `append()` can retry once it has more. When
-   * `atEnd` is true (from `finish()`), those same sequences are settled
-   * exactly like `parseAnsi` settles them at the end of a one-shot input
-   * (dropped — or, for a trailing lone `\r`, applied as an overwrite).
+   * Unless `atEnd`, an incomplete trailing sequence is returned unconsumed;
+   * at the end it is dropped (a lone `\r` still overwrites).
    * @param {string} input
    * @param {boolean} atEnd
    * @returns {string} Unconsumed tail (always "" when `atEnd`).
@@ -504,8 +310,7 @@ export function createAnsiSession() {
           return input.slice(i);
         }
 
-        const final = input[j];
-        if (final === "m") {
+        if (input[j] === "m") {
           flush();
           applySgr(style, parseSgrParams(input, i + 2, j));
         }
@@ -514,21 +319,8 @@ export function createAnsiSession() {
       }
 
       if (ch === ESC && input[i + 1] === "]") {
-        let j = i + 2;
-        let terminatorLength = 0;
-        while (j < input.length) {
-          if (input[j] === "\x07") {
-            terminatorLength = 1;
-            break;
-          }
-          if (input[j] === ESC && input[j + 1] === "\\") {
-            terminatorLength = 2;
-            break;
-          }
-          j += 1;
-        }
-
-        if (terminatorLength === 0) {
+        const j = stringTerminator(input, i + 2);
+        if (j === -1) {
           if (atEnd) break;
           return input.slice(i);
         }
@@ -536,6 +328,7 @@ export function createAnsiSession() {
         const body = input.slice(i + 2, j);
         const firstSemi = body.indexOf(";");
         const command = firstSemi === -1 ? body : body.slice(0, firstSemi);
+        // OSC 8 hyperlink `8;params;uri`; an empty uri closes the link.
         if (command === "8" && firstSemi !== -1) {
           const rest = body.slice(firstSemi + 1);
           const secondSemi = rest.indexOf(";");
@@ -545,37 +338,25 @@ export function createAnsiSession() {
             link = uri ? sanitizeLink(uri) : undefined;
           }
         }
-        i = j + terminatorLength;
+        i = j + (input[j] === ESC ? 2 : 1);
         continue;
       }
 
       if (ch === ESC) {
         const next = input[i + 1];
 
+        // DCS/SOS/PM/APC: string-terminated like OSC, no rendered state.
         if (next === "P" || next === "X" || next === "^" || next === "_") {
-          let j = i + 2;
-          let terminatorLength = 0;
-          while (j < input.length) {
-            if (input[j] === "\x07") {
-              terminatorLength = 1;
-              break;
-            }
-            if (input[j] === ESC && input[j + 1] === "\\") {
-              terminatorLength = 2;
-              break;
-            }
-            j += 1;
-          }
-
-          if (terminatorLength === 0) {
+          const j = stringTerminator(input, i + 2);
+          if (j === -1) {
             if (atEnd) break;
             return input.slice(i);
           }
-
-          i = j + terminatorLength;
+          i = j + (input[j] === ESC ? 2 : 1);
           continue;
         }
 
+        // Charset select: ESC, intermediate, designator.
         if (next !== undefined && "()*+-./".includes(next)) {
           if (i + 2 >= input.length) {
             if (atEnd) break;
@@ -634,8 +415,7 @@ export function createAnsiSession() {
       const start = changedFrom;
       const changed = segments.slice(start);
       if (buffer) changed.push(toSegment(buffer, style, link));
-      // The live trailing segment (index `segments.length`) is rebuilt from
-      // `buffer` on every call, so the next delta() always re-sends it.
+      // The live `buffer` segment is always re-sent next time.
       changedFrom = segments.length;
       return { start, segments: changed };
     },
