@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.23.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.23.0) - 2026-10-06
+
+**Features**
+
+- add `tokenizeAhead` to `HighlightVirtual`
+- center search matches when `HighlightVirtual` jumps (`scrollToLine` `align`)
+
+**Fixes**
+
+- recognize code fences on CRLF lines
+- stop an open fence's code from pinning every buffer
+- copy rather than truncate events `replace()` didn't re-parse
+- fire `windowchange` after the new rows render
+- repaint `css-highlights` lines an edit re-tokenized
+- drop `HighlightStyle` registry keys with no owners
+- strip tags before decoding entities in tokenized search lines
+- scale the engine loop guard with input length
+
+**Performance**
+
+- cut memory and work in `TokenizedDocument`, stream sessions, and fence splitting
+- paint only changed lines/segments in `HighlightEditable`, `AnsiOutput`, and `MarkdownStream`
+- speed up search, text-diff, and engine hot paths (`escapeHtml`, `nextMatch`, keyword processing)
+- trim ANSI parse/color work and scoped CSS rewriting
+
 ## [7.22.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.22.0) - 2026-09-21
 
 **Features**
