@@ -3,21 +3,17 @@ import { LANGUAGE_ALIASES } from "./languages/aliases.js";
 import { loadLanguage } from "./load-language.js";
 import { ensureRegistered, registry } from "./registry.js";
 
-/**
- * @typedef {import("./fence.d.ts").ParsedMeta} ParsedMeta
- */
+/** @typedef {import("./fence.d.ts").ParsedMeta} ParsedMeta */
 
 const TOKEN_RE = /(\w+)="([^"]*)"|(\w+)=\{([^}]*)\}|\{([^}]*)\}|(\w+)/g;
 const WHITESPACE_RE = /\s+/;
-// A line here excludes its "\n" but keeps a CRLF line's "\r", which `.`
-// doesn't match, so both allow one before the end.
+// Lines exclude "\n" but may keep a CRLF "\r", which `.` doesn't match.
 const OPENING_FENCE_RE = /^( {0,3})(`{3,}|~{3,})(.*)\r?$/;
 const CLOSING_FENCE_RE = /^( {0,3})(`+|~+)( *)\r?$/;
 const INFO_SPLIT_RE = /^(\S*)\s*([\s\S]*)$/;
 
 /**
- * Expands a comma-separated `1,3-5` range string into individual 1-indexed
- * line numbers.
+ * Expands `1,3-5` into 1-indexed line numbers.
  * @param {string} ranges
  * @returns {number[]}
  */
@@ -141,10 +137,8 @@ export async function highlightFence({ code, lang, meta }) {
 }
 
 /**
- * Whether the line spanning `[lineStart, lineEnd)` of `text` can be a fence
- * line at all: up to 3 spaces, then a backtick or tilde. A char-code check,
- * so the (overwhelmingly common) prose or code line skips both the line
- * slice and the fence regexes below - see bench/fence-splitter.bench.ts.
+ * Cheap pre-check (up to 3 spaces, then "`" or "~") so most lines skip the
+ * slice and fence regexes.
  * @param {string} text
  * @param {number} lineStart
  * @param {number} lineEnd
@@ -187,8 +181,6 @@ function matchClosingFence(line, char, minLen) {
 }
 
 /**
- * The line spanning `[lineStart, lineEnd)` of `text`, minus up to `indent`
- * leading spaces.
  * @param {string} text
  * @param {number} lineStart
  * @param {number} lineEnd
@@ -208,33 +200,21 @@ function stripIndent(text, lineStart, lineEnd, indent) {
  */
 
 /**
- * An open fence being scanned, with `lineCount` newline-terminated content
- * lines so far. An unindented fence's lines sit back to back in the text, so
- * they are tracked as the span `[codeStart, codeEnd)` and sliced from the
- * current buffer when needed. An indented fence strips each line, so `code`
- * holds its lines already joined instead, and a resumed scan extends it
- * rather than re-joining every line.
+ * An open fence. Unindented content is tracked as the span
+ * `[codeStart, codeEnd)`; indented content (stripped per line) is joined into `code`.
  * @typedef {{ char: "`" | "~"; len: number; indent: number; info: string; start: number; code: string; codeStart: number; codeEnd: number; lineCount: number }} FenceContext
  */
 
 /**
- * Where a scan stopped: `pos` is the start of the trailing line that wasn't
- * newline-terminated yet (or the end of the text), and `proseStart`/`fence`
- * describe the segment that line belongs to. Everything before `pos` is
- * final - a newline-terminated line never changes on append - so `append`
- * resumes from here instead of rescanning the whole last segment.
+ * Where a scan stopped: `pos` is the start of the unterminated trailing line
+ * (or the end). Everything before `pos` is final, so `append` resumes here.
  * @typedef {{ pos: number; proseStart: number; fence: FenceContext | null }} ScanState
  */
 
 /**
- * A copy of `slice` that owns only its own characters. A slice of the
- * splitter's buffer is a substring that keeps the whole buffer alive - and
- * since `append` grows a new buffer every chunk, each closed segment would
- * pin its own full copy of the text as it stood when the segment closed
- * (bench/markdown-stream.bench.ts --alloc: a finished 51 KB stream kept
- * 1.26 MB alive, 865 KB with copies). `structuredClone` copies in both V8 and
- * JSC at memcpy speed; rope tricks like `` ` ${s}`.slice(1) `` don't, since
- * JSC slices a rope's fiber without flattening it.
+ * Flat copy of `slice`, so a final segment doesn't pin the whole buffer
+ * (`append` grows a new buffer per chunk). `structuredClone` flattens in both
+ * V8 and JSC; rope tricks like `` ` ${s}`.slice(1) `` don't in JSC.
  * @param {string} slice
  * @returns {string}
  */
@@ -243,11 +223,8 @@ function ownCopy(slice) {
 }
 
 /**
- * `ctx`'s newline-terminated content lines, joined. Slicing an unindented
- * fence's lines from `text` keeps only the current buffer alive. Joining
- * them as they arrive would make a rope of slices of every buffer `append`
- * grew while the fence was open, pinning a full copy of the text as it
- * stood each time a chunk finished a line.
+ * Slicing from the current `text` (rather than joining lines as they arrive)
+ * avoids a rope pinning every past buffer.
  * @param {FenceContext} ctx
  * @param {string} text
  * @returns {string}
@@ -291,9 +268,7 @@ function buildFenceSegment(ctx, text, id, end, open, partial) {
       partial === undefined
         ? open
           ? code
-          : // Final, so copied (see `ownCopy`): an unindented body is a
-            // slice of the buffer, an indented one a rope of slices.
-            ownCopy(code)
+          : ownCopy(code)
         : ctx.lineCount === 0
           ? partial
           : `${code}\n${partial}`,
@@ -304,11 +279,8 @@ function buildFenceSegment(ctx, text, id, end, open, partial) {
 }
 
 /**
- * Parses `text` from `state.pos` onward. A fresh `scanStateAt(offset)`
- * treats `offset` as the start of a document (always begins in prose mode -
- * valid since a segment boundary never occurs mid-fence, only at a definite
- * open/close/EOF point); a state returned by an earlier call resumes that
- * scan where it stopped.
+ * Parses `text` from `state.pos`. `scanStateAt(offset)` starts in prose mode,
+ * which is valid at any segment boundary; an earlier returned state resumes.
  * @param {string} text
  * @param {ScanState} state
  * @param {number} startId
@@ -321,10 +293,9 @@ function computeSegments(text, state, startId) {
   const n = text.length;
   let i = state.pos;
   let proseStart = state.proseStart;
-  // Copied, since the content lines below extend it in place.
+  // Copied: mutated in place below.
   /** @type {FenceContext | null} */
   let fenceCtx = state.fence === null ? null : { ...state.fence };
-  // Start of the trailing line not yet terminated by a newline, if any.
   let resumePos = n;
   /** @type {string | undefined} */
   let partial;
@@ -342,19 +313,13 @@ function computeSegments(text, state, startId) {
         ? matchOpeningFence(text.slice(lineStart, lineEnd))
         : null;
       if (open !== null) {
-        if (!hasNewline) {
-          // Opening line not yet terminated by a newline: stays prose until
-          // it is, so a half-received "```ts" never flickers into a fence.
-          break;
-        }
+        // Unterminated opener stays prose, so a half-received "```ts" doesn't flicker.
+        if (!hasNewline) break;
         if (lineStart > proseStart) {
           segments.push({
             id: id++,
             kind: "text",
-            // Closed for good, so it gets its own copy (see `ownCopy`). The
-            // open tail below stays a cheap slice: it is rebuilt on every
-            // append and only ever pins the current buffer (as does an open
-            // unindented fence's code, see `fenceCode`).
+            // Final, so copied; the open tail below stays a slice.
             text: ownCopy(text.slice(proseStart, lineStart)),
             start: proseStart,
             end: lineStart,
@@ -364,8 +329,6 @@ function computeSegments(text, state, startId) {
           char: open.char,
           len: open.len,
           indent: open.indent,
-          // Copied once (see `ownCopy`), so the info, meta and title of
-          // every segment built from this fence don't pin the buffer.
           info: ownCopy(open.info),
           start: lineStart,
           code: "",
@@ -395,9 +358,7 @@ function computeSegments(text, state, startId) {
       i = lineEndIncl;
       continue;
     }
-    // A same-line-terminated closer requires a newline (like an opener, a
-    // still-unterminated closer-looking line might grow into content or a
-    // longer/shorter run with the next chunk) - anything else is content.
+    // An unterminated closer-looking line may still grow, so it's content.
     const content = stripIndent(text, lineStart, lineEnd, fenceCtx.indent);
     if (!hasNewline) {
       partial = content;
@@ -449,15 +410,12 @@ export function createFenceSplitter() {
       if (chunk === "") return;
       text += chunk;
 
-      // The segment `scanState` stopped in is the last one - unless the
-      // text ended right after a closing fence line, in which case the scan
-      // starts a brand-new segment and every existing one is final.
+      // Not continuing when the text ended right after a closing fence.
       const last = segments[segments.length - 1];
       const tailStart =
         scanState.fence === null ? scanState.proseStart : scanState.fence.start;
       const continuesLast = last !== undefined && last.start === tailStart;
-      // Skipping an id when not continuing keeps ids identical to a rescan
-      // from `last.start`, which re-emits `last` and discards its new id.
+      // Skip an id when not continuing, so ids match a rescan from `last.start`.
       const result = computeSegments(
         text,
         scanState,

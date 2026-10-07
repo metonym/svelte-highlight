@@ -2,76 +2,40 @@ import type { SvelteComponentTyped } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 
 export type AnsiOutputProps = HTMLAttributes<HTMLPreElement> & {
-  /**
-   * Terminal output, including ANSI SGR codes.
-   */
+  /** Terminal output, including ANSI escape codes. */
   text: string;
 
-  /**
-   * Flip foreground to black/white when contrast on a background is too low.
-   * @default true
-   */
+  /** Flip text to black/white on low-contrast backgrounds. @default true */
   autoContrast?: boolean;
 
-  /**
-   * Wrap long lines (`white-space: pre-wrap; overflow-wrap: anywhere`)
-   * instead of horizontally scrolling.
-   * @default false
-   */
+  /** Wrap long lines instead of horizontally scrolling. @default false */
   wrap?: boolean;
 
-  /**
-   * Output block padding.
-   * @default "1em"
-   */
+  /** Output block padding. @default "1em" */
   "--ansi-padding"?: string;
 
-  /**
-   * Output block background.
-   * @default "#1e1e1e"
-   */
+  /** Output block background. @default "#1e1e1e" */
   "--ansi-background"?: string;
 
-  /**
-   * Default text color.
-   * @default "#d4d4d4"
-   */
+  /** Default text color. @default "#d4d4d4" */
   "--ansi-foreground"?: string;
 
-  /**
-   * Monospace font family.
-   * @default "ui-monospace, SFMono-Regular, Menlo, monospace"
-   */
+  /** Monospace font family. @default "ui-monospace, SFMono-Regular, Menlo, monospace" */
   "--ansi-font-family"?: string;
 
-  /**
-   * Font size.
-   * @default "0.875em"
-   */
+  /** Font size. @default "0.875em" */
   "--ansi-font-size"?: string;
 
-  /**
-   * Line height.
-   * @default 1.5
-   */
+  /** Line height. @default 1.5 */
   "--ansi-line-height"?: string | number;
 
-  /**
-   * Tab size.
-   * @default 4
-   */
+  /** Tab size. @default 4 */
   "--ansi-tab-size"?: string | number;
 
-  /**
-   * Bold font weight.
-   * @default 700
-   */
+  /** Bold font weight. @default 700 */
   "--ansi-bold-weight"?: string | number;
 
-  /**
-   * Dim opacity.
-   * @default 0.5
-   */
+  /** Dim opacity. @default 0.5 */
   "--ansi-dim-opacity"?: string | number;
 
   /** Standard black. @default "#000000" */

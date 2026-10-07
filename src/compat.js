@@ -1,11 +1,4 @@
-/**
- * Runtime adapter for user-authored hljs-format grammars (`(hljs) => modeObject`).
- * Not in the core bundle: importing this pulls in highlight.js/lib/core (a peer
- * dependency you install yourself).
- *
- * Uses the same converter as scripts/convert-grammars.ts (convert-language.js),
- * against a fresh hljs instance instead of the build-time one.
- */
+// Not in the core bundle: imports highlight.js/lib/core (a peer dependency).
 import { convertLanguage } from "./convert-language.js";
 
 /** @typedef {import("./languages").LanguageType<string>} LanguageType */
@@ -15,13 +8,9 @@ let hljs;
 
 /**
  * @param {string} name
- * @param {(hljs: unknown) => object} languageFn hljs's `register(hljs)`
- *   shape: returns the grammar's root mode object.
- * @param {string} [source] raw source text of the grammar's own file (e.g.
- *   via a bundler's `?raw` import); recovers array-membership `on:begin`
- *   guards that the compiled callback alone can't expose.
- * @returns {Promise<LanguageType & { warnings: string[] }>} `warnings` lists
- *   hljs features with no IR equivalent; empty when the conversion is clean.
+ * @param {(hljs: unknown) => object} languageFn
+ * @param {string} [source]
+ * @returns {Promise<LanguageType & { warnings: string[] }>}
  */
 export async function fromHighlightJs(name, languageFn, source) {
   if (!hljs) {

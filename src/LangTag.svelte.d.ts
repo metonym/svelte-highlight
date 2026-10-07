@@ -5,23 +5,13 @@ import type { LanguageName } from "./languages";
 
 export type LangTagProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
-    /**
-     * Code to highlight.
-     */
+    /** Code to highlight. */
     code: any;
 
-    /**
-     * Highlighted HTML.
-     *
-     * When empty, `code` is rendered instead as plain, Svelte-escaped text —
-     * the `hljs` class is still applied, there's just no highlighting markup.
-     */
+    /** Highlighted HTML. When empty, `code` is rendered as escaped text. */
     highlighted: string;
 
-    /**
-     * Language name.
-     * @default "plaintext"
-     */
+    /** Language name. @default "plaintext" */
     languageName?: LanguageName | (string & {});
   };
 

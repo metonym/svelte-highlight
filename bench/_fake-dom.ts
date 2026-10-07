@@ -1,9 +1,6 @@
 /**
- * A minimal fake DOM for driving editable-line-dom.js outside a browser:
- * just the node tree, text, and a SHOW_TEXT TreeWalker, plus counters for
- * the writes that matter (`innerHTML`/`textContent` assignments, inserts,
- * removals). `innerHTML` is not parsed into elements: it becomes one text
- * node holding the markup's text, which is all the line math reads.
+ * Minimal DOM for editable-line-dom.js with write counters. `innerHTML`
+ * becomes a single text node of the markup's text; that's all the line math reads.
  */
 
 const ENTITIES: Record<string, string> = {
@@ -21,9 +18,7 @@ export type DomCounters = {
   removals: number;
 };
 
-// Children are a doubly linked list, as in a real DOM, so sibling steps,
-// inserts, and removals are O(1) and the timings reflect the code under
-// test rather than the fake.
+// Linked-list children keep the fake O(1) per op so timings reflect the code under test.
 class FakeNode {
   parentNode: FakeElement | null = null;
   nextSibling: FakeNode | null = null;
@@ -58,7 +53,6 @@ class FakeText extends FakeNode {
 class FakeElement extends FakeNode {
   firstChild: FakeNode | null = null;
   lastChild: FakeNode | null = null;
-  /** Only `length` is read; a full NodeList isn't needed. */
   childNodes = { length: 0 };
   constructor(ownerDocument: FakeDocument) {
     super(ownerDocument, 1);
@@ -135,7 +129,6 @@ class FakeElement extends FakeNode {
   }
 }
 
-/** Pre-order walk over the text nodes under `root`, like a SHOW_TEXT TreeWalker. */
 class FakeTreeWalker {
   currentNode: FakeNode;
   constructor(readonly root: FakeNode) {
@@ -183,7 +176,6 @@ class FakeDocument {
   }
 }
 
-/** An editor root plus its document's write counters. */
 export function createFakeEditor() {
   const doc = new FakeDocument();
   return {

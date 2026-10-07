@@ -1,11 +1,4 @@
-/**
- * highlightStatic()'s markup() step, end to end: parsing a .svelte file,
- * resolving each matched language module, running highlight.js, and
- * splicing the static HTML back in with a sourcemap. Scaling by match
- * count isolates the splice/sourcemap cost (the part this preprocessor
- * hand-rolls instead of using magic-string) from the fixed parse/resolve
- * overhead paid once per file regardless of match count.
- */
+/** highlightStatic().markup(); scaling by match count isolates splice/sourcemap cost. */
 import { group, task } from "ostia";
 import { highlightStatic } from "../src/static.js";
 
@@ -20,9 +13,8 @@ function fixture(matchCount: number) {
 `;
   const blocks: string[] = [];
   for (let i = 0; i < matchCount; i += 1) {
-    // No `{`/`}` in `code`: inside a quoted attribute Svelte reads them as
-    // an expression, the parse fails, and markup() bails out before
-    // matching anything (an earlier fixture here only measured that).
+    // No `{`/`}` in `code`: Svelte would parse them as an expression and
+    // markup() would bail out before matching.
     blocks.push(
       `<p>section ${i}</p>`,
       `<Highlight language={javascript} code="const sum${i} = a + b + ${i};\nconsole.log(sum${i});" />`,
@@ -42,6 +34,3 @@ group("highlightStatic().markup()", () => {
     });
   }
 });
-
-// Run this suite with `ostia bench bench/preprocessor.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

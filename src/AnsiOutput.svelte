@@ -17,9 +17,7 @@
   import { createAnsiOutput } from "./ansi-output.js";
 
   const output = createAnsiOutput();
-  // `update()` hands back the same array, patched in place. Reassigning it
-  // still invalidates `segments`: legacy-mode equality treats any object
-  // as changed.
+  // Same array each time; legacy-mode reactivity still treats it as changed.
   $: segments = output.update(text, autoContrast);
 </script>
 

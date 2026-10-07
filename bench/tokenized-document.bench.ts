@@ -1,9 +1,4 @@
-/**
- * TokenizedDocument's cold random access: jumping straight to the end of a
- * large document, the way HighlightVirtual's scrollToLine does. Everything
- * before the window has to be tokenized once, in checkpointInterval-line
- * batches, so this tracks how batch feeding scales with document length.
- */
+/** TokenizedDocument cold jump to the end (scrollToLine), tokenizing everything before it. */
 import { group, task } from "ostia";
 import typescript from "../src/languages/typescript.js";
 import { createTokenizedDocument } from "../src/tokenized-document.js";

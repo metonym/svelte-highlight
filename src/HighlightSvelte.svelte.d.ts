@@ -5,47 +5,27 @@ import type { LangtagProps } from "./Highlight.svelte";
 
 export type HighlightSvelteProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
-    /**
-     * Code to highlight.
-     */
+    /** Code to highlight. */
     code: any;
   };
 
 export type HighlightSvelteEvents = {
-  /**
-   * Fires once per highlight (when `code` changes and the highlighting
-   * result actually changes), including when the result is empty (empty
-   * `code`).
-   */
+  /** Fires when the highlighting result changes, including to empty. */
   highlight: CustomEvent<{
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
+    /** The highlighted HTML. */
     highlighted: string;
 
-    /**
-     * The scope-event stream behind `highlighted` - the same array
-     * `registry.highlight(...).events` returns. See `svelte-highlight/engine`
-     * for headless consumption (`tokenLines`, `toRanges`, custom renderers).
-     */
+    /** Scope events behind `highlighted` (see `svelte-highlight/engine`). */
     events: ScopeEvent[];
   }>;
 };
 
 export type HighlightSvelteSlots = {
   default: {
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
+    /** The highlighted HTML. */
     highlighted: string;
 
-    /**
-     * The scope-event stream behind `highlighted` - the same array
-     * `registry.highlight(...).events` returns. See `svelte-highlight/engine`
-     * for headless consumption (`tokenLines`, `toRanges`, custom renderers).
-     */
+    /** Scope events behind `highlighted` (see `svelte-highlight/engine`). */
     events: ScopeEvent[];
   };
 };

@@ -107,8 +107,7 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
     }
   }
 
-  // Mining gap-fill proposals needs every theme's raw CSS up front, so read
-  // it all once here rather than per-file inside the main pass below.
+  // Gap-fill proposals need every theme's raw CSS up front.
   const cssFilesWithRaw = await Promise.all(
     cssFiles.map(async (entry) => ({
       ...entry,
@@ -129,9 +128,6 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
       const plugins =
         proposals && gapsFilled > 0 ? [fillSimilarityGaps(proposals)] : [];
 
-      // Only the primary (preserve-license) pass reports removal stats — the
-      // scoped-preview pass below processes identical selectors/declarations,
-      // so counting both would double-count the same removals.
       const deadDeclarationStats = { removedCount: 0 };
       const cssMinified = preprocessStyles(content, {
         discardComments: "preserve-license",
@@ -143,10 +139,7 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
       const exportee = `const ${moduleName} = \`<style>${contentCssForJs}</style>\`;\n
       export default ${moduleName};\n`;
 
-      // Scope each theme for docs previews (`class={moduleName}` on the `<pre>`).
-      // Strip comments from the already-processed CSS rather than running
-      // the whole postcss pipeline a second time just to drop license
-      // comments; the scoped output is byte-identical.
+      // Docs previews scope each theme under `class={moduleName}`.
       const scopedStyle = scopeStylesheet(
         stripComments(cssMinified),
         moduleName,
@@ -219,15 +212,15 @@ export async function buildStyles(): Promise<{ themeInputs: ThemeInput[] }> {
 
   styles.sort((a, b) => a.name.localeCompare(b.name));
 
-  const customNames = new Set(
-    cssFiles.filter((file) => file.custom).map((file) => file.name),
-  );
-
   const markdown =
-    createMarkdown("Styles", styles.length, customNames.size) +
+    createMarkdown(
+      "Styles",
+      styles.length,
+      styles.filter((style) => style.custom).length,
+    ) +
     styles
-      .map(({ name, moduleName }) => {
-        const customNote = customNames.has(name)
+      .map(({ name, moduleName, custom }) => {
+        const customNote = custom
           ? "\n> Custom svelte-highlight style (not exported by highlight.js)\n"
           : "";
         return `## ${name} (\`${moduleName}\`)

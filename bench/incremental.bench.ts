@@ -1,12 +1,4 @@
-/**
- * incremental-tokenize.js: cold parseIncremental, single-edit
- * reparseIncremental, and a typing-simulation macro-benchmark comparing
- * incremental reparse against naive "re-parse the whole document on every
- * keystroke" - the thing incremental parsing exists to avoid. Sizes are
- * kept modest for the typing simulations since each sample re-runs the
- * full keystroke-by-keystroke loop (ostia's runner wants multiple samples
- * per case).
- */
+/** parseIncremental/reparseIncremental, plus typing simulations vs naive full re-parse. */
 import { group, task } from "ostia";
 import {
   parseIncremental,
@@ -47,8 +39,6 @@ group("reparseIncremental() one-character mid-document edit", () => {
 });
 
 group("reparseIncremental() edit that never re-converges", () => {
-  // Opening a block comment on line 1 changes the state of every later
-  // line, so the reparse has to walk the whole document without a splice.
   for (const lines of [2_000, 8_000]) {
     const base = parseIncremental(registry, "javascript", jsLines(lines));
     const edited = `/* ${base.code}`;
@@ -92,6 +82,3 @@ group("typing simulation (keystroke-by-keystroke)", () => {
     );
   }
 });
-
-// Run this suite with `ostia bench bench/incremental.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

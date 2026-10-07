@@ -6,51 +6,31 @@ import type { LanguageName } from "./languages";
 
 export type HighlightAutoProps = HTMLAttributes<HTMLPreElement> &
   LangtagProps & {
-    /**
-     * Code to highlight.
-     */
+    /** Code to highlight. */
     code: any;
 
     /**
-     * Languages to consider for auto-detection.
-     * This can improve performance and accuracy.
+     * Candidate languages for auto-detection (improves speed and accuracy).
      * @example ["javascript", "typescript"]
      */
     languageNames?: (LanguageName | (string & {}))[];
   };
 
 export type HighlightAutoEvents = {
-  /**
-   * Fires once per highlight (when `code`/`languageNames` change and the
-   * highlighting result actually changes), including when the result is
-   * empty (empty `code`, or no candidate language matches).
-   */
+  /** Fires when the highlighting result changes, including to empty. */
   highlight: CustomEvent<{
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
+    /** The highlighted HTML. */
     highlighted: string;
 
-    /**
-     * The language name inferred by `highlight.js`.
-     * @example "css"
-     */
+    /** The detected language name, e.g. `"css"`. */
     language: string;
 
-    /**
-     * The scope-event stream behind `highlighted` - the same array
-     * `registry.highlightAuto(...).events` returns. See
-     * `svelte-highlight/engine` for headless consumption (`tokenLines`,
-     * `toRanges`, custom renderers).
-     */
+    /** Scope events behind `highlighted` (see `svelte-highlight/engine`). */
     events: ScopeEvent[];
 
     /**
-     * The runner-up candidate and its relevance score, for surfacing
-     * detection confidence (e.g. "detected javascript, runner-up
-     * typescript at relevance 6"). `undefined` when no other candidate
-     * scored above zero, or only one candidate was viable.
+     * Runner-up candidate and its relevance score; `undefined` when no other
+     * candidate scored above zero.
      */
     secondBest?: { language: string | undefined; relevance: number };
   }>;
@@ -58,18 +38,10 @@ export type HighlightAutoEvents = {
 
 export type HighlightAutoSlots = {
   default: {
-    /**
-     * The highlighted HTML as a string.
-     * @example "<span>...</span>"
-     */
+    /** The highlighted HTML. */
     highlighted: string;
 
-    /**
-     * The scope-event stream behind `highlighted` - the same array
-     * `registry.highlightAuto(...).events` returns. See
-     * `svelte-highlight/engine` for headless consumption (`tokenLines`,
-     * `toRanges`, custom renderers).
-     */
+    /** Scope events behind `highlighted` (see `svelte-highlight/engine`). */
     events: ScopeEvent[];
   };
 };

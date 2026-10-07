@@ -1,9 +1,4 @@
-/**
- * Pure color math for AnsiOutput: SGR color to CSS, and WCAG contrast-based
- * auto-foreground selection. Split out of the component (rather than left
- * inline in its `<script>`) so it's directly testable and benchable without
- * a DOM - .svelte files aren't type-checked by `tsgo`/covered by `bun test`.
- */
+// AnsiOutput color math: SGR color to CSS and WCAG auto-contrast.
 
 /** @typedef {import("./ansi.d.ts").AnsiColor} AnsiColor */
 /** @typedef {import("./ansi.d.ts").AnsiSegment} AnsiSegment */
@@ -16,7 +11,7 @@ const BLACK = [0, 0, 0];
 const WHITE = [255, 255, 255];
 
 /**
- * 16-color xterm defaults, each overridable via `--ansi-<name>`.
+ * xterm defaults, each overridable via `--ansi-<name>`.
  * @type {Record<string, string>}
  */
 export const ANSI_COLOR_DEFAULTS = {
@@ -38,13 +33,10 @@ export const ANSI_COLOR_DEFAULTS = {
   "bright-white": "#ffffff",
 };
 
-// 256-color cube steps (6x6x6).
+// 6x6x6 cube steps.
 const CUBE = [0, 95, 135, 175, 215, 255];
 
 /**
- * 256-color index to an RGB triple. Shared by `indexedHex` (stringifies it
- * for CSS) and `colorToRgb` (used as-is) so the latter doesn't have to
- * round-trip through a hex string just to parse the numbers back out.
  * @param {number} index
  * @returns {[number, number, number]}
  */
@@ -54,8 +46,6 @@ function indexedRgb(index) {
     return [value, value, value];
   }
   const n = index - 16;
-  // n is always in [0, 215] for index in [16, 231], so these three indices
-  // are always in CUBE's bounds ([0, 5]).
   return [
     /** @type {number} */ (CUBE[Math.floor(n / 36) % 6]),
     /** @type {number} */ (CUBE[Math.floor(n / 6) % 6]),
@@ -63,16 +53,11 @@ function indexedRgb(index) {
   ];
 }
 
-/**
- * `indexedHex` results by palette index, filled on first use. A colored log
- * repeats the same few indices, and building each string costs a few
- * array allocations (see bench/ansi.bench.ts).
- * @type {string[]}
- */
+// Lazily filled; logs repeat a few indices.
+/** @type {string[]} */
 const INDEXED_HEX = [];
 
 /**
- * 256-color index to hex.
  * @param {number} index
  * @returns {string}
  */
@@ -81,19 +66,14 @@ export function indexedHex(index) {
   if (cached !== undefined) return cached;
   const [r, g, b] = indexedRgb(index);
   const hex = `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
-  // Cache only the 240 real palette slots, so an out-of-range index can't
-  // grow the table.
+  // Only cache real palette slots so bad indices can't grow the table.
   if (Number.isInteger(index) && index >= 16 && index <= 255) {
     INDEXED_HEX[index] = hex;
   }
   return hex;
 }
 
-/**
- * `cssColor`'s `var(--ansi-<name>, <default>)` string for each of the 16
- * named colors, built once instead of per segment.
- * @type {Map<string, string>}
- */
+/** @type {Map<string, string>} */
 const NAMED_CSS = new Map(
   Object.entries(ANSI_COLOR_DEFAULTS).map(([name, hex]) => [
     name,
@@ -102,7 +82,6 @@ const NAMED_CSS = new Map(
 );
 
 /**
- * Parsed color to CSS (named colors use `--ansi-*` vars).
  * @param {AnsiColor} color
  * @returns {string}
  */
@@ -146,7 +125,6 @@ export function colorToRgb(color) {
 }
 
 /**
- * sRGB channel (0-255) to linear light.
  * @param {number} c
  * @returns {number}
  */
@@ -155,8 +133,7 @@ function linearChannel(c) {
   return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
 }
 
-// `linearChannel` for every integer channel, so the per-segment contrast
-// check reads a table instead of calling `**` (see bench/ansi.bench.ts).
+// Lookup table avoids `**` in the per-segment contrast check.
 const LINEAR = Array.from({ length: 256 }, (_, c) => linearChannel(c));
 
 /**
@@ -165,8 +142,7 @@ const LINEAR = Array.from({ length: 256 }, (_, c) => linearChannel(c));
  * @returns {number}
  */
 export function luminance(rgb) {
-  // A channel outside the table (a truecolor value past 255) is computed
-  // directly, with the same result the table would hold.
+  // Out-of-range truecolor channels fall back to direct computation.
   const r = LINEAR[rgb[0]] ?? linearChannel(rgb[0]);
   const g = LINEAR[rgb[1]] ?? linearChannel(rgb[1]);
   const b = LINEAR[rgb[2]] ?? linearChannel(rgb[2]);
@@ -174,7 +150,6 @@ export function luminance(rgb) {
 }
 
 /**
- * WCAG contrast ratio from two relative luminances.
  * @param {number} la
  * @param {number} lb
  * @returns {number}
@@ -184,7 +159,6 @@ function luminanceRatio(la, lb) {
 }
 
 /**
- * WCAG contrast ratio.
  * @param {[number, number, number]} a
  * @param {[number, number, number]} b
  * @returns {number}
@@ -197,7 +171,6 @@ const BLACK_LUMINANCE = luminance(BLACK);
 const WHITE_LUMINANCE = luminance(WHITE);
 
 /**
- * `readableForeground` for a background whose luminance is already known.
  * @param {number} bgLuminance
  * @returns {string}
  */
@@ -217,9 +190,7 @@ export function readableForeground(bg) {
   return readableForegroundFor(luminance(bg));
 }
 
-// Luminance of each named color's default and of the fallback foreground,
-// computed once: `foregroundCss` needs them for most segments with a
-// background, and re-parsing the hex string each time dominated the check.
+// Precomputed: re-parsing hex per segment dominated the contrast check.
 /** @type {Map<string, number>} */
 const NAMED_LUMINANCE = new Map(
   Object.entries(ANSI_COLOR_DEFAULTS).map(([name, hex]) => [
@@ -230,7 +201,6 @@ const NAMED_LUMINANCE = new Map(
 const FALLBACK_LUMINANCE = luminance(hexToRgb(FOREGROUND_FALLBACK));
 
 /**
- * `luminance(colorToRgb(color))`, without re-parsing a named color's hex.
  * @param {AnsiColor} color
  * @returns {number}
  */
@@ -240,17 +210,14 @@ function colorLuminance(color) {
 }
 
 /**
- * Foreground CSS, with auto-contrast override when needed.
  * @param {AnsiSegment} segment
  * @param {boolean} autoContrast
  * @returns {string | undefined}
  */
 export function foregroundCss(segment, autoContrast) {
-  // Concealed text is rendered transparent (layout and copy text stay).
+  // Transparent keeps layout and copy text.
   if (segment.conceal) return "transparent";
   if (autoContrast && segment.bg) {
-    // Each luminance is computed once and reused for both the contrast check
-    // and the black/white pick (it used to be computed up to three times).
     const bg = colorLuminance(segment.bg);
     const fg = segment.fg ? colorLuminance(segment.fg) : FALLBACK_LUMINANCE;
     if (luminanceRatio(fg, bg) < CONTRAST_TARGET) {

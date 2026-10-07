@@ -1,14 +1,6 @@
-/**
- * Convert a highlight.js theme's `.hljs-<scope>` class rules into
- * `::highlight(hljs-<scope>)` rules for the CSS Custom Highlight API, used
- * by the `HighlightEditable` "css-highlights" engine.
- *
- * `::highlight()` only supports `color`/`background-color` across browsers
- * (no `text-decoration`/`text-shadow` everywhere), so every other
- * declaration is dropped. Compound (`.hljs-title.class_`) and descendant
- * (`.hljs-meta .hljs-keyword`) selectors have no `::highlight()` equivalent
- * and are dropped too; only single-class `.hljs-<scope>` selectors convert.
- */
+// `.hljs-<scope>` rules -> `::highlight(hljs-<scope>)` for HighlightEditable's
+// css-highlights engine. Only color/background-color work cross-browser, and
+// only single-class selectors have an equivalent; everything else is dropped.
 
 import {
   findBlockEnd,
@@ -21,8 +13,7 @@ import { SHL_FALLBACKS } from "./themes/_shl-fallbacks.js";
 const SIMPLE_SCOPE_SELECTOR = /^\.hljs-([\w-]+)$/;
 const SUPPORTED_PROPERTIES = new Set(["color", "background-color"]);
 
-/** `--shl-*` names with no scope segment at all (the base `.hljs` rule) —
- * not a scope selector, same as `.hljs` itself in the string path below. */
+// Base `.hljs` vars: not a scope.
 const BASE_VAR_NAMES = new Set([
   "--shl-fg",
   "--shl-bg",
@@ -42,12 +33,12 @@ const SUFFIX_PROPERTY = [
 const VAR_PREFIX_LENGTH = "--shl-".length;
 
 /**
- * Inverts the build-time `varName()` derivation for a single-scope var.
+ * Inverse of `varName()` for a single-scope var.
  * @param {string} shlVarName
  */
 function decomposeSingleScopeVar(shlVarName) {
   for (const [suffix, property] of SUFFIX_PROPERTY) {
-    if (suffix && shlVarName.endsWith(suffix)) {
+    if (shlVarName.endsWith(suffix)) {
       return {
         scope: shlVarName.slice(VAR_PREFIX_LENGTH, -suffix.length),
         property,
@@ -97,9 +88,7 @@ export function highlightRules(theme) {
   const css = match ? (match[2] ?? "") : theme;
 
   let out = "";
-  // Comments are dropped from the prelude, so it's assembled from the
-  // slices between them (`runStart` marks the current one) rather than a
-  // char at a time (see bench/scoped.bench.ts).
+  // Prelude is built from slices between comments, not char by char.
   let prelude = "";
   let runStart = 0;
   let i = 0;
@@ -128,7 +117,7 @@ export function highlightRules(theme) {
       continue;
     }
     if (ch === ";") {
-      // Blockless at-rule (@import, etc.): nothing to convert.
+      // Blockless at-rule (@import, etc.).
       prelude = "";
       i += 1;
       runStart = i;
@@ -140,13 +129,7 @@ export function highlightRules(theme) {
 }
 
 /**
- * `ThemePalette` counterpart to `highlightRules`: turns single-scope
- * `--shl-<scope>`/`--shl-<scope>-bg` vars into `::highlight(hljs-<scope>)`
- * rules. Multi-scope (compound/descendant) vars have no `::highlight()`
- * equivalent — same limitation as the string path above — and are
- * skipped; detected via `SHL_FALLBACKS`, the same generated data
- * `themes/base.css`'s fallback chains come from, so "is this a single
- * scope" never drifts from what the structural stylesheet encodes.
+ * Multi-scope vars (keys of `SHL_FALLBACKS`) have no equivalent and are skipped.
  * @param {import("./theme.d.ts").ThemePalette} palette
  * @returns {string} Converted `::highlight()` rules, concatenated.
  */

@@ -38,7 +38,7 @@
 
   $: {
     ensureRegistered(svelte);
-    const source = typeof code === "string" ? code : String(code ?? "");
+    const source = String(code ?? "");
     const result = registry.highlight(source, { language: svelte.name });
     highlighted = result.value;
     events = result.events;

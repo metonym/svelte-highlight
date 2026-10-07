@@ -1,7 +1,6 @@
 <script>
   /**
-   * Code to render. A 100k-line document costs ~`overscan`*2 + viewport
-   * line nodes, not one per line.
+   * Code to render.
    * @type {any}
    */
   export let code = "";
@@ -16,17 +15,14 @@
   export let overscan = 12;
 
   /**
-   * Lines between engine checkpoints (forwarded to `createTokenizedDocument`).
+   * Lines between engine checkpoints.
    * @type {number}
    */
   export let checkpointInterval = 100;
 
   /**
    * Tokenize the rest of the document in idle time after the first paint,
-   * so a far jump (scrollToLine, dragging the scrollbar) doesn't stall on
-   * tokenizing everything before it. Off by default: the engine session
-   * keeps every event it produces, so a full pass retains about 117 MB
-   * per 100k lines of TypeScript, even if nobody scrolls.
+   * so far jumps don't stall. Costs memory for the whole document up front.
    * @type {boolean}
    */
   export let tokenizeAhead = false;
@@ -43,13 +39,10 @@
   /** @type {HTMLElement} */
   let probe;
 
-  // Uniform line height (v1 constraint), measured once from a rendered
-  // probe line and re-measured when webfonts finish loading.
+  // Uniform line height, measured from the probe line.
   let lineHeight = 16;
 
-  // Gates the SSR/pre-mount plain-text branch vs. the windowed view: the
-  // client's first render must match the server's markup byte-for-byte, so
-  // this only flips true inside onMount, after hydration has attached.
+  // Flips in onMount so the first client render matches the SSR markup.
   let hydrated = false;
 
   let scrollTop = 0;
@@ -72,8 +65,7 @@
   /** @type {string[]} */
   let visibleLines = [];
 
-  // Last { start, end, lineCount } dispatched as `windowchange`, so a
-  // recompute that lands on the same window doesn't re-dispatch.
+  // Last `windowchange` detail, to skip re-dispatching an unchanged window.
   /** @type {number | undefined} */
   let dispatchedWindowStart;
   /** @type {number | undefined} */
@@ -117,18 +109,14 @@
       dispatchedWindowStart = start;
       dispatchedWindowEnd = end;
       dispatchedWindowLineCount = lineCount;
-      // Dispatch once the new rows are in the DOM, so a listener that paints
-      // into them (e.g. search's highlightMatches) doesn't paint the old
-      // rows Svelte is about to replace.
+      // Dispatch once the new rows are in the DOM, so listeners that paint
+      // into them don't paint rows about to be replaced.
       const detail = { start, end, lineCount };
       tick().then(() => dispatch("windowchange", detail));
     }
   }
 
-  // After the document changes shape, the sizer's height changes too; sync
-  // our tracked scrollTop/clientHeight from the (now-updated) DOM so an
-  // out-of-range scroll position - the document shrank while scrolled near
-  // its old end - is clamped rather than left pointing past the new content.
+  // Clamps scrollTop if the document shrank past the current position.
   async function syncFromContainer() {
     await tick();
     if (!container) return;
@@ -169,9 +157,8 @@
     );
   }
 
-  // Rebuilds/updates the document whenever its content or shape changes.
-  // Deliberately separate from the scroll-driven block below so scrolling
-  // never touches doc.setCode() (O(len) prefix check) on every frame.
+  // Kept separate from the scroll block so scrolling never calls setCode()
+  // (an O(len) prefix check).
   $: if (hydrated) {
     void source;
     void language;
@@ -189,9 +176,6 @@
     else cancelTokenizeAhead();
   }
 
-  // Idle-time tokenizing ahead. A first jump to the end of a 500k-line file
-  // otherwise tokenizes ~24 MB synchronously (seconds); after this pass,
-  // checkpoints cover the whole document and any jump is a few ms.
   const requestIdle =
     typeof requestIdleCallback === "function"
       ? (/** @type {IdleRequestCallback} */ callback) =>
@@ -208,7 +192,7 @@
 
   /** @type {any} */
   let aheadHandle;
-  // Bumped on every (re)schedule so a callback from an older document stops.
+  // Bumped on every (re)schedule so a stale callback stops.
   let aheadGeneration = 0;
 
   function cancelTokenizeAhead() {
@@ -239,7 +223,6 @@
     aheadHandle = requestIdle(step);
   }
 
-  // Scroll/resize/overscan/lineHeight-driven window recompute.
   $: if (hydrated) {
     void overscan;
     void lineHeight;
@@ -250,11 +233,9 @@
   }
 
   /**
-   * Scroll a given line into the rendered window. Jumps instantly (sets
-   * `scrollTop`), so there's no scroll animation.
+   * Scroll a given line into the rendered window, without animation.
    * @param {number} line
-   * @param {{ align?: "start" | "center" }} [options] Where the line lands
-   *   in the viewport: the top edge (default) or the middle.
+   * @param {{ align?: "start" | "center" }} [options]
    */
   export function scrollToLine(line, options = {}) {
     if (!container) return;

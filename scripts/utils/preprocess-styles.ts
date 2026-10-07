@@ -10,11 +10,8 @@ import {
 } from "./remove-dead-declarations.ts";
 
 /**
- * cssnano's lite preset as one postcss plugin, built the way
- * `cssnano({ preset: litePreset(options) })` builds it (every plugin not
- * marked `exclude`, in order). Skips importing `cssnano` itself: its entry
- * eagerly requires cssnano-preset-default (svgo, caniuse-lite, ...) even
- * when given a preset, ~60ms of load time this build never uses.
+ * Equivalent to `cssnano({ preset: litePreset(options) })` without importing
+ * `cssnano`, which eagerly loads cssnano-preset-default (svgo, caniuse-lite).
  */
 const cssnanoLite = (options: Parameters<typeof litePreset>[0]) =>
   postcss(
@@ -26,15 +23,14 @@ const cssnanoLite = (options: Parameters<typeof litePreset>[0]) =>
     ),
   );
 
-/**
- * Raw styles from `highlight.js` are preprocessed for consistency.
- * - Inlining CSS variables.
- * - Removing declarations unconditionally overridden later in the file.
- * - Discarding duplicate rules.
- * - Merging rules.
- * - Discarding comments (but preserving license comments).
- * - Minifying the CSS.
- */
+/** Drops the newlines hljs styles put between selectors in a list. */
+const joinSelectors: Plugin = {
+  postcssPlugin: "join-selectors",
+  Rule(rule) {
+    rule.selector = rule.selectors.join(",");
+  },
+};
+
 export const preprocessStyles = (
   css: string,
   options?: {
@@ -49,19 +45,11 @@ export const preprocessStyles = (
     ...(options?.plugins ?? []),
     discardDuplicates(),
     mergeRules(),
+    joinSelectors,
     cssnanoLite({
       discardComments:
         options?.discardComments === "preserve-license"
-          ? {
-              remove: (comment) => {
-                if (LICENSE_OR_AUTHOR.test(comment)) {
-                  // Preserve license comments.
-                  return false;
-                }
-
-                return true;
-              },
-            }
+          ? { remove: (comment) => !LICENSE_OR_AUTHOR.test(comment) }
           : options?.discardComments === "remove-all"
             ? { removeAll: true }
             : undefined,
@@ -73,11 +61,6 @@ const stripCommentsProcessor = postcss([
   cssnanoLite({ discardComments: { removeAll: true } }),
 ]);
 
-/**
- * Drop every comment (license ones too) from CSS that `preprocessStyles`
- * already processed. Same output as re-running `preprocessStyles` on the
- * source with `discardComments: "remove-all"`, but skips the second full
- * plugin pass (var inlining, dead-declaration removal, rule merging).
- */
+/** Same as `preprocessStyles` with `"remove-all"`, for already-processed CSS. */
 export const stripComments = (css: string) =>
   stripCommentsProcessor.process(css).css;

@@ -1,12 +1,8 @@
-/**
- * Pure helpers turning `ThemePalette` objects into inline CSS var strings
- * for `HighlightStyle`'s object path (see `HighlightStyle.svelte`).
- */
+// Inline CSS var strings for HighlightStyle's palette-object path.
 
 import { PROP_SUFFIX } from "./theme-vars.js";
 import { SHL_FALLBACKS } from "./themes/_shl-fallbacks.js";
 
-// `-bg`, `-font-style`, ...: every var suffix except color's empty one.
 const NON_COLOR_SUFFIXES = Object.values(PROP_SUFFIX)
   .filter((suffix) => suffix !== "")
   .map((suffix) => `-${suffix}`);
@@ -17,10 +13,8 @@ function isColorKey(key) {
 }
 
 /**
- * Resolve one palette's value for `key`, falling back through the same
- * chain `themes/base.css` encodes when the palette never set it directly:
- * a multi-scope key falls back to its subject-scope key (per `fallbacks`),
- * and a still-unresolved color key falls back to `--shl-fg`.
+ * Mirrors `themes/base.css`: key, then its `fallbacks` key, then (for color
+ * keys) `--shl-fg`.
  * @param {Record<string, string>} vars
  * @param {string} key
  * @param {Record<string, string>} fallbacks
@@ -38,11 +32,8 @@ export function resolveThemeVar(vars, key, fallbacks) {
 }
 
 /**
- * `--shl-x: light-dark(<light>, <dark>)` for every key in the union of
- * both palettes' vars. A key that still can't be resolved on one side
- * after fallback is omitted entirely — `light-dark()` requires two
- * concrete arguments, so a missing side must never produce an empty or
- * invalid one.
+ * `light-dark()` per key; keys unresolved on either side are omitted since
+ * `light-dark()` needs two concrete values.
  * @param {Record<string, string>} lightVars
  * @param {Record<string, string>} darkVars
  * @param {Record<string, string>} fallbacks
@@ -80,8 +71,7 @@ const COLOR_SCHEME_BY_MODE = {
 };
 
 /**
- * Serialize a single palette's vars plus its own `color-scheme`, so native
- * form controls/scrollbars inside a themed block follow the theme too.
+ * `color-scheme` makes native controls/scrollbars follow the theme.
  * @param {import("./theme.d.ts").ThemePalette} palette
  */
 export function paletteStyle(palette) {
@@ -101,11 +91,7 @@ export function dualPaletteStyle(light, dark, mode) {
 }
 
 /**
- * Plain-declaration baseline for a light/dark palette pair: the light
- * side's resolved value for every key either palette declares, with no
- * `light-dark()` — safe on any browser, including ones that don't support
- * it. A key resolvable only via the dark side is omitted, same as
- * `mergeLightDarkVars`.
+ * Light-side values only, for browsers without `light-dark()`.
  * @param {import("./theme.d.ts").ThemePalette} light
  * @param {import("./theme.d.ts").ThemePalette} dark
  * @returns {string}
@@ -122,11 +108,8 @@ export function lightFallbackStyle(light, dark) {
 }
 
 /**
- * A scoped `<style>` tag, gated behind `@supports (color: light-dark(#000,
- * #000))`, that overrides `lightFallbackStyle`'s plain baseline with the
- * `light-dark()` merge (and `color-scheme`) on browsers that support it.
- * Paired with `lightFallbackStyle` as `HighlightStyle`'s inline style for a
- * light/dark palette pair.
+ * `<style>` overriding `lightFallbackStyle`'s inline baseline with the
+ * `light-dark()` merge where supported.
  * @param {string} scopeClass
  * @param {import("./theme.d.ts").ThemePalette} light
  * @param {import("./theme.d.ts").ThemePalette} dark

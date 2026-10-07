@@ -1,11 +1,4 @@
-/**
- * tokenizeAuto() scores every registered (non-disableAutodetect) language
- * candidate against a code sample - O(numLanguages) per call, and the
- * engine backing HighlightAuto. Compares scanning the full registry
- * (~200+ languages) against a small realistic subset, at a couple of
- * sample sizes (tokenizeAuto caps the scored sample at DETECT_SAMPLE_LIMIT
- * internally, so larger inputs shouldn't scale the per-candidate cost).
- */
+/** tokenizeAuto() over the full registry vs a small subset (sample is capped internally). */
 import { group, task } from "ostia";
 import { buildRegistry, getCorpus, sizedSlice } from "./_shared.ts";
 
@@ -38,6 +31,3 @@ group("registry.tokenizeAuto()", () => {
     );
   }
 });
-
-// Run this suite with `ostia bench bench/auto-detect.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

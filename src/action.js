@@ -4,32 +4,26 @@ import { ensureRegistered, registry } from "./registry.js";
 const LANGUAGE_CLASS = /(?:^|\s)language-([\w#+-]+)(?:\s|$)/;
 
 /**
- * Highlight an element in place with highlight.js.
- * Omits `code` to highlight existing `textContent`.
- *
- * Omits `language` to resolve it from a `class="language-xxx"` token on the
- * node itself (the Prism/highlight.js Markdown convention), loaded via
- * `loadLanguage`. No matching class dispatches `error` and leaves the
- * content untouched.
- *
- * Dispatches `highlighted` ({ html, language }) on the node after a
- * successful highlight, and `error` ({ error }) after a failed one.
- *
  * @param {HTMLElement} node
  * @param {{ language?: import("./languages").LanguageType<string>; code?: string }} [parameters]
  * @returns {ReturnType<import("svelte/action").Action<HTMLElement, { language?: import("./languages").LanguageType<string>; code?: string }>>}
  */
 export function highlight(node, parameters = {}) {
-  // Snapshot the pre-action source once: updates that omit `code` fall back
-  // to this instead of `node.textContent`, which after the first highlight
-  // pass holds the already-highlighted (and DOM-normalized) output.
+  // Snapshot: after the first pass `textContent` is the highlighted output.
   const originalText = node.textContent ?? "";
 
-  // Guards a `loadLanguage` continuation from applying stale results if a
-  // newer `apply()` call (from `update` or a fresh `destroy`) has since
-  // superseded it.
+  // Discards stale `loadLanguage` results.
   let generation = 0;
   let destroyed = false;
+
+  /**
+   * Deferred: Svelte attaches `on:` listeners after the action's synchronous mount.
+   * @param {"highlighted" | "error"} type
+   * @param {unknown} detail
+   */
+  function dispatch(type, detail) {
+    queueMicrotask(() => node.dispatchEvent(new CustomEvent(type, { detail })));
+  }
 
   /**
    * @param {import("./languages").LanguageType<string>} language
@@ -54,26 +48,13 @@ export function highlight(node, parameters = {}) {
           error,
         );
       }
-      // Deferred: Svelte wraps `on:` listeners on this node in an effect
-      // that flushes after this action's own (synchronous) mount/update
-      // runs, so dispatching synchronously here would fire before a
-      // listener declared via `on:error` is attached.
-      queueMicrotask(() =>
-        node.dispatchEvent(new CustomEvent("error", { detail: { error } })),
-      );
+      dispatch("error", { error });
       return;
     }
 
     node.innerHTML = value;
     node.classList.add("hljs");
-    // See the `error` dispatch above for why this is deferred.
-    queueMicrotask(() =>
-      node.dispatchEvent(
-        new CustomEvent("highlighted", {
-          detail: { html: value, language: language.name },
-        }),
-      ),
-    );
+    dispatch("highlighted", { html: value, language: language.name });
   }
 
   /** @param {{ language?: import("./languages").LanguageType<string>; code?: string }} params */
@@ -95,9 +76,7 @@ export function highlight(node, parameters = {}) {
       if (import.meta.env?.DEV) {
         console.warn(`[svelte-highlight] ${error.message}.`);
       }
-      queueMicrotask(() =>
-        node.dispatchEvent(new CustomEvent("error", { detail: { error } })),
-      );
+      dispatch("error", { error });
       return;
     }
 
@@ -115,9 +94,7 @@ export function highlight(node, parameters = {}) {
             error,
           );
         }
-        queueMicrotask(() =>
-          node.dispatchEvent(new CustomEvent("error", { detail: { error } })),
-        );
+        dispatch("error", { error });
       },
     );
   }

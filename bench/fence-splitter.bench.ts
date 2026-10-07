@@ -1,9 +1,4 @@
-/**
- * fence-splitter.js: append()'s per-chunk rescan (only from the last
- * segment's start) against the naive alternative of re-running set() on the
- * whole accumulated text after every chunk - the thing append()'s O(chunk)
- * contract exists to avoid.
- */
+/** Fence splitter append() per chunk vs set() on the accumulated text. */
 import { group, task } from "ostia";
 import { createFenceSplitter } from "../src/fence.js";
 import { markdownWithFences } from "./_shared.ts";
@@ -36,7 +31,3 @@ group(
     task("set(accumulated) per chunk", streamReparse);
   },
 );
-
-// Run this suite with `ostia bench --isolate bench/fence-splitter.bench.ts`
-// for a fast feedback loop; `bun run bench` runs every *.bench.ts suite for
-// a full-baseline run.

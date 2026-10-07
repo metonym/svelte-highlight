@@ -1,11 +1,7 @@
 /**
- * Line-checkpoint incremental re-tokenization for editors. On each edit,
- * resume from the nearest line boundary before the change and stop once
- * tokenizer state matches the previous parse at a later line, reusing that
- * tail's events. Falls back to a full re-parse when state never converges
- * (e.g. an edit that unbalances a string for the rest of the file).
- *
- * Pure and DOM-free; HighlightEditable wires the result into a renderer.
+ * Incremental re-tokenization for editors: resume from the checkpoint before
+ * an edit and stop once tokenizer state re-converges with the previous parse,
+ * reusing its tail. Falls back to parsing to the end when it never converges.
  */
 import { diffText } from "./text-diff.js";
 
@@ -16,11 +12,8 @@ import { diffText } from "./text-diff.js";
  */
 
 /**
- * What a reparse kept from the previous parse: `events[0, head)` and its
- * last `tail` events are the same objects as `from`'s first `head` and last
- * `tail`. Lets a consumer holding output derived from `from` (e.g.
- * `patchLineHtml`) find the changed span without comparing the event
- * arrays.
+ * `events[0, head)` and the last `tail` events are the same objects as in
+ * `from`, so consumers can find the changed span without comparing arrays.
  * @typedef {{
  *   from: ScopeEvent[],
  *   head: number,
@@ -29,11 +22,8 @@ import { diffText } from "./text-diff.js";
  */
 
 /**
- * How many leading and trailing events an edit left as they were: the first
- * `prefix` and last `suffix` of `events` are the same objects as in
- * `prevEvents`, and the two never overlap on either side. Taken from
- * `reuse` when it is relative to `prevEvents`, else found by comparing the
- * arrays, which is O(document).
+ * Counts of leading/trailing events identical in both arrays (never
+ * overlapping); O(document) unless `reuse` is relative to `prevEvents`.
  * @param {ScopeEvent[]} prevEvents
  * @param {ScopeEvent[]} events
  * @param {EventReuse} [reuse]
@@ -59,7 +49,6 @@ export function sharedEvents(prevEvents, events, reuse) {
 }
 
 /**
- * `reuse` is set by `reparseIncremental` when it resumed from `previous`.
  * @typedef {{
  *   code: string,
  *   language: string,
@@ -71,7 +60,7 @@ export function sharedEvents(prevEvents, events, reuse) {
 
 /**
  * Whether two checkpoints will emit the same events from here on.
- * `relevance`/`kwHits` are excluded; they only affect detection scoring.
+ * `relevance`/`kwHits` are excluded: they only affect detection scoring.
  * @param {Snapshot} a
  * @param {Snapshot} b
  */
@@ -85,12 +74,8 @@ function stateConverges(a, b) {
     const aRecord = a.subContinuations[name];
     const bRecord = b.subContinuations[name];
     if (!aRecord || !bRecord) return false;
-    // beginPos is deliberately not compared here: it's an absolute code
-    // position, so it legitimately differs between the old parse and a
-    // resumed-after-edit one even when their *future* behavior is
-    // identical (the carry decision it gates is relative to whichever
-    // parse is asking, and stays consistent once frames/buffer/openScopes
-    // - already compared above and below - agree).
+    // beginPos is an absolute position, so it differs after an edit even
+    // when future behavior is identical; deliberately not compared.
     if (!framesEqual(aRecord.frames, bRecord.frames)) return false;
   }
   return true;
@@ -114,29 +99,16 @@ function framesEqual(a, b) {
   return true;
 }
 
-/**
- * Default gap between line checkpoints. Matches the spirit of
- * `tokenized-document`'s interval: denser than its windowed default (100)
- * so mid-document edits still resume nearby, sparse enough that a 10k-line
- * file stores O(hundreds) of snapshots rather than O(lines).
- */
+/** Lines between checkpoints: dense enough to resume near an edit, sparse enough to not store O(lines) snapshots. */
 export const CHECKPOINT_INTERVAL = 32;
 
-/**
- * Shortest text past the resume checkpoint, in characters, for which
- * `reparseIncremental` windows its scans (see `from.windowed` in
- * engine.js's `createSession`).
- */
+/** Minimum characters past the resume checkpoint for which scans are windowed. */
 const WINDOWED_MIN_TAIL = 8192;
 
 /**
- * Full parse with a line checkpoint every `CHECKPOINT_INTERVAL` lines (and
- * always at the document end). First paint or language change.
- *
- * The whole document is loaded up front and stepped through with
- * `advance()` rather than `append()`-ed line by line: each append forces
- * the engine to re-flatten the grown string and rescan every rule whose
- * cached miss it invalidated, which made this O(lines x length).
+ * Full parse with a checkpoint every `CHECKPOINT_INTERVAL` lines and at the
+ * end. Loads the whole document and steps with `advance()`: `append()`-ing
+ * line by line re-flattens and rescans each time, O(lines x length).
  * @param {Registry} registry
  * @param {string} language
  * @param {string} code
@@ -146,9 +118,8 @@ export function parseIncremental(registry, language, code) {
   const session = registry.createSession(language, { from: { code } });
   const checkpoints = [session.snapshot()];
   let linesSinceCheckpoint = 0;
-  // Only newline-terminated lines are tokenized before finish(): a lexeme
-  // ending at an unterminated tail may grow with the next keystroke, so no
-  // checkpoint can be taken past it (`append()` stages such text likewise).
+  // Only newline-terminated lines are tokenized before finish(): a lexeme in
+  // an unterminated tail may grow with the next keystroke.
   let fedEnd = 0;
   for (let lineStart = 0; lineStart < code.length; ) {
     const newline = code.indexOf("\n", lineStart);
@@ -162,8 +133,6 @@ export function parseIncremental(registry, language, code) {
     }
   }
   session.advance(fedEnd);
-  // Always retain an end checkpoint so resume can land on the final state
-  // even when the last interval is incomplete.
   if (linesSinceCheckpoint > 0 || checkpoints.length === 1) {
     checkpoints.push(session.snapshot());
   }
@@ -172,9 +141,8 @@ export function parseIncremental(registry, language, code) {
 }
 
 /**
- * Latest checkpoint at or before `maxPos`. Checkpoint `pos` can lag behind the
- * line it was recorded on when a construct needs more lookahead (multi-line
- * strings, etc.), so checkpoint index and line number are not 1:1.
+ * Index of the latest checkpoint at or before `maxPos`. A checkpoint's `pos`
+ * can lag its line (multi-line lookahead), so index and line aren't 1:1.
  * @param {Snapshot[]} checkpoints
  * @param {number} maxPos
  */
@@ -196,10 +164,8 @@ function findResumeIndex(checkpoints, maxPos) {
 }
 
 /**
- * Pushes `source[from..]` onto `target`. The result used to be assembled by
- * spreading a sliced prefix (`[...prefix, ...tail]`), which copied the
- * O(document) prefix twice per edit; slicing once and pushing the rest
- * copies it once (see bench/incremental.bench.ts).
+ * Pushes `source[from..]` onto `target`; avoids spreading, which copies the
+ * O(document) prefix twice.
  * @param {ScopeEvent[]} target
  * @param {ScopeEvent[]} source
  * @param {number} from
@@ -211,7 +177,6 @@ function appendEvents(target, source, from) {
 }
 
 /**
- * Re-tokenizes `code` given the previous parse of the same language.
  * @param {Registry} registry
  * @param {string} language
  * @param {IncrementalParse} previous
@@ -230,18 +195,11 @@ export function reparseIncremental(registry, language, previous, code) {
     previous.checkpoints[resumeIndex]
   );
 
-  // Prefix up to the resume checkpoint is unchanged (within diffText's common
-  // prefix). restore() clears the session event log, so reattach prefix events
-  // separately, when the result is assembled (see `appendEvents`).
+  // Events before the resume checkpoint are unchanged and reattached below.
   const prefixLength = resumeCheckpoint.eventCount;
-  // The full document is loaded so the tail can be walked with `advance()`
-  // (see parseIncremental); tokenization still only proceeds line by line.
-  // The parse usually re-converges within a few lines, so over a long tail
-  // scans are windowed rather than run to the end of `code`: otherwise a
-  // rule with no match nearby scanned the whole tail, and a one-character
-  // edit cost time in proportion to the document. Over a short tail
-  // (typing at the end, say) plain scans are cheaper than the windowed
-  // bookkeeping. See bench/incremental.bench.ts.
+  // The parse usually re-converges within a few lines, so window scans over a
+  // long tail (else a rule with no nearby match scans to the end). Over a
+  // short tail plain scans are cheaper than the windowing bookkeeping.
   const session = registry.createSession(language, {
     from: {
       code,
@@ -251,7 +209,6 @@ export function reparseIncremental(registry, language, previous, code) {
   });
   const checkpoints = previous.checkpoints.slice(0, resumeIndex + 1);
 
-  // Earliest position where old and new code match from here on.
   const newSuffixStart = diff.start + diff.inserted.length;
   const posOffset = code.length - previous.code.length;
 
@@ -265,8 +222,8 @@ export function reparseIncremental(registry, language, previous, code) {
     li++
   ) {
     const newline = code.indexOf("\n", lineStart);
-    // An unterminated tail is staged, not tokenized (see parseIncremental);
-    // it still gets its own iteration so the final checkpoint is stored.
+    // An unterminated tail isn't tokenized, but still gets an iteration so
+    // the final checkpoint is stored.
     const isTail = newline === -1;
     if (!isTail) {
       lineStart = newline + 1;
@@ -275,11 +232,8 @@ export function reparseIncremental(registry, language, previous, code) {
     const isLast = isTail || lineStart === code.length;
     const snap = session.snapshot();
     linesSinceCheckpoint++;
-    // Check every line for convergence against previous checkpoints.
-    // Store every line for a window right after the edit (typing tends to
-    // stay near the cursor, so a follow-up edit here resumes in O(1)
-    // instead of walking to the next interval boundary), then fall back to
-    // the sparse interval so density doesn't stay O(lines) further out.
+    // Store every line just after the edit (follow-up typing resumes in
+    // O(1)), then fall back to the sparse interval.
     let shouldStore =
       li < CHECKPOINT_INTERVAL || linesSinceCheckpoint >= CHECKPOINT_INTERVAL;
     if (snap.pos >= newSuffixStart) {
@@ -292,8 +246,7 @@ export function reparseIncremental(registry, language, previous, code) {
         oldIndex++;
       }
       const oldCheckpoint = previous.checkpoints[oldIndex];
-      // Need matching position, not just state. Top-level state repeats
-      // between statements; wrong position would splice an unrelated tail.
+      // Position must match too: top-level state repeats between statements.
       if (
         oldCheckpoint &&
         oldCheckpoint.pos === targetOldPos &&
@@ -303,9 +256,9 @@ export function reparseIncremental(registry, language, previous, code) {
         shouldStore = true;
       }
     }
-    if (!shouldStore && isLast) shouldStore = true;
+    if (isLast) shouldStore = true;
     if (shouldStore) {
-      // snap.eventCount is session-local; shift to index the combined array.
+      // snap.eventCount is session-local; shift to the combined array.
       checkpoints.push({
         ...snap,
         eventCount: snap.eventCount + prefixLength,

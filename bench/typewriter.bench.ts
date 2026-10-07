@@ -1,11 +1,4 @@
-/**
- * typewriter-units.js: the three passes `Typewriter.svelte` runs over
- * highlighted HTML - tokenizeTypewriter (HTML -> units, once per
- * `highlighted` change), buildUnitMarkup (units -> per-unit-span HTML,
- * once per `highlighted` change), and createTypewriterSplitter's splitAt
- * (once per animation frame, called with a monotonically increasing
- * `count` as more characters reveal).
- */
+/** typewriter-units.js: tokenizeTypewriter, buildUnitMarkup, and splitAt per revealed unit. */
 import { group, task } from "ostia";
 import { renderHtml } from "../src/engine.js";
 import {
@@ -43,7 +36,6 @@ group("buildUnitMarkup()", () => {
   }
 });
 
-/** Simulates one full typewriter run: splitAt called once per revealed unit, in order. */
 function revealAll(html: string, units: ReturnType<typeof tokenizeTypewriter>) {
   const splitter = createTypewriterSplitter(units, html);
   const total = units.reduce((sum, unit) => sum + unit.visible, 0);
@@ -63,6 +55,3 @@ group("createTypewriterSplitter(): full reveal simulation", () => {
     );
   }
 });
-
-// Run this suite with `ostia bench bench/typewriter.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

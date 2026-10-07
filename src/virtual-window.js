@@ -1,14 +1,8 @@
-/**
- * Windowing math and probe-based line-height measurement shared by
- * components that render a scroll-position-driven slice of lines
- * (`HighlightVirtual`, `HighlightStream`'s `virtualize` mode).
- */
-
 import { tick } from "svelte";
 
 /**
- * The `[start, end)` line range to render for a given scroll position,
- * padded by `overscan` lines on each side and clamped to `[0, total]`.
+ * The `[start, end)` line range to render, padded by `overscan` and clamped
+ * to `[0, total]`.
  * @param {{
  *   scrollTop: number,
  *   clientHeight: number,
@@ -36,14 +30,9 @@ export function windowRange({
 }
 
 /**
- * Measures a hidden probe line's rendered height, once after the next tick
- * and again once webfonts finish loading (a late font swap can change line
- * height after the first measurement). Rounded to a whole pixel: the sizer
- * height and window `translateY` are both `lineCount * lineHeight` /
- * `start * lineHeight`, and a fractional line height makes those fall on a
- * different sub-pixel offset than the (always-integer) scroll position on
- * every repaint - harmless for a one-off scroll, but a visible 1px jitter
- * during continuous high-frequency repaints like streaming.
+ * Measures the probe line's height after the next tick and again once
+ * webfonts load. Rounded: a fractional height misaligns the sizer/translateY
+ * with the integer scrollTop, causing 1px jitter during streaming repaints.
  * @param {() => HTMLElement | undefined} getProbe
  * @param {() => number} getLineHeight
  * @param {(height: number) => void} setLineHeight

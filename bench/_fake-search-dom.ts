@@ -1,14 +1,6 @@
 /**
- * Just enough DOM for search.js's highlightMatches() to run under Bun:
- * elements and text nodes with linked siblings, the four selectors it
- * queries (`[data-line="N"]`, `[data-line]`, `.line`, and tag names), a
- * text-only TreeWalker, Range, Highlight, and CSS.highlights. Dev-only,
- * shared by bench/search.bench.ts and tests/search-highlight.test.ts so
- * neither needs a DOM dependency.
- *
- * Siblings are a linked list, so walking and splitting stay O(1) per node
- * like a browser's; an array with indexOf() would make the shim itself
- * quadratic and hide what highlightMatches costs.
+ * Just enough DOM for search.js's highlightMatches() under Bun. Linked-list
+ * siblings keep the shim O(1) per node so it doesn't hide the real cost.
  */
 
 const TAG_NAME = /^[a-z]+$/;
@@ -151,7 +143,6 @@ export class FakeElement extends FakeNode {
   }
 }
 
-/** Pre-order walk of every node under `root`, excluding `root` itself. */
 function nextInTree(node: FakeNode, root: FakeNode): FakeNode | null {
   if (node instanceof FakeElement && node.firstChild) return node.firstChild;
   let n: FakeNode | null = node;
@@ -202,10 +193,6 @@ export class FakeRange {
 
 export class FakeHighlight extends Set<FakeRange> {}
 
-/**
- * `h("span", { dataset: { line: "3" } }, "text", h(...))` builds a
- * FakeElement; string children become text nodes.
- */
 export function h(
   localName: string,
   props: { className?: string; dataset?: Record<string, string> } = {},
@@ -220,11 +207,7 @@ export function h(
   return el;
 }
 
-/**
- * Install the fake DOM as globals. `highlights: false` leaves out
- * CSS.highlights, so highlightMatches takes its `<mark>` fallback.
- * Returns the CSS.highlights registry (empty when `highlights` is false).
- */
+/** `highlights: false` omits CSS.highlights to exercise the `<mark>` fallback. */
 export function installFakeDom({ highlights = true } = {}) {
   const registry = new Map<string, FakeHighlight>();
   const globals: [string, unknown][] = [

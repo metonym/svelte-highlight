@@ -1,24 +1,9 @@
 /**
  * Highlighting engine (MIT, no highlight.js code). Runs a serializable
- * grammar IR built from hljs grammars by scripts/convert-grammars.ts.
- *
- * Output is a flat scope-event stream. HTML, CSS Custom Highlight ranges, and
- * line-indexed tokens (`renderHtml`, `toRanges`, `tokenLines`) are three
- * renderers over the same events - see the `Renderer` interface exported
- * from engine.d.ts. Tokenizer state is serializable so parses can
- * checkpoint, resume, and stream. Callback behavior from hljs grammars
- * becomes declarative IR flags (endSameAsBegin, onlyAtInputStart,
- * notAfterDot, letterBoundaryGuard, beginWordSet).
- *
- * A well-formed event stream is balanced: every OPEN has a matching later
- * CLOSE, properly nested, and the TEXT values, concatenated in order, equal
- * the tokenized source. All renderers in this module assume this invariant.
- *
- * Scope names stay on hljs's vocabulary (`hljs-*` classes) so existing themes
- * and the CSS-Highlight theme converter keep working. Scope names as they
- * appear in events/tokenLines are the raw, unprefixed strings (e.g.
- * "keyword", "title.class_"); the `hljs-` prefix and multi-class expansion
- * are `renderHtml`'s concern (see `scopeToCssClass`).
+ * grammar IR built from hljs grammars and emits a flat scope-event stream.
+ * Renderers assume the stream is balanced (OPEN/CLOSE properly nested) and
+ * that its TEXT values concatenate to the source. Scope names are raw hljs
+ * names ("title.class_"); `renderHtml` adds the `hljs-` prefix.
  */
 
 /**
@@ -40,16 +25,13 @@ import {
 } from "./incremental-tokenize.js";
 
 /**
- * A grammar plus its transitive `subLanguage` dependencies, as passed to
- * `registerAll` (e.g. astro's entry lists html/typescript/css/javascript).
  * @typedef {{ name: string, register: GrammarIR, dependencies?: Language[] }} Language
  */
 
 /**
- * A grammar state after `compileProgram` has compiled its string patterns
- * into RegExps (and normalized `keywords`/`relevance` - the IR omits
- * `relevance` when it's the default 1, but the compiled form always has it).
- * @typedef {Omit<GrammarState, "keywords" | "relevance" | "beginWordSet"> & {
+ * A grammar state with IR defaults filled in and patterns compiled.
+ * @typedef {Omit<GrammarState, "rules" | "keywords" | "relevance" | "beginWordSet"> & {
+ *   rules: number[],
  *   relevance: number,
  *   keywords: Record<string, [string, number]> | null,
  *   beginRe: RegExp | null,
@@ -65,16 +47,10 @@ import {
  */
 
 /**
- * Memoized result of scanning a single rule/frame's pattern: `match` is the
- * earliest guard-passing match at or after the position `this.pos` had when
- * it was computed (or `null` if none exists in `this.code` as of `codeLen`
- * characters). See `Tokenizer#nextMatch`'s cache-hit checks.
- *
- * A windowed tokenizer (see `Tokenizer#windowed`) also sets `until` and
- * `level`. With `match: null`, `until` is the end of the window it scanned:
- * no guard-passing match starts before it. `until` is `Infinity` once a scan
- * reached the end of the code. `level` picks the window size for the next
- * scan (see `scanWindowed`).
+ * Memoized pattern scan: `match` is the earliest guard-passing match at or
+ * after the `pos` it was computed at, or null if none in the first `codeLen`
+ * chars. Windowed scans also set `until` (a miss only rules out starts before
+ * it; Infinity once the scan reached the end) and `level` (window size).
  * @typedef {{
  *   codeLen: number,
  *   match: RegExpExecArray | null,
@@ -83,36 +59,20 @@ import {
  * }} MatchCache
  */
 
-/**
- * A windowed tokenizer's `MatchCache`, which always has `until`/`level`.
- * @typedef {Required<MatchCache>} WindowCache
- */
+/** @typedef {Required<MatchCache>} WindowCache */
 
 /**
- * One entry of the tokenizer's parse stack. `endCache` memoizes this
- * frame's end-pattern scan (see `nextMatch`); it's per-frame rather than
- * per-state because `endSameAsBegin`'s guard depends on this frame's own
- * `beginMatch`, and two frames can share the same state (recursive nesting).
- * `beginPos` is this frame's begin match's position in `this.code` (see
- * `subContinuations` below).
+ * `endCache` is per-frame, not per-state: `endSameAsBegin`'s guard depends on
+ * the frame's own `beginMatch`, and recursive frames can share a state.
  * @typedef {{ idx: number, state: CompiledState, beginMatch: string | undefined, beginPos: number, endCache?: MatchCache }} Frame
  */
 
-/**
- * Serializable snapshot of a stack frame (see `Tokenizer#snapshot`).
- * @typedef {{ idx: number, beginMatch: string | undefined, beginPos: number }} FrameSnapshot
- */
+/** @typedef {{ idx: number, beginMatch: string | undefined, beginPos: number }} FrameSnapshot */
+
+/** @typedef {{ beginPos: number, frames: FrameSnapshot[] }} SubContinuation */
 
 /**
- * A sub-language's carried continuation, scoped to one embedding
- * occurrence (see `subContinuations`).
- * @typedef {{ beginPos: number, frames: FrameSnapshot[] }} SubContinuation
- */
-
-/**
- * The subset of the registry's shape that `Tokenizer` itself relies on
- * (embedded-language lookups). The object built by `createRegistry()` has
- * more members than this, but it structurally satisfies it.
+ * The part of the registry `Tokenizer` uses (embedded-language lookups).
  * @typedef {{
  *   get(name: string): Program | undefined,
  *   tokenizeAuto(code: string, subset?: string[] | null): {
@@ -125,48 +85,34 @@ import {
  */
 
 /**
- * Which kind of pattern produced `nextMatch`'s winner. Its `matchData` is
- * the rule's state index for "begin", the frame depth for "end", and null
- * for "illegal".
+ * `matchData` is the state index for "begin", the frame depth for "end",
+ * and null for "illegal".
  * @typedef {"begin" | "end" | "illegal"} MatchKind
  */
 
 const MAX_KEYWORD_HITS = 7;
 
 /**
- * Max leading characters used for auto-detection scoring. Keyword relevance
- * caps at MAX_KEYWORD_HITS per word, so scanning past a few KB rarely
- * changes the winner but costs O(candidates × length). tokenizeAuto still
- * re-tokenizes the winner over the full `code` before returning.
+ * Auto-detection scores only this many leading chars (relevance saturates
+ * early); the winner is re-tokenized over the full code.
  */
 const DETECT_SAMPLE_LIMIT = 8000;
 
 /**
- * Window sizes for `Tokenizer#scanWindowed`: `WINDOW_BASE << level` match
- * start positions, for `level` in `[0, WINDOW_LEVELS)`. Past the last level
- * the scan runs to the end of the code, as an unwindowed scan does. A
- * window scan reads more slowly per character than a plain `exec` (which
- * can skip ahead for a literal first character), so the windows stay small
- * and an edit that never re-converges soon falls back to plain scans (see
- * bench/incremental.bench.ts).
+ * Windowed scans cover `WINDOW_BASE << level` start positions; past the last
+ * level they run to the end. Kept small: a window scan is slower per char
+ * than a plain `exec`.
  */
 const WINDOW_BASE = 256;
 const WINDOW_LEVELS = 5;
 
-/**
- * Window regexes by source regex and level (see `windowRegExp`).
- * @type {WeakMap<RegExp, RegExp[]>}
- */
+/** @type {WeakMap<RegExp, RegExp[]>} */
 const windowRegExps = new WeakMap();
 
 /**
- * A sticky regex that, run at `lastIndex = from`, matches the shortest run
- * of up to `(WINDOW_BASE << level) - 1` characters after which `re` matches.
- * So `from + match[0].length` is the first position in the window where an
- * attempt of `re` succeeds, with the same result an unbounded `re.exec`
- * from `from` would find there: the lookahead sees the whole code, so
- * anchors, `\b`, and lookarounds behave exactly as in `re`. The prefix is
- * non-capturing, so `re`'s group numbers and backreferences don't shift.
+ * Sticky regex matching the shortest prefix (< window size) after which `re`
+ * matches. The lookahead sees the whole code, so anchors and lookarounds
+ * behave as in `re`; the prefix is non-capturing, so group numbers hold.
  * @param {RegExp} re
  * @param {number} level
  * @returns {RegExp}
@@ -189,7 +135,6 @@ function windowRegExp(re, level) {
   return windowRe;
 }
 
-// Tokenizer#isTrulyOpeningTag lookaheads.
 const XML_TAG_DEFAULT_PARAM_RE = /^\s*=/;
 const XML_TAG_EXTENDS_CONSTRAINT_RE = /^\s+extends\s+/;
 
@@ -198,13 +143,6 @@ export const TEXT = 0;
 export const OPEN = 1;
 export const CLOSE = 2;
 
-/**
- * Thrown by `tokenize`, `highlight`, `tokenizeRanges`, and `createSession`
- * when `language` isn't registered. Distinct from `LanguageLoadError`
- * (src/load-language.js), which fires from a grammar module's dynamic
- * `import()` failure, not a registry lookup. `resume()` does not throw
- * this - see its own comment.
- */
 export class UnknownLanguageError extends Error {
   /**
    * @param {string} language
@@ -216,13 +154,6 @@ export class UnknownLanguageError extends Error {
   }
 }
 
-/**
- * Thrown by `Tokenizer#run` once a parse exceeds both 500,000 iterations
- * and three iterations per character consumed, guarding against a grammar
- * bug that never advances `pos`. The per-character term keeps large inputs
- * legal: real grammars take well under one iteration per character, and a
- * flat cap rejected plain JS past ~80k lines.
- */
 export class TokenizerLoopError extends Error {
   /**
    * @param {string} grammarName
@@ -236,16 +167,11 @@ export class TokenizerLoopError extends Error {
   }
 }
 
-/** Scope name prefix marking a sub-language boundary (`language:css`). */
 const LANGUAGE_SCOPE_PREFIX = "language:";
 
 /**
- * Five sequential `.replace()` passes (one per character) previously cost
- * ~87% of renderHtml's time, since every TEXT event runs through this. A
- * single pass that returns `value` untouched when there's nothing to escape
- * cuts that to a fraction. It scans char codes rather than calling a regex:
- * most TEXT values are a few characters long, where a regex call's fixed
- * cost dominated (see bench/render.bench.ts).
+ * Hot path (every TEXT event): a char-code scan beats a regex on short
+ * strings, and the common no-escape case returns `value` as-is.
  * @param {string} value
  */
 export function escapeHtml(value) {
@@ -259,7 +185,6 @@ export function escapeHtml(value) {
 }
 
 /**
- * The entity for an escaped char code, or null if it needs no escaping.
  * @param {number} code
  * @returns {string | null}
  */
@@ -281,7 +206,6 @@ function htmlEscape(code) {
 }
 
 /**
- * `escapeHtml`'s slow path, from the first index `start` that needs escaping.
  * @param {string} value
  * @param {number} start
  */
@@ -299,8 +223,24 @@ function escapeHtmlFrom(value, start) {
   return out + value.slice(last);
 }
 
+/** @type {number[]} */
+const EMPTY_RULES = [];
+
 /**
- * Compiles an IR (plain JSON) into an executable program.
+ * Expands `[scope, relevance, "word word ..."]` groups into a word map.
+ * @param {Array<[string, number, string]>} groups
+ */
+function expandKeywordTable(groups) {
+  /** @type {Record<string, [string, number]>} */
+  const table = Object.create(null);
+  for (const [scope, relevance, words] of groups) {
+    const data = /** @type {[string, number]} */ ([scope, relevance]);
+    for (const word of words.split(" ")) table[word] = data;
+  }
+  return table;
+}
+
+/**
  * @param {GrammarIR} ir
  * @returns {Program}
  */
@@ -308,17 +248,21 @@ function compileProgram(ir) {
   const flags = `mg${ir.caseInsensitive ? "i" : ""}${ir.unicode ? "u" : ""}`;
   /** @param {string | undefined} src */
   const re = (src) => (src == null ? null : new RegExp(src, flags));
+  const tables = (ir.keywordTables || []).map(expandKeywordTable);
   const states = ir.states.map((s) => ({
     ...s,
-    // Omitted in the shipped IR when it's the default (see convert-language.ts).
+    rules: s.rules || EMPTY_RULES,
     relevance: s.relevance ?? 1,
-    keywords: s.keywords
-      ? Object.assign(Object.create(null), s.keywords)
-      : null,
+    keywords:
+      typeof s.keywords === "number"
+        ? /** @type {Record<string, [string, number]>} */ (tables[s.keywords])
+        : s.keywords
+          ? Object.assign(Object.create(null), s.keywords)
+          : null,
     beginRe: re(s.begin),
     endRe: re(s.end),
     illegalRe: re(s.illegal),
-    keywordRe: s.keywords ? re(s.keywordPattern || "\\w+") : null,
+    keywordRe: s.keywords == null ? null : re(s.keywordPattern || "\\w+"),
     beginWordSet: s.beginWordSet ? new Set(s.beginWordSet) : null,
   }));
   return { ir, states };
@@ -328,8 +272,7 @@ class Tokenizer {
   /**
    * @param {EngineRegistry} registry
    * @param {Program} program
-   * @param {{ detect?: boolean }} [options] `detect` scores relevance and
-   *   aborts on `illegal` (mirrors hljs auto-detection semantics).
+   * @param {{ detect?: boolean }} [options] `detect` aborts on `illegal`.
    */
   constructor(registry, program, { detect = false } = {}) {
     this.registry = registry;
@@ -344,20 +287,12 @@ class Tokenizer {
     this.openScopes = 0;
     /** @type {Record<string, number>} */
     this.kwHits = Object.create(null);
-    /**
-     * Whether `kwHits` is shared with a snapshot, so the next keyword hit
-     * must copy it before writing. `snapshot()` and `restore()` copied it
-     * on every call, about 9% of a streaming repaint, though most frames
-     * never hit a keyword before the next snapshot (see
-     * bench/stream-repaint.bench.ts).
-     */
+    /** Copy-on-write: `kwHits` is shared with a snapshot until the next hit. */
     this.kwHitsShared = false;
     /** @type {Frame[]} */
     this.frames = [
       {
         idx: 0,
-        // states[0] (the root state) always exists: compileProgram maps
-        // ir.states 1:1, and every grammar has a root state.
         state: /** @type {CompiledState} */ (program.states[0]),
         beginMatch: undefined,
         beginPos: 0,
@@ -366,65 +301,42 @@ class Tokenizer {
     this.aborted = false;
     this.iterations = 0;
     /**
-     * Whether begin/end scans search a bounded window past the cursor
-     * instead of running to the end of the code (see `nextMatchWindowed`).
-     * Set for a parse resumed after an edit, which usually stops a few
-     * lines later: a rule with no match nearby otherwise scanned the whole
-     * tail of the document, so a one-character edit cost time in
-     * proportion to the document (see bench/incremental.bench.ts). Never
+     * Bound begin/end scans to a window past the cursor, so a reparse after
+     * an edit (which usually stops soon) doesn't scan the whole tail. Never
      * set in detect mode, so the windowed path ignores `illegal`.
      */
     this.windowed = false;
     /**
-     * Embedded-language parse state, carried across segments by name - but
-     * only for the *same* embedding occurrence (matched by `beginPos`, the
-     * code position where that occurrence's frame began). Without the
-     * `beginPos` guard, a later, textually unrelated occurrence of the same
-     * sub-language name would incorrectly resume from an earlier, already-
-     * closed occurrence's leftover frames instead of starting fresh (e.g.
-     * two independent markdown fenced blocks that both embed "xml": the
-     * second would wrongly inherit the first's still-open-tag state).
+     * Embedded-language parse state by name, only resumed by the same
+     * embedding occurrence (same `beginPos`), so e.g. a second fenced block
+     * doesn't inherit the first's open-tag state.
      * @type {Record<string, SubContinuation>}
      */
     this.subContinuations = Object.create(null);
     /**
-     * Memoized begin-pattern scans, indexed by state index (see
-     * `nextMatch`). A rule's "next match" is independent of which parent
-     * state referenced it, so this is shared across all of them rather than
-     * being per-frame like `Frame#endCache`.
+     * Begin-pattern scans by state index; shared across parents.
      * @type {(MatchCache | undefined)[]}
      */
     this.beginCache = [];
     /**
-     * Memoized `illegal`-pattern scans (detect mode only), indexed by state
-     * index. Like `beginCache`, a state's next illegal match doesn't depend
-     * on the frame. Uncached, every lexeme re-ran the pattern from `pos`,
-     * and a pattern with no match left (the common case for a candidate
-     * that won't abort) scanned the whole remaining sample each time:
-     * quadratic in sample length (see bench/auto-detect.bench.ts).
+     * `illegal` scans by state index (detect mode). Uncached, a pattern with
+     * no match left rescanned the whole sample per lexeme.
      * @type {(MatchCache | undefined)[]}
      */
     this.illegalCache = [];
-    /**
-     * Tag names with no `</name` at or after the recorded position. See
-     * `hasClosingTag`.
-     * @type {Map<string, number>}
-     */
+    /** @type {Map<string, number>} */
     this.noClosingTag = new Map();
     this.noClosingTagCodeLen = 0;
-    /** Kind of the last `nextMatch` winner. @type {MatchKind} */
+    /** @type {MatchKind} */
     this.matchKind = "begin";
-    /** Data of the last `nextMatch` winner. @type {number | null} */
+    /** @type {number | null} */
     this.matchData = null;
   }
 
   /** @returns {Frame} */
   get top() {
-    // Root frame (idx 0) is never popped; doEnd stops at depth >= 1.
     return /** @type {Frame} */ (this.frames[this.frames.length - 1]);
   }
-
-  // --- emission ---
 
   /** @param {string} value */
   text(value) {
@@ -454,7 +366,6 @@ class Tokenizer {
   }
 
   /**
-   * Emits the capture groups of a begin/end match (hljs "multi-class").
    * @param {Record<string, string | null>} captureScopes
    * @param {RegExpExecArray} match
    */
@@ -468,8 +379,6 @@ class Tokenizer {
     }
   }
 
-  // --- buffered text ---
-
   flush() {
     const state = this.top.state;
     if (state.subLanguage == null) this.keywordProcess(this.buffer, state);
@@ -478,12 +387,9 @@ class Tokenizer {
   }
 
   /**
-   * Splits `text` into keyword and plain-text events. Plain runs are sliced
-   * straight out of `text` rather than rebuilt by `+=` per word, which made
-   * every non-keyword word a string concatenation (see
-   * bench/tokenize.bench.ts). A keyword hit always ends the current TEXT
-   * event, even a relevance-only (`_`-prefixed) one, which stays in the
-   * next plain run.
+   * Splits `text` into keyword and plain-text events, slicing plain runs out
+   * of `text`. Any keyword hit ends the current TEXT event, even a
+   * relevance-only (`_`) one, which stays in the next plain run.
    * @param {string} text
    * @param {CompiledState} state
    */
@@ -494,8 +400,6 @@ class Tokenizer {
     }
     if (text === "") return;
     const keywords = state.keywords;
-    // keywordRe is always compiled alongside keywords (see compileProgram),
-    // so it is non-null whenever `keywords` is set.
     const keywordRe = /** @type {RegExp} */ (state.keywordRe);
     const caseInsensitive = this.program.ir.caseInsensitive;
     let kwHits = this.kwHits;
@@ -510,8 +414,8 @@ class Tokenizer {
         const [kind, keywordRelevance] = data;
         this.text(text.substring(textStart, match.index));
         if (this.kwHitsShared) {
-          // Copied into a null-prototype object before any read, so a
-          // restored plain-object snapshot can't leak `constructor` etc.
+          // Null-prototype copy: a restored plain-object snapshot must not
+          // leak `constructor` etc.
           kwHits = Object.assign(Object.create(null), kwHits);
           this.kwHits = kwHits;
           this.kwHitsShared = false;
@@ -520,7 +424,7 @@ class Tokenizer {
         kwHits[word] = hits;
         if (hits <= MAX_KEYWORD_HITS) this.relevance += keywordRelevance;
         if (kind.charCodeAt(0) === 95) {
-          // "_": relevance-only keyword, not highlighted
+          // "_": relevance-only, not highlighted
           textStart = match.index;
         } else {
           this.emitKeyword(lexeme, kind);
@@ -536,7 +440,6 @@ class Tokenizer {
   flushSubLanguage(state) {
     const text = this.buffer;
     if (text === "") return;
-    // flush() only calls this when state.subLanguage != null.
     const subLanguage = /** @type {string | string[]} */ (state.subLanguage);
     /** @type {{ language: string | undefined, relevance: number, events: ScopeEvent[] }} */
     let result;
@@ -546,10 +449,7 @@ class Tokenizer {
         this.text(text);
         return;
       }
-      // Later segments of the *same* embedding occurrence resume where the
-      // previous segment's parse left off (e.g. still inside an open tag).
-      // Guarded by beginPos: a record left by a different, already-closed
-      // occurrence of this sub-language must not leak into this one.
+      // Resume only a continuation from this same embedding occurrence.
       const beginPos = this.top.beginPos;
       const sub = new Tokenizer(this.registry, program);
       sub.code = text;
@@ -558,8 +458,6 @@ class Tokenizer {
       if (carried) {
         sub.frames = carried.map((f) => ({
           idx: f.idx,
-          // f.idx was produced by this same program's frame indices, so
-          // it's always a valid index into program.states.
           state: /** @type {CompiledState} */ (program.states[f.idx]),
           beginMatch: f.beginMatch,
           beginPos: f.beginPos,
@@ -599,11 +497,8 @@ class Tokenizer {
     }
   }
 
-  // --- scanning ---
-
   /**
-   * Finds the earliest valid match of `re` at or after `from`, skipping
-   * matches rejected by `guard`.
+   * Earliest match of `re` at or after `from` that passes `guard`.
    * @param {RegExp} re
    * @param {number} from
    * @param {((m: RegExpExecArray) => boolean) | null} guard
@@ -622,13 +517,9 @@ class Tokenizer {
   }
 
   /**
-   * Whether `cache` is still valid at `this.pos`: without this, every token
-   * boundary re-scans every rule's pattern from scratch. A cached match stays
-   * valid until `this.pos` passes it; a cached miss stays valid until the
-   * code grows (streaming append).
-   * Returns a plain boolean, not a `cache is MatchCache` predicate, so a
-   * stale cache isn't narrowed to `undefined` where `nextMatch` refreshes
-   * it in place.
+   * A cached match is valid until `pos` passes it; a cached miss until the
+   * code grows. Plain boolean (not a type predicate) so a stale cache isn't
+   * narrowed to `undefined` where `nextMatch` refreshes it in place.
    * @param {MatchCache | undefined} cache
    * @returns {boolean}
    */
@@ -670,18 +561,9 @@ class Tokenizer {
   }
 
   /**
-   * Whether `</name` occurs at or after `from`.
-   *
-   * Misses are memoized per tag name, which makes the common "generic, not a
-   * tag" verdict cheap: absence from `from` implies absence from every later
-   * position, so one scan settles all of that name's later occurrences. Code
-   * dense in generics (`Modify<T>`, `Array<T>`) otherwise rescans the whole
-   * remaining source per occurrence, which is quadratic in file size.
-   *
-   * Keyed on `code.length` like `beginCache`: a tokenizer's `code` only ever
-   * grows, so an unchanged length means unchanged content, and appended code
-   * can supply a closing tag that was legitimately absent before.
-   *
+   * Whether `</name` occurs at or after `from`. Misses are memoized per name
+   * (absence from `from` implies absence later), avoiding quadratic rescans
+   * in generic-heavy code; reset when `code` grows.
    * @param {string} name
    * @param {number} from
    * @returns {boolean}
@@ -699,9 +581,7 @@ class Tokenizer {
   }
 
   /**
-   * hljs javascript/typescript JSX-vs-generic disambiguation for a `<Foo`
-   * match. Re-evaluated when more code arrives so a streaming closing tag
-   * still resolves it. See Tokenizer#isTrulyOpeningTag.
+   * JSX-vs-generic disambiguation for a `<Foo` match (hljs javascript).
    * @param {RegExpExecArray} match
    * @returns {boolean}
    */
@@ -723,14 +603,10 @@ class Tokenizer {
   }
 
   /**
-   * The next lexeme: earliest match wins; ties break by priority (begin
-   * rules in order, then ends innermost-first, then illegal). Returns the
-   * winning match and leaves its kind/data in `matchKind`/`matchData`.
-   *
-   * Runs once per lexeme, so it allocates nothing on cache hits: no
-   * `consider()` closure over mutable locals, no `{ match, kind, data }`
-   * result object, and stale caches are refreshed in place (see
-   * bench/tokenize.bench.ts).
+   * The next lexeme: earliest match wins; ties go to begin rules in order,
+   * then ends innermost-first, then illegal. Sets `matchKind`/`matchData`.
+   * Hot path: allocates nothing on cache hits (no closures or result
+   * objects; stale caches are refreshed in place).
    * @returns {RegExpExecArray | null}
    */
   nextMatch() {
@@ -745,20 +621,14 @@ class Tokenizer {
     const state = this.top.state;
     const rules = state.rules;
     const states = this.program.states;
-    // Begin rules come first and in priority order, so among them a strict
-    // `<` keeps the earliest rule on ties.
+    // Strict `<` keeps the earliest rule on ties.
     for (let i = 0; i < rules.length; i++) {
-      // rules[i] is in-bounds by the loop condition.
       const ruleIdx = /** @type {number} */ (rules[i]);
       let cache = this.beginCache[ruleIdx];
-      // Guard closures (this.beginGuard(child)) are only built on a cache
-      // miss - passing them in as a pre-built thunk, as this used to via a
-      // shared cachedMatch() helper, allocated one on every call regardless
-      // of hit/miss, since JS evaluates argument expressions eagerly.
+      // Guard closures are only built on a cache miss.
       if (!this.isCacheValid(cache)) {
         const child = /** @type {CompiledState} */ (states[ruleIdx]);
         const match = this.execValid(
-          // Every state referenced from a `rules` list has a `begin` pattern.
           /** @type {RegExp} */ (child.beginRe),
           this.pos,
           this.beginGuard(child),
@@ -778,23 +648,15 @@ class Tokenizer {
         bestData = ruleIdx;
       }
     }
-    // End candidates walk outward while `endsWithParent` chains allow. They
-    // rank below every begin rule and innermost-first, so they also only win
-    // with a strictly earlier index.
+    // Ends walk outward while `endsWithParent` allows; they rank below
+    // begins, innermost-first, so they too need a strictly earlier index.
     for (let d = this.frames.length - 1; d >= 1; d--) {
-      // d ranges over [1, frames.length - 1], always in bounds.
       const frame = /** @type {Frame} */ (this.frames[d]);
       const endRe = frame.state.endRe;
       if (endRe) {
         let cache = frame.endCache;
         if (!this.isCacheValid(cache)) {
-          const match = this.execValid(
-            endRe,
-            this.pos,
-            frame.state.endSameAsBegin
-              ? (/** @type {RegExpExecArray} */ m) => m[1] === frame.beginMatch
-              : null,
-          );
+          const match = this.execValid(endRe, this.pos, this.endGuard(frame));
           if (cache) {
             cache.codeLen = this.code.length;
             cache.match = match;
@@ -839,7 +701,6 @@ class Tokenizer {
   }
 
   /**
-   * The end-pattern guard for `frame` (see `nextMatch`).
    * @param {Frame} frame
    * @returns {((m: RegExpExecArray) => boolean) | null}
    */
@@ -848,9 +709,6 @@ class Tokenizer {
   }
 
   /**
-   * Whether a windowed cache still answers "first match at or after
-   * `pos`": a match `pos` hasn't passed, or a miss whose window reaches
-   * past `pos` in unchanged code.
    * @param {WindowCache} cache
    * @returns {boolean}
    */
@@ -860,13 +718,9 @@ class Tokenizer {
   }
 
   /**
-   * `execValid` over a window of `WINDOW_BASE << cache.level` start
-   * positions from `from`, written into `cache`: the first guard-passing
-   * match in the window, or a miss with `until` at the window's end. A
-   * window that reaches the end of the code, or a level past the last,
-   * gives the same answer as `execValid` (`until` is `Infinity`). Matches
-   * come from `re.exec` itself, so they're the same objects an unwindowed
-   * scan returns (see `windowRegExp`).
+   * `execValid` over a window of `WINDOW_BASE << cache.level` start positions
+   * from `from`, written into `cache` (a miss sets `until` to the window
+   * end). Matches come from `re.exec`, identical to an unwindowed scan's.
    * @param {WindowCache} cache
    * @param {RegExp} re
    * @param {number} from
@@ -877,11 +731,8 @@ class Tokenizer {
     cache.codeLen = code.length;
     cache.until = Number.POSITIVE_INFINITY;
     const size = WINDOW_BASE << cache.level;
-    // A window reaching the end of the code saves nothing, and a plain
-    // `exec` scans faster: near the end of a document (typing at the end,
-    // say) every scan is plain. Under the `u` flag a window could start
-    // inside a surrogate pair, where the window regex and `re` might step
-    // differently; scan plainly there too.
+    // Scan plainly when a window would reach the end anyway (plain `exec`
+    // is faster), or under `u`, where a window could start mid-surrogate.
     if (
       cache.level >= WINDOW_LEVELS ||
       from + size > code.length ||
@@ -905,8 +756,7 @@ class Tokenizer {
       re.lastIndex = at;
       const match = re.exec(code);
       if (match === null || match.index !== at) {
-        // Unreachable: the lookahead just matched `re` at `at`. Kept so a
-        // regex engine quirk can't change output, only cost.
+        // Unreachable; guards against a regex engine quirk changing output.
         cache.match = this.execValid(re, from, guard);
         return;
       }
@@ -923,14 +773,10 @@ class Tokenizer {
   }
 
   /**
-   * `nextMatch` for a windowed tokenizer (see `windowed`). A cached miss
-   * only rules out matches before its `until`, so its window is widened
-   * (twice the size, from `until`) while the rule could still beat the
-   * best match so far, then the candidates are compared again. Windows
-   * never widen past `stopAt`: `run` stops before any lexeme at or past
-   * it, so when nothing can start earlier this returns a match at or past
-   * `stopAt` (not necessarily the earliest) or null. Detect mode never
-   * runs windowed, so `illegal` is not scanned.
+   * `nextMatch` for a windowed tokenizer. A miss's window is widened (from
+   * `until`) while the rule could still beat the best match. Windows never
+   * widen past `stopAt`, so a returned match at or past `stopAt` may not be
+   * the earliest (`run` stops there anyway).
    * @param {number} stopAt
    * @returns {RegExpExecArray | null}
    */
@@ -958,7 +804,7 @@ class Tokenizer {
           beginCache[ruleIdx] = cache;
         }
         if (!this.isWindowValid(cache)) {
-          // A miss whose window `pos` has passed: widen the next one.
+          // `pos` passed a miss's window: widen the next one.
           if (cache.match === null && cache.codeLen === this.code.length) {
             cache.level++;
           }
@@ -1006,9 +852,7 @@ class Tokenizer {
         }
         if (!frame.state.endsWithParent) break;
       }
-      // Every unresolved rule starts strictly after `limit`, so it can
-      // neither beat nor tie the best match, nor start before `stopAt`.
-      // (`minUntil` stays Infinity when every rule is resolved.)
+      // Done once no unresolved rule could start at or before `limit`.
       const limit = Math.min(bestIndex, stopAt - 1);
       if (minUntil > limit || minUntil === Number.POSITIVE_INFINITY) {
         this.matchKind = bestKind;
@@ -1045,10 +889,8 @@ class Tokenizer {
     }
   }
 
-  // --- state transitions ---
-
   /**
-   * Enters a state (shared by begin matches and `starts` chaining).
+   * Shared by begin matches and `starts` chaining.
    * @param {number} idx
    * @param {CompiledState} state
    * @param {RegExpExecArray} match
@@ -1076,8 +918,6 @@ class Tokenizer {
    * @returns {number}
    */
   doBegin(match, idx) {
-    // idx comes from nextMatch's "begin" matchData, which is always a valid
-    // program.states index (see the ruleIdx comment above).
     const state = /** @type {CompiledState} */ (this.program.states[idx]);
     const lexeme = match[0];
     if (state.skip) {
@@ -1099,8 +939,6 @@ class Tokenizer {
   doEnd(match, depth) {
     // `endsParent` extends the ended range outward through parents.
     let d = depth;
-    // this.frames[d] is in bounds: d starts at `depth` (a frame index
-    // returned by nextMatch) and only decreases while staying > 1.
     while (d > 1 && /** @type {Frame} */ (this.frames[d]).state.endsParent) d--;
 
     const origin = this.top.state;
@@ -1122,8 +960,6 @@ class Tokenizer {
     /** @type {Frame} */
     let popped;
     do {
-      // frames.pop() is non-null: the loop condition (frames.length > d,
-      // with d >= 1) guarantees at least one element remains before each pop.
       popped = /** @type {Frame} */ (this.frames.pop());
       if (popped.state.scope) this.close();
       if (!popped.state.skip && popped.state.subLanguage == null) {
@@ -1142,23 +978,17 @@ class Tokenizer {
     return origin.returnEnd ? 0 : lexeme.length;
   }
 
-  // --- main loop ---
-
   /**
    * Consumes as much of `this.code` as possible; resumable after append.
-   *
-   * `stopAt` halts *before* the first lexeme starting at or past that
-   * offset, leaving `pos`/`buffer` exactly as they were after the previous
-   * lexeme. That makes the state at a line boundary identical whether the
-   * text after it was visible (this call) or not yet appended (streaming),
-   * so checkpoints taken either way line up - but with the whole document
-   * visible, match caches stay valid across stops and nothing is rescanned.
+   * `stopAt` halts before the first lexeme starting at or past it, so state
+   * at a line boundary matches a streaming parse that hasn't seen later text.
    * @param {number} [stopAt]
    */
   run(stopAt = Number.POSITIVE_INFINITY) {
     if (this.aborted) return;
     for (;;) {
       this.iterations++;
+      // Per-char term keeps huge inputs legal; a flat cap rejected big files.
       if (this.iterations > 500000 && this.iterations > this.pos * 3) {
         throw new TokenizerLoopError(this.program.ir.name, this.iterations);
       }
@@ -1178,11 +1008,8 @@ class Tokenizer {
         this.aborted = true;
         return;
       } else if (kind === "begin") {
-        // nextMatch() only leaves null data for "illegal"; "begin" always
-        // carries the numeric rule index.
         consumed = this.doBegin(match, /** @type {number} */ (this.matchData));
       } else {
-        // Same invariant as above: "end" always carries the numeric depth.
         consumed = this.doEnd(match, /** @type {number} */ (this.matchData));
       }
 
@@ -1192,8 +1019,7 @@ class Tokenizer {
         this.frames.length === framesBefore &&
         this.top === topBefore
       ) {
-        // 0-width match made no progress; emit one char and move on
-        // (mirrors hljs's badly-behaved-rule recovery).
+        // 0-width match made no progress: consume one char (as hljs does).
         this.buffer += this.code.slice(this.pos, this.pos + 1);
         next = this.pos + 1;
       }
@@ -1214,19 +1040,12 @@ class Tokenizer {
     };
   }
 
-  // --- checkpointing ---
-
   /**
    * Serializable parse state; everything needed to resume at `pos`.
-   * Includes `subContinuations` (embedded-language parse state, e.g. an
-   * astro frontmatter's typescript or a markdown fenced code block) - a
-   * resumed parse that omitted it would silently restart every embedded
-   * sublanguage from scratch instead of continuing it.
    * @returns {Snapshot}
    */
   snapshot() {
-    // Shared, not copied: the next keyword hit copies it (see
-    // `kwHitsShared`). Callers treat snapshots as read-only.
+    // `kwHits` is shared, not copied (see `kwHitsShared`).
     this.kwHitsShared = true;
     return {
       pos: this.pos,
@@ -1261,13 +1080,10 @@ class Tokenizer {
     this.pos = snap.pos;
     this.buffer = snap.buffer;
     this.relevance = snap.relevance;
-    // Shared until the next keyword hit, like `snapshot()`.
     this.kwHits = snap.kwHits;
     this.kwHitsShared = true;
     this.frames = snap.frames.map((f) => ({
       idx: f.idx,
-      // f.idx was captured from this same program's frames by snapshot(),
-      // so it's always a valid index into program.states.
       state: /** @type {CompiledState} */ (this.program.states[f.idx]),
       beginMatch: f.beginMatch,
       beginPos: f.beginPos,
@@ -1281,10 +1097,7 @@ class Tokenizer {
   }
 }
 
-// --- renderers ---
-
 /**
- * hljs-compatible class for a scope (`hljs-` prefix, tiered scopes).
  * @param {string} name
  * @param {string} prefix
  */
@@ -1303,12 +1116,8 @@ export function scopeToCssClass(name, prefix) {
 }
 
 /**
- * Built `<span class="...">` open tags, by class prefix and then scope.
- * Building one per OPEN event (`scopeToCssClass` plus a template string)
- * cost about a quarter of renderHtml's time, though a document only has a
- * few dozen distinct scopes (see bench/render.bench.ts). The vocabulary is
- * bounded by the registered grammars, but `OPEN_TAG_LIMIT` caps it anyway
- * so arbitrary class prefixes can't grow it without bound.
+ * Memoized `<span class="...">` tags by class prefix, then scope. Capped so
+ * arbitrary class prefixes can't grow it without bound.
  * @type {Map<string, Map<string, string>>}
  */
 const openTagCache = new Map();
@@ -1316,7 +1125,6 @@ const OPEN_TAG_LIMIT = 2048;
 let openTagCount = 0;
 
 /**
- * The open-tag cache for `prefix`, to pass to `openTag`.
  * @param {string} prefix
  * @returns {Map<string, string>}
  */
@@ -1330,7 +1138,6 @@ function openTagsFor(prefix) {
 }
 
 /**
- * `<span class="...">` for `scope`, memoized in `tags` (from `openTagsFor`).
  * @param {Map<string, string>} tags
  * @param {string} scope
  * @param {string} prefix
@@ -1367,10 +1174,8 @@ export function renderHtml(events, { classPrefix = "hljs-" } = {}) {
 }
 
 /**
- * Incrementally extends line-rendered HTML from `pendingHtml`/`openScopes`,
- * processing only `newEvents` since the last call. Avoids re-running
- * `renderHtml` + `splitLines` on the whole stream each repaint (O(n²) for
- * long streams). Used by HighlightStream.
+ * Extends line-rendered HTML with only `newEvents`, continuing from
+ * `pendingHtml`/`openScopes`.
  * @param {ScopeEvent[]} newEvents
  * @param {string[]} openScopes
  * @param {string} pendingHtml
@@ -1387,9 +1192,7 @@ export function extendLines(
   /** @type {string[]} */
   const completedLines = [];
   const openTags = openTagsFor(classPrefix);
-  // Cache the concatenated open/close tag strings for the current stack so a
-  // run of newlines between OPEN/CLOSE events reuses them instead of
-  // re-joining the whole stack per line break.
+  // Reopen/close strings for the current stack, reused across line breaks.
   /** @type {string[]} */
   const tags = stack.map((scope) => openTag(openTags, scope, classPrefix));
   let reopen = tags.join("");
@@ -1428,9 +1231,8 @@ export function extendLines(
 }
 
 /**
- * Flat scope ranges for the CSS Custom Highlight API. Same shape as the old
- * token-ranges.js. A run of text is painted with its innermost scope;
- * sublanguage wrappers are transparent.
+ * Flat ranges for the CSS Custom Highlight API: text gets its innermost
+ * scope; sublanguage wrappers are transparent.
  * @param {ScopeEvent[]} events
  * @returns {TokenRange[]}
  */
@@ -1457,18 +1259,9 @@ export function toRanges(events) {
 }
 
 /**
- * Line-indexed `{ text, scopes }` tokens - the structured alternative to
- * re-splitting `renderHtml`'s output. A single pass over `events`, maintaining
- * the open-scope stack (like `toRanges`) and splitting `TEXT` values on line
- * breaks (like `extendLines`'s HTML splitting).
- *
- * Splits solely on LF (`\n`, code point 10), matching `splitLines`'s behavior
- * on `renderHtml` output (escaping never touches `\n`). CR (`\r`) is not
- * treated specially - for CRLF input, the `\r` lands as the last character of
- * the preceding line's trailing token, exactly where `splitLines` leaves it
- * in the HTML string. A trailing newline in the source yields a trailing
- * empty line, and an empty `events` array yields one empty line - both to
- * match `splitLines("")` / `splitLines`'s unconditional final push.
+ * Splits only on LF to match `splitLines` on `renderHtml` output: a CR stays
+ * at the end of its line, and a trailing newline (or empty input) yields a
+ * trailing empty line.
  * @param {ScopeEvent[]} events
  * @returns {LineToken[][]}
  */
@@ -1479,9 +1272,7 @@ export function tokenLines(events) {
   let line = [];
   /** @type {string[]} */
   const stack = [];
-  // Recomputed only on OPEN/CLOSE, so adjacent text on the same nesting
-  // level (even across separate TEXT events) shares one array reference and
-  // can be merged by identity below.
+  // Recomputed only on OPEN/CLOSE, so same-level text merges by identity.
   /** @type {string[]} */
   let scopes = [];
   /** @type {LineToken | null} */
@@ -1543,12 +1334,9 @@ export function createLineRenderer() {
 }
 
 /**
- * Registers `language` and its `dependencies` (transitive subLanguage refs).
- * Skips languages already registered under their canonical name.
- *
- * Does not use `registry.get(language.name)` as the skip check. `get` resolves
- * aliases, so hljs's "ini" aliasing "toml" could make `get("toml")` look
- * registered when the real toml grammar has not been loaded yet.
+ * Registers `language` and its dependencies, skipping ones already
+ * registered. Compares `ir.name` because `get` resolves aliases ("ini"
+ * aliases "toml", so `get("toml")` can hit before toml is loaded).
  * @param {Registry} registry
  * @param {Language} language
  */
@@ -1562,8 +1350,6 @@ export function registerAll(registry, language) {
   }
 }
 
-// --- registry (public API) ---
-
 export function createRegistry() {
   /** @type {Map<string, Program>} */
   const programs = new Map();
@@ -1572,7 +1358,6 @@ export function createRegistry() {
 
   const registry = {
     /**
-     * Registers a grammar IR (plain JSON, e.g. from convert.js).
      * @param {GrammarIR} ir
      * @returns {Program}
      */
@@ -1623,29 +1408,30 @@ export function createRegistry() {
     },
 
     /**
-     * Detection scoring run: aborts on `illegal`, like hljs auto.
+     * Detection scoring run: aborts (scores 0) on `illegal`.
      * @param {string} code
      * @param {string} language
      * @returns {{ relevance: number, events: ScopeEvent[] }}
      */
     score(code, language) {
       const program = this.get(language);
-      if (!program) return { relevance: 0, events: [{ t: TEXT, v: code }] };
-      const tokenizer = new Tokenizer(this, program, { detect: true });
-      tokenizer.code = code;
-      try {
-        tokenizer.run();
-        if (tokenizer.aborted)
-          return { relevance: 0, events: [{ t: TEXT, v: code }] };
-        const result = tokenizer.finish();
-        return { relevance: result.relevance, events: result.events };
-      } catch {
-        return { relevance: 0, events: [{ t: TEXT, v: code }] };
+      if (program) {
+        const tokenizer = new Tokenizer(this, program, { detect: true });
+        tokenizer.code = code;
+        try {
+          tokenizer.run();
+          if (!tokenizer.aborted) {
+            const result = tokenizer.finish();
+            return { relevance: result.relevance, events: result.events };
+          }
+        } catch {
+          // A grammar that errors (e.g. TokenizerLoopError) scores 0.
+        }
       }
+      return { relevance: 0, events: [{ t: TEXT, v: code }] };
     },
 
     /**
-     * Auto-detection over any registered grammars (customs included).
      * @param {string} code
      * @param {string[] | null} [subset]
      * @returns {{
@@ -1679,7 +1465,7 @@ export function createRegistry() {
           relevance: scored.relevance,
           events: scored.events,
         };
-        if (this.beats(entry, best, sample)) {
+        if (this.beats(entry, best)) {
           secondBest = best.language ? best : secondBest;
           best = entry;
         } else if (!secondBest || entry.relevance > secondBest.relevance) {
@@ -1692,8 +1478,8 @@ export function createRegistry() {
           relevance: secondBest.relevance,
         };
       }
-      // Winner was scored on `sample` only; re-tokenize the full `code`.
-      // secondBest relevance stays sample-scored (informational only).
+      // Re-tokenize the winner over the full code; secondBest stays
+      // sample-scored.
       if (best.language && sample.length !== code.length) {
         const full = this.tokenize(code, best.language);
         best = { ...best, relevance: full.relevance, events: full.events };
@@ -1705,10 +1491,9 @@ export function createRegistry() {
      * Relevance ordering with hljs's supersetOf tie-break.
      * @param {{ language: string | undefined, relevance: number }} a
      * @param {{ language: string | undefined, relevance: number }} b
-     * @param {string} _code
      * @returns {boolean}
      */
-    beats(a, b, _code) {
+    beats(a, b) {
       if (a.relevance !== b.relevance) return a.relevance > b.relevance;
       if (a.language && b.language) {
         const aLang = this.get(a.language);
@@ -1718,8 +1503,6 @@ export function createRegistry() {
       }
       return false; // stable: first candidate wins ties
     },
-
-    // hljs-shaped conveniences matching svelte-highlight's call sites
 
     /**
      * @param {string} code
@@ -1761,18 +1544,10 @@ export function createRegistry() {
     },
 
     /**
-     * Streaming session. Appended text is tokenized incrementally; only
-     * complete lines are consumed so line-anchored matches behave as they
-     * will in the final document. `snapshot()`/`resume()` expose the
-     * serializable checkpoint state.
-     *
-     * `options.from` loads `code` up front instead of via `append()`, and
-     * resumes at `snapshot` when given (otherwise from the start). Used by
-     * incremental-tokenize.js, which knows the whole document and steps
-     * through it with `advance()`; further `append()` calls still extend it.
-     * `from.windowed` bounds each pattern scan to a window that grows past
-     * the cursor (see `Tokenizer#windowed`), for callers that expect to
-     * stop soon, like a reparse after an edit. Output is unchanged.
+     * Streaming session. Only complete lines are tokenized, so line-anchored
+     * matches behave as in the final document. `from` preloads `code`
+     * (optionally resuming at `snapshot`) for stepping with `advance()`;
+     * `from.windowed` bounds scans for callers that expect to stop soon.
      * @param {string} language
      * @param {{ from?: { code: string, snapshot?: Snapshot, windowed?: boolean } }} [options]
      * @returns {StreamSession}
@@ -1783,12 +1558,8 @@ export function createRegistry() {
       let tokenizer = new Tokenizer(this, program);
       const registry = this;
       let staged = "";
-      /**
-       * Index of the last `\n` in `staged`, or -1. Kept up to date so
-       * `append()` only searches the new text: a `staged.lastIndexOf()`
-       * rescanned the whole open line on every append, O(n^2) over a long
-       * single-line stream (see bench/stream-long-line.bench.ts).
-       */
+      // Last `\n` in `staged` (or -1), tracked so `append()` only searches
+      // new text; rescanning `staged` is quadratic on a long open line.
       let stagedNewline = -1;
       let fed = from ? from.code : "";
       if (from) {
@@ -1797,8 +1568,7 @@ export function createRegistry() {
         if (from.windowed) tokenizer.windowed = true;
       }
       /**
-       * Lazily built on the first `replace()` call; stays null for sessions
-       * that only ever `append()`/`advance()` so they pay no extra cost.
+       * Built lazily on the first `replace()`.
        * @type {IncrementalParse | null}
        */
       let incremental = null;
@@ -1816,23 +1586,14 @@ export function createRegistry() {
             tokenizer.run();
           }
         },
-        /**
-         * Tokenizes already-loaded text up to (not including) the first
-         * lexeme starting at or past `stopAt`. A snapshot taken right after
-         * matches one taken by `append()`-ing the same text line by line -
-         * see `Tokenizer#run` - without the per-append rescans.
-         * @param {number} stopAt
-         */
+        /** @param {number} stopAt */
         advance(stopAt) {
           tokenizer.run(stopAt);
         },
         /**
-         * `append(text.slice(fedLength))`, given `text` (everything fed so
-         * far plus more) as a slice of one larger string. `append()` builds
-         * the grown text by concatenation, which the engine re-flattens
-         * before the next regex scan: feeding a long document in batches
-         * that way cost O(batches x length). Slicing shares the source
-         * string's storage instead (see bench/tokenized-document.bench.ts).
+         * Like `append(text.slice(fedLength))`, but slicing `text` shares its
+         * storage instead of concatenating (which the regex engine would
+         * re-flatten on every scan).
          * @param {string} text
          */
         feed(text) {
@@ -1846,17 +1607,9 @@ export function createRegistry() {
           }
         },
         /**
-         * Replaces the fed text's `[from, to)` range with `text`, as if the
-         * session had been fed the resulting string from the start.
-         * Built on `incremental-tokenize.js`'s diff-and-resume re-parsing: an
-         * `IncrementalParse` record is built once (lazily, on first call)
-         * and then re-parsed only for the affected region on each call,
-         * reusing the unaffected suffix when tokenizer state reconverges.
-         * Does not support a `replace()` across a language change; create a
-         * new session for that instead.
-         *
-         * Returns how many leading `events()` entries are the same objects
-         * as before the call. The first call re-parses, so it returns 0.
+         * Replaces fed `[from, to)` with `text`, re-parsing only the affected
+         * region. Returns how many leading `events()` entries are unchanged
+         * objects (0 on the first call).
          * @param {number} from
          * @param {number} to
          * @param {string} text
@@ -1886,27 +1639,11 @@ export function createRegistry() {
           tokenizer = new Tokenizer(registry, program);
           tokenizer.code = fed.slice(0, lastCheckpoint.pos);
           tokenizer.restore(lastCheckpoint);
-          // `lastCheckpoint` is taken just *before* `parseIncremental`'s
-          // internal `finish()` - by design (see `run`'s `stopAt` doc
-          // comment), it defers any lexeme starting exactly at the
-          // checkpoint's position so a later `advance()` could still see
-          // more text. `incremental.events` already has that lexeme
-          // resolved (by the `finish()` that produced it), so restore only
-          // the events up to the checkpoint's own count, then run the live
-          // tokenizer once - exactly what `append()` does for newly fed
-          // complete lines - to resolve it the same way.
-          //
-          // The events are truncated in place rather than copied, which
-          // copied every event before the change a second time (see
-          // bench/stream-repaint.bench.ts). When the code changed,
-          // `reparseIncremental` returns a fresh array, so the events
-          // `events()` returned before this call stay as they were. When it
-          // didn't, it returns `previous` itself, whose events are the array
-          // `events()` and any `finish()` result handed out, so that one is
-          // copied instead. Either way `incremental.events` may hold events
-          // past the last checkpoint, which the next re-parse doesn't keep:
-          // it resumes at or before that checkpoint, and whatever it carries
-          // over past it is cut off here again.
+          // `lastCheckpoint` precedes `parseIncremental`'s final `finish()`,
+          // so keep only events up to its count and re-run to resolve the
+          // rest live. Truncate in place when `reparseIncremental` returned
+          // a fresh array; copy when it returned `previous` unchanged, whose
+          // events array was already handed out by `events()`/`finish()`.
           tokenizer.events =
             incremental === previous
               ? incremental.events.slice(0, lastCheckpoint.eventCount)
@@ -1920,17 +1657,9 @@ export function createRegistry() {
           return incremental.reuse?.head ?? 0;
         },
         /**
-         * The last of the last `replace()`'s checkpoints (none before the
-         * first) within both limits: a point where rendering can resume,
-         * since `events()[0, eventCount)` covers the text before `textPos`
-         * and leaves `scopes` open. Lets stream-regenerate.js skip its walk
-         * over the events before a change.
-         *
-         * At a checkpoint the open scopes are the scoped frames' (begin
-         * and end matches open and close them, and keyword and
-         * sub-language runs are balanced), and the text not yet emitted is
-         * `buffer`, which ends at `pos`. Checkpoints only move forward, so
-         * this is a binary search.
+         * Binary search over the last `replace()`'s checkpoints. At a
+         * checkpoint the open scopes are exactly the scoped frames', and the
+         * unemitted text is `buffer`, ending at `pos`.
          * @param {{ eventCount?: number, textPos?: number }} limits
          * @returns {{ textPos: number, eventCount: number, scopes: string[] } | undefined}
          */
@@ -1971,8 +1700,8 @@ export function createRegistry() {
           };
         },
         /**
-         * Multi-line lookahead (e.g. ruby heredocs) may need the full text
-         * before it can match. `canonicalize` re-tokenizes in one O(n) pass.
+         * `canonicalize` re-tokenizes the full text in one pass, for
+         * multi-line lookahead (e.g. ruby heredocs) that streaming can miss.
          * @param {{ canonicalize?: boolean }} [options]
          * @returns {HighlightResult}
          */
@@ -1984,12 +1713,8 @@ export function createRegistry() {
           tokenizer.run();
           const result = tokenizer.finish();
           const events = result.events;
-          // `value` renders on first read: the live preview
-          // (stream-preview.js) and incremental-tokenize.js only read
-          // `events`, and rendering the whole document's HTML they then
-          // dropped was wasted work (see bench/stream-repaint.bench.ts,
-          // bench/incremental.bench.ts). A later append() pushes onto
-          // this same array, so render only what finish() returned.
+          // `value` renders lazily (most callers only read `events`), and
+          // only up to `eventCount`: a later append() pushes onto `events`.
           const eventCount = events.length;
           /** @type {string | undefined} */
           let value;
@@ -2009,15 +1734,7 @@ export function createRegistry() {
         },
         snapshot: () => tokenizer.snapshot(),
         events: () => tokenizer.events,
-        /**
-         * Returns the events produced since the last call and lets the
-         * session forget them, so a long session doesn't hold every event
-         * it ever made (~140 MB per 100k lines of TypeScript). For callers
-         * that consume events once, like TokenizedDocument. Afterward,
-         * `events()`, `finish()`, and snapshot `eventCount`s only cover
-         * later events, so don't mix it with `replace()`.
-         * @returns {ScopeEvent[]}
-         */
+        /** @returns {ScopeEvent[]} */
         takeEvents() {
           const taken = tokenizer.events;
           tokenizer.events = [];
@@ -2027,7 +1744,7 @@ export function createRegistry() {
     },
 
     /**
-     * Resumes a parse from a snapshot; emits only post-snapshot events.
+     * Emits only post-snapshot events.
      * @param {string} code
      * @param {string} language
      * @param {Snapshot} snap
@@ -2035,8 +1752,8 @@ export function createRegistry() {
      */
     resume(code, language, snap) {
       const program = this.get(language);
-      // resume() does not validate `language`; unregistered names throw in
-      // Tokenizer when it reads program.states (same as before types).
+      // Unvalidated: an unknown language throws a TypeError, not
+      // UnknownLanguageError.
       const tokenizer = new Tokenizer(this, /** @type {Program} */ (program));
       tokenizer.code = code;
       tokenizer.restore(snap);

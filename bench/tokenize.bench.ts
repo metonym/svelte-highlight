@@ -1,9 +1,4 @@
-/**
- * Core engine tokenize() throughput per language, on real corpora pulled
- * from this repo (see _shared.ts). This is the hottest path in the
- * library: every Highlight render and every candidate scored during
- * auto-detection goes through it.
- */
+/** Core tokenize() throughput per language on real corpora. */
 import { group, task } from "ostia";
 import { buildRegistry, getCorpus, sizedSlice } from "./_shared.ts";
 
@@ -24,9 +19,7 @@ group("engine.tokenize()", () => {
   }
 });
 
-// Prose-like runs of plain words between rule matches, where the time goes
-// into Tokenizer#keywordProcess rather than rule scanning. SQL is also
-// case-insensitive, so every word is lowercased before its keyword lookup.
+// Stresses keyword lookup rather than rule scanning (SQL also lowercases).
 const KEYWORD_DENSE = {
   sql:
     "SELECT name, total_amount, created_at FROM orders o INNER JOIN customers c " +
@@ -44,6 +37,3 @@ group("engine.tokenize() keyword-dense", () => {
     task(`${language} @ 20,000 chars`, () => registry.tokenize(code, language));
   }
 });
-
-// Run this suite with `ostia bench bench/tokenize.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

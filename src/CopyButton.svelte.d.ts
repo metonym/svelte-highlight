@@ -2,134 +2,81 @@ import type { SvelteComponentTyped } from "svelte";
 import type { HTMLButtonAttributes } from "svelte/elements";
 
 export type CopyButtonProps = HTMLButtonAttributes & {
-  /**
-   * Text to copy.
-   */
+  /** Text to copy. */
   code: string;
 
   /**
-   * Copy handler. Defaults to `navigator.clipboard.writeText`.
+   * Copy handler.
    * @default (code) => navigator.clipboard.writeText(code)
    */
   copy?: (code: string) => void | Promise<void>;
 
   /**
-   * Transform `code` before it is passed to `copy`. Defaults to identity.
-   * The transformed string is what `on:copy` reports in `detail.code`.
+   * Transform `code` before `copy`; the result is reported in `on:copy`.
    * @default (code) => code
    */
   transform?: (code: string) => string;
 
-  /**
-   * How long the "copied" state lasts (ms).
-   * @default 2000
-   */
+  /** How long the "copied" state lasts (ms). @default 2000 */
   timeout?: number;
 
-  /**
-   * Copy button `aria-label`.
-   * Used as the fallback text only if the default icon slot is overridden.
-   * @default "Copy"
-   */
+  /** Button `aria-label`. @default "Copy" */
   text?: string;
 
-  /**
-   * Copied state `aria-label`.
-   * Used as the fallback text only if the default icon slot is overridden.
-   * @default "Copied!"
-   */
+  /** Button `aria-label` while copied. @default "Copied!" */
   copiedText?: string;
 
-  /**
-   * Top offset.
-   * @default "0.5em"
-   */
+  /** Top offset. @default "0.5em" */
   "--copy-top"?: string;
 
-  /**
-   * Right offset.
-   * @default "0.5em"
-   */
+  /** Right offset. @default "0.5em" */
   "--copy-right"?: string;
 
-  /**
-   * Button size.
-   * @default "2em"
-   */
+  /** Button size. @default "2em" */
   "--copy-size"?: string;
 
-  /**
-   * Button padding.
-   * @default "0.5em"
-   */
+  /** Button padding. @default "0.5em" */
   "--copy-padding"?: string;
 
-  /**
-   * Button background.
-   * @default "inherit"
-   */
+  /** Button background. @default "inherit" */
   "--copy-background"?: string;
 
-  /**
-   * Button color.
-   * @default "inherit"
-   */
+  /** Button color. @default "inherit" */
   "--copy-color"?: string;
 
-  /**
-   * Button border radius.
-   * @default "4px"
-   */
+  /** Button border radius. @default "4px" */
   "--copy-border-radius"?: string;
 
-  /**
-   * Button border.
-   * @default "none"
-   */
+  /** Button border. @default "none" */
   "--copy-border"?: string;
 
-  /**
-   * Button z-index.
-   * @default 2
-   */
+  /** Button z-index. @default 2 */
   "--copy-z-index"?: string | number;
 };
 
 export type CopyButtonEvents = {
   copy: CustomEvent<{
-    /**
-     * The code that was copied, after `transform` is applied.
-     */
+    /** The code that was copied, after `transform` is applied. */
     code: string;
   }>;
   error: CustomEvent<{
-    /**
-     * The error thrown by the copy behavior.
-     */
+    /** The error thrown by the copy behavior. */
     error: unknown;
   }>;
 
-  /**
-   * Useful for prefetching an async copy on hover.
-   */
+  /** Useful for prefetching an async copy on hover. */
   mouseenter: MouseEvent;
 
-  /**
-   * Forwarded from the `button` element.
-   */
+  /** Forwarded from the `button` element. */
   mouseleave: MouseEvent;
 };
 
 export type CopyButtonSlots = {
   default: {
-    /**
-     * `true` while the "copied" state is active.
-     */
+    /** `true` while the "copied" state is active. */
     copied: boolean;
 
-    /**
-     * `true` while async `copy` is in flight.
-     */
+    /** `true` while async `copy` is in flight. */
     copying: boolean;
   };
 };

@@ -1,14 +1,7 @@
 /**
- * hljs grammar to engine IR. Build time: scripts/convert-grammars.ts.
- * Runtime: svelte-highlight/compat's fromHighlightJs for user grammars.
- *
- * Force-compiles a grammar on an hljs instance and walks the compiled mode
- * tree into plain JSON. hljs already normalizes sugar (match/beginKeywords/
- * variants, etc.) and builds the mode graph. Callbacks recognized by
- * fingerprint become declarative IR flags; the rest become warnings.
- *
- * Output is regex sources, keyword tables, scope names, and flags. No hljs
- * code is copied into this file.
+ * hljs grammar to engine IR. Walks hljs's compiled (already desugared) mode
+ * tree into JSON; callbacks recognized by fingerprint become IR flags, the
+ * rest become warnings.
  */
 
 /**
@@ -40,12 +33,10 @@ const FLAGS = /** @type {const} */ ([
 const SET_MEMBERSHIP_GUARD_RE = /(\w+)\.has\(match\[0\]\)/;
 
 /**
- * Extracts hljs's array-membership `on:begin` filter (e.g. mathematica's
- * `SYSTEM_SYMBOLS_SET.has(match[0])`) into a plain word list. The Set is
- * built inside the grammar factory from a module-level array literal that
- * isn't visible via the compiled callback's own `toString()`, so this greps
- * the grammar's raw source file text instead - trusted, pinned highlight.js
- * source, not user input.
+ * Extracts an `on:begin` Set-membership guard (e.g. mathematica's
+ * `SYSTEM_SYMBOLS_SET.has(match[0])`) into a word list. The array literal
+ * isn't visible in the callback's `toString()`, so this greps the grammar's
+ * raw source (trusted hljs source, not user input).
  * @param {string} onBegin
  * @param {string | undefined} grammarSource
  * @returns {string[] | null}
@@ -68,24 +59,21 @@ function extractBeginWordSet(onBegin, grammarSource) {
       return words;
     }
   } catch {
-    // fall through to null
+    // not a plain literal
   }
   return null;
 }
 
 /**
- * @param {unknown} hljs instance with the grammar (and any sublanguages it
- *   embeds) already registered
+ * @param {unknown} hljs instance with the grammar (and its sublanguages) registered
  * @param {string} name
- * @param {string} [grammarSource] raw source text of the grammar's own file,
- *   used only to recover data (like `extractBeginWordSet`'s word list) that
- *   the compiled mode tree doesn't expose
+ * @param {string} [grammarSource] raw source of the grammar's file
  * @returns {ConvertResult}
  */
 export function convertLanguage(hljs, name, grammarSource) {
   // hljs's compiled mode type is not exported; read fields loosely.
   const hl = /** @type {any} */ (hljs);
-  // Force compilation; the registered object is the compiled tree.
+  // Forces compilation; the registered object becomes the compiled tree.
   hl.highlight("", { language: name });
   const language = hl.getLanguage(name);
   if (!language) throw new Error(`Language not registered: "${name}"`);
@@ -124,26 +112,19 @@ export function convertLanguage(hljs, name, grammarSource) {
       } else if (onBegin.includes(".index !== 0")) {
         state.onlyAtInputStart = true; // hljs SHEBANG guard
       } else if (onBegin.includes("hasClosingTag(")) {
-        // JSX opening tag vs generic/comparison. See Tokenizer#isTrulyOpeningTag.
-        state.xmlTagGuard = true;
+        state.xmlTagGuard = true; // JSX opening tag vs generic/comparison
       } else if (onBegin.includes("charBeforeMatch")) {
-        // hljs gcode LETTER_BOUNDARY_CALLBACK: a manual negative-lookbehind
-        // stand-in (accept at input start or after a digit/underscore, reject
-        // otherwise), used until hljs can rely on native lookbehind.
-        state.letterBoundaryGuard = true;
+        state.letterBoundaryGuard = true; // hljs gcode LETTER_BOUNDARY_CALLBACK
       } else {
         const wordSet = extractBeginWordSet(onBegin, grammarSource);
         if (wordSet) {
-          // hljs word-list membership guard (e.g. mathematica's
-          // SYSTEM_SYMBOLS_SET), used to accept a begin match only for
-          // recognized identifiers rather than any syntactic shape.
           state.beginWordSet = wordSet;
         } else {
           warnings.add(
             `on:begin not convertible (scope: ${mode.scope ?? "<none>"}, begin: ${source(mode.begin)})`,
           );
-          // Dropped guard callback: state now matches unconditionally.
-          // Zero relevance so auto-detection is not skewed.
+          // Dropped guard now matches unconditionally; zero relevance so
+          // auto-detection isn't skewed.
           state.relevance = 0;
         }
       }

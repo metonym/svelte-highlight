@@ -9,93 +9,53 @@ export type FileTabsProps = HTMLAttributes<HTMLDivElement> & {
   files: string[];
 
   /**
-   * Active file (`bind:active`).
-   * Reconciled whenever `files` changes: an unknown or stale value
-   * selects `files[0]`; if the previously active file is removed, its
-   * neighbor (same index, clamped to the new length) is selected
-   * instead; an empty `files` list sets this to `undefined`.
+   * Active file (`bind:active`). If it is removed from `files`, the tab at
+   * the same index (clamped) is selected; unknown values select `files[0]`.
    * @default files[0]
    */
   active?: string;
 
-  /**
-   * Gap between tabs.
-   * @default 0
-   */
+  /** Gap between tabs. @default 0 */
   "--file-tabs-gap"?: string | number;
 
-  /**
-   * Tab strip background.
-   * @default "inherit"
-   */
+  /** Tab strip background. @default "inherit" */
   "--file-tabs-background"?: string;
 
-  /**
-   * Width of the scroll shadow shown on the overflowing edge of the
-   * tab strip.
-   * @default "1.5rem"
-   */
+  /** Width of the tab strip's overflow scroll shadow. @default "1.5rem" */
   "--tab-overflow-fade"?: string;
 
-  /**
-   * Tab padding.
-   * @default "0.5em 1em"
-   */
+  /** Tab padding. @default "0.5em 1em" */
   "--tab-padding"?: string;
 
-  /**
-   * Inactive tab text color.
-   * @default "inherit"
-   */
+  /** Inactive tab text color. @default "inherit" */
   "--tab-color"?: string;
 
-  /**
-   * Inactive tab background.
-   * @default "transparent"
-   */
+  /** Inactive tab background. @default "transparent" */
   "--tab-background"?: string;
 
-  /**
-   * Inactive tab opacity. Active/hovered tabs stay opaque.
-   * @default 0.55
-   */
+  /** Inactive tab opacity. Active/hovered tabs stay opaque. @default 0.55 */
   "--tab-inactive-opacity"?: string | number;
 
-  /**
-   * Active tab text color.
-   * Defaults to the highlighted code block's text color.
-   * @default the highlighted code's color
-   */
+  /** Active tab text color. @default the highlighted code's color */
   "--tab-active-color"?: string;
 
-  /**
-   * Active tab background.
-   * Defaults to the highlighted code block's background.
-   * @default the highlighted code's background
-   */
+  /** Active tab background. @default the highlighted code's background */
   "--tab-active-background"?: string;
 
-  /**
-   * Keyboard focus outline.
-   * @default "2px solid currentColor"
-   */
+  /** Keyboard focus outline. @default "2px solid currentColor" */
   "--tab-focus-outline"?: string;
 };
 
 export type FileTabsEvents = {
   change: CustomEvent<{
-    /**
-     * The newly active file.
-     */
+    /** The newly active file. */
     active: string;
   }>;
 };
 
 export type FileTabsSlots = {
   default: {
-    /**
-     * The active file.
-     */
+    /** The active file. */
     active: string;
   };
 };

@@ -1,4 +1,3 @@
-/** Opening or closing tag name. */
 const TAG_NAME = /^<\/?\s*([a-zA-Z0-9-]+)/;
 
 /**
@@ -10,11 +9,6 @@ const TAG_NAME = /^<\/?\s*([a-zA-Z0-9-]+)/;
  */
 
 /**
- * Splits highlight.js output HTML into typing units for `Typewriter`. A unit
- * is either an HTML tag (zero visible chars, never split) or one visible
- * character: a plain character, a full surrogate pair (so a 4-byte emoji is
- * never split mid-codepoint), or a single HTML entity such as `&amp;` (one
- * visible char across several raw bytes).
  * @param {string} html
  * @returns {TypewriterUnit[]}
  */
@@ -25,10 +19,7 @@ export function tokenizeTypewriter(html) {
   let i = 0;
 
   while (i < n) {
-    // charCodeAt, not html[i]: this runs once per iteration over the whole
-    // string, and bracket-indexing allocates a 1-character string for every
-    // position compared, even the (overwhelmingly common) plain-char branch
-    // below that doesn't otherwise need one.
+    // charCodeAt avoids allocating a 1-char string per position.
     const code = html.charCodeAt(i);
 
     if (code === 60 /* "<" */) {
@@ -54,7 +45,6 @@ export function tokenizeTypewriter(html) {
       });
       i = end + 1;
     } else if (code === 38 /* "&" */) {
-      // One visible char per entity.
       const end = html.indexOf(";", i);
       if (end !== -1 && end - i <= 10) {
         units.push({ raw: html.slice(i, end + 1), visible: 1 });
@@ -64,8 +54,7 @@ export function tokenizeTypewriter(html) {
         i += 1;
       }
     } else {
-      // A surrogate pair (e.g. most emoji) is one codepoint, one unit --
-      // splitting it across two ticks would render an orphan half.
+      // Keep surrogate pairs together so an emoji never renders half.
       const codePoint = html.codePointAt(i) ?? 0;
       const length = codePoint > 0xffff ? 2 : 1;
       units.push({ raw: html.slice(i, i + length), visible: 1 });
@@ -77,10 +66,6 @@ export function tokenizeTypewriter(html) {
 }
 
 /**
- * Renders `units` into HTML once: tags pass through unchanged, each visible
- * unit is wrapped in a `typewriter-unit typewriter-hidden` span so
- * `Typewriter` can reveal them one at a time without touching the DOM tree
- * shape again until `units` itself changes.
  * @param {TypewriterUnit[]} units
  * @returns {string}
  */
@@ -101,15 +86,8 @@ export function buildUnitMarkup(units) {
  */
 
 /**
- * Stateful incremental version of the old `split(units, count)`: since
- * `units[i].raw` are contiguous, non-overlapping slices exactly partitioning
- * `html` (see `tokenizeTypewriter`), the concatenation of `units[0..i).raw`
- * equals `html.slice(0, rawOffset)` for the matching `rawOffset`, so `head`
- * can be built with a single slice instead of repeated concatenation. A
- * cursor (`i`, `shown`, `rawOffset`, open-tag stack) is kept between calls
- * and only ever advances, so a monotonically increasing sequence of
- * `splitAt(count)` calls costs O(n) total instead of O(n^2). A `count` lower
- * than the last one served resets the cursor and replays from zero.
+ * Units exactly partition `html`, so `head` is a single slice up to
+ * `rawOffset`. The cursor only advances; a lower `count` replays from zero.
  * @param {TypewriterUnit[]} units
  * @param {string} html
  * @returns {TypewriterSplitter}
@@ -167,15 +145,8 @@ export function createTypewriterSplitter(units, html) {
 const WHITESPACE = new Set([" ", "\t", "\r", "\n"]);
 
 /**
- * Groups `units`' visible characters into words: a maximal run of
- * consecutive non-whitespace visible units, plus any visible whitespace
- * (` `, `\t`, `\r`, `\n`) immediately following it. A leading whitespace run
- * (with no preceding word) is its own word. Tags (`visible: 0`) are skipped
- * without resetting the current word.
  * @param {TypewriterUnit[]} units
- * @returns {number[]} cumulative visible-unit count at the end of each word;
- *   the last entry always equals the total visible-unit count. Empty for
- *   zero visible units.
+ * @returns {number[]}
  */
 export function computeWordBoundaries(units) {
   /** @type {number[]} */

@@ -195,11 +195,8 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
   }));
 
 /**
- * hljs built-ins shipped with a svelte-highlight patch on top: each
- * `hljs-patches/<name>.js` wraps `highlight.js/lib/languages/<name>` and
- * exports `<name>` as `{ name, register }`, fixing bugs or filling syntax
- * holes upstream hasn't. The grammar keeps its hljs identity (license banner,
- * "exported from highlight.js" count); only its `register` differs.
+ * hljs built-ins wrapped by `hljs-patches/<name>.js`; they keep their hljs
+ * identity (license banner, count) and only `register` differs.
  */
 const HLJS_PATCH_NAMES = [
   "c",
@@ -232,7 +229,6 @@ export type LanguageEntry = {
   moduleName: string;
   kind: "custom" | "hljs";
   customPath?: string;
-  /** Set on an hljs entry whose grammar is wrapped by `hljs-patches/<name>.js`. */
   patchPath?: string;
 };
 
@@ -245,10 +241,7 @@ function getModuleName(name: string) {
   return moduleName;
 }
 
-/**
- * Shipped language list: hljs built-ins not shadowed by a custom grammar,
- * plus customs, sorted by name. Shared with convert-grammars.ts.
- */
+/** hljs built-ins not shadowed by a custom grammar, plus customs, sorted by name. */
 export function buildLanguageEntries(): LanguageEntry[] {
   const customNames = new Set(CUSTOM_LANGUAGES.map(({ name }) => name));
   const patchByName = new Map(HLJS_PATCHES.map((patch) => [patch.name, patch]));
@@ -288,10 +281,7 @@ export async function buildLanguages() {
   console.time("build languages");
   await $`rm -rf src/languages; mkdir src/languages`;
 
-  const customLanguageContents = new Map<
-    CustomLanguage["name"],
-    CustomLanguage["path"]
-  >(
+  const customLanguageContents = new Map<CustomLanguage["name"], string>(
     await Promise.all(
       CUSTOM_LANGUAGES.map(
         async ({ name, path }) => [name, await Bun.file(path).text()] as const,
@@ -338,12 +328,15 @@ export async function buildLanguages() {
     languageNamesUnion += `  | "${name}"\n`;
     lang.push({ name, moduleName });
 
-    if (kind === "custom") {
-      markdown += `## ${name} (\`${moduleName}\`)
+    const note =
+      kind === "custom"
+        ? "> Custom svelte-highlight language (not exported by highlight.js)\n\n"
+        : entry.patchPath
+          ? `> Exported from highlight.js with svelte-highlight patches on top (see \`scripts/hljs-patches/${name}.js\`)\n\n`
+          : "";
+    markdown += `## ${name} (\`${moduleName}\`)
 
-> Custom svelte-highlight language (not exported by highlight.js)
-
-\`\`\`html
+${note}\`\`\`html
 <script>
   // direct import (recommended)
   import ${moduleName} from "svelte-highlight/languages/${name}";
@@ -353,26 +346,12 @@ export async function buildLanguages() {
 </script>
 \`\`\`\n\n`;
 
+    if (kind === "custom") {
       files.push({
         path: `src/languages/${name}.js`,
         content: customLanguageContents.get(name) ?? "",
       });
     } else {
-      const patchNote = entry.patchPath
-        ? `> Exported from highlight.js with svelte-highlight patches on top (see \`scripts/hljs-patches/${name}.js\`)\n\n`
-        : "";
-      markdown += `## ${name} (\`${moduleName}\`)
-
-${patchNote}\`\`\`html
-<script>
-  // direct import (recommended)
-  import ${moduleName} from "svelte-highlight/languages/${name}";
-
-  // base import
-  import { ${moduleName} } from "svelte-highlight/languages";
-</script>
-\`\`\`\n\n`;
-
       files.push({
         path: `src/languages/${name}.js`,
         content:
@@ -396,8 +375,7 @@ export { ${moduleName} as default } from "./";\n`,
   files.push({ path: "src/languages/index.d.ts", content: baseTs });
   files.push({ path: "SUPPORTED_LANGUAGES.md", content: markdown });
 
-  // all.js: every grammar as a plain array for HighlightAuto default detect.
-  // Avoids `import *` (biome noNamespaceImport) and can be code-split later.
+  // Plain array rather than `import *` (biome noNamespaceImport).
   const allImports = entries
     .map((entry) => `import ${entry.moduleName} from "./${entry.name}.js";`)
     .join("\n");
@@ -418,18 +396,11 @@ export { ${moduleName} as default } from "./";\n`,
   console.timeEnd("build languages");
 }
 
-/**
- * Flat alias -> canonical grammar name table (`src/languages/aliases.js` /
- * `.d.ts`). Must run after `convertGrammars()`: aliases only land in each
- * `src/languages/<name>.js` module's `register` field once the grammar has
- * been converted, so this does a second pass importing those files fresh
- * rather than the already-imported (pre-conversion) barrel.
- */
+/** Must run after `convertGrammars()`: aliases only exist on converted grammars. */
 export async function buildAliases() {
   console.time("build aliases");
   const entries = buildLanguageEntries();
 
-  /** @type {Map<string, string>} */
   const aliasToCanonical = new Map<string, string>();
 
   function claim(alias: string, canonical: string) {
@@ -445,19 +416,12 @@ export async function buildAliases() {
     aliasToCanonical.set(alias, canonical);
   }
 
-  // Canonical names are claimed in a pass of their own, ahead of every
-  // alias: a grammar's own name must always resolve to itself even if an
-  // earlier grammar in the list happens to list that name as one of its
-  // aliases (e.g. "django" aliases "jinja", but "jinja" the grammar must
-  // still win "jinja" the word).
+  // Canonical names first so a grammar's own name beats another's alias
+  // (e.g. "django" aliases "jinja").
   for (const entry of entries) claim(entry.name.toLowerCase(), entry.name);
 
-  // Cache-busting query: convertGrammars() already imported these files
-  // (via the barrel, under an extensionless specifier resolving to the same
-  // path) before rewriting them on disk, so an uncached re-import of the
-  // plain path would return that stale, pre-conversion module. Fetched
-  // concurrently, then claimed sequentially in list order (claim order is
-  // what decides conflict winners, not import completion order).
+  // Query busts the module cache: the pre-conversion modules are already
+  // loaded. Claim in list order, since order decides conflicts.
   const mods = await Promise.all(
     entries.map(
       (entry) =>

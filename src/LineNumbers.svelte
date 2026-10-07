@@ -1,26 +1,13 @@
 <script>
   import { splitLines } from "./split-lines.js";
 
-  /**
-   * Highlighted `code` HTML. Required at runtime unless `lines` is passed.
-   * @type {string | undefined}
-   */
+  /** @type {string | undefined} */
   export let highlighted = undefined;
 
-  /**
-   * Pre-split per-line HTML, the same shape `splitLines`/`extendLines`/
-   * `TokenizedDocument#lineRange` produce. Overrides `highlighted` --
-   * pass this to render a window of a larger document without re-splitting
-   * the full string on every update.
-   * @type {string[] | undefined}
-   */
+  /** @type {string[] | undefined} */
   export let lines = undefined;
 
-  /**
-   * Total document line count, for gutter-width purposes, when `lines` is a
-   * partial window rather than the whole document.
-   * @type {number | undefined}
-   */
+  /** @type {number | undefined} */
   export let lineCount = undefined;
 
   /** @type {boolean} */
@@ -35,12 +22,7 @@
   /** @type {number[]} */
   export let highlightedLines = [];
 
-  /**
-   * Per-line decoration state, indexed relative to `lines`/`highlighted`
-   * (not the absolute document line when rendering a window). Merged with
-   * `highlightedLines`, which is equivalent to setting `"highlighted"` here.
-   * @type {Record<number, "highlighted" | "focus" | "added" | "removed">}
-   */
+  /** @type {Record<number, "highlighted" | "focus" | "added" | "removed">} */
   export let lineStates = {};
 
   /** @type {import('./languages').LanguageName | (string & {})} */

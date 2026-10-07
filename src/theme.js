@@ -1,9 +1,4 @@
 /**
- * Programmatic theme authoring on top of the `ThemePalette` format:
- * `defineTheme()` builds a complete palette from a small typed
- * `roles`/`scopes` definition, `extendTheme()` derives a palette from an
- * existing one, and `paletteToCss()` emits any palette as static CSS.
- *
  * @typedef {import("./theme.d.ts").ThemePalette} ThemePalette
  * @typedef {import("./theme.d.ts").ThemeDefinition} ThemeDefinition
  * @typedef {import("./theme.d.ts").TokenStyle} TokenStyle
@@ -21,8 +16,6 @@ import {
   varName,
 } from "./theme-vars.js";
 
-/** The same `ThemeRole` -> raw hljs scope-key table `defineTheme`'s `roles`
- * expansion uses. Read-only. */
 export { ROLE_SCOPES };
 
 const DEFAULT_NAME = "custom-theme";
@@ -46,9 +39,7 @@ function normalizeStyle(value) {
 }
 
 /**
- * Build a complete `ThemePalette` from a `ThemeDefinition`. Precedence
- * (low -> high): `extends` palette vars -> `roles` expansion -> `scopes`
- * overrides.
+ * Precedence (low -> high): `extends` vars, `roles`, `scopes`.
  * @param {ThemeDefinition} definition
  * @returns {ThemePalette}
  */
@@ -131,8 +122,6 @@ export function defineTheme(definition) {
 }
 
 /**
- * Derive a new palette from any shipped or user palette with role- or
- * scope-level overrides.
  * @param {ThemePalette} base
  * @param {Omit<ThemeDefinition, "extends">} overrides
  * @returns {ThemePalette}
@@ -142,8 +131,7 @@ export function extendTheme(base, overrides) {
 }
 
 /**
- * Emit a palette as a CSS string, matching the format of the generated
- * `themes/<name>.css` artifacts.
+ * Same format as the generated `themes/<name>.css` (also used by the build).
  * @param {ThemePalette} palette
  * @param {PaletteToCssOptions} [options]
  * @returns {string}
@@ -153,19 +141,10 @@ export function paletteToCss(palette, options = {}) {
   const selector = options.selector ?? `[data-shl-theme="${palette.name}"]`;
   const varsCss = serializeVars(palette.vars);
 
-  let css = "";
-  if (root) css += `:root{${varsCss}}`;
-  css += `${selector}{${varsCss}}`;
-  if (palette.extras) css += palette.extras;
-  return css;
+  return `${root ? ":root," : ""}${selector}{${varsCss}}${palette.extras ?? ""}`;
 }
 
 /**
- * Self-check a `ThemePalette` for common authoring mistakes: a missing or
- * malformed `vars` object, a missing `--shl-fg`/`--shl-bg`, a `vars` key
- * outside the `--shl-*` grammar, or a `--shl-fg`/`--shl-bg` value that
- * doesn't look like a recognized color. Never throws; `defineTheme` runs
- * this automatically in dev mode.
  * @param {ThemePalette} palette
  * @returns {string[]}
  */

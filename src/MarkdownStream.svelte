@@ -1,22 +1,18 @@
 <script>
   /**
-   * Growing Markdown buffer. On change, `splitter.append` is used when the
-   * new value starts with the previous one; otherwise the whole buffer is
-   * replaced via `splitter.set`.
+   * Growing Markdown buffer; appended when it extends the previous value, else replaced.
    * @type {string}
    */
   export let text = "";
 
   /**
-   * Stream finished: forwarded to every fence's `HighlightStream` as
-   * `done || !segment.open`.
+   * Stream finished; also closes a trailing open fence.
    * @type {boolean}
    */
   export let done = false;
 
   /**
-   * Resolves a fence's language. Cached per canonical name for the
-   * component's lifetime.
+   * Resolves a fence's language, cached per name.
    * @type {(lang: string | undefined, segment: import("./fence.d.ts").FenceSegment) => import("./languages").LanguageType<string> | Promise<import("./languages").LanguageType<string>> | undefined}
    */
   export let resolveLanguage = defaultResolveLanguage;
@@ -28,7 +24,7 @@
   export let autoScroll = true;
 
   /**
-   * Announced once, by the last fence only, when `done` becomes `true`.
+   * Announced once by the last fence when `done` becomes `true`.
    * @type {string}
    */
   export let doneText = "Code finished streaming";
@@ -61,14 +57,10 @@
   /** @type {readonly import("./fence.d.ts").MarkdownSegment[]} */
   let segments = splitter.segments();
 
-  // Fence ids already reported via the `fence` event -- an id is only ever
-  // seen once, even if the splitter later rebuilds the segment object (a
-  // regenerated buffer keeps the id per the splitter's contract).
+  // Fence ids already reported via the `fence` event.
   /** @type {Set<number>} */
   const seenFenceIds = new Set();
 
-  // Resolved languages by canonical name, plus in-flight names so a second
-  // fence sharing a language doesn't re-invoke `resolveLanguage`.
   /** @type {Record<string, import("./languages").LanguageType<string>>} */
   let resolvedLanguages = {};
   /** @type {Set<string>} */
@@ -97,18 +89,9 @@
   }
 
   /**
-   * `languages` is passed in so the template tracks the cache. A helper
-   * that only closed over `resolvedLanguages` would not re-run when a
-   * grammar finished loading (Svelte 3/4, and Svelte 5's `untrack` of
-   * helper bodies).
-   *
-   * Takes the cache key, not the segment, so the result doesn't depend on
-   * the segment object. Svelte 5's legacy mode marks every keyed `{#each}`
-   * item as changed whenever `segments` changes, and treats any object as
-   * changed. A `language` read off the segment would reach every closed
-   * fence's HighlightStream on every chunk. Through the (string) key, it
-   * only changes when the key or a grammar does -
-   * tests/markdown-stream-updates.test.ts.
+   * `languages` is a parameter so the template re-runs when the cache changes.
+   * Takes a string key, not the segment: Svelte 5 legacy mode treats every
+   * keyed item as changed per chunk, which would re-render every closed fence.
    * @param {Record<string, import("./languages").LanguageType<string>>} languages
    * @param {string} key
    */
@@ -116,7 +99,6 @@
     return languages[key] ?? plaintext;
   }
 
-  // Feed the splitter, then re-read its (identity-stable) segment list.
   $: {
     if (text !== previousText) {
       if (text.startsWith(previousText)) {
@@ -148,8 +130,7 @@
     doneDispatched = false;
   }
 
-  // Only the trailing segment can be an open fence (the parser is still
-  // inside it), so caret placement never needs to scan the whole document.
+  // Only the trailing segment can be an open fence.
   $: lastSegment = segments[segments.length - 1];
   $: lastOpenFenceId =
     lastSegment !== undefined &&

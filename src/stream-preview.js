@@ -1,16 +1,7 @@
 /**
- * The staged-tail preview computation for HighlightStream: the current,
- * not-yet-newline-terminated line.
- *
- * The naive approach - resume tokenizing from the last completed newline on
- * every call - is O(line length) per call, O(n^2) over a stream with no
- * newline for a long stretch (streamed single-line JSON, minified code, a
- * long log line). Instead this keeps a mid-line checkpoint in `cache`: a
- * tokenizer snapshot at the end of the previously fed text, plus the
- * `extendLines` state (`openScopes`/`pendingHtml`) that snapshot corresponds
- * to. On a pure append that hasn't crossed a newline since the checkpoint was
- * taken, tokenizing resumes from there instead of from the newline, so each
- * call only does work proportional to the newly appended chunk.
+ * HighlightStream's preview of the current, unterminated line. `cache` holds a
+ * mid-line checkpoint so a long newline-free stream (single-line JSON,
+ * minified code) costs O(chunk) per call instead of O(line length).
  */
 import { extendLines } from "./engine.js";
 
@@ -21,18 +12,10 @@ import { extendLines } from "./engine.js";
  */
 
 /**
- * A grammar rule's `begin` match can depend on a lookahead assertion (e.g.
- * JSON's attr-vs-string distinction: `"key"` is only `attr` if a `:`
- * follows). Resolved with too little text visible, that decision can't be
- * revised later just by resuming past it - the tokenizer has already
- * committed to a scope. So the trailing `LOOKAHEAD_MARGIN` characters of
- * every checkpoint are always re-tokenized from the last safe position
- * instead of trusted outright, giving any such lookahead room to resolve
- * with more context before its result is cached. Comfortably larger than
- * any lookahead distance used by this engine's shipped grammars (a key name
- * plus separator whitespace, a heredoc marker, etc.); pathological content
- * exceeding it (e.g. hundreds of spaces before a JSON `:`) could still see a
- * stale preview classification until the line completes.
+ * Trailing characters re-tokenized on every call rather than checkpointed, so
+ * lookahead-dependent matches (JSON `"key"` is `attr` only if `:` follows)
+ * aren't locked in before enough text arrives. Lookahead beyond this can show
+ * a stale preview until the line completes.
  */
 const LOOKAHEAD_MARGIN = 256;
 
@@ -72,14 +55,8 @@ export function computeStagedTailPreview({
     return { previewLines: [pendingHtml], cache: undefined };
   }
 
-  // Valid only for a pure append since the checkpoint: the committed session
-  // must not have advanced (no newline completed, so openScopes/pendingHtml
-  // - the checkpoint's base state - are still current) and `fedCode` must
-  // still start with the code the checkpoint was taken against. Only the
-  // part past the committed position needs comparing: `session` already
-  // covers everything before it and must match `fedCode` there anyway. A
-  // whole-buffer compare made every call O(stream), not O(line) -
-  // bench/stream-repaint.bench.ts.
+  // Valid only for a pure append with no newline committed since. Compare
+  // only past the committed position: a whole-buffer compare is O(stream).
   const canResume =
     cache !== undefined &&
     cache.committedPos === snapshot.pos &&
@@ -90,17 +67,11 @@ export function computeStagedTailPreview({
   const baseOpenScopes = canResume ? cache.openScopes : openScopes;
   const basePendingHtml = canResume ? cache.pendingHtml : pendingHtml;
 
-  // A fresh session resumed from the base checkpoint - the tokenizer work
-  // here is O(chunk + LOOKAHEAD_MARGIN), not O(line length), since
-  // `baseSnapshot` already covers everything up to the last checkpoint.
   const previewSession = registry.createSession(language, {
     from: { code: fedCode, snapshot: baseSnapshot },
   });
 
-  // Advance only up to the safe boundary and cache *that* checkpoint - not
-  // fedCode.length - so a lookahead-dependent match in the trailing margin
-  // gets re-decided (with more of the line visible) on every later call
-  // instead of being locked in early.
+  // Checkpoint at the safe boundary, not fedCode.length (see LOOKAHEAD_MARGIN).
   const safeBoundary = Math.max(
     baseSnapshot.pos,
     fedCode.length - LOOKAHEAD_MARGIN,
@@ -118,15 +89,12 @@ export function computeStagedTailPreview({
     pendingHtml: safe.pendingHtml,
   };
 
-  // Continue through the margin to fedCode.length for display.
   previewSession.advance(fedCode.length);
   const tailEvents = previewSession.events().slice(safeEvents.length);
   const tail = extendLines(tailEvents, safe.openScopes, safe.pendingHtml);
 
-  // Force-close any scopes still open at the end of the line, for display -
-  // mirrors what a from-scratch highlight of the same prefix would show.
-  // Not cached: closing is only valid at the current end of text, not at a
-  // future checkpoint once more text has streamed in.
+  // Close open scopes for display only; not cached, since it's valid only at
+  // the current end of text.
   const closed = previewSession.finish({ canonicalize: false });
   const closingEvents = closed.events.slice(
     safeEvents.length + tailEvents.length,

@@ -1,10 +1,4 @@
-/**
- * worker.js: WorkerSession round trips through a real `MessageChannel`, so
- * each reply pays the structured clone a `Worker` boundary would. Measured
- * after a 100 KB document has streamed into the session, where the reply
- * size matters: `events()` must ship every event so far, while
- * `snapshot()` only needs the (small) tokenizer state.
- */
+/** WorkerSession round trips over a MessageChannel: events() ships every event, snapshot() only state. */
 import { group, task } from "ostia";
 import type { PostMessageTarget } from "../src/worker.d.ts";
 import { createWorkerHighlighter, serveHighlighter } from "../src/worker.js";
@@ -29,7 +23,3 @@ group(
     task("events() round trip", () => session.events());
   },
 );
-
-// Run this suite with `ostia bench bench/worker.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a
-// full-baseline run.

@@ -5,9 +5,7 @@ import type { ThemePalette } from "./theme.d.ts";
 export type HighlightStyleProps = HTMLAttributes<HTMLDivElement> & {
   /**
    * Theme CSS from `svelte-highlight/styles/<theme>`, or a `ThemePalette`
-   * from `svelte-highlight/themes/<theme>` — the latter is applied by
-   * inlining `--shl-*` vars on the wrapper element instead of injecting a
-   * scoped `<style>` tag.
+   * from `svelte-highlight/themes/<theme>` (applied as inline `--shl-*` vars).
    * @example
    * import a11yDark from "svelte-highlight/styles/a11y-dark";
    * @example
@@ -16,46 +14,30 @@ export type HighlightStyleProps = HTMLAttributes<HTMLDivElement> & {
   theme?: string | ThemePalette;
 
   /**
-   * Light theme CSS/palette; pair with `dark` to emit both and switch
-   * automatically. Takes precedence over `theme` when both `light` and `dark`
-   * are provided. Must be the same type (string or `ThemePalette`) as `dark`.
+   * Light theme; with `dark`, takes precedence over `theme`. Must be the same
+   * type as `dark`.
    */
   light?: string | ThemePalette;
 
-  /**
-   * Dark theme CSS/palette; pair with `light`.
-   */
+  /** Dark theme; pair with `light`. */
   dark?: string | ThemePalette;
 
   /**
-   * How to switch between `light` and `dark`.
-   *
-   * String path: `"auto"` uses `prefers-color-scheme` media queries,
-   * `"light"`/`"dark"` force a single theme, and any other string is a CSS
-   * selector that gates the dark block (e.g. `[data-theme="dark"]`).
-   *
-   * `ThemePalette` path: `"auto"` inlines `color-scheme: light dark` (vars
-   * resolve via `light-dark()`), `"light"`/`"dark"` force that
-   * `color-scheme`, and any other string omits `color-scheme` — set it on
-   * your own selector for app-controlled switching.
+   * How to switch between `light` and `dark`: `"auto"` follows
+   * `prefers-color-scheme`, `"light"`/`"dark"` force one, and any other
+   * string is a CSS selector that gates dark (e.g. `[data-theme="dark"]`;
+   * with palettes, set `color-scheme` on that selector yourself).
    * @default "auto"
    */
   mode?: "auto" | "light" | "dark" | (string & {});
 
   /**
-   * Wrapper class the scoped selectors target. Inert on the `ThemePalette`
-   * path (kept for back-compat / slot access). An empty string is treated
-   * the same as omitting the prop (falls back to the auto-hash).
+   * Wrapper class the scoped selectors target. Empty means auto.
    * @default hash of `theme`
    */
   scopeClass?: string;
 
-  /**
-   * CSP nonce attached to the injected `<style>` tag, for a `style-src`
-   * policy that requires one. Unneeded (and has no effect) on a single
-   * `ThemePalette` (`theme`, no `light`/`dark` pair): that path only ever
-   * sets inline vars on the wrapper, never injects a `<style>` tag.
-   */
+  /** CSP nonce for the injected `<style>` tag (unused by a single palette). */
   nonce?: string;
 };
 

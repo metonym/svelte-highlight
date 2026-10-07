@@ -1,14 +1,4 @@
-/**
- * Shared fixtures for the ostia suites in this directory: a fully
- * registered engine registry plus real/synthetic code corpora. Kept
- * self-contained (not exported from src) since these are dev-only
- * benchmark inputs.
- *
- * The registry and corpus are both behind lazy, memoized async getters
- * (dynamic `import()` for the registry's ~250 language modules, `Bun.file`
- * reads for the corpus) so a suite that doesn't need them - e.g.
- * text-diff.bench.ts - can run standalone without paying for either.
- */
+/** Shared bench fixtures, lazily loaded so suites that don't need them skip the cost. */
 import { readdirSync } from "node:fs";
 import type { createRegistry } from "../src/engine.js";
 
@@ -16,7 +6,6 @@ type Registry = ReturnType<typeof createRegistry>;
 
 let cachedRegistry: Registry | undefined;
 
-/** Registering all ~250 languages costs ~100ms; memoized across a single process. */
 export async function buildRegistry(): Promise<Registry> {
   if (!cachedRegistry) {
     const engine = await import("../src/engine.js");
@@ -45,7 +34,7 @@ type Corpus = { javascript: string; css: string; markdown: string };
 
 let cachedCorpus: Corpus | undefined;
 
-/** Real-world corpora pulled from this repo, so results track this codebase's actual shape. */
+/** Real-world corpora from this repo. */
 export async function getCorpus(): Promise<Corpus> {
   if (!cachedCorpus) {
     cachedCorpus = {
@@ -63,7 +52,6 @@ export async function getCorpus(): Promise<Corpus> {
   return cachedCorpus;
 }
 
-/** An n-line synthetic JS document with deterministic content, for scaling tests. */
 export function jsLines(n: number) {
   const unit = [
     "function add(a, b) {",
@@ -76,7 +64,6 @@ export function jsLines(n: number) {
   return `${lines.join("\n")}\n`;
 }
 
-/** A synthetic JS document at least `minLength` characters long, for typing-simulation tests. */
 export function jsSource(minLength: number) {
   const unit = "function add(a, b) {\n  return a + b; // comment\n}\n";
   let out = "";
@@ -84,7 +71,7 @@ export function jsSource(minLength: number) {
   return out.slice(0, minLength);
 }
 
-/** Slices `code` to a fixed length, wrapping around if it's shorter than `length`. */
+/** Repeats `code` as needed to reach exactly `length`. */
 export function sizedSlice(code: string, length: number) {
   if (code.length >= length) return code.slice(0, length);
   let out = code;
@@ -92,12 +79,7 @@ export function sizedSlice(code: string, length: number) {
   return out.slice(0, length);
 }
 
-/**
- * A synthetic Markdown document with exactly `fenceCount` fenced code
- * blocks, each preceded by a prose paragraph, then padded with more prose
- * paragraphs until at least `minLength` characters long - shaped like an
- * LLM chat reply that talks through several snippets.
- */
+/** Chat-reply-shaped Markdown: `fenceCount` prose+fence pairs, padded with prose. */
 export function markdownWithFences(minLength: number, fenceCount: number) {
   const codeUnit = "function add(a, b) {\n  return a + b;\n}\n";
   const proseUnit =

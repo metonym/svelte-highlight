@@ -6,14 +6,7 @@
   /** @type {string[]} */
   export let files;
 
-  /**
-   * Active file (`bind:active`).
-   * Reconciled whenever `files` changes: an unknown or stale value
-   * selects `files[0]`; if the previously active file is removed, its
-   * neighbor (same index, clamped to the new length) is selected
-   * instead; an empty `files` list sets this to `undefined`.
-   * @type {string | undefined}
-   */
+  /** @type {string | undefined} */
   export let active = files[0];
 
   import { afterUpdate, createEventDispatcher, tick } from "svelte";
@@ -29,8 +22,7 @@
   /** @type {HTMLButtonElement[]} */
   let tabs = [];
 
-  // Index `active` last resolved to; used to pick a neighbor when the
-  // active file disappears from `files`.
+  // Used to pick a neighbor when the active file disappears from `files`.
   let lastValidIndex = -1;
 
   $: {
@@ -61,11 +53,7 @@
 
   $: activeIndex = files.indexOf(active);
 
-  // Keep the active tab in view whenever it changes, e.g. `bind:active`
-  // set from outside the visible tab strip. Seeded to `active` so it
-  // doesn't fire on mount and yank the page's scroll position toward
-  // an already-visible tab; guarded so it never runs during SSR, where
-  // there is no scrollable DOM to act on.
+  // Seeded to `active` so mount doesn't scroll the page to the active tab.
   let previousActive = active;
 
   $: if (typeof document !== "undefined" && active !== previousActive) {

@@ -1,23 +1,6 @@
 /**
- * A shared substrate for windowed rendering: text plus an engine checkpoint
- * every `checkpointInterval` lines, so highlighted HTML for any line range
- * costs O(range + interval) instead of O(document). Built on the same
- * `StreamSession` / `Registry#resume` / `extendLines` primitives
- * `HighlightStream` uses for incremental streaming - this module applies
- * the same checkpoint/resume trick to random-access windows instead of a
- * growing tail.
- *
- * Fidelity caveat: window output matches the *streaming* (non-canonicalized)
- * parse. Constructs needing multi-line lookahead beyond a window's edge may
- * differ from `registry.highlight()`'s canonical output - the same tradeoff
- * `HighlightStream`'s live view already makes.
- *
- * No mid-document edit support: `append` and full `setCode` resets only. A
- * patch/invalidation API for editable large documents is out of scope here.
- * `HighlightEditable` solves mid-document editing for a bounded, editable
- * document (not a windowed/virtualized one), built on its own checkpoint-
- * resume re-tokenizer (`incremental-tokenize.js`, not itself a public
- * export); the two primitives aren't unified today.
+ * Output matches the streaming (non-canonicalized) parse: multi-line
+ * lookahead past a window's edge may differ from `registry.highlight()`.
  */
 
 /**
@@ -38,8 +21,7 @@ import { extendLines } from "./engine.js";
 import { ensureRegistered, registry } from "./registry.js";
 
 /**
- * Finds the last checkpoint whose `line` is `<= target`. `checkpoints` is
- * non-empty (index 0 always covers line 0) and sorted ascending by `line`.
+ * Last checkpoint whose `line` is `<= target`.
  * @param {Checkpoint[]} checkpoints
  * @param {number} target
  * @returns {Checkpoint}
@@ -47,11 +29,9 @@ import { ensureRegistered, registry } from "./registry.js";
 function findCheckpoint(checkpoints, target) {
   let lo = 0;
   let hi = checkpoints.length - 1;
-  // checkpoints[0] is always present (index 0 covers line 0).
   let result = /** @type {Checkpoint} */ (checkpoints[0]);
   while (lo <= hi) {
     const mid = (lo + hi) >> 1;
-    // mid is in [lo, hi], always a valid checkpoints index.
     const candidate = /** @type {Checkpoint} */ (checkpoints[mid]);
     if (candidate.line <= target) {
       result = candidate;
@@ -79,20 +59,15 @@ export function createTokenizedDocument({
 
   /** @type {string} */
   let code = "";
-  /** Character offset each line starts at; one entry per line (line 0 is always 0). */
   /** @type {number[]} */
   let lineStartOffsets = [0];
 
   /** @type {StreamSession} */
   let session;
-  /** Character offset of `code` already fed to `session`. */
   let fedOffset = 0;
-  /** Line count already fed to `session` (index into `lineStartOffsets`). */
   let fedLineCount = 0;
 
-  // Incremental extendLines state, advanced lazily as far as any lineRange()
-  // call has required (never further) - the same bookkeeping HighlightStream
-  // uses, except only checkpoints are retained, not the full line history.
+  // extendLines state, advanced lazily only as far as lineRange() has needed.
   let committedLineCount = 0;
   /** @type {string[]} */
   let openScopesStack = [];
@@ -104,10 +79,8 @@ export function createTokenizedDocument({
   /** @type {{ checkpoint: Checkpoint, combined: string[], throughLine: number } | null} */
   let cache = null;
 
-  /** @param {number} scanFrom Character offset to resume scanning from. */
+  /** @param {number} scanFrom */
   function extendLineOffsets(scanFrom) {
-    // indexOf jumps between line breaks natively instead of testing every
-    // character in JS.
     for (
       let i = code.indexOf("\n", scanFrom);
       i !== -1;
@@ -118,8 +91,7 @@ export function createTokenizedDocument({
   }
 
   /**
-   * The character offset line `i` starts at. `i` may equal `lineCount()`
-   * (one past the last line), which resolves to `code.length`.
+   * `i` may be one past the last line, which resolves to `code.length`.
    * @param {number} i
    */
   function lineStartOffset(i) {
@@ -153,13 +125,10 @@ export function createTokenizedDocument({
   reset("");
 
   /**
-   * Feeds the session in `checkpointInterval`-line batches until either
-   * `targetLine` lines are committed or the whole document has been fed.
-   * Recording a checkpoint after every batch, regardless of how many lines
-   * it actually completed, keeps checkpoints valid even when a batch lands
-   * mid-construct (an unresolved multi-line lookahead): the checkpoint's
-   * `pendingHtml`/`openScopes` simply carry the in-progress line forward,
-   * mirroring HighlightStream's own finalizedPendingHtml/openScopes.
+   * Feeds `checkpointInterval`-line batches until `targetLine` lines are
+   * committed or the document is fed. A checkpoint after every batch stays
+   * valid mid-construct: its `pendingHtml`/`openScopes` carry the
+   * in-progress line forward.
    * @param {number} targetLine
    */
   function ensureTokenizedThrough(targetLine) {
@@ -168,19 +137,16 @@ export function createTokenizedDocument({
     while (committedLineCount < clampedTarget && fedLineCount < total) {
       const batchEndLine = Math.min(fedLineCount + checkpointInterval, total);
       const batchEndOffset = lineStartOffset(batchEndLine);
-      // A slice of `code`, not the batch alone: append()-ing batches made
-      // the engine re-flatten the grown text on each one, so a jump to the
-      // end of a 500k-line file took 13.7 s instead of 3.3 s.
+      // feed() a prefix of `code`: append()-ing batches re-flattens the
+      // grown text each time (~4x slower on huge files).
       if (batchEndOffset > fedOffset) {
         session.feed(code.slice(0, batchEndOffset));
       }
       fedOffset = batchEndOffset;
       fedLineCount = batchEndLine;
 
-      // Each event is only needed once, to extend the line state; taking
-      // them keeps the session from retaining the whole document's events
-      // (~140 MB per 100k lines of TypeScript). Windows resume from
-      // checkpoint snapshots with fresh events (see lineRange).
+      // takeEvents() keeps the session from retaining every event (~140 MB
+      // per 100k lines); windows re-derive events from checkpoints.
       const newEvents = session.takeEvents();
       if (newEvents.length > 0) {
         const result = extendLines(newEvents, openScopesStack, pendingHtmlStr, {
@@ -237,14 +203,8 @@ export function createTokenizedDocument({
 
       const checkpoint = findCheckpoint(checkpoints, s);
 
-      // `combined`'s last entry (pendingHtml) is only valid as the answer for
-      // the exact `end` it was computed against: resume()'s finish() force-
-      // closes whatever is still open at that cut point, which is correct
-      // for *that* boundary but not a real line's content otherwise. Cache
-      // coverage is therefore bounded by `throughLine` - the count of
-      // genuinely-completed lines - never by `combined.length`, so a later,
-      // larger `end` can't accidentally reuse that force-closed entry as if
-      // it were real, already-tokenized content.
+      // Bounded by `throughLine`, not `combined.length`: the last entry was
+      // force-closed at that call's `end` and isn't a real line's content.
       if (cache && cache.checkpoint === checkpoint && e <= cache.throughLine) {
         return cache.combined.slice(s - checkpoint.line, e - checkpoint.line);
       }
@@ -269,9 +229,6 @@ export function createTokenizedDocument({
     },
 
     /**
-     * Plain source text per line for [start, end), sliced straight from
-     * `code` via `lineStartOffsets`. Never tokenizes - for consumers like
-     * `createSearch` that only need the text `lineRange` would decode back to.
      * @param {number} start
      * @param {number} end
      * @returns {string[]}
@@ -283,8 +240,7 @@ export function createTokenizedDocument({
       /** @type {string[]} */
       const lines = [];
       for (let i = s; i < e; i++) {
-        // Every line but the last ends one character before the next
-        // line's start (its "\n"); the last runs to the end of `code`.
+        // Exclude the "\n"; the last line runs to the end of `code`.
         const lineEnd =
           i + 1 < total ? lineStartOffset(i + 1) - 1 : code.length;
         lines.push(code.slice(lineStartOffset(i), lineEnd));
@@ -297,10 +253,6 @@ export function createTokenizedDocument({
     },
 
     /**
-     * Tokenizes and checkpoints through `line` without rendering anything,
-     * so a later `lineRange` there is cheap. For tokenizing ahead in idle
-     * time (see HighlightVirtual's `tokenizeAhead`). Returns true once the
-     * whole document has been fed.
      * @param {number} line
      * @returns {boolean}
      */
@@ -309,11 +261,6 @@ export function createTokenizedDocument({
       return fedLineCount >= lineStartOffsets.length;
     },
 
-    /**
-     * Number of retained engine checkpoints; one is created every
-     * `checkpointInterval` lines of tokenized content and never evicted (see
-     * the memory-tradeoff note in the README's "Large documents" section).
-     */
     checkpointCount() {
       return checkpoints.length;
     },

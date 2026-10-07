@@ -1,9 +1,6 @@
 /**
- * A parsed ANSI color.
- *
- * - `name`: one of the 16 themable base colors (e.g. `"red"`, `"bright-red"`).
- * - `index`: a 256-color palette index (16-255); 0-15 are normalized to `name`.
- * - `rgb`: a 24-bit truecolor triple.
+ * A parsed ANSI color: one of the 16 themable names (e.g. `"bright-red"`),
+ * a 256-color index (16-255), or a truecolor triple.
  */
 export type AnsiColor =
   | { name: string }
@@ -31,29 +28,19 @@ export type AnsiSegment = {
   dim?: boolean;
   italic?: boolean;
   underline?: boolean;
-  /** Strikethrough (SGR 9). */
   strikethrough?: boolean;
-  /** Text is present for layout/copy but rendered invisible (SGR 8). */
+  /** Rendered invisible but kept for layout/copy (SGR 8). */
   conceal?: boolean;
   fg?: AnsiColor;
   bg?: AnsiColor;
-  /**
-   * OSC 8 hyperlink target for this run, if any. Only `http:`, `https:`,
-   * and `mailto:` schemes are accepted (case-insensitive); any other
-   * scheme (e.g. `javascript:`, `data:`) or a scheme-less uri is dropped
-   * as if no link were present.
-   */
+  /** OSC 8 hyperlink target; only `http:`, `https:`, and `mailto:` are kept. */
   link?: string;
 };
 
 /**
- * Parse ANSI SGR escape codes into styled segments. Malformed input is
- * dropped.
- *
- * This is a one-shot parse: a trailing unterminated escape sequence is
- * dropped rather than buffered, so calling it once per streamed chunk
- * loses any sequence that straddles a chunk boundary. Accumulate the full
- * string and re-parse it on each update instead of parsing per chunk.
+ * Parse ANSI escape codes into styled segments. Malformed or trailing
+ * unterminated sequences are dropped; use {@link createAnsiSession} for
+ * chunked input.
  */
 export declare function parseAnsi(text: string): AnsiSegment[];
 
@@ -69,35 +56,19 @@ export interface AnsiDelta {
 export interface AnsiSession {
   /** Feed the next chunk of text into the session. */
   append(chunk: string): void;
-  /**
-   * Completed segments so far, plus a live trailing segment for any
-   * buffered-but-not-yet-flushed text. Does not mutate session state.
-   */
+  /** Segments so far, including a live trailing segment for buffered text. */
   segments(): AnsiSegment[];
   /**
-   * What changed since the previous `delta()` call (or since the session
-   * started): `segments().slice(start)`, the same tail `segments()` would
-   * return from index `start`. Every segment before `start` is unchanged
-   * since the previous call, so a consumer that mirrors the segments can
-   * truncate its copy to `start` and append `segments`, paying for the
-   * new segments instead of the whole output. A `\r` overwrite can move
-   * `start` below the previous call's end. Does not affect `segments()`.
+   * `segments().slice(start)` for the first index changed since the last
+   * `delta()`. Mirror by truncating to `start` and appending `segments`.
    */
   delta(): AnsiDelta;
-  /**
-   * Flush remaining buffered text and drop any still-pending incomplete
-   * sequence, then return the final segments. Calling `append()` after
-   * `finish()` is unsupported.
-   */
+  /** Flush, drop any incomplete sequence, and return the final segments. */
   finish(): AnsiSegment[];
 }
 
 /**
- * Create an incremental counterpart to {@link parseAnsi} for text that
- * arrives in chunks. Carries style, the open OSC 8 link, and a
- * partial-escape buffer across `append()` calls, so a chunk boundary that
- * splits a sequence doesn't get parsed wrong or dropped. `finish()`'s
- * output is identical to calling `parseAnsi` once on the full
- * concatenation of every appended chunk.
+ * Incremental {@link parseAnsi} for chunked input; sequences split across
+ * chunks are buffered. `finish()` equals `parseAnsi` of the concatenation.
  */
 export declare function createAnsiSession(): AnsiSession;

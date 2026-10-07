@@ -2,11 +2,8 @@ import type { Plugin } from "postcss";
 import type { GapFillProposals } from "./similarity-map.ts";
 
 /**
- * Appends a `{ color }`-only rule for each proposed gap fill (see
- * `buildGapFillProposals`). Runs after `removeDeadDeclarations` so the newly
- * added rules are never mistaken for dead code, and before `mergeRules`/
- * `cssnano` so an added rule can still merge with an existing one that
- * happens to share the same color.
+ * Appends a `{ color }` rule per proposal. Must run after
+ * `removeDeadDeclarations` and before `mergeRules` so fills can merge.
  */
 export const fillSimilarityGaps = (proposals: GapFillProposals): Plugin => ({
   postcssPlugin: "fill-similarity-gaps",

@@ -40,7 +40,6 @@ if (buildLanguagesSource.includes(`"${name}"`)) {
 const camelName = toCamelCase(name);
 const pascalName = camelName.slice(0, 1).toUpperCase() + camelName.slice(1);
 
-/** Replaces the first (and only expected) occurrence of `anchor` in `path`. */
 async function replaceOnce(
   path: string,
   anchor: string | RegExp,
@@ -58,11 +57,7 @@ async function replaceOnce(
   await Bun.write(path, content.replace(anchor, replacement));
 }
 
-/**
- * Inserts `importLine` into an alphabetically-sorted block of import lines
- * matched by `pattern` (must have the importable slug as its last capture
- * group), keeping the block sorted.
- */
+/** `pattern`'s last capture group must be the slug the lines are sorted by. */
 async function insertImportAlphabetically(
   path: string,
   pattern: RegExp,
@@ -93,7 +88,6 @@ async function insertImportAlphabetically(
   await Bun.write(path, content.replace(last[0], `${last[0]}\n${importLine}`));
 }
 
-// 1. scripts/custom-languages/<name>.js
 await Bun.write(
   grammarPath,
   `// TODO: model this grammar on an existing one -- e.g. zig.js for a
@@ -117,21 +111,18 @@ export default ${camelName};
 `,
 );
 
-// 2. CUSTOM_LANGUAGE_NAMES in scripts/build-languages.ts
 await replaceOnce(
   buildLanguagesPath,
   "] as const;",
   `  "${name}",\n] as const;`,
 );
 
-// 3. CUSTOM_SNIPPETS in tests/differential-corpus.ts
 await replaceOnce(
   "tests/differential-corpus.ts",
   /\};\s*$/,
   `  "${name}": \`// TODO: a short, multi-construct ${displayName} sample\`,\n};\n`,
 );
 
-// 4. tests/languages.test.ts's expected language count
 {
   const path = "tests/languages.test.ts";
   const content = await Bun.file(path).text();
@@ -149,7 +140,6 @@ await replaceOnce(
   await Bun.write(path, content.replace(match[0], replacement));
 }
 
-// 5. tests/<name>-language.test.ts
 await Bun.write(
   `tests/${name}-language.test.ts`,
   `import { createRegistry } from "../src/engine.js";
@@ -172,7 +162,6 @@ test("${name} highlights something", () => {
 `,
 );
 
-// 6. www/preview/<name>-preview-snippets.ts
 await Bun.write(
   `www/preview/${name}-preview-snippets.ts`,
   `export type ${pascalName}PreviewSnippet = {
@@ -186,7 +175,6 @@ export const ${camelName}PreviewSnippets: ${pascalName}PreviewSnippet[] = [];
 `,
 );
 
-// 7. www/pages/preview-<name>.astro
 await Bun.write(
   `www/pages/preview-${name}.astro`,
   `---
@@ -200,7 +188,6 @@ import Layout from "@layouts/Layout.astro";
 `,
 );
 
-// 8. www/components/LanguagePreview.svelte: imports + registry entry
 const languagePreviewPath = "www/components/LanguagePreview.svelte";
 
 await insertImportAlphabetically(
@@ -221,7 +208,6 @@ await replaceOnce(
   `    "${name}": { lang: ${camelName}, snippets: ${camelName}PreviewSnippets },\n  };\n\n  $: ({ lang, snippets } = registry[language]);`,
 );
 
-// 9. www/components/globals/Header.svelte: hiddenRoutes entry
 await replaceOnce(
   "www/components/globals/Header.svelte",
   "  };\n\n  $: path = pathname",

@@ -1,7 +1,7 @@
 import type { Declaration } from "postcss";
 import postcss from "postcss";
 import { scopeSelectors } from "../src/scoped.js";
-import { serializeVars } from "../src/theme-vars.js";
+import { paletteToCss } from "../src/theme.js";
 import type { ThemeInput } from "./build-styles.ts";
 import { createMarkdown } from "./utils/create-markdown.ts";
 import {
@@ -15,8 +15,7 @@ import {
 } from "./utils/theme-ir.ts";
 import { writeTo } from "./utils/write-to.ts";
 
-/** Emitted once, literally, in `base.css` — verified uniform across the
- * whole corpus below rather than assumed. */
+/** Emitted once in `base.css`; themes that differ are reported as mismatches. */
 const STRUCTURAL_RULES: Array<{ selector: string; declText: string }> = [
   {
     selector: "pre code.hljs",
@@ -28,8 +27,6 @@ const STRUCTURAL_SELECTORS = new Map(
   STRUCTURAL_RULES.map((rule) => [rule.selector, rule.declText]),
 );
 
-/** Declarations are emitted in this order wherever a selector needs more
- * than one. */
 const PROPERTY_ORDER = [
   "color",
   "background-color",
@@ -89,8 +86,7 @@ function processTheme(
 
   for (const node of root.nodes) {
     if (node.type === "atrule") {
-      // Conditional overrides (e.g. Windows high-contrast mode media
-      // queries) never fit the unconditional var contract.
+      // Conditional overrides (e.g. high-contrast media queries) can't be vars.
       rawBlocks.push(node.toString());
       continue;
     }
@@ -178,13 +174,7 @@ function processTheme(
   };
 }
 
-/**
- * `--shl-*` var name -> the single fallback var name `base.css` encodes
- * for it (the same pairs `buildBaseCss` wraps in `var(x, var(y))`).
- * `HighlightStyle`'s light/dark merge (`src/theme-style.js`) imports this
- * so its runtime fallback resolution can't drift from what the structural
- * stylesheet actually does — it's generated, not re-derived heuristically.
- */
+/** `--shl-*` var -> its `var(x, var(y))` fallback in `base.css`, for runtime theme merging. */
 function buildFallbackMap(
   selectorUnion: Map<string, UnionEntry>,
 ): Map<string, string> {
@@ -282,40 +272,22 @@ export async function buildThemes(themeInputs: ThemeInput[]) {
   );
 
   for (const artifact of artifacts) {
-    const varsEntries = [...artifact.vars.entries()].sort(([a], [b]) =>
-      a.localeCompare(b),
-    );
-    const varsJs = varsEntries
-      .map(
-        ([key, value]) =>
-          `    ${JSON.stringify(key)}: ${JSON.stringify(value)},`,
-      )
-      .join("\n");
-
-    const hasExtras = artifact.extrasRaw.length > 0;
-    const js = `const ${artifact.moduleName} = {
-  name: ${JSON.stringify(artifact.name)},
-  colorScheme: ${JSON.stringify(artifact.colorScheme)},
-  vars: {
-${varsJs}
-  },${hasExtras ? `\n  extras: ${JSON.stringify(artifact.extrasRaw)},` : ""}
-};
-
-export default ${artifact.moduleName};
-`;
-
-    const varsCss = serializeVars(artifact.vars);
-    const scopedExtras = hasExtras
+    const palette = {
+      name: artifact.name,
+      colorScheme: artifact.colorScheme,
+      vars: Object.fromEntries(
+        [...artifact.vars].sort(([a], [b]) => a.localeCompare(b)),
+      ),
+      ...(artifact.extrasRaw && { extras: artifact.extrasRaw }),
+    };
+    const js = `const ${artifact.moduleName} = ${JSON.stringify(palette)};\nexport default ${artifact.moduleName};\n`;
+    const scopedExtras = artifact.extrasRaw
       ? scopeSelectors(
           artifact.extrasRaw,
           (selector) => `[data-shl-theme="${artifact.name}"] ${selector}`,
         )
       : "";
-    const css =
-      `:root{${varsCss}}` +
-      `[data-shl-theme="${artifact.name}"]{${varsCss}}` +
-      artifact.extrasRaw +
-      scopedExtras;
+    const css = paletteToCss(palette) + scopedExtras;
 
     allWrites.push(writeTo(`src/themes/${artifact.name}.js`, js));
     allWrites.push(

@@ -3,28 +3,19 @@ import { inlineCssVars } from "postcss-inline-css-vars";
 
 const SIMPLE_TOKEN = /^\.hljs-[\w-]+$/;
 
-/** A scope must appear (with a real `color`) in at least this fraction of
- * themes to be treated as a legitimate gap-fill target — filters out
- * one-off/typo scopes that most themes never touch at all. */
+/** Min fraction of themes coloring a scope for it to be a gap-fill target. */
 const CANONICAL_THRESHOLD_PCT = 0.1;
 
-/** Minimum overlap-coefficient score to accept a donor. Below this the
- * corpus doesn't agree enough on what a scope "should" match. */
+/** Min overlap-coefficient score to accept a donor. */
 const MIN_SIMILARITY = 0.15;
 
-/** Per-theme gap-fill proposals: scope token -> color to fill it with. */
+/** Scope token -> fill color. */
 export type GapFillProposals = Map<string, string>;
 
 /**
- * Mines which `.hljs-*` scopes are declared with the same `color` across the
- * corpus — grouped in the same rule, e.g. `.hljs-attr, .hljs-number { color:
- * X }`, which is a deliberate authoring choice, not coincidence — to build a
- * similarity graph between scopes.
- *
- * For a theme that never styles a given canonical scope at all, proposes
- * borrowing color from that *same theme's* closest-styled sibling scope
- * (per the mined graph), rather than an arbitrary/foreign color pulled from
- * another theme's palette.
+ * Builds a scope similarity graph from `.hljs-*` scopes grouped in the same
+ * colored rule across all themes. For each canonical scope a theme never
+ * styles, proposes the color of that theme's most similar styled scope.
  */
 export function buildGapFillProposals(
   rawCssByTheme: Map<string, string>,
@@ -50,11 +41,7 @@ export function buildGapFillProposals(
         if (decl.prop === "color") color = decl.value;
       });
 
-      // Some themes group scopes like `.hljs-formula, .hljs-attr,
-      // .hljs-property, .hljs-params {}` with an intentionally empty body
-      // (see default.css's "purposely ignored" comment) — a strong grouping
-      // signal, but there's no actual color to mine, so only count
-      // co-occurrence (and appearance) when the rule declares a real color.
+      // Skip intentionally empty groups (default.css "purposely ignored").
       if (color) {
         for (const token of tokens) declared.set(token, color);
 

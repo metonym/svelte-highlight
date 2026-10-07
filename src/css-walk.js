@@ -1,8 +1,4 @@
-/**
- * Low-level CSS text walking shared by `scoped.js` (selector scoping) and
- * `highlight-theme.js` (`::highlight()` conversion): string/comment/block
- * boundary scanning that both need before they can interpret a rule.
- */
+// CSS string/comment/block scanning shared by scoped.js and highlight-theme.js.
 
 export const STYLE_TAG = /^(\s*<style>)([\s\S]*?)(<\/style>\s*)$/;
 
@@ -27,7 +23,7 @@ export function findStringEnd(css, start) {
 }
 
 /**
- * Index after the `}` that closes the block starting at `start`.
+ * Index of the `}` closing the block whose body starts at `start`.
  * @param {string} css
  * @param {number} start
  */
@@ -64,9 +60,7 @@ export function findBlockEnd(css, start) {
 export function splitTopLevel(str, delim) {
   const parts = [];
   let depth = 0;
-  // Each part is the contiguous run since the last delimiter, so it's sliced
-  // out once rather than built up a char at a time (see
-  // bench/scoped.bench.ts).
+  // Parts are sliced once from `partStart`, not built char by char.
   let partStart = 0;
   let i = 0;
   while (i < str.length) {

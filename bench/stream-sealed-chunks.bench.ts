@@ -1,11 +1,4 @@
-/**
- * stream-sealed-chunks.js: the two pieces HighlightStream's sealChunk()
- * runs once per SEAL_CHUNK_LINES completed lines - buildSealedChunkHtml
- * (line-span templating) and pushSealedChunk (O(1) amortized array growth,
- * already guarded against an O(c^2) regression by
- * tests/perf-regression-guards.test.ts; this establishes the actual
- * baseline number on realistic line content instead of just a ratio).
- */
+/** buildSealedChunkHtml() and pushSealedChunk() on realistic line content. */
 import { group, task } from "ostia";
 import { extendLines } from "../src/engine.js";
 import {
@@ -45,7 +38,3 @@ group("pushSealedChunk(): sealing a growing stream", () => {
     });
   }
 });
-
-// Run this suite with `ostia bench bench/stream-sealed-chunks.bench.ts` for a
-// fast feedback loop; `bun run bench` runs every *.bench.ts suite for a
-// full-baseline run.

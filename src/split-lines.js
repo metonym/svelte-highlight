@@ -1,9 +1,5 @@
 /**
- * Splits highlight.js output HTML into lines without corrupting `<span>`
- * elements that wrap a line break (block comments, template literals).
- * Open spans are closed at the end of a line and the same stack is
- * reopened, in order, at the start of the next line -- the strategy
- * Prism and Shiki use for line-level transforms.
+ * Closes open spans at each line end and reopens them on the next line.
  * @param {string} html
  * @returns {string[]}
  */
@@ -12,8 +8,7 @@ export function splitLines(html) {
   /** @type {string[]} */
   const stack = [];
   let current = "";
-  // Text (tags included) is copied in runs delimited by newlines rather
-  // than character by character; only `<` and `\n` need inspecting.
+  // Copy text in newline-delimited runs; only `<` and `\n` need inspecting.
   let runStart = 0;
   let i = 0;
 

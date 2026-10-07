@@ -1,10 +1,4 @@
-/**
- * editable-css-paint.js: HighlightEditable's "css-highlights" engine cost
- * for the common single-line repaint (typing within one line), which only
- * needs the token ranges on that line. Sized by document line count, at a
- * line near the start, middle, and end of the document, since the cost of
- * reaching a line can depend on where it sits.
- */
+/** lineTokenRanges(): single-line repaint for HighlightEditable's css-highlights engine. */
 import { group, task } from "ostia";
 import { lineTokenRanges } from "../src/editable-css-paint.js";
 import { parseIncremental } from "../src/incremental-tokenize.js";
@@ -36,6 +30,3 @@ group("lineTokenRanges() single-line repaint", () => {
     }
   }
 });
-
-// Run this suite with `ostia bench bench/css-paint.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

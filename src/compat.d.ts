@@ -1,17 +1,12 @@
 import type { LanguageType } from "./languages/index.d.ts";
 
 /**
- * Converts a user-authored hljs-format grammar (`(hljs) => modeObject`) into
- * this package's `LanguageType` at runtime, for use with `Highlight`,
- * `HighlightAuto`, `HighlightEditable`, `HighlightStream`, the `highlight`
- * action, or `loadLanguage`-style dynamic registration. Requires
- * `highlight.js` as your own dependency (not bundled by svelte-highlight).
+ * Converts a user-authored hljs grammar (`(hljs) => modeObject`) into a
+ * `LanguageType` at runtime. Requires `highlight.js` as your own dependency.
  *
- * @param source raw source text of the grammar's own file (e.g. via a
- *   bundler's `?raw` import); recovers array-membership `on:begin` guards
- *   that the compiled callback alone can't expose.
- * @returns `warnings` lists hljs features with no IR equivalent; empty when
- *   the conversion is clean.
+ * @param source raw source of the grammar's file (e.g. a `?raw` import);
+ *   recovers Set-membership `on:begin` guards the compiled callback can't expose.
+ * @returns `warnings` lists hljs features with no IR equivalent.
  */
 export function fromHighlightJs(
   name: string,

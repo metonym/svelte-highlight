@@ -1,15 +1,9 @@
-/**
- * Shared `--shl-*` var-name derivation. Used by both the theme build
- * pipeline (`scripts/build-themes.ts`, via `scripts/utils/theme-ir.ts`) and
- * the runtime theme-authoring API (`src/theme.js`, `src/textmate-theme.js`)
- * so the two can never derive different var names for the same scope.
- */
+// `--shl-*` var naming shared by the theme build (scripts/) and the runtime
+// theme APIs so both always derive the same names.
 
 const SHL_PREFIX = "--shl-";
 
-/** CSS property -> `--shl-*` name suffix. `""` means no suffix (color is
- * the dominant, unsuffixed case). Only these properties fit the var
- * contract.
+/** CSS property -> `--shl-*` name suffix (`""` for color).
  * @type {Record<string, string>} */
 export const PROP_SUFFIX = {
   color: "",
@@ -30,10 +24,7 @@ export const SUPPORTED_PROPERTIES = new Set(Object.keys(PROP_SUFFIX));
 export function varName(scopes, property) {
   const suffix = PROP_SUFFIX[property];
   if (suffix === undefined) return null;
-  if (scopes.length === 0) {
-    const base = suffix === "" ? "fg" : suffix === "bg" ? "bg" : suffix;
-    return `${SHL_PREFIX}${base}`;
-  }
+  if (scopes.length === 0) return `${SHL_PREFIX}${suffix || "fg"}`;
   const joined = scopes.join("-");
   return `${SHL_PREFIX}${suffix === "" ? joined : `${joined}-${suffix}`}`;
 }
@@ -42,10 +33,7 @@ const HAS_WHITESPACE = /\s/;
 const WHITESPACE_RUN = /\s+/;
 
 /**
- * Parse a raw `ThemeDefinition["scopes"]` key ("keyword", "title.class_",
- * "meta keyword") into the ordered scope segments `varName` expects — the
- * same grouping a `.hljs-*` selector would classify into, just spelled
- * without the `.hljs-` prefix and CSS combinators.
+ * "title.class_" -> ["title", "class_"]; "meta keyword" -> ["meta", "keyword"].
  * @param {string} key
  * @returns {string[]}
  */
@@ -67,9 +55,7 @@ const HEX3 = /^#([0-9a-f]{3})$/;
 const HEX6 = /^#([0-9a-f]{6})[0-9a-f]{0,2}$/;
 const RGB_FUNCTION = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/;
 
-/** Best-effort color parse for `colorScheme` inference; not a general CSS
- * color parser (hex + rgb()/rgba() + the handful of named colors themes
- * actually use are all that's needed here).
+/** Best-effort (hex, rgb(), a few names) for `colorScheme` inference.
  * @param {string} value
  * @returns {[number, number, number] | null}
  */
@@ -105,9 +91,7 @@ export function parseColorToRgb(value) {
   return null;
 }
 
-/** Falls back to `"light"` when `bgValue` is missing or unparseable — a
- * theme whose background never resolved to a var (e.g. a gradient) still
- * needs *some* metadata value.
+/** `"light"` when `bgValue` is missing or unparseable (e.g. a gradient).
  * @param {string | undefined} bgValue
  * @returns {"light" | "dark"}
  */
@@ -120,12 +104,8 @@ export function colorSchemeFor(bgValue) {
 }
 
 /**
- * `ThemeRole` -> raw hljs scope keys it writes (the taste decision from
- * the theme-authoring design — see the role table in the theme-authoring
- * spec). `foreground` and `background` target the base `.hljs` scope
- * directly and are handled separately by callers. Exported so
- * `defineTheme`'s role expansion and the role-map validation report (see
- * `tests/theme-role-map-fidelity.test.ts`) can never drift apart.
+ * `ThemeRole` -> hljs scope keys. `foreground`/`background` are handled by
+ * callers.
  * @type {Record<string, string[]>}
  */
 export const ROLE_SCOPES = {
@@ -158,22 +138,15 @@ export const ROLE_SCOPES = {
   deletion: ["deletion"],
 };
 
-/** Every scope segment `ROLE_SCOPES` maps a role to, flattened into a single
- * vocabulary. Built once; used to flag a typo'd `scopes` key like
- * `"titel.calss_"` (see `unknownScopeSegments`).
- * @type {Set<string>}
- */
-export const KNOWN_SCOPE_SEGMENTS = new Set(
+/** @type {Set<string>} */
+const KNOWN_SCOPE_SEGMENTS = new Set(
   Object.values(ROLE_SCOPES).flatMap((scopeKeys) =>
     scopeKeys.flatMap((scopeKey) => parseScopeKey(scopeKey)),
   ),
 );
 
 /**
- * The subset of `parseScopeKey(scopeKey)`'s segments that aren't in
- * `KNOWN_SCOPE_SEGMENTS` — `[]` when every segment is known. Only checks
- * segment membership against `ROLE_SCOPES`'s flattened vocabulary; not a
- * general TextMate scope-selector validator.
+ * Segments not used by any `ROLE_SCOPES` key (flags typos in dev).
  * @param {string} scopeKey
  * @returns {string[]}
  */
@@ -183,10 +156,7 @@ export function unknownScopeSegments(scopeKey) {
   );
 }
 
-/** `TokenStyle` field -> CSS property in the `--shl-*` var contract. Shared
- * between `defineTheme`'s role/scope expansion and the TextMate importer so
- * both write vars the same way. */
-export const TOKEN_STYLE_FIELD_TO_PROPERTY = {
+const TOKEN_STYLE_FIELD_TO_PROPERTY = {
   color: "color",
   background: "background-color",
   fontStyle: "font-style",
@@ -195,8 +165,6 @@ export const TOKEN_STYLE_FIELD_TO_PROPERTY = {
 };
 
 /**
- * Write every set field of one `TokenStyle` into `vars`, for the given
- * scope segments.
  * @param {Record<string, string>} vars
  * @param {string[]} scopes
  * @param {import("./theme.d.ts").TokenStyle} style
@@ -214,9 +182,7 @@ export function applyTokenStyle(vars, scopes, style) {
 }
 
 /**
- * `key:value;key2:value2` — vars sorted alphabetically. The same
- * serialization the build uses for the generated `themes/<name>.css`
- * artifacts, shared so `paletteToCss` output matches byte-for-byte.
+ * `key:value;...`, sorted by key (shared with the build for byte parity).
  * @param {Record<string, string> | Map<string, string>} vars
  * @returns {string}
  */

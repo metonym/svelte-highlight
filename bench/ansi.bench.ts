@@ -1,9 +1,4 @@
-/**
- * ansi.js's parseAnsi() and ansi-color.js's per-segment class/style
- * computation - the two passes behind AnsiOutput.svelte - plus the
- * component's own per-chunk pipeline (ansi-output.js), which only redoes
- * the class/style step for segments the session reports as changed.
- */
+/** parseAnsi(), per-segment classNames()/inlineStyle(), and AnsiOutput's per-chunk pipeline. */
 import { group, task } from "ostia";
 import { createAnsiSession, parseAnsi } from "../src/ansi.js";
 import { classNames, inlineStyle } from "../src/ansi-color.js";
@@ -18,7 +13,7 @@ const FG_CODES = [
 const BG_CODES = ["", "\x1b[41m", "\x1b[48;5;22m", "\x1b[48;2;200;210;220m"];
 const STYLE_CODES = ["", "\x1b[1m", "\x1b[3m", "\x1b[4m", "\x1b[9m"];
 
-/** Synthetic colored terminal output: one styled "word" per segment. */
+/** One styled "word" per segment. */
 function ansiSource(segmentCount: number) {
   let out = "";
   for (let i = 0; i < segmentCount; i++) {
@@ -31,11 +26,7 @@ function ansiSource(segmentCount: number) {
   return out;
 }
 
-/**
- * Log-shaped terminal output: a short colored level tag, then a long run of
- * plain text per line. Unlike `ansiSource`'s one-word segments, the cost
- * here is dominated by copying plain text, not by escape sequences.
- */
+/** Colored level tag + long plain text per line: dominated by text copying. */
 function logSource(lineCount: number) {
   const levels = [
     "\x1b[32mINFO\x1b[0m",
@@ -79,11 +70,9 @@ group("classNames() + inlineStyle() over parsed segments", () => {
   }
 });
 
-// Fixed chunk size for the repeated-append case below: small enough to
-// straddle SGR/OSC 8 sequences many times over a long corpus.
+// Small enough to straddle escape sequences often.
 const CHUNK_BYTES = 200;
 
-/** Split `source` into fixed-size chunks (the last one may be shorter). */
 function chunk(source: string, size: number) {
   const chunks: string[] = [];
   for (let i = 0; i < source.length; i += size) {
@@ -118,9 +107,6 @@ group("repeated append: createAnsiSession vs re-parsing on every chunk", () => {
   }
 });
 
-// What AnsiOutput itself pays per streamed chunk: the session parse plus
-// the class/style step for the template, with `text` growing by one chunk
-// per update the way a live-tailed prop does.
 group("repeated append: AnsiOutput update per chunk", () => {
   for (const count of [2_000, 20_000]) {
     const chunks = chunk(ansiSource(count), CHUNK_BYTES);
@@ -136,6 +122,3 @@ group("repeated append: AnsiOutput update per chunk", () => {
     });
   }
 });
-
-// Run this suite with `ostia bench bench/ansi.bench.ts` for a fast feedback
-// loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

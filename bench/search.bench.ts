@@ -1,15 +1,4 @@
-/**
- * search.js: createSearch's scan cost as documents grow, the relative
- * cost of its literal/caseSensitive/wholeWord/regex modes, and the
- * incremental-rescan optimization against a growing TokenizedDocument -
- * repeated query()s only rescan newly appended lines instead of the whole
- * document, the same kind of typing-simulation comparison
- * incremental.bench.ts runs for parseIncremental/reparseIncremental.
- *
- * highlightMatches (the DOM-painting half of this module) runs against
- * bench/_fake-search-dom.ts, a minimal DOM shim, so its cost here is the tree
- * walking and querying it does, not a browser's layout or paint.
- */
+/** createSearch scan cost, query modes, incremental rescan, and highlightMatches on a fake DOM. */
 import { group, task } from "ostia";
 import javascript from "../src/languages/javascript.js";
 import { createSearch, highlightMatches } from "../src/search.js";
@@ -38,9 +27,6 @@ group("createSearch query() mode cost @ 20,000 lines", () => {
   task("regex", () => createSearch(code).query("a \\+ b", { regex: true }));
 });
 
-// Typing into a find box: one createSearch, then a query() per keystroke as
-// the text grows, so the per-query scan cost isn't hidden behind the
-// one-time cost of building the search.
 group("createSearch query() per keystroke on one search @ 20,000 lines", () => {
   const code = jsLines(20_000);
   const search = createSearch(code);
@@ -93,22 +79,15 @@ group(
 
 const PAINT_LINES = 2_000;
 
-/** Line `i`'s plain text; every line has one "needle" to match. */
 function paintLine(i: number) {
   return `  const value${i} = compute(${i}, "needle") + other_${i % 7};`;
 }
 
-/** One `<span>` per word or punctuation run, like highlighted tokens. */
 function tokenSpans(text: string) {
   return (text.match(/\w+|\W+/g) ?? []).map((token) => h("span", {}, token));
 }
 
-/**
- * A `<code>` of PAINT_LINES token-split lines. `rows` wraps each line in a
- * `<span class="line" data-line="N">`, the way HighlightVirtual renders;
- * without it, highlightMatches falls back to offsets into the whole
- * `<code>`'s text.
- */
+/** `rows` wraps lines in `[data-line]` spans like HighlightVirtual; else offsets span the whole `<code>`. */
 function paintFixture(rows: boolean) {
   const code = h("code");
   for (let i = 0; i < PAINT_LINES; i++) {
@@ -129,7 +108,6 @@ function paintFixture(rows: boolean) {
   return h("pre", {}, code);
 }
 
-/** `count` "needle" matches spread evenly over PAINT_LINES lines. */
 function paintMatches(count: number) {
   return Array.from({ length: count }, (_, k) => {
     const line = Math.floor((k * PAINT_LINES) / count);
@@ -161,8 +139,7 @@ group("highlightMatches() CSS highlights @ 2,000 lines", () => {
   }
 });
 
-// The <mark> fallback splits text nodes, so each run paints a fresh copy of
-// the fixture; building it is the same work on both sides of an A/B.
+// The <mark> fallback mutates the tree, so each run builds a fresh fixture.
 group("highlightMatches() <mark> fallback @ 2,000 lines", () => {
   for (const [layout, rows] of PAINT_LAYOUTS) {
     for (const count of [250, 1_000]) {
@@ -176,6 +153,3 @@ group("highlightMatches() <mark> fallback @ 2,000 lines", () => {
     }
   }
 });
-
-// Run this suite with `ostia bench bench/search.bench.ts` for a fast
-// feedback loop; `bun run bench` runs every *.bench.ts suite for a full-baseline run.

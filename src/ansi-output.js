@@ -1,10 +1,3 @@
-/**
- * AnsiOutput's per-update pipeline: feed `text` into an incremental ANSI
- * session, then compute each segment's class and inline style for the
- * template. Split out of the component so it can be benched
- * (bench/ansi.bench.ts) and tested without a DOM.
- */
-
 import { createAnsiSession } from "./ansi.js";
 import { classNames, inlineStyle } from "./ansi-color.js";
 
@@ -40,8 +33,7 @@ function render(segment, autoContrast) {
  */
 export function createAnsiOutput() {
   let session = createAnsiSession();
-  // Prefix of `text` already fed to `session`. If `text` stops starting
-  // with this, treat it as a restart (not an append) and re-parse fresh.
+  // Prefix already fed to `session`; a non-append change restarts it.
   let fedText = "";
   /** @type {RenderedAnsiSegment[]} */
   const rendered = [];
@@ -50,17 +42,12 @@ export function createAnsiOutput() {
 
   return {
     /**
-     * Returns the same array on every call, updated in place; entries for
-     * unchanged segments keep their identity across calls.
+     * Returns the same array, patched in place (unchanged entries keep identity).
      * @param {string} text
      * @param {boolean} autoContrast
      * @returns {RenderedAnsiSegment[]}
      */
     update(text, autoContrast) {
-      // Re-parsing the whole string on every change is O(n^2) over a
-      // growing (live-tailed or streamed) `text`, so only feed the new
-      // suffix when `text` grows by a pure append; anything else gets a
-      // fresh session.
       if (text.startsWith(fedText)) {
         if (text.length > fedText.length) {
           session.append(text.slice(fedText.length));
@@ -72,13 +59,9 @@ export function createAnsiOutput() {
         fedText = text;
       }
 
-      // Only the segments the session reports as changed get a fresh
-      // class/style. Copying every segment and recomputing all of them
-      // per chunk made a streamed 20,000-segment output quadratic
-      // (bench/ansi.bench.ts, "repeated append: AnsiOutput update").
+      // Re-render only changed segments; all of them is quadratic when streaming.
       let { start, segments } = session.delta();
       if (autoContrast !== renderedContrast) {
-        // Every inline style depends on `autoContrast`; rebuild them all.
         renderedContrast = autoContrast;
         start = 0;
         segments = session.segments();
