@@ -741,7 +741,7 @@ function hunkHeader(blocks, from, context = 3) {
   }
   a0 = Math.max(0, a0 - context);
   b0 = Math.max(0, b0 - context);
-  return `@@ -${a0 + 1},${a1 - a0} +${b0 + 1},${b1 - b0} @@`;
+  return `@@ -${hunkRange(a0, a1 - a0)} +${hunkRange(b0, b1 - b0)} @@`;
 }
 
 /**
@@ -953,6 +953,27 @@ export function toUnifiedPatch(
 ) {
   const { blocks, beforeLines, afterLines } = state;
   const lines = [`--- ${oldPath}`, `+++ ${newPath}`];
+  const lastOld = state.beforeNoEol ? beforeLines.length - 1 : -1;
+  const lastNew = state.afterNoEol ? afterLines.length - 1 : -1;
+  const NoEol = "\\ No newline at end of file";
+  /** @type {string[]} */
+  let body = [];
+  /** @param {number} k */
+  const context_ = (k) => {
+    body.push(` ${beforeLines[k]}`);
+    if (k === lastOld) body.push(NoEol);
+  };
+  /** @param {number} k */
+  const removed = (k) => {
+    body.push(`-${beforeLines[k]}`);
+    if (k === lastOld) body.push(NoEol);
+  };
+  /** @param {number} k */
+  const added = (k) => {
+    body.push(`+${afterLines[k]}`);
+    if (k === lastNew) body.push(NoEol);
+  };
+
   let i = 0;
   while (i < blocks.length) {
     while (i < blocks.length && blocks[i]?.type === "equal") i++;
@@ -960,9 +981,8 @@ export function toUnifiedPatch(
     const first = /** @type {Block} */ (blocks[i]);
     const a0 = Math.max(0, first.a - context);
     const b0 = Math.max(0, first.b - context);
-    /** @type {string[]} */
-    const body = [];
-    for (let k = a0; k < first.a; k++) body.push(` ${beforeLines[k]}`);
+    body = [];
+    for (let k = a0; k < first.a; k++) context_(k);
     let end = i;
     let a1 = first.a;
     let b1 = first.b;
@@ -973,27 +993,35 @@ export function toUnifiedPatch(
         const isLast = j === blocks.length - 1;
         if (n > context * 2 || isLast) {
           const take = Math.min(n, context);
-          for (let k = 0; k < take; k++)
-            body.push(` ${beforeLines[block.a + k]}`);
+          for (let k = 0; k < take; k++) context_(block.a + k);
           a1 = block.a + take;
           b1 = block.b + take;
           end = j;
           break;
         }
-        for (let k = block.a; k < block.aEnd; k++)
-          body.push(` ${beforeLines[k]}`);
+        for (let k = block.a; k < block.aEnd; k++) context_(k);
       } else {
-        for (let k = block.a; k < block.aEnd; k++)
-          body.push(`-${beforeLines[k]}`);
-        for (let k = block.b; k < block.bEnd; k++)
-          body.push(`+${afterLines[k]}`);
+        for (let k = block.a; k < block.aEnd; k++) removed(k);
+        for (let k = block.b; k < block.bEnd; k++) added(k);
       }
       a1 = block.aEnd;
       b1 = block.bEnd;
       end = j + 1;
     }
-    lines.push(`@@ -${a0 + 1},${a1 - a0} +${b0 + 1},${b1 - b0} @@`, ...body);
+    lines.push(
+      `@@ -${hunkRange(a0, a1 - a0)} +${hunkRange(b0, b1 - b0)} @@`,
+      ...body,
+    );
     i = Math.max(end, i + 1);
   }
   return `${lines.join("\n")}\n`;
+}
+
+/**
+ * A hunk range as git writes it: an empty range names the line before it.
+ * @param {number} start 0-based
+ * @param {number} count
+ */
+function hunkRange(start, count) {
+  return count === 0 ? `${start},0` : `${start + 1},${count}`;
 }
