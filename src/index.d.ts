@@ -6,6 +6,10 @@ export { parseAnsi } from "./ansi";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { stripDiffMarkers, stripPrompts } from "./copy-transforms";
+export { default as DiffMinimap } from "./DiffMinimap.svelte";
+export { default as DiffStats } from "./DiffStats.svelte";
+export { default as DiffView } from "./DiffView.svelte";
+export type { Block, DiffState, Row } from "./diff";
 export {
   applyReview,
   buildRows,
@@ -16,8 +20,14 @@ export {
   diffTexts,
   toUnifiedPatch,
   wordDiff,
-} from "./diff.js";
-export { createDiffController } from "./diff-controller.js";
+} from "./diff";
+export type {
+  Annotation,
+  DiffController,
+  DiffControllerOptions,
+} from "./diff-controller";
+export { createDiffController } from "./diff-controller";
+export type { Edit, EditFormat, FilePatch } from "./diff-edits";
 export {
   applyEdits,
   detectEditFormat,
@@ -25,13 +35,10 @@ export {
   parsePatch,
   patchToState,
   streamEditPrefix,
-} from "./diff-edits.js";
+} from "./diff-edits";
 export { default as FileTabs } from "./FileTabs.svelte";
 export { default as Highlight, default } from "./Highlight.svelte";
 export { default as HighlightAuto } from "./HighlightAuto.svelte";
-export { default as DiffMinimap } from "./DiffMinimap.svelte";
-export { default as DiffStats } from "./DiffStats.svelte";
-export { default as DiffView } from "./DiffView.svelte";
 export { default as HighlightDiff } from "./HighlightDiff.svelte";
 export { default as HighlightEditable } from "./HighlightEditable.svelte";
 export { default as HighlightStream } from "./HighlightStream.svelte";
