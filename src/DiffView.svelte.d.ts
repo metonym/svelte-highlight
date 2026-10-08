@@ -20,6 +20,13 @@ export type DiffViewProps = HTMLAttributes<HTMLDivElement> & {
    */
   review?: boolean;
 
+  /**
+   * Wrap long lines instead of scrolling each side sideways. Rows are
+   * measured, so wrapped rows keep virtualization.
+   * @default false
+   */
+  wrap?: boolean;
+
   /** @default "default" */
   palette?: "default" | "colorblind";
 
@@ -44,7 +51,7 @@ export type DiffViewSlots = {
     count: number | undefined;
     toggle: () => void;
   };
-  /** Replaces an annotation card. Its height comes from `Annotation.lines`. */
+  /** Replaces an annotation card. The row grows to fit it. */
   note: { note: Annotation };
   /** Controls shown on the first row of each change. */
   actions: {

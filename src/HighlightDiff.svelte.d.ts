@@ -54,6 +54,9 @@ export type HighlightDiffProps = HTMLAttributes<HTMLDivElement> & {
   /** Show accept/reject buttons on each change. @default false */
   review?: boolean;
 
+  /** Wrap long lines instead of scrolling sideways. @default false */
+  wrap?: boolean;
+
   /** Notes shown below their lines. @default [] */
   annotations?: Annotation[];
 

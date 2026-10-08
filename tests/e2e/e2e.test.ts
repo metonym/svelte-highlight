@@ -3150,3 +3150,97 @@ test("DiffView - fills note and actions slots, with stats and a minimap", async 
   ).toContainText("let v280 = 280;");
   await expect(page.getByTestId("action").last()).toHaveText("act 1");
 });
+
+/**
+ * Runs in the page: selects from the start of the row containing `from` to
+ * the end of the row containing `to`, fires a copy event, and returns what
+ * the diff put on the clipboard.
+ */
+function copyInPage({ from, to }: { from: string; to: string }) {
+  const texts = [...document.querySelectorAll(".shl-diff-text")];
+  const first = texts.find((el) => el.textContent?.includes(from));
+  const last = texts.findLast((el) => el.textContent?.includes(to));
+  if (!first || !last) throw new Error("rows not found");
+  const range = document.createRange();
+  range.setStart(first, 0);
+  range.setEnd(last, last.childNodes.length);
+  const selection = window.getSelection();
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+  const event = new ClipboardEvent("copy", {
+    clipboardData: new DataTransfer(),
+    bubbles: true,
+    cancelable: true,
+  });
+  first.dispatchEvent(event);
+  return event.clipboardData?.getData("text/plain") ?? "";
+}
+
+test("HighlightDiff - copies only the new text across a unified change", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff);
+
+  const copied = await page.evaluate(copyInPage, {
+    from: "const x4 = 4;",
+    to: "const x6 = 6;",
+  });
+  expect(copied).toBe(
+    [
+      "const x4 = 4; // line 4",
+      "const x5 = 500; // line 5",
+      "const x6 = 6; // line 6",
+    ].join("\n"),
+  );
+});
+
+test("HighlightDiff - copies one side in split view", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff);
+
+  const diff = page.getByTestId("diff");
+  await diff.focus();
+  await page.keyboard.press("v");
+  await diff.locator(".shl-diff-code.shl-diff-side-old").first().click();
+  const copied = await page.evaluate(copyInPage, {
+    from: "const x4 = 4;",
+    to: "const x6 = 6;",
+  });
+  expect(copied).toBe(
+    [
+      "const x4 = 4; // line 4",
+      "const x5 = 5; // line 5",
+      "const x6 = 6; // line 6",
+    ].join("\n"),
+  );
+});
+
+test("HighlightDiff - wraps long lines into taller rows without overlap", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, { props: { wrap: true, longLine: true } });
+
+  const diff = page.getByTestId("diff");
+  const rows = diff.locator(".shl-diff-window > .shl-diff-row");
+  await expect(rows.first()).toBeVisible();
+  const boxes = await rows.evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { top: r.top, bottom: r.bottom, height: r.height };
+    }),
+  );
+  const lineHeight = Math.min(...boxes.map((b) => b.height));
+  expect(Math.max(...boxes.map((b) => b.height))).toBeGreaterThan(
+    lineHeight * 2,
+  );
+  for (let i = 1; i < boxes.length; i++) {
+    expect(
+      Math.abs((boxes[i]?.top ?? 0) - (boxes[i - 1]?.bottom ?? 0)),
+    ).toBeLessThan(1);
+  }
+  await expect(diff.locator(".shl-diff-hbar-row")).toBeHidden();
+});

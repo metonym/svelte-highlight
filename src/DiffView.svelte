@@ -11,6 +11,9 @@
   /** Show accept/reject controls per change (or fill the `actions` slot). */
   export let review = false;
 
+  /** Wrap long lines instead of scrolling sideways. */
+  export let wrap = false;
+
   /** @type {"default" | "colorblind"} */
   export let palette = "default";
 
@@ -20,13 +23,15 @@
   /** Handle n/p/e/c/v (and a/r/u with `review`) when focused. */
   export let keyboard = true;
 
-  import { onMount, tick } from "svelte";
+  import { afterUpdate, onMount, tick } from "svelte";
   import { watchLineHeight } from "./virtual-window.js";
 
   $: ({ class: _class, style: _style, ...rest } = $$restProps);
 
   /** @type {HTMLElement} */
   let container;
+  /** @type {HTMLElement} */
+  let windowEl;
   /** @type {HTMLElement} */
   let probe;
   /** @type {HTMLElement} */
@@ -38,8 +43,10 @@
 
   let lineHeight = 18;
   let charWidth = 8;
+  let codeWidth = 0;
   let scrollTop = 0;
   let clientHeight = 600;
+  let clientWidth = 0;
   let scrollOld = 0;
   let scrollNew = 0;
   let hydrated = false;
@@ -52,32 +59,149 @@
   $: view = options.view;
   $: state = $diff.state();
   $: rows = $diff.rows();
-  $: tops = $diff.tops();
-  $: totalUnits = $diff.totalUnits();
   $: columns = $diff.columns();
   $: decisions = $diff.decisions();
   $: current = $diff.current();
 
-  $: start = Math.max(
-    0,
-    $diff.rowAt(Math.floor(scrollTop / lineHeight)) - overscan,
-  );
-  $: end = Math.min(
-    rows.length,
-    $diff.rowAt(Math.ceil((scrollTop + clientHeight) / lineHeight)) +
-      1 +
-      overscan,
-  );
+  // --- row heights ---
+  //
+  // Rows are estimated, then measured once rendered. Measured heights are
+  // cached by row key until something that changes them does: wrapping,
+  // the view, the width, notes, or a new (not just grown) document.
+
+  /** @type {Map<string, number>} */
+  let measured = new Map();
+  let layoutVersion = 0;
+
+  function resetHeights() {
+    measured = new Map();
+    layoutVersion++;
+  }
+
+  /** @type {unknown[]} */
+  let heightDeps = [];
+  $: {
+    const next = [
+      wrap,
+      view,
+      options.annotations,
+      lineHeight,
+      state.streaming ? null : state,
+    ];
+    if (wrap) next.push(clientWidth);
+    if (next.some((v, i) => v !== heightDeps[i])) {
+      heightDeps = next;
+      resetHeights();
+    }
+  }
+
+  /** @param {import("./diff-controller.js").ViewRow} row */
+  function textLength(row) {
+    const oldLen =
+      row.old === undefined ? 0 : (state.beforeLines[row.old]?.length ?? 0);
+    const newLen =
+      row.new === undefined
+        ? 0
+        : row.kind === "incoming"
+          ? (state.partial?.length ?? 0)
+          : (state.afterLines[row.new]?.length ?? 0);
+    if (view === "split") return Math.max(oldLen, newLen);
+    return row.kind === "del" ? oldLen : newLen;
+  }
+
+  /** @param {import("./diff-controller.js").ViewRow} row */
+  function estimate(row) {
+    if (row.note)
+      return (row.note.body.split("\n").length + 1) * lineHeight + 6;
+    if (!wrap || row.kind === "fold" || row.kind === "pending")
+      return lineHeight;
+    const perLine = Math.max(1, Math.floor((codeWidth || 600) / charWidth));
+    return lineHeight * Math.max(1, Math.ceil(textLength(row) / perLine));
+  }
+
+  $: offsets = (() => {
+    void layoutVersion;
+    const out = new Float64Array(rows.length + 1);
+    for (let i = 0; i < rows.length; i++) {
+      const row = /** @type {import("./diff-controller.js").ViewRow} */ (
+        rows[i]
+      );
+      out[i + 1] =
+        /** @type {number} */ (out[i]) +
+        (measured.get(row.key) ?? estimate(row));
+    }
+    return out;
+  })();
+  $: total = /** @type {number} */ (offsets[rows.length] ?? 0);
+
+  /** Last row whose top is at or above `px`. */
+  function indexAt(/** @type {number} */ px) {
+    let lo = 0;
+    let hi = rows.length - 1;
+    let found = 0;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (/** @type {number} */ (offsets[mid]) <= px) {
+        found = mid;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return found;
+  }
+
+  $: start = (void offsets, Math.max(0, indexAt(scrollTop) - overscan));
+  $: end =
+    (void offsets,
+    Math.min(rows.length, indexAt(scrollTop + clientHeight) + 1 + overscan));
   $: visible = $diff.renderRows(start, end);
-  $: windowTop = /** @type {number} */ (tops[start] ?? 0) * lineHeight;
+  $: windowTop = /** @type {number} */ (offsets[start] ?? 0);
 
-  $: if (hydrated)
-    diff.setViewport(scrollTop / lineHeight, clientHeight / lineHeight);
+  $: if (hydrated) {
+    void offsets;
+    diff.setViewport(indexAt(scrollTop), indexAt(scrollTop + clientHeight) + 1);
+  }
 
-  /** @param {number} unit @param {"start" | "center" | "third"} align */
-  function scrollToUnit(unit, align) {
+  // Measure rendered rows. Growth above the first visible row shifts
+  // scrollTop by the same amount, so the content under the reader stays put.
+  afterUpdate(() => {
+    if (!windowEl || !container) return;
+    const anchor = indexAt(container.scrollTop);
+    let changed = false;
+    let shift = 0;
+    for (const el of /** @type {HTMLElement[]} */ ([...windowEl.children])) {
+      const key = el.dataset.key;
+      const index = Number(el.dataset.index);
+      if (key === undefined || Number.isNaN(index)) continue;
+      const height = el.getBoundingClientRect().height;
+      const used =
+        /** @type {number} */ (offsets[index + 1]) -
+        /** @type {number} */ (offsets[index]);
+      if (Math.abs(height - used) > 0.5) {
+        measured.set(key, height);
+        changed = true;
+        if (index < anchor) shift += height - used;
+      }
+    }
+    const cell = /** @type {HTMLElement | null} */ (
+      windowEl.querySelector(".shl-diff-code")
+    );
+    if (cell && cell.clientWidth > 0) codeWidth = cell.clientWidth;
+    if (!changed) return;
+    layoutVersion++;
+    if (shift !== 0) {
+      container.scrollTop += shift;
+      scrollTop = container.scrollTop;
+    }
+  });
+
+  /** @param {number} row @param {"start" | "center" | "third"} align */
+  function scrollToRow(row, align) {
     if (!container) return;
-    const top = unit * lineHeight;
+    const top = /** @type {number} */ (
+      offsets[Math.max(0, Math.min(row, rows.length))] ?? 0
+    );
     const offset =
       align === "center"
         ? container.clientHeight / 2
@@ -109,6 +233,7 @@
       userScrolled = true;
       return;
     }
+    if (wrap) return;
     const side = /** @type {HTMLElement} */ (event.target)
       .closest?.("[data-side]")
       ?.getAttribute("data-side");
@@ -153,6 +278,78 @@
       view === "split" && (side === "old" || side === "new") ? side : null;
   }
 
+  // --- copy ---
+
+  /**
+   * Copies one file's text: in split view, the side the selection started
+   * on; in unified view, the new text, or the old text if only removed lines
+   * are selected. Fully selected lines come from the source, so tabs and
+   * carriage returns survive.
+   * @param {ClipboardEvent} event
+   */
+  function onCopy(event) {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed)
+      return;
+    const range = selection.getRangeAt(0);
+    /** @type {Array<{ row: import("./diff-controller.js").ViewRow, el: HTMLElement }>} */
+    const picked = [];
+    for (const el of /** @type {HTMLElement[]} */ ([...windowEl.children])) {
+      const item = visible[Number(el.dataset.index) - start];
+      if (!item || !range.intersectsNode(el)) continue;
+      const kind = item.row.kind;
+      if (kind === "fold" || kind === "pending" || item.row.note) continue;
+      picked.push({ row: item.row, el });
+    }
+    if (picked.length < 2) return;
+
+    /** @type {"old" | "new"} */
+    let side = "new";
+    if (view === "split") side = selectSide ?? "new";
+    else if (picked.every(({ row }) => row.kind === "del")) side = "old";
+
+    /** @type {string[]} */
+    const lines = [];
+    for (const { row, el } of picked) {
+      if (
+        view === "unified" &&
+        (side === "new" ? row.kind === "del" : row.kind !== "del")
+      )
+        continue;
+      const index = side === "old" ? row.old : row.new;
+      if (index === undefined) continue;
+      const cell = el.querySelector(
+        view === "split"
+          ? `.shl-diff-code[data-side="${side}"] .shl-diff-text`
+          : ".shl-diff-code .shl-diff-text",
+      );
+      if (!cell) continue;
+      const whole = document.createRange();
+      whole.selectNodeContents(cell);
+      const startsInside =
+        range.compareBoundaryPoints(Range.START_TO_START, whole) > 0;
+      const endsInside =
+        range.compareBoundaryPoints(Range.END_TO_END, whole) < 0;
+      if (!startsInside && !endsInside) {
+        const source =
+          side === "old"
+            ? state.beforeLines[index]
+            : row.kind === "incoming"
+              ? state.partial
+              : state.afterLines[index];
+        lines.push(source ?? "");
+        continue;
+      }
+      const part = whole.cloneRange();
+      if (startsInside) part.setStart(range.startContainer, range.startOffset);
+      if (endsInside) part.setEnd(range.endContainer, range.endOffset);
+      lines.push(part.toString().replace(/\u200b/g, ""));
+    }
+    if (lines.length === 0 || !event.clipboardData) return;
+    event.clipboardData.setData("text/plain", lines.join("\n"));
+    event.preventDefault();
+  }
+
   // Follow the streaming frontier unless the reader scrolled away.
   let followQueued = false;
   function followFrontier() {
@@ -172,8 +369,8 @@
         (r) => r.kind === "incoming" || r.kind === "pending",
       );
       const index = frontier === -1 ? rows.length - 1 : frontier;
-      const top = /** @type {number} */ (tops[index] ?? 0) * lineHeight;
-      const max = Math.max(0, totalUnits * lineHeight - container.clientHeight);
+      const top = /** @type {number} */ (offsets[index] ?? 0);
+      const max = Math.max(0, total - container.clientHeight);
       const target = Math.min(
         max,
         Math.max(0, top - container.clientHeight * 0.6),
@@ -206,6 +403,18 @@
     return undefined;
   }
 
+  /**
+   * Without `wrap`, code rows are exactly one line tall.
+   * @param {import("./diff-controller.js").ViewRow} row
+   * @param {boolean} wrapped
+   * @param {number} height
+   */
+  function rowStyle(row, wrapped, height) {
+    return wrapped || row.note
+      ? `min-height: ${height}px;`
+      : `height: ${height}px;`;
+  }
+
   onMount(() => {
     watchLineHeight(
       () => probe,
@@ -218,12 +427,15 @@
     });
     hydrated = true;
     clientHeight = container.clientHeight;
+    clientWidth = container.clientWidth;
     const observer = new ResizeObserver(() => {
-      if (container) clientHeight = container.clientHeight;
+      if (!container) return;
+      clientHeight = container.clientHeight;
+      clientWidth = container.clientWidth;
     });
     observer.observe(container);
-    const offReveal = diff.on("reveal", ({ unit, align }) =>
-      scrollToUnit(unit, align),
+    const offReveal = diff.on("reveal", ({ row, align }) =>
+      scrollToRow(row, align),
     );
     return () => {
       observer.disconnect();
@@ -239,6 +451,7 @@
   class:shl-diff-split={view === "split"}
   class:shl-diff-colorblind={palette === "colorblind"}
   class:shl-diff-streaming={state.streaming}
+  class:shl-diff-wrap={wrap}
   data-select={selectSide}
   role="region"
   aria-label="Diff: {$diff.stats().additions} additions, {$diff.stats()
@@ -249,6 +462,7 @@
     ""}"
   on:keydown={onKeydown}
   on:mousedown={onMousedown}
+  on:copy={onCopy}
 >
   <div class="shl-diff-frame hljs">
     <div
@@ -259,8 +473,9 @@
       role="table"
       aria-rowcount={rows.length}
     >
-      <div class="shl-diff-sizer" style="height: {totalUnits * lineHeight}px;">
+      <div class="shl-diff-sizer" style="height: {total}px;">
         <div
+          bind:this={windowEl}
           class="shl-diff-window"
           style="transform: translateY({windowTop}px);"
         >
@@ -279,7 +494,9 @@
                 row.old === undefined}
               class:shl-diff-unpaired-new={row.kind === "change" &&
                 row.new === undefined}
-              style="height: {item.span * lineHeight}px;"
+              style={rowStyle(row, wrap, lineHeight)}
+              data-key={row.key}
+              data-index={item.index}
               role="row"
               aria-rowindex={item.index + 1}
               aria-label={rowLabel(row)}
@@ -297,8 +514,7 @@
                       <span class="shl-diff-fold-icon" aria-hidden="true"
                         >⋯</span
                       >
-                      {row.count}
-                      lines not in patch
+                      {`${row.count} lines not in patch`}
                       <span class="shl-diff-hunk">{row.fold.header}</span>
                     </span>
                   {:else}
@@ -310,8 +526,7 @@
                       <span class="shl-diff-fold-icon" aria-hidden="true"
                         >↕</span
                       >
-                      Expand {row.count} unchanged
-                      {row.count === 1 ? "line" : "lines"}
+                      {`Expand ${row.count} unchanged ${row.count === 1 ? "line" : "lines"}`}
                       <span class="shl-diff-hunk">{row.fold.header}</span>
                     </button>
                   {/if}
@@ -319,8 +534,7 @@
               {:else if row.kind === "pending"}
                 <span class="shl-diff-fold-label">
                   <span class="shl-diff-spinner" aria-hidden="true"></span>
-                  {row.count} {row.count === 1 ? "line" : "lines"} not reached
-                  yet
+                  {`${row.count} ${row.count === 1 ? "line" : "lines"} not reached yet`}
                 </span>
               {:else if row.note}
                 <div class="shl-diff-note-slot">
@@ -348,7 +562,9 @@
                 <span class="shl-diff-code shl-diff-side-old" data-side="old"
                   ><span
                     class="shl-diff-text"
-                    style="transform: translateX({-scrollOld}px);"
+                    style={wrap
+                      ? undefined
+                      : `transform: translateX(${-scrollOld}px);`}
                     >{@html row.old === undefined
                       ? ""
                       : item.oldHtml || "​"}</span
@@ -365,7 +581,9 @@
                 <span class="shl-diff-code shl-diff-side-new" data-side="new"
                   ><span
                     class="shl-diff-text"
-                    style="transform: translateX({-scrollNew}px);"
+                    style={wrap
+                      ? undefined
+                      : `transform: translateX(${-scrollNew}px);`}
                     >{@html row.new === undefined
                       ? ""
                       : item.newHtml || "​"}</span
@@ -391,7 +609,9 @@
                 <span class="shl-diff-code" data-side="new"
                   ><span
                     class="shl-diff-text"
-                    style="transform: translateX({-scrollNew}px);"
+                    style={wrap
+                      ? undefined
+                      : `transform: translateX(${-scrollNew}px);`}
                     >{@html (row.kind === "del"
                       ? item.oldHtml
                       : item.newHtml) || "​"}</span
@@ -446,42 +666,44 @@
         </div>
       </div>
     </div>
-    <div class="shl-diff-hbar-row" aria-hidden="true">
-      {#if view === "split"}
-        <span></span><span></span>
-        <div
-          class="shl-diff-hbar"
-          bind:this={hbarOld}
-          on:scroll={() => (scrollOld = hbarOld?.scrollLeft ?? 0)}
-        >
+    {#if !wrap}
+      <div class="shl-diff-hbar-row" aria-hidden="true">
+        {#if view === "split"}
+          <span></span><span></span>
           <div
-            style="width: {(columns.old + 2) * charWidth}px; height: 1px;"
-          ></div>
-        </div>
-        <span></span><span></span>
-        <div
-          class="shl-diff-hbar"
-          bind:this={hbarNew}
-          on:scroll={() => (scrollNew = hbarNew?.scrollLeft ?? 0)}
-        >
+            class="shl-diff-hbar"
+            bind:this={hbarOld}
+            on:scroll={() => (scrollOld = hbarOld?.scrollLeft ?? 0)}
+          >
+            <div
+              style="width: {(columns.old + 2) * charWidth}px; height: 1px;"
+            ></div>
+          </div>
+          <span></span><span></span>
           <div
-            style="width: {(columns.new + 2) * charWidth}px; height: 1px;"
-          ></div>
-        </div>
-      {:else}
-        <span></span><span></span><span></span>
-        <div
-          class="shl-diff-hbar"
-          bind:this={hbarNew}
-          on:scroll={() => (scrollNew = hbarNew?.scrollLeft ?? 0)}
-        >
+            class="shl-diff-hbar"
+            bind:this={hbarNew}
+            on:scroll={() => (scrollNew = hbarNew?.scrollLeft ?? 0)}
+          >
+            <div
+              style="width: {(columns.new + 2) * charWidth}px; height: 1px;"
+            ></div>
+          </div>
+        {:else}
+          <span></span><span></span><span></span>
           <div
-            style="width: {(Math.max(columns.old, columns.new) + 2) *
-              charWidth}px; height: 1px;"
-          ></div>
-        </div>
-      {/if}
-    </div>
+            class="shl-diff-hbar"
+            bind:this={hbarNew}
+            on:scroll={() => (scrollNew = hbarNew?.scrollLeft ?? 0)}
+          >
+            <div
+              style="width: {(Math.max(columns.old, columns.new) + 2) *
+                charWidth}px; height: 1px;"
+            ></div>
+          </div>
+        {/if}
+      </div>
+    {/if}
     <span
       class="shl-diff-probe shl-diff-row"
       bind:this={probe}
@@ -549,6 +771,7 @@
   }
 
   .shl-diff-body {
+    overflow-anchor: none;
     position: relative;
     flex: 1;
     min-height: 0;
@@ -720,6 +943,7 @@
   .shl-diff-pending {
     display: flex;
     overflow: hidden;
+    white-space: nowrap;
     background: color-mix(in srgb, var(--shl-diff-move-accent) 8%, transparent);
     color: var(--shl-diff-muted);
   }
@@ -852,9 +1076,19 @@
   /* Notes */
   .shl-diff-note-slot {
     grid-column: 1 / -1;
-    height: 100%;
-    overflow: hidden;
     white-space: normal;
+  }
+
+  .shl-diff-wrap .shl-diff-row {
+    white-space: pre-wrap;
+  }
+
+  .shl-diff-wrap .shl-diff-code {
+    overflow-wrap: anywhere;
+  }
+
+  .shl-diff-wrap .shl-diff-text {
+    display: inline;
   }
 
   .shl-diff-note-card {

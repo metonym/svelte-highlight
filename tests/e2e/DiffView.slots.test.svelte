@@ -16,7 +16,7 @@
 
   const diff = createDiffController({
     language: javascript,
-    annotations: [{ side: "new", line: 11, body: "Custom note", lines: 2 }],
+    annotations: [{ side: "new", line: 11, body: "Custom note" }],
   });
   diff.update(before, after);
 

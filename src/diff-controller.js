@@ -16,8 +16,7 @@ import { escapeText, overlayRanges } from "./diff-html.js";
 import { createTokenizedDocument } from "./tokenized-document.js";
 
 /**
- * @typedef {{ side: "old" | "new", line: number, body: string, author?: string, tone?: "info" | "warning" | "error" | "suggestion", lines?: number }} Annotation
- *   `lines` sets the note's height in code lines (default: body lines + 1).
+ * @typedef {{ side: "old" | "new", line: number, body: string, author?: string, tone?: "info" | "warning" | "error" | "suggestion" }} Annotation
  *
  * @typedef {import("./diff.js").Row & { note?: Annotation }} ViewRow
  *
@@ -35,14 +34,13 @@ import { createTokenizedDocument } from "./tokenized-document.js";
  * @typedef {{
  *   row: ViewRow,
  *   index: number,
- *   span: number,
  *   oldHtml: string,
  *   newHtml: string,
  * }} RenderedRow
  *
  * @typedef {{
- *   reveal: { unit: number, align: "start" | "center" | "third" },
- *   viewport: { top: number, height: number },
+ *   reveal: { row: number, align: "start" | "center" | "third" },
+ *   viewport: { start: number, end: number, count: number },
  *   navigate: { change: number, index: number, count: number },
  *   review: { decisions: Map<number, "accepted" | "rejected">, text: string },
  *   options: DiffOptions,
@@ -91,7 +89,7 @@ export function createDiffController(initial = {}) {
   let decisions = new Map();
   let current = -1;
 
-  /** @type {{ rows: ViewRow[], tops: Int32Array, changeStarts: number[] } | null} */
+  /** @type {{ rows: ViewRow[], changeStarts: number[] } | null} */
   let layout = null;
   /** @type {{ state: object, moves: ReturnType<typeof detectMoves> } | null} */
   let movesCache = null;
@@ -165,15 +163,12 @@ export function createDiffController(initial = {}) {
       movesNew: moves.newMoves,
     });
     const rows = withNotes(base, options.annotations);
-    const tops = new Int32Array(rows.length + 1);
     /** @type {number[]} */
     const changeStarts = [];
     for (let i = 0; i < rows.length; i++) {
-      const row = /** @type {ViewRow} */ (rows[i]);
-      tops[i + 1] = /** @type {number} */ (tops[i]) + spanOf(row);
-      if (row.first) changeStarts.push(i);
+      if (rows[i]?.first) changeStarts.push(i);
     }
-    layout = { rows, tops, changeStarts };
+    layout = { rows, changeStarts };
     return layout;
   }
 
@@ -264,7 +259,7 @@ export function createDiffController(initial = {}) {
 
   /** @param {1 | -1} dir */
   function jump(dir) {
-    const { rows, tops, changeStarts } = ensureLayout();
+    const { rows, changeStarts } = ensureLayout();
     if (changeStarts.length === 0) return undefined;
     const at = changeStarts.findIndex((r) => rows[r]?.change === current);
     const index =
@@ -276,10 +271,7 @@ export function createDiffController(initial = {}) {
     const rowIndex = /** @type {number} */ (changeStarts[index]);
     current = /** @type {number} */ (rows[rowIndex]?.change);
     notify();
-    emit("reveal", {
-      unit: /** @type {number} */ (tops[rowIndex]),
-      align: "third",
-    });
+    emit("reveal", { row: rowIndex, align: "third" });
     const detail = { change: current, index, count: changeStarts.length };
     emit("navigate", detail);
     return detail;
@@ -393,29 +385,6 @@ export function createDiffController(initial = {}) {
       return ensureLayout().rows;
     },
 
-    /** Row tops in line units (`tops[i]`), with the total at `tops[rows.length]`. */
-    tops() {
-      return ensureLayout().tops;
-    },
-
-    totalUnits() {
-      const { rows, tops } = ensureLayout();
-      return /** @type {number} */ (tops[rows.length]);
-    },
-
-    /** First row whose bottom is past `unit`. */
-    rowAt(/** @type {number} */ unit) {
-      const { rows, tops } = ensureLayout();
-      let lo = 0;
-      let hi = rows.length;
-      while (lo < hi) {
-        const mid = (lo + hi) >> 1;
-        if (/** @type {number} */ (tops[mid + 1]) <= unit) lo = mid + 1;
-        else hi = mid;
-      }
-      return lo;
-    },
-
     /**
      * Rows `[start, end)` with highlighted HTML for each side, word diffs
      * overlaid, and line-end markers.
@@ -501,7 +470,6 @@ export function createDiffController(initial = {}) {
         return {
           row,
           index: start + i,
-          span: spanOf(row),
           oldHtml: oHtml,
           newHtml: nHtml,
         };
@@ -536,10 +504,10 @@ export function createDiffController(initial = {}) {
       return columnsCache.value;
     },
 
-    /** One mark per change, as fractions of the total height. */
+    /** One mark per change, as fractions of the row count. */
     marks() {
-      const { rows, tops, changeStarts } = ensureLayout();
-      const total = /** @type {number} */ (tops[rows.length]);
+      const { rows, changeStarts } = ensureLayout();
+      const total = rows.length;
       if (total === 0) return [];
       return changeStarts.map((rowIndex) => {
         const id = /** @type {number} */ (rows[rowIndex]?.change);
@@ -554,12 +522,11 @@ export function createDiffController(initial = {}) {
             hasAdd = true;
           last++;
         }
-        const top = /** @type {number} */ (tops[rowIndex]);
         return {
           id,
           rowIndex,
-          top: top / total,
-          height: ((tops[last] ?? top) - top) / total,
+          top: rowIndex / total,
+          height: (last - rowIndex) / total,
           kind: hasDel && hasAdd ? "mod" : hasDel ? "del" : "add",
           decision: decisions.get(id),
         };
@@ -609,21 +576,21 @@ export function createDiffController(initial = {}) {
     },
 
     /**
-     * Asks views to scroll a line unit into view.
-     * @param {number} unit
+     * Asks views to scroll a row into view.
+     * @param {number} row
      * @param {"start" | "center" | "third"} [align]
      */
-    reveal(unit, align = "center") {
-      emit("reveal", { unit, align });
+    reveal(row, align = "center") {
+      emit("reveal", { row, align });
     },
 
     /**
-     * Views report what they show, in line units, for minimaps.
-     * @param {number} top
-     * @param {number} height
+     * Views report which rows `[start, end)` they show, for minimaps.
+     * @param {number} start
+     * @param {number} end
      */
-    setViewport(top, height) {
-      emit("viewport", { top, height });
+    setViewport(start, end) {
+      emit("viewport", { start, end, count: ensureLayout().rows.length });
     },
 
     decisions() {
@@ -703,12 +670,6 @@ function withNotes(list, notes) {
     });
   }
   return out;
-}
-
-/** @param {ViewRow} row */
-function spanOf(row) {
-  if (!row.note) return 1;
-  return row.note.lines ?? Math.min(8, row.note.body.split("\n").length + 1);
 }
 
 /**

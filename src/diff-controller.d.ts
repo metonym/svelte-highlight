@@ -9,8 +9,6 @@ export interface Annotation {
   body: string;
   author?: string;
   tone?: "info" | "warning" | "error" | "suggestion";
-  /** Height in code lines. @default body lines + 1 */
-  lines?: number;
 }
 
 export type ViewRow = Row & { note?: Annotation };
@@ -36,8 +34,6 @@ export interface DiffControllerOptions {
 export interface RenderedRow {
   row: ViewRow;
   index: number;
-  /** Height in code lines. */
-  span: number;
   oldHtml: string;
   newHtml: string;
 }
@@ -45,7 +41,7 @@ export interface RenderedRow {
 export interface DiffMark {
   id: number;
   rowIndex: number;
-  /** Fraction of the total height. */
+  /** Fraction of the row count. */
   top: number;
   height: number;
   kind: "add" | "del" | "mod";
@@ -53,10 +49,10 @@ export interface DiffMark {
 }
 
 export interface DiffEvents {
-  /** A view should scroll `unit` (in code lines) into view. */
-  reveal: { unit: number; align: "start" | "center" | "third" };
-  /** What a view shows, in code lines. */
-  viewport: { top: number; height: number };
+  /** A view should scroll row `row` into view. */
+  reveal: { row: number; align: "start" | "center" | "third" };
+  /** Rows `[start, end)` a view shows, out of `count`. */
+  viewport: { start: number; end: number; count: number };
   navigate: { change: number; index: number; count: number };
   review: { decisions: Map<number, "accepted" | "rejected">; text: string };
   options: DiffControllerOptions;
@@ -89,11 +85,6 @@ export interface DiffController {
 
   state(): DiffState & { beforeText?: string; afterText?: string };
   rows(): ViewRow[];
-  /** Row tops in code lines; `tops()[rows().length]` is the total. */
-  tops(): Int32Array;
-  totalUnits(): number;
-  /** First row whose bottom is past `unit`. */
-  rowAt(unit: number): number;
   /** Rows `[start, end)` with highlighted HTML and word diffs. */
   renderRows(start: number, end: number): RenderedRow[];
   stats(): ReturnType<typeof diffStats>;
@@ -105,8 +96,10 @@ export interface DiffController {
   current(): number;
   nextChange(): DiffEvents["navigate"] | undefined;
   prevChange(): DiffEvents["navigate"] | undefined;
-  reveal(unit: number, align?: "start" | "center" | "third"): void;
-  setViewport(top: number, height: number): void;
+  /** Asks views to scroll a row into view. */
+  reveal(row: number, align?: "start" | "center" | "third"): void;
+  /** Views report the rows `[start, end)` they show. */
+  setViewport(start: number, end: number): void;
 
   isExpanded(key: string): boolean;
   toggleFold(key: string): void;

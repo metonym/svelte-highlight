@@ -42,13 +42,7 @@
 
   const diff = createDiffController({ language: typescript, context: 2 });
   diff.update(tsBefore, tsAfter);
-  // The custom card stacks author over body, so it needs one more line.
-  $: diff.setOptions({
-    annotations: annotations.map((a) => ({
-      ...a,
-      lines: a.body.split("\n").length + 2,
-    })),
-  });
+  $: diff.setOptions({ annotations });
 
   /** Adds a comment on the first line of a change. @param {number} change */
   function comment(change) {
@@ -112,7 +106,6 @@
   .note {
     display: flex;
     gap: 10px;
-    height: calc(100% - 6px);
     margin: 3px 2ch 3px 9ch;
     padding: 4px 10px;
     border-radius: 6px;

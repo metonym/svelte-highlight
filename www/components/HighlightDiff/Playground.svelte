@@ -18,6 +18,7 @@
   let ignoreWhitespace = false;
   let detectMoves = true;
   let minimap = true;
+  let wrap = false;
   /** @type {"default" | "colorblind"} */
   let palette = "default";
 
@@ -54,6 +55,7 @@
   />
   <Toggle size="sm" bind:toggled={detectMoves} labelText="Detect moves" />
   <Toggle size="sm" bind:toggled={minimap} labelText="Minimap" />
+  <Toggle size="sm" bind:toggled={wrap} labelText="Wrap lines" />
 </div>
 
 <div class="controls">
@@ -88,6 +90,7 @@
   {ignoreWhitespace}
   {detectMoves}
   {minimap}
+  {wrap}
   {palette}
   class={THEME_MODULE_NAME}
   style="height: 480px"

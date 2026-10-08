@@ -44,15 +44,13 @@ describe("createDiffController", () => {
   it("navigates changes, wrapping, and asks views to reveal them", () => {
     const diff = controller();
     const reveals: number[] = [];
-    diff.on("reveal", ({ unit }) => reveals.push(unit));
+    diff.on("reveal", ({ row }) => reveals.push(row));
     expect(diff.nextChange()).toEqual({ change: 0, index: 0, count: 2 });
     expect(diff.nextChange()).toEqual({ change: 1, index: 1, count: 2 });
     expect(diff.nextChange()?.change).toBe(0);
     expect(diff.prevChange()?.change).toBe(1);
     expect(reveals).toHaveLength(4);
-    const tops = diff.tops();
-    const firstChangeRow = diff.rows().findIndex((r) => r.change === 0);
-    expect(reveals[0]).toBe(tops[firstChangeRow]);
+    expect(reveals[0]).toBe(diff.rows().findIndex((r) => r.change === 0));
   });
 
   it("emits review results with rejected changes reverted", () => {
@@ -86,21 +84,21 @@ describe("createDiffController", () => {
     expect(html).not.toContain("a < b");
   });
 
-  it("gives annotations their own rows and heights", () => {
+  it("gives annotations their own rows, after their line", () => {
     const diff = controller();
     diff.setOptions({
       annotations: [
         { side: "new", line: 6, body: "one\ntwo" },
-        { side: "new", line: 6, body: "tall", lines: 4 },
+        { side: "old", line: 6, body: "on the old side" },
       ],
     });
     const rows = diff.rows();
     const notes = rows.filter((r) => r.note);
     expect(notes).toHaveLength(2);
-    const at = rows.indexOf(notes[0]!);
-    const tops = diff.tops();
-    expect((tops[at + 1] ?? 0) - (tops[at] ?? 0)).toBe(3);
-    expect((tops[at + 2] ?? 0) - (tops[at + 1] ?? 0)).toBe(4);
+    const del = rows.findIndex((r) => r.kind === "del" && r.old === 5);
+    const add = rows.findIndex((r) => r.kind === "add" && r.new === 5);
+    expect(rows[del + 1]?.note?.body).toBe("on the old side");
+    expect(rows[add + 1]?.note?.body).toBe("one\ntwo");
   });
 
   it("marks each change for the minimap", () => {
@@ -125,10 +123,12 @@ describe("createDiffController", () => {
     expect(diff.stats()).toEqual({ additions: 1, deletions: 1, changes: 1 });
   });
 
-  it("finds the row at a scroll position", () => {
+  it("reports a view's visible rows to minimaps", () => {
     const diff = controller();
-    expect(diff.rowAt(0)).toBe(0);
-    expect(diff.rowAt(diff.totalUnits())).toBe(diff.rows().length);
+    const seen: unknown[] = [];
+    diff.on("viewport", (v) => seen.push(v));
+    diff.setViewport(2, 9);
+    expect(seen).toEqual([{ start: 2, end: 9, count: diff.rows().length }]);
   });
 });
 

@@ -117,9 +117,9 @@
     {#if file}
       <div class="filebar">
         <span
-          >{file.oldPath !== file.newPath
-            ? `${file.oldPath} → `
-            : ""}{file.newPath}</span
+          >{file.oldPath === file.newPath
+            ? ""
+            : `${file.oldPath} → `}{file.newPath}</span
         >
         <span>
           <DiffStats {diff} />

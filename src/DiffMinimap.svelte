@@ -8,16 +8,19 @@
   import { onMount } from "svelte";
 
   $: marks = $diff.marks();
-  $: total = $diff.totalUnits();
+  $: total = $diff.rows().length;
 
-  let viewport = { top: 0, height: 0 };
+  let viewport = { start: 0, end: 0, count: 0 };
 
   /** @param {MouseEvent} event */
   function onClick(event) {
     const rect = /** @type {HTMLElement} */ (
       event.currentTarget
     ).getBoundingClientRect();
-    diff.reveal(((event.clientY - rect.top) / rect.height) * total, "center");
+    diff.reveal(
+      Math.floor(((event.clientY - rect.top) / rect.height) * total),
+      "center",
+    );
   }
 
   onMount(() => diff.on("viewport", (v) => (viewport = v)));
@@ -41,10 +44,12 @@
   {#if total > 0}
     <span
       class="shl-diff-mark-viewport"
-      style="top: {(viewport.top / total) * 100}%; height: {Math.min(
-        1,
-        viewport.height / total,
-      ) * 100}%;"
+      style="top: {(viewport.start / total) * 100}%; height: {(Math.min(
+        total,
+        viewport.end - viewport.start,
+      ) /
+        total) *
+        100}%;"
     ></span>
   {/if}
 </div>

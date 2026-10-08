@@ -6,8 +6,12 @@
 
   /** @type {"unified" | "split"} */
   let view = "unified";
+  let wrap = false;
 </script>
 
+<button type="button" class="toggle" on:click={() => (wrap = !wrap)}>
+  Wrap: {wrap ? "on" : "off"}
+</button>
 <button
   type="button"
   class="toggle"
@@ -25,6 +29,7 @@
         after={edge.after}
         language={javascript}
         {view}
+        {wrap}
         minimap={false}
         class={THEME_MODULE_NAME}
         style="height: 130px"

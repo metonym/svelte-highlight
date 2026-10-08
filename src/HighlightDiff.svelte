@@ -48,6 +48,9 @@
   /** Show accept/reject controls per change. */
   export let review = false;
 
+  /** Wrap long lines instead of scrolling sideways. */
+  export let wrap = false;
+
   /** @type {import("./diff-controller.js").Annotation[]} */
   export let annotations = [];
 
@@ -132,6 +135,7 @@
     {diff}
     {follow}
     {review}
+    {wrap}
     {palette}
     {overscan}
     style="height: 100%; flex: 1;"

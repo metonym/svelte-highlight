@@ -6,6 +6,9 @@
   /** Lines in the large document. */
   export let lineCount = 40;
   export let review = false;
+  export let wrap = false;
+  /** Make line 10 long enough to wrap. */
+  export let longLine = false;
 
   function generate(n) {
     let out = "";
@@ -14,7 +17,8 @@
   }
 
   const before = generate(lineCount);
-  const after = before
+  const long = `const x10 = [${Array.from({ length: 200 }, (_, i) => i).join(", ")}];`;
+  const after = (longLine ? before.replace("const x10 = 10;", long) : before)
     .replace("const x5 = 5;", "const x5 = 500;")
     .replace(
       `const x${lineCount - 5} = ${lineCount - 5};`,
@@ -51,6 +55,7 @@
   {after}
   language={javascript}
   {review}
+  {wrap}
   bind:view
   style="height: 300px"
   on:review={(e) => (reviewText = e.detail.text)}
