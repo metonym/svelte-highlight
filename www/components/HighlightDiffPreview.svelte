@@ -10,12 +10,14 @@
   import LargeFile from "@components/HighlightDiff/LargeFile.svelte";
   import MovesWhitespace from "@components/HighlightDiff/MovesWhitespace.svelte";
   import Playground from "@components/HighlightDiff/Playground.svelte";
+  import RealData from "@components/HighlightDiff/RealData.svelte";
   import StreamingEdits from "@components/HighlightDiff/StreamingEdits.svelte";
   import StreamingRewrite from "@components/HighlightDiff/StreamingRewrite.svelte";
   import { Column, Row } from "carbon-components-svelte";
 
   const sections = [
     ["Playground", Playground],
+    ["Real data: this repo's git history", RealData],
     ["Live: an AI rewrites a file", StreamingRewrite],
     ["Live: SEARCH/REPLACE output applied as it streams", StreamingEdits],
     ["LLM edit formats, fuzzy apply, and review", EditFormats],
