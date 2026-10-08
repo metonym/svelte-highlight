@@ -584,11 +584,11 @@ export function buildRows(
           const mn = row.new === undefined ? undefined : movesNew.get(row.new);
           if (mo) {
             row.moved = mo.group;
-            row.movedTo = mo.to;
+            if (mo.to !== undefined) row.movedTo = mo.to;
           }
           if (mn) {
             row.moved = mn.group;
-            row.movedFrom = mn.from;
+            if (mn.from !== undefined) row.movedFrom = mn.from;
           }
           rows.push(row);
         }
@@ -606,7 +606,7 @@ export function buildRows(
           const mo = moves.get(block.a + i);
           if (mo) {
             row.moved = mo.group;
-            row.movedTo = mo.to;
+            if (mo.to !== undefined) row.movedTo = mo.to;
           }
           rows.push(row);
         }
@@ -623,7 +623,7 @@ export function buildRows(
           const mn = movesNew.get(block.b + i);
           if (mn) {
             row.moved = mn.group;
-            row.movedFrom = mn.from;
+            if (mn.from !== undefined) row.movedFrom = mn.from;
           }
           rows.push(row);
         }
@@ -722,10 +722,20 @@ function hunkHeader(blocks, from, context = 3) {
   let b0 = start.b;
   let a1 = start.aEnd;
   let b1 = start.bEnd;
-  // Extend through changes separated by short equal runs.
+  // Extend through changes separated by short equal runs, then take the
+  // trailing context.
   for (let i = from + 1; i < blocks.length; i++) {
     const block = /** @type {Block} */ (blocks[i]);
-    if (block.type === "equal" && block.aEnd - block.a > context * 2) break;
+    const n = block.aEnd - block.a;
+    if (
+      block.type === "equal" &&
+      (n > context * 2 || i === blocks.length - 1)
+    ) {
+      const take = Math.min(n, context);
+      a1 = block.a + take;
+      b1 = block.b + take;
+      break;
+    }
     a1 = block.aEnd;
     b1 = block.bEnd;
   }

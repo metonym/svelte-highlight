@@ -9,7 +9,7 @@ import { splitText } from "./diff.js";
  * @typedef {{
  *   search: string,
  *   replace: string,
- *   path?: string,
+ *   path?: string | undefined,
  *   searchComplete: boolean,
  *   complete: boolean,
  * }} Edit
@@ -118,8 +118,17 @@ function parseSearchReplace(text) {
       i++;
     }
     const complete = i < lines.length;
+    // Hold back a partial last line that may still become the closing marker.
+    const tail = replace[replace.length - 1];
+    const heldBack =
+      !complete &&
+      tail !== undefined &&
+      tail !== "" &&
+      ">>>>>>> REPLACE".startsWith(tail);
+    if (heldBack) replace.pop();
     // A truncated replace keeps its partial last line without a newline.
-    const replaceText = complete ? joinLines(replace) : replace.join("\n");
+    const replaceText =
+      complete || heldBack ? joinLines(replace) : replace.join("\n");
     edits.push({
       search: joinLines(search),
       replace: replaceText,
@@ -723,7 +732,7 @@ export function parsePatch(text) {
       continue;
     }
     if (!hunk || line.startsWith("\\")) continue;
-    /** @type {NonNullable<typeof hunk>} */
+    /** @type {FilePatch["hunks"][number]} */
     const hk = hunk;
     const type = line[0];
     if (type === "+" || type === "-" || type === " ") {

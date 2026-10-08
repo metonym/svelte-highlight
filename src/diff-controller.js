@@ -103,7 +103,7 @@ export function createDiffController(initial = {}) {
   let statsCache = null;
 
   let version = 0;
-  /** @type {Set<(value: typeof api) => void>} */
+  /** @type {Set<(value: any) => void>} */
   const subscribers = new Set();
   /** @type {{ [K in keyof DiffEvents]?: Set<(detail: DiffEvents[K]) => void> }} */
   const listeners = {};
@@ -291,7 +291,7 @@ export function createDiffController(initial = {}) {
 
   const api = {
     /** Store contract: `$diff` re-renders on every change. */
-    subscribe(/** @type {(value: typeof api) => void} */ fn) {
+    subscribe(/** @type {(value: any) => void} */ fn) {
       subscribers.add(fn);
       fn(api);
       return () => subscribers.delete(fn);
@@ -303,8 +303,9 @@ export function createDiffController(initial = {}) {
      * @param {(detail: DiffEvents[K]) => void} fn
      */
     on(type, fn) {
+      if (!listeners[type]) listeners[type] = /** @type {any} */ (new Set());
       const set = /** @type {Set<(detail: DiffEvents[K]) => void>} */ (
-        (listeners[type] ??= /** @type {any} */ (new Set()))
+        listeners[type]
       );
       set.add(fn);
       return () => set.delete(fn);
@@ -558,7 +559,7 @@ export function createDiffController(initial = {}) {
           id,
           rowIndex,
           top: top / total,
-          height: /** @type {number} */ ((tops[last]) - top) / total,
+          height: ((tops[last] ?? top) - top) / total,
           kind: hasDel && hasAdd ? "mod" : hasDel ? "del" : "add",
           decision: decisions.get(id),
         };
@@ -693,13 +694,13 @@ function withNotes(list, notes) {
       ...(row.old === undefined ? [] : (byLine.get(`old:${row.old}`) ?? [])),
       ...(row.new === undefined ? [] : (byLine.get(`new:${row.new}`) ?? [])),
     ];
-    for (let i = 0; i < hits.length; i++) {
+    hits.forEach((note, i) => {
       out.push({
         key: `${row.key}n${i}`,
         kind: /** @type {any} */ ("note"),
-        note: hits[i],
+        note,
       });
-    }
+    });
   }
   return out;
 }

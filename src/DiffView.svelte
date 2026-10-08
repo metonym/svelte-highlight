@@ -719,15 +719,19 @@
   .shl-diff-fold,
   .shl-diff-pending {
     display: flex;
+    overflow: hidden;
     background: color-mix(in srgb, var(--shl-diff-move-accent) 8%, transparent);
     color: var(--shl-diff-muted);
   }
 
   .shl-diff-fold-label {
+    height: 100%;
+    margin: 0;
+    padding: 0 0 0 1ch;
+    line-height: inherit;
     display: flex;
     gap: 1ch;
     align-items: center;
-    padding-left: 1ch;
     font: inherit;
     color: inherit;
     background: none;
