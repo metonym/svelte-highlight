@@ -66,6 +66,9 @@ export type HighlightDiffProps = HTMLAttributes<HTMLDivElement> & {
   /** Show the change overview strip. @default true */
   minimap?: boolean;
 
+  /** Render only the rows in view; `"auto"` virtualizes past 500 rows. @default "auto" */
+  virtualize?: "auto" | boolean;
+
   /** Extra rows rendered above and below the viewport. @default 10 */
   overscan?: number;
 

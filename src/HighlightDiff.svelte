@@ -51,6 +51,12 @@
   /** Wrap long lines instead of scrolling sideways. */
   export let wrap = false;
 
+  /**
+   * Render only the rows in view. `"auto"` virtualizes past 500 rows.
+   * @type {"auto" | boolean}
+   */
+  export let virtualize = "auto";
+
   /** @type {import("./diff-controller.js").Annotation[]} */
   export let annotations = [];
 
@@ -136,6 +142,7 @@
     {follow}
     {review}
     {wrap}
+    {virtualize}
     {palette}
     {overscan}
     style="height: 100%; flex: 1;"

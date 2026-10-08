@@ -7,6 +7,8 @@
   export let lineCount = 40;
   export let review = false;
   export let wrap = false;
+  /** @type {"auto" | boolean} */
+  export let virtualize = "auto";
   /** Make line 10 long enough to wrap. */
   export let longLine = false;
 
@@ -56,6 +58,7 @@
   language={javascript}
   {review}
   {wrap}
+  {virtualize}
   bind:view
   style="height: 300px"
   on:review={(e) => (reviewText = e.detail.text)}

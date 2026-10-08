@@ -42,6 +42,14 @@ export type DiffViewProps = HTMLAttributes<HTMLDivElement> & {
    * @default true
    */
   keyboard?: boolean;
+
+  /**
+   * Render only the rows in view. `"auto"` virtualizes past 500 rows, so
+   * small diffs keep browser find (Ctrl/Cmd+F), printing, and server
+   * rendering of every row.
+   * @default "auto"
+   */
+  virtualize?: "auto" | boolean;
 };
 
 export type DiffViewSlots = {

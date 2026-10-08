@@ -3244,3 +3244,39 @@ test("HighlightDiff - wraps long lines into taller rows without overlap", async 
   }
   await expect(diff.locator(".shl-diff-hbar-row")).toBeHidden();
 });
+
+test("HighlightDiff - renders every row of a small diff, so browser find works", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, { props: { lineCount: 300 } });
+
+  const diff = page.getByTestId("diff");
+  await diff.focus();
+  await page.keyboard.press("e");
+  // 300 rows is under the "auto" threshold: all of them are in the DOM.
+  await expect(diff.locator(".shl-diff-window > .shl-diff-row")).toHaveCount(
+    302,
+  );
+  await expect(diff.getByText("// line 299")).toBeAttached();
+});
+
+test("HighlightDiff - virtualize forces either mode", async ({
+  mount,
+  page,
+}) => {
+  const forced = await mount(HighlightDiff, {
+    props: { lineCount: 300, virtualize: true },
+  });
+  const diff = page.getByTestId("diff");
+  await diff.focus();
+  await page.keyboard.press("e");
+  expect(
+    await diff.locator(".shl-diff-window > .shl-diff-row").count(),
+  ).toBeLessThan(60);
+
+  await forced.update({ props: { lineCount: 300, virtualize: false } });
+  await expect(diff.locator(".shl-diff-window > .shl-diff-row")).toHaveCount(
+    302,
+  );
+});

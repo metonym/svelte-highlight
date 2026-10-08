@@ -23,6 +23,13 @@
   /** Handle n/p/e/c/v (and a/r/u with `review`) when focused. */
   export let keyboard = true;
 
+  /**
+   * Render only the rows in view. `"auto"` virtualizes past 500 rows, so
+   * small diffs keep browser find, printing, and server rendering.
+   * @type {"auto" | boolean}
+   */
+  export let virtualize = "auto";
+
   import { afterUpdate, onMount, tick } from "svelte";
   import { watchLineHeight } from "./virtual-window.js";
 
@@ -151,10 +158,14 @@
     return found;
   }
 
-  $: start = (void offsets, Math.max(0, indexAt(scrollTop) - overscan));
-  $: end =
-    (void offsets,
-    Math.min(rows.length, indexAt(scrollTop + clientHeight) + 1 + overscan));
+  $: virtualized = virtualize === "auto" ? rows.length > 500 : virtualize;
+  $: start = virtualized
+    ? (void offsets, Math.max(0, indexAt(scrollTop) - overscan))
+    : 0;
+  $: end = virtualized
+    ? (void offsets,
+      Math.min(rows.length, indexAt(scrollTop + clientHeight) + 1 + overscan))
+    : rows.length;
   $: visible = $diff.renderRows(start, end);
   $: windowTop = /** @type {number} */ (offsets[start] ?? 0);
 
@@ -473,11 +484,17 @@
       role="table"
       aria-rowcount={rows.length}
     >
-      <div class="shl-diff-sizer" style="height: {total}px;">
+      <div
+        class="shl-diff-sizer"
+        style={virtualized ? `height: ${total}px;` : undefined}
+      >
         <div
           bind:this={windowEl}
           class="shl-diff-window"
-          style="transform: translateY({windowTop}px);"
+          class:shl-diff-window-flat={!virtualized}
+          style={virtualized
+            ? `transform: translateY(${windowTop}px);`
+            : undefined}
         >
           {#each visible as item (item.row.key)}
             {@const row = item.row}
@@ -791,6 +808,10 @@
     right: 0;
   }
 
+  .shl-diff-window-flat {
+    position: static;
+  }
+
   .shl-diff-row,
   .shl-diff-hbar-row {
     display: grid;
@@ -949,14 +970,13 @@
   }
 
   .shl-diff-fold-label {
+    font: inherit;
     height: 100%;
     margin: 0;
     padding: 0 0 0 1ch;
-    line-height: inherit;
     display: flex;
     gap: 1ch;
     align-items: center;
-    font: inherit;
     color: inherit;
     background: none;
     border: 0;
