@@ -170,3 +170,19 @@ export function commitFiles(sha: string): CommitFile[] {
   });
   return files;
 }
+
+/** Release ranges in this repo, sized like large real PRs. */
+export const RANGES = [
+  "v7.22.0..v7.23.1",
+  "v7.21.0..v7.23.1",
+  "v7.20.0..v7.23.1",
+];
+
+/** The unified patch for a range, or "" without that history. */
+export function rangePatch(range: string) {
+  try {
+    return git(["diff", "-M", "--no-color", range]);
+  } catch {
+    return "";
+  }
+}

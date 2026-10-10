@@ -8,6 +8,7 @@
   import Headless from "@components/HighlightDiff/Headless.svelte";
   import Languages from "@components/HighlightDiff/Languages.svelte";
   import LargeFile from "@components/HighlightDiff/LargeFile.svelte";
+  import LargePr from "@components/HighlightDiff/LargePr.svelte";
   import MovesWhitespace from "@components/HighlightDiff/MovesWhitespace.svelte";
   import Playground from "@components/HighlightDiff/Playground.svelte";
   import RealData from "@components/HighlightDiff/RealData.svelte";
@@ -27,6 +28,7 @@
     ["Moves and whitespace", MovesWhitespace],
     ["Review annotations (custom slots)", Annotations],
     ["Large file", LargeFile],
+    ["Large pull request: hundreds of files on one page", LargePr],
     ["Languages", Languages],
     ["Edge cases", EdgeCases],
     ["Headless API", Headless],
