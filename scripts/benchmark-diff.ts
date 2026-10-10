@@ -65,7 +65,6 @@ const js = corpus.javascript;
 const jsEdited = scatterEdits(js, 150);
 const md = corpus.markdown;
 const mdEdited = scatterEdits(md, 40);
-const streamTarget = jsEdited.slice(0, jsEdited.length >> 2);
 
 const cases = [
   {
@@ -79,14 +78,10 @@ const cases = [
     value: ratio(mdEdited, "markdown", () => diffTexts(md, mdEdited)),
   },
   {
-    label: "stream a quarter of the JS corpus in 200 chunks",
+    // A model rewriting the file: the whole edited file streams in.
+    label: "stream an edited JS corpus in 200 chunks, then finish",
     budget: STREAM_BUDGET,
-    value: ratio(
-      streamTarget,
-      "javascript",
-      () => streamed(js, streamTarget, 200),
-      1,
-    ),
+    value: ratio(jsEdited, "javascript", () => streamed(js, jsEdited, 200), 1),
   },
 ];
 

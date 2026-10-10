@@ -461,13 +461,15 @@ export function createDiffSession({ ignoreWhitespace = false } = {}) {
       return last;
     }
     const beforeChanged = last === null || beforeText !== before;
-    const grows =
-      streaming &&
-      wasStreaming &&
-      !beforeChanged &&
-      afterText.startsWith(after);
+    const continues =
+      wasStreaming && !beforeChanged && afterText.startsWith(after);
+    const afterEndsOpen = afterText !== "" && !afterText.endsWith("\n");
+    const grows = streaming && continues;
+    // Ending a stream keeps the sealed rows, so nothing the reader saw
+    // reshuffles, unless a final-newline mismatch would change a sealed line.
+    const finishing = !streaming && continues && b4.noEol === afterEndsOpen;
     if (beforeChanged) setBefore(beforeText);
-    if (!grows) {
+    if (!grows && !finishing) {
       sealed = [];
       sealA = 0;
       sealB = 0;
@@ -492,6 +494,12 @@ export function createDiffSession({ ignoreWhitespace = false } = {}) {
       b = afterIds.subarray(0, afterCount);
       const rest = afterText.slice(afterCut);
       partial = rest === "" ? null : rest;
+    } else if (finishing) {
+      // The last line counts too, even without a final newline.
+      growAfter(afterEndsOpen ? `${afterText}\n` : afterText);
+      lines = afterLines;
+      afterNoEol = afterEndsOpen;
+      b = afterIds.subarray(0, afterCount);
     } else {
       const split = splitText(afterText);
       lines = split.lines;

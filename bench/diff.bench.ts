@@ -46,14 +46,14 @@ group("buildRows()", () => {
 });
 
 group("streaming session", () => {
-  const target = edited.slice(0, edited.length >> 2);
   const chunks = 200;
-  const step = Math.ceil(target.length / chunks);
-  task(`a quarter of the corpus in ${chunks} chunks`, () => {
+  const step = Math.ceil(edited.length / chunks);
+  task(`the edited corpus in ${chunks} chunks, then finish`, () => {
     const session = createDiffSession();
-    for (let i = step; i < target.length + step; i += step) {
-      session.update(corpus, target.slice(0, i), { streaming: true });
+    for (let i = step; i < edited.length + step; i += step) {
+      session.update(corpus, edited.slice(0, i), { streaming: true });
     }
+    session.update(corpus, edited);
   });
 });
 

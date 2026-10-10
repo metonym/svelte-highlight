@@ -182,15 +182,36 @@ describe("createDiffSession streaming", () => {
     }
   });
 
-  it("matches a one-shot diff once streaming ends", () => {
+  it("ends with a valid diff that keeps the sealed rows", () => {
     const session = createDiffSession();
+    let sealed: string[] = [];
     for (let i = 1; i <= after.length; i += 7) {
-      session.update(before, after.slice(0, i), { streaming: true });
+      const state = session.update(before, after.slice(0, i), {
+        streaming: true,
+      });
+      sealed = state.blocks
+        .slice(0, state.sealedBlocks - 1)
+        .map((b) => JSON.stringify(b));
     }
     const final = session.update(before, after);
-    expect(summary(final.blocks)).toBe(
-      summary(diffTexts(before, after).blocks),
-    );
+    checkBlocks(final);
+    expect(final.streaming).toBe(false);
+    expect(
+      final.blocks.slice(0, sealed.length).map((b) => JSON.stringify(b)),
+    ).toEqual(sealed);
+    expect(diffStats(final)).toEqual(diffStats(diffTexts(before, after)));
+  });
+
+  it("ends a stream without a final newline", () => {
+    const session = createDiffSession();
+    const target = "line 0\nline 1\nnew last";
+    for (let i = 1; i <= target.length; i++) {
+      session.update(before, target.slice(0, i), { streaming: true });
+    }
+    const final = session.update(before, target);
+    checkBlocks(final);
+    expect(final.afterLines).toEqual(["line 0", "line 1", "new last"]);
+    expect(final.afterNoEol).toBe(true);
   });
 
   it("starts over when `after` is replaced instead of grown", () => {
