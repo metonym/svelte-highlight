@@ -8,6 +8,8 @@ import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
 import CopyButtonTransform from "./CopyButton.transform.test.svelte";
+import DiffFileList from "./DiffFileList.test.svelte";
+import DiffViewSlots from "./DiffView.slots.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
 import HighlightDispatchOnce from "./Highlight.dispatchOnce.test.svelte";
 import HighlightEmptyCode from "./Highlight.emptyCode.test.svelte";
@@ -26,6 +28,7 @@ import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestrictio
 import HighlightAutoNoCandidate from "./HighlightAuto.noCandidate.test.svelte";
 import HighlightAutoSecondBest from "./HighlightAuto.secondBest.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
+import HighlightDiff from "./HighlightDiff.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlights from "./HighlightEditable.cssHighlights.test.svelte";
 import HighlightEditableLanguageSwap from "./HighlightEditable.languageSwap.test.svelte";
@@ -3012,4 +3015,364 @@ test("MarkdownStream - caret only on the last open fence", async ({
   await expect(
     container.locator("pre").nth(1).locator(".highlight-stream-caret"),
   ).toHaveCount(1);
+});
+
+test("HighlightDiff - renders a bounded number of rows with highlighted word diffs", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, { props: { lineCount: 5000 } });
+
+  const diff = page.getByTestId("diff");
+  await expect(diff.locator(".shl-diff-del").first()).toBeVisible();
+  // Folded, then virtualized: nowhere near 5,000 rows.
+  expect(await diff.locator(".shl-diff-row").count()).toBeLessThan(60);
+  await expect(diff.locator(".shl-diff-del .shl-diff-word").first()).toHaveText(
+    "5",
+  );
+  await expect(diff.locator(".shl-diff-add .shl-diff-word").first()).toHaveText(
+    "500",
+  );
+  await expect(diff.locator(".shl-diff-del .hljs-keyword").first()).toHaveText(
+    "const",
+  );
+
+  // Expanding every fold stays virtualized.
+  await diff.focus();
+  await page.keyboard.press("e");
+  await expect(diff.locator(".shl-diff-fold")).toHaveCount(0);
+  expect(await diff.locator(".shl-diff-row").count()).toBeLessThan(60);
+});
+
+test("HighlightDiff - expands a fold on click", async ({ mount, page }) => {
+  await mount(HighlightDiff);
+
+  const diff = page.getByTestId("diff");
+  const context = diff.locator(".shl-diff-context");
+  const before = await context.count();
+  await diff.locator("button.shl-diff-fold-label").first().click();
+  await expect.poll(() => context.count()).toBeGreaterThan(before);
+});
+
+test("HighlightDiff - navigates changes and toggles the view from the keyboard", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff);
+
+  const diff = page.getByTestId("diff");
+  await diff.focus();
+  await page.keyboard.press("n");
+  await expect(page.getByTestId("navigate")).toHaveText("1/2");
+  await expect(diff.locator(".shl-diff-current").first()).toBeVisible();
+  await page.keyboard.press("n");
+  await expect(page.getByTestId("navigate")).toHaveText("2/2");
+  await page.keyboard.press("n");
+  await expect(page.getByTestId("navigate")).toHaveText("1/2");
+
+  await page.keyboard.press("v");
+  await expect(page.getByTestId("view")).toHaveText("split");
+  await expect(diff).toHaveClass(/shl-diff-split/);
+});
+
+test("HighlightDiff - keeps a split-view selection on one side", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff);
+
+  const diff = page.getByTestId("diff");
+  await diff.focus();
+  await page.keyboard.press("v");
+  await diff.locator(".shl-diff-code.shl-diff-side-old").first().click();
+  await expect(diff).toHaveAttribute("data-select", "old");
+  await diff.locator(".shl-diff-code.shl-diff-side-new").first().click();
+  await expect(diff).toHaveAttribute("data-select", "new");
+});
+
+test("HighlightDiff - review reverts rejected changes", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, { props: { review: true } });
+
+  const diff = page.getByTestId("diff");
+  await diff.locator(".shl-diff-reject").first().click();
+  await expect(page.getByTestId("review-text")).toContainText("const x5 = 5;");
+  await expect(page.getByTestId("review-text")).toContainText(
+    "const changed = true;",
+  );
+  await expect(diff.locator(".shl-diff-rejected").first()).toBeVisible();
+
+  await diff.locator(".shl-diff-actions button", { hasText: "Undo" }).click();
+  await expect(page.getByTestId("review-text")).toContainText(
+    "const x5 = 500;",
+  );
+});
+
+test("HighlightDiff - streaming shows unreached lines as pending, not deleted", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff);
+
+  for (let i = 0; i < 8; i++) {
+    // biome-ignore lint/performance/noAwaitInLoops: each click streams the next line, in order
+    await page.getByTestId("stream-line").click();
+  }
+  const stream = page.getByTestId("stream");
+  await expect(stream.locator(".shl-diff-pending")).toContainText(
+    "32 lines not reached yet",
+  );
+  await expect(stream.locator(".shl-diff-del")).toHaveCount(1);
+
+  await page.getByTestId("stream-finish").click();
+  await expect(stream.locator(".shl-diff-pending")).toHaveCount(0);
+  await expect(stream.locator(".shl-diff-del")).toHaveCount(2);
+});
+
+test("DiffView - fills note and actions slots, with stats and a minimap", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffViewSlots);
+
+  await expect(page.getByTestId("stats")).toContainText("+2");
+  await expect(page.getByTestId("stats")).toContainText("2 changes");
+  await expect(page.getByTestId("note")).toHaveText("Custom note");
+
+  await page.getByTestId("action").first().click();
+  await expect(page.getByTestId("clicked")).toHaveText("0");
+
+  // Clicking the bottom of the minimap scrolls the view to the second change.
+  const minimap = page.getByTestId("minimap");
+  const box = await minimap.boundingBox();
+  if (!box) throw new Error("minimap has no box");
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height - 4);
+  await expect(
+    page.getByTestId("view").locator(".shl-diff-del").last(),
+  ).toContainText("let v280 = 280;");
+  await expect(page.getByTestId("action").last()).toHaveText("act 1");
+});
+
+/**
+ * Runs in the page: selects from the start of the row containing `from` to
+ * the end of the row containing `to`, fires a copy event, and returns what
+ * the diff put on the clipboard.
+ */
+function copyInPage({ from, to }: { from: string; to: string }) {
+  const texts = [...document.querySelectorAll(".shl-diff-text")];
+  const first = texts.find((el) => el.textContent?.includes(from));
+  const last = texts.findLast((el) => el.textContent?.includes(to));
+  if (!first || !last) throw new Error("rows not found");
+  const range = document.createRange();
+  range.setStart(first, 0);
+  range.setEnd(last, last.childNodes.length);
+  const selection = window.getSelection();
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+  const event = new ClipboardEvent("copy", {
+    clipboardData: new DataTransfer(),
+    bubbles: true,
+    cancelable: true,
+  });
+  first.dispatchEvent(event);
+  return event.clipboardData?.getData("text/plain") ?? "";
+}
+
+test("HighlightDiff - copies only the new text across a unified change", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff);
+
+  const copied = await page.evaluate(copyInPage, {
+    from: "const x4 = 4;",
+    to: "const x6 = 6;",
+  });
+  expect(copied).toBe(
+    [
+      "const x4 = 4; // line 4",
+      "const x5 = 500; // line 5",
+      "const x6 = 6; // line 6",
+    ].join("\n"),
+  );
+});
+
+test("HighlightDiff - copies one side in split view", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff);
+
+  const diff = page.getByTestId("diff");
+  await diff.focus();
+  await page.keyboard.press("v");
+  await diff.locator(".shl-diff-code.shl-diff-side-old").first().click();
+  const copied = await page.evaluate(copyInPage, {
+    from: "const x4 = 4;",
+    to: "const x6 = 6;",
+  });
+  expect(copied).toBe(
+    [
+      "const x4 = 4; // line 4",
+      "const x5 = 5; // line 5",
+      "const x6 = 6; // line 6",
+    ].join("\n"),
+  );
+});
+
+test("HighlightDiff - wraps long lines into taller rows without overlap", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, { props: { wrap: true, longLine: true } });
+
+  const diff = page.getByTestId("diff");
+  const rows = diff.locator(".shl-diff-window > .shl-diff-row");
+  await expect(rows.first()).toBeVisible();
+  const boxes = await rows.evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { top: r.top, bottom: r.bottom, height: r.height };
+    }),
+  );
+  const lineHeight = Math.min(...boxes.map((b) => b.height));
+  expect(Math.max(...boxes.map((b) => b.height))).toBeGreaterThan(
+    lineHeight * 2,
+  );
+  for (let i = 1; i < boxes.length; i++) {
+    expect(
+      Math.abs((boxes[i]?.top ?? 0) - (boxes[i - 1]?.bottom ?? 0)),
+    ).toBeLessThan(1);
+  }
+  await expect(diff.locator(".shl-diff-hbar-row")).toBeHidden();
+});
+
+test("HighlightDiff - renders every row of a small diff, so browser find works", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, { props: { lineCount: 300 } });
+
+  const diff = page.getByTestId("diff");
+  await diff.focus();
+  await page.keyboard.press("e");
+  // 300 rows is under the "auto" threshold: all of them are in the DOM.
+  await expect(diff.locator(".shl-diff-window > .shl-diff-row")).toHaveCount(
+    302,
+  );
+  await expect(diff.getByText("// line 299")).toBeAttached();
+});
+
+test("HighlightDiff - virtualize forces either mode", async ({
+  mount,
+  page,
+}) => {
+  const forced = await mount(HighlightDiff, {
+    props: { lineCount: 300, virtualize: true },
+  });
+  const diff = page.getByTestId("diff");
+  await diff.focus();
+  await page.keyboard.press("e");
+  expect(
+    await diff.locator(".shl-diff-window > .shl-diff-row").count(),
+  ).toBeLessThan(60);
+
+  await forced.update({ props: { lineCount: 300, virtualize: false } });
+  await expect(diff.locator(".shl-diff-window > .shl-diff-row")).toHaveCount(
+    302,
+  );
+});
+
+test("DiffFileList - mounts only files near the viewport, and unmounts far ones", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffFileList);
+
+  const list = page.getByTestId("list");
+  await expect(list.locator(".shl-diff-file")).toHaveCount(300);
+  await expect(list.locator(".shl-diff-file-body").first()).toBeVisible();
+  const mountedAtTop = await list.locator(".shl-diff-file-body").count();
+  expect(mountedAtTop).toBeLessThan(40);
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(
+    list.locator(".shl-diff-file").last().locator(".shl-diff-file-body"),
+  ).toBeVisible();
+  expect(await list.locator(".shl-diff-file-body").count()).toBeLessThan(40);
+  // The first file unmounted, keeping its height.
+  await expect(
+    list
+      .locator(".shl-diff-file")
+      .first()
+      .locator(".shl-diff-file-placeholder"),
+  ).toBeAttached();
+});
+
+test("DiffFileList - mounts every file with windowing none", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffFileList, { props: { count: 40, windowing: "none" } });
+
+  await expect(
+    page.getByTestId("list").locator(".shl-diff-file-body"),
+  ).toHaveCount(40);
+});
+
+test("DiffFileList - keeps content still while scrolling up from a far jump", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffFileList);
+
+  await page.getByTestId("jump-index").fill("250");
+  await page.getByTestId("jump").click();
+  const target = page.getByTestId("list").locator(".shl-diff-file").nth(250);
+  await expect(target.locator(".shl-diff-file-body")).toBeVisible();
+
+  // Files above the target were never measured, so they change height as
+  // they mount. Scrolling up 900px must move the content exactly 900px.
+  let checks = 0;
+  for (let i = 0; i < 12; i++) {
+    // biome-ignore lint/performance/noAwaitInLoops: each step scrolls further up, in order
+    const moved = await page.evaluate(async () => {
+      const header = [
+        ...document.querySelectorAll(".shl-diff-file-header"),
+      ].find((e) => e.getBoundingClientRect().top > 50);
+      if (!header || window.scrollY < 1000) return null;
+      const before = header.getBoundingClientRect().top;
+      window.scrollBy(0, -900);
+      await new Promise((r) => setTimeout(r, 400));
+      return header.isConnected
+        ? header.getBoundingClientRect().top - before
+        : null;
+    });
+    if (moved === null) continue;
+    checks++;
+    expect(Math.abs(moved - 900)).toBeLessThan(2);
+  }
+  expect(checks).toBeGreaterThan(5);
+});
+
+test("DiffFileList - collapses files and fills the header slot", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffFileList, { props: { count: 5, customHeader: true } });
+
+  const list = page.getByTestId("list");
+  await expect(page.getByTestId("custom-path").first()).toHaveText(
+    "src/file-0.js",
+  );
+  await expect(page.getByTestId("custom-stats").first()).toHaveText("+2");
+  await page.getByTestId("custom-toggle").first().click();
+  await expect(list.locator(".shl-diff-file").first()).toHaveClass(
+    /shl-diff-file-collapsed/,
+  );
+  await expect(
+    list.locator(".shl-diff-file").first().locator(".shl-diff-file-body"),
+  ).toHaveCount(0);
 });
