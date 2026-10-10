@@ -6,6 +6,8 @@ export { parseAnsi } from "./ansi";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { stripDiffMarkers, stripPrompts } from "./copy-transforms";
+export type { DiffFile } from "./DiffFileList.svelte";
+export { default as DiffFileList } from "./DiffFileList.svelte";
 export { default as DiffMinimap } from "./DiffMinimap.svelte";
 export { default as DiffStats } from "./DiffStats.svelte";
 export { default as DiffView } from "./DiffView.svelte";
@@ -36,6 +38,7 @@ export {
   patchToState,
   streamEditPrefix,
 } from "./diff-edits";
+export { languageNameForPath } from "./diff-languages";
 export { default as FileTabs } from "./FileTabs.svelte";
 export { default as Highlight, default } from "./Highlight.svelte";
 export { default as HighlightAuto } from "./HighlightAuto.svelte";

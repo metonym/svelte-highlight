@@ -8,6 +8,7 @@ import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
 import CopyButtonTransform from "./CopyButton.transform.test.svelte";
+import DiffFileList from "./DiffFileList.test.svelte";
 import DiffViewSlots from "./DiffView.slots.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
 import HighlightDispatchOnce from "./Highlight.dispatchOnce.test.svelte";
@@ -3282,4 +3283,96 @@ test("HighlightDiff - virtualize forces either mode", async ({
   await expect(diff.locator(".shl-diff-window > .shl-diff-row")).toHaveCount(
     302,
   );
+});
+
+test("DiffFileList - mounts only files near the viewport, and unmounts far ones", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffFileList);
+
+  const list = page.getByTestId("list");
+  await expect(list.locator(".shl-diff-file")).toHaveCount(300);
+  await expect(list.locator(".shl-diff-file-body").first()).toBeVisible();
+  const mountedAtTop = await list.locator(".shl-diff-file-body").count();
+  expect(mountedAtTop).toBeLessThan(40);
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(
+    list.locator(".shl-diff-file").last().locator(".shl-diff-file-body"),
+  ).toBeVisible();
+  expect(await list.locator(".shl-diff-file-body").count()).toBeLessThan(40);
+  // The first file unmounted, keeping its height.
+  await expect(
+    list
+      .locator(".shl-diff-file")
+      .first()
+      .locator(".shl-diff-file-placeholder"),
+  ).toBeAttached();
+});
+
+test("DiffFileList - mounts every file with windowing none", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffFileList, { props: { count: 40, windowing: "none" } });
+
+  await expect(
+    page.getByTestId("list").locator(".shl-diff-file-body"),
+  ).toHaveCount(40);
+});
+
+test("DiffFileList - keeps content still while scrolling up from a far jump", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffFileList);
+
+  await page.getByTestId("jump-index").fill("250");
+  await page.getByTestId("jump").click();
+  const target = page.getByTestId("list").locator(".shl-diff-file").nth(250);
+  await expect(target.locator(".shl-diff-file-body")).toBeVisible();
+
+  // Files above the target were never measured, so they change height as
+  // they mount. Scrolling up 900px must move the content exactly 900px.
+  let checks = 0;
+  for (let i = 0; i < 12; i++) {
+    // biome-ignore lint/performance/noAwaitInLoops: each step scrolls further up, in order
+    const moved = await page.evaluate(async () => {
+      const header = [
+        ...document.querySelectorAll(".shl-diff-file-header"),
+      ].find((e) => e.getBoundingClientRect().top > 50);
+      if (!header || window.scrollY < 1000) return null;
+      const before = header.getBoundingClientRect().top;
+      window.scrollBy(0, -900);
+      await new Promise((r) => setTimeout(r, 400));
+      return header.isConnected
+        ? header.getBoundingClientRect().top - before
+        : null;
+    });
+    if (moved === null) continue;
+    checks++;
+    expect(Math.abs(moved - 900)).toBeLessThan(2);
+  }
+  expect(checks).toBeGreaterThan(5);
+});
+
+test("DiffFileList - collapses files and fills the header slot", async ({
+  mount,
+  page,
+}) => {
+  await mount(DiffFileList, { props: { count: 5, customHeader: true } });
+
+  const list = page.getByTestId("list");
+  await expect(page.getByTestId("custom-path").first()).toHaveText(
+    "src/file-0.js",
+  );
+  await expect(page.getByTestId("custom-stats").first()).toHaveText("+2");
+  await page.getByTestId("custom-toggle").first().click();
+  await expect(list.locator(".shl-diff-file").first()).toHaveClass(
+    /shl-diff-file-collapsed/,
+  );
+  await expect(
+    list.locator(".shl-diff-file").first().locator(".shl-diff-file-body"),
+  ).toHaveCount(0);
 });
