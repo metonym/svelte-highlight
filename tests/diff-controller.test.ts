@@ -132,6 +132,25 @@ describe("createDiffController", () => {
   });
 });
 
+describe("streaming through the controller", () => {
+  it("keeps column widths right as lines stream in", () => {
+    const target = `${before}${"x".repeat(120)}\nshort\n`;
+    const diff = createDiffController();
+    for (let i = 1; i <= target.length; i += 9) {
+      diff.update(before, target.slice(0, i), { streaming: true });
+      const state = diff.state();
+      const widest = Math.max(
+        0,
+        ...state.afterLines.map((l) => l.length),
+        state.partial?.length ?? 0,
+      );
+      expect(diff.columns().new).toBe(widest);
+    }
+    diff.update(before, target);
+    expect(diff.columns().new).toBe(120);
+  });
+});
+
 describe("overlayRanges", () => {
   it("keeps the wrapper innermost across tags and counts entities as one character", () => {
     const html = '<span class="k">a&amp;b</span>cd';

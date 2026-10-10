@@ -97,6 +97,16 @@ export function createDiffController(initial = {}) {
   let wordCache = { state, map: new Map() };
   /** @type {{ state: object, value: { old: number, new: number, gutter: number } } | null} */
   let columnsCache = null;
+  // Widest line per side. A streamed `afterLines` grows in place, so only
+  // its new lines are measured.
+  const widths = {
+    /** @type {string[] | null} */ oldLines: null,
+    old: 0,
+    /** @type {string[] | null} */ newLines: null,
+    newCount: 0,
+    new: 0,
+    tabSize: 0,
+  };
   /** @type {{ state: object, value: ReturnType<typeof diffStats> } | null} */
   let statsCache = null;
 
@@ -486,14 +496,34 @@ export function createDiffController(initial = {}) {
     /** Widest line per side in columns, and the gutter width in characters. */
     columns() {
       if (columnsCache?.state !== state) {
+        const tab = options.tabSize;
+        if (widths.tabSize !== tab) {
+          widths.oldLines = null;
+          widths.newLines = null;
+          widths.tabSize = tab;
+        }
+        if (widths.oldLines !== state.beforeLines) {
+          widths.oldLines = state.beforeLines;
+          widths.old = maxColumns(state.beforeLines, tab, 0);
+        }
+        if (
+          widths.newLines !== state.afterLines ||
+          state.afterLines.length < widths.newCount
+        ) {
+          widths.newLines = state.afterLines;
+          widths.newCount = 0;
+          widths.new = 0;
+        }
+        widths.new = Math.max(
+          widths.new,
+          maxColumns(state.afterLines, tab, widths.newCount),
+        );
+        widths.newCount = state.afterLines.length;
         columnsCache = {
           state,
           value: {
-            old: maxColumns(state.beforeLines, options.tabSize),
-            new: Math.max(
-              maxColumns(state.afterLines, options.tabSize),
-              (state.partial ?? "").length,
-            ),
+            old: widths.old,
+            new: Math.max(widths.new, (state.partial ?? "").length),
             gutter:
               String(
                 Math.max(state.beforeLines.length, state.afterLines.length + 1),
@@ -675,10 +705,12 @@ function withNotes(list, notes) {
 /**
  * @param {string[]} lines
  * @param {number} tabSize
+ * @param {number} from first line to measure
  */
-function maxColumns(lines, tabSize) {
+function maxColumns(lines, tabSize, from) {
   let max = 0;
-  for (const line of lines) {
+  for (let i = from; i < lines.length; i++) {
+    const line = /** @type {string} */ (lines[i]);
     let cols = line.length;
     if (line.includes("\t")) {
       cols += (line.split("\t").length - 1) * (tabSize - 1);

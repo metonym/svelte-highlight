@@ -365,10 +365,15 @@ function diffPrefix(a, aLo, b, bLo, out) {
 }
 
 /**
- * Stateful diff that reuses sealed work when `after` only grows.
+ * Stateful diff that reuses work when `after` only grows: the split and
+ * interned lines of both sides are kept, so a streamed chunk only splits
+ * and interns its own new lines, and only the part past the last sealed
+ * anchor is re-diffed. While streaming, `afterLines` grows in place.
  * @param {{ ignoreWhitespace?: boolean }} [options]
  */
 export function createDiffSession({ ignoreWhitespace = false } = {}) {
+  const key = lineKey(ignoreWhitespace);
+
   let before = "";
   let after = "";
   let wasStreaming = false;
@@ -378,8 +383,67 @@ export function createDiffSession({ ignoreWhitespace = false } = {}) {
   let sealB = 0;
   let version = 0;
 
+  /** @type {Map<string, number>} line key -> id, shared by both sides */
+  let ids = new Map();
+  /** @type {{ lines: string[], noEol: boolean, ids: Int32Array }} */
+  let b4 = { lines: [], noEol: false, ids: new Int32Array(0) };
+
+  // Streaming `after`: complete lines and their ids, up to `afterCut`.
+  /** @type {string[]} */
+  let afterLines = [];
+  let afterIds = new Int32Array(64);
+  let afterCount = 0;
+  let afterCut = 0;
+
   /** @type {DiffState | null} */
   let last = null;
+
+  /** @param {string} line */
+  function idOf(line) {
+    const k = key(line);
+    let id = ids.get(k);
+    if (id === undefined) {
+      id = ids.size;
+      ids.set(k, id);
+    }
+    return id;
+  }
+
+  /** @param {string} text */
+  function setBefore(text) {
+    ids = new Map();
+    const { lines, noEol } = splitText(text);
+    const out = new Int32Array(lines.length);
+    for (let i = 0; i < lines.length; i++) {
+      out[i] = idOf(/** @type {string} */ (lines[i]));
+    }
+    b4 = { lines, noEol, ids: out };
+  }
+
+  function resetAfter() {
+    afterLines = [];
+    afterCount = 0;
+    afterCut = 0;
+  }
+
+  /** Splits and interns the complete lines of `text` past `afterCut`. */
+  function growAfter(/** @type {string} */ text) {
+    const cut = text.lastIndexOf("\n");
+    if (cut < afterCut) return;
+    const fresh = text.slice(afterCut, cut).split("\n");
+    if (afterCount + fresh.length > afterIds.length) {
+      const grown = new Int32Array(
+        Math.max(afterIds.length * 2, afterCount + fresh.length),
+      );
+      grown.set(afterIds.subarray(0, afterCount));
+      afterIds = grown;
+    }
+    for (const line of fresh) {
+      afterLines.push(line);
+      afterIds[afterCount++] = idOf(line);
+    }
+    afterCut = cut + 1;
+  }
 
   /**
    * @param {string} beforeText
@@ -396,45 +460,54 @@ export function createDiffSession({ ignoreWhitespace = false } = {}) {
     ) {
       return last;
     }
+    const beforeChanged = last === null || beforeText !== before;
     const grows =
-      streaming && wasStreaming && beforeText === before
-        ? afterText.startsWith(after)
-        : false;
+      streaming &&
+      wasStreaming &&
+      !beforeChanged &&
+      afterText.startsWith(after);
+    if (beforeChanged) setBefore(beforeText);
     if (!grows) {
       sealed = [];
       sealA = 0;
       sealB = 0;
+      resetAfter();
     }
     before = beforeText;
     after = afterText;
     wasStreaming = streaming;
 
-    const b4 = splitText(beforeText);
     /** @type {string[]} */
-    let afterLines;
+    let lines;
+    /** @type {Int32Array} */
+    let a = b4.ids;
+    /** @type {Int32Array} */
+    let b;
     /** @type {string | null} */
     let partial = null;
     let afterNoEol = false;
     if (streaming) {
-      const cut = afterText.lastIndexOf("\n");
-      afterLines = cut === -1 ? [] : afterText.slice(0, cut).split("\n");
-      const rest = afterText.slice(cut + 1);
+      growAfter(afterText);
+      lines = afterLines;
+      b = afterIds.subarray(0, afterCount);
+      const rest = afterText.slice(afterCut);
       partial = rest === "" ? null : rest;
     } else {
       const split = splitText(afterText);
-      afterLines = split.lines;
+      lines = split.lines;
       afterNoEol = split.noEol;
-    }
-
-    // A missing final newline on one side only counts as a change.
-    const key = lineKey(ignoreWhitespace);
-    const eolMismatch = !streaming && b4.noEol !== afterNoEol;
-    const [a, b] = /** @type {[Int32Array, Int32Array]} */ (
-      intern([b4.lines, afterLines], (line) => key(line))
-    );
-    if (eolMismatch) {
-      if (b4.noEol && a.length > 0) a[a.length - 1] = -1;
-      if (afterNoEol && b.length > 0) b[b.length - 1] = -2;
+      b = new Int32Array(lines.length);
+      for (let i = 0; i < lines.length; i++) {
+        b[i] = idOf(/** @type {string} */ (lines[i]));
+      }
+      // A missing final newline on one side only counts as a change.
+      if (b4.noEol !== afterNoEol) {
+        if (b4.noEol && a.length > 0) {
+          a = a.slice();
+          a[a.length - 1] = -1;
+        }
+        if (afterNoEol && b.length > 0) b[b.length - 1] = -2;
+      }
     }
 
     /** @type {Block[]} */
@@ -486,7 +559,7 @@ export function createDiffSession({ ignoreWhitespace = false } = {}) {
     version++;
     last = {
       beforeLines: b4.lines,
-      afterLines,
+      afterLines: lines,
       partial,
       blocks,
       pendingA,
