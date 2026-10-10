@@ -10,7 +10,7 @@ import javascriptLang from "../src/languages/javascript.js";
 import markdownLang from "../src/languages/markdown.js";
 
 const DIFF_BUDGET = 0.5;
-const STREAM_BUDGET = 2;
+const STREAM_BUDGET = 0.5;
 const ROUNDS = 9;
 
 const corpus = await getCorpus();
