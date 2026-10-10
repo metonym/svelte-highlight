@@ -142,13 +142,16 @@
   $: total = /** @type {number} */ (offsets[rows.length] ?? 0);
 
   /** Last row whose top is at or above `px`. */
-  function indexAt(/** @type {number} */ px) {
+  function indexAt(
+    /** @type {number} */ px,
+    /** @type {Float64Array} */ table = offsets,
+  ) {
     let lo = 0;
     let hi = rows.length - 1;
     let found = 0;
     while (lo <= hi) {
       const mid = (lo + hi) >> 1;
-      if (/** @type {number} */ (offsets[mid]) <= px) {
+      if (/** @type {number} */ (table[mid]) <= px) {
         found = mid;
         lo = mid + 1;
       } else {
@@ -160,11 +163,13 @@
 
   $: virtualized = virtualize === "auto" ? rows.length > 500 : virtualize;
   $: start = virtualized
-    ? (void offsets, Math.max(0, indexAt(scrollTop) - overscan))
+    ? Math.max(0, indexAt(scrollTop, offsets) - overscan)
     : 0;
   $: end = virtualized
-    ? (void offsets,
-      Math.min(rows.length, indexAt(scrollTop + clientHeight) + 1 + overscan))
+    ? Math.min(
+        rows.length,
+        indexAt(scrollTop + clientHeight, offsets) + 1 + overscan,
+      )
     : rows.length;
   $: visible = $diff.renderRows(start, end);
   $: windowTop = /** @type {number} */ (offsets[start] ?? 0);
@@ -390,7 +395,7 @@
         container.scrollTop = target;
     });
   }
-  $: followFrontier(), void rows;
+  $: if (rows) followFrontier();
   $: if (!state.streaming) userScrolled = false;
 
   /** @param {import("./diff-controller.js").ViewRow} row */
@@ -457,14 +462,13 @@
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<div
+<section
   class="shl-diff shl-diff-theme {_class ?? ""}"
   class:shl-diff-split={view === "split"}
   class:shl-diff-colorblind={palette === "colorblind"}
   class:shl-diff-streaming={state.streaming}
   class:shl-diff-wrap={wrap}
   data-select={selectSide}
-  role="region"
   aria-label="Diff: {$diff.stats().additions} additions, {$diff.stats()
     .deletions} deletions"
   tabindex="0"
@@ -731,7 +735,7 @@
       >0000000000</span
     >
   </div>
-</div>
+</section>
 
 <style>
   :global(.shl-diff-theme) {
@@ -784,7 +788,11 @@
     flex: 1;
     flex-direction: column;
     min-height: 0;
-    padding: 0 !important;
+  }
+
+  /* Beat a theme's `.hljs` padding without `!important`. */
+  .shl-diff .shl-diff-frame.hljs {
+    padding: 0;
   }
 
   .shl-diff-body {
@@ -825,16 +833,16 @@
     position: relative;
   }
 
+  .shl-diff-hbar-row {
+    scrollbar-gutter: stable;
+    overflow-y: hidden;
+  }
+
   .shl-diff-split .shl-diff-row,
   .shl-diff-split .shl-diff-hbar-row {
     grid-template-columns:
       var(--shl-diff-gutter) 2ch minmax(0, 1fr)
       var(--shl-diff-gutter) 2ch minmax(0, 1fr);
-  }
-
-  .shl-diff-hbar-row {
-    scrollbar-gutter: stable;
-    overflow-y: hidden;
   }
 
   .shl-diff-hbar {
@@ -867,6 +875,18 @@
 
   .shl-diff-text {
     display: inline-block;
+  }
+
+  .shl-diff-wrap .shl-diff-row {
+    white-space: pre-wrap;
+  }
+
+  .shl-diff-wrap .shl-diff-row .shl-diff-code {
+    overflow-wrap: anywhere;
+  }
+
+  .shl-diff-wrap .shl-diff-text {
+    display: inline;
   }
 
   /* Unified */
@@ -945,8 +965,8 @@
     background: var(--shl-diff-move);
   }
 
-  .shl-diff-moved .shl-diff-marker {
-    color: var(--shl-diff-move-accent) !important;
+  .shl-diff .shl-diff-row.shl-diff-moved .shl-diff-marker {
+    color: var(--shl-diff-move-accent);
   }
 
   .shl-diff-moved::after {
@@ -1046,13 +1066,13 @@
     opacity: 0.45;
   }
 
-  .shl-diff-rejected.shl-diff-add .shl-diff-code,
-  .shl-diff-rejected .shl-diff-side-new {
+  .shl-diff-row.shl-diff-rejected.shl-diff-add .shl-diff-code,
+  .shl-diff-split .shl-diff-rejected > .shl-diff-side-new {
     text-decoration: line-through;
   }
 
-  .shl-diff-accepted.shl-diff-del .shl-diff-code,
-  .shl-diff-accepted .shl-diff-side-old {
+  .shl-diff-row.shl-diff-accepted.shl-diff-del .shl-diff-code,
+  .shl-diff-split .shl-diff-accepted > .shl-diff-side-old {
     text-decoration: line-through;
     opacity: 0.6;
   }
@@ -1097,18 +1117,6 @@
   .shl-diff-note-slot {
     grid-column: 1 / -1;
     white-space: normal;
-  }
-
-  .shl-diff-wrap .shl-diff-row {
-    white-space: pre-wrap;
-  }
-
-  .shl-diff-wrap .shl-diff-code {
-    overflow-wrap: anywhere;
-  }
-
-  .shl-diff-wrap .shl-diff-text {
-    display: inline;
   }
 
   .shl-diff-note-card {

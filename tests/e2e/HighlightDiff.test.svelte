@@ -68,8 +68,12 @@
 <div data-testid="navigate">{navigate}</div>
 <pre data-testid="review-text">{reviewText}</pre>
 
-<button data-testid="stream-line" on:click={streamLine}>stream</button>
-<button data-testid="stream-finish" on:click={finishStream}>finish</button>
+<button type="button" data-testid="stream-line" on:click={streamLine}>
+  stream
+</button>
+<button type="button" data-testid="stream-finish" on:click={finishStream}>
+  finish
+</button>
 {#if streaming || streamDone}
   <HighlightDiff
     data-testid="stream"

@@ -151,11 +151,16 @@
   <div class="metrics label-01" data-testid="pr-metrics">
     {files.length}
     files · <span class="add">+{totals.add}</span>
-    <span class="del">−{totals.del}</span> · mounted {mountedCount} · DOM nodes
-    {metrics.domNodes.toLocaleString()} · fetch {metrics.fetchMs.toFixed(0)} ms
-    · parse {metrics.parseMs.toFixed(0)} ms · first paint
-    {metrics.firstPaintMs.toFixed(0)} ms · long tasks
-    {metrics.longTasks} ({metrics.longTaskMs.toFixed(0)}
+    <span class="del">−{totals.del}</span>
+    · mounted {mountedCount} · DOM nodes
+    {metrics.domNodes.toLocaleString()}
+    · fetch {metrics.fetchMs.toFixed(0)} ms · parse
+    {metrics.parseMs.toFixed(0)}
+    ms · first paint
+    {metrics.firstPaintMs.toFixed(0)}
+    ms · long tasks
+    {metrics.longTasks}
+    ({metrics.longTaskMs.toFixed(0)}
     ms)
   </div>
 {/if}
@@ -171,7 +176,8 @@
         >
         <span
           ><span class="add">+{f.additions}</span>
-          <span class="del">−{f.deletions}</span> · {f.status}</span
+          <span class="del">−{f.deletions}</span>
+          · {f.status}</span
         >
       </header>
       {#if f.status === "binary" || f.hunks.length === 0}

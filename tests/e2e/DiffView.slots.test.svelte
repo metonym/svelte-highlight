@@ -28,6 +28,7 @@
   <DiffView {diff} data-testid="view" style="height: 240px; flex: 1">
     <div slot="note" let:note data-testid="note">{note.body}</div>
     <button
+      type="button"
       slot="actions"
       let:change
       data-testid="action"

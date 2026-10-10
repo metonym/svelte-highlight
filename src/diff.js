@@ -276,14 +276,16 @@ function uniqueAnchors(a, aLo, aHi, b, bLo, bHi) {
 
 /**
  * @param {Int32Array} a
- * @param {number} aLo
+ * @param {number} aStart
  * @param {number} aHi
  * @param {Int32Array} b
- * @param {number} bLo
+ * @param {number} bStart
  * @param {number} bHi
  * @param {Block[]} out
  */
-function diffRange(a, aLo, aHi, b, bLo, bHi, out) {
+function diffRange(a, aStart, aHi, b, bStart, bHi, out) {
+  let aLo = aStart;
+  let bLo = bStart;
   while (aLo < aHi && bLo < bHi && a[aLo] === b[bLo]) {
     pushRun(out, "equal", aLo, aLo + 1, bLo, bLo + 1);
     aLo++;
@@ -771,9 +773,9 @@ export function detectMoves(state, { minLines = 3 } = {}) {
       addChange.set(j, /** @type {number} */ (block.id));
       const k = moveKey(/** @type {string} */ (state.afterLines[j]));
       if (trivial(k)) continue;
-      let list = addsByKey.get(k);
-      if (!list) addsByKey.set(k, (list = []));
-      list.push(j);
+      const list = addsByKey.get(k);
+      if (list) list.push(j);
+      else addsByKey.set(k, [j]);
     }
     for (let i = block.a; i < block.aEnd; i++) {
       delChange.set(i, /** @type {number} */ (block.id));
@@ -824,6 +826,7 @@ export function detectMoves(state, { minLines = 3 } = {}) {
   return { oldMoves, newMoves, groups: group };
 }
 
+const BLANK_RE = /^\s*$/;
 const WORD_RE = /[\p{L}\p{N}_]+|\s+|[^\p{L}\p{N}_\s]/gu;
 
 /**
@@ -873,7 +876,7 @@ export function wordDiff(oldText, newText) {
     if (s === e) return;
     const prev = list[list.length - 1];
     // Bridge whitespace-only gaps so "a b c" reads as one change.
-    if (prev && /^\s*$/.test(text.slice(prev[1], s))) prev[1] = e;
+    if (prev && BLANK_RE.test(text.slice(prev[1], s))) prev[1] = e;
     else list.push([s, e]);
   };
   for (const op of ops) {

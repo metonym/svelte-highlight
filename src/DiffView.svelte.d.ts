@@ -3,7 +3,7 @@ import type { HTMLAttributes } from "svelte/elements";
 import type { Row } from "./diff";
 import type { Annotation, DiffController } from "./diff-controller";
 
-export type DiffViewProps = HTMLAttributes<HTMLDivElement> & {
+export type DiffViewProps = HTMLAttributes<HTMLElement> & {
   /** A controller from `createDiffController`. */
   diff: DiffController;
 

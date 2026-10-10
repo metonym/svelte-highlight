@@ -3115,7 +3115,10 @@ test("HighlightDiff - streaming shows unreached lines as pending, not deleted", 
 }) => {
   await mount(HighlightDiff);
 
-  for (let i = 0; i < 8; i++) await page.getByTestId("stream-line").click();
+  for (let i = 0; i < 8; i++) {
+    // biome-ignore lint/performance/noAwaitInLoops: each click streams the next line, in order
+    await page.getByTestId("stream-line").click();
+  }
   const stream = page.getByTestId("stream");
   await expect(stream.locator(".shl-diff-pending")).toContainText(
     "32 lines not reached yet",

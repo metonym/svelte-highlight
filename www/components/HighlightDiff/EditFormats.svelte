@@ -23,7 +23,10 @@
   let reviewed = "";
   let decided = 0;
 
-  $: void applied, (reviewed = ""), (decided = 0);
+  $: if (applied) {
+    reviewed = "";
+    decided = 0;
+  }
 </script>
 
 <div class="controls">

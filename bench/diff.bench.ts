@@ -11,6 +11,9 @@ import { applyEdits, parseEdits } from "../src/diff-edits.js";
 import javascript from "../src/languages/javascript.js";
 import { getCorpus, scatterEdits } from "./_shared.ts";
 
+const TRAILING_SEMI_RE = /;$/;
+const DOUBLE_QUOTE_RE = /"/g;
+
 const { javascript: corpus } = await getCorpus();
 const lineCount = corpus.split("\n").length;
 const edited = scatterEdits(corpus, 150);
@@ -78,7 +81,7 @@ group("applyEdits()", () => {
   const at = lines.length >> 1;
   const search = lines.slice(at, at + 6);
   const exact = `<<<<<<< SEARCH\n${search.join("\n")}\n=======\n// replaced\n>>>>>>> REPLACE\n`;
-  const fuzzy = `<<<<<<< SEARCH\n${search.map((l) => l.replace(/;$/, "").replace(/"/g, "'")).join("\n")}\n=======\n// replaced\n>>>>>>> REPLACE\n`;
+  const fuzzy = `<<<<<<< SEARCH\n${search.map((l) => l.replace(TRAILING_SEMI_RE, "").replace(DOUBLE_QUOTE_RE, "'")).join("\n")}\n=======\n// replaced\n>>>>>>> REPLACE\n`;
   task("exact match, mid-corpus", () =>
     applyEdits(corpus, parseEdits(exact).edits),
   );

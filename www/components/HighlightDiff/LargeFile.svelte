@@ -9,7 +9,7 @@
   $: pair = generateLargePair(Number(size), Math.round(Number(size) / 150));
   $: t0 = performance.now();
   $: stats = diffStats(diffTexts(pair.before, pair.after));
-  $: elapsed = (void stats, performance.now() - t0);
+  $: elapsed = stats ? performance.now() - t0 : 0;
 
   /** @type {HighlightDiff} */
   let ref;

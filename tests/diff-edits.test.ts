@@ -305,7 +305,9 @@ deleted file mode 100644
   });
 
   it("builds a state with unknown gaps that keep real line numbers", () => {
-    const state = patchToState(files[0]!);
+    const [file] = files;
+    if (!file) throw new Error("no file parsed");
+    const state = patchToState(file);
     const rows = buildRows(state);
     const first = rows[0];
     expect(first?.kind).toBe("fold");

@@ -5,6 +5,26 @@
 
 import { splitText } from "./diff.js";
 
+const APPLY_PATCH_RE = /^\*\*\* Begin Patch/m;
+const SEARCH_MARKER_LINE_RE = /^<{5,9} SEARCH/m;
+const SEARCH_MARKER_RE = /^<{5,9} SEARCH/;
+const STR_REPLACE_JSON_RE = /"old_str(ing)?"\s*:/;
+const STR_REPLACE_TAG_RE = /<old_str>/;
+const HUNK_LINE_RE = /^@@/m;
+const FILE_HEADERS_RE = /^--- .*\n\+\+\+ /m;
+const FENCE_LINE_RE = /^```/m;
+const PATH_LINE_RE = /^[\w./-]+\.\w+$/;
+const DIVIDER_RE = /^={5,9}\s*$/;
+const REPLACE_MARKER_RE = /^>{5,9} REPLACE/;
+const PATCH_FILE_RE = /^\*\*\* (Update|Add|Delete) File: (.+)$/;
+const B_PREFIX_RE = /^b\//;
+const WHOLE_FILE_RE = /^```[^\n]*\n([\s\S]*?)(\n```|$)/m;
+const INDENT_RE = /^[ \t]*/;
+const AB_PREFIX_RE = /^[ab]\//;
+const TAB_SUFFIX_RE = /\t.*$/;
+const GIT_HEADER_RE = /^diff --git a\/(.+) b\/(.+)$/;
+const HUNK_HEADER_RE = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@ ?(.*)$/;
+
 /**
  * @typedef {{
  *   search: string,
@@ -22,15 +42,15 @@ import { splitText } from "./diff.js";
  * @returns {EditFormat}
  */
 export function detectEditFormat(text) {
-  if (/^\*\*\* Begin Patch/m.test(text)) return "apply-patch";
-  if (/^<{5,9} SEARCH/m.test(text)) return "search-replace";
-  if (/"old_str(ing)?"\s*:/.test(text) || /<old_str>/.test(text)) {
+  if (APPLY_PATCH_RE.test(text)) return "apply-patch";
+  if (SEARCH_MARKER_LINE_RE.test(text)) return "search-replace";
+  if (STR_REPLACE_JSON_RE.test(text) || STR_REPLACE_TAG_RE.test(text)) {
     return "str-replace";
   }
-  if (/^@@/m.test(text) || /^--- .*\n\+\+\+ /m.test(text)) {
+  if (HUNK_LINE_RE.test(text) || FILE_HEADERS_RE.test(text)) {
     return "unified-diff";
   }
-  if (/^```/m.test(text)) return "whole-file";
+  if (FENCE_LINE_RE.test(text)) return "whole-file";
   return "unknown";
 }
 
@@ -74,14 +94,10 @@ function parseSearchReplace(text) {
   let i = 0;
   while (i < lines.length) {
     const line = /** @type {string} */ (lines[i]);
-    if (!/^<{5,9} SEARCH/.test(line)) {
+    if (!SEARCH_MARKER_RE.test(line)) {
       const trimmed = line.trim();
       // A bare path line (Aider style) names the file for the next blocks.
-      if (
-        trimmed &&
-        !FENCE_RE.test(trimmed) &&
-        /^[\w./-]+\.\w+$/.test(trimmed)
-      ) {
+      if (trimmed && !FENCE_RE.test(trimmed) && PATH_LINE_RE.test(trimmed)) {
         path = trimmed;
       }
       i++;
@@ -92,7 +108,7 @@ function parseSearchReplace(text) {
     const search = [];
     while (
       i < lines.length &&
-      !/^={5,9}\s*$/.test(/** @type {string} */ (lines[i]))
+      !DIVIDER_RE.test(/** @type {string} */ (lines[i]))
     ) {
       search.push(/** @type {string} */ (lines[i]));
       i++;
@@ -112,7 +128,7 @@ function parseSearchReplace(text) {
     const replace = [];
     while (
       i < lines.length &&
-      !/^>{5,9} REPLACE/.test(/** @type {string} */ (lines[i]))
+      !REPLACE_MARKER_RE.test(/** @type {string} */ (lines[i]))
     ) {
       replace.push(/** @type {string} */ (lines[i]));
       i++;
@@ -173,7 +189,7 @@ function parseApplyPatch(text) {
       ended = true;
       break;
     }
-    const file = /^\*\*\* (Update|Add|Delete) File: (.+)$/.exec(line);
+    const file = PATCH_FILE_RE.exec(line);
     if (file) {
       flush(true);
       path = /** @type {string} */ (file[2]).trim();
@@ -238,7 +254,7 @@ function parseUnifiedEdits(text) {
   for (const line of text.split("\n")) {
     if (FENCE_RE.test(line)) continue;
     if (line.startsWith("+++ ")) {
-      path = line.slice(4).replace(/^b\//, "").trim();
+      path = line.slice(4).replace(B_PREFIX_RE, "").trim();
       continue;
     }
     if (
@@ -339,7 +355,7 @@ function safeJson(text) {
 
 /** @param {string} text */
 function parseWholeFile(text) {
-  const m = /^```[^\n]*\n([\s\S]*?)(\n```|$)/m.exec(text);
+  const m = WHOLE_FILE_RE.exec(text);
   if (!m) return [];
   return [
     {
@@ -436,7 +452,10 @@ export function locate(lines, search, from = 0) {
   const cache = new Map();
   const gramsAt = (/** @type {number} */ i) => {
     let g = cache.get(i);
-    if (!g) cache.set(i, (g = bigrams(/** @type {string} */ (lines[i]))));
+    if (!g) {
+      g = bigrams(/** @type {string} */ (lines[i]));
+      cache.set(i, g);
+    }
     return g;
   };
   let best = 0;
@@ -472,7 +491,7 @@ export function locate(lines, search, from = 0) {
 }
 
 /** @param {string} line */
-const indentOf = (line) => /^[ \t]*/.exec(line)?.[0] ?? "";
+const indentOf = (line) => INDENT_RE.exec(line)?.[0] ?? "";
 
 /**
  * Shifts `replace` by the indentation difference between what the model
@@ -683,13 +702,10 @@ export function parsePatch(text) {
     hunk = null;
   };
   const strip = (/** @type {string} */ p) =>
-    p
-      .trim()
-      .replace(/^[ab]\//, "")
-      .replace(/\t.*$/, "");
+    p.trim().replace(AB_PREFIX_RE, "").replace(TAB_SUFFIX_RE, "");
 
   for (const line of text.split("\n")) {
-    const git = /^diff --git a\/(.+) b\/(.+)$/.exec(line);
+    const git = GIT_HEADER_RE.exec(line);
     if (git) {
       start(/** @type {string} */ (git[1]), /** @type {string} */ (git[2]));
       continue;
@@ -718,7 +734,7 @@ export function parsePatch(text) {
     else if (line.startsWith("deleted file mode")) f.status = "deleted";
     else if (line.startsWith("rename from")) f.status = "renamed";
     else if (line.startsWith("Binary files")) f.status = "binary";
-    const h = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@ ?(.*)$/.exec(line);
+    const h = HUNK_HEADER_RE.exec(line);
     if (h) {
       hunk = {
         oldStart: Number(h[1]),
