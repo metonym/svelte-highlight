@@ -2099,6 +2099,222 @@ Browser Cmd+F can't see rows a virtualized view (`HighlightVirtual`, `HighlightS
 
 `highlightMatches(root, matches, { current, name })` paints `matches` into `root`, restricted to whatever rows are currently rendered there -- resolved per match's line via `[data-line]` (the row shape `HighlightVirtual`/`HighlightStream` render), then the `line`-th `.line` element (the shape `highlightFence`/fenced code renders), then the whole `<code>` split on `"\n"`; matches whose line resolves to nothing are skipped. It uses the CSS Custom Highlight API when available (two `Highlight`s: `name`, defaulting to `"shl-search"`, and `${name}-current` for the match at index `current`), or falls back to wrapping text in `<mark data-shl-search>` (plus `data-shl-search-current`) when it isn't. It paints once per call and returns `{ dispose() }` -- there's no diffing against a previous call, so a consumer disposes and re-runs it after the rendered window changes (`on:windowchange`) or the query changes (`onChange`), as in the example above. It's a no-op on the server. `import "svelte-highlight/search.css"` is optional and styles both highlight names via the `--search-match-background`/`--search-current-background` CSS variables; passing a custom `name` bypasses it, since the stylesheet only targets the default names.
 
+## Diffs
+
+`HighlightDiff` shows a syntax-highlighted diff of two texts. It highlights each side as a whole file, not hunk by hunk. So a string or comment that opens far above a change still highlights correctly inside it.
+
+```svelte
+<script>
+  import { HighlightDiff } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import atomOneDark from "svelte-highlight/styles/atom-one-dark";
+
+  export let before;
+  export let after;
+</script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
+
+<HighlightDiff {before} {after} language={typescript} style="height: 480px" />
+```
+
+Try every feature on the [diff preview page](https://svhe.onrender.com/preview-diff).
+
+### Views, folds, and word diffs
+
+- `view` is `"unified"` (default) or `"split"`. It supports `bind:view`; the `v` key toggles it.
+- `context` (default `3`) sets how many unchanged lines stay around each change. Longer unchanged runs fold into a row you can click to expand.
+- `wordDiff` (default `true`) marks the changed words inside paired lines.
+- `ignoreWhitespace` treats lines that differ only in whitespace as unchanged.
+- `detectMoves` (default `true`) shows a block removed in one place and added in another as a move. Moved lines are purple, and their title says where they came from or went.
+- `wrap` wraps long lines. Without it, each side scrolls sideways on its own.
+- A minimap beside the scrollbar marks every change. Click it to jump. Turn it off with `minimap={false}`.
+- `palette="colorblind"` uses blue and orange instead of green and red.
+
+The diff takes focus on click. Then `n`/`p` move to the next or previous change, `e`/`c` expand or collapse every fold, and `v` toggles the view.
+
+Copying across rows gives one file's text, not both. In split view, it's the side where the selection started. In unified view, it's the new text, or the old text if you select only removed lines.
+
+### Virtualization
+
+`virtualize` defaults to `"auto"`. Diffs up to 500 rows render every row, so browser find (Ctrl/Cmd+F), printing, and server rendering see the whole diff. Larger diffs render only the rows in view. `virtualize={true}` or `virtualize={false}` forces either mode. Rows can have different heights (wrapped lines, notes), and are measured as they render.
+
+### Streaming
+
+Set `streaming` while `after` is still growing, for example while a model writes a new version of a file:
+
+```svelte
+<HighlightDiff {before} {after} streaming={!done} language={typescript} />
+```
+
+While streaming:
+
+- The part of `before` that `after` hasn't reached yet shows as "not reached yet", not as deleted.
+- Rows behind the last unchanged run of 3 or more lines freeze. Later chunks don't move them, and each chunk only re-diffs what comes after them.
+- `follow` (default `true`) keeps the newest row in view until the reader scrolls away.
+
+When `streaming` turns off, the diff finishes from the frozen rows. It doesn't start over, so nothing the reader saw reshuffles.
+
+### LLM edit formats
+
+`parseEdits` reads the edit formats models write, and `applyEdits` applies them to a file:
+
+```js
+import { applyEdits, parseEdits } from "svelte-highlight/diff-edits";
+
+const { format, edits } = parseEdits(modelOutput);
+const { text, results } = applyEdits(source, edits);
+// <HighlightDiff before={source} after={text} ... />
+```
+
+It reads:
+
+- SEARCH/REPLACE blocks (`<<<<<<< SEARCH` … `=======` … `>>>>>>> REPLACE`), with an optional file path line before them.
+- Unified diffs. Line numbers are ignored, since models often get them wrong.
+- `str_replace` tool calls and `edits` arrays as JSON (`old_str`/`new_str` or `old_string`/`new_string`).
+- `apply_patch` envelopes (`*** Begin Patch`).
+- A single fenced code block, as a whole-file replacement.
+
+`applyEdits` finds each edit's search text exactly first. Then it ignores trailing whitespace, then indentation (and re-indents the replacement to match the file), then it falls back to fuzzy line similarity. Each result reports `status`, `strategy`, `score`, and the matched lines. An edit that can't be found, or that overlaps an earlier edit, is skipped and reported as failed.
+
+To show edits while the model is still writing them, use `streamEditPrefix`. It returns the part of the edited file that's settled so far, which only grows:
+
+```js
+import { streamEditPrefix } from "svelte-highlight/diff-edits";
+
+const preview = streamEditPrefix(source, partialOutput, { done });
+// <HighlightDiff before={source} after={preview.after} streaming={!preview.done} ... />
+```
+
+### Review
+
+With `review`, each change gets Accept and Reject buttons. With the diff focused, `a`, `r`, and `u` accept, reject, or undo the current change. `on:review` fires on every decision with `{ decisions, text }`. `text` is `after` with the rejected changes reverted.
+
+```svelte
+<HighlightDiff
+  bind:this={diff}
+  {before}
+  {after}
+  language={typescript}
+  review
+  on:review={(e) => (result = e.detail.text)}
+/>
+```
+
+`bind:this` gives you `decideAll("accepted" | "rejected")`, `getResult()`, and `getPatch({ oldPath, newPath })`. The patch is a unified diff that `git apply` accepts.
+
+### Git patches
+
+To show a patch without its source files, parse it and pass one file at a time:
+
+```js
+import { parsePatch } from "svelte-highlight/diff-edits";
+
+const files = parsePatch(gitDiffOutput);
+// <HighlightDiff patch={files[0]} language={...} />
+```
+
+`parsePatch` reads multi-file git output, including added, deleted, renamed, and binary files. Lines between hunks are unknown, so they show as folds that can't expand, with the hunk header. Line numbers stay real. Since only the hunks are known, highlighting can be less accurate than with full files.
+
+### Annotations
+
+`annotations` puts notes below lines: `[{ side: "new", line: 12, body: "…", author, tone }]`. `side` is `"old"` or `"new"`, `line` is 1-based, and `tone` is `"info"`, `"warning"`, `"error"`, or `"suggestion"`. A note's row grows to fit it.
+
+### Building your own diff UI
+
+`HighlightDiff` combines smaller parts that you can use on their own. They share one controller:
+
+```svelte
+<script>
+  import {
+    createDiffController,
+    DiffMinimap,
+    DiffStats,
+    DiffView,
+  } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+
+  const diff = createDiffController({ language: typescript, view: "split" });
+  $: diff.update(before, after);
+</script>
+
+<DiffStats {diff} />
+<button on:click={() => diff.nextChange()}>Next change</button>
+
+<div style="display: flex; height: 480px">
+  <DiffView {diff} style="flex: 1">
+    <div slot="note" let:note>{note.author}: {note.body}</div>
+    <button slot="actions" let:change on:click={() => comment(change)}>Comment</button>
+  </DiffView>
+  <DiffMinimap {diff} />
+</div>
+```
+
+- `createDiffController(options)` holds the diff state: the diff, highlighting, folds, review decisions, and navigation. Use it as a Svelte store (`$diff`), or call it from anywhere. `update(before, after, { streaming })` and `setPatch(file)` set the input. `setOptions({ view, context, … })` changes options. `on("navigate" | "review" | …, listener)` subscribes to events.
+- `DiffView` renders the rows. Its slots replace fold rows (`fold`), note cards (`note`), and the controls on each change (`actions`).
+- `DiffMinimap` shows the change marks and the area a `DiffView` on the same controller shows. Click it to scroll there.
+- `DiffStats` shows the counts and, after you navigate, "change *N* of *M*".
+
+Every part on a controller stays in sync. For example, a toolbar button that calls `diff.nextChange()` scrolls each `DiffView`.
+
+### Many files
+
+`DiffFileList` shows a page of per-file diffs, like a large pull request. It mounts files near the viewport and unmounts far ones, and keeps each file's measured height so the page doesn't jump. A page of 827 files stays near 10,000 DOM nodes.
+
+```svelte
+<script>
+  import { DiffFileList, parsePatch } from "svelte-highlight";
+
+  $: files = parsePatch(gitDiffOutput).map((file) => ({
+    path: file.newPath,
+    oldPath: file.oldPath,
+    status: file.status,
+    patch: file,
+  }));
+</script>
+
+<DiffFileList {files} />
+```
+
+- Each file is a parsed `patch` or a `before`/`after` pair.
+- It loads each file's language by extension the first time the file mounts. Pass `languageFor(path)` to choose another way, or set `language` on a file.
+- `windowing` is `"windowed"` (default), `"lazy"` (mount near the view, never unmount), or `"none"` (mount everything, for printing or browser find).
+- `maxHeight` (default `640`) caps each file's height before it scrolls on its own. `null` shows every file in full.
+- Click a header to collapse its file. Replace the header with the `header` slot.
+- `bind:this`, then `scrollToFile(index)` jumps to a file. The files around it mount first, so they have real heights before you scroll to them.
+- Set `root` if the list scrolls inside an element instead of the page.
+
+When files above the view change height, the list keeps the first file in view still. It does this itself, since browsers' scroll anchoring doesn't catch these changes everywhere.
+
+### Headless diffs
+
+`svelte-highlight/diff` has the diff itself, with no DOM:
+
+```js
+import { buildRows, diffTexts, toUnifiedPatch, wordDiff } from "svelte-highlight/diff";
+
+const state = diffTexts(before, after, { ignoreWhitespace: false });
+state.blocks; // [{ type: "equal" | "change", a, aEnd, b, bEnd, id }]
+const rows = buildRows(state, { view: "split", context: 3 });
+const patch = toUnifiedPatch(state, { oldPath: "a/file.ts", newPath: "b/file.ts" });
+const { old, new: added } = wordDiff("const a = 1;", "const a = 2;");
+```
+
+- `diffTexts` and `diffLines` find shared prefixes and suffixes, then anchor on lines unique to both sides, then run Myers' algorithm between anchors.
+- `createDiffSession()` keeps state between calls, for streaming: `session.update(before, after, { streaming: true })`.
+- `applyReview(state, decisions)`, `detectMoves(state)`, and `diffStats(state)` work on the same state.
+
+`svelte-highlight/diff-controller` exports `createDiffController`, and `svelte-highlight/diff-edits` exports the edit and patch parsers.
+
+### Limits
+
+- With `ignoreWhitespace`, unchanged lines show their `after` text, and `toUnifiedPatch` writes `before`'s text for them. The patch then doesn't reproduce `after`'s whitespace.
+- A region with more than 2,000 edits shows as one replacement, to bound the work.
+- Moved blocks aren't detected while streaming.
+- `DiffView` only virtualizes inside its own scroll container. For a page of many diffs, use `DiffFileList`.
+
 ## Terminal Output
 
 Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) escape codes. Colors, bold, dim, italic, and underline become styled HTML, along with OSC 8 hyperlinks, carriage-return overwrites, and reverse/strikethrough. The parser is separate from highlight.js, so reach for it with build logs, CLI output, and test runners.
@@ -2624,6 +2840,104 @@ Use `bind:this`, then call `scrollToLine(line, { align })`. It jumps without ani
 
 See [Large documents](#large-documents) above.
 
+### `HighlightDiff`
+
+#### Props
+
+| Name             | Type                                         | Default value  |
+| :--------------- | :------------------------------------------- | :------------- |
+| before           | `string`                                     | `""`           |
+| after            | `string`                                     | `""`           |
+| patch            | `FilePatch \| null` (from `parsePatch`)      | `null`         |
+| language         | { name: `string`; register: `object` } | N/A (required) |
+| view             | `"unified" \| "split"`                       | `"unified"`    |
+| context          | `number`                                     | `3`            |
+| wordDiff         | `boolean`                                    | `true`         |
+| ignoreWhitespace | `boolean`                                    | `false`        |
+| detectMoves      | `boolean`                                    | `true`         |
+| streaming        | `boolean`                                    | `false`        |
+| follow           | `boolean`                                    | `true`         |
+| review           | `boolean`                                    | `false`        |
+| wrap             | `boolean`                                    | `false`        |
+| virtualize       | `"auto" \| boolean`                          | `"auto"`       |
+| annotations      | `Annotation[]`                               | `[]`           |
+| palette          | `"default" \| "colorblind"`                  | `"default"`    |
+| minimap          | `boolean`                                    | `true`         |
+| overscan         | `number`                                     | `10`           |
+| tabSize          | `number`                                     | `4`            |
+
+`patch` takes precedence over `before`/`after`. `view` supports `bind:view`. `class` and `style` go on the outer element; size the diff with them (it's `400px` tall by default). Other `$$restProps` are forwarded to the inner `DiffView`.
+
+#### Methods
+
+Use `bind:this`, then call `nextChange()`, `prevChange()`, `expandAll()`, `collapseAll()`, `decideAll("accepted" | "rejected")`, `getResult()`, or `getPatch({ oldPath, newPath })`. The `diff` property is the underlying controller.
+
+#### Dispatched Events
+
+- **on:stats**: fired when the counts change, with `{ additions, deletions, changes }`
+- **on:navigate**: fired on `nextChange`/`prevChange`, with `{ change, index, count }`
+- **on:review**: fired on every accept or reject, with `{ decisions, text }`
+
+See [Diffs](#diffs) above.
+
+### `DiffView`
+
+#### Props
+
+| Name       | Type                         | Default value  |
+| :--------- | :--------------------------- | :------------- |
+| diff       | `DiffController`             | N/A (required) |
+| follow     | `boolean`                    | `true`         |
+| review     | `boolean`                    | `false`        |
+| wrap       | `boolean`                    | `false`        |
+| virtualize | `"auto" \| boolean`          | `"auto"`       |
+| palette    | `"default" \| "colorblind"`  | `"default"`    |
+| overscan   | `number`                     | `10`           |
+| keyboard   | `boolean`                    | `true`         |
+
+`$$restProps` are forwarded to the top-level `section` element.
+
+#### Slots
+
+- **fold**: replaces a fold row, with `{ fold, count, toggle }`
+- **note**: replaces an annotation card, with `{ note }`
+- **actions**: controls on the first row of each change, with `{ change, decision, decide }`. Filling it shows it even without `review`.
+
+### `DiffMinimap` and `DiffStats`
+
+Both take one prop, `diff` (a `DiffController`). `$$restProps` are forwarded to the top-level element. `DiffMinimap` fills its parent's height, so give it one.
+
+### `DiffFileList`
+
+#### Props
+
+| Name             | Type                                              | Default value             |
+| :--------------- | :------------------------------------------------ | :------------------------ |
+| files            | `DiffFile[]`                                      | `[]`                      |
+| view             | `"unified" \| "split"`                            | `"unified"`               |
+| context          | `number`                                          | `3`                       |
+| wordDiff         | `boolean`                                         | `true`                    |
+| ignoreWhitespace | `boolean`                                         | `false`                   |
+| wrap             | `boolean`                                         | `false`                   |
+| review           | `boolean`                                         | `false`                   |
+| palette          | `"default" \| "colorblind"`                       | `"default"`               |
+| maxHeight        | `number \| null`                                  | `640`                     |
+| languageFor      | `(path) => language \| Promise<language> \| undefined` | by file extension    |
+| windowing        | `"windowed" \| "lazy" \| "none"`                  | `"windowed"`              |
+| rootMargin       | `string`                                          | `"1500px 0px"`            |
+| root             | `Element \| null`                                 | `null` (the page scrolls) |
+| collapsible      | `boolean`                                         | `true`                    |
+
+A `DiffFile` is `{ key?, path, oldPath?, status?, patch?, before?, after?, language? }`. `$$restProps` are forwarded to the top-level `div` element.
+
+#### Slots
+
+- **header**: replaces a file's header, with `{ file, index, stats, collapsed, toggle }`. `stats` comes from the patch, or from the file's diff once it has mounted.
+
+#### Methods
+
+Use `bind:this`, then call `scrollToFile(index, options)`. `options` are `scrollIntoView` options (default `{ block: "start" }`).
+
 ### `FileTabs`
 
 #### Props
@@ -2699,7 +3013,7 @@ See it as a complete page in [examples/cdn](examples/cdn).
 
 - **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `SearchMatch`, `SearchOptions`, `Search`, `createSearch`, `highlightMatches`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`textRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
 - **Generated data, versioned with the library:** `GrammarIR`/`GrammarState`. These come from the build pipeline and are consumed by `registerAll`; treat them as opaque payloads whose field-level structure may change in any minor release. Always load grammars from the same package version as the engine.
-- **Experimental, may change in a minor release:** `createWorkerHighlighter`, `serveHighlighter`, `PostMessageTarget`, `WorkerHighlighter`, `WorkerSession`, `ServeHighlighterOptions` (`svelte-highlight/worker`). The wire protocol between the two halves is not part of the public contract — only the documented function behavior is.
+- **Experimental, may change in a minor release:** everything in `svelte-highlight/diff`, `svelte-highlight/diff-edits`, and `svelte-highlight/diff-controller`, and the `HighlightDiff`, `DiffView`, `DiffMinimap`, `DiffStats`, and `DiffFileList` components. They're new, and their API may change before they're stable. Also `createWorkerHighlighter`, `serveHighlighter`, `PostMessageTarget`, `WorkerHighlighter`, `WorkerSession`, `ServeHighlighterOptions` (`svelte-highlight/worker`). The wire protocol between the two halves is not part of the public contract — only the documented function behavior is.
 
 ### Headless highlighting, isolated registry
 

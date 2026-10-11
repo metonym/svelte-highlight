@@ -1,0 +1,9 @@
+---
+import HighlightDiffPreview from "@components/HighlightDiffPreview.svelte";
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout title="HighlightDiff preview">
+  <h1 class="mb-5">HighlightDiff</h1>
+  <HighlightDiffPreview client:only="svelte" />
+</Layout>

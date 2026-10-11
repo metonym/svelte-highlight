@@ -4,9 +4,35 @@ export { parseAnsi } from "./ansi.js";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { stripDiffMarkers, stripPrompts } from "./copy-transforms.js";
+export { default as DiffFileList } from "./DiffFileList.svelte";
+export { default as DiffMinimap } from "./DiffMinimap.svelte";
+export { default as DiffStats } from "./DiffStats.svelte";
+export { default as DiffView } from "./DiffView.svelte";
+export {
+  applyReview,
+  buildRows,
+  createDiffSession,
+  detectMoves,
+  diffLines,
+  diffStats,
+  diffTexts,
+  toUnifiedPatch,
+  wordDiff,
+} from "./diff.js";
+export { createDiffController } from "./diff-controller.js";
+export {
+  applyEdits,
+  detectEditFormat,
+  parseEdits,
+  parsePatch,
+  patchToState,
+  streamEditPrefix,
+} from "./diff-edits.js";
+export { languageNameForPath } from "./diff-languages.js";
 export { default as FileTabs } from "./FileTabs.svelte";
 export { default, default as Highlight } from "./Highlight.svelte";
 export { default as HighlightAuto } from "./HighlightAuto.svelte";
+export { default as HighlightDiff } from "./HighlightDiff.svelte";
 export { default as HighlightEditable } from "./HighlightEditable.svelte";
 export { default as HighlightStream } from "./HighlightStream.svelte";
 export { default as HighlightStyle } from "./HighlightStyle.svelte";

@@ -94,3 +94,20 @@ export function markdownWithFences(minLength: number, fenceCount: number) {
   while (out.length < minLength) out += proseUnit;
   return out;
 }
+
+/**
+ * `text` with a deterministic edit about every `every` lines: a changed
+ * line, an inserted line, or a deleted line, in turn.
+ */
+export function scatterEdits(text: string, every: number) {
+  const lines = text.split("\n");
+  const out: string[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i] ?? "";
+    const kind = i % every === every - 1 ? ((i / every) % 3) | 0 : -1;
+    if (kind === 0) out.push(`${line} // edited`);
+    else if (kind === 1) out.push(line, "  // inserted line");
+    else if (kind !== 2) out.push(line);
+  }
+  return out.join("\n");
+}

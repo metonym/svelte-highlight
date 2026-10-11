@@ -162,6 +162,31 @@
       }
     },
     {
+      "includes": ["src/DiffView.svelte"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off",
+            "useFocusableInteractive": "off",
+            "noNoninteractiveTabindex": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "tests/diff-edits.test.ts",
+        "www/components/HighlightDiff/samples.js"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["src/HighlightStream.svelte"],
       "linter": {
         "rules": {

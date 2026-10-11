@@ -45,6 +45,9 @@ jobs:
       - name: Run engine perf budget
         run: bun scripts/benchmark-engine.ts
 
+      - name: Run diff perf budget
+        run: bun scripts/benchmark-diff.ts
+
   e2e-tests:
     needs: [lint]
     runs-on: macos-15
