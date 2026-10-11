@@ -327,6 +327,8 @@
     };
   });
 
+  $: ({ class: _class, ...rest } = $$restProps);
+
   $: options = { view, context, wordDiff, ignoreWhitespace };
   $: viewProps = {
     wrap,
@@ -347,7 +349,10 @@
   };
 </script>
 
-<div class="shl-diff-file-list shl-diff-theme" {...$$restProps}>
+<div
+  {...rest}
+  class="shl-diff-file-list shl-diff-theme {$$restProps.class ?? ""}"
+>
   {#each files as file, index (keyOf(file, index))}
     {@const key = keyOf(file, index)}
     {@const fileStats = statsOf(file, key, stats)}

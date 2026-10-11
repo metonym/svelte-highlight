@@ -3292,6 +3292,9 @@ test("DiffFileList - mounts only files near the viewport, and unmounts far ones"
   await mount(DiffFileList);
 
   const list = page.getByTestId("list");
+  // A consumer class adds to the list's own classes instead of replacing them.
+  await expect(list).toHaveClass(/shl-diff-file-list/);
+  await expect(list).toHaveClass(/consumer-class/);
   await expect(list.locator(".shl-diff-file")).toHaveCount(300);
   await expect(list.locator(".shl-diff-file-body").first()).toBeVisible();
   const mountedAtTop = await list.locator(".shl-diff-file-body").count();

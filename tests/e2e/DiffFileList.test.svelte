@@ -56,5 +56,11 @@
     </div>
   </DiffFileList>
 {:else}
-  <DiffFileList bind:this={list} {files} {windowing} data-testid="list" />
+  <DiffFileList
+    bind:this={list}
+    {files}
+    {windowing}
+    class="consumer-class"
+    data-testid="list"
+  />
 {/if}

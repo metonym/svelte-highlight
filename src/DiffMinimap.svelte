@@ -7,6 +7,7 @@
 
   import { onMount } from "svelte";
 
+  $: ({ class: _class, ...rest } = $$restProps);
   $: marks = $diff.marks();
   $: total = $diff.rows().length;
 
@@ -28,11 +29,11 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-  class="shl-diff-minimap shl-diff-theme"
+  {...rest}
+  class="shl-diff-minimap shl-diff-theme {$$restProps.class ?? ""}"
   title="Changes in this file. Click to jump."
   role="presentation"
   on:click={onClick}
-  {...$$restProps}
 >
   {#each marks as mark (mark.rowIndex)}
     <span
