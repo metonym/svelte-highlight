@@ -6,7 +6,7 @@
     "build": "NODE_ENV=production webpack"
   },
   "dependencies": {
-    "svelte-highlight": "^7.21.0"
+    "svelte-highlight": "^7.23.1"
   },
   "devDependencies": {
     "@tsconfig/svelte": "latest",
@@ -16,7 +16,7 @@
     "svelte": "latest",
     "svelte-loader": "latest",
     "svelte-preprocess": "latest",
-    "typescript": "latest",
+    "typescript": "^6.0.3",
     "webpack": "latest",
     "webpack-cli": "latest",
     "webpack-dev-server": "latest"
