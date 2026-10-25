@@ -46,14 +46,17 @@ export const preprocessStyles = (
     discardDuplicates(),
     mergeRules(),
     joinSelectors,
-    cssnanoLite({
-      discardComments:
-        options?.discardComments === "preserve-license"
-          ? { remove: (comment) => !LICENSE_OR_AUTHOR.test(comment) }
-          : options?.discardComments === "remove-all"
-            ? { removeAll: true }
-            : undefined,
-    }),
+    cssnanoLite(
+      options?.discardComments === "preserve-license"
+        ? {
+            discardComments: {
+              remove: (comment) => !LICENSE_OR_AUTHOR.test(comment),
+            },
+          }
+        : options?.discardComments === "remove-all"
+          ? { discardComments: { removeAll: true } }
+          : {},
+    ),
   ]).process(css).css;
 };
 
