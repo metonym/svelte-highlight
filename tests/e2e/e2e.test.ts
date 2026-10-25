@@ -385,7 +385,7 @@ test("AnsiOutput - streamed appends match a single non-streamed render", async (
   await expect(link).toHaveAttribute("href", "https://example.com");
 
   const reference = page.getByTestId("reference");
-  await expect(streamed).toHaveText(await reference.innerText());
+  await expect(streamed).toHaveText((await reference.textContent()) ?? "");
   expect(await streamed.innerHTML()).toBe(await reference.innerHTML());
 });
 
