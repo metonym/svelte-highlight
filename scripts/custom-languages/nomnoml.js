@@ -12,9 +12,7 @@ function defineNomnoml(_hljs) {
 
   const CLASSIFIER = {
     className: "type",
-    begin: new RegExp(
-      String.raw`<(?:${NOMNOML_CLASSIFIERS.split(" ").join("|")})>`,
-    ),
+    begin: new RegExp(`<(?:${NOMNOML_CLASSIFIERS.split(" ").join("|")})>`),
     relevance: 0,
   };
 
