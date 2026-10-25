@@ -1,6 +1,9 @@
 {
   "private": true,
   "type": "module",
+  "imports": {
+    "#lib/*": "./src/lib/*"
+  },
   "scripts": {
     "start": "node build",
     "dev": "vite dev",
@@ -8,14 +11,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "svelte-highlight": "^7.21.0"
+    "svelte-highlight": "^7.23.1"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "latest",
     "@sveltejs/kit": "latest",
     "@sveltejs/vite-plugin-svelte": "latest",
     "svelte": "latest",
-    "typescript": "latest",
+    "typescript": "^6.0.3",
     "vite": "latest"
   }
 }

@@ -6,7 +6,7 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "svelte-highlight": "^7.21.0"
+    "svelte-highlight": "^7.23.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "latest",
@@ -17,6 +17,6 @@
     "rollup-plugin-terser": "latest",
     "svelte": "latest",
     "svelte-preprocess": "latest",
-    "typescript": "latest"
+    "typescript": "^6.0.3"
   }
 }
