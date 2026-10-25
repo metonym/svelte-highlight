@@ -160,3 +160,21 @@ export function highlightRulesFromPalette(palette) {
   }
   return out;
 }
+
+/**
+ * Lives here, not in HighlightEditable.svelte: svelte-preprocess matches a
+ * literal style tag inside `<script>` as the component's `<style>` block.
+ * @param {string | import("./theme.d.ts").ThemePalette} theme
+ * @param {string} instanceId Inserted into each highlight name.
+ * @returns {string} `<style>`-wrapped `::highlight(hljs-<id>-<scope>)` rules.
+ */
+export function instanceHighlightStyle(theme, instanceId) {
+  const rules =
+    typeof theme === "object"
+      ? highlightRulesFromPalette(theme)
+      : highlightRules(theme);
+  return `<style>${rules.replaceAll(
+    "::highlight(hljs-",
+    `::highlight(hljs-${instanceId}-`,
+  )}</style>`;
+}

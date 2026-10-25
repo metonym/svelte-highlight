@@ -50,10 +50,7 @@
     renderLines as renderLineDom,
   } from "./editable-line-dom.js";
   import { toRanges } from "./engine.js";
-  import {
-    highlightRules,
-    highlightRulesFromPalette,
-  } from "./highlight-theme.js";
+  import { instanceHighlightStyle } from "./highlight-theme.js";
   import {
     parseIncremental,
     reparseIncremental,
@@ -119,14 +116,7 @@
   $: if (mounted && code !== internalCode) syncExternal();
   $: cssHighlightStyle =
     resolvedEngineValue === "css-highlights" && theme !== undefined
-      ? `<style>${(
-          typeof theme === "object"
-            ? highlightRulesFromPalette(theme)
-            : highlightRules(theme)
-        ).replaceAll(
-          "::highlight(hljs-",
-          `::highlight(hljs-${instanceId}-`,
-        )}</style>`
+      ? instanceHighlightStyle(theme, instanceId)
       : "";
 
   function sumChildLengths(el, count) {
