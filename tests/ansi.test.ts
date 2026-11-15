@@ -106,6 +106,52 @@ describe("parseAnsi", () => {
     expect(parseAnsi(`${ESC}[53mx`)).toEqual([{ text: "x" }]);
   });
 
+  it("keeps active styling when a colon SGR group is unsupported", () => {
+    expect(parseAnsi(`${ESC}[1;31ma${ESC}[58:5:196mb`)).toEqual([
+      { text: "a", bold: true, fg: { name: "red" } },
+      { text: "b", bold: true, fg: { name: "red" } },
+    ]);
+  });
+
+  it("parses colon underline sub-parameters", () => {
+    expect(parseAnsi(`${ESC}[1;31ma ${ESC}[4:3mcurly`)).toEqual([
+      { text: "a ", bold: true, fg: { name: "red" } },
+      { text: "curly", bold: true, underline: true, fg: { name: "red" } },
+    ]);
+    expect(parseAnsi(`${ESC}[4mon${ESC}[4:0moff`)).toEqual([
+      { text: "on", underline: true },
+      { text: "off" },
+    ]);
+  });
+
+  it("parses colon 256-color and truecolor sub-parameters", () => {
+    expect(parseAnsi(`${ESC}[1mbold ${ESC}[38:5:196mred`)).toEqual([
+      { text: "bold ", bold: true },
+      { text: "red", bold: true, fg: { index: 196 } },
+    ]);
+    expect(parseAnsi(`${ESC}[38:2::10:20:30mx`)).toEqual([
+      { text: "x", fg: { rgb: [10, 20, 30] } },
+    ]);
+    expect(parseAnsi(`${ESC}[48:2:10:20:30mx`)).toEqual([
+      { text: "x", bg: { rgb: [10, 20, 30] } },
+    ]);
+    expect(parseAnsi(`${ESC}[1;38:5:2;3mx`)).toEqual([
+      { text: "x", bold: true, italic: true, fg: { name: "green" } },
+    ]);
+  });
+
+  it("drops non-decimal SGR parameters instead of coercing them", () => {
+    expect(parseAnsi(`${ESC}[+1mx`)).toEqual([{ text: "x" }]);
+    expect(parseAnsi(`${ESC}[ 1;3mx`)).toEqual([{ text: "x", italic: true }]);
+  });
+
+  it("still resets on an empty SGR sequence", () => {
+    expect(parseAnsi(`${ESC}[1ma${ESC}[mb`)).toEqual([
+      { text: "a", bold: true },
+      { text: "b" },
+    ]);
+  });
+
   it("skips non-SGR CSI sequences (e.g. cursor moves)", () => {
     expect(parseAnsi(`${ESC}[2Jhello`)).toEqual([{ text: "hello" }]);
     expect(parseAnsi(`a${ESC}[Kb`)).toEqual([{ text: "ab" }]);
