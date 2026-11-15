@@ -36,12 +36,9 @@ function paletteColor(index) {
 
 /**
  * @param {AnsiStyle} style
- * @param {number[]} params
+ * @param {number[]} list `ESC[m` arrives as `[0]`; `[]` is a no-op.
  */
-function applySgr(style, params) {
-  // Empty params (`ESC[m`) reset everything.
-  const list = params.length === 0 ? [0] : params;
-
+function applySgr(style, list) {
   for (let i = 0; i < list.length; i += 1) {
     const code = list[i];
     if (code === undefined) continue;
@@ -123,10 +120,12 @@ function applySgr(style, params) {
   }
 }
 
+const DIGITS = /^\d*$/;
+
 /**
  * `;`-separated integers in `text.slice(start, end)`; an empty part is 0.
- * All-digit bodies are parsed by char code to skip the split/map/filter
- * allocations; anything else falls back to that chain for `Number()` parity.
+ * All-digit bodies are parsed by char code to skip allocations; anything
+ * else goes through `parseSgrGroups`.
  * @param {string} text
  * @param {number} start
  * @param {number} end
@@ -147,14 +146,47 @@ function parseSgrParams(text, start, end) {
       value = value * 10 + (code - 0x30);
       digits += 1;
     } else {
-      return text
-        .slice(start, end)
-        .split(";")
-        .map((part) => (part === "" ? 0 : Number(part)))
-        .filter((n) => Number.isInteger(n));
+      return parseSgrGroups(text.slice(start, end));
     }
   }
   params.push(value);
+  return params;
+}
+
+/**
+ * Slow path: drops non-numeric parts and rewrites colon sub-parameter
+ * groups (ITU T.416: `4:3`, `38:5:n`, `38:2::r:g:b`) to their `;` form.
+ * Unsupported groups (e.g. `58:5:n` underline color) are dropped, so a
+ * body with nothing usable returns `[]` and leaves the style untouched.
+ * @param {string} body
+ * @returns {number[]}
+ */
+function parseSgrGroups(body) {
+  /** @type {number[]} */
+  const params = [];
+  for (const part of body.split(";")) {
+    if (DIGITS.test(part)) {
+      params.push(part === "" ? 0 : Number(part));
+      continue;
+    }
+    const sub = part.split(":");
+    if (!sub.every((s) => DIGITS.test(s))) continue;
+    const nums = sub.map((s) => (s === "" ? 0 : Number(s)));
+    const [head, mode] = nums;
+    if (head === 4) {
+      // `4:0` is underline off; `4:1`..`4:5` are underline styles.
+      if (mode === 0) params.push(24);
+      else if (mode !== undefined && mode <= 5) params.push(4);
+    } else if (head === 38 || head === 48) {
+      if (mode === 5 && nums.length >= 3) {
+        params.push(head, 5, /** @type {number} */ (nums[2]));
+      } else if (mode === 2 && nums.length >= 5) {
+        // `38:2:cs:r:g:b` carries a color-space id; `38:2:r:g:b` omits it.
+        const from = nums.length >= 6 ? 3 : 2;
+        params.push(head, 2, ...nums.slice(from, from + 3));
+      }
+    }
+  }
   return params;
 }
 

@@ -2101,7 +2101,7 @@ Browser Cmd+F can't see rows a virtualized view (`HighlightVirtual`, `HighlightS
 
 ## Terminal Output
 
-Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) escape codes. Colors, bold, dim, italic, and underline become styled HTML, along with OSC 8 hyperlinks, carriage-return overwrites, and reverse/strikethrough. The parser is separate from highlight.js, so reach for it with build logs, CLI output, and test runners.
+Use `AnsiOutput` to render terminal output that still contains ANSI [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) escape codes. Colors, bold, dim, italic, and underline become styled HTML (including the colon sub-parameter forms modern tools emit, like `4:3` and `38:5:196`), along with OSC 8 hyperlinks, carriage-return overwrites, and reverse/strikethrough. The parser is separate from highlight.js, so reach for it with build logs, CLI output, and test runners.
 
 ```svelte
 <script>
