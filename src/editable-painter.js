@@ -5,6 +5,7 @@
  * Framework-free; needs a DOM, plus `CSS.highlights` for "css-highlights".
  */
 
+import { createScopeHighlights } from "./css-highlights.js";
 import { lineTokenRanges, retokenizedEnd } from "./editable-css-paint.js";
 import { createDomLinePainter } from "./editable-dom-paint.js";
 import { lineStartOffset, renderLines } from "./editable-line-dom.js";
@@ -14,24 +15,7 @@ import {
   reparseIncremental,
 } from "./incremental-tokenize.js";
 
-/** @typedef {"dom" | "css-highlights"} PaintEngine */
-
-/** True when this runtime supports the CSS Custom Highlight API. */
-export function supportsCssHighlights() {
-  return typeof CSS !== "undefined" && typeof CSS.highlights !== "undefined";
-}
-
-/**
- * The engine to use for a requested one: "css-highlights" falls back to
- * "dom" where `CSS.highlights` is missing.
- * @param {PaintEngine} engine
- * @returns {PaintEngine}
- */
-export function resolveEngine(engine) {
-  return engine === "css-highlights" && supportsCssHighlights()
-    ? "css-highlights"
-    : "dom";
-}
+/** @typedef {import("./css-highlights.js").PaintEngine} PaintEngine */
 
 /** @param {HTMLElement} el @param {string} line */
 const setHtml = (el, line) => {
@@ -61,8 +45,7 @@ export function createEditorPainter({
   let incrementalParse;
   const domLinePainter = createDomLinePainter();
 
-  /** @type {Map<string, Highlight>} */
-  let cssHighlights = new Map();
+  const cssHighlights = createScopeHighlights(highlightPrefix);
   /** @type {{ scope: string; range: Range }[][]} */
   let lineHighlightRanges = [];
   /** @type {import("./engine.d.ts").ScopeEvent[] | undefined} */
@@ -76,31 +59,17 @@ export function createEditorPainter({
     return incrementalParse.events;
   }
 
-  /** @param {string} scope */
-  function cssHighlightFor(scope) {
-    let highlight = cssHighlights.get(scope);
-    if (!highlight) {
-      highlight = new Highlight();
-      cssHighlights.set(scope, highlight);
-      CSS.highlights.set(`${highlightPrefix}-${scope}`, highlight);
-    }
-    return highlight;
-  }
-
   /** @param {number} index */
   function clearLineHighlights(index) {
     const previous = lineHighlightRanges[index];
     if (!previous) return;
     for (const { scope, range } of previous) {
-      cssHighlights.get(scope)?.delete(range);
+      cssHighlights.delete(scope, range);
     }
   }
 
   function clearHighlights() {
-    for (const scope of cssHighlights.keys()) {
-      CSS.highlights.delete(`${highlightPrefix}-${scope}`);
-    }
-    cssHighlights = new Map();
+    cssHighlights.clear();
     lineHighlightRanges = [];
     cssPaintedEvents = undefined;
   }
@@ -164,7 +133,7 @@ export function createEditorPainter({
           const range = new Range();
           range.setStart(textNode, start);
           range.setEnd(textNode, end);
-          cssHighlightFor(token.scope).add(range);
+          cssHighlights.add(token.scope, range);
           next.push({ scope: token.scope, range });
         }
       }
