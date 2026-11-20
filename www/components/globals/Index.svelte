@@ -12,6 +12,7 @@
   import FileTabs from "@components/FileTabs.svelte";
   import HighlightWrap from "@components/Highlight/Wrap.svelte";
   import HighlightAction from "@components/HighlightAction.svelte";
+  import HighlightDiffIntro from "@components/HighlightDiff/Intro.svelte";
   import EditableBasic from "@components/HighlightEditable/Basic.svelte";
   import EditableCommands from "@components/HighlightEditable/Commands.svelte";
   import EditableComposition from "@components/HighlightEditable/Composition.svelte";
@@ -876,6 +877,29 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}> <HighlightVirtualSearch /> </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}> <h2 id="diffs">Diffs</h2> </Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">HighlightDiff</code>
+      shows a syntax-highlighted diff of two texts, in unified or split view.
+      Each side is highlighted as a whole file, so strings and comments that
+      open far above a change still highlight correctly inside it.
+    </p>
+    <p class="mb-5">
+      It can follow a stream as a model writes a new version, read the edit
+      formats models write, show accept and reject controls, and render a git
+      patch without its source files.
+      <code class="code">DiffFileList</code>
+      shows hundreds of files on one page.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}> <HighlightDiffIntro /> </Column>
+  <Column xlg={10} lg={10} md={12}>
+    <Link size="lg" href="/preview-diff">See every diff feature</Link>
+  </Column>
 </Row>
 
 <Row class="mb-9">

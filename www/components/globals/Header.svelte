@@ -74,6 +74,7 @@
     "/preview-highlight-stream": "HighlightStream preview",
     "/preview-markdown-stream": "MarkdownStream preview",
     "/preview-virtual": "HighlightVirtual preview",
+    "/preview-diff": "HighlightDiff preview",
     "/preview-large-file": "Large files",
     "/preview-engine": "Headless engine preview",
     "/preview-jq": "jq language preview",
