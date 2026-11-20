@@ -71,6 +71,40 @@ A long line makes the code block scroll. Keyboard users can only scroll what the
 
 `label` works the same way on `HighlightAuto`, `HighlightSvelte`, `LineNumbers`, `AnsiOutput`, `HighlightStream`, `HighlightVirtual`, and `Typewriter`. Inside a `CodeWindow`, the block takes the window's `title` (or its `label`) as its name.
 
+### Experimental: CSS Custom Highlight engine
+
+Set `engine="css-highlights"` to paint tokens with the [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) (`CSS.highlights`, `::highlight()`) instead of a `<span>` per token. The `<code>` then holds one plain text node. For a 1,768-line JavaScript file, `<code>` holds 2 DOM nodes instead of 9,478 (3,164 of them `<span>`s).
+
+Pass `theme` (theme CSS or a `ThemePalette`) to generate the `::highlight()` rules. `Highlight` resolves each token's color and background the way the browser would for the `"dom"` markup. Compound rules (`.hljs-title.function_`), descendant rules (`.hljs-meta .hljs-keyword`), and the fallback from `title.function_` to `.hljs-title` all apply, so colors match the `"dom"` engine. You still need `HighlightStyle` for the base `.hljs` rules. Without `theme`, the text stays plain.
+
+**Bold and italic are dropped.** `::highlight()` can't change `font-weight` or `font-style`, so a theme's bold keywords and italic comments render at normal weight and style. Underlines are dropped too.
+
+```svelte
+<script>
+  import Highlight, { HighlightStyle } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+</script>
+
+<HighlightStyle theme={github}>
+  <Highlight language={typescript} {code} engine="css-highlights" theme={github} />
+</HighlightStyle>
+```
+
+- The default stays `engine="dom"`.
+- SSR always renders the `"dom"` markup. The swap to plain text happens after mount, so hydration is unchanged.
+- Where `CSS.highlights` is unavailable, `Highlight` keeps the `"dom"` markup. Check which engine is on screen with `resolvedEngine()` on a `bind:this` reference. It returns `"dom"` until the first CSS paint, and after a failed resolver load.
+- Each instance registers its own highlight names, so many instances can share a page.
+- The color resolver loads on first paint, as a separate chunk. Pages that only use `"dom"` don't download it. The `"dom"` markup stays until the resolver is ready, so the code never shows uncolored.
+- A custom default slot renders its own markup, so the engine has no effect there.
+
+**Limits.** The colors come from `theme` alone, resolved in JavaScript:
+
+- Your app's own `.hljs-*` rules and `--shl-*` overrides don't reach the highlights.
+- `@media` blocks in the theme CSS (such as `prefers-color-scheme`) are skipped. To switch themes, change the `theme` prop.
+- Theme rules with selectors the resolver can't match (`:hover`, attributes, ids, sibling combinators) are skipped.
+- There are no per-token elements to query or attach handlers to.
+
 ## Theming
 
 Every `highlight.js` theme is also compiled into a **`ThemePalette`**: a typed object of `--shl-*` CSS custom properties plus a shared structural stylesheet (`svelte-highlight/themes/base.css`) that maps `.hljs*` classes to those variables. This is the recommended way to theme new projects — themes are data, scoping is an inline `style` attribute (SSR-safe by construction), and any token is overridable with one CSS line or a Svelte style prop. See [SUPPORTED_THEMES.md](SUPPORTED_THEMES.md) for a list of compiled themes.
@@ -157,7 +191,7 @@ const custom = {
 };
 ```
 
-**`HighlightEditable`'s `"css-highlights"` engine accepts palettes too:**
+**The `"css-highlights"` engine of `Highlight` and `HighlightEditable` accepts palettes too:**
 
 ```svelte
 <HighlightEditable engine="css-highlights" theme={atomOneDark} language={typescript} bind:code />
