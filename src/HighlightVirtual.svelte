@@ -154,6 +154,7 @@
       () => probe,
       () => lineHeight,
       (height) => (lineHeight = height),
+      tick,
     );
   }
 

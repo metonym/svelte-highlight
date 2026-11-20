@@ -28,6 +28,7 @@
     "src/stream-preview.js",
     "src/stream-regenerate.js",
     "src/stream-sealed-chunks.js",
+    "src/style-registry.js",
     "src/text-diff.js",
     "src/textmate-theme.js",
     "src/theme-style.js",

@@ -38,6 +38,7 @@ const CORE = [
   "stream-preview.js",
   "stream-regenerate.js",
   "stream-sealed-chunks.js",
+  "style-registry.js",
   "text-diff.js",
   "textmate-theme.js",
   "theme-style.js",
@@ -50,15 +51,14 @@ const CORE = [
   "worker.js",
 ];
 
-const DOM = ["action.js", "editable-line-dom.js", "search.js"];
-
-const SVELTE = [
-  "index.js",
-  "preprocessor.js",
-  "static.js",
-  "style-registry.js",
+const DOM = [
+  "action.js",
+  "editable-line-dom.js",
+  "search.js",
   "virtual-window.js",
 ];
+
+const SVELTE = ["index.js", "preprocessor.js", "static.js"];
 
 /** Packages each layer may import, by exact specifier. */
 const ALLOWED_PACKAGES: Record<string, string[]> = {

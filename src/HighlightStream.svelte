@@ -392,6 +392,7 @@
       () => probe,
       () => vLineHeight,
       (height) => (vLineHeight = height),
+      tick,
     );
   }
 

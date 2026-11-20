@@ -1,9 +1,40 @@
 // Owners of HighlightStyle's `<style>` tags, per key, in registration order.
 // Only the oldest renders; a store lets the rest re-derive a new owner when
 // it leaves.
-import { writable } from "svelte/store";
 
-/** @typedef {import("svelte/store").Writable<symbol[]>} Owners */
+/**
+ * A minimal store. It follows the Svelte store contract (`subscribe` calls
+ * back at once and returns an unsubscriber), so `$owners` works in Svelte 4
+ * and 5, but needs no framework.
+ * @typedef {{
+ *   subscribe(run: (value: symbol[]) => void): () => void,
+ *   update(fn: (value: symbol[]) => symbol[]): void,
+ * }} Owners
+ */
+
+/** @returns {Owners} */
+function createOwners() {
+  /** @type {symbol[]} */
+  let value = [];
+  /** @type {Set<{ run: (value: symbol[]) => void }>} */
+  const subscribers = new Set();
+  return {
+    subscribe(run) {
+      const subscriber = { run };
+      subscribers.add(subscriber);
+      run(value);
+      return () => {
+        subscribers.delete(subscriber);
+      };
+    },
+    update(fn) {
+      const next = fn(value);
+      if (next === value) return;
+      value = next;
+      for (const subscriber of [...subscribers]) subscriber.run(value);
+    },
+  };
+}
 
 export function createStyleRegistry() {
   /** @type {Map<string, Owners>} */
@@ -18,7 +49,7 @@ export function createStyleRegistry() {
     register(key, token) {
       let owners = registries.get(key);
       if (!owners) {
-        owners = writable([]);
+        owners = createOwners();
         registries.set(key, owners);
       }
       owners.update((list) => [...list, token]);

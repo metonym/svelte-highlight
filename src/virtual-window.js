@@ -1,5 +1,3 @@
-import { tick } from "svelte";
-
 /**
  * The `[start, end)` line range to render, padded by `overscan` and clamped
  * to `[0, total]`.
@@ -30,14 +28,21 @@ export function windowRange({
 }
 
 /**
- * Measures the probe line's height after the next tick and again once
+ * Measures the probe line's height after the next render and again once
  * webfonts load. Rounded: a fractional height misaligns the sizer/translateY
  * with the integer scrollTop, causing 1px jitter during streaming repaints.
  * @param {() => HTMLElement | undefined} getProbe
  * @param {() => number} getLineHeight
  * @param {(height: number) => void} setLineHeight
+ * @param {() => Promise<unknown>} tick Resolves once pending DOM updates
+ *   apply, e.g. Svelte's `tick`.
  */
-export async function watchLineHeight(getProbe, getLineHeight, setLineHeight) {
+export async function watchLineHeight(
+  getProbe,
+  getLineHeight,
+  setLineHeight,
+  tick,
+) {
   await tick();
   const probe = getProbe();
   if (probe) {
