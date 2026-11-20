@@ -1,6 +1,9 @@
 <script>
   import AnsiOutputExamples from "@components/AnsiOutput/Examples.svelte";
   import CodeSnippet from "@components/CodeSnippet.svelte";
+  import CodeToolbarBasic from "@components/CodeToolbar/Basic.svelte";
+  import CodeToolbarCustomActions from "@components/CodeToolbar/CustomActions.svelte";
+  import CodeToolbarInCodeWindow from "@components/CodeToolbar/InCodeWindow.svelte";
   import CodeWindowPreview from "@components/CodeWindowPreview.svelte";
   import CopyButtonBasic from "@components/CopyButton/Basic.svelte";
   import CopyButtonCustomFunction from "@components/CopyButton/CustomFunction.svelte";
@@ -626,6 +629,52 @@ export { add, mul };\`,
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}><CodeWindowPreview /></Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}><h2 id="code-toolbar">Code Toolbar</h2></Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">CodeToolbar</code>
+      adds a bar above the code with a file name, a language badge and buttons. Put
+      it first in
+      <code class="code">Highlight</code>'s default slot. It takes its colors
+      from your theme, so it matches light and dark themes with no extra CSS.
+    </p>
+    <p class="mb-5">
+      The toolbar sticks to the top of its scrolling container. Give the wrapper
+      a <code class="code">max-height</code> and
+      <code class="code">overflow-y: auto</code>, then scroll the example below.
+      Set <code class="code">label</code> to name the toolbar for screen readers.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}><CodeToolbarBasic /></Column>
+  <Column xlg={6} lg={6} md={12}>
+    <h3 class="mb-5">Custom actions</h3>
+    <p class="mb-5">
+      Use <code class="code">ToolbarButton</code> for your own actions. It
+      matches <code class="code">WrapToggle</code> and
+      <code class="code">CopyButton</code>. Its
+      <code class="code">label</code>
+      is the tooltip and the accessible name. Set
+      <code class="code">href</code>
+      for a link, or
+      <code class="code">pressed</code>
+      for a toggle. The
+      <code class="code">start</code>
+      slot holds content after the badge.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}><CodeToolbarCustomActions /></Column>
+  <Column xlg={6} lg={6} md={12}>
+    <h3 class="mb-5">Inside CodeWindow</h3>
+    <p class="mb-5">
+      In a <code class="code">CodeWindow</code>, the window title already names
+      the file. Leave out the toolbar's <code class="code">title</code>, so the
+      name doesn't show twice.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}><CodeToolbarInCodeWindow /></Column>
 </Row>
 
 <Row class="mb-9">

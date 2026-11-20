@@ -511,6 +511,7 @@ These apply to the outer container of every component (the `pre` element for `Hi
 | --copy-size          | Width and height of the button       | `2em`         |
 | --copy-padding       | Inner padding of the button          | `0.5em`       |
 | --copy-background    | Background color of the button       | `inherit`     |
+| --copy-hover-background | Background color on hover inside `CodeToolbar` | text color at 12% |
 | --copy-color         | Foreground color of the button       | `inherit`     |
 | --copy-border-radius | Border radius of the button          | `4px`         |
 | --copy-border        | Border of the button                 | `none`        |
@@ -568,6 +569,42 @@ These apply when `langtag` is set to `true`.
 | --tab-active-color      | Text color of the active tab                                     | the highlighted code's text color              |
 | --tab-active-background | Background color of the active tab                               | the highlighted code's background              |
 | --tab-focus-outline     | Keyboard focus outline of a tab                                   | `2px solid currentColor`                       |
+
+### `CodeToolbar` variables
+
+| Variable              | Description                                          | Default value                                       |
+| :-------------------- | :--------------------------------------------------- | :-------------------------------------------------- |
+| --toolbar-background  | Tint painted over the theme background               | `color-mix(in srgb, currentColor 5%, transparent)`  |
+| --toolbar-color       | Text color of the toolbar content                    | the theme's text color                              |
+| --toolbar-border      | Bottom border of the toolbar                         | `1px solid` text color at 14%                       |
+| --toolbar-padding     | Padding of the toolbar                               | `0.25em 0.375em 0.25em 1em`                         |
+| --toolbar-gap         | Gap between the title, badge and controls            | `0.75em`                                            |
+| --toolbar-height      | Minimum height of the toolbar                        | `2.75em`                                            |
+| --toolbar-font-family | Font family of the toolbar                           | `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif` |
+| --toolbar-font-size   | Font size of the toolbar                             | `0.8125em`                                          |
+| --toolbar-z-index     | Stacking order of a sticky toolbar                   | `3`                                                 |
+| --langtag-background  | Background color of the language badge               | text color at 10%                                   |
+| --langtag-color       | Text color of the language badge                     | text color at 72%                                   |
+| --langtag-padding     | Padding of the language badge                        | `0.375em 0.625em`                                   |
+| --langtag-border-radius | Corner radius of the language badge                | `999px`                                             |
+| --langtag-font-size   | Font size of the language badge                      | `0.875em`                                           |
+
+### `ToolbarButton` variables
+
+`WrapToggle`, and `CopyButton` inside `CodeToolbar`, use these too.
+
+| Variable                            | Description                               | Default value      |
+| :---------------------------------- | :---------------------------------------- | :----------------- |
+| --toolbar-button-size               | Width and height of the button            | `2em`              |
+| --toolbar-button-gap                | Gap between the button's content          | `0.4em`            |
+| --toolbar-button-padding            | Padding of the button                     | `0.3em`            |
+| --toolbar-button-background         | Background color of the button            | `transparent`      |
+| --toolbar-button-color              | Icon and text color of the button         | text color at 72%  |
+| --toolbar-button-hover-background   | Background color on hover                 | text color at 12%  |
+| --toolbar-button-pressed-background | Background color when pressed or active   | text color at 18%  |
+| --toolbar-button-border-radius      | Corner radius of the button               | `6px`              |
+| --toolbar-button-border             | Border of the button                      | `none`             |
+| --toolbar-button-font-size          | Font size of the button                   | `inherit`          |
 
 ## Svelte Syntax Highlighting
 
@@ -926,6 +963,12 @@ Use `--copy-*` style props to customize the button.
   --copy-color="#fff"
   --copy-border-radius="8px"
 />
+```
+
+Set `absolute={false}` to lay the button out in normal document flow instead of overlaying its container. Inside `CodeToolbar`, this is the default.
+
+```svelte
+<CopyButton {code} absolute={false} />
 ```
 
 ### With Line Numbers
@@ -1732,6 +1775,100 @@ Put a `FileTabs` strip in the `titlebar` slot to switch between files without le
 <CodeWindow variant="macos">
   <FileTabs {files} bind:active slot="titlebar" />
   <Highlight language={sources[active].language} code={sources[active].code} />
+</CodeWindow>
+```
+
+## Code Toolbar
+
+`CodeToolbar` adds a bar above the code with a file name, a language badge and buttons. Put it first in `Highlight`'s default slot.
+
+```svelte
+<script>
+  import Highlight, {
+    CodeToolbar,
+    CopyButton,
+    LineNumbers,
+    WrapToggle,
+  } from "svelte-highlight";
+  import typescript from "svelte-highlight/languages/typescript";
+  import github from "svelte-highlight/styles/github";
+
+  export let code;
+
+  let wrap = false;
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<div class="code-block">
+  <Highlight {code} language={typescript} {wrap} let:highlighted let:languageName>
+    <CodeToolbar {languageName} title="app.ts" label="app.ts actions">
+      <WrapToggle bind:wrap />
+      <CopyButton {code} />
+    </CodeToolbar>
+    <LineNumbers {highlighted} wrapLines={wrap} style="max-height: 24rem" />
+  </Highlight>
+</div>
+
+<style>
+  .code-block {
+    border-radius: 8px;
+    overflow: clip;
+  }
+</style>
+```
+
+- **Theme colors:** the toolbar has the `hljs` class, so it takes its background and text color from your theme. A faint tint and a divider set it apart from the code. With no theme, it uses the system `Canvas` colors.
+- **Scoped themes:** if you scope a theme to a class, put that class on an element that wraps the toolbar, such as `.code-block` above. A global theme works as is.
+- **Scrolling:** put the `max-height` on `LineNumbers`, not on a wrapper. Then only the code scrolls, and the scrollbar starts below the toolbar. `overflow: clip` on the wrapper rounds the corners without making it scroll.
+- **Sticky:** if a wrapper or the page scrolls instead, the toolbar sticks to its top while the block is on screen. Set `sticky={false}` to turn it off.
+- **Buttons:** inside `CodeToolbar`, `CopyButton` sits in the bar, and `WrapToggle` and `CopyButton` share one icon-button style.
+- **Accessibility:** the root is a `role="toolbar"` element. Set `label` to give it a name. The buttons are ordinary tab stops, as in the lightweight [WAI-ARIA toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
+
+### Custom actions
+
+Use `ToolbarButton` for your own actions. It matches the built-in buttons. Give it a `label` for the tooltip and screen readers, and an icon in its slot. Set `href` for a link, or `pressed` for a toggle.
+
+```svelte
+<script>
+  import { ToolbarButton } from "svelte-highlight";
+
+  function download() {
+    const url = URL.createObjectURL(new Blob([code], { type: "text/plain" }));
+    Object.assign(document.createElement("a"), { href: url, download: "app.ts" }).click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+<CodeToolbar {languageName} title="app.ts">
+  <ToolbarButton label="Download" on:click={download}>
+    <svg aria-hidden="true"><!-- icon --></svg>
+  </ToolbarButton>
+  <ToolbarButton label="Open in playground" href={playgroundUrl} target="_blank" rel="noopener">
+    <svg aria-hidden="true"><!-- icon --></svg>
+  </ToolbarButton>
+  <WrapToggle bind:wrap />
+  <CopyButton {code} />
+</CodeToolbar>
+```
+
+Use the `start` slot for content after the badge, such as a status or a branch name.
+
+### Composing with CodeWindow
+
+In a `CodeWindow`, the window title already names the file. Leave out the toolbar's `title`, so the name doesn't show twice:
+
+```svelte
+<CodeWindow variant="macos" title="app.ts">
+  <Highlight {code} language={typescript} {wrap} let:highlighted let:languageName>
+    <CodeToolbar {languageName}>
+      <WrapToggle bind:wrap />
+      <CopyButton {code} />
+    </CodeToolbar>
+    <LineNumbers {highlighted} wrapLines={wrap} />
+  </Highlight>
 </CodeWindow>
 ```
 
@@ -2597,6 +2734,7 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | text       | `string`                                   | `"Copy"`                                     |
 | copiedText | `string`                                   | `"Copied!"`                                  |
 | errorText  | `string`                                   | `"Copy failed"`                              |
+| absolute   | `boolean`                                  | `true` (`false` inside `CodeToolbar`)        |
 
 `$$restProps` are forwarded to the top-level `button` element. A visually-hidden `role="status"` region after the button announces `copiedText` on success and `errorText` on failure.
 
@@ -2613,6 +2751,7 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | --copy-size          | Width and height of the button       | `2em`         |
 | --copy-padding       | Inner padding of the button          | `0.5em`       |
 | --copy-background    | Background color of the button       | `inherit`     |
+| --copy-hover-background | Background color on hover inside `CodeToolbar` | text color at 12% |
 | --copy-color         | Foreground color of the button       | `inherit`     |
 | --copy-border-radius | Border radius of the button          | `4px`         |
 | --copy-border        | Border of the button                 | `none`        |
@@ -2678,6 +2817,86 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | --prompt-font-family  | Font family of the terminal prompt       | `ui-monospace, monospace`           |
 | --prompt-font-weight  | Font weight of the terminal prompt       | `700`                               |
 | --prompt-color        | Color of the terminal prompt             | `inherit`                           |
+
+### `CodeToolbar`
+
+#### Props
+
+| Name         | Type      | Default value |
+| :----------- | :-------- | :------------ |
+| languageName | `string`  | `undefined`    |
+| title        | `string`  | `""`           |
+| sticky       | `boolean` | `true`         |
+| label        | `string`  | `undefined`    |
+
+`$$restProps` are forwarded to the top-level `div` element.
+
+#### Slots
+
+- **start**: rendered next to the language badge/title
+- default: rendered in the trailing/"end" region
+
+#### CSS Variables
+
+| Variable              | Description                                          | Default value                                       |
+| :-------------------- | :--------------------------------------------------- | :-------------------------------------------------- |
+| --toolbar-background  | Tint painted over the theme background               | `color-mix(in srgb, currentColor 5%, transparent)`  |
+| --toolbar-color       | Text color of the toolbar content                    | the theme's text color                              |
+| --toolbar-border      | Bottom border of the toolbar                         | `1px solid` text color at 14%                       |
+| --toolbar-padding     | Padding of the toolbar                               | `0.25em 0.375em 0.25em 1em`                         |
+| --toolbar-gap         | Gap between the title, badge and controls            | `0.75em`                                            |
+| --toolbar-height      | Minimum height of the toolbar                        | `2.75em`                                            |
+| --toolbar-font-family | Font family of the toolbar                           | `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif` |
+| --toolbar-font-size   | Font size of the toolbar                             | `0.8125em`                                          |
+| --toolbar-z-index     | Stacking order of a sticky toolbar                   | `3`                                                 |
+| --langtag-background  | Background color of the language badge               | text color at 10%                                   |
+| --langtag-color       | Text color of the language badge                     | text color at 72%                                   |
+| --langtag-padding     | Padding of the language badge                        | `0.375em 0.625em`                                   |
+| --langtag-border-radius | Corner radius of the language badge                | `999px`                                             |
+| --langtag-font-size   | Font size of the language badge                      | `0.875em`                                           |
+
+### `WrapToggle`
+
+#### Props
+
+| Name        | Type      | Default value |
+| :---------- | :-------- | :------------- |
+| wrap        | `boolean` | `false`        |
+| text        | `string`  | `"Wrap"`       |
+
+`wrap` is bindable (`bind:wrap`). `$$restProps` are forwarded to the `ToolbarButton`.
+
+#### Slots
+
+- default: exposes `wrap`, falls back to a wrap icon (`text` is the `aria-label` and `title`)
+
+#### CSS Variables
+
+`WrapToggle` is a `ToolbarButton`. Style it with the `--toolbar-button-*` variables.
+
+### `ToolbarButton`
+
+#### Props
+
+| Name    | Type                   | Default value  |
+| :------ | :--------------------- | :------------- |
+| label   | `string`               | N/A (required) |
+| pressed | `boolean \| undefined` | `undefined`    |
+| href    | `string \| undefined`  | `undefined`    |
+
+`label` is the `aria-label` and the `title` tooltip. Set `pressed` to make a toggle button. Set `href` to render a link instead of a button. `$$restProps` are forwarded to the `button` or `a` element, and `class` is merged with the button's own class.
+
+#### Slots
+
+- default: the icon or text
+
+#### Events
+
+- `on:click`
+
+#### CSS Variables
+
+See [`ToolbarButton` variables](#toolbarbutton-variables).
 
 ### `AnsiOutput`
 
