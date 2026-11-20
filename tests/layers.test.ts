@@ -34,6 +34,7 @@ const CORE = [
   "editable-history.js",
   "engine.js",
   "fence.js",
+  "highlight-cascade.js",
   "highlight-theme.js",
   "incremental-tokenize.js",
   "load-language.js",

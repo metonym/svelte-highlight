@@ -21,6 +21,13 @@
    */
   export let label = undefined;
 
+  /**
+   * Bindable `<code>` element, for callers that paint it after mount
+   * (e.g. `Highlight`'s "css-highlights" engine).
+   * @type {HTMLElement | undefined}
+   */
+  export let codeElement = undefined;
+
   import { getContext } from "svelte";
   import { CODE_REGION, NO_REGION_LABEL } from "./code-region.js";
 
@@ -39,6 +46,7 @@
   style:width="var(--width, auto)"
   style:max-width="var(--max-width, none)"
   {...$$restProps}><code
+    bind:this={codeElement}
     class:hljs={true}
     tabindex="0"
     role="region"

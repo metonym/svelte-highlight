@@ -86,3 +86,53 @@ export function splitTopLevel(str, delim) {
   parts.push(str.slice(partStart));
   return parts;
 }
+
+/**
+ * Calls `visit(prelude, body)` for each top-level style rule in `css`, in
+ * source order. At-rules (`@media`, `@import`, ...) are skipped. A
+ * `<style>` wrapper is stripped first.
+ * @param {string} css
+ * @param {(prelude: string, body: string) => void} visit
+ */
+export function forEachRule(css, visit) {
+  const match = STYLE_TAG.exec(css);
+  const source = match ? (match[2] ?? "") : css;
+
+  // Prelude is built from slices between comments, not char by char.
+  let prelude = "";
+  let runStart = 0;
+  let i = 0;
+  while (i < source.length) {
+    const ch = source[i];
+    if (ch === "/" && source[i + 1] === "*") {
+      prelude += source.slice(runStart, i);
+      const end = source.indexOf("*/", i + 2);
+      i = end === -1 ? source.length : end + 2;
+      runStart = i;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      i = findStringEnd(source, i);
+      continue;
+    }
+    if (ch === "{") {
+      prelude += source.slice(runStart, i);
+      const bodyEnd = findBlockEnd(source, i + 1);
+      if (!prelude.trim().startsWith("@")) {
+        visit(prelude, source.slice(i + 1, bodyEnd));
+      }
+      prelude = "";
+      i = bodyEnd + 1;
+      runStart = i;
+      continue;
+    }
+    if (ch === ";") {
+      // Blockless at-rule (@import, etc.).
+      prelude = "";
+      i += 1;
+      runStart = i;
+      continue;
+    }
+    i += 1;
+  }
+}
