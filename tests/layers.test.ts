@@ -55,6 +55,7 @@ const CORE = [
 
 const DOM = [
   "action.js",
+  "editable.js",
   "editable-line-dom.js",
   "editable-painter.js",
   "search.js",

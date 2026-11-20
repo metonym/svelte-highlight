@@ -8,6 +8,7 @@ import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
 import CopyButtonTransform from "./CopyButton.transform.test.svelte";
+import CreateEditor from "./createEditor.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
 import HighlightDispatchOnce from "./Highlight.dispatchOnce.test.svelte";
 import HighlightEmptyCode from "./Highlight.emptyCode.test.svelte";
@@ -2732,6 +2733,42 @@ test("HighlightEditable - two instances share the same bound code", async ({
 
   await page.getByTestId("insert-first").click();
   await expect(second).toHaveText("abX");
+});
+
+test("createEditor - highlights and edits a plain element", async ({
+  mount,
+  page,
+}) => {
+  await mount(CreateEditor);
+
+  const editor = page.locator("[contenteditable='true']");
+  await expect(editor).toHaveText("const a = 1;");
+  await expect(editor.locator(".hljs-keyword")).toHaveText("const");
+
+  await editor.click();
+  await page.keyboard.press("End");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("let b");
+  await expect(editor).toHaveText("const a = 1;\nlet b");
+  await expect(editor.locator(".hljs-keyword")).toHaveText(["const", "let"]);
+  await expect(page.getByTestId("changes")).not.toHaveText("0");
+
+  await page.keyboard.press("ControlOrMeta+z");
+  await expect(editor).not.toContainText("let b");
+});
+
+test("createEditor - destroy removes the listeners", async ({
+  mount,
+  page,
+}) => {
+  await mount(CreateEditor);
+
+  await page.getByTestId("destroy").click();
+  const editor = page.locator("[contenteditable='true']");
+  await editor.click();
+  await page.keyboard.press("End");
+  await page.keyboard.press("Enter");
+  await expect(page.getByTestId("changes")).toHaveText("0");
 });
 
 test("FileTabs - renders a tab per file with the first active", async ({

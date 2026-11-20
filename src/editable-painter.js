@@ -21,6 +21,18 @@ export function supportsCssHighlights() {
   return typeof CSS !== "undefined" && typeof CSS.highlights !== "undefined";
 }
 
+/**
+ * The engine to use for a requested one: "css-highlights" falls back to
+ * "dom" where `CSS.highlights` is missing.
+ * @param {PaintEngine} engine
+ * @returns {PaintEngine}
+ */
+export function resolveEngine(engine) {
+  return engine === "css-highlights" && supportsCssHighlights()
+    ? "css-highlights"
+    : "dom";
+}
+
 /** @param {HTMLElement} el @param {string} line */
 const setHtml = (el, line) => {
   el.innerHTML = line;

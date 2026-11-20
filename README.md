@@ -1065,6 +1065,26 @@ Pass `theme` (the same theme string you'd give `HighlightStyle`) to generate `::
 </HighlightStyle>
 ```
 
+### Without Svelte
+
+`createEditor` from `svelte-highlight/editable` runs the same editor on any element, with no framework. Use a `<code contenteditable>` inside a `<pre>`. It takes the same settings as the component and has the same methods, plus `update`, `syncCode` and `destroy`.
+
+```js
+import { createEditor } from "svelte-highlight/editable";
+import typescript from "svelte-highlight/languages/typescript";
+
+const editor = createEditor(document.querySelector("pre code"), {
+  language: typescript,
+  code: "const add = (a, b) => a + b;",
+  onChange: (code) => console.log(code),
+});
+
+editor.update({ readonly: true });
+editor.destroy();
+```
+
+For the `"css-highlights"` engine, add `instanceHighlightStyle(theme, editor.instanceId)` to the page's `<head>`. It returns a complete `<style>` tag and is exported from the same path.
+
 ### Adding a gutter
 
 `HighlightEditable` has no slot and doesn't expose `highlighted`/`languageName`, so it can't be wrapped directly in `LineNumbers` the way a static `Highlight` block can. Mirror the same `code` in a second, read-only `Highlight` instance wrapped in `LineNumbers`, and position it alongside the editable block:

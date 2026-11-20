@@ -49,6 +49,7 @@ pkgJson.exports = Object.fromEntries([
   ...entry("transformers", "transformers", "default"),
   ...entry("worker", "worker", "import"),
   ...entry("search", "search", "import"),
+  ...entry("editable", "editable", "import"),
   ["./search.css", { import: "./search.css" }],
   ["./package.json", "./package.json"],
 ]);
