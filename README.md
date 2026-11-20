@@ -1856,6 +1856,32 @@ Per-chunk work is O(tail), not O(stream length so far): finished output is seale
 
 `virtualize` renders only the lines within the scrolled viewport (plus `overscan`), the same windowing `HighlightVirtual` does for static documents -- a stream that runs to tens of thousands of lines still costs a couple dozen DOM nodes. It swaps the sealed-chunk session for `TokenizedDocument` (see [Large documents](#large-documents) below), so output always reflects the streaming (non-canonicalized) parse, even once `done` -- unlike the default mode, which upgrades to a canonical final render. `on:highlight` isn't dispatched in this mode, since materializing the full HTML on every repaint would defeat the point of windowing; `on:done`, the caret, and `autoScroll` all keep working. `on:windowchange` fires with `{ start, end, lineCount }` whenever the rendered window moves, so you can show something like "lines *N*-*M* of *T*" without counting DOM nodes yourself. Row math assumes one line per fixed-height row, so `virtualize` can't wrap lines -- it always renders with `white-space: pre`, overriding any `white-space` you pass through `$$restProps`. `bind:this`, then call `scrollToLine(line)` to scroll a given line into view -- works in both `virtualize` and default modes.
 
+### Streaming without Svelte
+
+`createStreamView` from `svelte-highlight/stream` runs the same rendering on any element, with no framework. Use a `<code>` inside a `<pre>`, and import `svelte-highlight/stream.css` for the caret. It takes the same settings as the component, minus `virtualize`, and renders the first frame at once.
+
+```js
+import "svelte-highlight/stream.css";
+import { createStreamView } from "svelte-highlight/stream";
+import typescript from "svelte-highlight/languages/typescript";
+
+const view = createStreamView(document.querySelector("pre code"), {
+  language: typescript,
+  autoScroll: true,
+  onDone: () => console.log(view.highlighted),
+});
+
+let code = "";
+for await (const chunk of response) {
+  code += chunk;
+  view.update({ code });
+}
+view.update({ done: true });
+view.destroy();
+```
+
+`aria-busy` and the "finished" announcement are up to you here. Set `aria-busy` on the `<pre>` while streaming, and clear it in `onDone`.
+
 ### Streaming Markdown with multiple fences
 
 `HighlightStream` highlights a single growing code buffer, but LLM chat output is Markdown: prose interleaved with several fenced code blocks, each in its own language. `svelte-highlight/fence`'s `createFenceSplitter` (see "[Rendering Markdown/MDX fences](#rendering-markdownmdx-fences)" above) turns that growing Markdown string into prose and fence segments, so you can drive one `HighlightStream` per fence as it streams in:

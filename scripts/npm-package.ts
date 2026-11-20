@@ -50,7 +50,9 @@ pkgJson.exports = Object.fromEntries([
   ...entry("worker", "worker", "import"),
   ...entry("search", "search", "import"),
   ...entry("editable", "editable", "import"),
+  ...entry("stream", "stream", "import"),
   ["./search.css", { import: "./search.css" }],
+  ["./stream.css", { import: "./stream.css" }],
   ["./package.json", "./package.json"],
 ]);
 
@@ -64,6 +66,7 @@ pkgJson.sideEffects = [
   "themes/*.css",
   "langtag.css",
   "search.css",
+  "stream.css",
 ];
 
 await Bun.write("./package/package.json", JSON.stringify(pkgJson, null, 2));

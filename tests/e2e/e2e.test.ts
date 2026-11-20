@@ -68,6 +68,8 @@ import ScopedStyle from "./ScopedStyle.test.svelte";
 import SvelteHighlight from "./SvelteHighlight.test.svelte";
 import Typewriter from "./Typewriter.test.svelte";
 
+const withoutComments = (html: string) => html.replace(/<!--.*?-->/gs, "");
+
 test.use({ viewport: { width: 1200, height: 600 } });
 
 test("Scoped styles - two themes coexist without bleed", async ({
@@ -1766,7 +1768,11 @@ test("HighlightStream - streaming chunks (split mid-keyword and mid-template-lit
 
   const reference = page.getByTestId("reference").locator("code");
   await expect(stream).toHaveText("const greet = () => `Hello, world!`;");
-  expect(await stream.innerHTML()).toBe(await reference.innerHTML());
+  // Svelte's `{@html}` leaves anchor comments in the reference; they carry
+  // no content, and the stream view writes none.
+  expect(withoutComments(await stream.innerHTML())).toBe(
+    withoutComments(await reference.innerHTML()),
+  );
 });
 
 test("HighlightStream - mid-line chunks keep on:highlight payload growing without newlines", async ({
@@ -2025,7 +2031,11 @@ test("HighlightStream sealing - `done` still swaps to the canonical full render"
   const stream = page.getByTestId("stream").locator("code");
   const reference = page.getByTestId("reference").locator("code");
   await expect(stream).toHaveText((await reference.textContent()) ?? "");
-  expect(await stream.innerHTML()).toBe(await reference.innerHTML());
+  // Svelte's `{@html}` leaves anchor comments in the reference; they carry
+  // no content, and the stream view writes none.
+  expect(withoutComments(await stream.innerHTML())).toBe(
+    withoutComments(await reference.innerHTML()),
+  );
   // The split-rendering markup (sealed chunks/data-line spans) is gone.
   expect(await page.getByTestId("stream").locator("[data-line]").count()).toBe(
     0,

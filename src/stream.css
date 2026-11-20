@@ -1,0 +1,16 @@
+/* The caret `createStreamView` draws at the end of a stream. */
+.highlight-stream-caret {
+  display: inline-block;
+  width: var(--caret-width, 0.6em);
+  height: var(--caret-height, 1.1em);
+  margin-left: var(--caret-gap, 1px);
+  vertical-align: text-bottom;
+  background: var(--caret-color, currentColor);
+  animation: highlight-stream-blink var(--caret-blink, 1s) step-end infinite;
+}
+
+@keyframes highlight-stream-blink {
+  50% {
+    opacity: 0;
+  }
+}

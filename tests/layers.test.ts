@@ -60,6 +60,7 @@ const DOM = [
   "editable-line-dom.js",
   "editable-painter.js",
   "search.js",
+  "stream.js",
   "virtual-window.js",
 ];
 

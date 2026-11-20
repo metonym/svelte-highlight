@@ -52,6 +52,7 @@
   export let doneText = "Code finished streaming";
 
   import { createEventDispatcher, onMount, tick } from "svelte";
+  import { createStreamView } from "./stream.js";
   import { createStreamHighlighter } from "./stream-highlighter.js";
   import { createTokenizedDocument } from "./tokenized-document.js";
   import { watchLineHeight, windowRange } from "./virtual-window.js";
@@ -61,11 +62,17 @@
   /** @type {HTMLElement} */
   let container;
 
+  /** @type {HTMLElement | null} */
+  let codeElement = null;
+
+  /** @type {ReturnType<typeof createStreamView> | undefined} */
+  let view;
+  /** @type {HTMLElement | null} */
+  let viewElement = null;
+
+  // Server and pre-mount markup only. After mount, `view` owns `<code>`.
   /** @type {string} */
   let highlighted = "";
-
-  /** @type {ReturnType<typeof requestAnimationFrame> | undefined} */
-  let frame;
 
   let mounted = false;
 
@@ -100,60 +107,45 @@
   /** @type {number | undefined} */
   let dispatchedWindowLineCount;
 
-  const streamHighlighter = createStreamHighlighter();
-  // Append-only: past entries are never rebuilt. Full chunks are immutable
-  // HTML strings, so the keyed each-block only diffs the bounded tail.
-  /** @type {string[]} */
-  let sealedChunks = [];
-  let sealedLineCount = 0;
-  // Unsealed completed lines plus the live preview line(s).
-  /** @type {string[]} */
-  let tailLines = [];
+  /** @type {ReturnType<typeof createStreamHighlighter> | undefined} */
+  let serverHighlighter = createStreamHighlighter();
 
-  function repaint() {
+  function renderBeforeMount() {
+    if (!serverHighlighter) return;
     const state = done
-      ? streamHighlighter.finish(code, language)
-      : streamHighlighter.update(code, language);
+      ? serverHighlighter.finish(code, language)
+      : serverHighlighter.update(code, language);
     highlighted = state.highlighted;
-    sealedChunks = state.sealedChunks;
-    sealedLineCount = state.sealedLineCount;
-    tailLines = state.tailLines;
-
     dispatch("highlight", { highlighted });
-
-    if (autoScroll) {
-      tick().then(() => {
-        if (stickToBottom) scrollToBottom();
-      });
-    }
   }
 
-  function scrollToBottom() {
-    if (container) container.scrollTop = container.scrollHeight;
+  /** @param {HTMLElement | null} element */
+  function attachView(element) {
+    if (element === viewElement) return;
+    view?.destroy();
+    view = undefined;
+    viewElement = element;
+    if (!element) return;
+    // The view has its own state from here on.
+    serverHighlighter = undefined;
+    highlighted = "";
+    view = createStreamView(element, {
+      code,
+      language,
+      done,
+      caret,
+      autoScroll,
+      onHighlight: (html) => dispatch("highlight", { highlighted: html }),
+      onDone: () => dispatch("done"),
+    });
   }
 
   function onScroll() {
-    if (!container) return;
+    if (!container || !virtualize) return;
     const gap =
       container.scrollHeight - container.scrollTop - container.clientHeight;
     stickToBottom = gap <= 4;
-    if (virtualize) scheduleVirtualRepaint();
-  }
-
-  function cancelFrame() {
-    if (frame != null) {
-      cancelAnimationFrame(frame);
-      frame = undefined;
-    }
-  }
-
-  // Coalesce chunk bursts into one highlight pass per frame.
-  function scheduleRepaint() {
-    if (frame != null) return;
-    frame = requestAnimationFrame(() => {
-      frame = undefined;
-      repaint();
-    });
+    scheduleVirtualRepaint();
   }
 
   function ensureVirtualDoc() {
@@ -262,30 +254,26 @@
     );
   }
 
-  $: {
+  // SSR and pre-mount: one synchronous pass for the initial markup.
+  $: if (!virtualize && !mounted) {
     void code;
     void language;
-    if (virtualize) {
-      // Rendering is handled by the blocks below; only dispatch `done` here.
-      if (mounted && done) {
-        if (!doneDispatched) {
-          doneDispatched = true;
-          dispatch("done");
-        }
-      } else {
-        doneDispatched = false;
-      }
-    } else if (mounted && !done) {
-      doneDispatched = false;
-      scheduleRepaint();
-    } else {
-      // SSR, pre-mount, and final done pass: synchronous, no rAF.
-      cancelFrame();
-      repaint();
-      if (mounted && !doneDispatched) {
+    void done;
+    renderBeforeMount();
+  }
+
+  $: attachView(virtualize ? null : codeElement);
+  $: view?.update({ code, language, done, caret, autoScroll });
+
+  // Virtual rendering is handled by the blocks below; only dispatch `done`.
+  $: if (virtualize) {
+    if (mounted && done) {
+      if (!doneDispatched) {
         doneDispatched = true;
         dispatch("done");
       }
+    } else {
+      doneDispatched = false;
     }
   }
 
@@ -310,8 +298,7 @@
     computeVirtualWindow();
   }
 
-  $: useSplitRendering = mounted && !done;
-  $: showCaret = useSplitRendering && caret;
+  $: showCaret = mounted && !done && caret;
 
   onMount(() => {
     mounted = true;
@@ -326,7 +313,7 @@
       }
     }
     return () => {
-      cancelFrame();
+      view?.destroy();
       cancelVirtualFrame();
       resizeObserver?.disconnect();
     };
@@ -352,9 +339,9 @@
     aria-busy={!done}
     on:scroll={onScroll}
     {...$$restProps}
-  ><code
-  class:hljs={true}
->{#if useSplitRendering}{#each sealedChunks as chunk, c (c)}{@html chunk}{/each}{#each tailLines as line, li (sealedLineCount + li)}{#if sealedLineCount + li > 0}{"\n"}{/if}<span class="highlight-stream-line" data-line={sealedLineCount + li}>{@html line}</span>{/each}{#if showCaret}<span class="highlight-stream-caret" aria-hidden="true"></span>{/if}{:else}{@html highlighted}{/if}</code></pre>
+  >{#if mounted}<code bind:this={codeElement} class="hljs"></code>{:else}<code
+    class:hljs={true}>{@html highlighted}</code
+  >{/if}</pre>
 {/if}
 
 <span class="visually-hidden" role="status" aria-live="polite"
@@ -402,7 +389,8 @@
     border: 0;
   }
 
-  .highlight-stream-caret {
+  /* Global: the stream view creates the caret outside the template. */
+  :global(.highlight-stream-caret) {
     display: inline-block;
     width: var(--caret-width, 0.6em);
     height: var(--caret-height, 1.1em);
@@ -412,7 +400,7 @@
     animation: highlight-stream-blink var(--caret-blink, 1s) step-end infinite;
   }
 
-  @keyframes highlight-stream-blink {
+  @keyframes -global-highlight-stream-blink {
     50% {
       opacity: 0;
     }
