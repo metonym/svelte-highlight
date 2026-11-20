@@ -32,6 +32,9 @@ export type CopyButtonProps = HTMLButtonAttributes & {
   /** Announced to screen readers when the copy fails. @default "Copy failed" */
   errorText?: string;
 
+  /** Overlay the container (`true`) or sit in normal flow (`false`). @default true */
+  absolute?: boolean;
+
   /** Top offset. @default "0.5em" */
   "--copy-top"?: string;
 

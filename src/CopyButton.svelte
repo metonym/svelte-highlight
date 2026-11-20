@@ -2,6 +2,9 @@
   /** @type {string} */
   export let code;
 
+  /** @type {boolean} */
+  export let absolute = true;
+
   /** @type {(code: string) => void | Promise<void>} */
   export let copy = (code) => navigator.clipboard.writeText(code);
 
@@ -70,6 +73,7 @@
   on:click={handleClick}
   on:mouseenter
   on:mouseleave
+  class:static={!absolute}
   {...$$restProps}
 >
   <slot {copied} {copying}>
@@ -138,5 +142,9 @@
     clip-path: inset(50%);
     white-space: nowrap;
     border: 0;
+  }
+
+  button.static {
+    position: static;
   }
 </style>
