@@ -11,6 +11,12 @@
   export let virtualize = "auto";
   /** Make line 10 long enough to wrap. */
   export let longLine = false;
+  /** Let the streaming diff follow its frontier. */
+  export let follow = false;
+  /** Lines each "stream" click adds. */
+  export let streamStep = 1;
+  /** Unchanged lines kept around each change in the streaming diff. */
+  export let streamContext = 3;
 
   function generate(n) {
     let out = "";
@@ -40,7 +46,7 @@
     streaming = true;
     const lines = after.split("\n");
     const have = streamed.split("\n").length - 1;
-    streamed = `${lines.slice(0, have + 1).join("\n")}\n`;
+    streamed = `${lines.slice(0, have + streamStep).join("\n")}\n`;
   }
   function finishStream() {
     streamed = after;
@@ -80,7 +86,8 @@
     {before}
     after={streamed}
     {streaming}
-    follow={false}
+    {follow}
+    context={streamContext}
     language={javascript}
     style="height: 300px"
   />

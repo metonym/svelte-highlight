@@ -206,10 +206,7 @@
     if (cell && cell.clientWidth > 0) codeWidth = cell.clientWidth;
     if (!changed) return;
     layoutVersion++;
-    if (shift !== 0) {
-      container.scrollTop += shift;
-      scrollTop = container.scrollTop;
-    }
+    if (shift !== 0) setScrollTop(container.scrollTop + shift);
   });
 
   /** @param {number} row @param {"start" | "center" | "third"} align */
@@ -224,13 +221,31 @@
         : align === "third"
           ? container.clientHeight / 3
           : 0;
-    container.scrollTop = Math.max(0, top - offset);
-    scrollTop = container.scrollTop;
+    setScrollTop(Math.max(0, top - offset));
+  }
+
+  // Where DiffView last put the scroll position. A scroll that lands
+  // anywhere else came from the reader: a scrollbar drag, a key, a swipe.
+  let ownScrollTop = -1;
+  /** @param {number} value */
+  function setScrollTop(value) {
+    container.scrollTop = value;
+    scrollTop = ownScrollTop = container.scrollTop;
   }
 
   /** @type {number | undefined} */
   let frame;
   function onScroll() {
+    if (
+      state.streaming &&
+      container &&
+      Math.abs(container.scrollTop - ownScrollTop) > 1
+    ) {
+      // If the content shrank under our position, the browser clamped it.
+      const max = container.scrollHeight - container.clientHeight;
+      if (ownScrollTop > max + 1) ownScrollTop = container.scrollTop;
+      else userScrolled = true;
+    }
     if (frame !== undefined) return;
     frame = requestAnimationFrame(() => {
       frame = undefined;
@@ -380,7 +395,7 @@
     followQueued = true;
     requestAnimationFrame(() => {
       followQueued = false;
-      if (!container) return;
+      if (!container || userScrolled) return;
       const frontier = rows.findIndex(
         (r) => r.kind === "incoming" || r.kind === "pending",
       );
@@ -392,7 +407,7 @@
         Math.max(0, top - container.clientHeight * 0.6),
       );
       if (Math.abs(container.scrollTop - target) > lineHeight)
-        container.scrollTop = target;
+        setScrollTop(target);
     });
   }
   $: if (rows) followFrontier();

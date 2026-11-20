@@ -3178,6 +3178,41 @@ test("HighlightDiff - streaming shows unreached lines as pending, not deleted", 
   await expect(stream.locator(".shl-diff-del")).toHaveCount(2);
 });
 
+test("HighlightDiff - streaming stops following after any reader scroll", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightDiff, {
+    props: {
+      lineCount: 400,
+      follow: true,
+      streamStep: 100,
+      streamContext: 1000,
+    },
+  });
+  const body = page.getByTestId("stream").locator(".shl-diff-body");
+  const scrollTop = () => body.evaluate((el) => el.scrollTop);
+
+  // The first chunk mounts the stream; following starts with the next.
+  await page.getByTestId("stream-line").click();
+  await page.getByTestId("stream-line").click();
+  await expect.poll(scrollTop).toBeGreaterThan(0);
+
+  // Setting scrollTop is how a scrollbar drag, Page Up or a swipe
+  // reaches the page: a scroll event with no wheel event.
+  await body.evaluate((el) => {
+    el.scrollTop = 0;
+  });
+  await page.getByTestId("stream-line").click();
+  await page.evaluate(
+    () =>
+      new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve)),
+      ),
+  );
+  expect(await scrollTop()).toBe(0);
+});
+
 test("DiffView - fills note and actions slots, with stats and a minimap", async ({
   mount,
   page,
