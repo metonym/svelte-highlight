@@ -5,6 +5,7 @@
  * inside a `<pre>` (or anything with `white-space: pre`).
  */
 
+import { resolveEngine } from "./css-highlights.js";
 import {
   indentSelection,
   replaceSelection,
@@ -17,7 +18,7 @@ import {
   readSelection,
   writeSelection,
 } from "./editable-line-dom.js";
-import { createEditorPainter, resolveEngine } from "./editable-painter.js";
+import { createEditorPainter } from "./editable-painter.js";
 import { ensureRegistered, registry } from "./registry.js";
 
 export { instanceHighlightStyle } from "./highlight-theme.js";
@@ -32,7 +33,7 @@ let instanceCount = 0;
  *   tabSize: number,
  *   historyLimit: number,
  *   readonly: boolean,
- *   engine: import("./editable-painter.js").PaintEngine,
+ *   engine: import("./css-highlights.js").PaintEngine,
  * }} EditorSettings
  */
 

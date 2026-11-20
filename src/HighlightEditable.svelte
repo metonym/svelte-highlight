@@ -46,8 +46,8 @@
   export let label = "Code editor";
 
   import { createEventDispatcher, onMount } from "svelte";
+  import { resolveEngine } from "./css-highlights.js";
   import { createEditor } from "./editable.js";
-  import { resolveEngine } from "./editable-painter.js";
   import { instanceHighlightStyle } from "./highlight-theme.js";
 
   const dispatch = createEventDispatcher();
