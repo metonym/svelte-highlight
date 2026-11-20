@@ -539,41 +539,43 @@
               title={moveTitle(row)}
             >
               {#if row.kind === "fold" && row.fold}
-                <slot
-                  name="fold"
-                  fold={row.fold}
-                  count={row.count}
-                  toggle={() => diff.toggleFold(row.key)}
-                >
-                  {#if row.fold.unknown}
-                    <span class="shl-diff-fold-label">
-                      <span class="shl-diff-fold-icon" aria-hidden="true"
-                        >⋯</span
+                <span class="shl-diff-fold-cell" role="cell">
+                  <slot
+                    name="fold"
+                    fold={row.fold}
+                    count={row.count}
+                    toggle={() => diff.toggleFold(row.key)}
+                  >
+                    {#if row.fold.unknown}
+                      <span class="shl-diff-fold-label">
+                        <span class="shl-diff-fold-icon" aria-hidden="true"
+                          >⋯</span
+                        >
+                        {`${row.count} lines not in patch`}
+                        <span class="shl-diff-hunk">{row.fold.header}</span>
+                      </span>
+                    {:else}
+                      <button
+                        type="button"
+                        class="shl-diff-fold-label"
+                        on:click={() => diff.toggleFold(row.key)}
                       >
-                      {`${row.count} lines not in patch`}
-                      <span class="shl-diff-hunk">{row.fold.header}</span>
-                    </span>
-                  {:else}
-                    <button
-                      type="button"
-                      class="shl-diff-fold-label"
-                      on:click={() => diff.toggleFold(row.key)}
-                    >
-                      <span class="shl-diff-fold-icon" aria-hidden="true"
-                        >↕</span
-                      >
-                      {`Expand ${row.count} unchanged ${row.count === 1 ? "line" : "lines"}`}
-                      <span class="shl-diff-hunk">{row.fold.header}</span>
-                    </button>
-                  {/if}
-                </slot>
+                        <span class="shl-diff-fold-icon" aria-hidden="true"
+                          >↕</span
+                        >
+                        {`Expand ${row.count} unchanged ${row.count === 1 ? "line" : "lines"}`}
+                        <span class="shl-diff-hunk">{row.fold.header}</span>
+                      </button>
+                    {/if}
+                  </slot>
+                </span>
               {:else if row.kind === "pending"}
-                <span class="shl-diff-fold-label">
+                <span class="shl-diff-fold-label" role="cell">
                   <span class="shl-diff-spinner" aria-hidden="true"></span>
                   {`${row.count} ${row.count === 1 ? "line" : "lines"} not reached yet`}
                 </span>
               {:else if row.note}
-                <div class="shl-diff-note-slot">
+                <div class="shl-diff-note-slot" role="cell">
                   <slot name="note" note={row.note}>
                     <div
                       class="shl-diff-note-card shl-diff-note-{row.note.tone ??
@@ -590,12 +592,18 @@
                 <span class="shl-diff-num" aria-hidden="true"
                   >{row.old === undefined ? "" : row.old + 1}</span
                 >
-                <span class="shl-diff-marker shl-diff-side-old" data-side="old"
+                <span
+                  class="shl-diff-marker shl-diff-side-old"
+                  data-side="old"
+                  role="cell"
                   >{row.kind === "change" && row.old !== undefined
                     ? "-"
                     : ""}</span
                 >
-                <span class="shl-diff-code shl-diff-side-old" data-side="old"
+                <span
+                  class="shl-diff-code shl-diff-side-old"
+                  data-side="old"
+                  role="cell"
                   ><span
                     class="shl-diff-text"
                     style={wrap
@@ -609,12 +617,18 @@
                 <span class="shl-diff-num shl-diff-num-new" aria-hidden="true"
                   >{row.new === undefined ? "" : row.new + 1}</span
                 >
-                <span class="shl-diff-marker shl-diff-side-new" data-side="new"
+                <span
+                  class="shl-diff-marker shl-diff-side-new"
+                  data-side="new"
+                  role="cell"
                   >{row.kind === "change" && row.new !== undefined
                     ? "+"
                     : ""}</span
                 >
-                <span class="shl-diff-code shl-diff-side-new" data-side="new"
+                <span
+                  class="shl-diff-code shl-diff-side-new"
+                  data-side="new"
+                  role="cell"
                   ><span
                     class="shl-diff-text"
                     style={wrap
@@ -635,14 +649,14 @@
                 <span class="shl-diff-num" aria-hidden="true"
                   >{row.new === undefined ? "" : row.new + 1}</span
                 >
-                <span class="shl-diff-marker"
+                <span class="shl-diff-marker" role="cell"
                   >{row.kind === "del"
                     ? "-"
                     : row.kind === "add" || row.kind === "incoming"
                       ? "+"
                       : ""}</span
                 >
-                <span class="shl-diff-code" data-side="new"
+                <span class="shl-diff-code" data-side="new" role="cell"
                   ><span
                     class="shl-diff-text"
                     style={wrap
@@ -659,7 +673,7 @@
               {/if}
               {#if row.first && row.change !== undefined && (review || $$slots.actions)}
                 {@const change = row.change}
-                <span class="shl-diff-actions">
+                <span class="shl-diff-actions" role="cell">
                   <slot
                     name="actions"
                     {change}
@@ -998,6 +1012,13 @@
     white-space: nowrap;
     background: color-mix(in srgb, var(--shl-diff-move-accent) 8%, transparent);
     color: var(--shl-diff-muted);
+  }
+
+  .shl-diff-fold-cell {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
   }
 
   .shl-diff-fold-label {
