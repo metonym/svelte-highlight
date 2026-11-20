@@ -40,6 +40,11 @@
   export let theme = undefined;
 
   import { createEventDispatcher, onMount } from "svelte";
+  import {
+    indentSelection,
+    replaceSelection,
+    shiftLines,
+  } from "./editable-commands.js";
   import { lineTokenRanges, retokenizedEnd } from "./editable-css-paint.js";
   import { createDomLinePainter } from "./editable-dom-paint.js";
   import { createEditHistory } from "./editable-history.js";
@@ -112,7 +117,6 @@
     previousLanguageName = language.name;
     previousEngine = resolvedEngineValue;
   }
-  $: indentUnit = " ".repeat(tabSize);
   $: if (mounted && code !== internalCode) syncExternal();
   $: cssHighlightStyle =
     resolvedEngineValue === "css-highlights" && theme !== undefined
@@ -365,49 +369,25 @@
     paint();
   }
 
-  function insertText(text) {
+  // Applies a command from editable-commands.js to the current selection.
+  function runCommand(command) {
     const sel = getSelectionRange();
     if (!sel) return;
-    const value = code.slice(0, sel.start) + text + code.slice(sel.end);
-    commit(value, sel.start + text.length, undefined, false);
+    const edit = command(code, sel);
+    if (edit)
+      commit(edit.code, edit.selection.start, edit.selection.end, false);
   }
 
-  // Indent/dedent selected lines; blank lines skipped on indent.
+  function insertText(text) {
+    runCommand((value, sel) => replaceSelection(value, sel, text));
+  }
+
   function shiftIndent(outdent) {
-    const sel = getSelectionRange();
-    if (!sel) return;
-    const blockStart = code.lastIndexOf("\n", sel.start - 1) + 1;
-    const lines = code.slice(blockStart, sel.end).split("\n");
-
-    let firstDelta = 0;
-    let totalDelta = 0;
-    const next = lines
-      .map((line, index) => {
-        if (outdent) {
-          const leading = line.length - line.trimStart().length;
-          const remove = Math.min(tabSize, leading);
-          if (index === 0) firstDelta = -remove;
-          totalDelta -= remove;
-          return line.slice(remove);
-        }
-        if (line.length === 0) return line;
-        if (index === 0) firstDelta = tabSize;
-        totalDelta += tabSize;
-        return indentUnit + line;
-      })
-      .join("\n");
-
-    if (totalDelta === 0) return;
-    const value = code.slice(0, blockStart) + next + code.slice(sel.end);
-    const start = Math.max(blockStart, sel.start + firstDelta);
-    commit(value, start, sel.end + totalDelta, false);
+    runCommand((value, sel) => shiftLines(value, sel, tabSize, outdent));
   }
 
   function indentCommand() {
-    const sel = getSelectionRange();
-    if (sel && code.slice(sel.start, sel.end).includes("\n"))
-      shiftIndent(false);
-    else insertText(indentUnit);
+    runCommand((value, sel) => indentSelection(value, sel, tabSize));
   }
 
   function ensureFocus() {

@@ -23,6 +23,7 @@ const CORE = [
   "convert-language.js",
   "copy-transforms.js",
   "css-walk.js",
+  "editable-commands.js",
   "editable-css-paint.js",
   "editable-dom-paint.js",
   "editable-history.js",

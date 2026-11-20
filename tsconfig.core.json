@@ -13,6 +13,7 @@
     "src/convert-language.js",
     "src/copy-transforms.js",
     "src/css-walk.js",
+    "src/editable-commands.js",
     "src/editable-css-paint.js",
     "src/editable-dom-paint.js",
     "src/editable-history.js",
