@@ -1,7 +1,10 @@
-import { registerAll } from "../src/engine.js";
+import { createRegistry, registerAll } from "../src/engine.js";
 import allLanguages from "../src/languages/all.js";
-import { registry } from "../src/registry.js";
 
+// A private registry, so the candidate order is always all.js order.
+// Ties go to the first candidate, and other test files fill the shared
+// registry in whatever order Bun happens to run them.
+const registry = createRegistry();
 for (const language of allLanguages) registerAll(registry, language);
 
 // Idiomatic, realistic (multi-line, not single-fragment) samples for a
