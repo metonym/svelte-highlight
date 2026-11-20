@@ -45,22 +45,18 @@
     replaceSelection,
     shiftLines,
   } from "./editable-commands.js";
-  import { lineTokenRanges, retokenizedEnd } from "./editable-css-paint.js";
-  import { createDomLinePainter } from "./editable-dom-paint.js";
   import { createEditHistory } from "./editable-history.js";
   import {
     createLineView,
     lineStartOffset as lineStartIn,
     readSelection,
-    renderLines as renderLineDom,
     writeSelection,
   } from "./editable-line-dom.js";
-  import { toRanges } from "./engine.js";
-  import { instanceHighlightStyle } from "./highlight-theme.js";
   import {
-    parseIncremental,
-    reparseIncremental,
-  } from "./incremental-tokenize.js";
+    createEditorPainter,
+    supportsCssHighlights,
+  } from "./editable-painter.js";
+  import { instanceHighlightStyle } from "./highlight-theme.js";
   import { ensureRegistered, registry } from "./registry.js";
 
   const dispatch = createEventDispatcher();
@@ -83,22 +79,15 @@
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
 
-  /** @type {import("./incremental-tokenize.js").IncrementalParse | undefined} */
-  let incrementalParse;
-
-  const domLinePainter = createDomLinePainter();
-
-  function getEvents() {
-    incrementalParse = incrementalParse
-      ? reparseIncremental(registry, language.name, incrementalParse, code)
-      : parseIncremental(registry, language.name, code);
-    return incrementalParse.events;
-  }
+  const painter = createEditorPainter({
+    editor: () => editor,
+    view,
+    registry,
+    highlightPrefix: `hljs-${instanceId}`,
+  });
 
   $: resolvedEngineValue =
-    engine === "css-highlights" &&
-    typeof CSS !== "undefined" &&
-    typeof CSS.highlights !== "undefined"
+    engine === "css-highlights" && supportsCssHighlights()
       ? "css-highlights"
       : "dom";
 
@@ -111,7 +100,7 @@
       (language.name !== previousLanguageName ||
         resolvedEngineValue !== previousEngine)
     ) {
-      if (previousEngine === "css-highlights") clearCssHighlights();
+      if (previousEngine === "css-highlights") painter.clearHighlights();
       repaintForLanguageChange();
     }
     previousLanguageName = language.name;
@@ -140,148 +129,8 @@
     return lineStartIn(view, index);
   }
 
-  const setHtml = (el, line) => {
-    el.innerHTML = line;
-  };
-  const setText = (el, line) => {
-    el.textContent = line;
-  };
-
-  function renderLines(lines, setContent) {
-    return renderLineDom(editor, view, lines, setContent, lineHooks);
-  }
-
-  const lineHooks = {
-    onReset: () => clearCssHighlights(),
-    onSplice: (index, removed, inserted) => {
-      if (index >= lineHighlightRanges.length) return;
-      for (let i = index; i < index + removed; i++) clearLineHighlights(i);
-      lineHighlightRanges = lineHighlightRanges.slice(0, index).concat(
-        Array.from({ length: inserted }, () => []),
-        lineHighlightRanges.slice(index + removed),
-      );
-    },
-  };
-
-  /** @type {Map<string, InstanceType<typeof Highlight>>} */
-  let cssHighlights = new Map();
-  /** @type {{ scope: string; range: Range }[][]} */
-  let lineHighlightRanges = [];
-  /** @type {import("./engine.d.ts").ScopeEvent[] | undefined} */
-  let cssPaintedEvents;
-
-  function cssHighlightFor(scope) {
-    let highlight = cssHighlights.get(scope);
-    if (!highlight) {
-      highlight = new Highlight();
-      cssHighlights.set(scope, highlight);
-      CSS.highlights.set(`hljs-${instanceId}-${scope}`, highlight);
-    }
-    return highlight;
-  }
-
-  function clearLineHighlights(index) {
-    const previous = lineHighlightRanges[index];
-    if (!previous) return;
-    for (const { scope, range } of previous) {
-      cssHighlights.get(scope)?.delete(range);
-    }
-  }
-
-  function clearCssHighlights() {
-    for (const scope of cssHighlights.keys()) {
-      CSS.highlights.delete(`hljs-${instanceId}-${scope}`);
-    }
-    cssHighlights = new Map();
-    lineHighlightRanges = [];
-    cssPaintedEvents = undefined;
-  }
-
-  // Re-registers ranges for lines from `first` (at offset `base`) through the
-  // one ending at `end`; `tokenRanges` are relative to `base`. They're sorted
-  // and disjoint, so `tokenIndex` only advances: O(lines + tokens).
-  function paintLineHighlights(first, base, end, tokenRanges) {
-    let tokenIndex = 0;
-    let lineStart = 0;
-    for (
-      let i = first;
-      i < view.lineEls.length && base + lineStart <= end;
-      i++
-    ) {
-      clearLineHighlights(i);
-      const lineEnd = lineStart + view.lineLengths[i];
-      const textNode = view.lineEls[i].firstChild;
-      const next = [];
-      if (textNode) {
-        while (
-          tokenIndex < tokenRanges.length &&
-          tokenRanges[tokenIndex].end <= lineStart
-        ) {
-          tokenIndex++;
-        }
-        for (
-          let j = tokenIndex;
-          j < tokenRanges.length && tokenRanges[j].start < lineEnd;
-          j++
-        ) {
-          const token = tokenRanges[j];
-          if (token.end <= lineStart) continue;
-          const start = Math.max(token.start, lineStart) - lineStart;
-          const end = Math.min(token.end, lineEnd) - lineStart;
-          if (start === end) continue;
-          const range = new Range();
-          range.setStart(textNode, start);
-          range.setEnd(textNode, end);
-          cssHighlightFor(token.scope).add(range);
-          next.push({ scope: token.scope, range });
-        }
-      }
-      lineHighlightRanges[i] = next;
-      lineStart = lineEnd + 1; // +1 for the "\n" separator
-    }
-  }
-
-  function paintCssHighlights() {
-    const changedIndex = renderLines(code.split("\n"), setText);
-    const previousEvents = cssPaintedEvents;
-    const events = getEvents();
-    cssPaintedEvents = events;
-
-    if (changedIndex == null) {
-      paintLineHighlights(0, 0, code.length, toRanges(events));
-    } else {
-      // One line's text changed, but its tokens can affect later lines
-      // (typing `/*`): repaint through where the re-parse converged.
-      const base = lineStartOffset(changedIndex);
-      const end = retokenizedEnd(
-        code,
-        events,
-        previousEvents,
-        incrementalParse?.reuse,
-        base,
-      );
-      paintLineHighlights(
-        changedIndex,
-        base,
-        end,
-        lineTokenRanges(events, base, end),
-      );
-    }
-    return changedIndex;
-  }
-
   function paint() {
-    if (resolvedEngineValue === "css-highlights") return paintCssHighlights();
-    const events = getEvents();
-    return renderLines(
-      domLinePainter.paint(
-        events,
-        code,
-        language.name,
-        incrementalParse?.reuse,
-      ),
-      setHtml,
-    );
+    return painter.paint(code, language.name, resolvedEngineValue);
   }
 
   function renderAt(start, end) {
@@ -308,8 +157,7 @@
   }
 
   function repaintForLanguageChange() {
-    incrementalParse = undefined;
-    domLinePainter.reset();
+    painter.reset();
     const caret = document.activeElement === editor ? getCaretOffset() : null;
     if (caret == null) paint();
     else renderAt(caret, caret);
@@ -614,7 +462,7 @@
       editor.removeEventListener("blur", onBlur);
       editor.removeEventListener("compositionstart", onCompositionStart);
       editor.removeEventListener("compositionend", onCompositionEnd);
-      clearCssHighlights();
+      painter.clearHighlights();
     };
   });
 </script>
