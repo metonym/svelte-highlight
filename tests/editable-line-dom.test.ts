@@ -3,6 +3,7 @@ import {
   createLineView,
   editorNodeAtOffset,
   nodeAtOffset,
+  offsetOfBoundary,
   renderLines,
 } from "../src/editable-line-dom.js";
 
@@ -140,5 +141,33 @@ describe("editorNodeAtOffset", () => {
         nodeAtOffset(editor, offset),
       );
     }
+  });
+});
+
+describe("offsetOfBoundary", () => {
+  it("maps every node boundary back to its character offset", () => {
+    const lines = ["const a = 1;", "", "  return a;", "}"];
+    const { editor, view } = setup(lines);
+    const text = lines.join("\n");
+    for (let offset = 0; offset <= text.length; offset++) {
+      const at = editorNodeAtOffset(editor, view, offset);
+      if (!at) throw new Error(`no node at ${offset}`);
+      expect(offsetOfBoundary(editor, view, at.node, at.offset)).toBe(offset);
+    }
+  });
+
+  it("maps boundaries between the editor's children", () => {
+    const { editor, view } = setup(["ab", "cde"]);
+    // Children: <span>ab</span>, "\n", <span>cde</span>.
+    expect(offsetOfBoundary(editor, view, editor, 0)).toBe(0);
+    expect(offsetOfBoundary(editor, view, editor, 1)).toBe(2);
+    expect(offsetOfBoundary(editor, view, editor, 2)).toBe(3);
+    expect(offsetOfBoundary(editor, view, editor, 3)).toBe(6);
+  });
+
+  it("returns null once the DOM drifts from the view", () => {
+    const { editor, view } = setup(["ab", "cd"]);
+    editor.appendChild(editor.ownerDocument.createTextNode("x"));
+    expect(offsetOfBoundary(editor, view, editor, 0)).toBeNull();
   });
 });

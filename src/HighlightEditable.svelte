@@ -44,10 +44,10 @@
   import { createDomLinePainter } from "./editable-dom-paint.js";
   import {
     createLineView,
-    editorNodeAtOffset,
     lineStartOffset as lineStartIn,
-    nodeAtOffset,
+    readSelection,
     renderLines as renderLineDom,
+    writeSelection,
   } from "./editable-line-dom.js";
   import { toRanges } from "./engine.js";
   import { instanceHighlightStyle } from "./highlight-theme.js";
@@ -119,89 +119,8 @@
       ? instanceHighlightStyle(theme, instanceId)
       : "";
 
-  function sumChildLengths(el, count) {
-    let total = 0;
-    for (let i = 0; i < count && i < el.childNodes.length; i++) {
-      total += el.childNodes[i].textContent.length;
-    }
-    return total;
-  }
-
-  // Character offset of a Selection boundary, derived from the line
-  // structure instead of serializing the document. Null when the DOM has
-  // drifted from `view`, so the caller falls back to cloneRange/toString.
-  function offsetOfBoundary(container, offsetInContainer) {
-    const expectedChildren =
-      view.lineEls.length === 0 ? 0 : view.lineEls.length * 2 - 1;
-    if (editor.childNodes.length !== expectedChildren) return null;
-
-    if (container === editor) {
-      if (view.lineEls.length === 0) return offsetInContainer === 0 ? 0 : null;
-      const lineIndex = offsetInContainer >> 1;
-      if (lineIndex >= view.lineEls.length) return null;
-      return offsetInContainer % 2 === 0
-        ? lineStartOffset(lineIndex)
-        : lineStartOffset(lineIndex) + view.lineLengths[lineIndex];
-    }
-
-    let node = container;
-    while (node.parentNode !== editor) {
-      node = node.parentNode;
-      if (!node) return null;
-    }
-
-    let childIndex = 0;
-    for (let sib = node.previousSibling; sib; sib = sib.previousSibling) {
-      childIndex++;
-    }
-    const lineIndex = childIndex >> 1;
-
-    if (childIndex % 2 === 1) {
-      // A "\n" separator has no children, so it must be `container` itself.
-      if (container !== node || lineIndex >= view.lineLengths.length)
-        return null;
-      return (
-        lineStartOffset(lineIndex) +
-        view.lineLengths[lineIndex] +
-        offsetInContainer
-      );
-    }
-
-    const span = node;
-    if (lineIndex >= view.lineEls.length || view.lineEls[lineIndex] !== span)
-      return null;
-
-    let charOffset =
-      container.nodeType === Node.TEXT_NODE
-        ? offsetInContainer
-        : sumChildLengths(container, offsetInContainer);
-    let n = container;
-    while (n !== span) {
-      for (let sib = n.previousSibling; sib; sib = sib.previousSibling) {
-        charOffset += sib.textContent.length;
-      }
-      n = n.parentNode;
-      if (!n) return null;
-    }
-    return lineStartOffset(lineIndex) + charOffset;
-  }
-
   function getSelectionRange() {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return null;
-    const range = selection.getRangeAt(0);
-    if (!editor.contains(range.commonAncestorContainer)) return null;
-    const start = offsetOfBoundary(range.startContainer, range.startOffset);
-    const end = offsetOfBoundary(range.endContainer, range.endOffset);
-    if (start != null && end != null) return { start, end };
-    const pre = range.cloneRange();
-    pre.selectNodeContents(editor);
-    pre.setEnd(range.startContainer, range.startOffset);
-    const fallbackStart = pre.toString().length;
-    return {
-      start: fallbackStart,
-      end: fallbackStart + range.toString().length,
-    };
+    return readSelection(editor, view, window.getSelection());
   }
 
   function getCaretOffset() {
@@ -209,38 +128,8 @@
     return sel ? sel.end : null;
   }
 
-  // Firefox: a boundary at a text node's edge breaks its native undo after
-  // a repaint, so anchor edges via setStartBefore/After. A boundary at a
-  // separator's end goes inside the next line's <span>, else Firefox types
-  // into a stray text node (forcing a full rebuild).
-  function setRangeBoundary(range, side, node, offset) {
-    const nextLine = node.nextSibling;
-    if (
-      node.parentNode === editor &&
-      offset === node.textContent.length &&
-      nextLine?.nodeType === Node.ELEMENT_NODE
-    ) {
-      range[side === "Start" ? "setStart" : "setEnd"](nextLine, 0);
-    } else if (offset === 0) range[`set${side}Before`](node);
-    else if (offset === node.textContent.length) range[`set${side}After`](node);
-    else range[side === "Start" ? "setStart" : "setEnd"](node, offset);
-  }
-
   function setSelection(start, end, root = editor) {
-    const locate = (offset) =>
-      root === editor
-        ? editorNodeAtOffset(editor, view, offset)
-        : nodeAtOffset(root, offset);
-    const from = locate(start);
-    if (!from) return;
-    const range = document.createRange();
-    setRangeBoundary(range, "Start", from.node, from.offset);
-    const to = end != null && end !== start ? locate(end) : null;
-    if (to) setRangeBoundary(range, "End", to.node, to.offset);
-    else range.collapse(true);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
+    writeSelection(editor, view, window.getSelection(), start, end, root);
   }
 
   function lineStartOffset(index) {

@@ -6,6 +6,10 @@
 /** `NodeFilter.SHOW_TEXT`, inlined so this module loads outside a browser. */
 const SHOW_TEXT = 4;
 
+/** `Node.TEXT_NODE` and `Node.ELEMENT_NODE`, inlined for the same reason. */
+const TEXT_NODE = 3;
+const ELEMENT_NODE = 1;
+
 /**
  * @typedef {{
  *   lineEls: HTMLElement[],
@@ -213,4 +217,175 @@ export function editorNodeAtOffset(editor, view, offset) {
     node = walker.nextNode();
   }
   return null;
+}
+
+/**
+ * @param {Node} el
+ * @param {number} count
+ */
+function sumChildLengths(el, count) {
+  let total = 0;
+  for (let i = 0; i < count && i < el.childNodes.length; i++) {
+    const child = /** @type {Node} */ (el.childNodes[i]);
+    total += /** @type {string} */ (child.textContent).length;
+  }
+  return total;
+}
+
+/**
+ * Character offset of a Selection boundary, derived from the line structure
+ * instead of serializing the document. Null when the DOM has drifted from
+ * `view`, so the caller falls back to cloneRange/toString.
+ * @param {HTMLElement} editor
+ * @param {LineView} view
+ * @param {Node} container
+ * @param {number} offsetInContainer
+ * @returns {number | null}
+ */
+export function offsetOfBoundary(editor, view, container, offsetInContainer) {
+  const { lineEls, lineLengths } = view;
+  const expectedChildren = lineEls.length === 0 ? 0 : lineEls.length * 2 - 1;
+  if (editor.childNodes.length !== expectedChildren) return null;
+
+  if (container === editor) {
+    if (lineEls.length === 0) return offsetInContainer === 0 ? 0 : null;
+    const lineIndex = offsetInContainer >> 1;
+    if (lineIndex >= lineEls.length) return null;
+    return offsetInContainer % 2 === 0
+      ? lineStartOffset(view, lineIndex)
+      : lineStartOffset(view, lineIndex) +
+          /** @type {number} */ (lineLengths[lineIndex]);
+  }
+
+  let node = container;
+  while (node.parentNode !== editor) {
+    if (!node.parentNode) return null;
+    node = node.parentNode;
+  }
+
+  let childIndex = 0;
+  for (let sib = node.previousSibling; sib; sib = sib.previousSibling) {
+    childIndex++;
+  }
+  const lineIndex = childIndex >> 1;
+
+  if (childIndex % 2 === 1) {
+    // A "\n" separator has no children, so it must be `container` itself.
+    if (container !== node || lineIndex >= lineLengths.length) return null;
+    return (
+      lineStartOffset(view, lineIndex) +
+      /** @type {number} */ (lineLengths[lineIndex]) +
+      offsetInContainer
+    );
+  }
+
+  if (lineIndex >= lineEls.length || lineEls[lineIndex] !== node) return null;
+
+  let charOffset =
+    container.nodeType === TEXT_NODE
+      ? offsetInContainer
+      : sumChildLengths(container, offsetInContainer);
+  let n = container;
+  while (n !== node) {
+    for (let sib = n.previousSibling; sib; sib = sib.previousSibling) {
+      charOffset += /** @type {string} */ (sib.textContent).length;
+    }
+    if (!n.parentNode) return null;
+    n = n.parentNode;
+  }
+  return lineStartOffset(view, lineIndex) + charOffset;
+}
+
+/**
+ * The editor's selection as character offsets, or null when it lies outside
+ * `editor`.
+ * @param {HTMLElement} editor
+ * @param {LineView} view
+ * @param {Selection | null} selection
+ * @returns {{ start: number, end: number } | null}
+ */
+export function readSelection(editor, view, selection) {
+  if (!selection || selection.rangeCount === 0) return null;
+  const range = selection.getRangeAt(0);
+  if (!editor.contains(range.commonAncestorContainer)) return null;
+  const start = offsetOfBoundary(
+    editor,
+    view,
+    range.startContainer,
+    range.startOffset,
+  );
+  const end = offsetOfBoundary(
+    editor,
+    view,
+    range.endContainer,
+    range.endOffset,
+  );
+  if (start != null && end != null) return { start, end };
+  const pre = range.cloneRange();
+  pre.selectNodeContents(editor);
+  pre.setEnd(range.startContainer, range.startOffset);
+  const fallbackStart = pre.toString().length;
+  return { start: fallbackStart, end: fallbackStart + range.toString().length };
+}
+
+/**
+ * Firefox: a boundary at a text node's edge breaks its native undo after a
+ * repaint, so anchor edges via setStartBefore/After. A boundary at a
+ * separator's end goes inside the next line's `<span>`, else Firefox types
+ * into a stray text node (forcing a full rebuild).
+ * @param {HTMLElement} editor
+ * @param {Range} range
+ * @param {"Start" | "End"} side
+ * @param {Node} node
+ * @param {number} offset
+ */
+function setRangeBoundary(editor, range, side, node, offset) {
+  const length = /** @type {string} */ (node.textContent).length;
+  const nextLine = node.nextSibling;
+  if (
+    node.parentNode === editor &&
+    offset === length &&
+    nextLine?.nodeType === ELEMENT_NODE
+  ) {
+    range[side === "Start" ? "setStart" : "setEnd"](nextLine, 0);
+  } else if (offset === 0) range[`set${side}Before`](node);
+  else if (offset === length) range[`set${side}After`](node);
+  else range[side === "Start" ? "setStart" : "setEnd"](node, offset);
+}
+
+/**
+ * Selects characters `[start, end)` of `root`, or puts the caret at `start`
+ * when `end` is null or equal. `root` defaults to the editor; pass another
+ * element (such as a cloned preview) to select inside it.
+ * @param {HTMLElement} editor
+ * @param {LineView} view
+ * @param {Selection | null} selection
+ * @param {number} start
+ * @param {number | null} [end]
+ * @param {Node} [root]
+ */
+export function writeSelection(
+  editor,
+  view,
+  selection,
+  start,
+  end,
+  root = editor,
+) {
+  if (!selection) return;
+  /** @param {number} offset */
+  const locate = (offset) =>
+    root === editor
+      ? editorNodeAtOffset(editor, view, offset)
+      : nodeAtOffset(root, offset);
+  const from = locate(start);
+  if (!from) return;
+  const doc = /** @type {Document} */ (editor.ownerDocument);
+  const range = doc.createRange();
+  setRangeBoundary(editor, range, "Start", from.node, from.offset);
+  const to = end != null && end !== start ? locate(end) : null;
+  if (to) setRangeBoundary(editor, range, "End", to.node, to.offset);
+  else range.collapse(true);
+  selection.removeAllRanges();
+  selection.addRange(range);
 }
