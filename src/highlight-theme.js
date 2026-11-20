@@ -1,13 +1,9 @@
 // `.hljs-<scope>` rules -> `::highlight(hljs-<scope>)` for HighlightEditable's
 // css-highlights engine. Only color/background-color work cross-browser, and
 // only single-class selectors have an equivalent; everything else is dropped.
+// Highlight resolves colors per token instead (highlight-cascade.js).
 
-import {
-  findBlockEnd,
-  findStringEnd,
-  STYLE_TAG,
-  splitTopLevel,
-} from "./css-walk.js";
+import { forEachRule, splitTopLevel } from "./css-walk.js";
 import { SHL_FALLBACKS } from "./themes/_shl-fallbacks.js";
 
 const SIMPLE_SCOPE_SELECTOR = /^\.hljs-([\w-]+)$/;
@@ -84,47 +80,10 @@ function highlightRulesFor(prelude, body) {
  * @returns {string} Converted `::highlight()` rules, concatenated.
  */
 export function highlightRules(theme) {
-  const match = STYLE_TAG.exec(theme);
-  const css = match ? (match[2] ?? "") : theme;
-
   let out = "";
-  // Prelude is built from slices between comments, not char by char.
-  let prelude = "";
-  let runStart = 0;
-  let i = 0;
-  while (i < css.length) {
-    const ch = css[i];
-    if (ch === "/" && css[i + 1] === "*") {
-      prelude += css.slice(runStart, i);
-      const end = css.indexOf("*/", i + 2);
-      i = end === -1 ? css.length : end + 2;
-      runStart = i;
-      continue;
-    }
-    if (ch === '"' || ch === "'") {
-      i = findStringEnd(css, i);
-      continue;
-    }
-    if (ch === "{") {
-      prelude += css.slice(runStart, i);
-      const bodyEnd = findBlockEnd(css, i + 1);
-      if (!prelude.trim().startsWith("@")) {
-        out += highlightRulesFor(prelude, css.slice(i + 1, bodyEnd));
-      }
-      prelude = "";
-      i = bodyEnd + 1;
-      runStart = i;
-      continue;
-    }
-    if (ch === ";") {
-      // Blockless at-rule (@import, etc.).
-      prelude = "";
-      i += 1;
-      runStart = i;
-      continue;
-    }
-    i += 1;
-  }
+  forEachRule(theme, (prelude, body) => {
+    out += highlightRulesFor(prelude, body);
+  });
   return out;
 }
 
@@ -162,7 +121,7 @@ export function highlightRulesFromPalette(palette) {
 }
 
 /**
- * Lives here, not in HighlightEditable.svelte: svelte-preprocess matches a
+ * Lives here, not in a component: svelte-preprocess matches a
  * literal style tag inside `<script>` as the component's `<style>` block.
  * @param {string | import("./theme.d.ts").ThemePalette} theme
  * @param {string} instanceId Inserted into each highlight name.

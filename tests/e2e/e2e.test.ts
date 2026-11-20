@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/experimental-ct-svelte";
+import * as styles from "../../src/styles/index.js";
+import * as palettes from "../../src/themes/index.js";
 import AnsiOutputContrast from "./AnsiOutput.contrast.test.svelte";
 import AnsiOutputLink from "./AnsiOutput.link.test.svelte";
 import AnsiOutputStreaming from "./AnsiOutput.streaming.test.svelte";
@@ -14,6 +16,10 @@ import CreateEditor from "./createEditor.test.svelte";
 import DiffFileList from "./DiffFileList.test.svelte";
 import DiffViewSlots from "./DiffView.slots.test.svelte";
 import FileTabs from "./FileTabs.test.svelte";
+import HighlightCssHighlightsColors from "./Highlight.cssHighlights.colors.test.svelte";
+import HighlightCssHighlightsLazy from "./Highlight.cssHighlights.lazy.test.svelte";
+import HighlightCssHighlights from "./Highlight.cssHighlights.test.svelte";
+import HighlightCssHighlightsTwoInstances from "./Highlight.cssHighlights.twoInstances.test.svelte";
 import HighlightDispatchOnce from "./Highlight.dispatchOnce.test.svelte";
 import HighlightEmptyCode from "./Highlight.emptyCode.test.svelte";
 import HighlightEvents from "./Highlight.events.test.svelte";
@@ -713,6 +719,592 @@ test("Highlight - exposes the scope-event stream via slot prop and on:highlight 
   expect(expected).not.toBe("");
   await expect(page.getByTestId("slot-events")).toHaveText(expected ?? "");
   await expect(page.getByTestId("dispatch-events")).toHaveText(expected ?? "");
+});
+
+type PaintedRange = { start: number; end: number; scope: string };
+
+/** Runs in the page: ranges registered by `Highlight` instances, by position. */
+function collectHighlightRanges() {
+  const out: (PaintedRange & { inCode: boolean })[] = [];
+  for (const [name, highlight] of CSS.highlights) {
+    const scope = /^hljs-highlight-\d+-(.+)$/.exec(name)?.[1];
+    if (!scope) continue;
+    for (const range of highlight as Iterable<AbstractRange>) {
+      out.push({
+        start: range.startOffset,
+        end: range.endOffset,
+        scope,
+        inCode:
+          range.startContainer.isConnected &&
+          range.startContainer.parentElement?.matches("code.hljs") === true,
+      });
+    }
+  }
+  return out.sort((a, b) => a.start - b.start);
+}
+
+/** Runs in the page: the fixture's `cascadeRanges()`, as painted ranges. */
+function collectExpectedRanges() {
+  const json = document
+    .querySelector('[data-testid="expected-ranges"]')
+    ?.getAttribute("data-value");
+  return (JSON.parse(json ?? "[]") as PaintedRange[]).map((range) => ({
+    ...range,
+    inCode: true,
+  }));
+}
+
+/** The parts of the `page` fixture that `readResolvedEngine` uses. */
+type EnginePage = {
+  getByRole(
+    role: "button",
+    options: { name: string },
+  ): { click(): Promise<void> };
+  getByTestId(id: string): {
+    getAttribute(name: string): Promise<string | null>;
+  };
+};
+
+/** Clicks "read engine" and returns what `resolvedEngine()` reported. */
+async function readResolvedEngine(page: EnginePage) {
+  await page.getByRole("button", { name: "read engine" }).click();
+  return page.getByTestId("resolved-engine").getAttribute("data-value");
+}
+
+test("Highlight css-highlights engine - paints plain text with one range per styled run", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightCssHighlights);
+
+  await expect.poll(() => readResolvedEngine(page)).toBe("css-highlights");
+  const code = page.locator("code.hljs");
+  await expect(code).toHaveText("const a = 1;");
+  await expect(code.locator("*")).toHaveCount(0);
+  // The swap to plain text keeps the focusable, named code region.
+  await expect(code).toHaveAttribute("role", "region");
+  await expect(code).toHaveAttribute("tabindex", "0");
+  await expect(code).toHaveAccessibleName("Code");
+
+  const expected = await page.evaluate(collectExpectedRanges);
+  expect(expected.length).toBeGreaterThan(0);
+  await expect
+    .poll(() => page.evaluate(collectHighlightRanges))
+    .toEqual(expected);
+
+  const styles = (await page.locator("style").allTextContents()).join("");
+  expect(styles).toMatch(
+    /::highlight\(hljs-highlight-\d+-c\d+\)\{color:#d73a49\}/,
+  );
+});
+
+test("Highlight css-highlights engine - repaints on code, language, theme, and engine changes", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightCssHighlights);
+  const code = page.locator("code.hljs");
+
+  await page.getByRole("button", { name: "set code" }).click();
+  await expect(code).toHaveText("let b = 'two';");
+  await expect(code.locator("*")).toHaveCount(0);
+  await expect
+    .poll(() => page.evaluate(collectHighlightRanges))
+    .toEqual(await page.evaluate(collectExpectedRanges));
+  // The string run, `'two'`, gets the github string color.
+  const stringRun = (await page.evaluate(collectHighlightRanges)).find(
+    (range) => range.start === 8 && range.end === 13,
+  );
+  expect((await page.locator("style").allTextContents()).join("")).toContain(
+    `-${stringRun?.scope}){color:#032f62}`,
+  );
+
+  await page.getByRole("button", { name: "set language" }).click();
+  await expect
+    .poll(() => page.evaluate(collectHighlightRanges))
+    .toEqual(await page.evaluate(collectExpectedRanges));
+
+  await page.getByRole("button", { name: "set theme" }).click();
+  await expect
+    .poll(async () => (await page.locator("style").allTextContents()).join(""))
+    .toMatch(/::highlight\(hljs-highlight-\d+-c\d+\)\{color:#c678dd\}/);
+  await expect
+    .poll(() => page.evaluate(collectHighlightRanges))
+    .toEqual(await page.evaluate(collectExpectedRanges));
+
+  await page.getByRole("button", { name: "toggle engine" }).click();
+  await expect(code.locator(".hljs-keyword")).toHaveText("let");
+  await expect.poll(() => page.evaluate(collectHighlightRanges)).toEqual([]);
+
+  await page.getByRole("button", { name: "toggle engine" }).click();
+  await expect(code.locator("*")).toHaveCount(0);
+  await expect
+    .poll(() => page.evaluate(collectHighlightRanges))
+    .toEqual(await page.evaluate(collectExpectedRanges));
+});
+
+test("Highlight css-highlights engine - unregisters its highlights on unmount", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const component = await mount(HighlightCssHighlights);
+  await expect
+    .poll(() => page.evaluate(collectHighlightRanges))
+    .not.toEqual([] as PaintedRange[]);
+
+  await component.unmount();
+  expect(await page.evaluate(() => CSS.highlights.size)).toBe(0);
+});
+
+test("Highlight css-highlights engine - instances on one page use distinct names", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  await mount(HighlightCssHighlightsTwoInstances);
+
+  // Two Highlights and one HighlightEditable, in mount order. Each paints
+  // `const` (offsets 0-5) under a name of its own.
+  const keywordNames = () =>
+    page.evaluate(() =>
+      [...CSS.highlights]
+        .filter(([, highlight]) =>
+          [...(highlight as Iterable<AbstractRange>)].some(
+            (range) => range.startOffset === 0 && range.endOffset === 5,
+          ),
+        )
+        .map(([name]) => name)
+        .sort((a, b) => Number(/\d+/.exec(a)) - Number(/\d+/.exec(b))),
+    );
+  await expect
+    .poll(async () =>
+      (await keywordNames()).map((name) => name.replace(/\d+/g, "N")).sort(),
+    )
+    .toEqual(["hljs-N-keyword", "hljs-highlight-N-cN", "hljs-highlight-N-cN"]);
+  const names = await keywordNames();
+  expect(new Set(names).size).toBe(3);
+
+  const [first, second] = names.filter((name) =>
+    name.startsWith("hljs-highlight-"),
+  ) as [string, string];
+  const styles = (await page.locator("style").allTextContents()).join("");
+  expect(styles).toContain(`::highlight(${first}){color:#d73a49}`);
+  expect(styles).toContain(`::highlight(${second}){color:#c678dd}`);
+});
+
+/** The parts of the `page` fixture that `holdCascadeChunk` uses. */
+type RoutingPage = {
+  route(
+    url: RegExp,
+    handler: (route: {
+      request(): { url(): string };
+      continue(): Promise<void>;
+      abort(): Promise<void>;
+    }) => Promise<void>,
+  ): Promise<unknown>;
+  evaluate(
+    fn: (src: string) => Promise<unknown>,
+    arg: string,
+  ): Promise<unknown>;
+};
+
+/**
+ * Holds back the resolver chunk until `release()`, so a test can act while
+ * `Highlight` waits for it.
+ */
+async function holdCascadeChunk(page: RoutingPage) {
+  let release = () => {};
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let url = "";
+  await page.route(/\/highlight-cascade-[\w-]+\.js$/, async (route) => {
+    url = route.request().url();
+    await held;
+    await route.continue();
+  });
+  return {
+    requested: () => url !== "",
+    /** Lets the chunk through and waits until the page has run it. */
+    async release() {
+      release();
+      await page.evaluate((src) => import(src), url);
+    },
+  };
+}
+
+/**
+ * Runs in the page: records each moment a `<code>` shows plain text with no
+ * highlight ranges on it, which is a flash of uncolored code.
+ */
+function watchForFlash() {
+  const flashes: string[] = [];
+  (window as unknown as { flashes: string[] }).flashes = flashes;
+  const painted = (code: Element) => {
+    for (const highlight of CSS.highlights.values()) {
+      for (const range of highlight as Iterable<AbstractRange>) {
+        if (code.contains(range.startContainer)) return true;
+      }
+    }
+    return false;
+  };
+  new MutationObserver(() => {
+    for (const code of document.querySelectorAll("code.hljs")) {
+      if (code.childElementCount === 0 && code.textContent && !painted(code)) {
+        flashes.push(code.textContent);
+      }
+    }
+  }).observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  });
+}
+
+test("Highlight css-highlights engine - keeps the DOM markup until the resolver loads", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const chunk = await holdCascadeChunk(page);
+  await page.evaluate(watchForFlash);
+  await mount(HighlightCssHighlightsLazy);
+  await expect.poll(chunk.requested).toBe(true);
+
+  const code = page.locator("code.hljs");
+  await expect(code.locator(".hljs-keyword")).toHaveText("const");
+  expect(await page.evaluate(() => CSS.highlights.size)).toBe(0);
+
+  await chunk.release();
+  await expect(code.locator("*")).toHaveCount(0);
+  await expect
+    .poll(() => page.evaluate(collectHighlightRanges))
+    .not.toEqual([] as PaintedRange[]);
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { flashes: string[] }).flashes,
+    ),
+  ).toEqual([]);
+});
+
+test("Highlight css-highlights engine - reports the DOM engine until the first paint", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const chunk = await holdCascadeChunk(page);
+  await mount(HighlightCssHighlightsLazy);
+  await expect.poll(chunk.requested).toBe(true);
+
+  await expect(page.locator("code .hljs-keyword")).toHaveText("const");
+  expect(await readResolvedEngine(page)).toBe("dom");
+
+  await chunk.release();
+  await expect(page.locator("code.hljs *")).toHaveCount(0);
+  await expect.poll(() => readResolvedEngine(page)).toBe("css-highlights");
+});
+
+test("Highlight css-highlights engine - reports the DOM engine when the resolver fails to load", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const chunkUrl = /\/highlight-cascade-[\w-]+\.js$/;
+  const failed = page.waitForEvent("requestfailed", (request) =>
+    chunkUrl.test(request.url()),
+  );
+  await page.route(chunkUrl, (route) => route.abort());
+  await mount(HighlightCssHighlightsLazy);
+  await failed;
+  // Let the failed import's callbacks run.
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(resolve)),
+  );
+
+  const code = page.locator("code.hljs");
+  await expect(code.locator(".hljs-keyword")).toHaveText("const");
+  expect(await readResolvedEngine(page)).toBe("dom");
+  expect(await page.evaluate(() => CSS.highlights.size)).toBe(0);
+
+  // Later updates keep the "dom" markup too.
+  await page.getByRole("button", { name: "set code" }).click();
+  await expect(code.locator(".hljs-keyword")).toHaveText("let");
+  expect(await readResolvedEngine(page)).toBe("dom");
+});
+
+test("Highlight css-highlights engine - paints the latest props once the resolver loads", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const chunk = await holdCascadeChunk(page);
+  await mount(HighlightCssHighlightsLazy);
+  await expect.poll(chunk.requested).toBe(true);
+  await page.getByRole("button", { name: "set code" }).click();
+  await page.getByRole("button", { name: "set theme" }).click();
+
+  const code = page.locator("code.hljs");
+  await expect(code.locator(".hljs-keyword")).toHaveText("let");
+  await chunk.release();
+  await expect(code).toHaveText("let b = 'two';");
+  await expect(code.locator("*")).toHaveCount(0);
+  // atom-one-dark's keyword color, not github's.
+  await expect
+    .poll(async () => (await page.locator("style").allTextContents()).join(""))
+    .toMatch(/::highlight\(hljs-highlight-\d+-c\d+\)\{color:#c678dd\}/);
+  const styles = (await page.locator("style").allTextContents()).join("");
+  expect(styles).not.toContain("#d73a49");
+  const ranges = await page.evaluate(collectHighlightRanges);
+  expect(ranges.some((range) => range.start === 0 && range.end === 3)).toBe(
+    true,
+  );
+});
+
+test("Highlight css-highlights engine - keeps the DOM markup when the engine switches back during the load", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const chunk = await holdCascadeChunk(page);
+  await mount(HighlightCssHighlightsLazy);
+  await expect.poll(chunk.requested).toBe(true);
+  await page.getByRole("button", { name: "toggle engine" }).click();
+  await chunk.release();
+
+  await expect(page.locator("code .hljs-keyword")).toHaveText("const");
+  expect(await page.evaluate(() => CSS.highlights.size)).toBe(0);
+});
+
+test("Highlight css-highlights engine - paints nothing when unmounted during the load", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const chunk = await holdCascadeChunk(page);
+  await mount(HighlightCssHighlightsLazy);
+  await expect.poll(chunk.requested).toBe(true);
+  await page.getByRole("button", { name: "unmount" }).click();
+  await expect(page.locator("code")).toHaveCount(0);
+  await chunk.release();
+  // Let the load's callbacks run.
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(resolve)),
+  );
+
+  expect(await page.evaluate(() => CSS.highlights.size)).toBe(0);
+  const styles = (await page.locator("style").allTextContents()).join("");
+  expect(styles).not.toContain("::highlight(");
+});
+
+type ColorMismatch = { sample: number; text: string; dom: string; css: string };
+
+/**
+ * Runs in the page: each character's computed color and background under
+ * the "dom" engine's `<span>`s and under the "css-highlights" engine's
+ * `::highlight()` rules, for each sample pair in the colors fixture. Returns
+ * the runs where they differ.
+ */
+function colorMismatches() {
+  const none = (value: string) =>
+    value === "transparent" || value === "rgba(0, 0, 0, 0)" ? "" : value;
+  const out: ColorMismatch[] = [];
+  for (const domRoot of document.querySelectorAll<HTMLElement>(
+    '[data-engine="dom"]',
+  )) {
+    const sample = Number(domRoot.dataset.sample);
+    const domCode = domRoot.querySelector("code") as HTMLElement;
+    const cssCode = document.querySelector(
+      `[data-engine="css-highlights"][data-sample="${sample}"] code`,
+    ) as HTMLElement;
+    const text = domCode.textContent ?? "";
+
+    const dom: string[] = [];
+    const walker = document.createTreeWalker(domCode, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const parent = node.parentElement as HTMLElement;
+      // A span's text sits on its nearest painted ancestor span.
+      let background = "";
+      for (let el = parent; el !== domCode && !background;) {
+        background = none(getComputedStyle(el).backgroundColor);
+        el = el.parentElement as HTMLElement;
+      }
+      const style = `${getComputedStyle(parent).color} ${background}`.trim();
+      for (let i = 0; i < (node.textContent ?? "").length; i++) dom.push(style);
+    }
+
+    const css = Array.from(text, () => getComputedStyle(cssCode).color);
+    if (cssCode.childElementCount > 0 || cssCode.textContent !== text) {
+      out.push({ sample, text: "<markup>", dom: text, css: cssCode.innerHTML });
+      continue;
+    }
+    for (const [name, highlight] of CSS.highlights) {
+      for (const range of highlight as Iterable<AbstractRange>) {
+        if (range.startContainer.parentNode !== cssCode) continue;
+        const pseudo = getComputedStyle(cssCode, `::highlight(${name})`);
+        const style = `${pseudo.color} ${none(pseudo.backgroundColor)}`.trim();
+        for (let i = range.startOffset; i < range.endOffset; i++) {
+          css[i] = style;
+        }
+      }
+    }
+
+    for (let i = 0; i < text.length; i++) {
+      if (dom[i] === css[i] || /\s/.test(text[i] as string)) continue;
+      const last = out[out.length - 1];
+      if (
+        last?.sample === sample &&
+        last.dom === dom[i] &&
+        last.css === css[i] &&
+        text.lastIndexOf(last.text, i) + last.text.length === i
+      ) {
+        last.text += text[i];
+      } else {
+        out.push({
+          sample,
+          text: text[i] as string,
+          dom: dom[i] as string,
+          css: css[i] as string,
+        });
+      }
+    }
+  }
+  return out;
+}
+
+/** Runs in the page: true once every css-highlights sample has painted. */
+function colorsPainted() {
+  const prefixes = new Set(
+    [...CSS.highlights.keys()].map((name) => name.replace(/-c\d+$/, "")),
+  );
+  return (
+    prefixes.size ===
+    document.querySelectorAll('[data-engine="css-highlights"]').length
+  );
+}
+
+for (const [label, theme] of [
+  // Styles `.hljs-title.function_` and `.hljs-title.class_` apart from
+  // `.hljs-title`.
+  ["monokai CSS", styles.monokai],
+  // No compound rules: `title.function_` falls back to `.hljs-title`.
+  ["vs2015 CSS", styles.vs2015],
+  // Compound rules in the same color as `.hljs-title`.
+  ["github CSS", styles.github],
+  ["monokai ThemePalette", palettes.monokai],
+  ["vs2015 ThemePalette", palettes.vs2015],
+] as const) {
+  test(`Highlight css-highlights engine - matches the DOM engine's token colors (${label})`, async ({
+    mount,
+    page,
+  }) => {
+    const supported = await page.evaluate(
+      () => typeof CSS !== "undefined" && "highlights" in CSS,
+    );
+    test.skip(!supported, "CSS Custom Highlight API not supported");
+
+    await mount(HighlightCssHighlightsColors, { props: { theme } });
+    await expect.poll(() => page.evaluate(colorsPainted)).toBe(true);
+    expect(await page.evaluate(colorMismatches)).toEqual([]);
+  });
+}
+
+test("Highlight css-highlights engine - matches the DOM engine's token colors for every bundled theme", async ({
+  browserName,
+  mount,
+  page,
+}) => {
+  test.skip(browserName !== "chromium", "One browser covers the resolver");
+  test.setTimeout(240_000);
+
+  const component = await mount(HighlightCssHighlightsColors, {
+    props: { theme: styles.github },
+  });
+  const themes: [string, string | (typeof palettes)["github"]][] = [
+    ...Object.entries(styles).map(([name, theme]): [string, string] => [
+      `styles/${name}`,
+      theme,
+    ]),
+    ...Object.entries(palettes).map(
+      ([name, theme]): [string, (typeof palettes)["github"]] => [
+        `themes/${name}`,
+        theme,
+      ],
+    ),
+  ];
+  expect(themes.length).toBeGreaterThan(400);
+  /** Theme -> its mismatches, for themes that have any. */
+  const failures: Record<string, ColorMismatch[]> = {};
+  for (const [key, theme] of themes) {
+    // eslint-disable-next-line no-await-in-loop -- one theme on the page at a time
+    await component.update({ props: { theme } });
+    // `colorMismatches` stays empty only once the new theme has painted.
+    let mismatches: ColorMismatch[] = [];
+    for (let attempt = 0; attempt < 20; attempt++) {
+      // eslint-disable-next-line no-await-in-loop -- polls until the theme paints
+      mismatches = await page.evaluate(colorMismatches);
+      if (mismatches.length === 0) break;
+      await page.waitForTimeout(25);
+    }
+    if (mismatches.length > 0) failures[key] = mismatches;
+  }
+  expect(failures).toEqual({});
+});
+
+test("Highlight css-highlights engine - falls back to the DOM engine without CSS.highlights", async ({
+  mount,
+  page,
+}) => {
+  await page.evaluate(() => {
+    Reflect.deleteProperty(CSS, "highlights");
+  });
+
+  await mount(HighlightCssHighlights);
+
+  await expect(page.locator("code .hljs-keyword")).toHaveText("const");
+  expect(await readResolvedEngine(page)).toBe("dom");
 });
 
 test("Highlight - dispatches on:highlight for empty code", async ({

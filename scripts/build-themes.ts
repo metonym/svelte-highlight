@@ -270,6 +270,20 @@ export async function buildThemes(themeInputs: ThemeInput[]) {
       "export declare const SHL_FALLBACKS: Record<string, string>;\n",
     ),
   );
+  // `base.css` as a string, so Highlight's "css-highlights" engine can resolve
+  // a palette's colors through the same rules the "dom" engine uses.
+  allWrites.push(
+    writeTo(
+      "src/themes/_base-css.js",
+      `export const BASE_CSS = ${JSON.stringify(baseCss)};\n`,
+    ),
+  );
+  allWrites.push(
+    writeTo(
+      "src/themes/_base-css.d.ts",
+      "export declare const BASE_CSS: string;\n",
+    ),
+  );
 
   for (const artifact of artifacts) {
     const palette = {

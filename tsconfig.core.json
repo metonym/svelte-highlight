@@ -24,6 +24,7 @@
     "src/editable-history.js",
     "src/engine.js",
     "src/fence.js",
+    "src/highlight-cascade.js",
     "src/highlight-theme.js",
     "src/incremental-tokenize.js",
     "src/load-language.js",

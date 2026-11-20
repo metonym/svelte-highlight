@@ -14,6 +14,9 @@ export type LangTagProps = HTMLAttributes<HTMLPreElement> &
 
     /** Language name. @default "plaintext" */
     languageName?: LanguageName | (string & {});
+
+    /** Bindable `<code>` element. Set after mount. */
+    codeElement?: HTMLElement;
   };
 
 export type LangTagEvents = {};
