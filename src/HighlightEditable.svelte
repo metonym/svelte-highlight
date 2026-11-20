@@ -42,6 +42,7 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { lineTokenRanges, retokenizedEnd } from "./editable-css-paint.js";
   import { createDomLinePainter } from "./editable-dom-paint.js";
+  import { createEditHistory } from "./editable-history.js";
   import {
     createLineView,
     lineStartOffset as lineStartIn,
@@ -56,7 +57,6 @@
     reparseIncremental,
   } from "./incremental-tokenize.js";
   import { ensureRegistered, registry } from "./registry.js";
-  import { diffText } from "./text-diff.js";
 
   const dispatch = createEventDispatcher();
   const TRAILING_NEWLINE = /\n$/;
@@ -313,102 +313,29 @@
 
   function syncCaretToHistory() {
     if (!editor.contains(document.activeElement)) return;
-    if (restoringSelection || composing || undoStack.length === 0) return;
+    if (restoringSelection || composing || editHistory.isEmpty) return;
     const sel = getSelectionRange();
-    if (!sel) return;
-    const top = undoStack[undoStack.length - 1];
-    if (top.resultLength !== code.length) return;
-    undoStack[undoStack.length - 1] = {
-      ...top,
-      selectionAfter: { start: sel.start, end: sel.end },
-    };
+    if (sel) editHistory.moveCaret(code.length, sel);
   }
 
-  /**
-   * @typedef {{ start: number; end: number }} Selection
-   * @typedef {{
-   *   start: number;
-   *   removed: string;
-   *   inserted: string;
-   *   resultLength: number;
-   *   selectionBefore: Selection;
-   *   selectionAfter: Selection;
-   * }} HistoryEntry
-   */
-
-  /** @type {HistoryEntry[]} */
-  let undoStack = [];
-  /** @type {HistoryEntry[]} */
-  let redoStack = [];
-  let lastRecord = 0;
+  const editHistory = createEditHistory({ limit: () => historyLimit });
 
   function emitHistory() {
-    const future = redoStack.slice().reverse();
-    dispatch("history", {
-      entries: [...undoStack, ...future].map((snap) => ({
-        size: snap.resultLength,
-      })),
-      index: undoStack.length - 1,
-      canUndo: canUndo(),
-      canRedo: canRedo(),
-    });
+    dispatch("history", editHistory.snapshot());
   }
 
-  /** @returns {HistoryEntry} */
-  function makeEntry(before, after, selectionBefore, selectionAfter) {
-    const { start, removed, inserted } = diffText(before, after);
-    return {
-      start,
-      removed,
-      inserted,
-      resultLength: after.length,
-      selectionBefore,
-      selectionAfter,
-    };
-  }
-
-  // The code an entry transformed *from*, given the code it produced.
-  function beforeCodeOf(entry, resultCode) {
-    return (
-      resultCode.slice(0, entry.start) +
-      entry.removed +
-      resultCode.slice(entry.start + entry.inserted.length)
-    );
-  }
-
-  // Coalesce typing within 250ms; Enter/Tab/paste pass coalesce=false.
   function pushHistory(previousCode, newCode, selectionAfter, coalesce) {
-    redoStack = [];
-    const now = Date.now();
-    const top = undoStack[undoStack.length - 1];
-
-    if (coalesce && undoStack.length > 1 && now - lastRecord < 250) {
-      const burstStart = beforeCodeOf(top, previousCode);
-      undoStack[undoStack.length - 1] = makeEntry(
-        burstStart,
-        newCode,
-        top.selectionBefore,
-        selectionAfter,
-      );
-    } else {
-      undoStack.push(
-        makeEntry(previousCode, newCode, top.selectionAfter, selectionAfter),
-      );
-      const limit = Math.max(1, historyLimit);
-      if (undoStack.length > limit) {
-        undoStack.splice(0, undoStack.length - limit);
-      }
-    }
-    lastRecord = coalesce ? now : 0;
+    editHistory.record(previousCode, newCode, selectionAfter, coalesce);
     emitHistory();
   }
 
-  function applyHistoryMove(newCode, selection) {
-    code = newCode;
-    internalCode = newCode;
+  function applyHistoryMove(move) {
+    if (!move) return;
+    code = move.code;
+    internalCode = move.code;
     dispatch("change", { code });
     emitHistory();
-    renderAt(selection.start, selection.end);
+    renderAt(move.selection.start, move.selection.end);
   }
 
   function commit(value, start, end, coalesce) {
@@ -493,21 +420,11 @@
   }
 
   export function undo() {
-    if (undoStack.length <= 1) return;
-    const entry = undoStack.pop();
-    redoStack.push(entry);
-    applyHistoryMove(beforeCodeOf(entry, code), entry.selectionBefore);
+    applyHistoryMove(editHistory.undo(code));
   }
 
   export function redo() {
-    if (redoStack.length === 0) return;
-    const entry = redoStack.pop();
-    const nextCode =
-      code.slice(0, entry.start) +
-      entry.inserted +
-      code.slice(entry.start + entry.removed.length);
-    undoStack.push(entry);
-    applyHistoryMove(nextCode, entry.selectionAfter);
+    applyHistoryMove(editHistory.redo(code));
   }
 
   export function focus() {
@@ -558,11 +475,11 @@
   }
 
   export function canUndo() {
-    return undoStack.length > 1;
+    return editHistory.canUndo();
   }
 
   export function canRedo() {
-    return redoStack.length > 0;
+    return editHistory.canRedo();
   }
 
   /** The engine actually in use: `engine`, or `"dom"` if it was requested but unsupported. */
@@ -686,16 +603,7 @@
 
   onMount(() => {
     paint();
-    undoStack = [
-      {
-        start: 0,
-        removed: "",
-        inserted: code,
-        resultLength: code.length,
-        selectionBefore: { start: 0, end: 0 },
-        selectionAfter: { start: 0, end: 0 },
-      },
-    ];
+    editHistory.reset(code);
     mounted = true;
     emitHistory();
 

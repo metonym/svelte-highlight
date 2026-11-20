@@ -25,6 +25,7 @@ const CORE = [
   "css-walk.js",
   "editable-css-paint.js",
   "editable-dom-paint.js",
+  "editable-history.js",
   "engine.js",
   "fence.js",
   "highlight-theme.js",

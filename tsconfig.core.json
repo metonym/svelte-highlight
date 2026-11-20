@@ -15,6 +15,7 @@
     "src/css-walk.js",
     "src/editable-css-paint.js",
     "src/editable-dom-paint.js",
+    "src/editable-history.js",
     "src/engine.js",
     "src/fence.js",
     "src/highlight-theme.js",
