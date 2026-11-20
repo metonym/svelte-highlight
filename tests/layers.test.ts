@@ -37,6 +37,7 @@ const CORE = [
   "split-lines.js",
   "stream-final-highlight.js",
   "stream-highlighted.js",
+  "stream-highlighter.js",
   "stream-preview.js",
   "stream-regenerate.js",
   "stream-sealed-chunks.js",

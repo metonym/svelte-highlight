@@ -27,6 +27,7 @@
     "src/split-lines.js",
     "src/stream-final-highlight.js",
     "src/stream-highlighted.js",
+    "src/stream-highlighter.js",
     "src/stream-preview.js",
     "src/stream-regenerate.js",
     "src/stream-sealed-chunks.js",

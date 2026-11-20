@@ -52,22 +52,9 @@
   export let doneText = "Code finished streaming";
 
   import { createEventDispatcher, onMount, tick } from "svelte";
-  import { extendLines } from "./engine.js";
-  import { ensureRegistered, registry } from "./registry.js";
-  import { createFinalHighlighter } from "./stream-final-highlight.js";
-  import { createCompletedHtmlBuffer } from "./stream-highlighted.js";
-  import { computeStagedTailPreview } from "./stream-preview.js";
-  import { regenerate } from "./stream-regenerate.js";
-  import {
-    buildSealedChunkHtml,
-    pushSealedChunk,
-  } from "./stream-sealed-chunks.js";
+  import { createStreamHighlighter } from "./stream-highlighter.js";
   import { createTokenizedDocument } from "./tokenized-document.js";
   import { watchLineHeight, windowRange } from "./virtual-window.js";
-
-  // Full chunks become one immutable HTML string, so the keyed each-block
-  // only diffs the bounded unsealed tail.
-  const SEAL_CHUNK_LINES = 256;
 
   const dispatch = createEventDispatcher();
 
@@ -113,145 +100,24 @@
   /** @type {number | undefined} */
   let dispatchedWindowLineCount;
 
-  /** @type {ReturnType<typeof registry.createSession> | undefined} */
-  let session;
-  let sessionLanguageName = "";
-  // Prefix of `code` already fed to `session`.
-  let fedCode = "";
-
-  let finalizedPendingHtml = "";
-  /** @type {string[]} */
-  let finalizedOpenScopes = [];
-  let renderedCommittedCount = 0;
-  /** @type {import("./stream-preview.d.ts").PreviewCache | undefined} */
-  let previewCache;
-
-  // Append-only: past entries are never rebuilt.
+  const streamHighlighter = createStreamHighlighter();
+  // Append-only: past entries are never rebuilt. Full chunks are immutable
+  // HTML strings, so the keyed each-block only diffs the bounded tail.
   /** @type {string[]} */
   let sealedChunks = [];
   let sealedLineCount = 0;
-  // Completed lines for the `highlight` payload, so it isn't rebuilt per repaint.
-  const completedHtml = createCompletedHtmlBuffer();
-  const finalHighlighter = createFinalHighlighter();
-  // Bounded by SEAL_CHUNK_LINES, so touching it every repaint stays O(1).
-  /** @type {string[]} */
-  let unsealedLines = [];
-  // unsealedLines + the live preview line(s).
+  // Unsealed completed lines plus the live preview line(s).
   /** @type {string[]} */
   let tailLines = [];
 
-  function ensureSession() {
-    if (
-      session &&
-      sessionLanguageName === language.name &&
-      code.startsWith(fedCode)
-    ) {
-      return;
-    }
-    ensureRegistered(language);
-    if (session && sessionLanguageName === language.name) {
-      // Not a pure append: patch in place rather than lose every sealed chunk.
-      const next = regenerate({
-        session,
-        fedCode,
-        code,
-        sealedChunks,
-        completedHtml,
-        chunkLines: SEAL_CHUNK_LINES,
-      });
-      fedCode = code;
-      previewCache = undefined;
-      finalizedPendingHtml = next.pendingHtml;
-      finalizedOpenScopes = next.openScopes;
-      renderedCommittedCount = next.committedCount;
-      sealedChunks = next.sealedChunks;
-      sealedLineCount = next.sealedLineCount;
-      unsealedLines = next.unsealedLines;
-      tailLines = unsealedLines;
-      return;
-    }
-    resetStreamingState();
-    session = registry.createSession(language.name);
-    sessionLanguageName = language.name;
-  }
-
-  // Also runs after the done pass, so a closed stream retains only its final
-  // HTML; resuming re-feeds the whole buffer.
-  function resetStreamingState() {
-    session = undefined;
-    sessionLanguageName = "";
-    fedCode = "";
-    finalizedPendingHtml = "";
-    finalizedOpenScopes = [];
-    renderedCommittedCount = 0;
-    previewCache = undefined;
-    sealedChunks = [];
-    sealedLineCount = 0;
-    completedHtml.reset();
-    unsealedLines = [];
-    tailLines = [];
-  }
-
-  function sealChunk() {
-    const chunkLines = unsealedLines.slice(0, SEAL_CHUNK_LINES);
-    sealedChunks = pushSealedChunk(
-      sealedChunks,
-      buildSealedChunkHtml(chunkLines, sealedLineCount),
-    );
-    sealedLineCount += chunkLines.length;
-    unsealedLines = unsealedLines.slice(SEAL_CHUNK_LINES);
-  }
-
   function repaint() {
-    if (done) {
-      // Full re-parse for multi-line lookahead (heredocs, etc.).
-      ensureRegistered(language);
-      highlighted = finalHighlighter.highlight(registry, code, language.name);
-      if (session) resetStreamingState();
-    } else {
-      ensureSession();
-      if (code.length > fedCode.length) {
-        session.append(code.slice(fedCode.length));
-        fedCode = code;
-      }
-
-      const committed = session.events();
-      if (committed.length > renderedCommittedCount) {
-        const result = extendLines(
-          committed.slice(renderedCommittedCount),
-          finalizedOpenScopes,
-          finalizedPendingHtml,
-        );
-        if (result.completedLines.length > 0) {
-          completedHtml.appendLines(result.completedLines);
-          unsealedLines = unsealedLines.concat(result.completedLines);
-          while (unsealedLines.length >= SEAL_CHUNK_LINES) sealChunk();
-        }
-        finalizedPendingHtml = result.pendingHtml;
-        finalizedOpenScopes = result.openScopes;
-        renderedCommittedCount = committed.length;
-      }
-
-      const { previewLines, cache } = computeStagedTailPreview({
-        registry,
-        language: sessionLanguageName,
-        session,
-        fedCode,
-        openScopes: finalizedOpenScopes,
-        pendingHtml: finalizedPendingHtml,
-        cache: previewCache,
-      });
-      previewCache = cache;
-
-      tailLines = [...unsealedLines, ...previewLines];
-
-      // A trailing empty preview keeps a final `\n` when the stream ends a line.
-      const completed = completedHtml.toString();
-      highlighted =
-        completedHtml.lineCount === 0
-          ? previewLines.join("\n")
-          : `${completed}\n${previewLines.join("\n")}`;
-    }
+    const state = done
+      ? streamHighlighter.finish(code, language)
+      : streamHighlighter.update(code, language);
+    highlighted = state.highlighted;
+    sealedChunks = state.sealedChunks;
+    sealedLineCount = state.sealedLineCount;
+    tailLines = state.tailLines;
 
     dispatch("highlight", { highlighted });
 
