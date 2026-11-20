@@ -3,7 +3,9 @@ import AnsiOutputContrast from "./AnsiOutput.contrast.test.svelte";
 import AnsiOutputLink from "./AnsiOutput.link.test.svelte";
 import AnsiOutputStreaming from "./AnsiOutput.streaming.test.svelte";
 import AnsiOutput from "./AnsiOutput.test.svelte";
+import CodeToolbar from "./CodeToolbar.test.svelte";
 import CodeWindow from "./CodeWindow.test.svelte";
+import CopyButtonAbsolute from "./CopyButton.absolute.test.svelte";
 import CopyButtonAsyncCopy from "./CopyButton.asyncCopy.test.svelte";
 import CopyButtonCustomCopy from "./CopyButton.customCopy.test.svelte";
 import CopyButton from "./CopyButton.test.svelte";
@@ -181,6 +183,140 @@ test("HighlightStyle - falls back to the auto-hash when scopeClass is an empty s
     "color",
     "rgb(220, 198, 224)",
   );
+});
+
+test("CodeToolbar - renders a language badge and title", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeToolbar);
+
+  const badge = page.locator('[data-language="typescript"]');
+  await expect(badge).toBeVisible();
+  await expect(badge).toHaveText("typescript");
+
+  const title = page.locator('[title="app.ts"]');
+  await expect(title).toHaveText("app.ts");
+});
+
+test("CodeToolbar - stays pinned to the top while its container scrolls", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeToolbar);
+
+  const toolbar = page.getByRole("toolbar");
+  // Transparent would let the scrolled code show through the pinned bar.
+  await expect(toolbar).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  const before = await toolbar.boundingBox();
+  expect(before).not.toBeNull();
+
+  await expect(page.getByText("line0")).toBeInViewport();
+
+  const container = page.getByTestId("scroll-container");
+  await container.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+
+  const after = await toolbar.boundingBox();
+  expect(after).not.toBeNull();
+  expect(Math.abs((after?.y ?? 0) - (before?.y ?? 0))).toBeLessThan(2);
+
+  await expect(page.getByText("line0")).not.toBeInViewport();
+  await expect(page.getByText("line199")).toBeInViewport();
+});
+
+test("CodeToolbar - takes the theme's colors and lays CopyButton out inline", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeToolbar);
+
+  // atom-one-dark's `.hljs` background and text color.
+  const toolbar = page.getByRole("toolbar");
+  await expect(toolbar).toHaveCSS("background-color", "rgb(40, 44, 52)");
+  await expect(toolbar).toHaveCSS("color", "rgb(171, 178, 191)");
+
+  // No `absolute={false}` in the fixture: the toolbar makes it the default.
+  await expect(page.getByRole("button", { name: "Copy" })).toHaveCSS(
+    "position",
+    "static",
+  );
+});
+
+test("CodeToolbar - WrapToggle flips aria-pressed and the bound wrap", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeToolbar);
+
+  const codeLine = page.locator("table pre").first();
+  await expect(codeLine).toHaveCSS("white-space", "pre");
+
+  const wrapButton = page.getByRole("button", { name: "Wrap" });
+  await wrapButton.click();
+
+  await expect(wrapButton).toHaveAttribute("aria-pressed", "true");
+  await expect(wrapButton).toHaveAttribute("aria-label", "Wrap");
+  await expect(codeLine).toHaveCSS("white-space", "pre-wrap");
+});
+
+test("CodeToolbar - ToolbarButton forwards clicks and matches the built-in buttons", async ({
+  mount,
+  page,
+}) => {
+  await mount(CodeToolbar);
+
+  const download = page.getByRole("button", { name: "Download" });
+  await download.click();
+  await expect(page.getByTestId("downloads")).toHaveText("1");
+  await expect(download).toHaveAttribute("title", "Download");
+  await expect(download).not.toHaveAttribute("aria-pressed");
+
+  const link = page.getByRole("link", { name: "Docs" });
+  await expect(link).toHaveAttribute("href", "#docs");
+
+  // Same size, shape and resting color as WrapToggle and CopyButton.
+  await page.mouse.move(0, 0);
+  await page.locator("body").focus();
+  const wrap = page.getByRole("button", { name: "Wrap" });
+  const copy = page.getByRole("button", { name: "Copy" });
+  const properties = ["height", "border-radius", "color"];
+  const expected = await wrap.evaluate(
+    (el, props) => props.map((p) => getComputedStyle(el).getPropertyValue(p)),
+    properties,
+  );
+  await Promise.all(
+    [download, link, copy].flatMap((button) =>
+      properties.map((property, i) =>
+        expect(button).toHaveCSS(property, expected[i] ?? ""),
+      ),
+    ),
+  );
+});
+
+test("CodeToolbar - CopyButton inside it copies the code", async ({
+  mount,
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName !== "chromium",
+    "Clipboard permissions are Chromium-only",
+  );
+
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+
+  await mount(CodeToolbar);
+
+  await page.getByRole("button", { name: "Copy" }).click();
+
+  const clipboard = await page.evaluate(() => navigator.clipboard.readText());
+  const expected = Array.from(
+    { length: 200 },
+    (_, i) => `const line${i} = ${i};`,
+  ).join("\n");
+  expect(clipboard).toBe(expected);
 });
 
 test("CodeWindow - renders each variant wrapping a Highlight", async ({
@@ -1117,6 +1253,18 @@ test("CopyButton - transform strips decoration before copying and reporting on:c
   const clipboard = await page.evaluate(() => navigator.clipboard.readText());
   expect(clipboard).toBe("npm i\nadded 1 package");
   await expect(page.getByTestId("detail")).toHaveText("npm i\nadded 1 package");
+});
+
+test("CopyButton - absolute false lays out inline instead of overlaying", async ({
+  mount,
+  page,
+}) => {
+  await mount(CopyButtonAbsolute);
+
+  await expect(page.getByRole("button", { name: "Copy" })).toHaveCSS(
+    "position",
+    "static",
+  );
 });
 
 test("HighlightEditable - renders an editable, highlighted block", async ({

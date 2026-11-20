@@ -32,7 +32,11 @@ export type CopyButtonProps = HTMLButtonAttributes & {
   /** Announced to screen readers when the copy fails. @default "Copy failed" */
   errorText?: string;
 
-  /** Overlay the container (`true`) or sit in normal flow (`false`). @default true */
+  /**
+   * Overlay the container (`true`) or sit in normal flow (`false`).
+   * Defaults to `false` inside `CodeToolbar`.
+   * @default true
+   */
   absolute?: boolean;
 
   /** Top offset. @default "0.5em" */
@@ -49,6 +53,9 @@ export type CopyButtonProps = HTMLButtonAttributes & {
 
   /** Button background. @default "inherit" */
   "--copy-background"?: string;
+
+  /** Button background on hover inside `CodeToolbar`. @default "color-mix(in srgb, currentColor 12%, transparent)" */
+  "--copy-hover-background"?: string;
 
   /** Button color. @default "inherit" */
   "--copy-color"?: string;

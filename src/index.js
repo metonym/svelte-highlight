@@ -1,6 +1,7 @@
 export { default as AnsiOutput } from "./AnsiOutput.svelte";
 export { highlight } from "./action.js";
 export { parseAnsi } from "./ansi.js";
+export { default as CodeToolbar } from "./CodeToolbar.svelte";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { stripDiffMarkers, stripPrompts } from "./copy-transforms.js";
@@ -47,6 +48,7 @@ export {
   scopeSelectors,
   scopeStyle,
 } from "./scoped.js";
+export { default as ToolbarButton } from "./ToolbarButton.svelte";
 export { default as Typewriter } from "./Typewriter.svelte";
 export {
   easeInCubic,
@@ -60,3 +62,4 @@ export {
   easeOutSine,
   linear,
 } from "./typewriter-easing.js";
+export { default as WrapToggle } from "./WrapToggle.svelte";

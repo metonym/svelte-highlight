@@ -43,6 +43,7 @@ const CASES = [
   ["diff-parts", "DiffView, DiffMinimap, DiffStats"],
   ["diff-file-list", "DiffFileList"],
   ["file-tabs", "FileTabs"],
+  ["code-toolbar", "CodeToolbar, ToolbarButton, WrapToggle"],
 ] as const;
 
 for (const [component, name] of CASES) {
