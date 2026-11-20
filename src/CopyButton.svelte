@@ -2,8 +2,12 @@
   /** @type {string} */
   export let code;
 
+  import { createEventDispatcher, getContext, onMount } from "svelte";
+
+  const inToolbar = getContext("svelte-highlight:code-toolbar") === true;
+
   /** @type {boolean} */
-  export let absolute = true;
+  export let absolute = !inToolbar;
 
   /** @type {(code: string) => void | Promise<void>} */
   export let copy = (code) => navigator.clipboard.writeText(code);
@@ -22,8 +26,6 @@
 
   /** @type {string} */
   export let errorText = "Copy failed";
-
-  import { createEventDispatcher, onMount } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -70,10 +72,13 @@
 <button
   type="button"
   aria-label={copied ? copiedText : text}
+  title={inToolbar ? (copied ? copiedText : text) : undefined}
   on:click={handleClick}
   on:mouseenter
   on:mouseleave
   class:static={!absolute}
+  class:toolbar={inToolbar}
+  class:copied
   {...$$restProps}
 >
   <slot {copied} {copying}>
@@ -146,5 +151,69 @@
 
   button.static {
     position: static;
+  }
+
+  /* Inside CodeToolbar: matches ToolbarButton and reads the same
+     --toolbar-button-* variables. --copy-* variables still win. */
+  button.toolbar {
+    width: auto;
+    font: inherit;
+    line-height: 1;
+    min-width: var(--copy-size, var(--toolbar-button-size, 2em));
+    height: var(--copy-size, var(--toolbar-button-size, 2em));
+    padding: var(--copy-padding, var(--toolbar-button-padding, 0.3em));
+    background: var(
+      --copy-background,
+      var(--toolbar-button-background, transparent)
+    );
+    color: var(
+      --copy-color,
+      var(
+        --toolbar-button-color,
+        color-mix(in srgb, currentColor 72%, transparent)
+      )
+    );
+    border-radius: var(
+      --copy-border-radius,
+      var(--toolbar-button-border-radius, 6px)
+    );
+    border: var(--copy-border, var(--toolbar-button-border, none));
+    transition:
+      background-color 120ms ease,
+      color 120ms ease;
+  }
+
+  button.toolbar:hover {
+    background: var(
+      --copy-hover-background,
+      var(
+        --toolbar-button-hover-background,
+        color-mix(in srgb, currentColor 12%, transparent)
+      )
+    );
+    color: inherit;
+  }
+
+  button.toolbar:active {
+    background: var(
+      --toolbar-button-pressed-background,
+      color-mix(in srgb, currentColor 18%, transparent)
+    );
+  }
+
+  button.toolbar.copied {
+    color: inherit;
+  }
+
+  button.toolbar:focus-visible {
+    color: inherit;
+    outline: 2px solid currentColor;
+    outline-offset: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button.toolbar {
+      transition: none;
+    }
   }
 </style>

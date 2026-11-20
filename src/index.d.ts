@@ -3,6 +3,7 @@ export type { HighlightActionParameters } from "./action";
 export { highlight } from "./action";
 export type { AnsiColor, AnsiSegment, AnsiStyle } from "./ansi";
 export { parseAnsi } from "./ansi";
+export { default as CodeToolbar } from "./CodeToolbar.svelte";
 export { default as CodeWindow } from "./CodeWindow.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { stripDiffMarkers, stripPrompts } from "./copy-transforms";
@@ -53,6 +54,7 @@ export type { LanguageName, LanguageType } from "./languages";
 export { LanguageLoadError, loadLanguage } from "./load-language";
 export { default as MarkdownStream } from "./MarkdownStream.svelte";
 export { dualStyle, scopeClassFor, scopeSelectors, scopeStyle } from "./scoped";
+export { default as ToolbarButton } from "./ToolbarButton.svelte";
 export { default as Typewriter } from "./Typewriter.svelte";
 export type { ThemePalette } from "./theme";
 export {
@@ -67,3 +69,4 @@ export {
   easeOutSine,
   linear,
 } from "./typewriter-easing";
+export { default as WrapToggle } from "./WrapToggle.svelte";

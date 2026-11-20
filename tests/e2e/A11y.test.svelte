@@ -1,6 +1,7 @@
 <script>
   import Highlight, {
     AnsiOutput,
+    CodeToolbar,
     CodeWindow,
     CopyButton,
     createDiffController,
@@ -17,7 +18,9 @@
     HighlightVirtual,
     LineNumbers,
     MarkdownStream,
+    ToolbarButton,
     Typewriter,
+    WrapToggle,
   } from "svelte-highlight";
   import javascript from "svelte-highlight/languages/javascript";
   import typescript from "svelte-highlight/languages/typescript";
@@ -25,7 +28,7 @@
 
   /**
    * Which component to render.
-   * @type {"highlight" | "line-numbers" | "virtual" | "ansi" | "code-window" | "copy-button" | "editable" | "typewriter" | "stream" | "stream-virtual" | "markdown-stream" | "diff" | "diff-split" | "diff-review" | "diff-streaming" | "diff-parts" | "diff-file-list" | "file-tabs"}
+   * @type {"highlight" | "line-numbers" | "virtual" | "ansi" | "code-window" | "copy-button" | "editable" | "typewriter" | "stream" | "stream-virtual" | "markdown-stream" | "diff" | "diff-split" | "diff-review" | "diff-streaming" | "diff-parts" | "diff-file-list" | "file-tabs" | "code-toolbar"}
    */
   export let component = "highlight";
 
@@ -59,6 +62,7 @@
 
   const tabFiles = ["App.svelte", "index.js"];
   let active = tabFiles[0];
+  let wrap = false;
 
   const markdown = `Intro text.\n\n\`\`\`js\n${long}\n\`\`\`\n\nOutro text.\n`;
 </script>
@@ -112,6 +116,28 @@
         timeout={60_000}
       />
     </div>
+  {:else if component === "code-toolbar"}
+    <Highlight language={typescript} {code} {wrap} let:highlighted>
+      <CodeToolbar languageName="TypeScript" title="app.ts">
+        <ToolbarButton label="Download" on:click={() => {}}>
+          <svg aria-hidden="true" width="16" height="16"></svg>
+        </ToolbarButton>
+        <ToolbarButton label="Open in playground" href="#playground">
+          <svg aria-hidden="true" width="16" height="16"></svg>
+        </ToolbarButton>
+        <WrapToggle bind:wrap />
+        <CopyButton {code} copy={() => {}} timeout={60_000} />
+      </CodeToolbar>
+      <LineNumbers {highlighted} wrapLines={wrap} />
+    </Highlight>
+    <CodeWindow title="config.ts">
+      <Highlight language={typescript} {code} let:highlighted>
+        <CodeToolbar languageName="TypeScript" label="config.ts actions">
+          <CopyButton {code} copy={() => {}} timeout={60_000} />
+        </CodeToolbar>
+        <LineNumbers {highlighted} />
+      </Highlight>
+    </CodeWindow>
   {:else if component === "editable"}
     <HighlightEditable
       language={typescript}
