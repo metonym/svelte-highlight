@@ -14,7 +14,7 @@
     "test:unit": "bun test tests/*.ts",
     "test:e2e": "bunx playwright test",
     "test:static-app": "bun run build:lib && bun run package && cd tests/e2e/static-app && bun install && bun run test",
-    "test:types": "tsgo",
+    "test:types": "tsgo && tsgo -p tsconfig.core.json",
     "bench": "ostia bench bench/*.bench.ts",
     "bench:ab": "ostia ab --base-setup \"bun scripts/index.ts\"",
     "format": "biome format --write .",

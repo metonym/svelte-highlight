@@ -1,0 +1,43 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": [],
+    "paths": {}
+  },
+  "files": [
+    "types/core-globals.d.ts",
+    "src/ansi-color.js",
+    "src/ansi-output.js",
+    "src/ansi.js",
+    "src/convert-language.js",
+    "src/copy-transforms.js",
+    "src/css-walk.js",
+    "src/editable-css-paint.js",
+    "src/editable-dom-paint.js",
+    "src/engine.js",
+    "src/fence.js",
+    "src/highlight-theme.js",
+    "src/incremental-tokenize.js",
+    "src/load-language.js",
+    "src/registry.js",
+    "src/scoped.js",
+    "src/split-lines.js",
+    "src/stream-final-highlight.js",
+    "src/stream-highlighted.js",
+    "src/stream-preview.js",
+    "src/stream-regenerate.js",
+    "src/stream-sealed-chunks.js",
+    "src/text-diff.js",
+    "src/textmate-theme.js",
+    "src/theme-style.js",
+    "src/theme-vars.js",
+    "src/theme.js",
+    "src/tokenized-document.js",
+    "src/transformers.js",
+    "src/typewriter-easing.js",
+    "src/typewriter-units.js",
+    "src/worker.js"
+  ],
+  "include": []
+}

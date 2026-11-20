@@ -3,10 +3,14 @@ import { ensureRegistered, registry } from "./registry.js";
 
 const LANGUAGE_CLASS = /(?:^|\s)language-([\w#+-]+)(?:\s|$)/;
 
+/** @typedef {import("./action.d.ts").HighlightActionParameters} HighlightActionParameters */
+
 /**
+ * Framework-free: returns `{ update, destroy }`, which Svelte accepts as an
+ * action. `action.d.ts` types it as a Svelte `Action` for `use:`.
  * @param {HTMLElement} node
- * @param {{ language?: import("./languages").LanguageType<string>; code?: string }} [parameters]
- * @returns {ReturnType<import("svelte/action").Action<HTMLElement, { language?: import("./languages").LanguageType<string>; code?: string }>>}
+ * @param {HighlightActionParameters} [parameters]
+ * @returns {{ update: (params?: HighlightActionParameters) => void; destroy: () => void }}
  */
 export function highlight(node, parameters = {}) {
   // Snapshot: after the first pass `textContent` is the highlighted output.
@@ -57,7 +61,7 @@ export function highlight(node, parameters = {}) {
     dispatch("highlighted", { html: value, language: language.name });
   }
 
-  /** @param {{ language?: import("./languages").LanguageType<string>; code?: string }} params */
+  /** @param {HighlightActionParameters} params */
   function apply({ language, code } = {}) {
     generation += 1;
     const gen = generation;
