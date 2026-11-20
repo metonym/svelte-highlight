@@ -69,7 +69,7 @@ A long line makes the code block scroll. Keyboard users can only scroll what the
 <Highlight language={typescript} {code} label="Add function" />
 ```
 
-`label` works the same way on `HighlightAuto`, `HighlightSvelte`, `LineNumbers`, `AnsiOutput`, `HighlightStream`, `HighlightVirtual`, and `Typewriter`. Inside a `CodeWindow`, the block takes the window's `title` (or its `label`) as its name.
+`label` works the same way on `HighlightAuto`, `HighlightAutoLazy`, `HighlightSvelte`, `LineNumbers`, `AnsiOutput`, `HighlightStream`, `HighlightVirtual`, and `Typewriter`. Inside a `CodeWindow`, the block takes the window's `title` (or its `label`) as its name.
 
 ### Experimental: CSS Custom Highlight engine
 
@@ -673,7 +673,7 @@ See the [kitchen-sink live demo](https://svhe.onrender.com/preview-svelte) for a
 The `HighlightAuto` component uses the [highlightAuto API](https://highlightjs.readthedocs.io/en/latest/api.html#highlightauto) and attempts to guess what grammar to use based on the provided `code`. Its `on:highlight` event's `secondBest` field surfaces the runner-up candidate and its relevance, for showing detection confidence.
 
 > [!WARNING]
-> Mounting `HighlightAuto` statically imports all 279 shipped grammars, regardless of `languageNames`, so bundle size is unconditionally larger than a `Highlight` with a single named language. Specify a language if possible.
+> Mounting `HighlightAuto` statically imports all 279 shipped grammars, regardless of `languageNames`, so bundle size is unconditionally larger than a `Highlight` with a single named language. Specify a language if possible. If you can't, and plain text before hydration is fine, use [`HighlightAutoLazy`](#lazy-auto-highlighting) instead. It loads only a few likely grammars.
 
 ```svelte
 <script>
@@ -708,6 +708,55 @@ You can restrict [language auto-detection](https://highlightjs.readthedocs.io/en
 
 <HighlightAuto {code} languageNames={["javascript", "typescript"]} />
 ```
+
+### Lazy auto-highlighting
+
+`HighlightAutoLazy` detects the language without importing every grammar. It works in two steps:
+
+1. It scores `code` against a small generated fingerprint index (about 33 KB gzip) and picks the 5 likeliest grammars. This step loads no grammar.
+2. It imports only those grammars, plus any grammars they embed. Then the same relevance engine as `HighlightAuto` picks the winner from them and from every grammar already registered.
+
+Each grammar is its own chunk, so a page fetches only the grammars its code needs.
+
+```svelte
+<script>
+  import { HighlightAutoLazy } from "svelte-highlight";
+  import github from "svelte-highlight/styles/github";
+
+  const code = `@media (max-width: 600px) {\n  body { padding: 0; }\n}`;
+</script>
+
+<svelte:head>
+  {@html github}
+</svelte:head>
+
+<HighlightAutoLazy {code} />
+```
+
+It has the same props, slot props, and `on:highlight` detail as `HighlightAuto`, with these differences:
+
+- **Plain text first.** On the server and on the first client render, it shows `code` as escaped plain text with no language. It highlights after mount, once the grammars load. If they are already registered, that happens at once.
+- **`on:highlight` fires for results only.** It does not fire for the plain-text placeholder.
+- **Latest `code` wins.** If `code` changes while grammars still load, the older result is dropped.
+- **`languageNames` skips the fingerprint step.** It loads each named grammar on demand and detects among those only.
+- **Different picks.** It picks from fewer grammars, so its answer can differ from `HighlightAuto`'s. On this repo's detection corpus it is right more often, but the fingerprint step misses some grammars with few keywords. To make sure a grammar competes, register it first (for example with `loadLanguage` and `registerAll`), or pass `languageNames`.
+
+The two steps are also available without the component, from `svelte-highlight/auto-detect`:
+
+```js
+import {
+  detectCandidates,
+  highlightAutoLazy,
+} from "svelte-highlight/auto-detect";
+
+detectCandidates(code); // ["stylus", "less", "css", "scss", "ada"]
+
+const result = await highlightAutoLazy(code);
+result.language; // "css"
+result.value; // highlighted HTML
+```
+
+Both accept an options object: `k` (number of candidates, default 5), `languageNames`, and `registry` (defaults to the shared registry). `highlightAutoIfLoaded(code, options)` does the same work synchronously and returns `undefined` if a grammar it needs is not registered yet.
 
 ## Line Numbers
 
@@ -3032,6 +3081,19 @@ import type { LanguageName } from "svelte-highlight";
   }}
 />
 ```
+
+### `HighlightAutoLazy`
+
+Same props, slot props, and `on:highlight` detail as [`HighlightAuto`](#highlightauto). See [Lazy auto-highlighting](#lazy-auto-highlighting) for how it differs.
+
+| Name          | Type             | Default value  |
+| :------------ | :--------------- | :------------- |
+| code          | `any`            | N/A (required) |
+| languageNames | `LanguageName[]` | `undefined`    |
+| langtag       | `boolean`        | `false`        |
+| wrap          | `boolean`        | `false`        |
+
+- **on:highlight**: fired once per detection result, after the grammars load. Not fired for the plain-text placeholder.
 
 ### `HighlightEditable`
 
