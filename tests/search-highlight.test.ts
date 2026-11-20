@@ -5,10 +5,13 @@ import {
   FakeText,
   h,
   installFakeDom,
+  restoreFakeDom,
 } from "../bench/_fake-search-dom.ts";
 import { highlightMatches } from "../src/search.js";
 
 type Match = { line: number; start: number; end: number };
+
+afterEach(restoreFakeDom);
 
 function paint(
   root: FakeElement,

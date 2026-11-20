@@ -223,6 +223,30 @@ export function installFakeDom({ highlights = true } = {}) {
     ["Highlight", FakeHighlight],
     ["CSS", highlights ? { highlights: registry } : {}],
   ];
+  if (!saved) {
+    saved = new Map(
+      globals.map(([name]) => [
+        name,
+        Object.getOwnPropertyDescriptor(globalThis, name),
+      ]),
+    );
+  }
   for (const [name, value] of globals) Reflect.set(globalThis, name, value);
   return registry;
+}
+
+/** The globals `installFakeDom` replaced, as they were before. */
+let saved: Map<string, PropertyDescriptor | undefined> | undefined;
+
+/**
+ * Puts back the globals `installFakeDom` replaced. Test files share one
+ * process, so a stub `document` left behind breaks later DOM tests.
+ */
+export function restoreFakeDom() {
+  if (!saved) return;
+  for (const [name, descriptor] of saved) {
+    if (descriptor) Object.defineProperty(globalThis, name, descriptor);
+    else Reflect.deleteProperty(globalThis, name);
+  }
+  saved = undefined;
 }
