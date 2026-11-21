@@ -1,6 +1,8 @@
 import { dualStyle, scopeClassFor, scopeStyle } from "../src/scoped.js";
 import a11yDark from "../src/styles/a11y-dark.js";
 import brownPaper from "../src/styles/brown-paper.js";
+import github from "../src/styles/github.js";
+import zenburn from "../src/styles/zenburn.js";
 
 describe("scopeStyle", () => {
   it("scopes a bare .hljs selector beneath the scope class", () => {
@@ -127,6 +129,45 @@ describe("invalid scope token warnings", () => {
   it("warns exactly once per dualStyle call, not once per theme", () => {
     dualStyle(".hljs{color:red}", ".hljs{color:blue}", "a b");
     expect(warnings.length).toBe(1);
+  });
+});
+
+describe("dualStyle with a selector mode", () => {
+  it("unsets light-only properties under the mode, before the dark rules", () => {
+    const out = dualStyle(
+      ".hljs{color:#000}.hljs-section{color:blue;font-weight:bold}",
+      ".hljs{color:#fff}.hljs-section{color:#eee}",
+      "s",
+      ".dark",
+    );
+    expect(out).toBe(
+      "<style>.s .hljs{color:#000}.s .hljs-section{color:blue;font-weight:bold}" +
+        ".dark .s .hljs-section{font-weight:unset}" +
+        ".dark .s .hljs{color:#fff}.dark .s .hljs-section{color:#eee}</style>",
+    );
+  });
+
+  it("matches selectors across selector lists and whitespace", () => {
+    const out = dualStyle(
+      ".a,.b  .c{margin:0;Color:red}",
+      ".b .c{color:blue;margin:1px}",
+      "s",
+      ".dark",
+    );
+    expect(out).toContain(".dark .s .a{margin:unset;color:unset}");
+    expect(out).not.toMatch(/\.b \.c\{[^}]*unset/);
+  });
+
+  it("leaves the auto, light and dark modes alone", () => {
+    for (const mode of ["auto", "light", "dark"]) {
+      expect(dualStyle(github, zenburn, "s", mode)).not.toContain("unset");
+    }
+  });
+
+  it("keeps github's bold headings out of zenburn", () => {
+    expect(dualStyle(github, zenburn, "s", '[theme="g100"]')).toContain(
+      '[theme="g100"] .s .hljs-section{font-weight:unset}',
+    );
   });
 });
 
