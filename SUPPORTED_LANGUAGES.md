@@ -812,6 +812,8 @@
 
 ## coq (`coq`)
 
+> Exported from highlight.js with svelte-highlight patches on top (see `scripts/hljs-patches/coq.js`)
+
 ```html
 <script>
   // direct import (recommended)
