@@ -23,7 +23,7 @@ function register(hljs) {
 
   // Built fresh per call by the stock grammar (`NORMAL_KEYWORDS.concat(...)`),
   // and shared with every nested mode, so pushing propagates.
-  keywords.keyword.push("checked", "allows");
+  keywords.keyword.push("checked", "allows", "extension|0", "field|0");
 
   const contains = /** @type {any[]} */ (lang.contains);
   const classHeader = contains.find(
