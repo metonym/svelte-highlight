@@ -1,3 +1,4 @@
+// @depends-on src/stream-sealed-chunks.js src/stream-highlighted.js src/editable-dom-paint.js
 /**
  * Regression guards for four hot-path scaling issues (checkpoint memory,
  * sealed-chunk append, streamed-highlight completed-html buffering, and DOM

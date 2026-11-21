@@ -1,3 +1,5 @@
+// @reads src/*.js src/*.svelte README.md SUPPORTED_LANGUAGES.md
+// @depends-on scripts/build-styles.ts scripts/custom-styles/**
 /** Shared bench fixtures, lazily loaded so suites that don't need them skip the cost. */
 import { readdirSync } from "node:fs";
 import type { createRegistry } from "../src/engine.js";

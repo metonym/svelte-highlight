@@ -1,3 +1,4 @@
+// @depends-on src/HighlightStyle.svelte
 /**
  * Integration coverage proving `defineTheme()` output is a plain
  * `ThemePalette` valid everywhere shipped palettes work: SSR-render

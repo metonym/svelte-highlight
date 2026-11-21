@@ -1,3 +1,5 @@
+// @depends-on scripts/build-themes.ts scripts/build-styles.ts scripts/custom-styles/**
+// @reads src/themes/**
 /**
  * Validation report for `defineTheme`'s role -> scope table (the taste
  * decision documented in `src/theme-vars.js`'s `ROLE_SCOPES`): for every

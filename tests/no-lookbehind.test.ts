@@ -1,3 +1,4 @@
+// @reads scripts/custom-languages/*.js
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 

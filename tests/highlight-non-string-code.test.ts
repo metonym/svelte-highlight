@@ -1,3 +1,4 @@
+// @depends-on src/Highlight.svelte src/HighlightAuto.svelte src/HighlightSvelte.svelte
 import fs from "node:fs";
 import path from "node:path";
 import { plugin } from "bun";

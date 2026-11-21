@@ -1,3 +1,4 @@
+// @depends-on src/MarkdownStream.svelte src/HighlightStream.svelte
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";

@@ -1,3 +1,4 @@
+// @depends-on scripts/build-themes.ts scripts/build-styles.ts scripts/custom-styles/**
 import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { Glob } from "bun";
