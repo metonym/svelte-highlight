@@ -7,7 +7,8 @@
 
   let editor;
   let code = initialCode;
-  $: resolvedEngine = editor?.resolvedEngine();
+  /** @type {string | undefined} */
+  let resolvedEngine;
 </script>
 
 <HighlightEditable
@@ -20,3 +21,10 @@
 
 <div data-testid="code" data-value={code}></div>
 <div data-testid="resolved-engine" data-value={resolvedEngine}></div>
+
+<button
+  type="button"
+  on:click={() => (resolvedEngine = editor?.resolvedEngine())}
+>
+  read engine
+</button>

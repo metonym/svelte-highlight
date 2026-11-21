@@ -17,6 +17,12 @@ export interface EditorSettings {
    * API and falls back to `"dom"` where it is missing. @default "dom"
    */
   engine: EditorEngine;
+  /**
+   * Theme CSS or `ThemePalette` that `"css-highlights"` resolves token
+   * colors from, as `Highlight` does. The editor adds the matching
+   * `::highlight()` rules to the page itself. Colors only.
+   */
+  theme: string | ThemePalette | undefined;
 }
 
 export interface EditorHistorySnapshot {
@@ -33,8 +39,9 @@ export interface EditorOptions extends Partial<EditorSettings> {
   /** Initial code. @default "" */
   code?: string;
   /**
-   * Inserted into `CSS.highlights` names (`hljs-<id>-<scope>`). Pass the
-   * same id to `instanceHighlightStyle`. @default a unique id
+   * Inserted into `CSS.highlights` names: `hljs-<id>-c<n>` with `theme`,
+   * `hljs-<id>-<scope>` without. Pass the same id to
+   * `instanceHighlightStyle`. @default a unique id
    */
   instanceId?: string | number;
   /** Called on each edit, undo and redo. */
@@ -48,7 +55,7 @@ export interface EditorOptions extends Partial<EditorSettings> {
 export interface Editor {
   /** The id used in this editor's `CSS.highlights` names. */
   readonly instanceId: string | number;
-  /** Applies changed settings. A new language or engine repaints. */
+  /** Applies changed settings. A new language, engine or theme repaints. */
   update(settings: Partial<EditorSettings>): void;
   /**
    * Takes code changed outside the editor. Records an undo step, ignores
@@ -71,9 +78,13 @@ export interface Editor {
   getCode(): string;
   canUndo(): boolean;
   canRedo(): boolean;
-  /** The engine in use: `"dom"` when `"css-highlights"` is unsupported. */
+  /**
+   * The engine on screen. `"css-highlights"` once it paints. `"dom"`
+   * where `CSS.highlights` is missing, while a theme's color resolver
+   * loads, and while that load has failed.
+   */
   resolvedEngine(): EditorEngine;
-  /** Removes listeners and this editor's CSS highlights. */
+  /** Removes listeners, this editor's CSS highlights and their `<style>`. */
   destroy(): void;
 }
 
@@ -97,7 +108,9 @@ export function createEditor(
 
 /**
  * `<style>`-wrapped `::highlight()` rules for one editor's
- * `"css-highlights"` engine. Pass the editor's `instanceId`.
+ * `"css-highlights"` engine, for an editor made without `theme`. Pass the
+ * editor's `instanceId`. Only single-class `.hljs-<scope>` rules convert.
+ * Prefer the `theme` option, which resolves every rule as `Highlight` does.
  */
 export function instanceHighlightStyle(
   theme: string | ThemePalette,

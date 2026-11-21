@@ -33,8 +33,8 @@
   export let engine = "dom";
 
   /**
-   * Theme CSS or `ThemePalette` for `::highlight()` rules (`"css-highlights"`
-   * only). Colors only.
+   * Theme CSS or `ThemePalette` that `"css-highlights"` resolves token colors
+   * from, as `Highlight` does. Colors only.
    * @type {string | import("./theme.d.ts").ThemePalette | undefined}
    */
   export let theme = undefined;
@@ -46,9 +46,7 @@
   export let label = "Code editor";
 
   import { createEventDispatcher, onMount } from "svelte";
-  import { resolveEngine } from "./css-highlights.js";
   import { createEditor } from "./editable.js";
-  import { instanceHighlightStyle } from "./highlight-theme.js";
 
   const dispatch = createEventDispatcher();
   const instanceId = nextInstanceId();
@@ -62,16 +60,18 @@
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
 
-  $: editor?.update({ language, tabSize, historyLimit, readonly, engine });
+  $: editor?.update({
+    language,
+    tabSize,
+    historyLimit,
+    readonly,
+    engine,
+    theme,
+  });
   $: if (editor && code !== internalCode) {
     internalCode = code;
     editor.syncCode(code);
   }
-  $: resolvedEngineValue = resolveEngine(engine);
-  $: cssHighlightStyle =
-    resolvedEngineValue === "css-highlights" && theme !== undefined
-      ? instanceHighlightStyle(theme, instanceId)
-      : "";
 
   export function undo() {
     editor?.undo();
@@ -121,9 +121,13 @@
     return editor?.canRedo() ?? false;
   }
 
-  /** The engine actually in use: `engine`, or `"dom"` if it was requested but unsupported. */
+  /**
+   * The engine on screen. `"css-highlights"` once it paints. `"dom"`
+   * before mount, where `CSS.highlights` is missing, while the color
+   * resolver loads, and while that load has failed.
+   */
   export function resolvedEngine() {
-    return resolvedEngineValue;
+    return editor?.resolvedEngine() ?? "dom";
   }
 
   onMount(() => {
@@ -134,6 +138,7 @@
       historyLimit,
       readonly,
       engine,
+      theme,
       instanceId,
       onChange: (value) => {
         code = value;
@@ -146,12 +151,6 @@
     return () => editor?.destroy();
   });
 </script>
-
-<svelte:head
-  >{#if cssHighlightStyle}
-    {@html cssHighlightStyle}
-  {/if}</svelte:head
->
 
 <!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 <pre

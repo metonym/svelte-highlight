@@ -1,12 +1,22 @@
 <script>
   import { THEME_MODULE_NAME } from "@www/constants";
+  import { onMount } from "svelte";
   import { HighlightEditable } from "svelte-highlight";
   import typescript from "svelte-highlight/languages/typescript";
   import horizonDark from "svelte-highlight/styles/horizon-dark";
 
   let editor;
   let code = "const add = (a: number, b: number) => a + b;";
-  $: resolvedEngine = editor?.resolvedEngine();
+  /** @type {"dom" | "css-highlights" | undefined} */
+  let resolvedEngine;
+
+  // resolvedEngine() changes after mount, once the color resolver loads.
+  onMount(() => {
+    const timer = setInterval(() => {
+      resolvedEngine = editor?.resolvedEngine();
+    }, 250);
+    return () => clearInterval(timer);
+  });
 </script>
 
 <!-- class provides the base `.hljs`/`pre code.hljs` layout rules (from the

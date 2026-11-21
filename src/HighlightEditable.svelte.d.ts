@@ -36,15 +36,17 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
    * Rendering engine. `"css-highlights"` (experimental) paints tokens via
    * the CSS Custom Highlight API instead of `<span>`s (Chrome 105+, Safari
    * 17.2+, Firefox 140+), falling back to `"dom"` elsewhere (see
-   * `resolvedEngine()`). Colors only, for single-class `.hljs-<scope>` rules.
+   * `resolvedEngine()`). Colors only: `::highlight()` ignores
+   * `font-weight` and `font-style`, so bold and italic are dropped.
    * @default "dom"
    */
   engine?: "dom" | "css-highlights";
 
   /**
    * Theme CSS (`svelte-highlight/styles/<theme>`) or `ThemePalette`
-   * (`svelte-highlight/themes/<theme>`) for `"css-highlights"` mode. Only
-   * `color`/`background-color` of single-class `.hljs-<scope>` rules apply.
+   * (`svelte-highlight/themes/<theme>`) for `"css-highlights"` mode. Each
+   * token gets the `color` and `background-color` that the theme gives
+   * its `<span>` in the `"dom"` engine, compound scopes included.
    * @example
    * import a11yDark from "svelte-highlight/styles/a11y-dark";
    * @example
@@ -136,8 +138,9 @@ export default class HighlightEditable extends SvelteComponentTyped<
   canRedo(): boolean;
 
   /**
-   * The engine actually in use: `engine`, or `"dom"` if `"css-highlights"`
-   * was requested but `CSS.highlights` is unavailable.
+   * The engine on screen. `"css-highlights"` once it paints. `"dom"`
+   * before mount, where `CSS.highlights` is missing, while the color
+   * resolver loads, and while that load has failed.
    */
   resolvedEngine(): "dom" | "css-highlights";
 }

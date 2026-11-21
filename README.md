@@ -1133,9 +1133,9 @@ Set `readonly` to keep highlighting, caret placement, and selection active while
 
 `engine="css-highlights"` paints tokens with the [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) (`CSS.highlights`, `::highlight()`) instead of wrapping them in `<span>`s. The editable `<code>` stays plain text (one `<span>` per line, reused from the default engine's line structure, but with no per-token spans inside), so a repaint never replaces the DOM the caret is sitting in.
 
-Requires Chrome 105+, Safari 17.2+, or Firefox 140+. Where `CSS.highlights` is unavailable, `HighlightEditable` falls back to `engine="dom"` silently; check what actually ran with `editor.resolvedEngine()`.
+Requires Chrome 105+, Safari 17.2+, or Firefox 140+. Where `CSS.highlights` is unavailable, `HighlightEditable` falls back to `engine="dom"` silently; check what is on screen with `editor.resolvedEngine()`. It returns `"dom"` until the first CSS paint, and while the resolver load has failed.
 
-Pass `theme` (the same theme string you'd give `HighlightStyle`) to generate `::highlight()` rules from it. Only `color`/`background-color` convert, and only for single-class `.hljs-<scope>` rules — compound (`.hljs-title.class_`) and descendant-selector (`.hljs-meta .hljs-keyword`) scopes have no `::highlight()` equivalent and get **no color at all**, not just plain weight/style.
+Pass `theme` (theme CSS or a `ThemePalette`) to color the tokens. `HighlightEditable` resolves colors the same way `Highlight` does, so compound rules (`.hljs-title.function_`) and descendant rules (`.hljs-meta .hljs-keyword`) apply. Only colors and backgrounds carry over, and the same [limits](#experimental-css-custom-highlight-engine) apply. Each edit re-resolves only the lines it changed. As with `Highlight`, the resolver loads on the first paint, so `"dom"`-only pages don't bundle it. Until it loads, the editor shows `"dom"` spans.
 
 `theme` only covers token colors — you still need `HighlightStyle` (or an injected stylesheet) for the base `.hljs` layout rules (padding, overflow, background), exactly as with the default engine.
 
@@ -1171,7 +1171,9 @@ editor.update({ readonly: true });
 editor.destroy();
 ```
 
-For the `"css-highlights"` engine, add `instanceHighlightStyle(theme, editor.instanceId)` to the page's `<head>`. It returns a complete `<style>` tag and is exported from the same path.
+For the `"css-highlights"` engine, pass `theme` to `createEditor` or `update`. The editor adds its `::highlight()` rules to the page and removes them on `destroy`.
+
+`instanceHighlightStyle(theme, editor.instanceId)` still works for an editor made without `theme`. Add its `<style>` tag to the page's `<head>`. It only converts single-class `.hljs-<scope>` rules, so compound scopes such as `title.function_` get no color.
 
 ### Adding a gutter
 
