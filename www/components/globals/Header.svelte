@@ -222,6 +222,7 @@
     "/preview-metal": "Metal language preview",
     "/preview-po": "gettext PO language preview",
     "/preview-sshconfig": "SSH Config language preview",
+    "/preview-fluent": "Fluent language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
