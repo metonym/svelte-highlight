@@ -222,6 +222,7 @@ const HLJS_PATCH_NAMES = [
   "rust",
   "swift",
   "typescript",
+  "verilog",
   "vim",
 ] as const;
 
