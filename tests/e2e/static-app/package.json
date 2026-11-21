@@ -23,7 +23,13 @@
     "preview:multiple-snippets-various-languages": "ENTRY=multiple-snippets-various-languages vite preview",
     "dev:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite",
     "build:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite build",
-    "preview:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite preview"
+    "preview:scoped-styles-multiple-themes": "ENTRY=scoped-styles-multiple-themes vite preview",
+    "dev:highlight-auto": "ENTRY=highlight-auto vite",
+    "build:highlight-auto": "ENTRY=highlight-auto vite build",
+    "preview:highlight-auto": "ENTRY=highlight-auto vite preview",
+    "dev:highlight-auto-lazy": "ENTRY=highlight-auto-lazy vite",
+    "build:highlight-auto-lazy": "ENTRY=highlight-auto-lazy vite build",
+    "preview:highlight-auto-lazy": "ENTRY=highlight-auto-lazy vite preview"
   },
   "dependencies": {
     "svelte-highlight": "file:../../../package"

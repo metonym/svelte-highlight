@@ -10,6 +10,7 @@
     "src/ansi-color.js",
     "src/ansi-output.js",
     "src/ansi.js",
+    "src/auto-detect.js",
     "src/convert-language.js",
     "src/copy-transforms.js",
     "src/css-walk.js",

@@ -15,6 +15,8 @@ Layout follows [carbon-preprocess-svelte's `examples/vite@svelte-5`](https://git
 | `multiple-snippets-same-language` | Three static `<Highlight>` usages, same language |
 | `multiple-snippets-various-languages` | Three static usages: javascript, typescript, css |
 | `scoped-styles-multiple-themes` | Two static usages, each in a different `HighlightStyle` theme |
+| `highlight-auto` | One `HighlightAuto`. Baseline: every grammar ships in the entry JS |
+| `highlight-auto-lazy` | One `HighlightAutoLazy`. No grammar ships in the entry JS; candidates load as chunks |
 
 ## Layout
 

@@ -47,6 +47,7 @@ pkgJson.exports = Object.fromEntries([
   ...entry("ansi", "ansi", "default", false),
   ...entry("copy-transforms", "copy-transforms", "default", false),
   ...entry("load-language", "load-language", "default", false),
+  ...entry("auto-detect", "auto-detect", "default", false),
   ...entry("scoped", "scoped", "default", false),
   ...entry("compat", "compat", "default"),
   ...entry("transformers", "transformers", "default"),

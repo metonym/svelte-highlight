@@ -44,6 +44,7 @@ const CASES = [
   ["diff-file-list", "DiffFileList"],
   ["file-tabs", "FileTabs"],
   ["code-toolbar", "CodeToolbar, ToolbarButton, WrapToggle"],
+  ["auto-lazy", "HighlightAutoLazy"],
 ] as const;
 
 for (const [component, name] of CASES) {
@@ -73,6 +74,19 @@ test("A11y - code regions take keyboard focus and have names", async ({
 
   await page.keyboard.press("Tab");
   await expect(regions.first()).toBeFocused();
+});
+
+test("A11y - HighlightAutoLazy takes a label like HighlightAuto", async ({
+  mount,
+  page,
+}) => {
+  await mount(A11y, { props: { component: "auto-lazy" } });
+  await page.locator("main").waitFor();
+
+  await expect(page.getByRole("region", { name: "Code" })).toHaveCount(1);
+  await expect(
+    page.getByRole("region", { name: "Detected example" }),
+  ).toHaveCount(1);
 });
 
 test("A11y - CodeWindow names the region inside it, title first", async ({

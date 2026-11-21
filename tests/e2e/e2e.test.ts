@@ -37,6 +37,9 @@ import HighlightAutoLanguageRestriction from "./HighlightAuto.languageRestrictio
 import HighlightAutoNoCandidate from "./HighlightAuto.noCandidate.test.svelte";
 import HighlightAutoSecondBest from "./HighlightAuto.secondBest.test.svelte";
 import HighlightAuto from "./HighlightAuto.test.svelte";
+import HighlightAutoLazyDispatchOnce from "./HighlightAutoLazy.dispatchOnce.test.svelte";
+import HighlightAutoLazyStaleRace from "./HighlightAutoLazy.staleRace.test.svelte";
+import HighlightAutoLazy from "./HighlightAutoLazy.test.svelte";
 import HighlightDiff from "./HighlightDiff.test.svelte";
 import HighlightEditableBinding from "./HighlightEditable.binding.test.svelte";
 import HighlightEditableCssHighlightsColors from "./HighlightEditable.cssHighlights.colors.test.svelte";
@@ -1655,6 +1658,48 @@ test("HighlightAuto - exposes secondBest in the event detail", async ({
   await expect(page.getByTestId("dispatch-second-best")).toHaveText(
     expected ?? "",
   );
+});
+
+test("HighlightAutoLazy - loads candidate grammars and highlights", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoLazy);
+
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "css");
+  await expect(page.locator(".hljs-selector-tag")).toHaveText("body");
+  await expect(page.locator(".hljs-attribute").last()).toHaveText("background");
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await expect(page.getByTestId("language")).toHaveText("css");
+});
+
+test("HighlightAutoLazy - drops a result for stale code", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoLazyStaleRace);
+
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "css");
+  await page.getByRole("button", { name: "Race" }).click();
+  await expect(page.getByTestId("done")).toHaveText("true");
+  await expect(page.locator("pre")).toHaveAttribute("data-language", "css");
+  await expect(page.getByTestId("language")).toHaveText("css");
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+});
+
+test("HighlightAutoLazy - dispatches on:highlight once per change", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAutoLazyDispatchOnce);
+
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
+  await expect(page.getByTestId("language")).toHaveText(
+    /^(javascript|typescript)$/,
+  );
+  await page.getByRole("button", { name: "Toggle langtag" }).click();
+  await expect(page.locator("pre")).toHaveAttribute("data-language", /script/);
+  await expect(page.getByTestId("dispatch-count")).toHaveText("1");
 });
 
 test("HighlightSvelte - exposes the scope-event stream via slot prop and on:highlight detail", async ({

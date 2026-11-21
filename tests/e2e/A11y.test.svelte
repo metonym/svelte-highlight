@@ -11,6 +11,7 @@
     DiffView,
     FileTabs,
     HighlightAuto,
+    HighlightAutoLazy,
     HighlightDiff,
     HighlightEditable,
     HighlightStream,
@@ -28,7 +29,7 @@
 
   /**
    * Which component to render.
-   * @type {"highlight" | "line-numbers" | "virtual" | "ansi" | "code-window" | "copy-button" | "editable" | "typewriter" | "stream" | "stream-virtual" | "markdown-stream" | "diff" | "diff-split" | "diff-review" | "diff-streaming" | "diff-parts" | "diff-file-list" | "file-tabs" | "code-toolbar"}
+   * @type {"highlight" | "line-numbers" | "virtual" | "ansi" | "code-window" | "copy-button" | "editable" | "typewriter" | "stream" | "stream-virtual" | "markdown-stream" | "diff" | "diff-split" | "diff-review" | "diff-streaming" | "diff-parts" | "diff-file-list" | "file-tabs" | "code-toolbar" | "auto-lazy"}
    */
   export let component = "highlight";
 
@@ -138,6 +139,9 @@
         <LineNumbers {highlighted} />
       </Highlight>
     </CodeWindow>
+  {:else if component === "auto-lazy"}
+    <HighlightAutoLazy {code} languageNames={["typescript"]} />
+    <HighlightAutoLazy {code} label="Detected example" />
   {:else if component === "editable"}
     <HighlightEditable
       language={typescript}

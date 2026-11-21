@@ -3,5 +3,7 @@
   "single-snippet-stylesheet",
   "multiple-snippets-same-language",
   "multiple-snippets-various-languages",
-  "scoped-styles-multiple-themes"
+  "scoped-styles-multiple-themes",
+  "highlight-auto",
+  "highlight-auto-lazy"
 ]
