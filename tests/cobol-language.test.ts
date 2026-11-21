@@ -102,3 +102,24 @@ test("cobol keeps reserved paragraph headers as keywords", () => {
   expect(result).toContain('<span class="hljs-keyword">FILE-CONTROL</span>');
   expect(result).not.toContain("hljs-title");
 });
+
+test("cobol scores COBOL-only phrases for auto-detection", () => {
+  const relevance = (code: string) =>
+    registry.highlight(code, { language: "cobol" }).relevance;
+
+  expect(relevance("END-PERFORM")).toBeGreaterThanOrEqual(10);
+  expect(relevance("STOP RUN.")).toBeGreaterThanOrEqual(10);
+  expect(relevance("PERFORM VARYING WS-I")).toBeGreaterThanOrEqual(10);
+  expect(relevance("MOVE 'OK' TO WS-STATUS")).toBeGreaterThanOrEqual(5);
+  expect(relevance("000100 IDENTIFICATION")).toBeGreaterThanOrEqual(5);
+  // A plain PERFORM of a paragraph scores like any keyword.
+  expect(relevance("PERFORM 1000-INIT")).toBeLessThan(5);
+});
+
+test("cobol phrase rules keep the keyword style", () => {
+  const result = highlight("           STOP RUN.\n           END-IF");
+
+  expect(result).toContain('<span class="hljs-keyword">STOP</span>');
+  expect(result).toContain('<span class="hljs-keyword">RUN</span>');
+  expect(result).toContain('<span class="hljs-keyword">END-IF</span>');
+});
