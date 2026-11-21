@@ -405,6 +405,28 @@ executable('demo', 'main.c',
   dependencies : [m_dep],
   install : true)
 `,
+  antlr: `grammar Calc;
+
+prog
+    : stat+ EOF
+    ;
+
+stat
+    : ID '=' expr NEWLINE
+    | expr NEWLINE
+    ;
+
+expr
+    : expr ('*'|'/') expr
+    | INT
+    | ID
+    ;
+
+fragment DIGIT : [0-9] ;
+INT : DIGIT+ ;
+ID : [a-zA-Z]+ ;
+WS : [ \\t]+ -> skip ;
+`,
   robotframework: `*** Keywords ***
 Sum Values
     [Arguments]    @{values}
