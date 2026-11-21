@@ -213,6 +213,7 @@
     "/preview-nomnoml": "Nomnoml language preview",
     "/preview-blockdiag": "blockdiag language preview",
     "/preview-apex": "Apex language preview",
+    "/preview-cobol": "COBOL language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
