@@ -836,6 +836,8 @@
 
 ## cpp (`cpp`)
 
+> Exported from highlight.js with svelte-highlight patches on top (see `scripts/hljs-patches/cpp.js`)
+
 ```html
 <script>
   // direct import (recommended)
