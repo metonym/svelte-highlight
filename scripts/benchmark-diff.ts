@@ -10,6 +10,9 @@ import javascriptLang from "../src/languages/javascript.js";
 import markdownLang from "../src/languages/markdown.js";
 
 const DIFF_BUDGET = 0.5;
+// Markdown tokenizes fast, so its ratio swings more on a shared runner:
+// 0.27x to 0.37x in CI, with one run at 0.51x.
+const MARKDOWN_DIFF_BUDGET = 0.75;
 const STREAM_BUDGET = 0.5;
 const ROUNDS = 9;
 
@@ -74,7 +77,7 @@ const cases = [
   },
   {
     label: "diff README + SUPPORTED_LANGUAGES, an edit every 40 lines",
-    budget: DIFF_BUDGET,
+    budget: MARKDOWN_DIFF_BUDGET,
     value: ratio(mdEdited, "markdown", () => diffTexts(md, mdEdited)),
   },
   {
