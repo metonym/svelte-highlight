@@ -371,4 +371,18 @@ interface types {
     std.debug.print("{}\\n", .{x});
 }
 `,
+  apex: `public with sharing class AccountService {
+    @AuraEnabled
+    public static void markHot(List<Id> accountIds) {
+        List<Account> accounts = [
+            SELECT Id, Rating FROM Account WHERE Id IN :accountIds
+        ];
+        for (Account a : accounts) {
+            a.Rating = 'Hot';
+        }
+        update accounts;
+        System.debug('Updated ' + accounts.size() + ' accounts');
+    }
+}
+`,
 };
