@@ -74,6 +74,21 @@ export const sveltePreviewSnippets: SveltePreviewSnippet[] = [
 {/if}`,
   },
   {
+    title: "Keyed each block",
+    description: "An index binding and a key expression in {#each}",
+    code: `<script>
+  let { todos } = $props();
+</script>
+
+<ul>
+  {#each todos as todo, i (todo.id)}
+    <li class:done={todo.done}>{i + 1}. {todo.text}</li>
+  {:else}
+    <li>Nothing to do</li>
+  {/each}
+</ul>`,
+  },
+  {
     title: "Dotted rune suffixes",
     description: "$effect.pre, $effect.tracking, $state.raw, and more",
     code: `<script>
