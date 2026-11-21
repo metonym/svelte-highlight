@@ -56,6 +56,36 @@ describe("csharp grammar patch", () => {
     expect(html).toContain("&quot;&quot;&quot;u8</span>");
   });
 
+  it("styles a C# 14 extension block", () => {
+    const html = expectMatchesHljs(
+      "public static class E\n{\n    extension(string s)\n    {\n        public bool IsEmpty => s.Length == 0;\n    }\n}",
+    );
+    expect(html).toContain(
+      '<span class="hljs-keyword">extension</span>(<span class="hljs-built_in">string</span> s)',
+    );
+  });
+
+  it("styles the C# 14 field keyword in an accessor", () => {
+    const html = expectMatchesHljs(
+      "public string Name { get; set => field = value.Trim(); }",
+    );
+    expect(html).toContain(
+      '<span class="hljs-keyword">set</span> =&gt; <span class="hljs-keyword">field</span> = <span class="hljs-keyword">value</span>.Trim();',
+    );
+  });
+
+  it("keeps accessors and a method declaration unchanged", () => {
+    const html = expectMatchesHljs(
+      "public int X { get; init; }\npublic void Run(int n) {}",
+    );
+    expect(html).toContain(
+      '{ <span class="hljs-keyword">get</span>; <span class="hljs-keyword">init</span>; }',
+    );
+    expect(html).toContain(
+      '<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Run</span>',
+    );
+  });
+
   it("keeps plain, verbatim, and interpolated strings unchanged", () => {
     const html = expectMatchesHljs(
       'var a = "plain"; var b = @"C:\\x"; var c = $"n={n}";',
