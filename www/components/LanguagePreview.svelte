@@ -145,6 +145,7 @@
   import { sparqlPreviewSnippets } from "@www/preview/sparql-preview-snippets";
   import { spicedbPreviewSnippets } from "@www/preview/spicedb-preview-snippets";
   import { splunkPreviewSnippets } from "@www/preview/splunk-preview-snippets";
+  import { sshconfigPreviewSnippets } from "@www/preview/sshconfig-preview-snippets";
   import { starlarkPreviewSnippets } from "@www/preview/starlark-preview-snippets";
   import { structurizrPreviewSnippets } from "@www/preview/structurizr-preview-snippets";
   import { surrealqlPreviewSnippets } from "@www/preview/surrealql-preview-snippets";
@@ -323,6 +324,7 @@
   import sparql from "svelte-highlight/languages/sparql";
   import spicedb from "svelte-highlight/languages/spicedb";
   import splunk from "svelte-highlight/languages/splunk";
+  import sshconfig from "svelte-highlight/languages/sshconfig";
   import starlark from "svelte-highlight/languages/starlark";
   import structurizr from "svelte-highlight/languages/structurizr";
   import surrealql from "svelte-highlight/languages/surrealql";
@@ -541,6 +543,7 @@
     cython: { lang: cython, snippets: cythonPreviewSnippets },
     metal: { lang: metal, snippets: metalPreviewSnippets },
     po: { lang: po, snippets: poPreviewSnippets },
+    sshconfig: { lang: sshconfig, snippets: sshconfigPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
