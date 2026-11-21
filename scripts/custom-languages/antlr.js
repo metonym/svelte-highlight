@@ -54,7 +54,7 @@ function defineAntlr(hljs) {
     beginScope: { 1: "meta" },
     end: /\}/,
     contains: [ACTION, ...ACTION_BODY],
-    relevance: 2,
+    relevance: 5,
   };
 
   // `options { language = Java; }`, `tokens { INDENT, DEDENT }`,
@@ -92,6 +92,38 @@ function defineAntlr(hljs) {
     beginScope: { 1: "keyword", 3: "title" },
   };
 
+  // Rule shapes that only a grammar file has. They style the name just
+  // like LEXER_RULE and PARSER_RULE below, but score for auto-detection:
+  // a name alone on its line with the `:` on the next line, a `fragment`
+  // rule, and a one-line lexer rule that ends with `;`.
+  const RULE_NAME_ALONE = /(?=[ \t]*\n\s*:(?!:))/;
+  const SCORED_RULES = [
+    {
+      begin: [
+        /^[ \t]*/,
+        new RegExp(String.raw`(?!(?:${ANTLR_RESERVED})\b)[a-z]\w*`),
+        RULE_NAME_ALONE,
+      ],
+      beginScope: { 2: "title.function" },
+      relevance: 5,
+    },
+    {
+      begin: [/^[ \t]*/, /[A-Z]\w*/, RULE_NAME_ALONE],
+      beginScope: { 2: "title.class" },
+      relevance: 5,
+    },
+    {
+      begin: [/^[ \t]*/, /fragment\b/, /[ \t]*/, /[A-Z]\w*/, /(?=\s*:)/],
+      beginScope: { 2: "keyword", 4: "title.class" },
+      relevance: 5,
+    },
+    {
+      begin: [/^[ \t]*/, /[A-Z]\w*/, /(?=[ \t]*:(?!:)[^;\n]*[ \t];[ \t]*$)/],
+      beginScope: { 2: "title.class" },
+      relevance: 3,
+    },
+  ];
+
   // Lexer rules start with an uppercase letter, parser rules with a
   // lowercase one. The two get different scopes at their definition.
   const LEXER_RULE = {
@@ -121,6 +153,7 @@ function defineAntlr(hljs) {
     begin: [/\b(?:returns|locals)\b/, /\s*/, /\[/],
     beginScope: { 1: "keyword" },
     end: /\]/,
+    relevance: 5,
   };
 
   // `-> skip`, `-> channel(HIDDEN)`, `-> pushMode(STRING), more`.
@@ -137,7 +170,7 @@ function defineAntlr(hljs) {
     contains: COMMENTS,
     // `->` is common elsewhere (`$this->type` in PHP), so the match needs
     // a space and a known command after it.
-    relevance: 3,
+    relevance: 5,
   };
 
   // `left=expr`, `args+=arg`.
@@ -187,6 +220,7 @@ function defineAntlr(hljs) {
       SPEC_BLOCK,
       NAMED_ACTION,
       RULE_SIGNATURE,
+      ...SCORED_RULES,
       LEXER_RULE,
       PARSER_RULE,
       LEXER_COMMANDS,

@@ -90,3 +90,27 @@ test("antlr highlights options, tokens, and rule signatures", () => {
   // `[int v]` is a declaration, not a character set.
   expect(result).not.toContain('<span class="hljs-regexp">[int v]</span>');
 });
+
+test("antlr scores rule shapes that only a grammar file has", () => {
+  const relevance = (code: string) =>
+    registry.highlight(code, { language: "antlr" }).relevance;
+
+  // A rule name alone on its line, with the colon on the next one.
+  expect(relevance("prog\n    : stat+\n    ;")).toBeGreaterThanOrEqual(5);
+  expect(relevance("fragment DIGIT : [0-9] ;")).toBeGreaterThanOrEqual(5);
+  // A one-line lexer rule that ends with `;`.
+  expect(relevance("INT : [0-9]+ ;")).toBeGreaterThanOrEqual(3);
+  // `NAME: value` as a YAML key scores nothing.
+  expect(relevance("NAME: value")).toBe(0);
+});
+
+test("antlr keeps rule styling when a rule scores", () => {
+  const result = highlight(
+    "prog\n    : stat+\n    ;\nfragment DIGIT : [0-9] ;",
+  );
+
+  expect(result).toContain('<span class="hljs-title function_">prog</span>');
+  expect(result).toContain(
+    '<span class="hljs-keyword">fragment</span> <span class="hljs-title class_">DIGIT</span>',
+  );
+});
