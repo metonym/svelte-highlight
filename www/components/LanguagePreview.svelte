@@ -93,6 +93,7 @@
   import { kvPreviewSnippets } from "@www/preview/kv-preview-snippets";
   import { ldscriptPreviewSnippets } from "@www/preview/ldscript-preview-snippets";
   import { leanPreviewSnippets } from "@www/preview/lean-preview-snippets";
+  import { lexPreviewSnippets } from "@www/preview/lex-preview-snippets";
   import { likec4PreviewSnippets } from "@www/preview/likec4-preview-snippets";
   import { liquidPreviewSnippets } from "@www/preview/liquid-preview-snippets";
   import { logPreviewSnippets } from "@www/preview/log-preview-snippets";
@@ -278,6 +279,7 @@
   import kv from "svelte-highlight/languages/kv";
   import ldscript from "svelte-highlight/languages/ldscript";
   import lean from "svelte-highlight/languages/lean";
+  import lex from "svelte-highlight/languages/lex";
   import likec4 from "svelte-highlight/languages/likec4";
   import liquid from "svelte-highlight/languages/liquid";
   import log from "svelte-highlight/languages/log";
@@ -559,6 +561,7 @@
     abap: { lang: abap, snippets: abapPreviewSnippets },
     freemarker: { lang: freemarker, snippets: freemarkerPreviewSnippets },
     yacc: { lang: yacc, snippets: yaccPreviewSnippets },
+    lex: { lang: lex, snippets: lexPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
