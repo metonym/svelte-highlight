@@ -119,3 +119,25 @@ test("mojo leaves read unstyled as a method name", () => {
   expect(result).toContain("file.read()");
   expect(result).not.toContain('<span class="hljs-keyword">read</span>');
 });
+
+test("mojo highlights trailing where clauses", () => {
+  const result = highlight(
+    'struct Matrix[m: Int, n: Int] where m > 0:\n    pass\n\ndef check[n: Int]() where n > 0 else "n must be positive":\n    pass\n',
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">where</span> m &gt;');
+  expect(result).toContain('<span class="hljs-keyword">where</span> n &gt;');
+});
+
+test("mojo highlights lambda expressions", () => {
+  const result = highlight("var inc = lambda (x: Int) -> Int: x + 1\n");
+
+  expect(result).toContain('<span class="hljs-keyword">lambda</span> (x:');
+});
+
+test("mojo leaves names that contain where or lambda plain", () => {
+  const result = highlight("var where_ = 1\nvar lambdas = where_\n");
+
+  expect(result).not.toContain('<span class="hljs-keyword">where');
+  expect(result).not.toContain('<span class="hljs-keyword">lambda');
+});
