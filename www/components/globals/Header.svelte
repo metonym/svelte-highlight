@@ -212,6 +212,7 @@
     "/preview-pikchr": "Pikchr language preview",
     "/preview-nomnoml": "Nomnoml language preview",
     "/preview-blockdiag": "blockdiag language preview",
+    "/preview-apex": "Apex language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
