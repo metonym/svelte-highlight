@@ -62,4 +62,33 @@ workflow QC {
 }
 `,
   },
+  {
+    title: "Typed params and workflow outputs",
+    description:
+      "a typed params block, publish: in the entry workflow, and an output block",
+    code: `params {
+    input: Path
+    outdir: String = 'results'
+    save_trimmed: Boolean = false
+}
+
+workflow {
+    main:
+    reads = channel.fromFilePairs(params.input)
+    QC(reads)
+
+    publish:
+    reports = QC.out.html
+
+    onComplete:
+    log.info "Done: \${workflow.success}"
+}
+
+output {
+    reports {
+        path 'qc'
+    }
+}
+`,
+  },
 ];
