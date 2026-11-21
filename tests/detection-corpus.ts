@@ -396,4 +396,13 @@ interface types {
            DISPLAY WS-STATUS
            STOP RUN.
 `,
+  meson: `project('demo', 'c', version : '0.1.0')
+
+cc = meson.get_compiler('c')
+m_dep = cc.find_library('m', required : false)
+
+executable('demo', 'main.c',
+  dependencies : [m_dep],
+  install : true)
+`,
 };

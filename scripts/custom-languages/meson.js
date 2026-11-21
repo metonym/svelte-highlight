@@ -121,6 +121,11 @@ function defineMeson(hljs) {
         match: new RegExp(`\\b(?:${DISTINCT_FUNCTIONS.join("|")})(?=\\s*\\()`),
         relevance: 5,
       },
+      // Every meson.build starts with `project('name', 'c', ...)`.
+      {
+        match: /\bproject(?=\s*\(\s*'[^'\n]*'\s*,\s*'[^'\n]*')/,
+        relevance: 5,
+      },
       {
         match: new RegExp(`\\b(?:${GENERIC_FUNCTIONS.join("|")})(?=\\s*\\()`),
         relevance: 0,
@@ -133,7 +138,7 @@ function defineMeson(hljs) {
   const BUILTIN_OBJECT = {
     scope: "variable.language",
     match: new RegExp(`\\b(?:${BUILTIN_OBJECTS.join("|")})(?=\\s*\\.)`),
-    relevance: 2,
+    relevance: 5,
   };
 
   // Method calls on any object: `cc.find_library(...)`.
@@ -161,11 +166,14 @@ function defineMeson(hljs) {
     relevance: 10,
   };
 
-  // Keyword arguments: `version : '1.0'`, `install: true`.
+  // Keyword arguments: `version : '1.0'`, `install: true`. Meson style
+  // puts a space on both sides of the colon, which scores a little.
   const KEYWORD_ARGUMENT = {
     scope: "attr",
-    match: /\b[A-Za-z_]\w*(?=\s*:(?!:))/,
-    relevance: 0,
+    variants: [
+      { match: /\b[A-Za-z_]\w*(?=[ \t]+:[ \t]+[\w'[])/, relevance: 2 },
+      { match: /\b[A-Za-z_]\w*(?=\s*:(?!:))/, relevance: 0 },
+    ],
   };
 
   return {

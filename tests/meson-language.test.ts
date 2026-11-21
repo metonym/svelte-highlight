@@ -87,3 +87,15 @@ test("meson highlights number bases", () => {
     expect(result).toContain(`<span class="hljs-number">${n}</span>`);
   }
 });
+
+test("meson scores Meson habits for auto-detection", () => {
+  const relevance = (code: string) =>
+    registry.highlight(code, { language: "meson" }).relevance;
+
+  expect(relevance("project('demo', 'c')")).toBeGreaterThanOrEqual(5);
+  expect(relevance("cc = meson.get_compiler('c')")).toBeGreaterThanOrEqual(5);
+  expect(relevance("f(required : x)")).toBe(2);
+  // A call to a generic name or a tight `key: value` adds nothing.
+  expect(relevance("project(name)")).toBe(0);
+  expect(relevance("f(required: x)")).toBe(0);
+});
