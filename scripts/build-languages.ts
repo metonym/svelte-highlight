@@ -193,6 +193,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "antlr",
   "cython",
   "metal",
+  "po",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
