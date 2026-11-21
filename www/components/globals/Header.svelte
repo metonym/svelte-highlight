@@ -218,6 +218,7 @@
     "/preview-meson": "Meson language preview",
     "/preview-httpfile": "HTTP Request File language preview",
     "/preview-antlr": "ANTLR language preview",
+    "/preview-cython": "Cython language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
