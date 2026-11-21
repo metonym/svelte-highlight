@@ -54,6 +54,7 @@
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
   import { fluentPreviewSnippets } from "@www/preview/fluent-preview-snippets";
   import { fluxPreviewSnippets } from "@www/preview/flux-preview-snippets";
+  import { freemarkerPreviewSnippets } from "@www/preview/freemarker-preview-snippets";
   import { fstarPreviewSnippets } from "@www/preview/fstar-preview-snippets";
   import { gbnfPreviewSnippets } from "@www/preview/gbnf-preview-snippets";
   import { gdscriptPreviewSnippets } from "@www/preview/gdscript-preview-snippets";
@@ -237,6 +238,7 @@
   import fish from "svelte-highlight/languages/fish";
   import fluent from "svelte-highlight/languages/fluent";
   import flux from "svelte-highlight/languages/flux";
+  import freemarker from "svelte-highlight/languages/freemarker";
   import fstar from "svelte-highlight/languages/fstar";
   import gbnf from "svelte-highlight/languages/gbnf";
   import gdscript from "svelte-highlight/languages/gdscript";
@@ -553,6 +555,7 @@
     fluent: { lang: fluent, snippets: fluentPreviewSnippets },
     riscv: { lang: riscv, snippets: riscvPreviewSnippets },
     abap: { lang: abap, snippets: abapPreviewSnippets },
+    freemarker: { lang: freemarker, snippets: freemarkerPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
