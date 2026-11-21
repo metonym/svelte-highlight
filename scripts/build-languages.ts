@@ -200,6 +200,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "abap",
   "freemarker",
   "yacc",
+  "lex",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
