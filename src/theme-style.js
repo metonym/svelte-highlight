@@ -7,9 +7,23 @@ const NON_COLOR_SUFFIXES = Object.values(PROP_SUFFIX)
   .filter((suffix) => suffix !== "")
   .map((suffix) => `-${suffix}`);
 
+/** Keys for `font-style`, `font-weight` and `text-decoration`. */
+const FONT_SUFFIXES = NON_COLOR_SUFFIXES.filter(
+  (suffix) => suffix !== `-${PROP_SUFFIX["background-color"]}`,
+);
+
 /** @param {string} key */
 function isColorKey(key) {
   return !NON_COLOR_SUFFIXES.some((suffix) => key.endsWith(suffix));
+}
+
+/**
+ * `light-dark()` only takes colors, so `font-style`, `font-weight` and
+ * `text-decoration` keys switch some other way.
+ * @param {string} key
+ */
+function isFontKey(key) {
+  return FONT_SUFFIXES.some((suffix) => key.endsWith(suffix));
 }
 
 /**
@@ -32,8 +46,10 @@ export function resolveThemeVar(vars, key, fallbacks) {
 }
 
 /**
- * `light-dark()` per key; keys unresolved on either side are omitted since
- * `light-dark()` needs two concrete values.
+ * `light-dark()` per color key. A background one side doesn't set is
+ * `transparent` there; other keys unresolved on either side are omitted,
+ * since `light-dark()` needs two colors. Font keys are left to
+ * {@link darkFontVars}.
  * @param {Record<string, string>} lightVars
  * @param {Record<string, string>} darkVars
  * @param {Record<string, string>} fallbacks
@@ -44,12 +60,37 @@ export function mergeLightDarkVars(lightVars, darkVars, fallbacks) {
   /** @type {Record<string, string>} */
   const merged = {};
   for (const key of keys) {
-    const lightValue = resolveThemeVar(lightVars, key, fallbacks);
-    const darkValue = resolveThemeVar(darkVars, key, fallbacks);
+    if (isFontKey(key)) continue;
+    const unset = isColorKey(key) ? undefined : "transparent";
+    const lightValue = resolveThemeVar(lightVars, key, fallbacks) ?? unset;
+    const darkValue = resolveThemeVar(darkVars, key, fallbacks) ?? unset;
     if (lightValue === undefined || darkValue === undefined) continue;
     merged[key] = `light-dark(${lightValue}, ${darkValue})`;
   }
   return merged;
+}
+
+/**
+ * The font keys whose dark value differs from the light one, for dark mode
+ * to override `lightFallbackStyle`'s light values with. A key the dark side
+ * doesn't set is `initial`, so `base.css` falls back as it would without
+ * the light theme.
+ * @param {Record<string, string>} lightVars
+ * @param {Record<string, string>} darkVars
+ * @param {Record<string, string>} fallbacks
+ * @returns {Record<string, string>}
+ */
+export function darkFontVars(lightVars, darkVars, fallbacks) {
+  const keys = new Set([...Object.keys(lightVars), ...Object.keys(darkVars)]);
+  /** @type {Record<string, string>} */
+  const vars = {};
+  for (const key of keys) {
+    if (!isFontKey(key)) continue;
+    const lightValue = resolveThemeVar(lightVars, key, fallbacks);
+    const darkValue = resolveThemeVar(darkVars, key, fallbacks) ?? "initial";
+    if (darkValue !== lightValue) vars[key] = darkValue;
+  }
+  return vars;
 }
 
 /**
@@ -123,5 +164,27 @@ export function dualPaletteSupportsStyle(scopeClass, light, dark, mode, nonce) {
   if (colorScheme) merged["color-scheme"] = colorScheme;
   const decls = varsToStyle(merged, { important: true });
   const openTag = nonce ? `<style nonce="${nonce}">` : "<style>";
-  return `${openTag}@supports (color: light-dark(#000, #000)){.${scopeClass}{${decls}}}</style>`;
+  return `${openTag}@supports (color: light-dark(#000, #000)){.${scopeClass}{${decls}}${darkFontRule(scopeClass, light, dark, mode)}}</style>`;
+}
+
+/**
+ * The dark palette's font keys, under the same condition `light-dark()`
+ * picks the dark color: the media query for `"auto"`, always for
+ * `"dark"`, never for `"light"`, and under the selector otherwise.
+ * @param {string} scopeClass
+ * @param {import("./theme.d.ts").ThemePalette} light
+ * @param {import("./theme.d.ts").ThemePalette} dark
+ * @param {string} mode
+ * @returns {string}
+ */
+function darkFontRule(scopeClass, light, dark, mode) {
+  if (mode === "light") return "";
+  const vars = darkFontVars(light.vars, dark.vars, SHL_FALLBACKS);
+  if (Object.keys(vars).length === 0) return "";
+  const decls = varsToStyle(vars, { important: true });
+  if (mode === "dark") return `.${scopeClass}{${decls}}`;
+  if (mode === "auto") {
+    return `@media (prefers-color-scheme: dark){.${scopeClass}{${decls}}}`;
+  }
+  return `${mode} .${scopeClass}{${decls}}`;
 }

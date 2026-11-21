@@ -133,6 +133,8 @@ The legacy string-theme path (`svelte-highlight/styles`, below) keeps working un
 <div data-shl-theme="atom-one-dark"><Highlight ... /></div>
 ```
 
+`base.css` sets every variable to `initial` on a `[data-shl-theme]` element, so each scoped theme starts from nothing rather than inheriting what it leaves out from another theme.
+
 **Component-driven scoping via palette objects** (replaces the scoped-`<style>` machinery described under [Scoping styles](#scoping-styles) below — no injected `<style>` tag, no runtime CSS parsing):
 
 ```svelte
@@ -164,7 +166,7 @@ This renders SSR-identical output — no `<svelte:head>`, no `<style>` tag, just
 </HighlightStyle>
 ```
 
-The wrapper's inline style carries the plain light value for each var (e.g. `--shl-keyword:#a626a4`) — a baseline every browser can render. A scoped, deduped `<style>` tag (gated behind `@supports (color: light-dark(...))`) overrides it with `--shl-keyword: light-dark(#a626a4, #c678dd)` (etc.) plus `color-scheme: light dark` on browsers that support `light-dark()`. `mode="light"` / `mode="dark"` force `color-scheme: light` / `dark`. Any other `mode` string (the legacy "CSS selector" mode) omits `color-scheme` inline — set it on your own selector for app-controlled switching, e.g. `[data-theme="dark"] { color-scheme: dark }`.
+The wrapper's inline style carries the plain light value for each var (e.g. `--shl-keyword:#a626a4`) — a baseline every browser can render. A scoped, deduped `<style>` tag (gated behind `@supports (color: light-dark(...))`) overrides it with `--shl-keyword: light-dark(#a626a4, #c678dd)` (etc.) plus `color-scheme: light dark` on browsers that support `light-dark()`. `light-dark()` only takes colors, so the dark palette's `font-weight`, `font-style` and `text-decoration` values apply under the same condition instead: `@media (prefers-color-scheme: dark)` for `mode="auto"`, or the `mode` selector. `mode="light"` / `mode="dark"` force `color-scheme: light` / `dark`. Any other `mode` string (the legacy "CSS selector" mode) omits `color-scheme` inline — set it on your own selector for app-controlled switching, e.g. `[data-theme="dark"] { color-scheme: dark }`.
 
 See it live, with a mode toggle, on the [dual-palette preview page](https://svhe.onrender.com/preview-dual-palette).
 

@@ -225,6 +225,23 @@ function buildBaseCss(selectorUnion: Map<string, UnionEntry>): string {
   return structural + rules.join("");
 }
 
+/**
+ * Sets every variable `baseCss` reads to `initial` on each
+ * `[data-shl-theme]` element, so a scoped theme doesn't inherit the
+ * variables it leaves out from another theme's `:root`. `:where()` keeps
+ * it below every theme's own rule, whatever order they load in.
+ */
+function buildScopeReset(baseCss: string): string {
+  const names = new Set(
+    [...baseCss.matchAll(/var\((--shl-[\w-]+)/g)].map((match) => match[1]),
+  );
+  const decls = [...names]
+    .sort()
+    .map((name) => `${name}:initial`)
+    .join(";");
+  return `:where([data-shl-theme]){${decls}}`;
+}
+
 export async function buildThemes(themeInputs: ThemeInput[]) {
   console.time("build themes");
   await Bun.$`rm -rf src/themes; mkdir src/themes`;
@@ -253,7 +270,9 @@ export async function buildThemes(themeInputs: ThemeInput[]) {
 
   const allWrites: Promise<void>[] = [];
 
-  allWrites.push(writeTo("src/themes/base.css", baseCss));
+  allWrites.push(
+    writeTo("src/themes/base.css", buildScopeReset(baseCss) + baseCss),
+  );
 
   const fallbackEntries = [...fallbackMap.entries()].sort(([a], [b]) =>
     a.localeCompare(b),
