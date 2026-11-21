@@ -217,6 +217,7 @@ const HLJS_PATCH_NAMES = [
   "javascript",
   "kotlin",
   "lisp",
+  "mathematica",
   "objectivec",
   "python",
   "rust",
