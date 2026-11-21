@@ -227,6 +227,7 @@
     "/preview-abap": "ABAP language preview",
     "/preview-freemarker": "FreeMarker language preview",
     "/preview-yacc": "Yacc language preview",
+    "/preview-lex": "Lex language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
