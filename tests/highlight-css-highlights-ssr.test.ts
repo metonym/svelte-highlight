@@ -1,3 +1,4 @@
+// @depends-on src/Highlight.svelte
 /**
  * There is no `CSS.highlights` on the server, so `Highlight` with
  * `engine="css-highlights"` must render the same markup as the default

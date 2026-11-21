@@ -1,3 +1,5 @@
+// @depends-on scripts/custom-languages/*.js scripts/hljs-patches/*
+// @reads src/engine.js README.md
 /**
  * Differential gate: every shipped grammar's engine output (HTML, flat
  * ranges, relevance) is compared byte-exact against real, pinned

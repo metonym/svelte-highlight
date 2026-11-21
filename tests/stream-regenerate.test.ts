@@ -1,3 +1,4 @@
+// @depends-on src/HighlightStream.svelte
 import path from "node:path";
 import { getCorpus } from "../bench/_shared.ts";
 import { createRegistry, extendLines, registerAll } from "../src/engine.js";

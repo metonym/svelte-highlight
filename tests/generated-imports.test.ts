@@ -1,3 +1,4 @@
+// @depends-on scripts/build-languages.ts scripts/convert-grammars.ts scripts/custom-languages/** scripts/hljs-patches/** scripts/build-detect-index.ts scripts/build-themes.ts scripts/build-styles.ts scripts/custom-styles/**
 import { readFileSync } from "node:fs";
 
 // Node ESM (no bundler) needs explicit extensions; Bun resolves either way.

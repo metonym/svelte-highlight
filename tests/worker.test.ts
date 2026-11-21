@@ -1,3 +1,5 @@
+// The reference grammars are build outputs: name what generates them.
+// @depends-on scripts/build-languages.ts scripts/convert-grammars.ts scripts/custom-languages/** scripts/hljs-patches/**
 import { createRegistry, registerAll, tokenLines } from "../src/engine.js";
 import { LanguageLoadError } from "../src/load-language.js";
 import type { PostMessageTarget, WorkerHighlighter } from "../src/worker.d.ts";

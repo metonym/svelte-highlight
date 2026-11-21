@@ -1,3 +1,4 @@
+// @depends-on src/Highlight.svelte src/HighlightAuto.svelte src/HighlightSvelte.svelte
 /**
  * `Highlight`, `HighlightAuto`, and `HighlightSvelte` all expose the
  * scope-event stream as a default-slot prop (`events`) alongside the

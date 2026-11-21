@@ -1,3 +1,6 @@
+// @reads SUPPORTED_STYLES.md
+// @depends-on scripts/build-styles.ts scripts/custom-styles/**
+// @reads src/styles/**
 import { existsSync } from "node:fs";
 import path from "node:path";
 

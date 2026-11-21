@@ -1,3 +1,4 @@
+// @depends-on src/MarkdownStream.svelte src/HighlightStream.svelte
 import path from "node:path";
 import javascript from "../src/languages/javascript.js";
 import {

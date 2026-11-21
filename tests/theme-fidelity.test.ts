@@ -1,3 +1,5 @@
+// @depends-on scripts/build-themes.ts scripts/build-styles.ts scripts/custom-styles/**
+// @reads src/themes/** src/styles/**
 /**
  * Fidelity differential (the load-bearing test for the theme-palette
  * compiler): for every shipped theme, resolve `themes/base.css` +

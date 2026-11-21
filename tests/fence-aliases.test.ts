@@ -1,3 +1,4 @@
+// @depends-on scripts/build-languages.ts scripts/convert-grammars.ts scripts/custom-languages/** scripts/hljs-patches/**
 import { existsSync } from "node:fs";
 import { resolveLanguageName } from "../src/fence.js";
 import { LANGUAGE_ALIASES } from "../src/languages/aliases.js";

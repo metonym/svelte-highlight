@@ -1,3 +1,4 @@
+// @depends-on src/HighlightStyle.svelte
 /**
  * SSR coverage for `HighlightStyle`'s `ThemePalette` object path: no
  * `<style>` tag / `<svelte:head>` content, inline vars present on the

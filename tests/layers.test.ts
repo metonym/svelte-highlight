@@ -1,3 +1,4 @@
+// @reads src/* tsconfig.core.json
 // Keeps the source in three layers, so the highlighter can run without Svelte:
 //
 // - core: no DOM, no framework. Runs in browsers, workers, Node, Bun, Deno.

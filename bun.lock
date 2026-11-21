@@ -16,6 +16,7 @@
         "@types/jest": "^30.0.0",
         "@types/node": "^26.6.5",
         "astro": "^7.4.2",
+        "bivium": "0.4.0",
         "carbon-components-svelte": "^0.113.1",
         "carbon-preprocess-svelte": "^0.11.58",
         "cssnano": "^9.9.0",
@@ -414,6 +415,8 @@
     "bail": ["bail@2.0.2", "", {}, "sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw=="],
 
     "baseline-browser-mapping": ["baseline-browser-mapping@2.11.33", "", { "bin": { "baseline-browser-mapping": "dist/cli.cjs" } }, "sha512-yiVKDX+qCMRKBE084lXvq9EcwFUhKZ2nU8TK1EQQuOgPNR/lmbGxXOeDdlGUqC2Zz11Cs9rk1d/8NfgBmlkt0w=="],
+
+    "bivium": ["bivium@0.4.0", "", { "bin": { "bivium": "cli.js" } }, "sha512-cYX0cZr4yr3AREtKRg9OL93sNLBlzoeLN4PzNThHarlyVO4770FXIhLzKCegHsDQjkZp4b40N8tsvJX9dJX24g=="],
 
     "boolbase": ["boolbase@1.0.0", "", {}, "sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww=="],
 
