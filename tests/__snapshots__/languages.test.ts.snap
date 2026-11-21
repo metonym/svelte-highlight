@@ -118,6 +118,7 @@ exports[`Languages 1`] = `
   "flux",
   "fortran",
   "freedesktop",
+  "freemarker",
   "fsharp",
   "fstar",
   "gams",

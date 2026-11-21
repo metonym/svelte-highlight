@@ -2517,4 +2517,30 @@ CLASS lcl_flights IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 `,
+  freemarker: `<#ftl output_format="HTML">
+<#import "/lib/layout.ftlh" as layout>
+<#-- Render the cart, or a hint when it is empty. -->
+<#assign total = 0>
+<@layout.page title="Your cart">
+  <h1>Hello, \${user.name!"guest"}!</h1>
+  <#if cart.items?has_content>
+    <ul class="items">
+      <#list cart.items as item>
+        <li class="\${item?item_parity}">\${item.title?upper_case} - \${item.price?string.currency}</li>
+        <#assign total += item.price>
+      </#list>
+    </ul>
+    <p>Total: \${total} (\${cart.items?size} items, \${.now?date})</p>
+  <#elseif (user.points > 100)>
+    <p>Spend your \${user.points} points.</p>
+  <#else>
+    <p>Your cart is empty.</p>
+  </#if>
+  <#macro badge label color="gray">
+    <span style="color: \${color}">\${label}</span>
+  </#macro>
+  <@badge label="New" color="red"/>
+  <#noparse>\${not.parsed}</#noparse>
+  [#if user.admin??]<a href="/admin">Admin</a>[/#if]
+</@layout.page>`,
 };
