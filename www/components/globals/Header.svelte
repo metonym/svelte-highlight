@@ -228,6 +228,7 @@
     "/preview-freemarker": "FreeMarker language preview",
     "/preview-yacc": "Yacc language preview",
     "/preview-lex": "Lex language preview",
+    "/preview-mlir": "MLIR language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
