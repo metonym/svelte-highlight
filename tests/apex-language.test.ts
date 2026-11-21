@@ -72,6 +72,32 @@ test("apex highlights DML statements but not member names", () => {
   expect(result).not.toContain('<span class="hljs-keyword">insert</span>');
 });
 
+test("apex styles platform members like before", () => {
+  const result = highlight(
+    "for (Account a : Trigger.new) { System.debug(a); }\nTest.startTest();",
+  );
+
+  expect(result).toContain('<span class="hljs-built_in">Trigger</span>.new');
+  expect(result).toContain('<span class="hljs-built_in">System</span>.debug');
+  expect(result).toContain('<span class="hljs-built_in">Test</span>.startTest');
+});
+
+test("apex scores Salesforce-only constructs for auto-detection", () => {
+  const relevance = (code: string) =>
+    registry.highlight(code, { language: "apex" }).relevance;
+
+  // Each construct is worth more than a run of shared Java keywords.
+  expect(relevance("@AuraEnabled")).toBeGreaterThanOrEqual(10);
+  expect(relevance("System.debug(x);")).toBeGreaterThanOrEqual(10);
+  expect(relevance("for (Account a : Trigger.new) {}")).toBeGreaterThanOrEqual(
+    10,
+  );
+  expect(relevance("update accounts;")).toBeGreaterThanOrEqual(5);
+  // A plain member call or a JavaScript `delete` gets nothing.
+  expect(relevance("System.out.println(x);")).toBeLessThan(5);
+  expect(relevance("delete obj.key;")).toBeLessThan(5);
+});
+
 test("apex highlights annotations, strings and comments", () => {
   const result = highlight(
     "@IsTest\n// setup\nstatic void run() { String s = 'ok'; }",

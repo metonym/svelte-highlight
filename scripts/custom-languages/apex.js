@@ -55,10 +55,62 @@ function defineApex(hljs) {
     relevance: 10,
   };
 
+  // Annotations that exist only on the Salesforce platform.
+  const PLATFORM_ANNOTATION = {
+    className: "meta",
+    begin:
+      /@(?:AuraEnabled|IsTest|TestSetup|TestVisible|InvocableMethod|InvocableVariable|RemoteAction|RestResource|Http(?:Get|Post|Put|Patch|Delete)|future|NamespaceAccessible)\b/,
+    relevance: 10,
+  };
+
   const ANNOTATION = {
     className: "meta",
     begin: /@[a-zA-Z_]\w*/,
     relevance: 0,
+  };
+
+  // Salesforce-only members of the platform classes: System.debug,
+  // Trigger.new, Database.Batchable, Test.startTest, Schema.SObjectType.
+  // Only the class name is matched, as built_in. A lookahead checks the
+  // member, so MEMBER still styles `.new` and the rest as plain text.
+  const platformMember = (
+    /** @type {string} */ owner,
+    /** @type {RegExp} */ members,
+  ) => ({
+    className: "built_in",
+    begin: new RegExp(`\\b${owner}(?=\\.${members.source})`),
+    relevance: 10,
+  });
+  const PLATFORM_MEMBERS = [
+    platformMember(
+      "System",
+      /(?:debug|assert(?:Equals|NotEquals)?|runAs|enqueueJob|schedule(?:Batch)?|abortJob)\b/,
+    ),
+    platformMember(
+      "Trigger",
+      /(?:new|old|newMap|oldMap|is(?:Before|After|Insert|Update|Delete|Undelete|Executing)|operationType)\b/,
+    ),
+    platformMember(
+      "Database",
+      /(?:Batchable(?:Context)?|QueryLocator|getQueryLocator|executeBatch|Stateful|AllowsCallouts|SaveResult|UpsertResult|DeleteResult|DMLOptions|setSavepoint|rollback|countQuery)\b/,
+    ),
+    platformMember(
+      "Test",
+      /(?:startTest|stopTest|setMock|isRunningTest|loadData|setCurrentPage|getStandardPricebookId)\b/,
+    ),
+    platformMember(
+      "Schema",
+      /(?:SObjectType|SObjectField|Describe(?:SObject|Field)Result|getGlobalDescribe)\b/,
+    ),
+  ];
+
+  // DML statements: `insert acc;`, `update records;`, `insert new
+  // Task(...)`. `delete x;` is left out because JavaScript has it too.
+  const DML_STATEMENT = {
+    className: "keyword",
+    begin:
+      /\b(?:insert|update|upsert|undelete)(?=\s+(?:new\s+[a-zA-Z_]|[a-zA-Z_][\w.]*\s*;))/,
+    relevance: 5,
   };
 
   const CLASS_DECL = {
@@ -143,6 +195,9 @@ function defineApex(hljs) {
       TRIGGER_EVENT,
       SWITCH_ON,
       CLASS_DECL,
+      DML_STATEMENT,
+      PLATFORM_ANNOTATION,
+      ...PLATFORM_MEMBERS,
       ANNOTATION,
       MEMBER,
       hljs.C_NUMBER_MODE,
