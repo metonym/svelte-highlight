@@ -123,6 +123,25 @@ export const sveltePreviewSnippets: SveltePreviewSnippet[] = [
 <p>{items.length} items</p>`,
   },
   {
+    title: "Generic component",
+    description: "The generics attribute and a generic snippet",
+    code: `<script lang="ts" generics="T extends { id: string }">
+  import type { Snippet } from "svelte";
+
+  let { rows, cell }: { rows: T[]; cell: Snippet<[T]> } = $props();
+</script>
+
+{#snippet row<R extends T>(item: R, index = 0)}
+  <tr data-index={index}>{@render cell(item)}</tr>
+{/snippet}
+
+<table>
+  {#each rows as item (item.id)}
+    {@render row(item)}
+  {/each}
+</table>`,
+  },
+  {
     title: "Legacy directives",
     description:
       "on:, bind:, class:, use:, transition:, and let: prop directives",
