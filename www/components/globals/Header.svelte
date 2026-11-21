@@ -216,6 +216,7 @@
     "/preview-cobol": "COBOL language preview",
     "/preview-robotframework": "Robot Framework language preview",
     "/preview-meson": "Meson language preview",
+    "/preview-httpfile": "HTTP Request File language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
