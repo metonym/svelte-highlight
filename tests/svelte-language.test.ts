@@ -295,3 +295,39 @@ test("svelte closes a single-line style block at its own </style>", () => {
   expect(result).toContain('<span class="hljs-selector-tag">button</span>');
   expect(result).toContain('<span class="hljs-variable">onclick</span>');
 });
+
+test("svelte keeps each-block bindings before a key plain", () => {
+  registerAll(registry, svelte);
+
+  const highlight = (code: string) =>
+    registry.highlight(code, { language: "svelte" }).value;
+
+  for (const code of [
+    "{#each items as item, i (item.id)}{/each}",
+    "{#each items as { id, name }, i (id)}{/each}",
+  ]) {
+    const result = highlight(code);
+    expect(result).not.toContain('<span class="hljs-title function_">i</span>');
+    expect(result).toContain("</span>i<span");
+  }
+
+  const unindexed = highlight("{#each items as item (item.id)}{/each}");
+  expect(unindexed).not.toContain(
+    '<span class="hljs-title function_">item</span>',
+  );
+  expect(unindexed).toContain('<span class="hljs-property">id</span>');
+});
+
+test("svelte still styles calls next to an each block", () => {
+  registerAll(registry, svelte);
+
+  const result = registry.highlight(
+    "{#each getItems(x) as item, i}{format(item)}{/each}",
+    { language: "svelte" },
+  ).value;
+
+  expect(result).toContain(
+    '<span class="hljs-title function_">getItems</span>',
+  );
+  expect(result).toContain('<span class="hljs-title function_">format</span>');
+});

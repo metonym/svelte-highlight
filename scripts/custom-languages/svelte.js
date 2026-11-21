@@ -69,9 +69,39 @@ function defineSvelte(hljs) {
     relevance: 5,
   };
 
+  const braceSkip = { begin: /\{/, end: /\}/, skip: true };
+
+  // `{#each items as item, i (item.id)}`: TypeScript reads `i (` as a call
+  // and styles the last binding as a function title. The `#each` mode hands
+  // the rest of the tag to TypeScript, and its `as` mode claims the binding
+  // before the key with a plain match. The iterable before `as` keeps its
+  // normal highlighting, so `getItems(x)` is still a call.
+  const eachBlock = {
+    begin: /#each\b/,
+    className: "keyword",
+    relevance: 10,
+    starts: {
+      end: /(?=\})/,
+      subLanguage: "typescript",
+      contains: [
+        braceSkip,
+        {
+          begin: /\bas\b/,
+          className: "keyword",
+          starts: {
+            end: /(?=\})/,
+            subLanguage: "typescript",
+            contains: [braceSkip, { begin: /[A-Za-z_$][\w$]*(?=\s*\()/ }],
+          },
+        },
+      ],
+    },
+  };
+
   const expressionPatterns = [
     hljs.COMMENT(/\/\*/, /\*\//),
-    { begin: /\{/, end: /\}/, skip: true },
+    eachBlock,
+    braceSkip,
     {
       begin: /:(else if|else|then|catch)\b/,
       className: "keyword",
