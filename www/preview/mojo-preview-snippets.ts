@@ -28,4 +28,21 @@ struct Label:
     fn take(owned self):
         pass`,
   },
+  {
+    title: "Decorators and comptime",
+    description: "@fieldwise_init, @parameter loops, and the read convention",
+    code: `comptime WIDTH = 4
+
+@fieldwise_init
+struct Vec(Copyable, Movable):
+    var data: List[Float64]
+
+    @always_inline
+    fn sum(read self) -> Float64:
+        var total = 0.0
+        @parameter
+        for i in range(WIDTH):
+            total += self.data[i]
+        return total`,
+  },
 ];
