@@ -71,3 +71,22 @@ test("roc still interpolates $(name) and does not treat android as and", () => {
   expect(result).toContain("android =");
   expect(result).not.toContain('<span class="hljs-keyword">and</span>roid');
 });
+
+test("roc highlights var and for-in loops", () => {
+  const result = highlight(
+    "main! = |args| {\n    var count_ = 0\n    for arg in args {\n        count_ = count_ + 1\n    }\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">var</span> count_');
+  expect(result).toContain(
+    '<span class="hljs-keyword">for</span> arg <span class="hljs-keyword">in</span> args',
+  );
+});
+
+test("roc does not treat variable or input as var or in", () => {
+  const result = highlight("variable = 1\ninput = variable");
+
+  expect(result).toContain("variable = ");
+  expect(result).not.toContain('<span class="hljs-keyword">var</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">in</span>');
+});
