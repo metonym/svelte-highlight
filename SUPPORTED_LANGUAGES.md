@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 365 languages: 193 exported from highlight.js@11.12.0, 172 custom grammars added by svelte-highlight
+> 366 languages: 193 exported from highlight.js@11.12.0, 173 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -753,6 +753,20 @@
 
   // base import
   import { cmake } from "svelte-highlight/languages";
+</script>
+```
+
+## cobol (`cobol`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import cobol from "svelte-highlight/languages/cobol";
+
+  // base import
+  import { cobol } from "svelte-highlight/languages";
 </script>
 ```
 

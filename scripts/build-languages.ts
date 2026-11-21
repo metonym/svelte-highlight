@@ -186,6 +186,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "nomnoml",
   "blockdiag",
   "apex",
+  "cobol",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

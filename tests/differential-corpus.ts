@@ -2181,4 +2181,24 @@ trigger AccountTrigger on Account (before insert, after update) {
   update Trigger.new;
   System.debug(LoggingLevel.INFO, 'done');
 }`,
+  cobol: `000100 IDENTIFICATION DIVISION.
+000200 PROGRAM-ID. PAYROLL.
+000300*  Fixed-form comment in column 7.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-EMPLOYEE.
+          05 WS-NAME      PIC X(30).
+          05 WS-SALARY    PIC S9(7)V99 COMP-3 VALUE ZERO.
+          05 FILLER       PIC X(5).
+       PROCEDURE DIVISION.
+       MAIN-PARA.
+           MOVE "Ada ""Lovelace""" TO WS-NAME
+           PERFORM 1000-CALC VARYING WS-I FROM 1 BY 1 UNTIL WS-I > 12
+           EVALUATE TRUE
+               WHEN WS-SALARY > 1000 DISPLAY 'HIGH' *> free-form comment
+               WHEN OTHER DISPLAY FUNCTION UPPER-CASE(WS-NAME)
+           END-EVALUATE
+           STOP RUN.
+       1000-CALC.
+           COMPUTE WS-SALARY = WS-SALARY * 1.05.`,
 };
