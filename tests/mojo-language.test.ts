@@ -81,3 +81,41 @@ test("mojo still highlights fn names and does not treat outer as out", () => {
   expect(result).toContain("outer =");
   expect(result).not.toContain('<span class="hljs-keyword">out</span>er');
 });
+
+test("mojo highlights decorators at top level and inside a fn", () => {
+  const result = highlight(
+    '@fieldwise_init\nstruct Pair(Copyable, Movable):\n    var a: Int\n\n@always_inline("nodebug")\nfn sum[n: Int]() -> Int:\n    var total = 0\n    @parameter\n    for i in range(n):\n        total += i\n    return total\n',
+  );
+
+  expect(result).toContain('<span class="hljs-meta">@fieldwise_init</span>');
+  expect(result).toContain('<span class="hljs-meta">@always_inline</span>(');
+  expect(result).toContain('    <span class="hljs-meta">@parameter</span>');
+  expect(result).toContain('<span class="hljs-title class_">Pair</span>');
+});
+
+test("mojo leaves the @ matmul operator unstyled", () => {
+  const result = highlight("var c = a @ b\n");
+
+  expect(result).toContain("a @ b");
+  expect(result).not.toContain("hljs-meta");
+});
+
+test("mojo highlights comptime and the read convention", () => {
+  const result = highlight(
+    "comptime N = 10\nfn show(read self, read x: Int):\n    comptime if N > 1:\n        pass\n",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">comptime</span> N');
+  expect(result).toContain(
+    '<span class="hljs-keyword">comptime</span> <span class="hljs-keyword">if</span>',
+  );
+  expect(result).toContain('<span class="hljs-keyword">read</span> self');
+  expect(result).toContain('<span class="hljs-keyword">read</span> x');
+});
+
+test("mojo leaves read unstyled as a method name", () => {
+  const result = highlight("var data = file.read()\n");
+
+  expect(result).toContain("file.read()");
+  expect(result).not.toContain('<span class="hljs-keyword">read</span>');
+});
