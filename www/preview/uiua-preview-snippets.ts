@@ -26,4 +26,17 @@ Third ← pop pop`,
     code: `Circumference ← ×2×π
 IsInfinite ← =∞`,
   },
+  {
+    title: "Statistics with a test scope",
+    description: "by ⊸, self ˙, and with ⤙ asserting results",
+    code: `# mean and standard deviation
+Mean ← ÷⊃⧻/+
+StdDev ← √Mean˙×-⊸Mean
+⊃Mean StdDev [2 4 4 4 5 5 7 9]
+
+---
+⍤⤙≍ 3 Mean [2 4]
+⍤⤙≍ 2 StdDev [2 4 4 4 5 5 7 9]
+---`,
+  },
 ];
