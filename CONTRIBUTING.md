@@ -28,10 +28,12 @@ A bundled custom grammar touches 8 files across `scripts/`, `tests/`, and `www/`
    ```
 
    Look at an existing grammar for the shape you need: `csv.js` for a keyword-less, `contains`-only grammar; `renpy.js` or `zig.js` for a keyword-heavy one. **Not automated — author this by hand.**
+
+   Don't use regex lookbehind (`(?<=` or `(?<!`). It throws on Safari before 16.4, and `tests/no-lookbehind.test.ts` fails the build on it. Consume the preceding text in the `begin` match instead, or split the rule into a parent mode and a child mode. This applies to hljs patches too.
 2. Append `"<name>",` to `CUSTOM_LANGUAGE_NAMES` in `scripts/build-languages.ts` (before the closing `] as const;`). *Automated by the scaffold.*
 3. Add a `<name>: \`...\`` entry to `CUSTOM_SNIPPETS` in `tests/differential-corpus.ts` — a short, multi-construct sample (keywords/punctuation, at least one nested or structural construct). This feeds `tests/differential.test.ts`, which highlights it with both real `highlight.js` (via the grammar's own `register(hljs)`) and this repo's converted engine and asserts byte-identical output. **Not automated — the scaffold writes a `// TODO` placeholder; replace it with a real sample.**
 4. Bump `tests/languages.test.ts`'s `expect(languageNames.length).toEqual(<N>)` by however many languages you added. *Automated by the scaffold.*
-5. Run `bun run build:lib` — regenerates `src/languages/<name>.js`, `SUPPORTED_LANGUAGES.md`, the alias table, and `www/data/languages.json`. These are gitignored build output; never hand-edit them.
+5. Run `bun run build:lib` — regenerates `src/languages/<name>.js`, `SUPPORTED_LANGUAGES.md`, the alias table, and `www/data/languages.json`. Never hand-edit them. All but `SUPPORTED_LANGUAGES.md` are gitignored; that one is tracked, so commit its regenerated rows with the grammar.
 6. Add `tests/<name>-language.test.ts`: `createRegistry()` from `../src/engine.js`, `registry.register(<name>.register)`, then 4-6 `test(...)` assertions on `registry.highlight(code, { language: "<name>" }).value` containing expected `<span class="hljs-...">` fragments (follow `tests/renpy-language.test.ts`'s shape). **Not automated — the scaffold writes a placeholder test; write real assertions.**
 7. Update the two auto-generated snapshots by running the tests with `-u`: `bun test tests/languages.test.ts tests/languages-golden.test.ts --update-snapshots` (the golden test iterates every registered language automatically — a keyword-bearing grammar just needs to produce at least one `hljs-` span on a sample built from its own keyword table; no per-language entry required unless the grammar's keyword-bearing modes are gated behind a structural anchor, in which case add a prefix to `SAMPLE_PREFIXES` in `tests/languages-golden.test.ts`).
 8. Add `www/preview/<name>-preview-snippets.ts` (type `<Name>PreviewSnippet[]`, ≥3 entries, each `{ title, description?, code }` — follow `www/preview/csv-preview-snippets.ts`'s shape). *Scaffolded as an empty array with a `// TODO`; you still need to author real snippets.*
@@ -101,10 +103,22 @@ Most shipped grammars come straight from `highlight.js` and are converted to the
    ```
 
    Two rules of thumb: (a) the stock grammar's keyword arrays are often module-level constants shared by every call, so *replace* them on `lang.keywords` rather than pushing into them; (b) locate the mode you're changing with a `find` on a stable property and `throw` if it's missing, so an upstream `highlight.js` bump that reshapes the grammar fails the build instead of silently dropping the patch.
-2. Append `"<name>",` to `HLJS_PATCH_NAMES` in `scripts/build-languages.ts`. The name must be an hljs built-in that isn't also a custom grammar (the build asserts this). The grammar keeps its hljs identity in `SUPPORTED_LANGUAGES.md` (with a note pointing at the patch) and its license banner.
+2. Add `"<name>",` to `HLJS_PATCH_NAMES` in `scripts/build-languages.ts`, in alphabetical order. The name must be an hljs built-in that isn't also a custom grammar (the build asserts this). The grammar keeps its hljs identity in `SUPPORTED_LANGUAGES.md` (with a note pointing at the patch) and its license banner.
 3. Run `bun run build:lib`. `tests/differential.test.ts` uses the patched grammar under real `highlight.js` as the baseline for that language, so the engine's output must stay byte-identical to hljs running your patch.
 4. Add `tests/<name>-grammar-patch.test.ts`: register the patch on a fresh `hljs` instance and the converted `src/languages/<name>.js` on a `createRegistry()`, assert the two agree, then assert the specific `<span class="hljs-...">` fragments the patch introduces (follow `tests/go-grammar-patch.test.ts`). Include at least one "unchanged" case for neighbouring syntax the patch must not disturb.
 5. Run `bun test tests/languages.test.ts tests/languages-golden.test.ts --update-snapshots` if the golden sample for that grammar changed.
+
+To find what a stock grammar misses, use the probe-first loop from [Auditing an existing custom grammar](#auditing-an-existing-custom-grammar): register the stock grammar on a fresh `highlight.js/lib/core` instance and highlight a sample from the language's latest release notes.
+
+#### Adding an alias to an hljs built-in
+
+`resolveLanguageName` and `highlightFence` read aliases from each grammar's own `aliases` field. To make a new name resolve to a stock grammar (for example, Shiki's `shellscript` for `bash`), write a patch that only extends that field:
+
+```js
+lang.aliases = [...(lang.aliases ?? []), "shellscript"];
+```
+
+Its test asserts that `resolveLanguageName` maps the alias to the grammar, and that the patched output equals the stock output. If two grammars claim the same alias, the build keeps the first and logs the one it ignored. A grammar's own name always wins over another grammar's alias.
 
 Note that custom grammars which embed an hljs built-in (`astro`, `svelte`, `vue`, `tsrx`, ... import `highlight.js/lib/languages/typescript` directly) still embed the *stock* grammar when run under real `highlight.js`; at runtime in this package the embed resolves by name to the patched grammar. The converter registers patched grammars last for the same reason: those customs re-register the stock built-in as a side effect.
 
@@ -114,14 +128,24 @@ Note that custom grammars which embed an hljs built-in (`astro`, `svelte`, `vue`
 bun scripts/add-language.ts <name> "<Display Name>"
 ```
 
-`<name>` must be lowercase `[a-z][a-z0-9-]*` and must not already exist. The script writes the 5 new files (grammar stub, language test stub, preview-snippets stub, preview page) and edits the 4 existing ones (`build-languages.ts`, `differential-corpus.ts`, `languages.test.ts`, `LanguagePreview.svelte`, `Header.svelte`) described above, then prints a summary and the exact follow-up commands to run once you've filled in the grammar.
+`<name>` must be lowercase `[a-z][a-z0-9-]*` and must not already exist. The script writes the 4 new files (grammar stub, language test stub, preview-snippets stub, preview page) and edits the 5 existing ones (`build-languages.ts`, `differential-corpus.ts`, `languages.test.ts`, `LanguagePreview.svelte`, `Header.svelte`) described above, then prints a summary and the exact follow-up commands to run once you've filled in the grammar.
+
+### Choosing a language to add
+
+Pick a language that scores on at least two of these signals:
+
+- **GitHub pushers:** the [GitHub Innovation Graph](https://github.com/github/innovationgraph) counts people who push code in each language per quarter. Compare the latest quarter with the same quarter a year earlier to see the trend.
+- **Editor installs:** installs of the language's main VS Code extension.
+- **Other highlighters:** support in [Shiki](https://shiki.style/languages) or [Linguist](https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml).
+
+Skip formats that people commit but rarely paste into docs or READMEs (Procfile, Jupyter notebooks, autoconf M4). Their pusher counts are high, but few people need them highlighted. If a stock grammar already covers the language under another name, add an alias instead (see [Adding an alias to an hljs built-in](#adding-an-alias-to-an-hljs-built-in)).
 
 ### Quality bar
 
 Before opening a PR for a new language, check:
 
 - **Aliases.** Does the language have real hljs-style file-extension or name aliases (like CSV's `tsv`)? Add them to the grammar's `aliases` field if so.
-- **`disableAutodetect`.** Make an explicit decision, don't leave the default unexamined. Default is `false`. Set it to `true` when the grammar's syntax is generic enough to plausibly false-positive during auto-detection — e.g. a bare URL or a semver range has almost no syntax that couldn't also appear as a fragment of an unrelated language, or embedded inside a wholly different document. Most grammars with real keywords or a distinctive structural anchor don't need this.
+- **`disableAutodetect`.** Make an explicit decision, don't leave the default unexamined. Default is `false`. Set it to `true` when the grammar's syntax is generic enough to plausibly false-positive during auto-detection — e.g. a bare URL or a semver range has almost no syntax that couldn't also appear as a fragment of an unrelated language, or embedded inside a wholly different document. Most grammars with real keywords or a distinctive structural anchor don't need this. Also set it to `true` when the format extends a grammar that already ships, so one sample is valid in both: a grammar for `.http` request files would share most samples with the shipped `http` grammar, and the two would split detection.
 - **Relevance sanity check.** Only matters when `disableAutodetect` is `false`. Run `registry.highlight()` on the new grammar's differential-corpus sample under 3-5 syntactically similar existing language names and confirm none of them produce a plausible-looking result — i.e. the new grammar isn't going to get misdetected as, or steal detection from, a neighbor.
 - **Snapshot corpus.** The ≥3 preview snippets must be real-world examples (an actual API endpoint, an actual config block, an actual template), not synthetic keyword soup that happens to hit every branch of the grammar.
 
@@ -133,6 +157,8 @@ bun test tests/languages.test.ts tests/languages-golden.test.ts tests/<name>-lan
 bun run test:types
 bun fix:changed
 ```
+
+For a full run, use `bun run test:unit`. A bare `bun test` also picks up the Playwright files under `tests/e2e/`, which fail outside `bun run test:e2e`.
 
 ## Benchmarks
 
