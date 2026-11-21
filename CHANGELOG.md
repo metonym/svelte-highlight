@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.25.1](https://github.com/metonym/svelte-highlight/releases/tag/v7.25.1) - 2026-11-21
+
+**Fixes**
+
+- keep light-only rules out of `HighlightStyle`'s dark mode when `light` and `dark` are style strings and `mode` is a selector: github's bold headings and diff backgrounds no longer show under zenburn ([#634](https://github.com/metonym/svelte-highlight/issues/634))
+- switch only colors with `light-dark()` for `ThemePalette` pairs, so bold, italic and decoration apply again, and light-only variables no longer apply in dark mode ([#637](https://github.com/metonym/svelte-highlight/issues/637))
+- start each `[data-shl-theme]` element with every variable unset in `themes/base.css`, so scoped themes don't inherit each other's variables ([#637](https://github.com/metonym/svelte-highlight/issues/637))
+
 ## [7.25.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.25.0) - 2026-11-21
 
 **Features**
