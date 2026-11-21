@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.25.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.25.0) - 2026-11-21
+
+**Features**
+
+- add custom `abap` language
+- add custom `antlr` language
+- add custom `apex` language
+- add custom `cobol` language
+- add custom `cython` language
+- add custom `fluent` language
+- add custom `freemarker` language
+- add custom `httpfile` language
+- add custom `lex` language
+- add custom `meson` language
+- add custom `metal` language
+- add custom `mlir` language
+- add custom `po` language
+- add custom `riscv` language
+- add custom `robotframework` language
+- add custom `sshconfig` language
+- add custom `yacc` language
+- add aliases to existing languages: `cuda`, `cu` and `cuh` (cpp), `rocq` (coq), `njk` and `nunjucks` (jinja), `emacs-lisp` and `elisp` (lisp), `mustache` (handlebars), `vimscript` and `viml` (vim), `shellscript` (bash), `objective-c` (objectivec), `systemverilog` (verilog), `wolfram` (mathematica), `jsonl` and `ndjson` (json)
+
+**Fixes**
+
+- highlight the `generics` attribute of a Svelte `<script>` as TypeScript, and style the name of a generic snippet
+- keep Svelte `{#each}` bindings before a key plain
+- highlight Angular block parameters and `@let` values
+- recognize newer syntax in `csharp` (C# 14), `dart`, `kotlin`, `php` (8.4), `pgsql`, `mojo`, `roc`, `solidity`, `zig`, `nextflow` and `uiua`
+- recognize newer shipping CSS properties, such as `position-area`, `text-box` and `font-width`
+- improve auto-detection for `apex`, `antlr`, `cobol`, `meson` and `robotframework`
+
 ## [7.24.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.24.0) - 2026-11-21
 
 **Features**
