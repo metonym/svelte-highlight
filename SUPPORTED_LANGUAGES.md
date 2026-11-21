@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 380 languages: 193 exported from highlight.js@11.12.0, 187 custom grammars added by svelte-highlight
+> 381 languages: 193 exported from highlight.js@11.12.0, 188 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2859,6 +2859,20 @@
 
   // base import
   import { mizar } from "svelte-highlight/languages";
+</script>
+```
+
+## mlir (`mlir`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import mlir from "svelte-highlight/languages/mlir";
+
+  // base import
+  import { mlir } from "svelte-highlight/languages";
 </script>
 ```
 

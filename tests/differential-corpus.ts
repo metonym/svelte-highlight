@@ -2609,4 +2609,30 @@ ID       [a-zA-Z_][a-zA-Z0-9_]*
 
 int main(void) { return yylex(); }
 `,
+  mlir: `// Sum a 1-D buffer.
+#map = affine_map<(d0) -> (d0 * 2)>
+
+module {
+  func.func @sum(%buf: memref<?xf32>, %n: index) -> f32 {
+    %c0 = arith.constant 0 : index
+    %c1 = arith.constant 1 : index
+    %zero = arith.constant 0.0 : f32
+    %r = scf.for %i = %c0 to %n step %c1 iter_args(%acc = %zero) -> (f32) {
+      %v = memref.load %buf[%i] : memref<?xf32>
+      %s = arith.addf %acc, %v : f32
+      scf.yield %s : f32
+    }
+    return %r : f32
+  }
+
+  func.func private @branch(%c: i1, %t: tensor<4x?xf32>) {
+    cf.cond_br %c, ^bb1, ^bb2
+  ^bb1:
+    %0 = "arith.constant"() {value = dense<0> : vector<4xi32>} : () -> vector<4xi32>
+    return loc("sum.mlir":20:5)
+  ^bb2:
+    return
+  }
+}
+`,
 };
