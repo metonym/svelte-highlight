@@ -1851,6 +1851,11 @@ https://example.com/docs#installation`,
 	(endif)
 	%% Begin the adventure.`,
   nextflow: `// align reads and emit a sorted bam
+params {
+    input: Path
+    outdir: String = 'results'
+}
+
 process alignReads {
     tag "\${sample_id}"
     publishDir 'results/bam', mode: 'copy'

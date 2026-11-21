@@ -133,3 +133,57 @@ if __name__ == "__main__":
     });
   }
 });
+
+test("nextflow highlights workflow publish and handler sections", () => {
+  const result = highlight(
+    "workflow {\n    main:\n    ch = channel.of(1)\n\n    publish:\n    samples = ch\n\n    onComplete:\n    log.info 'done'\n\n    onError:\n    log.error 'failed'\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">publish</span>');
+  expect(result).toContain('<span class="hljs-keyword">onComplete</span>');
+  expect(result).toContain('<span class="hljs-keyword">onError</span>');
+  expect(result).toContain('<span class="hljs-built_in">channel</span>');
+});
+
+test("nextflow highlights the workflow output block", () => {
+  const result = highlight(
+    "output {\n    samples {\n        path 'fastq'\n    }\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">output</span> {');
+});
+
+test("nextflow highlights topic channels", () => {
+  const result = highlight(
+    "output:\npath 'versions.yml', topic: versions\n\nchannel.topic('versions').view()",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">topic</span>:');
+  expect(result).toContain('<span class="hljs-built_in">topic</span>(');
+});
+
+test("nextflow highlights typed params without section keywords", () => {
+  const result = highlight(
+    "params {\n    input: Path\n    outdir: String = 'results'\n    save: Boolean = false\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">params</span>');
+  expect(result).toContain('<span class="hljs-type">Path</span>');
+  expect(result).toContain('<span class="hljs-type">Boolean</span>');
+  expect(result).toContain('<span class="hljs-literal">false</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">input</span>');
+});
+
+test("nextflow keeps logical or as one operator", () => {
+  const result = highlight("task.ext.when == null || task.ext.when");
+
+  expect(result).toContain('<span class="hljs-operator">||</span>');
+});
+
+test("nextflow keeps params property access and channel pipes unchanged", () => {
+  const result = highlight("reads = params.input\nch | map { it } | view");
+
+  expect(result).toContain('<span class="hljs-keyword">params</span>.input');
+  expect(result).not.toContain("hljs-type");
+  expect(result).toContain('<span class="hljs-operator">|</span>');
+});
