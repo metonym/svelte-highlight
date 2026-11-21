@@ -187,6 +187,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "blockdiag",
   "apex",
   "cobol",
+  "robotframework",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
