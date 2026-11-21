@@ -213,6 +213,7 @@ exports[`Languages 1`] = `
   "mercury",
   "mermaid",
   "meson",
+  "metal",
   "mipsasm",
   "mizar",
   "modelfile",
