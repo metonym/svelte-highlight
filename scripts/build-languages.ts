@@ -189,6 +189,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "cobol",
   "robotframework",
   "meson",
+  "httpfile",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

@@ -2252,4 +2252,38 @@ doc = '''Multi-line
 string'''
 exe = executable('demo', src, install : true, link_args : ['-lz'])
 `,
+  httpfile: `@host = api.example.com
+@token = {{$dotenv API_TOKEN}}
+
+### Log in
+# @name login
+POST https://{{host}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "user": "ada",
+  "password": "{{password}}",
+  "remember": true,
+  "ttl": 3600
+}
+
+> {%
+  client.test("ok", () => {
+    client.assert(response.status === 200);
+  });
+  client.global.set("token", response.body.token);
+%}
+
+### Upload a file
+// @no-redirect
+PUT {{host}}/files/{{$uuid}}
+    ?overwrite=true
+Authorization: Bearer {{login.response.body.$.token}}
+
+< ./report.json
+>> ./out/upload.json
+
+###
+GET https://example.com/health
+`,
 };
