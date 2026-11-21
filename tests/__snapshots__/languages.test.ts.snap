@@ -60,6 +60,7 @@ exports[`Languages 1`] = `
   "clojure",
   "clojureRepl",
   "cmake",
+  "cobol",
   "codeql",
   "coffeescript",
   "coq",
