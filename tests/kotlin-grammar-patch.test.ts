@@ -3,7 +3,8 @@ import patchedKotlin from "../scripts/hljs-patches/kotlin.js";
 import { createRegistry } from "../src/engine.js";
 import kotlin from "../src/languages/kotlin.js";
 
-// scripts/hljs-patches/kotlin.js: unsigned integer literal suffixes.
+// scripts/hljs-patches/kotlin.js: unsigned integer literal suffixes,
+// context parameters, and multi-dollar interpolation.
 const hljs = hljsFactory.newInstance();
 hljs.registerLanguage("kotlin", patchedKotlin.register);
 
@@ -41,5 +42,51 @@ describe("kotlin grammar patch", () => {
   it("does not swallow an identifier starting with u after a number", () => {
     const html = expectMatchesHljs("val x = 3 until 10");
     expect(html).toContain('<span class="hljs-number">3</span> until');
+  });
+
+  it("styles context as a keyword before a context parameter list", () => {
+    const html = expectMatchesHljs(
+      "context(logger: Logger)\nfun log() {}\ncontext(_: Ctx) val x: Int get() = 1",
+    );
+    expect(html).toContain(
+      '<span class="hljs-keyword">context</span>(logger: Logger)\n<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">log</span>',
+    );
+    expect(html).toContain(
+      '<span class="hljs-keyword">context</span>(_: Ctx) <span class="hljs-keyword">val</span>',
+    );
+  });
+
+  it("keeps context as a plain name and member call", () => {
+    const html = expectMatchesHljs(
+      "val context = LocalContext.current\nfoo.context(1)",
+    );
+    expect(html).toContain('<span class="hljs-keyword">val</span> context =');
+    expect(html).toContain("foo.context(");
+  });
+
+  it("interpolates only $$ in a multi-dollar raw string", () => {
+    const html = expectMatchesHljs(
+      'val s = $$"""{"$schema": "$$name", "id": "$${a.b}"}"""\n',
+    );
+    expect(html).toContain(
+      '<span class="hljs-string">$$&quot;&quot;&quot;{&quot;$schema&quot;: &quot;<span class="hljs-variable">$$name</span>&quot;, &quot;id&quot;: &quot;<span class="hljs-subst">$${a.b}</span>&quot;}&quot;&quot;&quot;</span>',
+    );
+  });
+
+  it("interpolates only $$ in a multi-dollar quoted string", () => {
+    const html = expectMatchesHljs('val v = $$"$schema $$$name"');
+    expect(html).toContain(
+      '<span class="hljs-string">$$&quot;$schema $<span class="hljs-variable">$$name</span>&quot;</span>',
+    );
+  });
+
+  it("keeps single-dollar templates unchanged", () => {
+    const html = expectMatchesHljs('val t = """$name ${x}"""\nval u = "$name"');
+    expect(html).toContain(
+      '<span class="hljs-string">&quot;&quot;&quot;<span class="hljs-variable">$name</span> <span class="hljs-subst">${x}</span>&quot;&quot;&quot;</span>',
+    );
+    expect(html).toContain(
+      '<span class="hljs-string">&quot;<span class="hljs-variable">$name</span>&quot;</span>',
+    );
   });
 });
