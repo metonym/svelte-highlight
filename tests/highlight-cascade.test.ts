@@ -2,6 +2,7 @@ import type { ScopeEvent } from "../src/engine.js";
 import {
   cascadeHighlightStyle,
   cascadeRanges,
+  createRunTable,
   createThemeCascade,
 } from "../src/highlight-cascade.js";
 
@@ -107,6 +108,31 @@ describe("createThemeCascade", () => {
     } as unknown as Parameters<typeof createThemeCascade>[0];
     const events = [open("tag"), open("attr"), text("href"), close, close];
     expect(paint(palette, events)).toEqual([["href", "#0a0", undefined]]);
+  });
+});
+
+describe("cascadeRanges", () => {
+  it("keeps names stable across calls that share a table", () => {
+    const cascade = createThemeCascade(
+      ".hljs-keyword{color:red}.hljs-string{color:green}",
+    );
+    const table = createRunTable();
+    const first = cascadeRanges(
+      [open("keyword"), text("let"), close],
+      cascade,
+      table,
+    );
+    const second = cascadeRanges(
+      [open("string"), text('"a"'), close, open("keyword"), text("if"), close],
+      cascade,
+      table,
+    );
+    expect(first.ranges).toEqual([{ start: 0, end: 3, scope: "c0" }]);
+    expect(second.ranges).toEqual([
+      { start: 0, end: 3, scope: "c1" },
+      { start: 3, end: 5, scope: "c0" },
+    ]);
+    expect(second.styles.map((style) => style.color)).toEqual(["red", "green"]);
   });
 });
 

@@ -10,14 +10,16 @@ import { sharedEvents } from "./incremental-tokenize.js";
  */
 
 /**
- * `toRanges(events)` clipped to `[lineStart, lineEnd)`, relative to
+ * `ranges(events)` clipped to `[lineStart, lineEnd)`, relative to
  * `lineStart`, with empty clips dropped.
  * @param {ScopeEvent[]} events
  * @param {number} lineStart
  * @param {number} lineEnd
+ * @param {(events: ScopeEvent[]) => TokenRange[]} [ranges] Turns the
+ *   clipped events, with the scopes open at `lineStart`, into ranges.
  * @returns {TokenRange[]}
  */
-export function lineTokenRanges(events, lineStart, lineEnd) {
+export function lineTokenRanges(events, lineStart, lineEnd, ranges = toRanges) {
   // Perf: walk to the line tracking only open scopes, then run `toRanges`
   // over just the line's events instead of over the whole document.
   /** @type {ScopeEvent[]} */
@@ -51,7 +53,7 @@ export function lineTokenRanges(events, lineStart, lineEnd) {
     );
     offset += length;
   }
-  return toRanges(line);
+  return ranges(line);
 }
 
 /**
