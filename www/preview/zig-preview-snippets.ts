@@ -84,4 +84,30 @@ fn describe(items: []const i32, target: i32) ![]const u8 {
     return if (index == 0) "first" else "found";
 }`,
   },
+  {
+    title: "Labeled switch and blocks",
+    description: "a state machine with continue :sw and a break :blk value",
+    code: `const State = enum { start, digits, done };
+
+fn countDigits(input: []const u8) usize {
+    var i: usize = 0;
+    sw: switch (State.start) {
+        .start => continue :sw .digits,
+        .digits => {
+            if (i < input.len and std.ascii.isDigit(input[i])) {
+                i += 1;
+                continue :sw .digits;
+            }
+            continue :sw .done;
+        },
+        .done => {},
+    }
+    const label = blk: {
+        if (i == 0) break :blk "none";
+        break :blk "some";
+    };
+    std.debug.print("{s}\\n", .{label});
+    return i;
+}`,
+  },
 ];
