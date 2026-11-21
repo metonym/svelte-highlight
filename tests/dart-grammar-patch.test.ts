@@ -32,6 +32,33 @@ describe("dart grammar patch", () => {
     );
   });
 
+  it("styles class as a keyword after the interface modifier", () => {
+    const html = expectMatchesHljs(
+      "interface class I {}\nabstract interface class A extends B {}",
+    );
+    expect(html).toContain(
+      '<span class="hljs-keyword">interface</span> <span class="hljs-keyword">class</span> <span class="hljs-title">I</span>',
+    );
+    expect(html).toContain(
+      '<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-keyword">class</span> <span class="hljs-title">A</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">B</span>',
+    );
+  });
+
+  it("keeps the other Dart 3 class modifiers unchanged", () => {
+    const html = expectMatchesHljs(
+      "base class B {}\nfinal class F {}\nsealed class S {}\nmixin class M {}",
+    );
+    for (const [modifier, name] of [
+      ["base", "B"],
+      ["final", "F"],
+      ["sealed", "S"],
+      ["mixin", "M"],
+    ])
+      expect(html).toContain(
+        `<span class="hljs-keyword">${modifier}</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">${name}</span>`,
+      );
+  });
+
   it("keeps a plain class header and a mixin declaration unchanged", () => {
     const html = expectMatchesHljs("class P {}\nmixin M on Base {}");
     expect(html).toContain(
