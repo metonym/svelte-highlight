@@ -205,6 +205,7 @@ export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
  * identity (license banner, count) and only `register` differs.
  */
 const HLJS_PATCH_NAMES = [
+  "bash",
   "c",
   "coq",
   "cpp",
