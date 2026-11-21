@@ -27,6 +27,7 @@
   import { ciscoPreviewSnippets } from "@www/preview/cisco-preview-snippets";
   import { civetPreviewSnippets } from "@www/preview/civet-preview-snippets";
   import { clarityPreviewSnippets } from "@www/preview/clarity-preview-snippets";
+  import { cobolPreviewSnippets } from "@www/preview/cobol-preview-snippets";
   import { codeqlPreviewSnippets } from "@www/preview/codeql-preview-snippets";
   import { cqlPreviewSnippets } from "@www/preview/cql-preview-snippets";
   import { crontabPreviewSnippets } from "@www/preview/crontab-preview-snippets";
@@ -198,6 +199,7 @@
   import cisco from "svelte-highlight/languages/cisco";
   import civet from "svelte-highlight/languages/civet";
   import clarity from "svelte-highlight/languages/clarity";
+  import cobol from "svelte-highlight/languages/cobol";
   import codeql from "svelte-highlight/languages/codeql";
   import cql from "svelte-highlight/languages/cql";
   import crontab from "svelte-highlight/languages/crontab";
@@ -514,6 +516,7 @@
     nomnoml: { lang: nomnoml, snippets: nomnomlPreviewSnippets },
     blockdiag: { lang: blockdiag, snippets: blockdiagPreviewSnippets },
     apex: { lang: apex, snippets: apexPreviewSnippets },
+    cobol: { lang: cobol, snippets: cobolPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
