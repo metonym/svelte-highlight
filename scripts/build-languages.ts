@@ -210,6 +210,7 @@ const HLJS_PATCH_NAMES = [
   "coq",
   "cpp",
   "csharp",
+  "css",
   "dart",
   "go",
   "handlebars",
