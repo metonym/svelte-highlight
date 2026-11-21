@@ -27,7 +27,7 @@ const greet = (user: User): string => {
 
   const roleNames = ["foreground", "background", ...Object.keys(ROLE_SCOPES)];
 
-  let roleColors = {
+  const roleColors = {
     foreground: "#d6deeb",
     background: "#0b1021",
     comment: "#637777",

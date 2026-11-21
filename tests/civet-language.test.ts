@@ -65,7 +65,6 @@ test("civet does not treat a private class field as a hash comment", () => {
 
 test("civet highlights heredoc regexes and block strings", () => {
   const result = highlight(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: Civet's own ${} interpolation, not a JS template literal
     "re := ///\n  ^\\d+  # digits\n///gi\ns := \"\"\"\n  hi ${name}\n  \"\"\"\nt := '''raw'''",
   );
 
@@ -73,7 +72,6 @@ test("civet highlights heredoc regexes and block strings", () => {
     '<span class="hljs-regexp">///\n  ^\\d+  <span class="hljs-comment"># digits</span>\n///gi</span>',
   );
   expect(result).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: Civet's own ${} interpolation, not a JS template literal
     '<span class="hljs-string">&quot;&quot;&quot;\n  hi <span class="hljs-subst">${name}</span>\n  &quot;&quot;&quot;</span>',
   );
   expect(result).toContain(

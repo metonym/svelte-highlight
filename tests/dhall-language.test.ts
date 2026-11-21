@@ -57,14 +57,11 @@ test("dhall nests block comments", () => {
 
 test("dhall keeps a multi-line string open across the ''${ escape", () => {
   const result = highlight(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: dhall uses literal ${x} interpolation
     "let s = ''\n  ''${literal} and '''quoted''' and ${x}\n  ''\nin s",
   );
 
   expect(result).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: asserting the literal ''${ escape
     "&#x27;&#x27;${literal} and &#x27;&#x27;&#x27;quoted&#x27;&#x27;&#x27; and " +
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: asserting the literal ${x} token
       '<span class="hljs-subst">${x}</span>\n  &#x27;&#x27;</span>',
   );
   expect(result).toContain('<span class="hljs-keyword">in</span> s');

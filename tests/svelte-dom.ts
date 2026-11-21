@@ -284,7 +284,7 @@ class FakeStyle {
 
 class FakeElement extends FakeNode {
   localName: string;
-  // biome-ignore lint/style/useNamingConvention: DOM API name
+  // DOM API name.
   namespaceURI: string;
   _attributes = new Map<string, string>();
   style = new FakeStyle();
@@ -333,18 +333,18 @@ class FakeElement extends FakeNode {
     this.setAttribute("class", value);
   }
 
-  // biome-ignore lint/style/useNamingConvention: DOM API name
+  // DOM API name.
   get innerHTML() {
     return this._serialize();
   }
 
-  // biome-ignore lint/style/useNamingConvention: DOM API name
+  // DOM API name.
   set innerHTML(html: string) {
     this.textContent = "";
     if (html !== "") this.appendChild(new FakeRawHtml(html));
   }
 
-  // biome-ignore lint/style/useNamingConvention: DOM API name
+  // DOM API name.
   get outerHTML() {
     return this._serialize();
   }
@@ -405,7 +405,7 @@ class FakeDocument extends FakeNode {
     return createElement(localName);
   }
 
-  // biome-ignore lint/style/useNamingConvention: DOM API name
+  // DOM API name.
   createElementNS(namespaceUri: string, localName: string) {
     return createElement(localName, namespaceUri);
   }

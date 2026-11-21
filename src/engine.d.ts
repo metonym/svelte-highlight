@@ -44,7 +44,7 @@ export interface GrammarState {
 }
 
 /** Generated data; see `GrammarState`. */
-// biome-ignore lint/style/useNamingConvention: "IR" (intermediate representation) is an established term throughout this codebase's docs
+// "IR" (intermediate representation) is an established term throughout this codebase's docs.
 export interface GrammarIR {
   name: string;
   caseInsensitive?: boolean;

@@ -673,11 +673,11 @@ export function highlightMatches(
 
   /** @type {Map<number, { start: number; end: number; index: number }[]>} */
   const byLine = new Map();
-  matches.forEach((match, index) => {
+  for (const [index, match] of matches.entries()) {
     const list = byLine.get(match.line) ?? [];
     list.push({ start: match.start, end: match.end, index });
     byLine.set(match.line, list);
-  });
+  }
 
   const resolveScope = createLineScopeResolver(root);
   /** @type {Map<number, LineScope>} */

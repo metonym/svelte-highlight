@@ -28,11 +28,9 @@ test("systemd highlights unknown keys as generic attrs", () => {
 });
 
 test("systemd highlights specifiers and variables", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: ${HOME} is systemd syntax, not JS interpolation
   const result = highlight("Environment=PORT=%p HOME=${HOME}");
 
   expect(result).toContain('<span class="hljs-template-variable">%p</span>');
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: ${HOME} is systemd syntax, not JS interpolation
   expect(result).toContain('<span class="hljs-variable">${HOME}</span>');
 });
 

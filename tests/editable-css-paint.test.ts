@@ -45,7 +45,6 @@ describe("lineTokenRanges", () => {
       expectMatchesClippedRanges(code, language);
     }
     for (const code of [
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: JS *source text* fed to the tokenizer
       "const s = `a\n${b}\nc`;\n/* one\ntwo */ x\n\n<div>\n</div>",
       "",
       "\n\n",

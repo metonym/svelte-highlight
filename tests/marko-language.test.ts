@@ -228,7 +228,6 @@ test("marko highlights top-level import/export/static/$ statements as JavaScript
   registerAll(registry, marko);
 
   const result = registry.highlight(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
     'import { format } from "./utils";\nexport const limit = 1_000;\nstatic const VERSION = "6";\n$ const greeting = "Hi";\n<div>\${greeting}</div>',
     { language: "marko" },
   ).value;
@@ -248,7 +247,6 @@ test("marko highlights HTML-mode control-flow tags with attribute-value conditio
   registerAll(registry, marko);
 
   const result = registry.highlight(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
     '<if=count>\n  <span>Some</span>\n</if>\n<else-if=other>\n  <span>x</span>\n</else>\n<for|item, i| of=items by="id">\n  <span>${item}</span>\n</for>',
     { language: "marko" },
   ).value;
@@ -270,7 +268,6 @@ test("marko highlights tag variables, attribute tags, and shorthand heads", () =
   registerAll(registry, marko);
 
   const result = registry.highlight(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
     '<let/count=0/>\n<define/Card|{ title }|><h2>${title}</h2></define>\n<await|user|=fetchUser(id)>\n  <@then|user|>${user.name}</@then>\n  <@catch|err|>oops</@catch>\n</await>\n<div.card#main data-x="1">hi</div>\n<my-tag>\n  <@header>Title</@header>\n</my-tag>',
     { language: "marko" },
   ).value;

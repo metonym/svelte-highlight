@@ -22,11 +22,9 @@ test("hocon highlights the append operator with relevance", () => {
 });
 
 test("hocon highlights optional substitutions with high relevance", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: ${?DATABASE_URL} is HOCON syntax, not JS interpolation
   const result = highlight("db.url = ${?DATABASE_URL}");
 
   expect(result).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: ${?DATABASE_URL} is HOCON syntax, not JS interpolation
     '<span class="hljs-variable">${?DATABASE_URL}</span>',
   );
 });

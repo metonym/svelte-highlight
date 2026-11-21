@@ -130,7 +130,7 @@ export function commitFiles(sha: string): CommitFile[] {
   const numstat = git(["show", "--numstat", "--format=", "-M", sha])
     .trim()
     .split("\n");
-  statuses.forEach((line, i) => {
+  for (const [i, line] of statuses.entries()) {
     const [code = "", first = "", second] = line.split("\t");
     const path = second ?? first;
     const oldPath = first;
@@ -145,13 +145,13 @@ export function commitFiles(sha: string): CommitFile[] {
     const base: CommitFile = { path, oldPath, status, before: "", after: "" };
     if (numstat[i]?.startsWith("-\t-\t")) {
       files.push({ ...base, skipped: "binary" });
-      return;
+      continue;
     }
     const before = status === "added" ? "" : blob(`${sha}^:${oldPath}`);
     const after = status === "deleted" ? "" : blob(`${sha}:${path}`);
     if (before === null || after === null) {
       files.push({ ...base, skipped: "unreadable" });
-      return;
+      continue;
     }
     const size = before.length + after.length;
     if (before.length > MAX_FILE_BYTES || after.length > MAX_FILE_BYTES) {
@@ -159,15 +159,15 @@ export function commitFiles(sha: string): CommitFile[] {
         ...base,
         skipped: `too large (${Math.round(size / 1024)} KB)`,
       });
-      return;
+      continue;
     }
     if (total + size > MAX_COMMIT_BYTES) {
       files.push({ ...base, skipped: "commit size limit" });
-      return;
+      continue;
     }
     total += size;
     files.push({ ...base, before, after });
-  });
+  }
   return files;
 }
 

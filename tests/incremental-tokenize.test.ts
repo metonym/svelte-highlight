@@ -145,7 +145,6 @@ const after = 1;
   });
 
   it("simulates typing a function character by character", () => {
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: this is JS *source text* fed to the tokenizer, not a template literal to evaluate
     const target = "function greet(name) {\n  return `hi ${name}`;\n}\n";
     const versions: string[] = [""];
     for (let i = 1; i <= target.length; i++) versions.push(target.slice(0, i));

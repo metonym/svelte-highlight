@@ -43,7 +43,7 @@ async function streamReply(): Promise<Mounted> {
     end += chunkSize
   ) {
     stream.set({ text: markdown.slice(0, end) });
-    // biome-ignore lint/performance/noAwaitInLoops: one event-loop turn per chunk, as a real stream gets
+    // One event-loop turn per chunk, as a real stream gets.
     await Promise.resolve();
     flush();
   }

@@ -1715,7 +1715,7 @@ test("Search - next scrolls the current match into the rendered window", async (
   const next = page.getByTestId("next");
   // Lines 0-4 form the first match cluster, all inside the initial rendered
   // window; the 6th match (index 5) is line 200, well outside it.
-  // biome-ignore lint/performance/noAwaitInLoops: each click's scroll must land before the next
+  // Each click's scroll must land before the next.
   for (let i = 0; i < 5; i += 1) await next.click();
 
   await expect(virtual.locator('[data-line="200"]')).toBeVisible();
@@ -1783,7 +1783,7 @@ test("HighlightStream - streaming chunks (split mid-keyword and mid-template-lit
   let previousCount = (await highlightCount.textContent()) ?? "0";
   let previousLength = 0;
   for (let sent = 1; sent <= 5; sent++) {
-    // biome-ignore lint/performance/noAwaitInLoops: each chunk's effect on-screen must be observed before the next chunk is sent
+    // Each chunk's effect on-screen must be observed before the next chunk is sent.
     await appendChunk.click();
     await expect(highlightCount).not.toHaveText(previousCount);
     previousCount = (await highlightCount.textContent()) ?? previousCount;
@@ -1818,7 +1818,7 @@ test("HighlightStream - mid-line chunks keep on:highlight payload growing withou
 
   let previousLength = 0;
   for (let sent = 1; sent <= 4; sent++) {
-    // biome-ignore lint/performance/noAwaitInLoops: each chunk's highlight payload must be observed before the next append
+    // Each chunk's highlight payload must be observed before the next append.
     await appendChunk.click();
     // Mount / empty-code passes may push 0-length payloads first; assert on
     // the latest length after this append so mid-line growth is what we check.
@@ -2007,7 +2007,7 @@ test("HighlightStream sealing - data-line indices are globally correct across se
 
   const stream = page.getByTestId("stream");
   for (const i of [0, 100, 255, 256, 400, 511, 512, 599]) {
-    // biome-ignore lint/performance/noAwaitInLoops: each assertion is independent and cheap; sequential is clearer here
+    // Each assertion is independent and cheap; sequential is clearer here.
     await expect(stream.locator(`[data-line='${i}']`)).toHaveText(
       `const x${i} = ${i}; // line ${i}`,
     );
@@ -3193,7 +3193,7 @@ test("HighlightDiff - streaming shows unreached lines as pending, not deleted", 
   await mount(HighlightDiff);
 
   for (let i = 0; i < 8; i++) {
-    // biome-ignore lint/performance/noAwaitInLoops: each click streams the next line, in order
+    // Each click streams the next line, in order.
     await page.getByTestId("stream-line").click();
   }
   const stream = page.getByTestId("stream");
@@ -3465,7 +3465,7 @@ test("DiffFileList - keeps content still while scrolling up from a far jump", as
   // they mount. Scrolling up 900px must move the content exactly 900px.
   let checks = 0;
   for (let i = 0; i < 12; i++) {
-    // biome-ignore lint/performance/noAwaitInLoops: each step scrolls further up, in order
+    // Each step scrolls further up, in order.
     const moved = await page.evaluate(async () => {
       const header = [
         ...document.querySelectorAll(".shl-diff-file-header"),

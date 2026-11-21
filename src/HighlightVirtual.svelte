@@ -291,7 +291,7 @@
     display: block;
     position: relative;
     overflow: auto;
-    /* biome-ignore lint/complexity/noImportantStyles: must beat a consumer inline style, not just cascade order */
+    /* Must beat a consumer inline style, not just cascade order. */
     white-space: pre !important;
     margin: 0;
   }

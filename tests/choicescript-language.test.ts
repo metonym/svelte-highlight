@@ -36,11 +36,9 @@ test("choicescript highlights #option markers as bullets", () => {
 });
 
 test("choicescript highlights variable interpolation", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: ChoiceScript's own ${} interpolation syntax, not a JS template literal
   const result = highlight('"Leadership: ${leadership}"');
 
   expect(result).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: ChoiceScript's own ${} interpolation syntax, not a JS template literal
     '<span class="hljs-template-variable">${leadership}</span>',
   );
 });

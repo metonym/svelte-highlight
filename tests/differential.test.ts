@@ -437,7 +437,7 @@ class RangeEmitter {
   pos = 0;
   stack: string[] = [];
   ranges: HljsRange[] = [];
-  // biome-ignore lint/complexity/noUselessConstructor: matches hljs's Emitter constructor signature
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor -- matches hljs's Emitter constructor signature
   constructor(_options: unknown) {}
   addText(text: string) {
     if (text.length === 0) return;
@@ -470,7 +470,7 @@ class RangeEmitter {
     }
     this.pos += emitter.pos;
   }
-  // biome-ignore lint/style/useNamingConvention: interface-mandated name (hljs's Emitter)
+  // Interface-mandated name (hljs's Emitter).
   toHTML() {
     return "";
   }

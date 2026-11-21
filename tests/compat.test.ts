@@ -7,7 +7,7 @@ import { createRegistry } from "../src/engine.js";
 function defineCurl(hljs: any) {
   return {
     name: "cURL",
-    // biome-ignore lint/style/useNamingConvention: hljs's own grammar API property name
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- hljs's own grammar API property name
     case_insensitive: true,
     contains: [
       { className: "keyword", begin: /-{1,2}[a-zA-Z-]+/ },
@@ -48,9 +48,9 @@ describe("fromHighlightJs", () => {
 
   it("recovers an on:begin word-set guard only when given the grammar's source", async () => {
     function defineWordSetGrammar(_hljs: any) {
-      // biome-ignore lint/style/useNamingConvention: must match grammarSource's literal text below
+      // Must match grammarSource's literal text below.
       const SYMS = ["Alpha", "Beta"];
-      // biome-ignore lint/style/useNamingConvention: must match grammarSource's literal text below
+      // Must match grammarSource's literal text below.
       const SYMS_SET = new Set(SYMS);
       return {
         name: "wordset-lang",

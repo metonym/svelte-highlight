@@ -60,20 +60,16 @@ test("v highlights the ? prefix of an optional type", () => {
 });
 
 test("v does not process escapes or interpolation inside raw strings", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
   const raw = highlight("r'C:\\Users\\${name}'");
 
   expect(raw).not.toContain('<span class="hljs-subst">');
   expect(raw).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
     '<span class="hljs-string">r&#x27;C:\\Users\\${name}&#x27;</span>',
   );
 
   // regression check: the same content in a plain (non-raw) string still
   // gets interpolation processed
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
   const plain = highlight("'C:\\Users${name}'");
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
   expect(plain).toContain('<span class="hljs-subst">${name}</span>');
 });
 

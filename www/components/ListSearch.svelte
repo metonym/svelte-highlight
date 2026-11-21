@@ -66,13 +66,13 @@
   $: normalizedValue = normalize(value.trim());
   $: normalizedItems = items.map((item) => ({
     ...item,
-    normalized_name: normalize(item.name),
-    normalized_moduleName: item.moduleName.toLowerCase(),
+    normalizedName: normalize(item.name),
+    normalizedModuleName: item.moduleName.toLowerCase(),
   }));
   $: filtered = normalizedItems.filter(
     (item) =>
-      item.normalized_name.includes(normalizedValue) ||
-      item.normalized_moduleName.includes(normalizedValue),
+      item.normalizedName.includes(normalizedValue) ||
+      item.normalizedModuleName.includes(normalizedValue),
   );
   $: filteredIds = new Set(filtered.map((item) => item.name));
 </script>

@@ -19,13 +19,11 @@ describe("splitLines", () => {
 
   it("re-opens the full nested stack, in order, on the next line", () => {
     const html =
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
       '<span class="hljs-string">`a\n<span class="hljs-subst">${b}</span>\nc`</span>';
     const lines = splitLines(html);
 
     expect(lines).toEqual([
       '<span class="hljs-string">`a</span>',
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
       '<span class="hljs-string"><span class="hljs-subst">${b}</span></span>',
       '<span class="hljs-string">c`</span>',
     ]);

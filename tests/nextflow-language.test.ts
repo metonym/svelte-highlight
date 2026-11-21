@@ -41,14 +41,12 @@ test("nextflow highlights section openers, directives, and emit", () => {
 
 test("nextflow highlights channel built-ins, string interpolation, and operators", () => {
   const result = highlight(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Nextflow source under test, not a JS template string
     "Channel.fromPath('data/*.txt').map { it.name }\nparams.outdir ?: 'results'\n\"${sample_id}.bam\"",
   );
 
   expect(result).toContain('<span class="hljs-built_in">Channel</span>');
   expect(result).toContain('<span class="hljs-built_in">fromPath</span>');
   expect(result).toContain('<span class="hljs-operator">?:</span>');
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: asserting on literal Nextflow interpolation syntax
   expect(result).toContain('<span class="hljs-subst">${sample_id}</span>');
 });
 

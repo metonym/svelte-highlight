@@ -69,7 +69,7 @@ class FakeElement extends FakeNode {
     this.replaceText(text);
   }
 
-  // biome-ignore lint/style/useNamingConvention: the DOM property it fakes
+  // The DOM property it fakes.
   set innerHTML(html: string) {
     this.ownerDocument.counters.contentWrites++;
     this.replaceText(
