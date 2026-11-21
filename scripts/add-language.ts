@@ -113,8 +113,8 @@ export default ${camelName};
 
 await replaceOnce(
   buildLanguagesPath,
-  "] as const;",
-  `  "${name}",\n] as const;`,
+  "] as const;\n\nexport const CUSTOM_LANGUAGES",
+  `  "${name}",\n] as const;\n\nexport const CUSTOM_LANGUAGES`,
 );
 
 await replaceOnce(
