@@ -2543,4 +2543,39 @@ ENDCLASS.
   <#noparse>\${not.parsed}</#noparse>
   [#if user.admin??]<a href="/admin">Admin</a>[/#if]
 </@layout.page>`,
+  yacc: `%{
+#include <stdio.h>
+int yylex(void);
+void yyerror(const char *s);
+%}
+
+%union { double num; }
+%define parse.error verbose
+%token <num> NUMBER
+%type <num> expr
+%left '+' '-'
+%left '*' '/'
+%right UMINUS
+
+%%
+
+input
+    : %empty
+    | input expr '\\n'  { printf("%g\\n", $2); }
+    | error '\\n'       { yyerrok; }
+    ;
+
+expr: expr '+' expr          { $$ = $1 + $3; }
+    | expr '*' expr          { $$ = $1 * $3; }
+    | '-' expr %prec UMINUS  { $$ = -$2; }
+    | '(' expr ')'           { $$ = $2; @$ = @1; }
+    | NUMBER
+    ;
+
+%%
+
+void yyerror(const char *s) {
+  fprintf(stderr, "error: %s\\n", s);
+}
+`,
 };

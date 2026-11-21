@@ -199,6 +199,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "riscv",
   "abap",
   "freemarker",
+  "yacc",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
