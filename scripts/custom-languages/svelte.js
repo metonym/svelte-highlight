@@ -98,9 +98,25 @@ function defineSvelte(hljs) {
     },
   };
 
+  // `{#snippet row<T extends Item>(item: T)}`: TypeScript styles a name as
+  // a function only when `(` follows it, so a generic snippet's name was
+  // left plain. Claim the name here, then hand the rest of the tag to
+  // TypeScript as usual.
+  const snippetBlock = {
+    begin: [/#snippet/, /\s+/, /[A-Za-z_$][\w$]*/],
+    beginScope: { 1: "keyword", 3: "title.function" },
+    relevance: 10,
+    starts: {
+      end: /(?=\})/,
+      subLanguage: "typescript",
+      contains: [braceSkip],
+    },
+  };
+
   const expressionPatterns = [
     hljs.COMMENT(/\/\*/, /\*\//),
     eachBlock,
+    snippetBlock,
     braceSkip,
     {
       begin: /:(else if|else|then|catch)\b/,
