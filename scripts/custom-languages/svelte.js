@@ -15,6 +15,12 @@ const SCRIPT_JS_MODULE_BEGIN = new RegExp(
   String.raw`<script(?=[^>]*(?:\scontext=["']module["']|\smodule\b))(?![^>]*\slang=["']${TS_LANG}["'])[^>]*>`,
   "m",
 );
+// A tag's attributes, skipping over quoted values, so a `>` inside a value
+// such as `generics="T extends Array<U>"` doesn't end the tag.
+const TAG_ATTRS = String.raw`(?:[^>"']|"[^"]*"|'[^']*')*`;
+const SCRIPT_GENERICS_BEGIN = new RegExp(
+  String.raw`script(?=${TAG_ATTRS}\sgenerics=)`,
+);
 const SCRIPT_JS_BEGIN = new RegExp(
   String.raw`<script(?![^>]*\slang=["']${TS_LANG}["'])[^>]*>`,
   "m",
@@ -134,6 +140,39 @@ function defineSvelte(hljs) {
 
   const commonPatterns = [runePattern, storeSubscriptionPattern];
 
+  // `<script lang="ts" generics="T extends Item">`: the HTML grammar shows
+  // the attribute value as one plain string. When `generics` is present,
+  // style the tag here so the value can be highlighted as TypeScript. The
+  // attribute only works with TypeScript, so the body is TypeScript too.
+  /** @param {string} quote */
+  const genericsValue = (quote) => ({
+    begin: [/generics/, /=/, new RegExp(quote)],
+    beginScope: { 1: "attr", 3: "string" },
+    end: new RegExp(quote),
+    endScope: "string",
+    subLanguage: "typescript",
+  });
+  const scriptWithGenerics = {
+    begin: [/</, SCRIPT_GENERICS_BEGIN],
+    beginScope: { 2: "name" },
+    scope: "tag",
+    end: />/,
+    relevance: 10,
+    contains: [
+      genericsValue('"'),
+      genericsValue("'"),
+      { begin: /[^\s"'=<>/]+/, scope: "attr" },
+      { begin: /"/, end: /"/, scope: "string" },
+      { begin: /'/, end: /'/, scope: "string" },
+    ],
+    starts: {
+      end: /<\/script>/,
+      subLanguage: "typescript",
+      excludeEnd: true,
+      contains: commonPatterns,
+    },
+  };
+
   return {
     name: "Svelte",
     subLanguage: "html",
@@ -141,6 +180,7 @@ function defineSvelte(hljs) {
       hljs.COMMENT(/<!--/, /-->/, { relevance: 10 }),
       svelteDirective,
       svelteEventAttribute,
+      scriptWithGenerics,
       {
         begin: SCRIPT_TS_BEGIN,
         end: /<\/script>/gm,
