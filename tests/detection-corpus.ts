@@ -405,4 +405,14 @@ executable('demo', 'main.c',
   dependencies : [m_dep],
   install : true)
 `,
+  robotframework: `*** Keywords ***
+Sum Values
+    [Arguments]    @{values}
+    VAR    \${total}    \${0}
+    FOR    \${value}    IN    @{values}
+        IF    \${value} < 0    CONTINUE
+        \${total}=    Evaluate    \${total} + \${value}
+    END
+    RETURN    \${total}
+`,
 };

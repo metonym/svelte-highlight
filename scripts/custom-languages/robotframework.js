@@ -1,6 +1,7 @@
 // Robot Framework control words are case-sensitive and always uppercase.
-// They stay at relevance 0 because the same words show up in COBOL, SQL,
-// and BASIC; section headers carry the auto-detection weight instead.
+// They stay at relevance 0 as keywords because the same words show up in
+// COBOL, SQL, and BASIC. CONTROL_STEP scores them instead, and only where
+// they open a step inside a Test Cases, Tasks, or Keywords section.
 const CONTROL_WORDS = [
   "FOR",
   "IN",
@@ -59,10 +60,15 @@ function defineRobotframework() {
   const ESCAPE = { scope: "char.escape", match: /\\./, relevance: 0 };
 
   // `${scalar}`, `@{list}`, `&{dict}`, `%{ENV}`, with nesting such as
-  // `${items}[${index}]` or `${{ python }}`.
+  // `${items}[${index}]` or `${{ python }}`. List and dict variables are
+  // Robot-only and score. `${scalar}` and `%{ENV}` look like shell, so
+  // they do not.
   const VARIABLE = {
     scope: "variable",
-    begin: /[$@&%]\{/,
+    variants: [
+      { begin: /[@&]\{(?=\w)/, relevance: 5 },
+      { begin: /[$@&%]\{/, relevance: 0 },
+    ],
     end: /\}/,
     contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
       "self",
@@ -74,7 +80,6 @@ function defineRobotframework() {
         ]),
       },
     ]),
-    relevance: 0,
   };
 
   const BRACKET_SETTING = {
@@ -107,6 +112,13 @@ function defineRobotframework() {
       `[^\\s].*?${CELL_END}`,
   );
   const INDENT = /^(?: {2,}|\t)[ \t]*/;
+
+  // An indented step that opens with a control word: `    FOR`, `    END`.
+  const CONTROL_STEP = {
+    match: [INDENT, new RegExp(`(?:${CONTROL_WORDS.join("|")})${CELL_END}`)],
+    scope: { 2: "keyword" },
+    relevance: 5,
+  };
 
   const KEYWORD_CALL = {
     match: [INDENT, CALLED_KEYWORD],
@@ -169,6 +181,7 @@ function defineRobotframework() {
         BRACKET_SETTING,
         DEFINITION_NAME,
         ASSIGNED_CALL,
+        CONTROL_STEP,
         KEYWORD_CALL,
         VARIABLE,
         ESCAPE,
