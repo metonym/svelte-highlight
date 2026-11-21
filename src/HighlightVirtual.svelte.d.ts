@@ -32,6 +32,14 @@ export type HighlightVirtualProps = HTMLAttributes<HTMLPreElement> & {
    * @default false
    */
   tokenizeAhead?: boolean;
+
+  /**
+   * Accessible name of the scrollable code region. The region is
+   * keyboard-focusable so keyboard users can scroll it. Inside a
+   * `CodeWindow`, the window's `title` or `label` is the default.
+   * @default "Code"
+   */
+  label?: string;
 };
 
 export type HighlightVirtualEvents = {

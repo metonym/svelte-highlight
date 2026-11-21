@@ -22,10 +22,40 @@ describe("highlightStatic", () => {
 
     expect(output).not.toContain("<Highlight");
     expect(output).toContain('<pre class="hljs" data-language="javascript"');
-    expect(output).toContain('<code class="hljs">');
+    expect(output).toContain(
+      '<code class="hljs" tabindex="0" role="region" aria-label="Code">',
+    );
     expect(output).toContain("hljs-keyword");
     // Runtime imports are left in place; tree-shaking is left to the consumer's bundler.
     expect(output).toContain('import Highlight from "../src/Highlight.svelte"');
+  });
+
+  it("uses a static label as the region name", async () => {
+    const source = `<script>
+  import Highlight from "../src/Highlight.svelte";
+  import javascript from "../src/languages/javascript.js";
+</script>
+
+<Highlight language={javascript} code="const x = 1;" label={'Say "hi" & go'} />
+`;
+    const output = await transform(source);
+
+    expect(output).not.toContain("<Highlight");
+    expect(output).toContain('aria-label="Say &quot;hi&quot; &amp; go"');
+  });
+
+  it("keeps the runtime component for a dynamic label", async () => {
+    const source = `<script>
+  import Highlight from "../src/Highlight.svelte";
+  import javascript from "../src/languages/javascript.js";
+  let label = "Example";
+</script>
+
+<Highlight language={javascript} code="const x = 1;" {label} />
+`;
+    const output = await transform(source);
+
+    expect(output).toContain("<Highlight");
   });
 
   it("leaves dynamic code untouched", async () => {

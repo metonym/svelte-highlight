@@ -65,6 +65,49 @@ export function tokenizeTypewriter(html) {
   return units;
 }
 
+/** @type {Record<string, string>} */
+const NAMED_ENTITIES = {
+  "&amp;": "&",
+  "&lt;": "<",
+  "&gt;": ">",
+  "&quot;": '"',
+  "&apos;": "'",
+  "&nbsp;": " ",
+};
+
+const NUMERIC_ENTITY = /^&#(x[0-9a-f]+|[0-9]+);$/i;
+
+/** @param {string} raw */
+function decodeEntity(raw) {
+  const named = NAMED_ENTITIES[raw];
+  if (named !== undefined) return named;
+  const match = NUMERIC_ENTITY.exec(raw);
+  if (!match) return raw;
+  const digits = /** @type {string} */ (match[1]);
+  const codePoint =
+    digits[0] === "x" || digits[0] === "X"
+      ? Number.parseInt(digits.slice(1), 16)
+      : Number.parseInt(digits, 10);
+  return codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : raw;
+}
+
+/**
+ * Visible text of the units, with HTML entities decoded.
+ * @param {TypewriterUnit[]} units
+ * @returns {string}
+ */
+export function unitText(units) {
+  let text = "";
+  for (const unit of units) {
+    if (unit.visible === 0) continue;
+    text +=
+      unit.raw.length > 2 && unit.raw[0] === "&"
+        ? decodeEntity(unit.raw)
+        : unit.raw;
+  }
+  return text;
+}
+
 /**
  * @param {TypewriterUnit[]} units
  * @returns {string}

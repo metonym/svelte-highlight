@@ -8,6 +8,13 @@ export type CodeWindowProps = HTMLAttributes<HTMLDivElement> & {
   /** Title bar text, also set as its `title` tooltip. @default "" */
   title?: string;
 
+  /**
+   * Accessible name for the code region inside the window. `title` wins
+   * when set. The inner block (`Highlight`, `LineNumbers`, `AnsiOutput`,
+   * ...) takes it as its default `label`.
+   */
+  label?: string;
+
   /** Window body background. @default "#1e1e1e" */
   "--window-background"?: string;
 

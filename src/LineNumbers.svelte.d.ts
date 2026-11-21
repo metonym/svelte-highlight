@@ -56,6 +56,14 @@ export type LineNumbersProps = HTMLAttributes<HTMLDivElement> &
      */
     lineStates?: Record<number, "highlighted" | "focus" | "added" | "removed">;
 
+    /**
+     * Accessible name of the scrollable region. The region is
+     * keyboard-focusable so keyboard users can scroll it. Inside a
+     * `CodeWindow`, the window's `title` or `label` is the default.
+     * @default "Code with line numbers"
+     */
+    label?: string;
+
     /** Line number text color. @default currentColor */
     "--line-number-color"?: string;
 

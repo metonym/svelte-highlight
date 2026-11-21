@@ -1,6 +1,4 @@
 <script>
-  import { splitLines } from "./split-lines.js";
-
   /** @type {string | undefined} */
   export let highlighted = undefined;
 
@@ -30,6 +28,20 @@
 
   /** @type {boolean} */
   export let langtag = false;
+
+  /**
+   * Accessible name of the scrollable code region. Inside a CodeWindow, the
+   * window's `title` or `label` is the default.
+   * @type {string | undefined}
+   */
+  export let label = undefined;
+
+  import { getContext } from "svelte";
+  import { CODE_REGION, NO_REGION_LABEL } from "./code-region.js";
+  import { splitLines } from "./split-lines.js";
+
+  /** @type {import("svelte/store").Readable<string | undefined>} */
+  const windowLabel = getContext(CODE_REGION) ?? NO_REGION_LABEL;
 
   const MIN_DIGITS = 2;
   const HIGHLIGHTED_BACKGROUND = "rgba(254, 241, 96, 0.2)";
@@ -71,6 +83,7 @@
   $: len = len_digits - MIN_DIGITS < 1 ? MIN_DIGITS : len_digits;
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
   class:langtag
   data-language={languageName}
@@ -79,9 +92,12 @@
   style:border-radius="var(--border-radius, 0)"
   style:width="var(--width, auto)"
   style:max-width="var(--max-width, none)"
+  tabindex="0"
+  role="region"
+  aria-label={label ?? $windowLabel ?? "Code with line numbers"}
   {...$$restProps}
 >
-  <table>
+  <table role="presentation">
     <tbody class:hljs={true}>
       {#each renderedLines as line, i}
         {@const lineNumber = i + startingLineNumber}
@@ -123,6 +139,11 @@
   pre {
     margin: 0;
     direction: ltr;
+  }
+
+  /* Draw the ring inside, or a clipping parent hides it in Safari. */
+  div:focus-visible {
+    outline-offset: -2px;
   }
 
   table,

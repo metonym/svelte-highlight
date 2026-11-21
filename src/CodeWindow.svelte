@@ -4,6 +4,22 @@
 
   /** @type {string} */
   export let title = "";
+
+  /**
+   * Accessible name for the code region inside the window. `title` wins
+   * when set. Without either, the inner block keeps its own default.
+   * @type {string | undefined}
+   */
+  export let label = undefined;
+
+  import { setContext } from "svelte";
+  import { writable } from "svelte/store";
+  import { CODE_REGION } from "./code-region.js";
+
+  /** @type {import("svelte/store").Writable<string | undefined>} */
+  const regionLabel = writable(undefined);
+  setContext(CODE_REGION, regionLabel);
+  $: regionLabel.set(title || label);
 </script>
 
 <div class="code-window {variant}" {...$$restProps}>

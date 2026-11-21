@@ -17,6 +17,9 @@
   /** @type {string} */
   export let copiedText = "Copied!";
 
+  /** @type {string} */
+  export let errorText = "Copy failed";
+
   import { createEventDispatcher, onMount } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -27,6 +30,9 @@
   /** @type {boolean} */
   let copying = false;
 
+  /** @type {boolean} */
+  let failed = false;
+
   /** @type {ReturnType<typeof setTimeout> | undefined} */
   let timeoutId;
 
@@ -35,6 +41,8 @@
 
     try {
       copying = true;
+      failed = false;
+      clearTimeout(timeoutId);
       const transformed = transform(code);
       await copy(transformed);
       copied = true;
@@ -43,6 +51,10 @@
         copied = false;
       }, timeout);
     } catch (error) {
+      failed = true;
+      timeoutId = setTimeout(() => {
+        failed = false;
+      }, timeout);
       dispatch("error", { error });
     } finally {
       copying = false;
@@ -92,6 +104,10 @@
     {/if}
   </slot>
 </button>
+<!-- Screen readers skip aria-label changes, so announce the result here. -->
+<span class="visually-hidden" role="status"
+  >{copied ? copiedText : failed ? errorText : ""}</span
+>
 
 <style>
   button {
@@ -110,5 +126,17 @@
     border: var(--copy-border, none);
     z-index: var(--copy-z-index, 2);
     cursor: pointer;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 </style>

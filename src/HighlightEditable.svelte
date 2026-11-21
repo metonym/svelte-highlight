@@ -39,6 +39,12 @@
    */
   export let theme = undefined;
 
+  /**
+   * Accessible name of the editor (`aria-label`).
+   * @type {string}
+   */
+  export let label = "Code editor";
+
   import { createEventDispatcher, onMount } from "svelte";
   import { createEditor } from "./editable.js";
   import { resolveEngine } from "./editable-painter.js";
@@ -147,6 +153,7 @@
   {/if}</svelte:head
 >
 
+<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 <pre
   style:overflow-x="var(--overflow-x, auto)"
   style:border-radius="var(--border-radius, 0)"
@@ -154,7 +161,12 @@
     bind:this={element}
     class:hljs={true}
     contenteditable={readonly ? "false" : "true"}
-    spellcheck="false">{code}</code
+    spellcheck="false"
+    tabindex="0"
+    role="textbox"
+    aria-multiline="true"
+    aria-readonly={readonly ? "true" : undefined}
+    aria-label={label}>{code}</code
   ></pre>
 
 <style>

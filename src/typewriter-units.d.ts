@@ -11,6 +11,9 @@ export interface TypewriterUnit {
  */
 export declare function tokenizeTypewriter(html: string): TypewriterUnit[];
 
+/** Visible text of the units, with HTML entities decoded. */
+export declare function unitText(units: TypewriterUnit[]): string;
+
 /** Wraps each visible unit in a `typewriter-unit typewriter-hidden` span. */
 export declare function buildUnitMarkup(units: TypewriterUnit[]): string;
 

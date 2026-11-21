@@ -13,8 +13,22 @@
 
   /** @type {boolean} */
   export let wrap = false;
+
+  /**
+   * Accessible name of the scrollable code region. Inside a CodeWindow, the
+   * window's `title` or `label` is the default.
+   * @type {string | undefined}
+   */
+  export let label = undefined;
+
+  import { getContext } from "svelte";
+  import { CODE_REGION, NO_REGION_LABEL } from "./code-region.js";
+
+  /** @type {import("svelte/store").Readable<string | undefined>} */
+  const windowLabel = getContext(CODE_REGION) ?? NO_REGION_LABEL;
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <pre
   class:langtag
   class:wrap
@@ -24,7 +38,11 @@
   style:border-radius="var(--border-radius, 0)"
   style:width="var(--width, auto)"
   style:max-width="var(--max-width, none)"
-  {...$$restProps}><code class:hljs={true}
+  {...$$restProps}><code
+    class:hljs={true}
+    tabindex="0"
+    role="region"
+    aria-label={label ?? $windowLabel ?? "Code"}
     >{#if highlighted}{@html highlighted}{:else}{code}{/if}</code
   ></pre>
 
@@ -33,5 +51,10 @@
 
   pre {
     direction: ltr;
+  }
+
+  /* Draw the ring inside, or the scrolling <pre> clips it in Safari. */
+  code:focus-visible {
+    outline-offset: -2px;
   }
 </style>
