@@ -211,6 +211,7 @@ const HLJS_PATCH_NAMES = [
   "csharp",
   "dart",
   "go",
+  "handlebars",
   "java",
   "javascript",
   "kotlin",
