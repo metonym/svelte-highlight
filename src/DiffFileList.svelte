@@ -477,6 +477,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-family: var(--shl-diff-font, ui-monospace, Menlo, Consolas, monospace);
+    /* overflow: hidden clips descenders under an inherited line-height: 1. */
+    line-height: normal;
   }
 
   .shl-diff-file-status {
