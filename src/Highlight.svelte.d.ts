@@ -40,8 +40,19 @@ export type LangtagProps = {
   wrap?: boolean;
 };
 
+export type CodeRegionProps = {
+  /**
+   * Accessible name of the scrollable code region. The region is
+   * keyboard-focusable so keyboard users can scroll it. Inside a
+   * `CodeWindow`, the window's `title` or `label` is the default.
+   * @default "Code"
+   */
+  label?: string;
+};
+
 export type HighlightProps = HTMLAttributes<HTMLPreElement> &
-  LangtagProps & {
+  LangtagProps &
+  CodeRegionProps & {
     /**
      * Code to highlight. The container also reads `--overflow-x`,
      * `--overflow-y`, `--border-radius`, `--width`, and `--max-width`.

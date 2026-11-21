@@ -27,11 +27,22 @@
    */
   export let tokenizeAhead = false;
 
-  import { createEventDispatcher, onMount, tick } from "svelte";
+  /**
+   * Accessible name of the scrollable code region. Inside a CodeWindow, the
+   * window's `title` or `label` is the default.
+   * @type {string | undefined}
+   */
+  export let label = undefined;
+
+  import { createEventDispatcher, getContext, onMount, tick } from "svelte";
+  import { CODE_REGION, NO_REGION_LABEL } from "./code-region.js";
   import { createTokenizedDocument } from "./tokenized-document.js";
   import { watchLineHeight, windowRange } from "./virtual-window.js";
 
   const dispatch = createEventDispatcher();
+
+  /** @type {import("svelte/store").Readable<string | undefined>} */
+  const windowLabel = getContext(CODE_REGION) ?? NO_REGION_LABEL;
 
   /** @type {HTMLElement} */
   let container;
@@ -274,10 +285,14 @@
   });
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <pre
   bind:this={container}
   class:shl-virtual={true}
   class:hljs={true}
+  tabindex="0"
+  role="region"
+  aria-label={label ?? $windowLabel ?? "Code"}
   on:scroll={onScroll}
   {...$$restProps}><code
     >{#if !hydrated}{source}{:else}<span
@@ -306,6 +321,11 @@
     /* Must beat a consumer inline style, not just cascade order. */
     white-space: pre !important;
     margin: 0;
+  }
+
+  /* Draw the ring inside, or a clipping parent hides it in Safari. */
+  .shl-virtual:focus-visible {
+    outline-offset: -2px;
   }
 
   .shl-virtual-sizer {

@@ -14,14 +14,33 @@
    */
   export let wrap = false;
 
+  /**
+   * Accessible name of the scrollable output region. Inside a CodeWindow,
+   * the window's `title` or `label` is the default.
+   * @type {string | undefined}
+   */
+  export let label = undefined;
+
+  import { getContext } from "svelte";
   import { createAnsiOutput } from "./ansi-output.js";
+  import { CODE_REGION, NO_REGION_LABEL } from "./code-region.js";
+
+  /** @type {import("svelte/store").Readable<string | undefined>} */
+  const windowLabel = getContext(CODE_REGION) ?? NO_REGION_LABEL;
 
   const output = createAnsiOutput();
   // Same array each time; legacy-mode reactivity still treats it as changed.
   $: segments = output.update(text, autoContrast);
 </script>
 
-<pre class="ansi" class:wrap {...$$restProps}><code
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<pre
+  class="ansi"
+  class:wrap
+  tabindex="0"
+  role="region"
+  aria-label={label ?? $windowLabel ?? "Terminal output"}
+  {...$$restProps}><code
     >{#each segments as segment}{#if segment.link}<a
       href={segment.link}
       rel="noopener noreferrer"
@@ -33,6 +52,11 @@
   ></pre>
 
 <style>
+  /* Draw the ring inside, or a clipping parent hides it in Safari. */
+  .ansi:focus-visible {
+    outline-offset: -2px;
+  }
+
   .ansi {
     margin: 0;
     overflow: auto;

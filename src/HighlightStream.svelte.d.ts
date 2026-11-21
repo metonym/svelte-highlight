@@ -61,6 +61,14 @@ export type HighlightStreamProps = HTMLAttributes<HTMLPreElement> & {
   doneText?: string;
 
   /**
+   * Accessible name of the scrollable code region. The region is
+   * keyboard-focusable so keyboard users can scroll it. Inside a
+   * `CodeWindow`, the window's `title` or `label` is the default.
+   * @default "Code"
+   */
+  label?: string;
+
+  /**
    * Width of the blinking caret.
    * @default "0.6em"
    */

@@ -27,6 +27,13 @@ export type TypewriterProps = HTMLAttributes<HTMLPreElement> & {
   /** Total visible characters; read-only, for `bind:total`. @default 0 */
   total?: number;
 
+  /**
+   * Accessible name of the scrollable code region. Inside a `CodeWindow`,
+   * the window's `title` or `label` is the default.
+   * @default "Code"
+   */
+  label?: string;
+
   /** Width of the blinking caret. @default "0.6em" */
   "--caret-width"?: string;
 

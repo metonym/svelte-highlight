@@ -42,4 +42,17 @@ describe("HighlightEditable SSR", () => {
     expect(body).not.toContain("<code></code>");
     expect(body).toContain("a &lt; b");
   });
+
+  it("renders the editor as a named multiline textbox", async () => {
+    const { default: HighlightEditable } = await compileForServer();
+
+    const { body } = render(HighlightEditable, {
+      props: { language: typescript, code: "x", readonly: true },
+    });
+
+    expect(body).toContain('role="textbox"');
+    expect(body).toContain('aria-multiline="true"');
+    expect(body).toContain('aria-readonly="true"');
+    expect(body).toContain('aria-label="Code editor"');
+  });
 });

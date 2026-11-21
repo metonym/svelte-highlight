@@ -168,7 +168,8 @@ function matchHighlightElement(element, imports) {
     if (
       attribute.name !== "language" &&
       attribute.name !== "code" &&
-      attribute.name !== "langtag"
+      attribute.name !== "langtag" &&
+      attribute.name !== "label"
     ) {
       return null;
     }
@@ -196,7 +197,15 @@ function matchHighlightElement(element, imports) {
     langtag = value;
   }
 
-  return { code, languageSource, langtag };
+  const labelAttr = attrs.get("label");
+  let label = "Code";
+  if (labelAttr) {
+    const value = getStaticStringAttribute(labelAttr);
+    if (value === null) return null;
+    label = value;
+  }
+
+  return { code, languageSource, langtag, label };
 }
 
 /**
@@ -273,8 +282,9 @@ const LANGTAG_BADGE_STYLE =
  * @param {import("./languages").LanguageType<string>} language
  * @param {string} code
  * @param {boolean} langtag
+ * @param {string} label
  */
-function renderStatic(language, code, langtag) {
+function renderStatic(language, code, langtag, label) {
   ensureRegistered(language);
   const { value } = registry.highlight(code, { language: language.name });
   const badge = langtag
@@ -284,7 +294,7 @@ function renderStatic(language, code, langtag) {
     `<pre class="hljs" data-language="${escapeAttribute(language.name)}" ` +
       `style="${langtag ? "position:relative;" : ""}overflow-x:var(--overflow-x, auto);overflow-y:var(--overflow-y, auto);` +
       `border-radius:var(--border-radius, 0);width:var(--width, auto);max-width:var(--max-width, none)">` +
-      `<code class="hljs">${value}</code>${badge}</pre>`,
+      `<code class="hljs" tabindex="0" role="region" aria-label="${escapeAttribute(label)}">${value}</code>${badge}</pre>`,
   );
 }
 
@@ -512,7 +522,12 @@ export function highlightStatic(options = {}) {
           }
 
           try {
-            return renderStatic(language, match.code, match.langtag);
+            return renderStatic(
+              language,
+              match.code,
+              match.langtag,
+              match.label,
+            );
           } catch (cause) {
             warn(
               `highlight.js failed to highlight the code (language "${language.name}")`,

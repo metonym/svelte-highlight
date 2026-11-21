@@ -8,14 +8,26 @@
   /** @type {boolean} */
   export let play = true;
 
-  import { createEventDispatcher, onMount } from "svelte";
+  /**
+   * Accessible name of the scrollable code region. Inside a CodeWindow, the
+   * window's `title` or `label` is the default.
+   * @type {string | undefined}
+   */
+  export let label = undefined;
+
+  import { createEventDispatcher, getContext, onMount } from "svelte";
+  import { CODE_REGION, NO_REGION_LABEL } from "./code-region.js";
   import { linear } from "./typewriter-easing.js";
   import {
     buildUnitMarkup,
     computeWordBoundaries,
     createTypewriterSplitter,
     tokenizeTypewriter as tokenize,
+    unitText,
   } from "./typewriter-units.js";
+
+  /** @type {import("svelte/store").Readable<string | undefined>} */
+  const windowLabel = getContext(CODE_REGION) ?? NO_REGION_LABEL;
 
   /** @type {(t: number) => number} */
   export let easing = linear;
@@ -181,6 +193,8 @@
   }
 
   $: units = tokenize(highlighted);
+  // Assistive tech reads this full copy; the animated layer is aria-hidden.
+  $: text = unitText(units);
   $: splitter = createTypewriterSplitter(units, highlighted);
   $: total = units.reduce((sum, unit) => sum + unit.visible, 0);
   $: wordBoundaries =
@@ -220,20 +234,31 @@
   });
 </script>
 
-<pre {...$$restProps}><code class:hljs={true}
-    ><span
-      class="typewriter-content"
-      bind:this={contentEl}
-      hidden={!useUnitReveal}
-    ></span>{#if !useUnitReveal}{@html parts.head}{#if showCaret}<span
-      class="typewriter-caret"
-      aria-hidden="true"></span>{/if}<span
-      class="typewriter-rest"
-      aria-hidden="true">{@html parts.tail}</span
-    >{/if}</code
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<pre {...$$restProps}><code
+    class:hljs={true}
+    tabindex="0"
+    role="region"
+    aria-label={label ?? $windowLabel ?? "Code"}
+    ><span class="typewriter-visually-hidden">{text}</span><span
+      aria-hidden="true"
+      ><span
+        class="typewriter-content"
+        bind:this={contentEl}
+        hidden={!useUnitReveal}
+      ></span>{#if !useUnitReveal}{@html parts.head}{#if showCaret}<span
+        class="typewriter-caret"></span>{/if}<span class="typewriter-rest"
+        >{@html parts.tail}</span
+      >{/if}</span
+    ></code
   ></pre>
 
 <style>
+  /* Draw the ring inside, or a scrolling <pre> clips it in Safari. */
+  code:focus-visible {
+    outline-offset: -2px;
+  }
+
   .typewriter-rest {
     visibility: hidden;
   }
@@ -264,6 +289,27 @@
     vertical-align: text-bottom;
     background: var(--caret-color, var(--typewriter-caret-fg, currentColor));
     animation: typewriter-blink var(--caret-blink, 1s) step-end infinite;
+  }
+
+  .typewriter-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+    user-select: none;
+  }
+
+  /* The reveal itself is the consumer's call; a blinking caret is not. */
+  @media (prefers-reduced-motion: reduce) {
+    .typewriter-caret,
+    :global(.typewriter-unit.typewriter-caret)::before {
+      animation: none;
+    }
   }
 
   @keyframes typewriter-blink {

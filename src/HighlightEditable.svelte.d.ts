@@ -53,6 +53,13 @@ export type HighlightEditableProps = HTMLAttributes<HTMLPreElement> & {
   theme?: string | ThemePalette;
 
   /**
+   * Accessible name of the editor (`aria-label`). The editor has
+   * `role="textbox"`, so name it for what it edits.
+   * @default "Code editor"
+   */
+  label?: string;
+
+  /**
    * Color of the focus outline.
    * @default "#4589ff"
    */

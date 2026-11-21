@@ -170,6 +170,7 @@
           done={done || !segment.open}
           caret={caret && segment.id === lastOpenFenceId}
           {autoScroll}
+          label={segment.lang ? `${segment.lang} code` : undefined}
           doneText={segment.id === lastFenceId ? doneText : ""}
         />
       </slot>

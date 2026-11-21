@@ -1,10 +1,11 @@
 import type { SvelteComponentTyped } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { ScopeEvent } from "./engine.d.ts";
-import type { LangtagProps } from "./Highlight.svelte";
+import type { CodeRegionProps, LangtagProps } from "./Highlight.svelte";
 
 export type HighlightSvelteProps = HTMLAttributes<HTMLPreElement> &
-  LangtagProps & {
+  LangtagProps &
+  CodeRegionProps & {
     /** Code to highlight. */
     code: any;
   };

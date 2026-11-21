@@ -11,6 +11,14 @@ export type AnsiOutputProps = HTMLAttributes<HTMLPreElement> & {
   /** Wrap long lines instead of horizontally scrolling. @default false */
   wrap?: boolean;
 
+  /**
+   * Accessible name of the scrollable output region. The region is
+   * keyboard-focusable so keyboard users can scroll it. Inside a
+   * `CodeWindow`, the window's `title` or `label` is the default.
+   * @default "Terminal output"
+   */
+  label?: string;
+
   /** Output block padding. @default "1em" */
   "--ansi-padding"?: string;
 

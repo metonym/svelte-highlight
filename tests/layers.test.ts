@@ -69,7 +69,7 @@ const DOM = [
   "virtual-window.js",
 ];
 
-const SVELTE = ["index.js", "preprocessor.js", "static.js"];
+const SVELTE = ["code-region.js", "index.js", "preprocessor.js", "static.js"];
 
 /** Packages each layer may import, by exact specifier. */
 const ALLOWED_PACKAGES: Record<string, string[]> = {

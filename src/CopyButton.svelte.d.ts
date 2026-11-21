@@ -23,8 +23,14 @@ export type CopyButtonProps = HTMLButtonAttributes & {
   /** Button `aria-label`. @default "Copy" */
   text?: string;
 
-  /** Button `aria-label` while copied. @default "Copied!" */
+  /**
+   * Button `aria-label` while copied. Also announced to screen readers.
+   * @default "Copied!"
+   */
   copiedText?: string;
+
+  /** Announced to screen readers when the copy fails. @default "Copy failed" */
+  errorText?: string;
 
   /** Top offset. @default "0.5em" */
   "--copy-top"?: string;

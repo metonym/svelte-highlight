@@ -51,13 +51,25 @@
    */
   export let doneText = "Code finished streaming";
 
-  import { createEventDispatcher, onMount, tick } from "svelte";
+  /**
+   * Accessible name of the scrollable code region. Inside a CodeWindow, the
+   * window's `title` or `label` is the default.
+   * @type {string | undefined}
+   */
+  export let label = undefined;
+
+  import { createEventDispatcher, getContext, onMount, tick } from "svelte";
+  import { CODE_REGION, NO_REGION_LABEL } from "./code-region.js";
   import { createStreamView } from "./stream.js";
   import { createStreamHighlighter } from "./stream-highlighter.js";
   import { createTokenizedDocument } from "./tokenized-document.js";
   import { watchLineHeight, windowRange } from "./virtual-window.js";
 
   const dispatch = createEventDispatcher();
+
+  /** @type {import("svelte/store").Readable<string | undefined>} */
+  const windowLabel = getContext(CODE_REGION) ?? NO_REGION_LABEL;
+  $: regionName = label ?? $windowLabel ?? "Code";
 
   /** @type {HTMLElement} */
   let container;
@@ -321,10 +333,14 @@
 </script>
 
 {#if virtualize}
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
   <pre
     bind:this={container}
     class:hljs={true}
     class:shl-virtual={true}
+    tabindex="0"
+    role="region"
+    aria-label={regionName}
     aria-busy={!done}
     on:scroll={onScroll}
     {...$$restProps}><code
@@ -348,12 +364,22 @@
       aria-hidden="true">&nbsp;</span
     ></pre>
 {:else}
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
   <pre
     bind:this={container}
     aria-busy={!done}
     on:scroll={onScroll}
-    {...$$restProps}>{#if mounted}<code bind:this={codeElement} class="hljs"
-    ></code>{:else}<code class:hljs={true}>{@html highlighted}</code>{/if}</pre>
+    {...$$restProps}>{#if mounted}<code
+      bind:this={codeElement}
+      class="hljs"
+      tabindex="0"
+      role="region"
+      aria-label={regionName}></code>{:else}<code
+      class:hljs={true}
+      tabindex="0"
+      role="region"
+      aria-label={regionName}>{@html highlighted}</code
+    >{/if}</pre>
 {/if}
 
 <span class="visually-hidden" role="status" aria-live="polite"
@@ -368,6 +394,12 @@
     /* Must beat a consumer inline style, not just cascade order. */
     white-space: pre !important;
     margin: 0;
+  }
+
+  /* Draw the ring inside, or the scroller clips it in Safari. */
+  .shl-virtual:focus-visible,
+  code:focus-visible {
+    outline-offset: -2px;
   }
 
   .shl-virtual-sizer {
