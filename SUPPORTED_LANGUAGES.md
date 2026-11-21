@@ -3136,6 +3136,8 @@
 
 ## php (`php`)
 
+> Exported from highlight.js with svelte-highlight patches on top (see `scripts/hljs-patches/php.js`)
+
 ```html
 <script>
   // direct import (recommended)

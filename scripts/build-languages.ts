@@ -220,6 +220,7 @@ const HLJS_PATCH_NAMES = [
   "lisp",
   "mathematica",
   "objectivec",
+  "php",
   "python",
   "rust",
   "swift",
