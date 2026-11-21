@@ -217,6 +217,7 @@
     "/preview-robotframework": "Robot Framework language preview",
     "/preview-meson": "Meson language preview",
     "/preview-httpfile": "HTTP Request File language preview",
+    "/preview-antlr": "ANTLR language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
