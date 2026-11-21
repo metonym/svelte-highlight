@@ -2,7 +2,7 @@ const MOJO_KEYWORDS =
   "fn struct var let inout owned borrowed mut alias trait impl def if elif " +
   "else for while return from import as raise try except finally with yield " +
   "and or not in is pass continue break class raises out deinit imm ref " +
-  "comptime";
+  "comptime lambda where";
 
 const MOJO_TYPES =
   "Int Float64 String Bool SIMD UInt UInt8 UInt16 UInt32 UInt64 Int8 Int16 " +
