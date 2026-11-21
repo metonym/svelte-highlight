@@ -2468,4 +2468,26 @@ ratio = Ratio: { NUMBER($ratio, minimumFractionDigits: 2) }
 brace = An opening brace: {"{"} and {"\\u00A0"}
 ref = { save.title }
 `,
+  riscv: `# Print a greeting with the write syscall.
+#include <asm/unistd.h>
+    .section .rodata
+msg: .asciz "Hello\\n"
+    .text
+    .globl _start
+_start:
+    li      a0, 1               # stdout
+    lui     a1, %hi(msg)
+    addi    a1, a1, %lo(msg)
+    li      a7, 64              // write
+    ecall
+1:  auipc   t0, %pcrel_hi(count)
+    lw      t1, %pcrel_lo(1b)(t0)
+    bnez    t1, 1b
+    csrr    t2, mstatus
+    amoswap.w.aqrl x5, x6, (x7)
+    fcvt.w.s a0, ft0, rtz
+    vsetvli t0, a0, e32, m4, ta, ma
+    vadd.vv v8, v8, v16, v0.t   /* masked */
+count: .word 0x10, 'A', 0b1010
+`,
 };
