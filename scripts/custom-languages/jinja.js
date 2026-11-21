@@ -8,7 +8,10 @@ const JINJA_KEYWORDS = {
     "if elif else endif for endfor in macro endmacro set endset block " +
     "endblock extends include import from as with endwith call endcall " +
     "filter endfilter autoescape endautoescape raw endraw do break continue " +
-    "and or not is recursive scoped required",
+    "and or not is recursive scoped required " +
+    // Nunjucks-only tags. The grammar also serves the `njk` and `nunjucks`
+    // aliases, and Nunjucks shares the rest of its tag syntax with Jinja.
+    "elseif asyncEach endeach asyncAll endall ifAsync verbatim endverbatim",
   literal: JINJA_LITERALS,
 };
 
@@ -56,7 +59,7 @@ function defineJinja(hljs) {
 
   return {
     name: "Jinja",
-    aliases: ["jinja", "jinja2", "j2"],
+    aliases: ["jinja", "jinja2", "j2", "njk", "nunjucks"],
     subLanguage: "html",
     contains: [
       hljs.COMMENT(/\{#-?/, /-?#\}/),
