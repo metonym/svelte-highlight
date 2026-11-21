@@ -34,6 +34,7 @@ let instanceCount = 0;
  *   historyLimit: number,
  *   readonly: boolean,
  *   engine: import("./css-highlights.js").PaintEngine,
+ *   theme: string | import("./theme.d.ts").ThemePalette | undefined,
  * }} EditorSettings
  */
 
@@ -63,6 +64,7 @@ export function createEditor(element, options) {
     historyLimit: options.historyLimit ?? 200,
     readonly: options.readonly ?? false,
     engine: options.engine ?? "dom",
+    theme: options.theme,
   };
 
   let code = options.code ?? "";
@@ -85,7 +87,13 @@ export function createEditor(element, options) {
     view,
     registry,
     highlightPrefix: `hljs-${instanceId}`,
+    // The first themed "css-highlights" paint drew "dom" spans while the
+    // resolver loaded. Redraw with the latest settings.
+    onCascadeLoad: () => {
+      if (engine === "css-highlights") repaintForLanguageChange();
+    },
   });
+  painter.setTheme(settings.theme);
   const history = createEditHistory({ limit: () => settings.historyLimit });
 
   function getSelectionRange() {
@@ -400,14 +408,18 @@ export function createEditor(element, options) {
     instanceId,
 
     /**
-     * Applies changed settings. A new language or engine repaints.
+     * Applies changed settings. A new language, engine or theme repaints.
      * @param {Partial<EditorSettings>} next
      */
     update(next) {
       Object.assign(settings, next);
       ensureRegistered(settings.language);
       const nextEngine = resolveEngine(settings.engine);
+      const themeChanged = painter.setTheme(settings.theme);
       if (settings.language.name === languageName && nextEngine === engine) {
+        if (themeChanged && engine === "css-highlights") {
+          repaintForLanguageChange();
+        }
         return;
       }
       if (engine === "css-highlights") painter.clearHighlights();
@@ -480,9 +492,13 @@ export function createEditor(element, options) {
       return history.canRedo();
     },
 
-    /** The engine in use: `"dom"` when `"css-highlights"` is unsupported. */
+    /**
+     * The engine on screen. `"css-highlights"` once it paints. `"dom"`
+     * where `CSS.highlights` is missing, while a theme's color resolver
+     * loads, and while that load has failed.
+     */
     resolvedEngine() {
-      return engine;
+      return painter.paintedEngine();
     },
 
     /** Removes listeners and this editor's CSS highlights. */
@@ -491,7 +507,7 @@ export function createEditor(element, options) {
         element.removeEventListener(type, listener);
       }
       doc.removeEventListener("selectionchange", syncCaretToHistory);
-      painter.clearHighlights();
+      painter.destroy();
     },
   };
 }

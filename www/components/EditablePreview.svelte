@@ -1,5 +1,6 @@
 <script>
   import { Button, Column, Row, Slider } from "carbon-components-svelte";
+  import { onMount } from "svelte";
   import {
     Highlight,
     HighlightEditable,
@@ -33,7 +34,16 @@ const greet = (user: User): string => {
   /** @type {{ entries: { size: number }[]; index: number; canUndo: boolean; canRedo: boolean }} */
   let historyState = { entries: [], index: 0, canUndo: false, canRedo: false };
 
-  $: resolvedEngine = editor?.resolvedEngine();
+  /** @type {"dom" | "css-highlights" | undefined} */
+  let resolvedEngine;
+
+  // resolvedEngine() changes after mount, once the color resolver loads.
+  onMount(() => {
+    const timer = setInterval(() => {
+      resolvedEngine = editor?.resolvedEngine();
+    }, 250);
+    return () => clearInterval(timer);
+  });
 
   const sideThemes = [
     { name: "atom-one-dark", theme: atomOneDark },
