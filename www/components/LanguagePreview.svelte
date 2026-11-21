@@ -2,6 +2,7 @@
   import { agdaPreviewSnippets } from "@www/preview/agda-preview-snippets";
   import { alloyPreviewSnippets } from "@www/preview/alloy-preview-snippets";
   import { angularPreviewSnippets } from "@www/preview/angular-preview-snippets";
+  import { apexPreviewSnippets } from "@www/preview/apex-preview-snippets";
   import { assemblyscriptPreviewSnippets } from "@www/preview/assemblyscript-preview-snippets";
   import { astroPreviewSnippets } from "@www/preview/astro-preview-snippets";
   import { asymptotePreviewSnippets } from "@www/preview/asymptote-preview-snippets";
@@ -172,6 +173,7 @@
   import agda from "svelte-highlight/languages/agda";
   import alloy from "svelte-highlight/languages/alloy";
   import angular from "svelte-highlight/languages/angular";
+  import apex from "svelte-highlight/languages/apex";
   import assemblyscript from "svelte-highlight/languages/assemblyscript";
   import astro from "svelte-highlight/languages/astro";
   import asymptote from "svelte-highlight/languages/asymptote";
@@ -511,6 +513,7 @@
     pikchr: { lang: pikchr, snippets: pikchrPreviewSnippets },
     nomnoml: { lang: nomnoml, snippets: nomnomlPreviewSnippets },
     blockdiag: { lang: blockdiag, snippets: blockdiagPreviewSnippets },
+    apex: { lang: apex, snippets: apexPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
