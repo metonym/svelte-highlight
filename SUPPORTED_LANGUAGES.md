@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 364 languages: 193 exported from highlight.js@11.12.0, 171 custom grammars added by svelte-highlight
+> 365 languages: 193 exported from highlight.js@11.12.0, 172 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -125,6 +125,20 @@
 
   // base import
   import { apache } from "svelte-highlight/languages";
+</script>
+```
+
+## apex (`apex`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import apex from "svelte-highlight/languages/apex";
+
+  // base import
+  import { apex } from "svelte-highlight/languages";
 </script>
 ```
 

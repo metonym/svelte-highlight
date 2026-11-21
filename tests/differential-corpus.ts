@@ -2164,4 +2164,21 @@ nwdiag {
     web01 [address = "192.168.0.1"];
   }
 }`,
+  apex: `/** Updates open opportunities. */
+public with sharing class OpportunityService {
+  @AuraEnabled(cacheable=true)
+  public static List<Opportunity> openFor(Id accountId) {
+    return [SELECT Id, Name, Amount FROM Opportunity
+            WHERE AccountId = :accountId AND IsClosed = false
+            ORDER BY CloseDate DESC LIMIT 10];
+  }
+}
+
+trigger AccountTrigger on Account (before insert, after update) {
+  for (Account acc : Trigger.new) {
+    acc.Description = 'Updated';
+  }
+  update Trigger.new;
+  System.debug(LoggingLevel.INFO, 'done');
+}`,
 };

@@ -185,6 +185,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "pikchr",
   "nomnoml",
   "blockdiag",
+  "apex",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
