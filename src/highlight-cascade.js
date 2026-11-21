@@ -587,20 +587,29 @@ export function createThemeCascade(theme, outsideColor) {
 }
 
 /**
+ * Run styles and their `c<index>` names. Pass the same table to each
+ * `cascadeRanges` call to keep names stable across calls.
+ * @typedef {{ styles: RunStyle[]; names: Map<string, string> }} RunTable
+ */
+
+/** @returns {RunTable} */
+export function createRunTable() {
+  return { styles: [], names: new Map() };
+}
+
+/**
  * One range per run of text that shares a style, named `c<index>` into
  * `styles`. Text that looks the same as plain `<code>` text gets no range.
  * Offsets are into the events' concatenated text, as `toRanges` returns.
  * @param {import("./engine.d.ts").ScopeEvent[]} events
  * @param {ThemeCascade} cascade
+ * @param {RunTable} [table] Names styles; new styles are appended to it.
  * @returns {{ ranges: import("./engine.d.ts").TokenRange[]; styles: RunStyle[] }}
  */
-export function cascadeRanges(events, cascade) {
+export function cascadeRanges(events, cascade, table = createRunTable()) {
   /** @type {import("./engine.d.ts").TokenRange[]} */
   const ranges = [];
-  /** @type {RunStyle[]} */
-  const styles = [];
-  /** @type {Map<string, string>} */
-  const names = new Map();
+  const { styles, names } = table;
   /** @type {CascadeNode[]} */
   const stack = [cascade.root];
   let top = cascade.root;
@@ -637,15 +646,11 @@ export function cascadeRanges(events, cascade) {
 }
 
 /**
- * Lives here, not in a component: svelte-preprocess matches a literal
- * style tag inside `<script>` as the component's `<style>` block.
  * @param {RunStyle[]} styles From `cascadeRanges`.
  * @param {string} prefix Highlight name prefix, e.g. `hljs-highlight-1`.
- * @returns {string} `<style>`-wrapped `::highlight(<prefix>-c<i>)` rules, or
- *   `""` when there are none.
+ * @returns {string} `::highlight(<prefix>-c<i>)` rules, concatenated.
  */
-export function cascadeHighlightStyle(styles, prefix) {
-  if (styles.length === 0) return "";
+export function cascadeHighlightRules(styles, prefix) {
   let rules = "";
   for (const [index, style] of styles.entries()) {
     const declarations = [];
@@ -655,6 +660,20 @@ export function cascadeHighlightStyle(styles, prefix) {
     }
     rules += `::highlight(${prefix}-c${index}){${declarations.join(";")}}`;
   }
+  return rules;
+}
+
+/**
+ * Lives here, not in a component: svelte-preprocess matches a literal
+ * style tag inside `<script>` as the component's `<style>` block.
+ * @param {RunStyle[]} styles From `cascadeRanges`.
+ * @param {string} prefix Highlight name prefix, e.g. `hljs-highlight-1`.
+ * @returns {string} `<style>`-wrapped `::highlight(<prefix>-c<i>)` rules, or
+ *   `""` when there are none.
+ */
+export function cascadeHighlightStyle(styles, prefix) {
+  if (styles.length === 0) return "";
   // Theme values can't close the tag early.
-  return `<style>${rules.replaceAll("<", "\\3c ")}</style>`;
+  const rules = cascadeHighlightRules(styles, prefix).replaceAll("<", "\\3c ");
+  return `<style>${rules}</style>`;
 }

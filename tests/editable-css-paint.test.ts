@@ -8,11 +8,17 @@ import {
   toRanges,
 } from "../src/engine.js";
 import {
+  cascadeRanges,
+  createRunTable,
+  createThemeCascade,
+} from "../src/highlight-cascade.js";
+import {
   CHECKPOINT_INTERVAL,
   parseIncremental,
   reparseIncremental,
 } from "../src/incremental-tokenize.js";
 import * as languages from "../src/languages/index.js";
+import monokai from "../src/styles/monokai.js";
 import { CUSTOM_SNIPPETS } from "./differential-corpus.ts";
 
 const registry = createRegistry();
@@ -58,6 +64,45 @@ describe("lineTokenRanges", () => {
       "<script>\nlet a = 1;\n</script>\n<style>\np { color: red }\n</style>",
       "xml",
     );
+  });
+});
+
+describe("lineTokenRanges with cascade runs", () => {
+  it("matches whole-document runs clipped to each line", () => {
+    const cascade = createThemeCascade(monokai);
+    for (const [language, code] of Object.entries(CUSTOM_SNIPPETS)) {
+      const { events } = registry.tokenize(code, language);
+      const whole = createRunTable();
+      const ranges = cascadeRanges(events, cascade, whole).ranges;
+      // Lines share one table, as the editor's painter does.
+      const lines = createRunTable();
+      const keyOf = (table: typeof whole, scope: string) =>
+        table.styles[Number(scope.slice(1))]?.key;
+      let lineStart = 0;
+      for (const line of code.split("\n")) {
+        const lineEnd = lineStart + line.length;
+        const expected = ranges
+          .filter((run) => run.start < lineEnd && run.end > lineStart)
+          .map((run) => ({
+            start: Math.max(run.start, lineStart) - lineStart,
+            end: Math.min(run.end, lineEnd) - lineStart,
+            key: keyOf(whole, run.scope),
+          }))
+          .filter((run) => run.start !== run.end);
+        const actual = lineTokenRanges(
+          events,
+          lineStart,
+          lineEnd,
+          (line) => cascadeRanges(line, cascade, lines).ranges,
+        ).map((run) => ({
+          start: run.start,
+          end: run.end,
+          key: keyOf(lines, run.scope),
+        }));
+        expect(actual).toEqual(expected);
+        lineStart = lineEnd + 1;
+      }
+    }
   });
 });
 
