@@ -214,6 +214,7 @@ const HLJS_PATCH_NAMES = [
   "java",
   "javascript",
   "kotlin",
+  "lisp",
   "python",
   "rust",
   "swift",
