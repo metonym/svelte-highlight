@@ -24,8 +24,10 @@ const ROC_KEYWORDS = [
   "or",
   "match",
   "for",
+  "in",
   "while",
   "break",
+  "var",
 ];
 
 const ROC_BUILT_INS = "dbg expect";
