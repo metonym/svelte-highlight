@@ -52,6 +52,15 @@ describe("css grammar patch", () => {
       expect(html).toContain(attribute(name));
   });
 
+  it("styles font-width as a whole name", () => {
+    const html = expectMatchesHljs(
+      "h1 { font-width: condensed; font-stretch: 75%; font-weight: 700; }",
+    );
+    expect(html).toContain(attribute("font-width"));
+    expect(html).toContain(attribute("font-stretch"));
+    expect(html).toContain(attribute("font-weight"));
+  });
+
   it("keeps stock properties unchanged", () => {
     const html = expectMatchesHljs(
       ".a { position: absolute; text-align: center; anchor-name: --a; }",

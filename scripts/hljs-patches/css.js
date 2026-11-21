@@ -41,6 +41,7 @@ function register(hljs) {
     "reading-flow",
     "reading-order",
     // Text
+    "font-width",
     "text-autospace",
     "text-box",
     "text-box-edge",
