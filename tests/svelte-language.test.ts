@@ -331,3 +331,22 @@ test("svelte still styles calls next to an each block", () => {
   );
   expect(result).toContain('<span class="hljs-title function_">format</span>');
 });
+
+test("svelte styles the name of a generic snippet", () => {
+  registerAll(registry, svelte);
+
+  const highlight = (code: string) =>
+    registry.highlight(code, { language: "svelte" }).value;
+
+  const generic = highlight(
+    "{#snippet row<T extends Item>(item: T, index = 0)}<td>{item.id}</td>{/snippet}",
+  );
+  expect(generic).toContain('<span class="hljs-keyword">#snippet</span>');
+  expect(generic).toContain('<span class="hljs-title function_">row</span>');
+  expect(generic).toContain('<span class="hljs-keyword">extends</span>');
+  expect(generic).toContain('<span class="hljs-number">0</span>');
+
+  const plain = highlight("{#snippet badge(label?: string)}{label}{/snippet}");
+  expect(plain).toContain('<span class="hljs-title function_">badge</span>');
+  expect(plain).toContain('<span class="hljs-built_in">string</span>');
+});
