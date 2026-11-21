@@ -61,6 +61,16 @@ By default, overflowing horizontal content is contained by a scrollbar. Set `wra
 
 Don't combine `wrap` with `HighlightStream`'s `virtualize` mode or `HighlightVirtual` -- both assume one fixed-height line per row, which wrapping breaks.
 
+### Accessibility
+
+A long line makes the code block scroll. Keyboard users can only scroll what they can focus, so each code block is a focusable region (`tabindex="0"`, `role="region"`). Use `label` to give the region a name. It defaults to `"Code"`. A focused region shows the browser's focus ring, drawn just inside its edge so a scrolling parent can't clip it.
+
+```svelte
+<Highlight language={typescript} {code} label="Add function" />
+```
+
+`label` works the same way on `HighlightAuto`, `HighlightSvelte`, `LineNumbers`, `AnsiOutput`, `HighlightStream`, `HighlightVirtual`, and `Typewriter`. Inside a `CodeWindow`, the block takes the window's `title` (or its `label`) as its name.
+
 ## Theming
 
 Every `highlight.js` theme is also compiled into a **`ThemePalette`**: a typed object of `--shl-*` CSS custom properties plus a shared structural stylesheet (`svelte-highlight/themes/base.css`) that maps `.hljs*` classes to those variables. This is the recommended way to theme new projects — themes are data, scoping is an inline `style` attribute (SSR-safe by construction), and any token is overridable with one CSS line or a Svelte style prop. See [SUPPORTED_THEMES.md](SUPPORTED_THEMES.md) for a list of compiled themes.
@@ -1385,7 +1395,7 @@ export default {
 At build time this becomes plain HTML:
 
 ```html
-<pre class="hljs" data-language="javascript"><code class="hljs"
+<pre class="hljs" data-language="javascript"><code class="hljs" tabindex="0" role="region" aria-label="Code"
   ><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;</code
 ></pre>
 ```
@@ -1396,6 +1406,7 @@ The static transform runs only when all of these are true:
 - `code` is a string literal or a template literal with no `${...}` interpolation.
 - The element has no slot content, spread props, or directives (`bind:`, `on:`, etc.).
 - `langtag`, if set, is a bare flag or a static boolean literal (`langtag={true}`/`langtag={false}`) - not a variable or expression. Static output can't pull in `langtag.css` (that only happens when a runtime `LangTag` is in the bundle), so a truthy `langtag` renders the language badge as a plain inline-styled `<span>` instead, themed with the same `--langtag-*` custom properties `LangTag` reads - customization is limited to those variables, not `LangTag`'s slot content.
+- `label`, if set, is a string literal. Static output can't read a parent `CodeWindow`, so it uses `label` or `"Code"`.
 
 Dynamic `code` or `language`, `loadLanguage`, `HighlightAuto`, `HighlightSvelte`, and `HighlightEditable` keep the runtime component. No warning. That's intentional.
 
@@ -1798,7 +1809,9 @@ Fire `on:progress` for a progress bar or "X% typed" indicator -- it dispatches `
 </Highlight>
 ```
 
-`Typewriter` doesn't gate itself on `prefers-reduced-motion` -- if you want to honor it, check `matchMedia("(prefers-reduced-motion: reduce)")` yourself and skip rendering `Typewriter` (or set a very low `speed`). Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
+`Typewriter` doesn't gate itself on `prefers-reduced-motion` -- if you want to honor it, check `matchMedia("(prefers-reduced-motion: reduce)")` yourself and skip rendering `Typewriter` (or set a very low `speed`). The caret stops blinking under `prefers-reduced-motion: reduce`. Customize the caret with `--caret-width`, `--caret-height`, `--caret-gap`, `--caret-color`, and `--caret-blink`.
+
+Screen readers get the full text at once from a visually-hidden copy. The animated layer is `aria-hidden`, so they don't read a half-typed block.
 
 
 Each tick reveals one already-rendered unit rather than re-rendering the block, so animating stays smooth up to tens of thousands of characters; past that it falls back to the coarser whole-block reveal.
@@ -2507,8 +2520,9 @@ The active tab's `--tab-active-color` and `--tab-active-background` are resolved
 | language | { name: `string`; register: `object` } | N/A (required) |
 | langtag  | `boolean`                                      | `false`        |
 | wrap     | `boolean`                                      | `false`        |
+| label    | `string`                                       | `"Code"`       |
 
-`$$restProps` are forwarded to the top-level `pre` element.
+`$$restProps` are forwarded to the top-level `pre` element. `label` names the focusable code region (see [Accessibility](#accessibility)).
 
 #### Dispatched Events
 
@@ -2566,8 +2580,9 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | lineStates         | `Record<number, "highlighted" \| "focus" \| "added" \| "removed">` | `{}`                           |
 | langtag            | `boolean`                                                    | `false`                              |
 | languageName       | `string`                                                     | `"plaintext"`                        |
+| label              | `string`                                                     | `"Code with line numbers"`           |
 
-`$$restProps` are forwarded to the top-level `div` element.
+`$$restProps` are forwarded to the top-level `div` element. `label` names the focusable code region.
 
 ### `CopyButton`
 
@@ -2581,8 +2596,13 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | timeout    | `number`                                   | `2000`                                       |
 | text       | `string`                                   | `"Copy"`                                     |
 | copiedText | `string`                                   | `"Copied!"`                                  |
+| errorText  | `string`                                   | `"Copy failed"`                              |
 
-`$$restProps` are forwarded to the top-level `button` element.
+`$$restProps` are forwarded to the top-level `button` element. A visually-hidden `role="status"` region after the button announces `copiedText` on success and `errorText` on failure.
+
+```svelte
+<CopyButton {code} copiedText="Copied to clipboard" errorText="Could not copy" />
+```
 
 #### CSS Variables
 
@@ -2621,8 +2641,15 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | :------ | :--------------------------------- | :------------ |
 | variant | `"macos" \| "terminal" \| "plain"` | `"macos"`     |
 | title   | `string`                           | `""`          |
+| label   | `string`                           | `undefined`   |
 
-`$$restProps` are forwarded to the top-level `div` element.
+`$$restProps` are forwarded to the top-level `div` element. The code block inside the window takes `title`, or `label` when there is no title, as its region name.
+
+```svelte
+<CodeWindow variant="terminal" label="Install output">
+  <AnsiOutput text={output} />
+</CodeWindow>
+```
 
 #### Slots
 
@@ -2661,8 +2688,9 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | text         | `string`  | N/A (required) |
 | autoContrast | `boolean` | `true`         |
 | wrap         | `boolean` | `false`        |
+| label        | `string`  | `"Terminal output"` |
 
-`$$restProps` are forwarded to the top-level `pre` element.
+`$$restProps` are forwarded to the top-level `pre` element. `label` names the focusable output region.
 
 ### `HighlightSvelte`
 
@@ -2673,6 +2701,7 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | code    | `any`     | N/A (required) |
 | langtag | `boolean` | `false`        |
 | wrap    | `boolean` | `false`        |
+| label   | `string`  | `"Code"`       |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
@@ -2706,6 +2735,7 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | languageNames | `LanguageName[]` | `undefined`    |
 | langtag       | `boolean`        | `false`        |
 | wrap          | `boolean`        | `false`        |
+| label         | `string`         | `"Code"`       |
 
 `$$restProps` are forwarded to the top-level `pre` element.
 
@@ -2759,8 +2789,13 @@ import type { LanguageName } from "svelte-highlight";
 | tabSize      | `number`                                       | `2`            |
 | historyLimit | `number`                                       | `200`          |
 | readonly     | `boolean`                                      | `false`        |
+| label        | `string`                                       | `"Code editor"` |
 
-`$$restProps` are forwarded to the top-level `pre` element.
+`$$restProps` are forwarded to the top-level `pre` element. The editor is a `role="textbox"` with `aria-multiline`, and `label` is its accessible name. `readonly` also sets `aria-readonly`.
+
+```svelte
+<HighlightEditable language={typescript} bind:code label="Query editor" />
+```
 
 `code` supports two-way binding (`bind:code`).
 
@@ -2798,8 +2833,9 @@ Use `bind:this`, then call `undo()`, `redo()`, `focus()`, `selectAll()`, `insert
 | overscan           | `number`                                | `12`           |
 | checkpointInterval | `number`                                | `100`          |
 | doneText           | `string`                                | `"Code finished streaming"` |
+| label              | `string`                                | `"Code"`       |
 
-`$$restProps` are forwarded to the top-level `pre` element. `overscan` and `checkpointInterval` only apply when `virtualize` is set. `doneText` is announced by a visually-hidden live region once `done` becomes `true`; set it to `""` to disable the announcement.
+`$$restProps` are forwarded to the top-level `pre` element. `label` names the focusable code region. `overscan` and `checkpointInterval` only apply when `virtualize` is set. `doneText` is announced by a visually-hidden live region once `done` becomes `true`; set it to `""` to disable the announcement.
 
 #### Methods
 
@@ -2834,14 +2870,14 @@ Use `bind:this`, then call `scrollToLine(line)` -- works in both `virtualize` an
 | autoScroll      | `boolean`                                                                  | `true`                                |
 | doneText        | `string`                                                                   | `"Code finished streaming"`           |
 
-`$$restProps` are forwarded to the top-level `div` element. `resolveLanguage` results are cached per canonical language name for the component's lifetime. `doneText` is announced once, by the last fence only, once `done` becomes `true`; set it to `""` to disable the announcement.
+`$$restProps` are forwarded to the top-level `div` element. `resolveLanguage` results are cached per canonical language name for the component's lifetime. `doneText` is announced once, by the last fence only, once `done` becomes `true`; set it to `""` to disable the announcement. Each fence's code region is named for its language (`"js code"`), or `"Code"` when the fence has none.
 
 #### Slots
 
 | Name | Props                | Fallback                                                          |
 | :--- | :-------------------- | :----------------------------------------------------------------- |
 | text | `segment`             | `<div class="shl-md-text">{segment.text}</div>`                    |
-| fence | `segment`, `language` | `<HighlightStream code={segment.code} {language} done={done \|\| !segment.open} caret={...} autoScroll={autoScroll} doneText={...} />` |
+| fence | `segment`, `language` | `<HighlightStream code={segment.code} {language} done={done \|\| !segment.open} caret={...} autoScroll={autoScroll} label={...} doneText={...} />` |
 
 #### Dispatched Events
 
@@ -2870,8 +2906,9 @@ Use `bind:this`, then call `scrollToLine(line)` -- works in both `virtualize` an
 | overscan           | `number`                                       | `12`           |
 | checkpointInterval | `number`                                       | `100`          |
 | tokenizeAhead      | `boolean`                                      | `false`        |
+| label              | `string`                                       | `"Code"`       |
 
-`$$restProps` are forwarded to the top-level `pre` element (the scroll container -- size it with `style`/`class`, but `white-space` is pinned to `pre` and can't be overridden this way).
+`label` names the focusable scroll region. `$$restProps` are forwarded to the top-level `pre` element (the scroll container -- size it with `style`/`class`, but `white-space` is pinned to `pre` and can't be overridden this way).
 
 #### Methods
 
@@ -3020,8 +3057,9 @@ Use `bind:this`, then call `scrollToFile(index, options)`. `options` are `scroll
 | granularity | `"char" \| "word"`       | `"char"`      |
 | revealed    | `number`                 | `0`           |
 | total       | `number`                 | `0`           |
+| label       | `string`                 | `"Code"`      |
 
-`$$restProps` are forwarded to the top-level `pre` element. `revealed`/`total` are read-only in practice (overwritten every frame) but exposed for `bind:revealed`/`bind:total`.
+`$$restProps` are forwarded to the top-level `pre` element. `label` names the focusable code region. `revealed`/`total` are read-only in practice (overwritten every frame) but exposed for `bind:revealed`/`bind:total`.
 
 #### Dispatched Events
 
