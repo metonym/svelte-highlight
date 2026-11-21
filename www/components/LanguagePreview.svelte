@@ -67,6 +67,7 @@
   import { hlslPreviewSnippets } from "@www/preview/hlsl-preview-snippets";
   import { hoconPreviewSnippets } from "@www/preview/hocon-preview-snippets";
   import { htmlPreviewSnippets } from "@www/preview/html-preview-snippets";
+  import { httpfilePreviewSnippets } from "@www/preview/httpfile-preview-snippets";
   import { hurlPreviewSnippets } from "@www/preview/hurl-preview-snippets";
   import { idrisPreviewSnippets } from "@www/preview/idris-preview-snippets";
   import { imbaPreviewSnippets } from "@www/preview/imba-preview-snippets";
@@ -241,6 +242,7 @@
   import hlsl from "svelte-highlight/languages/hlsl";
   import hocon from "svelte-highlight/languages/hocon";
   import html from "svelte-highlight/languages/html";
+  import httpfile from "svelte-highlight/languages/httpfile";
   import hurl from "svelte-highlight/languages/hurl";
   import idris from "svelte-highlight/languages/idris";
   import imba from "svelte-highlight/languages/imba";
@@ -526,6 +528,7 @@
       snippets: robotframeworkPreviewSnippets,
     },
     meson: { lang: meson, snippets: mesonPreviewSnippets },
+    httpfile: { lang: httpfile, snippets: httpfilePreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
