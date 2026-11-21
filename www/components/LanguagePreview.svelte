@@ -2,6 +2,7 @@
   import { agdaPreviewSnippets } from "@www/preview/agda-preview-snippets";
   import { alloyPreviewSnippets } from "@www/preview/alloy-preview-snippets";
   import { angularPreviewSnippets } from "@www/preview/angular-preview-snippets";
+  import { antlrPreviewSnippets } from "@www/preview/antlr-preview-snippets";
   import { apexPreviewSnippets } from "@www/preview/apex-preview-snippets";
   import { assemblyscriptPreviewSnippets } from "@www/preview/assemblyscript-preview-snippets";
   import { astroPreviewSnippets } from "@www/preview/astro-preview-snippets";
@@ -177,6 +178,7 @@
   import agda from "svelte-highlight/languages/agda";
   import alloy from "svelte-highlight/languages/alloy";
   import angular from "svelte-highlight/languages/angular";
+  import antlr from "svelte-highlight/languages/antlr";
   import apex from "svelte-highlight/languages/apex";
   import assemblyscript from "svelte-highlight/languages/assemblyscript";
   import astro from "svelte-highlight/languages/astro";
@@ -529,6 +531,7 @@
     },
     meson: { lang: meson, snippets: mesonPreviewSnippets },
     httpfile: { lang: httpfile, snippets: httpfilePreviewSnippets },
+    antlr: { lang: antlr, snippets: antlrPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
