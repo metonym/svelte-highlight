@@ -223,6 +223,7 @@
     "/preview-po": "gettext PO language preview",
     "/preview-sshconfig": "SSH Config language preview",
     "/preview-fluent": "Fluent language preview",
+    "/preview-riscv": "RISC-V Assembly language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");

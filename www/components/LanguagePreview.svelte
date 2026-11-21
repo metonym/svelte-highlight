@@ -131,6 +131,7 @@
   import { regoPreviewSnippets } from "@www/preview/rego-preview-snippets";
   import { renpyPreviewSnippets } from "@www/preview/renpy-preview-snippets";
   import { rescriptPreviewSnippets } from "@www/preview/rescript-preview-snippets";
+  import { riscvPreviewSnippets } from "@www/preview/riscv-preview-snippets";
   import { robotframeworkPreviewSnippets } from "@www/preview/robotframework-preview-snippets";
   import { rocPreviewSnippets } from "@www/preview/roc-preview-snippets";
   import { ronPreviewSnippets } from "@www/preview/ron-preview-snippets";
@@ -311,6 +312,7 @@
   import rego from "svelte-highlight/languages/rego";
   import renpy from "svelte-highlight/languages/renpy";
   import rescript from "svelte-highlight/languages/rescript";
+  import riscv from "svelte-highlight/languages/riscv";
   import robotframework from "svelte-highlight/languages/robotframework";
   import roc from "svelte-highlight/languages/roc";
   import ron from "svelte-highlight/languages/ron";
@@ -547,6 +549,7 @@
     po: { lang: po, snippets: poPreviewSnippets },
     sshconfig: { lang: sshconfig, snippets: sshconfigPreviewSnippets },
     fluent: { lang: fluent, snippets: fluentPreviewSnippets },
+    riscv: { lang: riscv, snippets: riscvPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
