@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.24.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.24.0) - 2026-11-21
+
+**Features**
+
+- add `HighlightDiff`, `DiffFileList`, `DiffView`, `DiffMinimap` and `DiffStats`, and the `svelte-highlight/diff`, `svelte-highlight/diff-edits` and `svelte-highlight/diff-controller` modules (experimental)
+- add `CodeToolbar`, `ToolbarButton` and `WrapToggle`, and an `absolute` prop to `CopyButton`
+- add an `engine="css-highlights"` option and a `theme` prop to `Highlight`
+- add `HighlightAutoLazy` and `svelte-highlight/auto-detect` for lazy language detection
+- add `createEditor` (`svelte-highlight/editable`) for use without Svelte
+- add `createStreamView` (`svelte-highlight/stream`, `svelte-highlight/stream.css`) for use without Svelte
+- make every scrollable code block a focusable, named region, with a `label` prop
+- add an `errorText` prop to `CopyButton`, and announce copies in a status region
+- add a `--titlebar-line-height` variable to `CodeWindow`
+
+**Fixes**
+
+- resolve compound and descendant theme rules in `HighlightEditable`'s `css-highlights` engine
+- return `"dom"` from `resolvedEngine()` until the first CSS paint
+- fix what axe flags for WCAG 2.1 A and AA in every component
+- keep descenders in `CodeWindow` and `DiffFileList` titles under `line-height: 1`
+
+**Notes**
+
+- With `theme`, `HighlightEditable`'s `css-highlights` names change from `hljs-<id>-<scope>` to `hljs-<id>-c<n>`. The editor now writes its own `::highlight()` rules.
+
 ## [7.23.2](https://github.com/metonym/svelte-highlight/releases/tag/v7.23.2) - 2026-11-15
 
 **Fixes**
