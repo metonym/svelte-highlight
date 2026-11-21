@@ -6,7 +6,7 @@ test("Languages", () => {
 
   // @ts-expect-error: the module has no default export
   expect(languages.default).toBeUndefined();
-  expect(languageNames.length).toEqual(369);
+  expect(languageNames.length).toEqual(370);
   expect(languageNames).toMatchSnapshot();
 });
 

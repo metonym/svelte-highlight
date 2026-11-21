@@ -28,6 +28,8 @@ true false null
 /regex/ </span><span class="hljs-symbol">#hashtag</span><span class="language-html"> @annotation</span>"
 `;
 
+exports[`golden snapshot: antlr 1`] = `"<span class="hljs-keyword">grammar</span> <span class="hljs-keyword">lexer</span> <span class="hljs-keyword">parser</span> <span class="hljs-keyword">fragment</span> <span class="hljs-keyword">import</span> <span class="hljs-keyword">options</span> <span class="hljs-keyword">tokens</span> <span class="hljs-keyword">channels</span> <span class="hljs-keyword">mode</span> <span class="hljs-keyword">returns</span> <span class="hljs-keyword">locals</span> <span class="hljs-keyword">throws</span> <span class="hljs-keyword">catch</span> <span class="hljs-keyword">finally</span> <span class="hljs-built_in">EOF</span>"`;
+
 exports[`golden snapshot: apache 1`] = `
 "// <span class="hljs-attribute">comment</span>
 &quot;<span class="hljs-attribute">string</span><span class="hljs-string">&quot; &#x27;string&#x27; 123 3.14

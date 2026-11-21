@@ -2286,4 +2286,47 @@ Authorization: Bearer {{login.response.body.$.token}}
 ###
 GET https://example.com/health
 `,
+  antlr: `/* Arithmetic expressions */
+grammar Expr;
+
+options { language = Java; }
+import CommonLexerRules;
+tokens { INDENT, DEDENT }
+
+@header {
+package calc;
+import java.util.*;
+}
+
+@members {
+  Map<String, Integer> memory = new HashMap<String, Integer>();
+  void reset() { if (memory != null) { memory.clear(); } }
+}
+
+prog: stat+ EOF ;
+
+stat
+    : id=ID '=' value=expr NEWLINE   # assign
+    | expr NEWLINE                   # printExpr
+    | NEWLINE                        # blank
+    ;
+
+expr[int p] returns [int v]
+    : <assoc=right> expr '^' expr    # Pow
+    | left=expr op=('*'|'/') right=expr  # MulDiv
+    | args+=expr (',' args+=expr)*   # List
+    | {$p > 0}? INT                  # Int
+    | '(' expr ')'                   # Parens
+    ;
+
+ID  : [a-zA-Z_] [a-zA-Z_0-9]* ;
+INT : DIGIT+ ;
+fragment DIGIT : '0'..'9' ;
+STRING : '"' ~["\\\\\\r\\n]* '"' -> pushMode(IN_STRING), more ;
+COMMENT : '//' ~[\\r\\n]* -> channel(HIDDEN) ;
+WS : [ \\t]+ -> skip ;
+
+mode IN_STRING;
+END_STRING : '"' -> popMode ;
+`,
 };
