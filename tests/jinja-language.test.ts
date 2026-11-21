@@ -1,4 +1,5 @@
 import { createRegistry, registerAll } from "../src/engine.js";
+import { resolveLanguageName } from "../src/fence.js";
 
 import jinja from "../src/languages/jinja";
 
@@ -104,4 +105,45 @@ test("jinja highlights numbers with digit groups and exponents", () => {
   expect(result).toContain('<span class="hljs-number">42.1e2</span>');
   expect(result).toContain('<span class="hljs-number">7</span>');
   expect(result).toContain("{{ user_2 }}");
+});
+
+test("jinja resolves the njk and nunjucks aliases", () => {
+  expect(resolveLanguageName("njk")).toBe("jinja");
+  expect(resolveLanguageName("nunjucks")).toBe("jinja");
+  expect(resolveLanguageName("Nunjucks")).toBe("jinja");
+});
+
+test("jinja highlights Nunjucks async loop tags", () => {
+  const result = highlight(
+    "{% asyncEach post in posts %}{{ post.title }}{% endeach %}" +
+      "{% asyncAll d in drafts %}{{ d }}{% endall %}" +
+      "{% ifAsync ready %}ok{% endif %}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">asyncEach</span>');
+  expect(result).toContain('<span class="hljs-keyword">endeach</span>');
+  expect(result).toContain('<span class="hljs-keyword">asyncAll</span>');
+  expect(result).toContain('<span class="hljs-keyword">endall</span>');
+  expect(result).toContain('<span class="hljs-keyword">ifAsync</span>');
+});
+
+test("jinja highlights Nunjucks elseif and verbatim tags", () => {
+  const result = highlight(
+    "{%- if a -%}1{% elseif b %}2{% endif %}" +
+      "{% verbatim %}{{ raw }}{% endverbatim %}",
+  );
+
+  expect(result).toContain('<span class="hljs-keyword">elseif</span>');
+  expect(result).toContain('<span class="hljs-keyword">verbatim</span>');
+  expect(result).toContain('<span class="hljs-keyword">endverbatim</span>');
+  expect(result).toContain(
+    '<span class="hljs-template-tag">{%- <span class="hljs-keyword">if</span> a -%}</span>',
+  );
+});
+
+test("jinja highlights the Nunjucks dump filter like any filter", () => {
+  const result = highlight("{{ data | dump(2) }}");
+
+  expect(result).toContain('<span class="hljs-built_in">dump</span>');
+  expect(result).toContain('<span class="hljs-number">2</span>');
 });

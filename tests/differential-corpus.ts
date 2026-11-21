@@ -638,6 +638,9 @@ HTTP *
 {% for item in items %}
   {{ hello(item) }}
 {% endfor %}
+{%- asyncEach post in posts -%}
+  {{ post | dump(2) }}
+{% endeach %}
 `,
   jmespath:
     "people[?age > \`30\`].{name: name, city: address.city} | sort_by(@, &name)",
