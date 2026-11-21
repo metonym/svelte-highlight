@@ -4,8 +4,8 @@ const NEXTFLOW_KEYWORDS =
   "storeDir|0 true|0 false|0 null|0";
 
 const NEXTFLOW_BUILT_INS =
-  "Channel|0 fromPath|0 fromFilePairs|0 of|0 map|0 filter|0 collect|0 " +
-  "flatten|0 set|0 view|0";
+  "Channel|0 channel|0 fromPath|0 fromFilePairs|0 of|0 topic|0 map|0 " +
+  "filter|0 collect|0 flatten|0 set|0 view|0";
 
 /** @param {import("highlight.js").HLJSApi} hljs */
 function defineNextflow(hljs) {
@@ -62,24 +62,65 @@ function defineNextflow(hljs) {
     relevance: 10,
   };
 
+  const NUMBER = {
+    className: "number",
+    begin: /\b\d+(?:\.\d+)?\b/,
+    relevance: 0,
+  };
+
+  // The top-level `output { ... }` block that declares workflow outputs.
+  const OUTPUT_BLOCK = {
+    className: "keyword",
+    begin: /\boutput\b(?=\s*\{)/,
+    relevance: 0,
+  };
+
   // `input:`/`output:`/etc. section openers -- relevance 0 since the words
-  // themselves (input, output) are common outside Nextflow.
+  // themselves (input, output) are common outside Nextflow. `topic:` sits
+  // beside `emit:` on a process output.
   const SECTION = {
     className: "keyword",
     begin:
-      /\b(?:input|output|script|shell|exec|when|stub|take|main|emit)(?=\s*:)/,
+      /\b(?:input|output|script|shell|exec|when|stub|take|main|emit|publish|topic|onComplete|onError)(?=\s*:)/,
     relevance: 0,
+  };
+
+  const PARAM_TYPE = {
+    begin: [/:/, /\s*/, /[A-Z]\w*/],
+    beginScope: { 3: "type" },
+    relevance: 0,
+  };
+
+  const BRACES = {
+    begin: /\{/,
+    end: /\}/,
+    contains: /** @type {(import("highlight.js").Mode | "self")[]} */ ([
+      STRING,
+      "self",
+    ]),
+    relevance: 0,
+  };
+
+  // The typed `params { name: Type = default }` block. Its own mode keeps
+  // a parameter named `input` or `output` from reading as a section opener.
+  const PARAMS_BLOCK = {
+    begin: [/\bparams\b/, /\s*/, /\{/],
+    beginScope: { 1: "keyword" },
+    end: /\}/,
+    keywords: { literal: "true false null" },
+    contains: [
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+      STRING,
+      PARAM_TYPE,
+      NUMBER,
+      BRACES,
+    ],
   };
 
   const OPERATOR = {
     className: "operator",
-    begin: /\?\.|\?:|\.\.<|\.\.|->|\|/,
-    relevance: 0,
-  };
-
-  const NUMBER = {
-    className: "number",
-    begin: /\b\d+(?:\.\d+)?\b/,
+    begin: /\?\.|\?:|\.\.<|\.\.|->|\|\||&&|\|/,
     relevance: 0,
   };
 
@@ -99,6 +140,8 @@ function defineNextflow(hljs) {
       PROCESS_DECL,
       WORKFLOW_MAIN,
       WORKFLOW_DECL,
+      PARAMS_BLOCK,
+      OUTPUT_BLOCK,
       SECTION,
       OPERATOR,
       NUMBER,
