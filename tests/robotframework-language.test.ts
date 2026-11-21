@@ -112,3 +112,18 @@ test("robotframework highlights the keyword after an assignment", () => {
     '<span class="hljs-title function_ invoke__">Get From Dictionary</span>',
   );
 });
+
+test("robotframework scores control steps and list variables", () => {
+  const relevance = (code: string) =>
+    registry.highlight(code, { language: "robotframework" }).relevance;
+  const header = "*** Keywords ***\nDo It\n";
+  const base = relevance(header);
+
+  expect(relevance(`${header}    FOR    \${x}    IN    a\n    END`)).toBe(
+    base + 10,
+  );
+  expect(relevance(`${header}    Log Many    @{items}`)).toBe(base + 5);
+  expect(relevance(`${header}    Log    \${x}`)).toBe(base);
+  // Control words outside a steps section score nothing.
+  expect(relevance("    FOR    x\n    END")).toBe(0);
+});
