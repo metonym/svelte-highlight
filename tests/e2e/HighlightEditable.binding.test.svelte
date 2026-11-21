@@ -7,7 +7,7 @@
   let code = "ab";
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <div data-testid="first">
   <HighlightEditable bind:this={first} language={typescript} bind:code />

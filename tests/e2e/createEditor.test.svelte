@@ -19,14 +19,13 @@
   });
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <pre><code
     bind:this={element}
     class="hljs"
     contenteditable="true"
-    spellcheck="false"
-></code></pre>
+    spellcheck="false"></code></pre>
 
 <output data-testid="changes">{changes}</output>
 <button type="button" data-testid="destroy" on:click={() => editor.destroy()}>

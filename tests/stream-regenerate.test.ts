@@ -214,7 +214,7 @@ describe("walkStart", () => {
       // Every CHUNK_LINES-th line start before the change.
       const lineStarts: number[] = [];
       let line = 0;
-      for (let i = fed.indexOf("\n"); i !== -1 && i < at; ) {
+      for (let i = fed.indexOf("\n"); i !== -1 && i < at;) {
         if (++line % CHUNK_LINES === 0) lineStarts.push(i + 1);
         i = fed.indexOf("\n", i + 1);
       }

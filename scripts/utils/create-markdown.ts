@@ -1,6 +1,4 @@
-import { version as hljsVersion } from "highlight.js/package.json" with {
-  type: "json",
-};
+import { version as hljsVersion } from "highlight.js/package.json" with { type: "json" };
 
 export const createMarkdown = (
   type: "Languages" | "Styles" | "Themes",

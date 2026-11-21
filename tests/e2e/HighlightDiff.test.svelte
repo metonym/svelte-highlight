@@ -55,7 +55,7 @@
   }
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <HighlightDiff
   data-testid="diff"

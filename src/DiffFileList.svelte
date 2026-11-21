@@ -351,7 +351,7 @@
 
 <div
   {...rest}
-  class="shl-diff-file-list shl-diff-theme {$$restProps.class ?? ""}"
+  class="shl-diff-file-list shl-diff-theme {$$restProps.class ?? ''}"
 >
   {#each files as file, index (keyOf(file, index))}
     {@const key = keyOf(file, index)}

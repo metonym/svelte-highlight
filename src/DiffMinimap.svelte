@@ -30,7 +30,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
   {...rest}
-  class="shl-diff-minimap shl-diff-theme {$$restProps.class ?? ""}"
+  class="shl-diff-minimap shl-diff-theme {$$restProps.class ?? ''}"
   title="Changes in this file. Click to jump."
   role="presentation"
   on:click={onClick}

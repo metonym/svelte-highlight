@@ -22,11 +22,14 @@
 </script>
 
 <pre class="ansi" class:wrap {...$$restProps}><code
-    >{#each segments as segment}{#if segment.link}<a href={segment.link} rel="noopener noreferrer" class={segment.class} style={segment.style}
-        >{segment.text}</a
-      >{:else}<span class={segment.class} style={segment.style}
-        >{segment.text}</span
-      >{/if}{/each}</code
+    >{#each segments as segment}{#if segment.link}<a
+      href={segment.link}
+      rel="noopener noreferrer"
+      class={segment.class}
+      style={segment.style}>{segment.text}</a
+    >{:else}<span class={segment.class} style={segment.style}
+      >{segment.text}</span
+    >{/if}{/each}</code
   ></pre>
 
 <style>

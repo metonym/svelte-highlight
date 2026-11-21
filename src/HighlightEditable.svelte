@@ -150,13 +150,12 @@
 <pre
   style:overflow-x="var(--overflow-x, auto)"
   style:border-radius="var(--border-radius, 0)"
-  {...$$restProps}
-><code
+  {...$$restProps}><code
     bind:this={element}
     class:hljs={true}
     contenteditable={readonly ? "false" : "true"}
-    spellcheck="false"
->{code}</code></pre>
+    spellcheck="false">{code}</code
+  ></pre>
 
 <style>
   code {

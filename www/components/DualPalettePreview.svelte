@@ -62,8 +62,8 @@ const greet = (user: User): string => {
   {:else if mode === "light" || mode === "dark"}
     Forcing the <strong>{mode}</strong> theme.
   {:else}
-    Dark block is gated behind <code>{selector}</code> on an ancestor — toggle
-    the checkbox above.
+    Dark block is gated behind <code>{selector}</code> on an ancestor — toggle the
+    checkbox above.
   {/if}
 </p>
 

@@ -17,8 +17,8 @@
 <p class="label-01 mb-3">
   Swapping <code class="code">code</code> for a different (here, much shorter)
   document rebuilds the underlying <code class="code">TokenizedDocument</code>
-  and clamps an out-of-range scroll position -- try scrolling to the bottom of
-  the long document, then switching.
+  and clamps an out-of-range scroll position -- try scrolling to the bottom of the
+  long document, then switching.
 </p>
 
 <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem">

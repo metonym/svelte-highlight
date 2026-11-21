@@ -8,7 +8,7 @@
   let code = "const x: number = 1;";
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <HighlightEditable {language} bind:code />
 

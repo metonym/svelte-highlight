@@ -188,9 +188,9 @@
   <Column>
     <p class="mb-3">
       <code class="code">AnsiOutput</code>
-      renders terminal output with ANSI SGR escape codes as styled HTML. The
-      parser is separate from highlight.js. Build logs, CLI output, and test
-      runners are the usual cases.
+      renders terminal output with ANSI SGR escape codes as styled HTML. The parser
+      is separate from highlight.js. Build logs, CLI output, and test runners are
+      the usual cases.
     </p>
     <Toggle
       labelText="Show raw escape codes"
@@ -219,8 +219,8 @@
     <h3 class="mb-3">Auto-contrast</h3>
     <p class="label-01 mb-3">
       <code class="code">autoContrast</code>
-      (default on) flips a span's foreground to black or white when it wouldn't
-      read on its background. Set
+      (default on) flips a span's foreground to black or white when it wouldn't read
+      on its background. Set
       <code class="code">autoContrast={false}</code>
       to keep the ANSI colors as-is.
     </p>
@@ -239,8 +239,8 @@
   <Column xlg={12}>
     <h3 class="mb-3">Paired with <code class="code">CodeWindow</code></h3>
     <p class="label-01 mb-3">
-      Wrap with <code class="code">CodeWindow variant="terminal"</code> for the
-      prompt and title bar.
+      Wrap with <code class="code">CodeWindow variant="terminal"</code> for the prompt
+      and title bar.
     </p>
     <CodeWindow variant="terminal" title="vitest">
       <AnsiOutput text={testLog} />

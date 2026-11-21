@@ -27,7 +27,7 @@
   let jump = 0;
 </script>
 
-<input data-testid="jump-index" type="number" bind:value={jump}>
+<input data-testid="jump-index" type="number" bind:value={jump} />
 <button
   type="button"
   data-testid="jump"

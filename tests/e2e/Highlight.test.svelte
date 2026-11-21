@@ -31,7 +31,7 @@ export const title = "Page";
   <\/script>`;
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <button type="button" on:click={() => (toggle = !toggle)}>Toggle</button>
 <button type="button" on:click={() => (showHtml = !showHtml)}>

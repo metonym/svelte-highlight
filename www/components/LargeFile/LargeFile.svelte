@@ -117,12 +117,12 @@
   <Column xlg={12}>
     <p class="mb-5" style="max-width: 48rem">
       <code class="code">HighlightVirtual</code>
-      tokenizes only what you scroll to, from checkpoints spaced through the
-      document, and keeps a couple dozen line nodes in the DOM no matter how
-      long the file is. Pick a size, load it, and jump around. The file is
-      generated in your browser. After the first paint, the rest of the file is
-      tokenized in idle time. Once that reaches 100%, any jump takes a few
-      milliseconds; a jump before then tokenizes the remaining gap first.
+      tokenizes only what you scroll to, from checkpoints spaced through the document,
+      and keeps a couple dozen line nodes in the DOM no matter how long the file is.
+      Pick a size, load it, and jump around. The file is generated in your browser.
+      After the first paint, the rest of the file is tokenized in idle time. Once
+      that reaches 100%, any jump takes a few milliseconds; a jump before then tokenizes
+      the remaining gap first.
     </p>
   </Column>
 </Row>

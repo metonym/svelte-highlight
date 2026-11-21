@@ -6,7 +6,7 @@
   import atomOneDark from "svelte-highlight/styles/atom-one-dark";
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <Highlight language={javascript} code="const x = 1;" />
 <Highlight language={typescript} code="const y: number = 2;" />

@@ -185,29 +185,28 @@ export { add, mul };\`,
       <Link
         inline
         style="font-size: inherit"
-        href="https://github.com/highlightjs/highlight.js"
-        >highlight.js.</Link
+        href="https://github.com/highlightjs/highlight.js">highlight.js.</Link
       >
     </p>
   </Column>
 </Row>
 
 <Row>
-  <Column xlg={12}> <h4>Installation</h4> </Column>
+  <Column xlg={12}><h4>Installation</h4></Column>
   <Column xlg={6} lg={6} md={6}>
-    <CodeSnippet code="npm i {PKG_NAME}" /><br>
-    <CodeSnippet code="pnpm i {PKG_NAME}" /><br>
-    <CodeSnippet code="bun add {PKG_NAME}" /><br>
+    <CodeSnippet code="npm i {PKG_NAME}" /><br />
+    <CodeSnippet code="pnpm i {PKG_NAME}" /><br />
+    <CodeSnippet code="bun add {PKG_NAME}" /><br />
     <CodeSnippet code="yarn add {PKG_NAME}" />
   </Column>
 </Row>
 
 <Row>
-  <Column> <hr> </Column>
+  <Column><hr /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="usage">Usage</h2> </Column>
+  <Column xlg={12}><h2 id="usage">Usage</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">The default Highlight component requires two props:</p>
     <UnorderedList class="mb-5">
@@ -285,16 +284,15 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="scoping-styles">Scoping styles</h2> </Column>
+  <Column xlg={12}><h2 id="scoping-styles">Scoping styles</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Themes target global <code class="code">.hljs</code> selectors, so the
-      last one injected wins. That is fine when every block shares one theme.
+      Themes target global <code class="code">.hljs</code> selectors, so the last
+      one injected wins. That is fine when every block shares one theme.
     </p>
     <p class="mb-5">
-      Use <code class="code">HighlightStyle</code> when blocks on the same page
-      need different themes, like a style gallery or a light snippet next to a
-      dark one.
+      Use <code class="code">HighlightStyle</code> when blocks on the same page need
+      different themes, like a style gallery or a light snippet next to a dark one.
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
@@ -303,7 +301,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="dark-mode">Dark mode</h2> </Column>
+  <Column xlg={12}><h2 id="dark-mode">Dark mode</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">HighlightStyle</code>
@@ -355,8 +353,8 @@ export { add, mul };\`,
   </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use the <code class="code">HighlightSvelte</code> component for Svelte
-      syntax highlighting.
+      Use the <code class="code">HighlightSvelte</code> component for Svelte syntax
+      highlighting.
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
@@ -365,7 +363,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="auto-highlighting">Auto-highlighting</h2> </Column>
+  <Column xlg={12}><h2 id="auto-highlighting">Auto-highlighting</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       The <code class="code">HighlightAuto</code> component invokes the
@@ -386,8 +384,8 @@ export { add, mul };\`,
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Optionally, you can restrict language detection to a specific subset using
-      the <code class="code">languageNames</code> prop. This can improve
-      performance and accuracy.
+      the <code class="code">languageNames</code> prop. This can improve performance
+      and accuracy.
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
@@ -399,13 +397,13 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="action">Action</h2> </Column>
+  <Column xlg={12}><h2 id="action">Action</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use the <code class="code">highlight</code> action to highlight existing
       <code class="code">{"<pre><code>"}</code>
-      markup in place. This is useful for progressively enhancing
-      server-rendered content like Markdown without swapping in a component.
+      markup in place. This is useful for progressively enhancing server-rendered
+      content like Markdown without swapping in a component.
     </p>
     <p class="mb-5">
       The action accepts the same <code class="code">language</code> prop as the
@@ -430,21 +428,21 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="line-numbers">Line Numbers</h2> </Column>
+  <Column xlg={12}><h2 id="line-numbers">Line Numbers</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use the <code class="code">LineNumbers</code> component to render the
-      highlighted code with line numbers.
+      Use the <code class="code">LineNumbers</code> component to render the highlighted
+      code with line numbers.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <Basic /> </Column>
+  <Column xlg={10} lg={10} md={12}><Basic /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Set <code class="code">hideBorder</code> to <code class="code">true</code>
       to hide the border of the line numbers column.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HideBorder /> </Column>
+  <Column xlg={10} lg={10} md={12}><HideBorder /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       By default, overflowing horizontal content is contained by a scrollbar.
@@ -456,14 +454,13 @@ export { add, mul };\`,
       element.
     </p>
   </Column>
-  <Column xlg={8} lg={8} md={12}> <WrapLines /> </Column>
+  <Column xlg={8} lg={8} md={12}><WrapLines /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use <code class="code">--style-props</code> to customize visual
-      properties.
+      Use <code class="code">--style-props</code> to customize visual properties.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <StyleProps /> </Column>
+  <Column xlg={10} lg={10} md={12}><StyleProps /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use container-level variables like
@@ -475,7 +472,7 @@ export { add, mul };\`,
       overrides.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <ContainerStyle /> </Column>
+  <Column xlg={10} lg={10} md={12}><ContainerStyle /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">startingLineNumber</code> to customize the starting
@@ -483,7 +480,7 @@ export { add, mul };\`,
       <code class="code">1</code>.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <StartingLineNumber /> </Column>
+  <Column xlg={10} lg={10} md={12}><StartingLineNumber /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Pass a pre-split <code class="code">lines</code> array to render a window
@@ -494,30 +491,29 @@ export { add, mul };\`,
       so the gutter is sized for the whole document, not just the window.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <Streaming /> </Column>
+  <Column xlg={10} lg={10} md={12}><Streaming /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use <code class="code">highlightedLines</code> to highlight specific
-      lines. Indices start at zero.
+      Use <code class="code">highlightedLines</code> to highlight specific lines.
+      Indices start at zero.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightedLines /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightedLines /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">--unhighlighted-opacity</code> or
       <code class="code">--unhighlighted-filter</code>
-      to de-emphasize the remaining lines and focus attention on the highlighted
-      ones.
+      to de-emphasize the remaining lines and focus attention on the highlighted ones.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <FocusLines /> </Column>
+  <Column xlg={10} lg={10} md={12}><FocusLines /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use <code class="code">--highlighted-background</code> to customize the
-      background color of highlighted lines.
+      Use <code class="code">--highlighted-background</code> to customize the background
+      color of highlighted lines.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightedLinesCustomColor /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightedLinesCustomColor /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">lineStates</code> for a per-line state map --
@@ -527,7 +523,7 @@ export { add, mul };\`,
       <code class="code">highlightedLines</code>.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <LineStates /> </Column>
+  <Column xlg={10} lg={10} md={12}><LineStates /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       When using a custom slot, forward <code class="code">langtag</code> and
@@ -538,38 +534,37 @@ export { add, mul };\`,
       <code class="code">LineNumbers</code>.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <Langtag /> </Column>
+  <Column xlg={10} lg={10} md={12}><Langtag /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      The gutter follows <code class="code">dir="rtl"</code> via logical CSS
-      properties.
+      The gutter follows <code class="code">dir="rtl"</code> via logical CSS properties.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <Rtl /> </Column>
+  <Column xlg={10} lg={10} md={12}><Rtl /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="copy-button">Copy Button</h2> </Column>
+  <Column xlg={12}><h2 id="copy-button">Copy Button</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Compose the <code class="code">CopyButton</code> component alongside
       <code class="code">Highlight</code>
-      to add a copy-to-clipboard button. Position it by wrapping both in a
-      relatively-positioned container.
+      to add a copy-to-clipboard button. Position it by wrapping both in a relatively-positioned
+      container.
     </p>
     <p class="mb-5">
-      By default, it copies the <code class="code">code</code> using the native
-      Clipboard API and shows a transient "copied" state.
+      By default, it copies the <code class="code">code</code> using the native Clipboard
+      API and shows a transient "copied" state.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <CopyButtonBasic /> </Column>
+  <Column xlg={10} lg={10} md={12}><CopyButtonBasic /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Pass a <code class="code">copy</code> function to override the default
-      copy behavior—for example, to add logging or a custom toast.
+      Pass a <code class="code">copy</code> function to override the default copy
+      behavior—for example, to add logging or a custom toast.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <CopyButtonCustomFunction /> </Column>
+  <Column xlg={10} lg={10} md={12}><CopyButtonCustomFunction /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Provide custom button content using the default slot. The slot exposes a
@@ -577,14 +572,14 @@ export { add, mul };\`,
       boolean.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <CopyButtonSlot /> </Column>
+  <Column xlg={10} lg={10} md={12}><CopyButtonSlot /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Use <code class="code">--copy-*</code> style props to customize the
-      offset, size, and colors of the button.
+      Use <code class="code">--copy-*</code> style props to customize the offset,
+      size, and colors of the button.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <CopyButtonStyleProps /> </Column>
+  <Column xlg={10} lg={10} md={12}><CopyButtonStyleProps /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Compose <code class="code">CopyButton</code> with
@@ -592,7 +587,7 @@ export { add, mul };\`,
       by wrapping both in a relatively-positioned container.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <CopyButtonLineNumbers /> </Column>
+  <Column xlg={10} lg={10} md={12}><CopyButtonLineNumbers /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       When using a language tag alongside
@@ -603,16 +598,16 @@ export { add, mul };\`,
       so the tag sits to the left of the button.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <CopyButtonLangtag /> </Column>
+  <Column xlg={10} lg={10} md={12}><CopyButtonLangtag /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="code-window">Code Window</h2> </Column>
+  <Column xlg={12}><h2 id="code-window">Code Window</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Wrap a code block in the <code class="code">CodeWindow</code> component to
-      frame it with window chrome. It is purely cosmetic—the default slot
-      renders your content unchanged.
+      Wrap a code block in the <code class="code">CodeWindow</code> component to frame
+      it with window chrome. It is purely cosmetic—the default slot renders your content
+      unchanged.
     </p>
     <p class="mb-5">
       Use the <code class="code">variant</code> prop to choose the chrome style:
@@ -620,8 +615,8 @@ export { add, mul };\`,
       (default) renders traffic-light dots,
       <code class="code">"terminal"</code>
       renders a prompt, and <code class="code">"plain"</code> renders just the
-      title bar. The optional <code class="code">title</code> is shown in the
-      title bar.
+      title bar. The optional <code class="code">title</code> is shown in the title
+      bar.
     </p>
     <p class="mb-5">
       The chrome is themable with <code class="code">--window-*</code>,
@@ -630,22 +625,21 @@ export { add, mul };\`,
       style props.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <CodeWindowPreview /> </Column>
+  <Column xlg={10} lg={10} md={12}><CodeWindowPreview /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="animation">Animation</h2> </Column>
+  <Column xlg={12}><h2 id="animation">Animation</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Use <code class="code">Typewriter</code> inside
       <code class="code">Highlight</code>'s default slot with the
       <code class="code">highlighted</code>
-      prop. It prints the code one character at a time, syntax highlighting
-      included. A blinking caret marks the end of the typed text and hides when
-      typing stops.
+      prop. It prints the code one character at a time, syntax highlighting included.
+      A blinking caret marks the end of the typed text and hides when typing stops.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <TypewriterBasic /> </Column>
+  <Column xlg={10} lg={10} md={12}><TypewriterBasic /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Set <code class="code">speed</code> (milliseconds per character) and pause
@@ -671,13 +665,12 @@ export { add, mul };\`,
       Control the pacing curve with <code class="code">easing</code>: a function
       mapping elapsed-time fraction (0-1) to revealed-fraction (0-1). It
       defaults to <code class="code">linear</code>; import a named curve (<code
-        class="code"
-        >easeOutQuad</code
+        class="code">easeOutQuad</code
       >,
       <code class="code">easeInOutCubic</code>, ...) or pass your own. Total
       typing duration is always <code class="code">speed</code>
-      &times; character count no matter the curve—only the pacing within it
-      changes. Pick a curve in the demo below to try it live.
+      &times; character count no matter the curve—only the pacing within it changes.
+      Pick a curve in the demo below to try it live.
     </p>
     <InlineNotification
       lowContrast
@@ -687,11 +680,11 @@ export { add, mul };\`,
       subtitle="Typewriter doesn't gate itself on prefers-reduced-motion; check it yourself and skip rendering Typewriter if you want to honor it."
     />
   </Column>
-  <Column xlg={10} lg={10} md={12}> <TypewriterControls /> </Column>
+  <Column xlg={10} lg={10} md={12}><TypewriterControls /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="streaming">Streaming</h2> </Column>
+  <Column xlg={12}><h2 id="streaming">Streaming</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Rendering LLM chat output is the dominant new syntax-highlighting use
@@ -713,7 +706,7 @@ export { add, mul };\`,
       would render for the same code.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightStreamBasic /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightStreamBasic /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Already-rendered lines are diffed and left untouched in the DOM—only lines
@@ -737,7 +730,7 @@ export { add, mul };\`,
       subtitle="Per-chunk work is O(tail), not O(stream length so far): finished output is sealed into immutable chunks the DOM never re-diffs. Fine for very long responses, but not a substitute for HighlightVirtual below if you also need to scroll through a huge, already-complete document."
     />
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightStreamControls /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightStreamControls /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Set <code class="code">virtualize</code> to render only the lines within
@@ -755,15 +748,15 @@ export { add, mul };\`,
       subtitle="Backed by the same TokenizedDocument used below, so output stays the streaming (non-canonicalized) parse even once done. on:highlight isn't dispatched in this mode; on:done, the caret, and autoScroll all keep working."
     />
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightStreamVirtualize /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightStreamVirtualize /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       LLM chat output is Markdown, not a single code buffer -- prose interleaved
       with several fenced code blocks, each in its own language.
       <code class="code">svelte-highlight/fence</code>'s
       <code class="code">createFenceSplitter</code>
-      turns a growing Markdown string into prose and fence segments with stable
-      ids, so a keyed each block can drive one
+      turns a growing Markdown string into prose and fence segments with stable ids,
+      so a keyed each block can drive one
       <code class="code">HighlightStream</code>
       per fence without re-mounting it as more text arrives elsewhere.
     </p>
@@ -775,15 +768,14 @@ export { add, mul };\`,
       subtitle="Headless: createFenceSplitter has no Svelte dependency. MarkdownStream, below, wraps this exact pattern into a component."
     />
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightStreamMarkdownFences /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightStreamMarkdownFences /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">MarkdownStream</code>
       wraps the pattern above: pass it a growing <code class="code">text</code>
-      buffer and it drives one <code class="code">HighlightStream</code> per
-      fence for you, keyed by the splitter's stable ids. Prose renders as plain
-      text by default -- it's not a Markdown renderer, just a router for fenced
-      code.
+      buffer and it drives one <code class="code">HighlightStream</code> per fence
+      for you, keyed by the splitter's stable ids. Prose renders as plain text by
+      default -- it's not a Markdown renderer, just a router for fenced code.
     </p>
     <InlineNotification
       lowContrast
@@ -793,7 +785,7 @@ export { add, mul };\`,
       subtitle="done is forwarded to every fence as done || !segment.open, the caret only ever renders on the last open fence, and doneText's completion announcement fires once, from the last fence."
     />
   </Column>
-  <Column xlg={10} lg={10} md={12}> <MarkdownStreamBasic /> </Column>
+  <Column xlg={10} lg={10} md={12}><MarkdownStreamBasic /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       A non-append change to <code class="code">text</code>—an LLM regenerating
@@ -805,22 +797,22 @@ export { add, mul };\`,
       instance.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <MarkdownStreamRegenerate /> </Column>
+  <Column xlg={10} lg={10} md={12}><MarkdownStreamRegenerate /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="large-documents">Large Documents</h2> </Column>
+  <Column xlg={12}><h2 id="large-documents">Large Documents</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">HighlightVirtual</code>
       renders only the visible lines of a huge document (plus a small
       <code class="code">overscan</code>
-      margin) inside its own scroll container—a 100k-line file costs a couple
-      dozen DOM line nodes, not one per line. It reuses the same engine
-      checkpoint/resume primitive
+      margin) inside its own scroll container—a 100k-line file costs a couple dozen
+      DOM line nodes, not one per line. It reuses the same engine checkpoint/resume
+      primitive
       <code class="code">HighlightStream</code>
-      uses for streaming, but for random-access windows into a static document
-      instead of a growing tail.
+      uses for streaming, but for random-access windows into a static document instead
+      of a growing tail.
     </p>
     <p class="mb-5">
       The rendered <code class="code">pre</code> is the scroll container
@@ -832,7 +824,7 @@ export { add, mul };\`,
       windowed, highlighted view takes over after hydration.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightVirtualBasic /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightVirtualBasic /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">overscan</code>
@@ -844,15 +836,15 @@ export { add, mul };\`,
       access. Try jumping to a distant line below.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightVirtualControls /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightVirtualControls /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       For custom virtualization, servers, or tests,
       <code class="code">svelte-highlight/tokenized-document</code>
       exposes the same windowing primitive headlessly via
       <code class="code">createTokenizedDocument</code>
-      and its <code class="code">lineRange(start, end)</code> method, which
-      tokenizes lazily and caches the most recently resolved window.
+      and its <code class="code">lineRange(start, end)</code> method, which tokenizes
+      lazily and caches the most recently resolved window.
     </p>
     <InlineNotification
       lowContrast
@@ -862,7 +854,7 @@ export { add, mul };\`,
       subtitle="Output matches HighlightStream's live (non-canonicalized) parse: constructs needing multi-line lookahead across a window's edge can render slightly differently than Highlight's canonical output. No mid-document edits—append and full setCode resets only."
     />
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightVirtualHeadless /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightVirtualHeadless /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">svelte-highlight/search</code>
@@ -876,17 +868,17 @@ export { add, mul };\`,
       brings them into view.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightVirtualSearch /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightVirtualSearch /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="diffs">Diffs</h2> </Column>
+  <Column xlg={12}><h2 id="diffs">Diffs</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">HighlightDiff</code>
-      shows a syntax-highlighted diff of two texts, in unified or split view.
-      Each side is highlighted as a whole file, so strings and comments that
-      open far above a change still highlight correctly inside it.
+      shows a syntax-highlighted diff of two texts, in unified or split view. Each
+      side is highlighted as a whole file, so strings and comments that open far above
+      a change still highlight correctly inside it.
     </p>
     <p class="mb-5">
       It can follow a stream as a model writes a new version, read the edit
@@ -896,20 +888,20 @@ export { add, mul };\`,
       shows hundreds of files on one page.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <HighlightDiffIntro /> </Column>
+  <Column xlg={10} lg={10} md={12}><HighlightDiffIntro /></Column>
   <Column xlg={10} lg={10} md={12}>
     <Link size="lg" href="/preview-diff">See every diff feature</Link>
   </Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="terminal-output">Terminal Output</h2> </Column>
+  <Column xlg={12}><h2 id="terminal-output">Terminal Output</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">AnsiOutput</code>
-      renders terminal output with ANSI SGR escape codes as styled HTML. The
-      parser is separate from highlight.js. Build logs, CLI output, and test
-      runners are the usual cases.
+      renders terminal output with ANSI SGR escape codes as styled HTML. The parser
+      is separate from highlight.js. Build logs, CLI output, and test runners are
+      the usual cases.
     </p>
     <p class="mb-5">
       Standard, bright, 256-color, and 24-bit truecolor codes work, along with
@@ -918,29 +910,29 @@ export { add, mul };\`,
     <p class="mb-5">
       Theme the 16 base colors and bold/dim styling with
       <code class="code">--ansi-*</code>
-      props. <code class="code">autoContrast</code> (default on) flips text to
-      black or white when it wouldn't read on its background.
+      props. <code class="code">autoContrast</code> (default on) flips text to black
+      or white when it wouldn't read on its background.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <AnsiOutputExamples /> </Column>
+  <Column xlg={10} lg={10} md={12}><AnsiOutputExamples /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="editable">Editable</h2> </Column>
+  <Column xlg={12}><h2 id="editable">Editable</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">HighlightEditable</code>
       is a
       <code class="code">contenteditable</code>
-      code block. It re-highlights on every edit and keeps the caret where you
-      left it.
+      code block. It re-highlights on every edit and keeps the caret where you left
+      it.
     </p>
     <p class="mb-5">
       <code class="code">bind:code</code>
       keeps your state in sync. Try typing in the block below.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <EditableBasic /> </Column>
+  <Column xlg={10} lg={10} md={12}><EditableBasic /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">Enter</code>
@@ -965,7 +957,7 @@ export { add, mul };\`,
       and <code class="code">canRedo</code>.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <EditableCommands /> </Column>
+  <Column xlg={10} lg={10} md={12}><EditableCommands /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       Customize the focus outline with
@@ -1002,16 +994,15 @@ export { add, mul };\`,
       convert; bold and italic scopes render plain in this mode.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <EditableCssHighlights /> </Column>
+  <Column xlg={10} lg={10} md={12}><EditableCssHighlights /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      Set <code class="code">readonly</code> to keep highlighting, caret
-      placement, and selection active while blocking edits. The imperative API
-      still works, so a consumer can toggle a document read-only without
-      swapping components.
+      Set <code class="code">readonly</code> to keep highlighting, caret placement,
+      and selection active while blocking edits. The imperative API still works, so
+      a consumer can toggle a document read-only without swapping components.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <EditableReadOnly /> </Column>
+  <Column xlg={10} lg={10} md={12}><EditableReadOnly /></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       There's no slot for
@@ -1023,11 +1014,11 @@ export { add, mul };\`,
       editor.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <EditableComposition /> </Column>
+  <Column xlg={10} lg={10} md={12}><EditableComposition /></Column>
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="file-tabs">File Tabs</h2> </Column>
+  <Column xlg={12}><h2 id="file-tabs">File Tabs</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">FileTabs</code>
@@ -1049,7 +1040,7 @@ export { add, mul };\`,
       fires when the user picks a different one.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <FileTabs /> </Column>
+  <Column xlg={10} lg={10} md={12}><FileTabs /></Column>
 </Row>
 
 <Row class="mb-9">
@@ -1084,7 +1075,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="language-tags">Language Tags</h2> </Column>
+  <Column xlg={12}><h2 id="language-tags">Language Tags</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       All <code class="code">Highlight</code> components allow for a tag to be
@@ -1122,7 +1113,7 @@ export { add, mul };\`,
       />
       <CopyButton code={langtagBasicSnippet} />
     </div>
-    <br>
+    <br />
     <div style="position: relative">
       <HighlightSvelte
         code={langtagStylePropsSnippet}
@@ -1142,7 +1133,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="custom-language">Custom Language</h2> </Column>
+  <Column xlg={12}><h2 id="custom-language">Custom Language</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">fromHighlightJs</code>
@@ -1161,11 +1152,10 @@ export { add, mul };\`,
         Custom Language section
       </Link>
       {" "}
-      of the README for conversion fidelity details and third-party plugin
-      support.
+      of the README for conversion fidelity details and third-party plugin support.
     </p>
   </Column>
-  <Column xlg={10} lg={10} md={12}> <CustomLanguage /> </Column>
+  <Column xlg={10} lg={10} md={12}><CustomLanguage /></Column>
 </Row>
 
 <Row class="mb-9">
@@ -1181,9 +1171,9 @@ export { add, mul };\`,
       When the language is known only at <strong>runtime</strong>—a Markdown
       fence, an API field, or a user-selected value—use the
       <code class="code">loadLanguage</code>
-      helper to import a grammar by name. It resolves with the language object
-      and rejects with an <code class="code">Unknown language</code> error for
-      an unrecognized name.
+      helper to import a grammar by name. It resolves with the language object and
+      rejects with an <code class="code">Unknown language</code> error for an unrecognized
+      name.
     </p>
     <InlineNotification
       lowContrast
@@ -1202,7 +1192,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="static-mode">Static Mode</h2> </Column>
+  <Column xlg={12}><h2 id="static-mode">Static Mode</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">svelte-highlight/static</code>
@@ -1246,8 +1236,8 @@ export { add, mul };\`,
   </Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
-      ...into plain HTML, with no <code class="code">highlight.js</code> or
-      grammar module shipped to the client:
+      ...into plain HTML, with no <code class="code">highlight.js</code> or grammar
+      module shipped to the client:
     </p>
   </Column>
   <Column xlg={10} lg={10} md={12}>
@@ -1271,8 +1261,7 @@ export { add, mul };\`,
       </ListItem>
       <ListItem>
         <code class="code">code</code>
-        is a string literal or a template literal with no interpolated
-        expressions.
+        is a string literal or a template literal with no interpolated expressions.
       </ListItem>
       <ListItem>
         The element has no default-slot content, no spread props, and no
@@ -1345,7 +1334,7 @@ export { add, mul };\`,
       subtitle="Scope is small on purpose: extra props on Highlight don't carry over to the emitted &lt;pre&gt;, and unused imports are left for bundlers to drop."
     />
   </Column>
-  <Column xlg={12}> <h4>Rendering Markdown/MDX Fences</h4> </Column>
+  <Column xlg={12}><h4>Rendering Markdown/MDX Fences</h4></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">highlightStatic</code>
@@ -1394,7 +1383,7 @@ export { add, mul };\`,
 </Row>
 
 <Row class="mb-9">
-  <Column xlg={12}> <h2 id="headless-usage">Headless usage</h2> </Column>
+  <Column xlg={12}><h2 id="headless-usage">Headless usage</h2></Column>
   <Column xlg={6} lg={6} md={12}>
     <p class="mb-5">
       <code class="code">svelte-highlight/engine</code>

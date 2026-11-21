@@ -149,7 +149,7 @@ function mayBeFence(text, lineStart, lineEnd) {
   let p = lineStart;
   while (p < maxIndent && text.charCodeAt(p) === 32 /* " " */) p += 1;
   const code = text.charCodeAt(p);
-  return code === 96 /* "`" */ || code === 126 /* "~" */;
+  return code === 96 /* "`" */ || code === 126; /* "~" */
 }
 
 /**

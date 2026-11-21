@@ -33,11 +33,11 @@
   <div>
     <h6>buildRows(state, {"{"} context: 1 {"}"})</h6>
     <pre>{rows
-    .map(
-      (r) =>
-        `${r.kind.padEnd(8)} old=${r.old ?? "-"} new=${r.new ?? "-"}${r.count ? ` count=${r.count}` : ""}`,
-    )
-    .join("\n")}</pre>
+        .map(
+          (r) =>
+            `${r.kind.padEnd(8)} old=${r.old ?? "-"} new=${r.new ?? "-"}${r.count ? ` count=${r.count}` : ""}`,
+        )
+        .join("\n")}</pre>
   </div>
   <div>
     <h6>toUnifiedPatch(state)</h6>

@@ -10,7 +10,7 @@ const d = 4;
 const e = 5;`;
 </script>
 
-<svelte:head> {@html horizonDark} </svelte:head>
+<svelte:head>{@html horizonDark}</svelte:head>
 
 <Highlight language={typescript} {code} let:highlighted>
   <LineNumbers

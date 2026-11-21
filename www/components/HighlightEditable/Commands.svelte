@@ -22,15 +22,13 @@
     size="small"
     kind="tertiary"
     disabled={!historyState.canUndo}
-    on:click={() => editor.undo()}
-    >Undo</Button
+    on:click={() => editor.undo()}>Undo</Button
   >
   <Button
     size="small"
     kind="tertiary"
     disabled={!historyState.canRedo}
-    on:click={() => editor.redo()}
-    >Redo</Button
+    on:click={() => editor.redo()}>Redo</Button
   >
   <Button size="small" kind="ghost" on:click={() => editor.indent()}>
     Indent

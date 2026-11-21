@@ -52,12 +52,7 @@ export { default as LineNumbers } from "./LineNumbers.svelte";
 export type { LanguageName, LanguageType } from "./languages";
 export { LanguageLoadError, loadLanguage } from "./load-language";
 export { default as MarkdownStream } from "./MarkdownStream.svelte";
-export {
-  dualStyle,
-  scopeClassFor,
-  scopeSelectors,
-  scopeStyle,
-} from "./scoped";
+export { dualStyle, scopeClassFor, scopeSelectors, scopeStyle } from "./scoped";
 export { default as Typewriter } from "./Typewriter.svelte";
 export type { ThemePalette } from "./theme";
 export {

@@ -224,7 +224,7 @@
       v{PKG_VERSION}
     </span>
   </span>
-  <svelte:fragment slot="skipToContent"> <SkipToContent /> </svelte:fragment>
+  <svelte:fragment slot="skipToContent"><SkipToContent /></svelte:fragment>
   <HeaderNav>
     {#each Object.entries(navRoutes) as [href, text]}
       <HeaderNavItem {href} {text} isSelected={path === href} />
@@ -238,7 +238,7 @@
 <Content>
   <Grid padding>
     <Row>
-      <Column> <h1>{title}</h1> </Column>
+      <Column><h1>{title}</h1></Column>
     </Row>
     <slot />
   </Grid>

@@ -6,7 +6,7 @@
   let code = "const add = (a: number, b: number) => a + b;";
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <button
   type="button"

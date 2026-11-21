@@ -196,11 +196,10 @@ describe("defineTheme", () => {
 
 describe("extendTheme", () => {
   it("is equivalent to defineTheme({ ...overrides, extends: base })", async () => {
-    const { default: atomOneDark } = (await import(
-      "../src/themes/atom-one-dark.js"
-    )) as {
-      default: ThemePalette;
-    };
+    const { default: atomOneDark } =
+      (await import("../src/themes/atom-one-dark.js")) as {
+        default: ThemePalette;
+      };
     const a = extendTheme(atomOneDark, { roles: { keyword: "#ff79c6" } });
     const b = defineTheme({
       extends: atomOneDark,
@@ -210,11 +209,10 @@ describe("extendTheme", () => {
   });
 
   it("round-trips a shipped palette's vars deep-equal when given no overrides", async () => {
-    const { default: atomOneDark } = (await import(
-      "../src/themes/atom-one-dark.js"
-    )) as {
-      default: ThemePalette;
-    };
+    const { default: atomOneDark } =
+      (await import("../src/themes/atom-one-dark.js")) as {
+        default: ThemePalette;
+      };
     const roundTripped = extendTheme(atomOneDark, {});
     expect(roundTripped.vars).toEqual(atomOneDark.vars);
   });
@@ -222,11 +220,10 @@ describe("extendTheme", () => {
 
 describe("paletteToCss", () => {
   it("matches the generated themes/<name>.css artifact for a shipped palette", async () => {
-    const { default: atomOneDark } = (await import(
-      "../src/themes/atom-one-dark.js"
-    )) as {
-      default: ThemePalette;
-    };
+    const { default: atomOneDark } =
+      (await import("../src/themes/atom-one-dark.js")) as {
+        default: ThemePalette;
+      };
     const generatedCss = fs.readFileSync(
       path.join(import.meta.dir, "../src/themes/atom-one-dark.css"),
       "utf8",
@@ -235,11 +232,10 @@ describe("paletteToCss", () => {
   });
 
   it("output parses via PostCSS into declarations equal to the generated CSS", async () => {
-    const { default: atomOneDark } = (await import(
-      "../src/themes/atom-one-dark.js"
-    )) as {
-      default: ThemePalette;
-    };
+    const { default: atomOneDark } =
+      (await import("../src/themes/atom-one-dark.js")) as {
+        default: ThemePalette;
+      };
     const generatedCss = fs.readFileSync(
       path.join(import.meta.dir, "../src/themes/atom-one-dark.css"),
       "utf8",
@@ -306,11 +302,10 @@ describe("paletteToCss", () => {
 
 describe("validatePalette", () => {
   it("returns [] for a clean shipped-shape palette", async () => {
-    const { default: atomOneDark } = (await import(
-      "../src/themes/atom-one-dark.js"
-    )) as {
-      default: ThemePalette;
-    };
+    const { default: atomOneDark } =
+      (await import("../src/themes/atom-one-dark.js")) as {
+        default: ThemePalette;
+      };
     expect(validatePalette(atomOneDark)).toEqual([]);
   });
 

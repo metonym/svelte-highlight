@@ -151,8 +151,8 @@ $ npm run build`;
 
 <p class="mb-5 mt-5">
   Fill the <code class="code">titlebar</code> slot to add custom toolbar
-  content, like a <code class="code">FileTabs</code> strip, to the mirrored
-  trailing region of the title bar:
+  content, like a <code class="code">FileTabs</code> strip, to the mirrored trailing
+  region of the title bar:
 </p>
 
 <div class="mb-5">

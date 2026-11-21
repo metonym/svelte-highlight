@@ -94,9 +94,11 @@ export async function convertGrammars() {
   console.time("convert grammars");
   const entries = buildLanguageEntries();
 
-  const index = (await import(
-    "../src/languages/index.js"
-  )) as unknown as Record<string, LanguageModule>;
+  const index =
+    (await import("../src/languages/index.js")) as unknown as Record<
+      string,
+      LanguageModule
+    >;
 
   function getModule(entry: (typeof entries)[number]): LanguageModule {
     const mod = index[entry.moduleName];

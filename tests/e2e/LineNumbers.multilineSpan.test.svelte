@@ -8,7 +8,7 @@ line2
 line3 */`;
 </script>
 
-<svelte:head> {@html horizonDark} </svelte:head>
+<svelte:head>{@html horizonDark}</svelte:head>
 
 <Highlight language={javascript} {code} let:highlighted>
   <LineNumbers {highlighted} />

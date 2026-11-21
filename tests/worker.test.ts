@@ -56,7 +56,7 @@ describe("createWorkerHighlighter", () => {
       for (const name of Object.keys(SAMPLES)) {
         it(`highlight() and tokenLines() match a direct registry for ${name}`, async () => {
           const h = getHighlighter();
-          const code = /** @type {string} */ (SAMPLES[name] as string);
+          const code = /** @type {string} */ SAMPLES[name] as string;
 
           const result = await h.highlight(code, name);
           const reference = await referenceHighlight(code, name);

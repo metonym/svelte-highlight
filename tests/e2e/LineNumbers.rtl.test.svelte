@@ -8,7 +8,7 @@ const b = 2;
 const c = 3;`;
 </script>
 
-<svelte:head> {@html horizonDark} </svelte:head>
+<svelte:head>{@html horizonDark}</svelte:head>
 
 <div dir="rtl">
   <Highlight language={typescript} {code} let:highlighted>
