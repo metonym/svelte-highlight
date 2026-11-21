@@ -2490,4 +2490,31 @@ _start:
     vadd.vv v8, v8, v16, v0.t   /* masked */
 count: .word 0x10, 'A', 0b1010
 `,
+  abap: `REPORT zflights.
+* Full-line comment
+CLASS lcl_flights DEFINITION FINAL INHERITING FROM zcl_base.
+  PUBLIC SECTION.
+    TYPES tt_flights TYPE STANDARD TABLE OF sflight WITH EMPTY KEY.
+    CLASS-METHODS create RETURNING VALUE(ro_result) TYPE REF TO lcl_flights.
+    METHODS run IMPORTING iv_carrid TYPE s_carr_id.
+ENDCLASS.
+
+CLASS lcl_flights IMPLEMENTATION.
+  METHOD run.
+    SELECT carrid, connid, price FROM sflight
+      WHERE carrid = @iv_carrid
+      INTO TABLE @DATA(lt_flights).
+    IF sy-subrc <> 0. RETURN. ENDIF. " nothing found
+    LOOP AT lt_flights ASSIGNING FIELD-SYMBOL(<ls_row>).
+      <ls_row>-price = <ls_row>-price * '1.1'.
+      DATA(lv_text) = |{ <ls_row>-connid WIDTH = 4 }: { lines( lt_flights ) }\\n|.
+      mo_log->add( lv_text ) ##NO_TEXT.
+    ENDLOOP.
+    DATA(lo_json) = NEW /ui2/cl_json( ).
+    DATA(lt_ids) = VALUE string_table( FOR ls IN lt_flights ( CONV #( ls-connid ) ) ).
+    zcl_util=>log( iv_msg = 'It''s done' iv_raw = \`raw\` ).
+    lr_data->* = abap_true.
+  ENDMETHOD.
+ENDCLASS.
+`,
 };
