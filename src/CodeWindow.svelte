@@ -62,6 +62,9 @@
       sans-serif
     );
     font-size: var(--titlebar-font-size, 0.8125em);
+    /* The title clips overflow, so an inherited line-height: 1 cuts off
+       descenders. normal always fits the glyphs. */
+    line-height: var(--titlebar-line-height, normal);
   }
 
   .dots {

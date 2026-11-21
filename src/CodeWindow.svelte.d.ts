@@ -38,6 +38,9 @@ export type CodeWindowProps = HTMLAttributes<HTMLDivElement> & {
   /** Title bar font size. @default "0.8125em" */
   "--titlebar-font-size"?: string;
 
+  /** Title bar line height. @default "normal" */
+  "--titlebar-line-height"?: string;
+
   /** Traffic-light dot gap. @default "0.5em" */
   "--dot-gap"?: string;
 

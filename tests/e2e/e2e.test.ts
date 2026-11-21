@@ -214,6 +214,35 @@ test("CodeWindow - renders each variant wrapping a Highlight", async ({
   await expect(plain.locator(".prompt")).toHaveCount(0);
 });
 
+/**
+ * How far each element's text box sticks out of the element's own box.
+ * Text outside the box is clipped by `overflow: hidden`.
+ */
+function textOverflow(els: Element[]) {
+  return els.map((el) => {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const text = range.getBoundingClientRect();
+    const box = el.getBoundingClientRect();
+    return Math.max(box.top - text.top, text.bottom - box.bottom);
+  });
+}
+
+// Many CSS resets set this, and the docs site does too.
+const TIGHT_LINE_HEIGHT = "body { line-height: 1 }";
+
+test("CodeWindow - title keeps its descenders when the page sets line-height: 1", async ({
+  mount,
+  page,
+}) => {
+  await page.addStyleTag({ content: TIGHT_LINE_HEIGHT });
+  await mount(CodeWindow);
+
+  const overflow = await page.locator(".title").evaluateAll(textOverflow);
+  expect(overflow.length).toBeGreaterThan(0);
+  for (const px of overflow) expect(px).toBeLessThanOrEqual(0);
+});
+
 test("CodeWindow - truncated title carries a native tooltip", async ({
   mount,
   page,
@@ -3365,6 +3394,20 @@ test("HighlightDiff - virtualize forces either mode", async ({
   await expect(diff.locator(".shl-diff-window > .shl-diff-row")).toHaveCount(
     302,
   );
+});
+
+test("DiffFileList - file path keeps its descenders when the page sets line-height: 1", async ({
+  mount,
+  page,
+}) => {
+  await page.addStyleTag({ content: TIGHT_LINE_HEIGHT });
+  await mount(DiffFileList, { props: { count: 3 } });
+
+  const overflow = await page
+    .locator(".shl-diff-file-path")
+    .evaluateAll(textOverflow);
+  expect(overflow).toHaveLength(3);
+  for (const px of overflow) expect(px).toBeLessThanOrEqual(0);
 });
 
 test("DiffFileList - mounts only files near the viewport, and unmounts far ones", async ({

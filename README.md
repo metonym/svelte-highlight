@@ -534,6 +534,7 @@ These apply when `langtag` is set to `true`.
 | --titlebar-color      | Text color of the title bar              | `rgba(255, 255, 255, 0.6)`          |
 | --titlebar-font-family| Font family of the title bar             | `system-ui, -apple-system, sans-serif`|
 | --titlebar-font-size  | Font size of the title bar               | `0.8125em`                          |
+| --titlebar-line-height| Line height of the title bar             | `normal`                            |
 | --dot-gap             | Gap between the macOS traffic-light dots | `0.5em`                             |
 | --dot-size            | Diameter of the macOS traffic-light dots | `0.75em`                            |
 | --dot-close           | Color of the "close" traffic-light dot   | `#ff5f56`                           |
@@ -2641,6 +2642,7 @@ The default slot exposes `{ scopeClass }`. `$$restProps` are forwarded to the to
 | --titlebar-color      | Text color of the title bar              | `rgba(255, 255, 255, 0.6)`          |
 | --titlebar-font-family| Font family of the title bar             | `system-ui, -apple-system, sans-serif`|
 | --titlebar-font-size  | Font size of the title bar               | `0.8125em`                          |
+| --titlebar-line-height| Line height of the title bar             | `normal`                            |
 | --dot-gap             | Gap between the macOS traffic-light dots | `0.5em`                             |
 | --dot-size            | Diameter of the macOS traffic-light dots | `0.75em`                            |
 | --dot-close           | Color of the "close" traffic-light dot   | `#ff5f56`                           |
