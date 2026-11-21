@@ -79,9 +79,75 @@ test("angular highlights @let declarations", () => {
   expect(result).toContain(
     '<span class="hljs-keyword">@let</span> <span class="hljs-variable">$user</span>',
   );
-  // The initializer stays plain HTML text.
-  expect(result).toContain(" = items().length + 1;");
+  // The initializer is JavaScript up to the `;`.
+  expect(result).toContain(
+    '<span class="language-javascript"> = <span class="hljs-title function_">items</span>().<span class="hljs-property">length</span> + <span class="hljs-number">1</span></span>',
+  );
   expect(result).not.toContain('<span class="hljs-variable">user$');
+});
+
+test("angular highlights block parameters as JavaScript", () => {
+  const result = highlight(
+    `@if (user.isLoggedIn) {
+} @else if (count > 1) {
+}
+@switch (mode) {
+  @case ("admin") { }
+}`,
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">@if</span> (<span class="language-javascript">user.<span class="hljs-property">isLoggedIn</span></span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-keyword">@else if</span> (<span class="language-javascript">count &gt; <span class="hljs-number">1</span></span>',
+  );
+  expect(result).toContain(
+    '<span class="hljs-string">&quot;admin&quot;</span>',
+  );
+});
+
+test("angular highlights @for and @defer clause keywords", () => {
+  const result = highlight(
+    `@for (item of items; track item.id; let i = $index) {
+}
+@defer (on viewport; prefetch on idle) {
+} @placeholder (minimum 500ms) {
+}
+@defer (when isReady(); hydrate never) {}`,
+  );
+
+  for (const word of [
+    "of",
+    "track",
+    "let",
+    "on",
+    "prefetch",
+    "minimum",
+    "when",
+    "hydrate",
+    "never",
+  ]) {
+    expect(result).toContain(`<span class="hljs-keyword">${word}</span>`);
+  }
+  expect(result).toContain('<span class="hljs-title function_">isReady</span>');
+});
+
+test("angular keeps clause words as variables in a condition", () => {
+  const result = highlight("@if (on) {}\n@if (track && after) {}");
+
+  expect(result).not.toContain('<span class="hljs-keyword">on</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">track</span>');
+  expect(result).not.toContain('<span class="hljs-keyword">after</span>');
+});
+
+test("angular closes block parameters at their own paren", () => {
+  const result = highlight("@if (check((a) + 1)) {\n  <p>ok</p>\n}");
+
+  expect(result).toContain('<span class="hljs-title function_">check</span>');
+  expect(result).toContain(
+    '<span class="hljs-tag">&lt;<span class="hljs-name">p</span>',
+  );
 });
 
 test("angular leaves non-@let at-words alone", () => {

@@ -14,10 +14,17 @@ export const CUSTOM_SNIPPETS: Record<string, string> = {
 
 <input *ngIf="visible" [(ngModel)]="name" (click)="save()" [class.on]="active" #field />
 
-@for (item of items; track item.id) {
+@for (item of items; track item.id; let i = $index) {
   <li>{{ item }}</li>
 } @empty {
   <p>None</p>
+}
+
+@let total = price() * qty;
+@defer (on viewport; prefetch on idle) {
+  <chart-panel [total]="total" />
+} @placeholder (minimum 500ms) {
+  <p>Loading</p>
 }`,
   assemblyscript: `// add two i32s
 @inline
