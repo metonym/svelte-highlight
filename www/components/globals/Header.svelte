@@ -215,6 +215,7 @@
     "/preview-apex": "Apex language preview",
     "/preview-cobol": "COBOL language preview",
     "/preview-robotframework": "Robot Framework language preview",
+    "/preview-meson": "Meson language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");

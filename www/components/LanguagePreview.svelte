@@ -95,6 +95,7 @@
   import { luauPreviewSnippets } from "@www/preview/luau-preview-snippets";
   import { markdocPreviewSnippets } from "@www/preview/markdoc-preview-snippets";
   import { mermaidPreviewSnippets } from "@www/preview/mermaid-preview-snippets";
+  import { mesonPreviewSnippets } from "@www/preview/meson-preview-snippets";
   import { modelfilePreviewSnippets } from "@www/preview/modelfile-preview-snippets";
   import { mojoPreviewSnippets } from "@www/preview/mojo-preview-snippets";
   import { movePreviewSnippets } from "@www/preview/move-preview-snippets";
@@ -268,6 +269,7 @@
   import luau from "svelte-highlight/languages/luau";
   import markdoc from "svelte-highlight/languages/markdoc";
   import mermaid from "svelte-highlight/languages/mermaid";
+  import meson from "svelte-highlight/languages/meson";
   import modelfile from "svelte-highlight/languages/modelfile";
   import mojo from "svelte-highlight/languages/mojo";
   import move from "svelte-highlight/languages/move";
@@ -523,6 +525,7 @@
       lang: robotframework,
       snippets: robotframeworkPreviewSnippets,
     },
+    meson: { lang: meson, snippets: mesonPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
