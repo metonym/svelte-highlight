@@ -2201,4 +2201,29 @@ trigger AccountTrigger on Account (before insert, after update) {
            STOP RUN.
        1000-CALC.
            COMPUTE WS-SALARY = WS-SALARY * 1.05.`,
+  robotframework: `*** Settings ***
+Documentation     Login tests.
+Library           SeleniumLibrary
+Suite Setup       Open Browser    \${URL}    chrome
+
+*** Variables ***
+\${URL}            https://example.com
+@{USERS}          alice    bob
+&{CREDS}          user=admin    pass=secret
+
+*** Test Cases ***
+Valid Login
+    [Tags]    smoke
+    Input Text    id=user    \${CREDS}[user]
+    FOR    \${name}    IN    @{USERS}
+        Log    \${name}    # one per user
+    END
+    IF    \${ok}    Log    yes    ELSE    Fail    no
+
+*** Keywords ***
+Login As \${user}
+    [Arguments]    \${password}=%{PASSWORD}
+    \${result}=    Run Keyword And Return Status    Submit
+    RETURN    \${result}
+`,
 };
