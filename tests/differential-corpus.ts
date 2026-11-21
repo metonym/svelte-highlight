@@ -1262,7 +1262,11 @@ RELATE user:alice->wrote->post:hello;
   <p>many</p>
 {:else}
   <p>few</p>
-{/if}`,
+{/if}
+
+{#each items as item, i (item.id)}
+  <li>{i}: {format(item)}</li>
+{/each}`,
   systemd: `[Unit]
 Description=Example web service
 After=network-online.target
