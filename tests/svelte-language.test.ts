@@ -350,3 +350,25 @@ test("svelte styles the name of a generic snippet", () => {
   expect(plain).toContain('<span class="hljs-title function_">badge</span>');
   expect(plain).toContain('<span class="hljs-built_in">string</span>');
 });
+
+test("svelte highlights the script generics attribute as TypeScript", () => {
+  registerAll(registry, svelte);
+
+  const highlight = (code: string) =>
+    registry.highlight(code, { language: "svelte" }).value;
+
+  const result = highlight(
+    `<script lang="ts" generics="T extends Array<U>, U">\n  let a: T;\n</script>\n<p>{a}</p>`,
+  );
+  expect(result).toContain('<span class="hljs-name">script</span>');
+  expect(result).toContain('<span class="hljs-attr">generics</span>');
+  expect(result).toContain('<span class="hljs-keyword">extends</span>');
+  expect(result).toContain('<span class="hljs-title class_">Array</span>');
+  expect(result).not.toContain("&quot;T extends");
+  expect(result).toContain('<span class="hljs-keyword">let</span>');
+  expect(result).toContain('<span class="hljs-name">p</span>');
+
+  const plain = highlight(`<script lang="ts">\n  let a = 1;\n</script>`);
+  expect(plain).toContain('<span class="hljs-string">&quot;ts&quot;</span>');
+  expect(plain).toContain('<span class="hljs-number">1</span>');
+});
