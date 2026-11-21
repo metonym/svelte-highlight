@@ -219,6 +219,7 @@
     "/preview-httpfile": "HTTP Request File language preview",
     "/preview-antlr": "ANTLR language preview",
     "/preview-cython": "Cython language preview",
+    "/preview-metal": "Metal language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
