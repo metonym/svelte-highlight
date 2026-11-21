@@ -215,6 +215,7 @@ const HLJS_PATCH_NAMES = [
   "handlebars",
   "java",
   "javascript",
+  "json",
   "kotlin",
   "lisp",
   "mathematica",
