@@ -691,13 +691,13 @@ function withNotes(list, notes) {
       ...(row.old === undefined ? [] : (byLine.get(`old:${row.old}`) ?? [])),
       ...(row.new === undefined ? [] : (byLine.get(`new:${row.new}`) ?? [])),
     ];
-    hits.forEach((note, i) => {
+    for (const [i, note] of hits.entries()) {
       out.push({
         key: `${row.key}n${i}`,
         kind: /** @type {any} */ ("note"),
         note,
       });
-    });
+    }
   }
   return out;
 }

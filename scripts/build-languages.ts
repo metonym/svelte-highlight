@@ -375,7 +375,7 @@ export { ${moduleName} as default } from "./";\n`,
   files.push({ path: "src/languages/index.d.ts", content: baseTs });
   files.push({ path: "SUPPORTED_LANGUAGES.md", content: markdown });
 
-  // Plain array rather than `import *` (biome noNamespaceImport).
+  // Plain array rather than `import *` (no namespace imports).
   const allImports = entries
     .map((entry) => `import ${entry.moduleName} from "./${entry.name}.js";`)
     .join("\n");

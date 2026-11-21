@@ -37,7 +37,6 @@ async function referenceTokenLines(code: string, name: string) {
 }
 
 const SAMPLES: Record<string, string> = {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: `${name}` is TypeScript source text being highlighted, not a JS template placeholder
   typescript: "const greet = (name: string): string => `Hi, ${name}`;",
   python: "def greet(name):\n    return f'Hi, {name}'",
   css: ".a { color: red; }\n.b::before { content: 'x'; }",

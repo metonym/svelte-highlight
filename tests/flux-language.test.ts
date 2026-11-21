@@ -44,7 +44,6 @@ test("flux highlights keywords and boolean literals", () => {
 });
 
 test("flux highlights string interpolation", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
   const result = highlight('name = "cpu"\nmsg = "measurement: ${name}"');
 
   expect(result).toContain('<span class="hljs-subst">${');

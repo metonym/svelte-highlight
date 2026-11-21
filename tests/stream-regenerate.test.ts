@@ -131,7 +131,6 @@ describe("regenerate", () => {
     );
     expectSameAsFullRebuild(
       "javascript",
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: a JS template literal in the highlighted source
       "const a = 1;\n/* one\ntwo\nthree */\nconst t = `x\n${a}\ny`;\nlet b = 2;\n// end\n",
     );
   });

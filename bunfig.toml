@@ -1,0 +1,135 @@
+# `bun fmt`, `bun lint` and svelte-lint. These replace Biome.
+
+[lint]
+maxWarnings = 0
+ignorePatterns = ["examples/**", "astro.config.ts"]
+
+# ESLint and typescript-eslint recommended are on by default. These add the
+# stricter checks the project enforces on top.
+[lint.rules]
+"@typescript-eslint/consistent-type-imports" = [
+  "error",
+  { disallowTypeAnnotations = false },
+]
+# Biome's useNamingConvention, which skips names that need quotes.
+"@typescript-eslint/naming-convention" = [
+  "error",
+  { selector = "default", format = ["camelCase"], leadingUnderscore = "allowSingleOrDouble", trailingUnderscore = "allow" },
+  { selector = "variable", format = ["camelCase", "PascalCase", "UPPER_CASE"], leadingUnderscore = "allowSingleOrDouble", trailingUnderscore = "allow" },
+  { selector = "function", format = ["camelCase", "PascalCase", "UPPER_CASE"] },
+  { selector = "typeLike", format = ["PascalCase"] },
+  { selector = "import", format = ["camelCase", "PascalCase"] },
+  { selector = ["objectLiteralProperty", "typeProperty"], format = ["camelCase", "PascalCase", "UPPER_CASE"], leadingUnderscore = "allowSingleOrDouble", trailingUnderscore = "allow" },
+  { selector = ["objectLiteralProperty", "objectLiteralMethod", "typeProperty"], modifiers = ["requiresQuotes"], format = [] },
+]
+# Off, as they were under Biome.
+"@typescript-eslint/no-explicit-any" = "off"
+"@typescript-eslint/no-this-alias" = "off"
+"no-useless-assignment" = "off"
+"no-useless-escape" = "off"
+"@typescript-eslint/no-unnecessary-type-constraint" = "error"
+"@typescript-eslint/no-useless-empty-export" = "error"
+"default-param-last" = "error"
+"dot-notation" = "error"
+"import/no-commonjs" = "error"
+"import/no-cycle" = "error"
+"no-await-in-loop" = "error"
+"no-extra-label" = "error"
+"no-lone-blocks" = "error"
+"no-negated-condition" = "error"
+"no-param-reassign" = "error"
+"no-restricted-globals" = ["error", "event", "error"]
+# Bun has no rule for these Biome rules: noDelete, noReExportAll,
+# noNamespaceImport, useImportExtensions, useTopLevelRegex.
+"no-restricted-syntax" = [
+  "error",
+  { selector = "UnaryExpression[operator='delete']", message = "Avoid the delete operator. Assign undefined or rebuild the object." },
+  { selector = "ExportAllDeclaration", message = "Export names explicitly instead of re-exporting everything." },
+  { selector = "ImportDeclaration[importKind!='type'] > ImportNamespaceSpecifier", message = "Import names explicitly instead of a namespace." },
+  { selector = "ImportDeclaration[source.value=/^\\.\\.?\\//]:not([source.value=/\\.[a-z]+$/])", message = "Add the file extension to the relative import." },
+  { selector = ":function Literal[regex]:not([regex.flags=/[gy]/])", message = "Hoist the regular expression to the top level so it compiles once." },
+]
+"no-sequences" = ["error", { allowInParentheses = false }]
+"no-template-curly-in-string" = "error"
+"no-useless-constructor" = "error"
+"no-useless-rename" = "error"
+"one-var" = ["error", "never"]
+"prefer-const" = ["error", { destructuring = "all" }]
+"oxc/no-accumulating-spread" = "error"
+"prefer-arrow-callback" = "error"
+"prefer-exponentiation-operator" = "error"
+"unicorn/no-array-for-each" = "error"
+"unicorn/no-useless-switch-case" = "error"
+"unicorn/prefer-node-protocol" = "error"
+"unicorn/prefer-number-properties" = "error"
+
+# `no-restricted-syntax` takes its whole list again in each override that
+# drops a selector from it.
+
+# The library and tests import without extensions.
+[[lint.overrides]]
+files = ["src/**", "tests/**"]
+[lint.overrides.rules]
+"no-restricted-syntax" = [
+  "error",
+  { selector = "UnaryExpression[operator='delete']", message = "Avoid the delete operator. Assign undefined or rebuild the object." },
+  { selector = "ExportAllDeclaration", message = "Export names explicitly instead of re-exporting everything." },
+  { selector = "ImportDeclaration[importKind!='type'] > ImportNamespaceSpecifier", message = "Import names explicitly instead of a namespace." },
+  { selector = ":function Literal[regex]:not([regex.flags=/[gy]/])", message = "Hoist the regular expression to the top level so it compiles once." },
+]
+
+# Tests build regexes and namespaces inline, and use `forEach`.
+[[lint.overrides]]
+files = ["**/*.test.ts"]
+[lint.overrides.rules]
+"unicorn/no-array-for-each" = "off"
+"no-restricted-syntax" = [
+  "error",
+  { selector = "UnaryExpression[operator='delete']", message = "Avoid the delete operator. Assign undefined or rebuild the object." },
+  { selector = "ExportAllDeclaration", message = "Export names explicitly instead of re-exporting everything." },
+]
+
+# Scripts build regexes inline and reassign parameters.
+[[lint.overrides]]
+files = ["scripts/**"]
+[lint.overrides.rules]
+"@typescript-eslint/naming-convention" = "off"
+"no-param-reassign" = "off"
+"unicorn/no-array-for-each" = "off"
+"no-restricted-syntax" = [
+  "error",
+  { selector = "UnaryExpression[operator='delete']", message = "Avoid the delete operator. Assign undefined or rebuild the object." },
+  { selector = "ExportAllDeclaration", message = "Export names explicitly instead of re-exporting everything." },
+  { selector = "ImportDeclaration[importKind!='type'] > ImportNamespaceSpecifier", message = "Import names explicitly instead of a namespace." },
+  { selector = "ImportDeclaration[source.value=/^\\.\\.?\\//]:not([source.value=/\\.[a-z]+$/])", message = "Add the file extension to the relative import." },
+]
+
+# Grammar tests and previews hold `${}` from the languages they highlight.
+[[lint.overrides]]
+files = ["tests/**", "www/preview/**"]
+rules = { "no-template-curly-in-string" = "off" }
+
+# Names from the diff and edit formats under test.
+[[lint.overrides]]
+files = ["tests/diff-edits.test.ts", "www/components/HighlightDiff/samples.js"]
+rules = { "@typescript-eslint/naming-convention" = "off" }
+
+# The e2e tests and benchmarks drive the page one step at a time.
+[[lint.overrides]]
+files = ["tests/e2e/**", "bench/**"]
+rules = { "no-await-in-loop" = "off" }
+
+# `bun lint` skips `.svelte` files. svelte-lint (`bun run lint:svelte`)
+# lints their scripts with the rules above, and their markup with these.
+[svelte-lint]
+rules = { "svelte/require-each-key" = "off" }
+
+[fmt]
+# Markdown and YAML stay hand-formatted.
+ignorePatterns = [
+  "**/*.md",
+  "**/*.yml",
+  "**/*.yaml",
+  "examples/**",
+  "astro.config.ts",
+]

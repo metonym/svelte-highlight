@@ -31,7 +31,6 @@ for (const language of Object.values(languages)) {
   registerAll(registry, language);
 }
 
-// biome-ignore lint/suspicious/noTemplateCurlyInString: literal JS source text being tokenized, not a template placeholder
 const JS_TEMPLATE_LITERAL = "const x = `foo ${bar} baz`;\nconsole.log(x);\n";
 
 const HTML_EMBEDDED_JS = "<script>\nconst x = 1;\n<\\/script>\n";
@@ -83,7 +82,6 @@ describe("tokenLines: scope correctness", () => {
       { text: "const", scopes: ["keyword"] },
       { text: " x = ", scopes: [] },
       { text: "`foo ", scopes: ["string"] },
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: the literal token text, not a template placeholder
       { text: "${bar}", scopes: ["string", "subst"] },
       { text: " baz`", scopes: ["string"] },
       { text: ";", scopes: [] },

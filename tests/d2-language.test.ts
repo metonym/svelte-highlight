@@ -73,12 +73,9 @@ test("d2 highlights suspend and unsuspend instead of folding them into the next 
   expect(result).not.toContain('<span class="hljs-attr">suspend model</span>');
 });
 
-// biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
 test("d2 highlights ${} substitutions and |md block strings", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
   const result = highlight('x: "${primary}"\nlabel: |md\n  **hi**\n|');
 
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: literal ${} under test, not JS interpolation
   expect(result).toContain('<span class="hljs-subst">${primary}</span>');
   expect(result).toContain('<span class="hljs-string">|md\n  **hi**\n|</span>');
 });

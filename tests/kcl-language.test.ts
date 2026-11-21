@@ -29,10 +29,8 @@ test("kcl highlights decorators", () => {
 });
 
 test("kcl highlights string interpolation", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: KCL's own ${} interpolation syntax, not a JS template literal
   const result = highlight('greeting = "Hello, ${name}"');
 
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: KCL's own ${} interpolation syntax, not a JS template literal
   expect(result).toContain('<span class="hljs-subst">${name}</span>');
 });
 

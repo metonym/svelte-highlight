@@ -26,20 +26,17 @@ Let me know if you'd like more examples!`;
 
   const splitter = createFenceSplitter();
   let segments = splitter.segments();
-  let done = false;
   let stop = () => {};
 
   function run() {
     stop();
     splitter.reset();
     segments = splitter.segments();
-    done = false;
     stop = simulateStream(full, {
       onChunk: (chunk) => {
         splitter.append(chunk);
         segments = splitter.segments();
       },
-      onDone: () => (done = true),
     });
   }
 

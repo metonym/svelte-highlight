@@ -37,7 +37,6 @@ describe("createDomLinePainter", () => {
 
     const steps = [
       "function greet(name) {\n",
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: this is JS *source text* fed to the tokenizer, not a template literal to evaluate
       "  const msg = `hi ${name}`;\n",
       "  return msg;\n",
       "}\n",
@@ -234,7 +233,6 @@ describe("patchLineHtml", () => {
 
   it("matches a full repaint across random mid-document edits", () => {
     const js =
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: JS *source text* fed to the tokenizer
       "function add(a, b) {\n  // sum\n  return `${a + b}`;\n}\n/* block\ncomment */\nconst s = 'x';\n".repeat(
         6,
       );

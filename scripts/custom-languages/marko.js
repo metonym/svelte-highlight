@@ -163,10 +163,8 @@ function defineMarko(hljs) {
   // match the lookahead and stay with the html sublanguage.
   const markoHtmlTag = {
     className: "tag",
-    // biome-ignore lint/complexity/useRegexLiterals: `(?=` and `[|=(]` in this lookahead confuse biome's regex-literal rewriter
-    begin: new RegExp(
-      String.raw`<\/?(?=@|(?:if|else-if|else|for|while)\b|[a-zA-Z][\w-]*(?:[.#][\w-]+|\/[a-zA-Z_$]|[|=(]))`,
-    ),
+    begin:
+      /<\/?(?=@|(?:if|else-if|else|for|while)\b|[a-zA-Z][\w-]*(?:[.#][\w-]+|\/[a-zA-Z_$]|[|=(]))/,
     end: /\/?>/,
     relevance: 5,
     contains: [

@@ -4,7 +4,7 @@ import * as languages from "../src/languages";
 test("Languages", () => {
   const languageNames = Object.keys(languages);
 
-  // @ts-expect-error
+  // @ts-expect-error: the module has no default export
   expect(languages.default).toBeUndefined();
   expect(languageNames.length).toEqual(364);
   expect(languageNames).toMatchSnapshot();

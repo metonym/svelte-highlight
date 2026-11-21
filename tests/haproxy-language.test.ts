@@ -80,7 +80,6 @@ test("haproxy does not style the line after a nameless section as its name", () 
 
 test("haproxy highlights conditional block directives and env vars", () => {
   const result = highlight(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: HAProxy's own ${} env-var syntax, not a JS template literal
     'global\n    .if defined(ENABLE_H3)\n    .notice "h3"\n    .endif\n    setenv PORT 80\nbackend b\n    server s1 10.0.0.1:${PORT} check',
   );
 
@@ -90,10 +89,7 @@ test("haproxy highlights conditional block directives and env vars", () => {
   expect(result).toContain('<span class="hljs-meta">.notice</span>');
   expect(result).toContain('<span class="hljs-meta">.endif</span>');
   expect(result).toContain('<span class="hljs-keyword">setenv</span>');
-  expect(result).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: HAProxy's own ${} env-var syntax, not a JS template literal
-    '<span class="hljs-variable">${PORT}</span>',
-  );
+  expect(result).toContain('<span class="hljs-variable">${PORT}</span>');
 });
 
 test("haproxy keeps units with numbers and dots out of them", () => {

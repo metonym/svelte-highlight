@@ -17,17 +17,14 @@ test("bitbake highlights variable assignment operators", () => {
 });
 
 test("bitbake highlights variable expansion", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: BitBake's own ${} expansion syntax, not a JS template literal
   const result = highlight('S = "${WORKDIR}/git"');
 
   expect(result).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: BitBake's own ${} expansion syntax, not a JS template literal
     '<span class="hljs-template-variable">${WORKDIR}</span>',
   );
 });
 
 test("bitbake highlights shell function bodies", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: BitBake's own ${} expansion syntax, not a JS template literal
   const result = highlight("do_install() {\n    install -d ${D}\n}");
 
   expect(result).toContain(
@@ -80,11 +77,7 @@ test("bitbake shell functions are unchanged", () => {
 });
 
 test("bitbake highlights expanded overrides on assignment", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: BitBake override expansion
   const result = highlight('RDEPENDS:${PN} += "bash"');
 
-  expect(result).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: BitBake override expansion
-    '<span class="hljs-built_in">RDEPENDS:${PN}</span>',
-  );
+  expect(result).toContain('<span class="hljs-built_in">RDEPENDS:${PN}</span>');
 });

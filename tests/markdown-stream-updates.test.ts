@@ -54,7 +54,7 @@ async function streamMarkdown(
 ) {
   for (let end = CHUNK; end < markdown.length + CHUNK; end += CHUNK) {
     stream.set({ text: markdown.slice(0, end) });
-    // biome-ignore lint/performance/noAwaitInLoops: each chunk must settle before the next is sent
+    // eslint-disable-next-line no-await-in-loop -- each chunk must settle before the next is sent
     await settle();
     onChunk(Math.min(end, markdown.length));
   }

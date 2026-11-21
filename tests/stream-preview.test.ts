@@ -87,7 +87,6 @@ describe("computeStagedTailPreview", () => {
 
   it("matches a one-shot highlight at every chunk (javascript, open template literal)", () => {
     const code =
-      // biome-ignore lint/suspicious/noTemplateCurlyInString: this is JS source text being tokenized, not an interpolation
       "const s = `hello ${a + b} world, streaming keeps going without a closing backtick just yet, then it closes here`;\n" +
       "const done = true;\n";
     for (const chunkSize of [1, 5, 37]) {

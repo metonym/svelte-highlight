@@ -3,7 +3,7 @@ import * as styles from "../src/styles";
 test("Styles", () => {
   const styleNames = Object.keys(styles);
 
-  // @ts-expect-error
+  // @ts-expect-error: the module has no default export
   expect(styles.default).toBeUndefined();
   expect(styleNames.length).toEqual(348);
   expect(styleNames).toMatchSnapshot();

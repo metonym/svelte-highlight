@@ -29,12 +29,10 @@ test("lookml highlights literal values", () => {
 });
 
 test("lookml highlights sql values as embedded SQL up to ;;", () => {
-  // biome-ignore lint/suspicious/noTemplateCurlyInString: ${TABLE} is LookML syntax, not JS interpolation
   const result = highlight("sql: ${TABLE}.id ;;");
 
   expect(result).toContain('<span class="hljs-attr">sql:</span>');
   expect(result).toContain(
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: ${TABLE} is LookML syntax, not JS interpolation
     '<span class="hljs-template-variable">${TABLE}</span>',
   );
 });
