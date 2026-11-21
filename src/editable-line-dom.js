@@ -210,7 +210,7 @@ export function editorNodeAtOffset(editor, view, offset) {
   const walker = doc.createTreeWalker(editor, SHOW_TEXT, null);
   walker.currentNode = separator;
   let count = lineStart - 1;
-  for (let node = /** @type {Node | null} */ (separator); node; ) {
+  for (let node = /** @type {Node | null} */ (separator); node;) {
     const next = count + /** @type {string} */ (node.textContent).length;
     if (offset <= next) return { node, offset: offset - count };
     count = next;

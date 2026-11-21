@@ -53,8 +53,7 @@
 <pre data-testid="highlighted-snapshot" style="display:none">{highlighted}</pre>
 <pre
   data-testid="reference-highlighted-snapshot"
-  style="display:none"
->{referenceHighlighted}</pre>
+  style="display:none">{referenceHighlighted}</pre>
 
 <Highlight
   language={javascript}

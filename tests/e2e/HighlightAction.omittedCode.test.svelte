@@ -6,9 +6,9 @@
   let tick = 0;
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <button type="button" on:click={() => (tick += 1)}>Update</button>
 
-<pre
-><code use:highlight={{ language: javascript, tick }}>const s = 1;</code></pre>
+<pre><code use:highlight={{ language: javascript, tick }}>const s = 1;</code
+  ></pre>

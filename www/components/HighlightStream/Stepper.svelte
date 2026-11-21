@@ -29,8 +29,8 @@
 <p class="label-01 mb-3">
   Click through each chunk to watch it arrive mid-keyword and
   mid-template-literal. Once every chunk lands, the output below is compared
-  byte-for-byte against a plain <code class="code">Highlight</code> of the same
-  finished code.
+  byte-for-byte against a plain <code class="code">Highlight</code> of the same finished
+  code.
 </p>
 
 <div class="chunks mb-5">
@@ -60,8 +60,7 @@
 
 {#if done}
   <p class="label-01 mb-3" style="margin-top: 1.5rem">
-    Reference <code class="code">Highlight</code> of the same code, for
-    comparison:
+    Reference <code class="code">Highlight</code> of the same code, for comparison:
   </p>
   <Highlight language={javascript} {code} class={THEME_MODULE_NAME} />
 {/if}

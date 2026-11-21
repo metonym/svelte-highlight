@@ -3,9 +3,7 @@
  * a 256-color index (16-255), or a truecolor triple.
  */
 export type AnsiColor =
-  | { name: string }
-  | { index: number }
-  | { rgb: [number, number, number] };
+  { name: string } | { index: number } | { rgb: [number, number, number] };
 
 /** Active styling while parsing. */
 export type AnsiStyle = {

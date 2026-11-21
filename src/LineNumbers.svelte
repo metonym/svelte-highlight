@@ -72,7 +72,7 @@
 </script>
 
 <div
-  class:langtag={langtag}
+  class:langtag
   data-language={languageName}
   style:overflow-x="var(--overflow-x, auto)"
   style:overflow-y="var(--overflow-y, auto)"

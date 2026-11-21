@@ -133,7 +133,7 @@
 </script>
 
 <div
-  class="shl-diff-layout shl-diff-theme {_class ?? ""}"
+  class="shl-diff-layout shl-diff-theme {_class ?? ''}"
   class:shl-diff-colorblind={palette === "colorblind"}
   style={_style}
 >

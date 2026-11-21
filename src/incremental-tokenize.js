@@ -121,7 +121,7 @@ export function parseIncremental(registry, language, code) {
   // Only newline-terminated lines are tokenized before finish(): a lexeme in
   // an unterminated tail may grow with the next keystroke.
   let fedEnd = 0;
-  for (let lineStart = 0; lineStart < code.length; ) {
+  for (let lineStart = 0; lineStart < code.length;) {
     const newline = code.indexOf("\n", lineStart);
     linesSinceCheckpoint++;
     if (newline === -1) break;

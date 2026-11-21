@@ -67,6 +67,7 @@
 
 {#if lines.length}
   <pre class={THEME_MODULE_NAME} style="margin-top: 0.75rem"><code
-      class:hljs={true}>{#each lines as line, i}{#if i > 0}{"\n"}{/if}{@html line}{/each}</code
+      class:hljs={true}
+      >{#each lines as line, i}{#if i > 0}{"\n"}{/if}{@html line}{/each}</code
     ></pre>
 {/if}

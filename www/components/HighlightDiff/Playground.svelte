@@ -75,7 +75,8 @@
   <span class="label-01">
     <span class="add">+{stats.additions}</span>
     <span class="del">−{stats.deletions}</span>
-    · {stats.changes} changes {position} {copied}
+    · {stats.changes} changes {position}
+    {copied}
   </span>
 </div>
 
@@ -103,9 +104,9 @@
   Click the diff, then use the keyboard: <kbd>n</kbd>/<kbd>p</kbd>
   next/previous change,
   <kbd>e</kbd>/<kbd>c</kbd>
-  expand/collapse folds, <kbd>v</kbd> toggle view. In split view, a selection
-  stays on the side where it started, so copy gives one file's text. Scroll
-  sideways over each side on its own.
+  expand/collapse folds, <kbd>v</kbd> toggle view. In split view, a selection stays
+  on the side where it started, so copy gives one file's text. Scroll sideways over
+  each side on its own.
 </p>
 
 <style>

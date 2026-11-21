@@ -435,8 +435,7 @@ interface DomState {
   nextFrameId: number;
   // Hook for the `createEventDispatcher` shim; see `loadComponents`.
   onDispatch?:
-    | ((instance: number, type: string, detail: unknown) => void)
-    | undefined;
+    ((instance: number, type: string, detail: unknown) => void) | undefined;
   nextInstance: number;
 }
 

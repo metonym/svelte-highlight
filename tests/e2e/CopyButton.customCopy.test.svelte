@@ -15,7 +15,7 @@
   }
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <div style="position: relative">
   <Highlight language={typescript} {code} />

@@ -29,7 +29,7 @@ export function lineHtmlFromEvents(events, code) {
  */
 function countNewlines(code, from, end) {
   let count = 0;
-  for (let i = code.indexOf("\n", from); i !== -1 && i < end; ) {
+  for (let i = code.indexOf("\n", from); i !== -1 && i < end;) {
     count++;
     i = code.indexOf("\n", i + 1);
   }

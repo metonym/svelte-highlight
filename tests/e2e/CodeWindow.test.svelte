@@ -6,7 +6,7 @@
   const code = "const add = (a: number, b: number) => a + b;";
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <CodeWindow variant="macos" title="example.ts" data-testid="macos">
   <Highlight language={typescript} {code} />

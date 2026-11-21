@@ -109,14 +109,14 @@ const greet = (user: User): string => {
     <div class="swatches">
       {#each roleNames as role}
         <label class="swatch"
-          ><input type="color" bind:value={roleColors[role]}>{role}</label
+          ><input type="color" bind:value={roleColors[role]} />{role}</label
         >
       {/each}
     </div>
   {:else}
     <div class="swatches">
       <label class="swatch"
-        ><input type="color" bind:value={roleColors.keyword}>keyword</label
+        ><input type="color" bind:value={roleColors.keyword} />keyword</label
       >
     </div>
   {/if}
@@ -125,8 +125,8 @@ const greet = (user: User): string => {
 <p class="hint">
   {#if mode === "defineTheme"}
     <code>defineTheme()</code>
-    building a full palette from the ~14 semantic roles above — pick any swatch
-    to see it update live.
+    building a full palette from the ~14 semantic roles above — pick any swatch to
+    see it update live.
   {:else}
     <code>{"extendTheme(atomOneDark, { roles: { keyword } })"}</code>
     deriving a branded variant of a shipped palette — only <code>keyword</code>

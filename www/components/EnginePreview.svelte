@@ -126,8 +126,7 @@ console.log(add(1, 2));`;
           {#each line as token}
             <span
               title={token.scopes.join(" ")}
-              style="margin-right: 0.5rem; white-space: pre"
-              >{token.text}</span
+              style="margin-right: 0.5rem; white-space: pre">{token.text}</span
             >
           {/each}
         </td>

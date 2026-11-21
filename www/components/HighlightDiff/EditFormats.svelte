@@ -82,14 +82,12 @@
   <Button
     size="small"
     kind="tertiary"
-    on:click={() => ref.decideAll("accepted")}
-    >Accept all</Button
+    on:click={() => ref.decideAll("accepted")}>Accept all</Button
   >
   <Button
     size="small"
     kind="tertiary"
-    on:click={() => ref.decideAll("rejected")}
-    >Reject all</Button
+    on:click={() => ref.decideAll("rejected")}>Reject all</Button
   >
   <span class="label-01">
     {decided}

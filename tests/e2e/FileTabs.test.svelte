@@ -39,7 +39,7 @@
   }
 </script>
 
-<svelte:head> {@html atomOneDark} </svelte:head>
+<svelte:head>{@html atomOneDark}</svelte:head>
 
 <div style={width ? `width: ${width}` : undefined}>
   <FileTabs

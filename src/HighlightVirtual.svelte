@@ -279,12 +279,24 @@
   class:shl-virtual={true}
   class:hljs={true}
   on:scroll={onScroll}
-  {...$$restProps}
-><code>{#if !hydrated}{source}{:else}<span class="shl-virtual-sizer" style="height: {lineCount * lineHeight}px;"><span class="shl-virtual-window" style="transform: translateY({start * lineHeight}px);">{#each visibleLines as line, i (start + i)}<span class="shl-virtual-line" data-line={start + i}>{@html line}</span>{"\n"}{/each}</span></span>{/if}</code><span
-  bind:this={probe}
-  class="shl-virtual-probe shl-virtual-line"
-  aria-hidden="true"
->&nbsp;</span></pre>
+  {...$$restProps}><code
+    >{#if !hydrated}{source}{:else}<span
+      class="shl-virtual-sizer"
+      style="height: {lineCount * lineHeight}px;"
+      ><span
+        class="shl-virtual-window"
+        style="transform: translateY({start * lineHeight}px);"
+        >{#each visibleLines as line, i (start + i)}<span
+          class="shl-virtual-line"
+          data-line={start + i}>{@html line}</span
+        >{"\n"}{/each}</span
+      ></span
+    >{/if}</code
+  ><span
+    bind:this={probe}
+    class="shl-virtual-probe shl-virtual-line"
+    aria-hidden="true">&nbsp;</span
+  ></pre>
 
 <style>
   .shl-virtual {

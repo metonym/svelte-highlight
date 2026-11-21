@@ -17,8 +17,7 @@
   {LINE_COUNT.toLocaleString()}
   lines, rendered instantly. Only
   <strong>{renderedLineCount}</strong>
-  line nodes are ever in the DOM at once -- scroll to confirm the count stays
-  flat.
+  line nodes are ever in the DOM at once -- scroll to confirm the count stays flat.
 </p>
 
 <div use:trackRenderedLineCount={(n) => (renderedLineCount = n)}>

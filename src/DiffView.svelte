@@ -478,7 +478,7 @@
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <section
-  class="shl-diff shl-diff-theme {_class ?? ""}"
+  class="shl-diff shl-diff-theme {_class ?? ''}"
   class:shl-diff-split={view === "split"}
   class:shl-diff-colorblind={palette === "colorblind"}
   class:shl-diff-streaming={state.streaming}
@@ -489,7 +489,7 @@
   tabindex="0"
   {...rest}
   style="--shl-diff-gutter: {columns.gutter}ch; --shl-diff-line: {lineHeight}px; tab-size: {options.tabSize}; {_style ??
-    ""}"
+    ''}"
   on:keydown={onKeydown}
   on:mousedown={onMousedown}
   on:copy={onCopy}
@@ -577,7 +577,7 @@
                   <slot name="note" note={row.note}>
                     <div
                       class="shl-diff-note-card shl-diff-note-{row.note.tone ??
-                        "info"}"
+                        'info'}"
                     >
                       {#if row.note.author}
                         <strong>{row.note.author}</strong>
@@ -657,9 +657,7 @@
                   {/if}</span
                 >
               {/if}
-              {#if row.first &&
-                row.change !== undefined &&
-                (review || $$slots.actions)}
+              {#if row.first && row.change !== undefined && (review || $$slots.actions)}
                 {@const change = row.change}
                 <span class="shl-diff-actions">
                   <slot
@@ -743,8 +741,7 @@
     <span
       class="shl-diff-probe shl-diff-row"
       bind:this={probe}
-      aria-hidden="true"
-      ><span class="shl-diff-code">&nbsp;</span></span
+      aria-hidden="true"><span class="shl-diff-code">&nbsp;</span></span
     >
     <span class="shl-diff-char-probe" bind:this={charProbe} aria-hidden="true"
       >0000000000</span
@@ -838,10 +835,9 @@
   .shl-diff-row,
   .shl-diff-hbar-row {
     display: grid;
-    grid-template-columns: var(--shl-diff-gutter) var(--shl-diff-gutter) 2ch minmax(
-        0,
-        1fr
-      );
+    grid-template-columns:
+      var(--shl-diff-gutter) var(--shl-diff-gutter)
+      2ch minmax(0, 1fr);
     align-items: start;
     line-height: var(--shl-diff-line);
     white-space: pre;

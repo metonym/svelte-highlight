@@ -64,15 +64,13 @@ const greet = (user: User): string => {
         size="small"
         kind="tertiary"
         disabled={!historyState.canUndo}
-        on:click={() => editor.undo()}
-        >Undo</Button
+        on:click={() => editor.undo()}>Undo</Button
       >
       <Button
         size="small"
         kind="tertiary"
         disabled={!historyState.canRedo}
-        on:click={() => editor.redo()}
-        >Redo</Button
+        on:click={() => editor.redo()}>Redo</Button
       >
       <Button size="small" kind="ghost" on:click={() => editor.indent()}>
         Indent
@@ -86,8 +84,7 @@ const greet = (user: User): string => {
       <Button
         size="small"
         kind="ghost"
-        on:click={() => editor.insert("// TODO\n")}
-        >Insert</Button
+        on:click={() => editor.insert("// TODO\n")}>Insert</Button
       >
       <Button size="small" kind="ghost" on:click={sortLines}>
         Sort lines (external)
@@ -95,15 +92,14 @@ const greet = (user: User): string => {
       <Button
         size="small"
         kind="danger-tertiary"
-        on:click={() => editor.clear()}
-        >Clear</Button
+        on:click={() => editor.clear()}>Clear</Button
       >
     </div>
 
     <div class="controls">
       <label class="control">
         <span class="label-01">Outline color</span>
-        <input type="color" bind:value={outlineColor}>
+        <input type="color" bind:value={outlineColor} />
       </label>
       <div class="control slider">
         <Slider
@@ -121,14 +117,12 @@ const greet = (user: User): string => {
           <Button
             size="small"
             kind={engine === "dom" ? "primary" : "tertiary"}
-            on:click={() => (engine = "dom")}
-            >dom</Button
+            on:click={() => (engine = "dom")}>dom</Button
           >
           <Button
             size="small"
             kind={engine === "css-highlights" ? "primary" : "tertiary"}
-            on:click={() => (engine = "css-highlights")}
-            >css-highlights</Button
+            on:click={() => (engine = "css-highlights")}>css-highlights</Button
           >
         </div>
       </div>
@@ -189,8 +183,8 @@ const greet = (user: User): string => {
 </Row>
 
 <h3 class="mb-3">
-  Same <code>bind:code</code> in other themes. Edits in one block show up in all
-  of them.
+  Same <code>bind:code</code> in other themes. Edits in one block show up in all of
+  them.
 </h3>
 <Row class="mb-9">
   {#each sideThemes as { name, theme }}
@@ -213,9 +207,8 @@ const greet = (user: User): string => {
   side
 </h3>
 <p class="label-01 mb-3">
-  Each instance registers its own <code>CSS.highlights</code> entries, so two
-  editors on the same page can run different themes without one clobbering the
-  other's colors.
+  Each instance registers its own <code>CSS.highlights</code> entries, so two editors
+  on the same page can run different themes without one clobbering the other's colors.
 </p>
 <Row class="mb-9">
   {#each cssHighlightThemes as { name, theme }}

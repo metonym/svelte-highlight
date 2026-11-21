@@ -116,7 +116,7 @@
 {:else}
   <div class="viewer">
     <aside>
-      <input class="filter" placeholder="Filter commits" bind:value={filter}>
+      <input class="filter" placeholder="Filter commits" bind:value={filter} />
       <div class="commits">
         {#each shown as c, i (c.sha)}
           <button

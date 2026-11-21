@@ -221,14 +221,17 @@
 </script>
 
 <pre {...$$restProps}><code class:hljs={true}
-  ><span class="typewriter-content" bind:this={contentEl} hidden={!useUnitReveal}
-    ></span
-  >{#if !useUnitReveal}{@html parts.head}{#if showCaret}<span
-        class="typewriter-caret"
-        aria-hidden="true"
-      ></span>{/if}<span class="typewriter-rest" aria-hidden="true"
-      >{@html parts.tail}</span
-    >{/if}</code></pre>
+    ><span
+      class="typewriter-content"
+      bind:this={contentEl}
+      hidden={!useUnitReveal}
+    ></span>{#if !useUnitReveal}{@html parts.head}{#if showCaret}<span
+      class="typewriter-caret"
+      aria-hidden="true"></span>{/if}<span
+      class="typewriter-rest"
+      aria-hidden="true">{@html parts.tail}</span
+    >{/if}</code
+  ></pre>
 
 <style>
   .typewriter-rest {

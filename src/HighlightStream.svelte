@@ -327,21 +327,33 @@
     class:shl-virtual={true}
     aria-busy={!done}
     on:scroll={onScroll}
-    {...$$restProps}
-  ><code>{#if !mounted}{code}{:else}<span class="shl-virtual-sizer" style="height: {vLineCount * vLineHeight}px;"><span class="shl-virtual-window" style="transform: translateY({vStart * vLineHeight}px);">{#each vVisibleLines as line, i (vStart + i)}<span class="highlight-stream-line" data-line={vStart + i}>{@html line}</span>{#if showCaret && vEnd === vLineCount && i === vVisibleLines.length - 1}<span class="highlight-stream-caret" aria-hidden="true"></span>{/if}{"\n"}{/each}</span></span>{/if}</code><span
-  bind:this={probe}
-  class="shl-virtual-probe highlight-stream-line"
-  aria-hidden="true"
->&nbsp;</span></pre>
+    {...$$restProps}><code
+      >{#if !mounted}{code}{:else}<span
+        class="shl-virtual-sizer"
+        style="height: {vLineCount * vLineHeight}px;"
+        ><span
+          class="shl-virtual-window"
+          style="transform: translateY({vStart * vLineHeight}px);"
+          >{#each vVisibleLines as line, i (vStart + i)}<span
+            class="highlight-stream-line"
+            data-line={vStart + i}>{@html line}</span
+          >{#if showCaret && vEnd === vLineCount && i === vVisibleLines.length - 1}<span
+            class="highlight-stream-caret"
+            aria-hidden="true"></span>{/if}{"\n"}{/each}</span
+        ></span
+      >{/if}</code
+    ><span
+      bind:this={probe}
+      class="shl-virtual-probe highlight-stream-line"
+      aria-hidden="true">&nbsp;</span
+    ></pre>
 {:else}
   <pre
     bind:this={container}
     aria-busy={!done}
     on:scroll={onScroll}
-    {...$$restProps}
-  >{#if mounted}<code bind:this={codeElement} class="hljs"></code>{:else}<code
-    class:hljs={true}>{@html highlighted}</code
-  >{/if}</pre>
+    {...$$restProps}>{#if mounted}<code bind:this={codeElement} class="hljs"
+    ></code>{:else}<code class:hljs={true}>{@html highlighted}</code>{/if}</pre>
 {/if}
 
 <span class="visually-hidden" role="status" aria-live="polite"

@@ -16,7 +16,7 @@
   onMount(() => diff.on("navigate", (detail) => (position = detail)));
 </script>
 
-<span {...rest} class="shl-diff-stats shl-diff-theme {$$restProps.class ?? ""}">
+<span {...rest} class="shl-diff-stats shl-diff-theme {$$restProps.class ?? ''}">
   <span class="shl-diff-stats-add">+{stats.additions}</span>
   <span class="shl-diff-stats-del">−{stats.deletions}</span>
   <span>

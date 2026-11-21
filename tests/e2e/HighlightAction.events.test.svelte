@@ -24,6 +24,5 @@
 <pre><code
     use:highlight={{ language, code: "const add = (a, b) => a + b;" }}
     on:highlighted={() => (lastEvent = "highlighted")}
-    on:error={() => (lastEvent = "error")}
-  ></code></pre>
+    on:error={() => (lastEvent = "error")}></code></pre>
 <p data-testid="last-event">{lastEvent}</p>

@@ -124,7 +124,7 @@
     {loading ? "Loading…" : "Load"}
   </button>
   {#if files.length}
-    <input type="number" min="1" max={files.length} bind:value={jumpTo}>
+    <input type="number" min="1" max={files.length} bind:value={jumpTo} />
     <button type="button" on:click={() => list.scrollToFile(jumpTo - 1)}>
       Jump to file
     </button>

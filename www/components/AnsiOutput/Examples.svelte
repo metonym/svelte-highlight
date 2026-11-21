@@ -184,8 +184,8 @@
 
 <p class="label-01 mb-3">
   OSC 8 hyperlinks. Only <code class="code">http:</code>,
-  <code class="code">https:</code>, and <code class="code">mailto:</code> render
-  as links; other schemes render as plain text.
+  <code class="code">https:</code>, and <code class="code">mailto:</code> render as
+  links; other schemes render as plain text.
 </p>
 <div class="mb-3">
   <HighlightSvelte code={linksSnippet} class={THEME_MODULE_NAME} />

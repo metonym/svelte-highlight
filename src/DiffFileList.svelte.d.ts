@@ -78,8 +78,7 @@ export type DiffFileListSlots = {
     index: number;
     /** From the patch, or once the file has mounted. */
     stats:
-      | { additions: number; deletions: number; changes: number }
-      | undefined;
+      { additions: number; deletions: number; changes: number } | undefined;
     collapsed: boolean;
     toggle: () => void;
   };
