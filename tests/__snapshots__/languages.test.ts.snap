@@ -149,6 +149,7 @@ exports[`Languages 1`] = `
   "hsp",
   "html",
   "http",
+  "httpfile",
   "hurl",
   "hy",
   "idris",
