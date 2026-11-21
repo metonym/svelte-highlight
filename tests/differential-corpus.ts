@@ -2353,4 +2353,25 @@ WS : [ \\t]+ -> skip ;
 mode IN_STRING;
 END_STRING : '"' -> popMode ;
 `,
+  cython: `from libc.stdlib cimport malloc, free
+include "consts.pxi"
+
+cdef extern from "point.h":
+    ctypedef struct point_t:
+        double x
+        double y
+
+cdef class Grid(Base):
+    cdef readonly Py_ssize_t n
+
+    cpdef double total(self, double[:, ::1] a) except? -1:
+        cdef Py_ssize_t i
+        cdef double s = 0
+        with nogil:
+            for i in range(self.n):
+                s += a[i, 0]
+        return s
+
+cdef double* buf = <double*>malloc(8 * sizeof(double))
+`,
 };

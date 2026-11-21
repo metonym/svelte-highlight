@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 370 languages: 193 exported from highlight.js@11.12.0, 177 custom grammars added by svelte-highlight
+> 371 languages: 193 exported from highlight.js@11.12.0, 178 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -983,6 +983,20 @@
 
   // base import
   import { cypher } from "svelte-highlight/languages";
+</script>
+```
+
+## cython (`cython`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import cython from "svelte-highlight/languages/cython";
+
+  // base import
+  import { cython } from "svelte-highlight/languages";
 </script>
 ```
 
