@@ -141,3 +141,24 @@ test("solidity keeps Yul opcode names as plain identifiers outside assembly", ()
   expect(result).not.toContain('hljs-built_in">number');
   expect(result).not.toContain('hljs-built_in">caller');
 });
+
+test("solidity highlights a custom storage layout in the contract header", () => {
+  const result = highlight(
+    "contract Vault is Base layout at 2**255 - 42 {\n  uint x;\n}",
+  );
+
+  expect(result).toContain(
+    '<span class="hljs-keyword">layout</span> <span class="hljs-keyword">at</span> <span class="hljs-number">2</span>**<span class="hljs-number">255</span>',
+  );
+  expect(result).toContain('<span class="hljs-title class_">Base</span>');
+});
+
+test("solidity keeps layout and at as identifiers in a contract body", () => {
+  const result = highlight(
+    "contract C {\n  uint layout;\n  function at(uint i) public {}\n}",
+  );
+
+  expect(result).toContain("</span> layout;");
+  expect(result).not.toContain('<span class="hljs-keyword">layout</span>');
+  expect(result).toContain('<span class="hljs-title function_">at</span>');
+});
