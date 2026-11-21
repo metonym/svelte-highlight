@@ -2398,4 +2398,35 @@ kernel void scale(device float* data [[buffer(0)]],
     data[gid.x] *= 2.0f;
 }
 `,
+  po: `# German translation of the hello package.
+msgid ""
+msgstr ""
+"Project-Id-Version: hello 2.12\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
+
+#. TRANSLATORS: %s is the user name.
+#: src/hello.c:142 src/main.c:12
+#, c-format, fuzzy
+#| msgid "Hello, %s"
+msgid "Hello, %s! Saved 50% of %1$d."
+msgstr "Hallo, %s! 50% von %1$d gespeichert."
+
+msgctxt "menu"
+msgid "Open"
+msgstr "Öffnen"
+
+#, python-format
+msgid "%(count)d file"
+msgid_plural "%(count)d files"
+msgstr[0] "%(count)d Datei"
+msgstr[1] "%(count)d Dateien"
+
+msgid ""
+"Print a \\"friendly\\" greeting.\\t{name} %.2f%%\\n"
+msgstr ""
+
+#~ msgid "Obsolete"
+#~ msgstr "Veraltet"
+`,
 };
