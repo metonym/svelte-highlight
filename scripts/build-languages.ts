@@ -192,6 +192,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "httpfile",
   "antlr",
   "cython",
+  "metal",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

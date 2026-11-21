@@ -2374,4 +2374,28 @@ cdef class Grid(Base):
 
 cdef double* buf = <double*>malloc(8 * sizeof(double))
 `,
+  metal: `#include <metal_stdlib>
+using namespace metal;
+
+struct VertexOut {
+    float4 position [[position]];
+    half3 color;
+};
+
+constant float4x4 identity = float4x4(1.0);
+
+vertex VertexOut vert(uint vid [[vertex_id]],
+                      constant float4* pos [[buffer(0)]]) {
+    VertexOut out;
+    out.position = identity * pos[vid];
+    out.color = half3(0.5h);
+    return out;
+}
+
+kernel void scale(device float* data [[buffer(0)]],
+                  uint2 gid [[thread_position_in_grid]]) {
+    threadgroup float tile[64];
+    data[gid.x] *= 2.0f;
+}
+`,
 };
