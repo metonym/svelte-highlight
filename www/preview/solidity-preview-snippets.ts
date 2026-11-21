@@ -106,4 +106,18 @@ contract Vault is IERC20, Ownable {
   }
 }`,
   },
+  {
+    title: "Custom storage layout",
+    description: "layout at moves the contract's storage base slot",
+    code: `pragma solidity ^0.8.29;
+
+contract Registry is Ownable layout at 0xa1b2c3d4 {
+  mapping(address => uint256) public balances;
+  uint256 transient locked;
+
+  function deposit() external payable {
+    balances[msg.sender] += msg.value;
+  }
+}`,
+  },
 ];
