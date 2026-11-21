@@ -177,6 +177,7 @@
   import { wdlPreviewSnippets } from "@www/preview/wdl-preview-snippets";
   import { wgslPreviewSnippets } from "@www/preview/wgsl-preview-snippets";
   import { witPreviewSnippets } from "@www/preview/wit-preview-snippets";
+  import { yaccPreviewSnippets } from "@www/preview/yacc-preview-snippets";
   import { yangPreviewSnippets } from "@www/preview/yang-preview-snippets";
   import { yaraPreviewSnippets } from "@www/preview/yara-preview-snippets";
   import { yarnspinnerPreviewSnippets } from "@www/preview/yarnspinner-preview-snippets";
@@ -360,6 +361,7 @@
   import wdl from "svelte-highlight/languages/wdl";
   import wgsl from "svelte-highlight/languages/wgsl";
   import wit from "svelte-highlight/languages/wit";
+  import yacc from "svelte-highlight/languages/yacc";
   import yang from "svelte-highlight/languages/yang";
   import yara from "svelte-highlight/languages/yara";
   import yarnspinner from "svelte-highlight/languages/yarnspinner";
@@ -556,6 +558,7 @@
     riscv: { lang: riscv, snippets: riscvPreviewSnippets },
     abap: { lang: abap, snippets: abapPreviewSnippets },
     freemarker: { lang: freemarker, snippets: freemarkerPreviewSnippets },
+    yacc: { lang: yacc, snippets: yaccPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
