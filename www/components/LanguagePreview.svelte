@@ -104,6 +104,7 @@
   import { mermaidPreviewSnippets } from "@www/preview/mermaid-preview-snippets";
   import { mesonPreviewSnippets } from "@www/preview/meson-preview-snippets";
   import { metalPreviewSnippets } from "@www/preview/metal-preview-snippets";
+  import { mlirPreviewSnippets } from "@www/preview/mlir-preview-snippets";
   import { modelfilePreviewSnippets } from "@www/preview/modelfile-preview-snippets";
   import { mojoPreviewSnippets } from "@www/preview/mojo-preview-snippets";
   import { movePreviewSnippets } from "@www/preview/move-preview-snippets";
@@ -290,6 +291,7 @@
   import mermaid from "svelte-highlight/languages/mermaid";
   import meson from "svelte-highlight/languages/meson";
   import metal from "svelte-highlight/languages/metal";
+  import mlir from "svelte-highlight/languages/mlir";
   import modelfile from "svelte-highlight/languages/modelfile";
   import mojo from "svelte-highlight/languages/mojo";
   import move from "svelte-highlight/languages/move";
@@ -562,6 +564,7 @@
     freemarker: { lang: freemarker, snippets: freemarkerPreviewSnippets },
     yacc: { lang: yacc, snippets: yaccPreviewSnippets },
     lex: { lang: lex, snippets: lexPreviewSnippets },
+    mlir: { lang: mlir, snippets: mlirPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
