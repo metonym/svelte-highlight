@@ -195,6 +195,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "metal",
   "po",
   "sshconfig",
+  "fluent",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

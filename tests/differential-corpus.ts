@@ -2448,4 +2448,24 @@ Match host *.corp exec "test -f \${HOME}/.vpn-up"
   User=jdoe
   IdentityFile ~/.ssh/id_ed25519
 `,
+  fluent: `### Toolbar strings
+
+## Brand
+
+-brand-name = Firefox
+    .gender = masculine
+
+# $user (String) - the signed-in user
+welcome = Welcome back, { $user }!
+save = Save to { -brand-name }
+    .title = Save the page
+emails =
+    { $count ->
+        [one] One new email.
+       *[other] { $count } new emails.
+    }
+ratio = Ratio: { NUMBER($ratio, minimumFractionDigits: 2) }
+brace = An opening brace: {"{"} and {"\\u00A0"}
+ref = { save.title }
+`,
 };
