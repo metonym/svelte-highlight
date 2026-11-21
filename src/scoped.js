@@ -1,6 +1,7 @@
 import {
   findBlockEnd,
   findStringEnd,
+  forEachRule,
   STYLE_TAG,
   splitTopLevel,
 } from "./css-walk.js";
@@ -17,6 +18,8 @@ const GROUP_AT_RULES = new Set([
 
 const AT_RULE_NAME = /^@([a-zA-Z-]+)/;
 const WHITESPACE = /\s/;
+const WHITESPACE_RUN = /\s+/g;
+const COMMENT = /\/\*[\s\S]*?\*\//g;
 
 const VALID_SCOPE_TOKEN = /^-?[a-zA-Z_][\w-]*$/;
 
@@ -182,6 +185,62 @@ function scopedBody(style, scope, prefix = "") {
 }
 
 /**
+ * Each top-level selector in `style` (whitespace collapsed) to the
+ * properties its rules declare.
+ * @param {string} style
+ * @returns {Map<string, Set<string>>}
+ */
+function declaredProperties(style) {
+  /** @type {Map<string, Set<string>>} */
+  const properties = new Map();
+  forEachRule(style, (prelude, body) => {
+    /** @type {string[]} */
+    const names = [];
+    for (const declaration of splitTopLevel(body, ";")) {
+      const colon = declaration.indexOf(":");
+      if (colon === -1) continue;
+      const name = declaration.slice(0, colon).replace(COMMENT, "").trim();
+      if (name === "") continue;
+      names.push(name.startsWith("--") ? name : name.toLowerCase());
+    }
+    for (const selector of splitTopLevel(prelude, ",")) {
+      const core = splitTrivia(selector)[1].replace(WHITESPACE_RUN, " ");
+      if (core === "") continue;
+      let set = properties.get(core);
+      if (!set) {
+        set = new Set();
+        properties.set(core, set);
+      }
+      for (const name of names) set.add(name);
+    }
+  });
+  return properties;
+}
+
+/**
+ * The light rules apply in both modes, so under `mode`, before the dark
+ * rules, unset each property a light rule declares that the dark theme
+ * doesn't declare for the same selector: github's bold `.hljs-section`
+ * mustn't stay bold under a dark theme that leaves it alone.
+ * @param {string} light
+ * @param {string} dark
+ * @param {string} scope
+ * @param {string} mode
+ * @returns {string}
+ */
+function lightOnlyResets(light, dark, scope, mode) {
+  const darkProperties = declaredProperties(dark);
+  let css = "";
+  for (const [selector, names] of declaredProperties(light)) {
+    const dark = darkProperties.get(selector);
+    const reset = [...names].filter((name) => !dark?.has(name));
+    if (reset.length === 0) continue;
+    css += `${mode} .${scope} ${selector}{${reset.map((name) => `${name}:unset`).join(";")}}`;
+  }
+  return css;
+}
+
+/**
  * @param {string} light
  * @param {string} dark
  * @param {string} scope
@@ -207,7 +266,10 @@ export function dualStyle(
       `@media (prefers-color-scheme: light){${scopedBody(light, scope)}}` +
       `@media (prefers-color-scheme: dark){${scopedBody(dark, scope)}}`;
   } else {
-    css = scopedBody(light, scope) + scopedBody(dark, scope, mode);
+    css =
+      scopedBody(light, scope) +
+      lightOnlyResets(light, dark, scope, mode) +
+      scopedBody(dark, scope, mode);
   }
   const openTag = nonce ? `<style nonce="${nonce}">` : "<style>";
   return `${openTag}${css}</style>`;
