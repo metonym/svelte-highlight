@@ -139,12 +139,15 @@ function defineSolidity(hljs) {
         // (malformed/partial input -- every real declaration has a body),
         // this mode never closes, but keyword coloring for the rest of the
         // document still degrades gracefully instead of going dark.
+        // `layout at <slot>` (Solidity 0.8.29) is keyword-only here, so
+        // `layout` and `at` stay plain identifiers in contract bodies.
         keywords: {
-          keyword: SOLIDITY_KEYWORDS,
+          keyword: `${SOLIDITY_KEYWORDS} layout at`,
           literal: SOLIDITY_LITERALS,
           built_in: SOLIDITY_BUILT_INS,
         },
         contains: [
+          NUMBER,
           { className: "title class_", begin: /\b[A-Z]\w*/, relevance: 0 },
         ],
       },
