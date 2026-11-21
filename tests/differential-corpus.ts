@@ -902,6 +902,16 @@ struct Point:
     var x: Float64
     fn __init__(inout self, x: Float64):
         self.x = x
+
+comptime N = 4
+
+@always_inline
+fn total(read xs: List[Int]) -> Int:
+    var sum = 0
+    @parameter
+    for i in range(N):
+        sum += xs[i]
+    return sum
 `,
   nickel: `# config record
 let name = "svelte" in

@@ -1,7 +1,8 @@
 const MOJO_KEYWORDS =
   "fn struct var let inout owned borrowed mut alias trait impl def if elif " +
   "else for while return from import as raise try except finally with yield " +
-  "and or not in is pass continue break class raises out deinit imm ref";
+  "and or not in is pass continue break class raises out deinit imm ref " +
+  "comptime";
 
 const MOJO_TYPES =
   "Int Float64 String Bool SIMD UInt UInt8 UInt16 UInt32 UInt64 Int8 Int16 " +
@@ -26,8 +27,20 @@ function defineMojo(hljs) {
   };
 
   const STRUCT = {
-    begin: [/\bstruct\b/, /\s+/, /[A-Za-z_]\w*(?=\s*:)/],
+    begin: [/\bstruct\b/, /\s+/, /[A-Za-z_]\w*(?=\s*[:(\[])/],
     beginScope: { 1: "keyword", 3: "title.class" },
+  };
+
+  // `read` is a common method name (`file.read()`), so it is a keyword only
+  // as an argument convention: `read self`, `read x: Int`.
+  const READ_CONVENTION = {
+    className: "keyword",
+    begin: /\bread(?=\s+[A-Za-z_]\w*\s*[:,)])/,
+  };
+
+  const DECORATOR = {
+    begin: [/^[\t ]*/, /@[A-Za-z_][\w.]*/],
+    beginScope: { 2: "meta" },
   };
 
   const OWNERSHIP = {
@@ -50,7 +63,9 @@ function defineMojo(hljs) {
       { className: "string", begin: /'''/, end: /'''/ },
       hljs.QUOTE_STRING_MODE,
       hljs.APOS_STRING_MODE,
+      DECORATOR,
       OWNERSHIP,
+      READ_CONVENTION,
       FUNCTION,
       STRUCT,
       NUMBER,
