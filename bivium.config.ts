@@ -138,6 +138,11 @@ export default {
       glob: "src/themes/**",
       reason: GENERATED,
     },
+    {
+      file: "tests/theme-style.test.ts",
+      glob: "src/themes/**",
+      reason: GENERATED,
+    },
   ],
   // Fail on any new unknown node a test reaches.
   knownUnknowns: [],

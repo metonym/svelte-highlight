@@ -1,4 +1,9 @@
+// @depends-on scripts/build-themes.ts
+// @reads src/themes/**
+import { readFileSync } from "node:fs";
+import { BASE_CSS } from "../src/themes/_base-css.js";
 import {
+  darkFontVars,
   dualPaletteStyle,
   dualPaletteSupportsStyle,
   lightFallbackStyle,
@@ -234,5 +239,85 @@ describe("dualPaletteSupportsStyle", () => {
       "abc",
     );
     expect(style.startsWith('<style nonce="abc">')).toBe(true);
+  });
+});
+
+describe("palette pairs and font keys", () => {
+  const light = {
+    name: "light",
+    colorScheme: "light" as const,
+    vars: {
+      "--shl-fg": "#000",
+      "--shl-bg": "#fff",
+      "--shl-section-font-weight": "bold",
+      "--shl-strong-font-weight": "bold",
+      "--shl-addition-bg": "#f0fff4",
+    },
+  };
+  const dark = {
+    name: "dark",
+    colorScheme: "dark" as const,
+    vars: {
+      "--shl-fg": "#fff",
+      "--shl-bg": "#000",
+      "--shl-strong-font-weight": "bold",
+      "--shl-emphasis-font-style": "italic",
+    },
+  };
+
+  it("switches only colors with light-dark(), with transparent for a one-sided background", () => {
+    const merged = mergeLightDarkVars(light.vars, dark.vars, {});
+    expect(merged["--shl-addition-bg"]).toBe(
+      "light-dark(#f0fff4, transparent)",
+    );
+    expect(Object.keys(merged).filter((key) => key.includes("font"))).toEqual(
+      [],
+    );
+  });
+
+  it("overrides font keys that differ in dark mode, with initial for the ones it lacks", () => {
+    expect(darkFontVars(light.vars, dark.vars, {})).toEqual({
+      "--shl-section-font-weight": "initial",
+      "--shl-emphasis-font-style": "italic",
+    });
+  });
+
+  it("puts the font overrides under the dark condition of each mode", () => {
+    const decls =
+      "--shl-section-font-weight:initial !important;--shl-emphasis-font-style:italic !important";
+    const rule = (mode: string) =>
+      dualPaletteSupportsStyle("s", light, dark, mode);
+    expect(rule("auto")).toContain(
+      `@media (prefers-color-scheme: dark){.s{${decls}}}`,
+    );
+    expect(rule("dark")).toContain(`}.s{${decls}}}</style>`);
+    expect(rule('[data-theme="dark"]')).toContain(
+      `[data-theme="dark"] .s{${decls}}`,
+    );
+    expect(rule("light")).not.toContain("font");
+  });
+});
+
+describe("themes/base.css", () => {
+  const css = readFileSync(
+    new URL("../src/themes/base.css", import.meta.url),
+    "utf8",
+  );
+
+  it("starts a [data-shl-theme] element with every variable it reads unset", () => {
+    const reset = /^:where\(\[data-shl-theme\]\)\{([^}]*)\}/.exec(css)?.[1];
+    const read = new Set(
+      [...BASE_CSS.matchAll(/var\((--shl-[\w-]+)/g)].map((match) => match[1]),
+    );
+    const decls = reset?.split(";") ?? [];
+    expect(decls.every((decl) => decl.endsWith(":initial"))).toBe(true);
+    expect(decls.map((decl) => decl.split(":")[0]).sort()).toEqual(
+      [...read].sort(),
+    );
+  });
+
+  it("leaves the reset out of BASE_CSS, which the css-highlights engine parses", () => {
+    expect(BASE_CSS).not.toContain("data-shl-theme");
+    expect(css.endsWith(BASE_CSS)).toBe(true);
   });
 });
