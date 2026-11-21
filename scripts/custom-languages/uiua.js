@@ -1,5 +1,6 @@
 const UIUA_ASCII_PRIMITIVES =
-  "dup flip over pop fold reduce rows each table keep first reverse range shape len join couple select pick take drop rotate transpose sort box unbox match fill repeat do try assert under fork bracket both on by with off above below dip gap identity";
+  "dup flip over pop fold reduce rows each table keep first reverse range shape len join couple select pick take drop rotate transpose sort box unbox match fill repeat do try assert under fork bracket both on by with off above below dip gap identity " +
+  "un anti obverse switch stencil tuples inventory backward self mask";
 
 const UIUA_CONSTANTS = "η π τ ∞";
 
@@ -56,18 +57,36 @@ function defineUiua(hljs) {
     relevance: 0,
   };
 
-  // Stack/array combinator glyphs: a single character class of the common
-  // non-ASCII primitives.
+  // Stack/array combinator glyphs: a single character class of the
+  // non-ASCII primitives, plus `-` (subtract) and a bare `¯` (negate). A
+  // numeric subscript (`⊟₃`) stays part of its glyph.
   const STACK_GLYPH = {
     className: "built_in",
     begin:
-      /[.,:;∘◌⟜⊸⋅˜°⍜⊙⊃⊓⊜⊕⊗⊛⊞⊠⧻⋯⊢⊣⇌⍏⍖⊚⊂⊏⊡↯↙↘♭¤⬚≡∵/\\⧅⌕∊⍆⍥⟨⍢⟩≍⌟⋕⍤⚂ℂ⁅⁆∿⍉↻⇡⍩⌵√○⌊⌈◿ⁿₙ∠±¬×÷+−≠<≤>≥∧∨?]/,
+      /[.,:;∘◌⟜⊸⋅˜˙°⌝⌅⍜⊙⊃⊓∩⤙⤚◠◡⊜⊕⊗⊛⊞⊠⧻△⋯⊢⊣⇌⍏⍖⊚⊂⊟⊏⊡↯☇↙↘▽♭¤⬚≡⍚∵/\\⧅⧈◫⌕⦷∊◴◰□◇⍆⍥⟨⍢⟩⨬≍⌟⋕⍤⍣⚂ℂ⁅⁆∿⍉⤸↻⇡⍩⌵√○⌊⌈◿ⁿₙ∠⊥±¬¯×÷+\-−≠<≤>≥↥↧∧∨?⸮⧋ₑ⚇⧆⨪][₀-₉]*/,
     relevance: 0,
   };
 
+  // `¯` is the negative sign; `-` is always subtract. No `\b`, so both
+  // halves of a `1_2` strand match.
   const NUMBER = {
     className: "number",
-    begin: /-?\b\d+(?:\.\d+)?\b/,
+    begin: /¯?\d+(?:\.\d+)?(?:e¯?\d+)?/,
+    relevance: 0,
+  };
+
+  // A `---` line opens or closes a test scope. Without this rule its dashes
+  // would read as three subtract glyphs.
+  const TEST_SCOPE = {
+    className: "meta",
+    begin: /^---[ \t]*$/,
+    relevance: 0,
+  };
+
+  // System functions: `&p`, `&fras`, `&sl`.
+  const SYSTEM_FUNCTION = {
+    className: "built_in",
+    begin: /&[a-z]+/,
     relevance: 0,
   };
 
@@ -92,9 +111,11 @@ function defineUiua(hljs) {
       FUNCTION_NAME,
       BIND_ARROW,
       OTHER_ARROW,
+      TEST_SCOPE,
       CONSTANT,
       NUMBER,
       STRAND,
+      SYSTEM_FUNCTION,
       STACK_GLYPH,
     ],
   };
