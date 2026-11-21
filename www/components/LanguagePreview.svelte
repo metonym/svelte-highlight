@@ -35,6 +35,7 @@
   import { csvPreviewSnippets } from "@www/preview/csv-preview-snippets";
   import { cuePreviewSnippets } from "@www/preview/cue-preview-snippets";
   import { cypherPreviewSnippets } from "@www/preview/cypher-preview-snippets";
+  import { cythonPreviewSnippets } from "@www/preview/cython-preview-snippets";
   import { d2PreviewSnippets } from "@www/preview/d2-preview-snippets";
   import { dafnyPreviewSnippets } from "@www/preview/dafny-preview-snippets";
   import { datalogPreviewSnippets } from "@www/preview/datalog-preview-snippets";
@@ -211,6 +212,7 @@
   import csv from "svelte-highlight/languages/csv";
   import cue from "svelte-highlight/languages/cue";
   import cypher from "svelte-highlight/languages/cypher";
+  import cython from "svelte-highlight/languages/cython";
   import d2 from "svelte-highlight/languages/d2";
   import dafny from "svelte-highlight/languages/dafny";
   import datalog from "svelte-highlight/languages/datalog";
@@ -532,6 +534,7 @@
     meson: { lang: meson, snippets: mesonPreviewSnippets },
     httpfile: { lang: httpfile, snippets: httpfilePreviewSnippets },
     antlr: { lang: antlr, snippets: antlrPreviewSnippets },
+    cython: { lang: cython, snippets: cythonPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
