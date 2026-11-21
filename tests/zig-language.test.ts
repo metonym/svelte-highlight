@@ -100,3 +100,32 @@ test("zig highlights the addrspace keyword", () => {
   expect(result).toContain('<span class="hljs-keyword">addrspace</span>');
   expect(result).toContain('<span class="hljs-type">u8</span>');
 });
+
+test("zig highlights labeled switch continue targets", () => {
+  const result = highlight(
+    "sw: switch (state) {\n    .start => continue :sw .end,\n    .end => break :sw,\n}",
+  );
+
+  expect(result).toContain('<span class="hljs-symbol">sw:</span>');
+  expect(result).toContain('<span class="hljs-keyword">continue</span>');
+  expect(result).toContain('<span class="hljs-symbol">:sw</span>');
+});
+
+test("zig highlights block and loop labels", () => {
+  const result = highlight(
+    "const x = blk: {\n    break :blk 1;\n};\nouter: inline for (xs) |x| {}",
+  );
+
+  expect(result).toContain('<span class="hljs-symbol">blk:</span>');
+  expect(result).toContain('<span class="hljs-symbol">:blk</span>');
+  expect(result).toContain('<span class="hljs-symbol">outer:</span>');
+});
+
+test("zig leaves struct fields and typed bindings unlabeled", () => {
+  const result = highlight(
+    "const P = struct { a: u8, b: struct { c: u8 } };\nconst n: u32 = 0;",
+  );
+
+  expect(result).not.toContain("hljs-symbol");
+  expect(result).toContain('<span class="hljs-type">u8</span>');
+});

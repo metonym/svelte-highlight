@@ -53,6 +53,20 @@ function defineZig(hljs) {
     relevance: 0,
   };
 
+  // `break :blk`, `continue :sw` (labeled switch, Zig 0.14).
+  const LABEL_REF = {
+    begin: [/\b(?:break|continue)\b/, /\s+/, /:[A-Za-z_]\w*/],
+    beginScope: { 1: "keyword", 3: "symbol" },
+  };
+
+  // `blk: {`, `outer: while`, `sw: switch`. The lookahead keeps a struct
+  // field (`x: f32`) or a typed binding (`const a: u8`) out.
+  const LABEL_DEF = {
+    className: "symbol",
+    begin: /\b[A-Za-z_]\w*:(?=\s*(?:\{|switch\b|while\b|for\b|inline\b))/,
+    relevance: 0,
+  };
+
   const MULTILINE_STRING = {
     className: "string",
     begin: /\\\\/,
@@ -83,6 +97,8 @@ function defineZig(hljs) {
       hljs.QUOTE_STRING_MODE,
       CHAR,
       BUILTIN,
+      LABEL_REF,
+      LABEL_DEF,
       NUMBER,
       TYPE_MODIFIER,
       INT_TYPE,
