@@ -1,5 +1,5 @@
 import { $ } from "bun";
-
+import { buildDetectIndex } from "./build-detect-index.ts";
 import { buildAliases, buildLanguages } from "./build-languages.ts";
 import { buildStyles } from "./build-styles.ts";
 import { buildThemes } from "./build-themes.ts";
@@ -13,5 +13,5 @@ const stylesChain = buildStyles().then(({ themeInputs }) =>
 );
 await buildLanguages();
 await convertGrammars();
-await buildAliases();
+await Promise.all([buildAliases(), buildDetectIndex()]);
 await stylesChain;

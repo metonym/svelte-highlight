@@ -17,6 +17,7 @@ const CORE = [
   "ansi-color.js",
   "ansi-output.js",
   "ansi.js",
+  "auto-detect.js",
   // Core, but left out of `tsconfig.core.json`: its optional
   // `highlight.js` import pulls in the DOM lib through hljs's typings.
   "compat.js",
