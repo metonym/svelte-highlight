@@ -124,6 +124,7 @@
   import { regoPreviewSnippets } from "@www/preview/rego-preview-snippets";
   import { renpyPreviewSnippets } from "@www/preview/renpy-preview-snippets";
   import { rescriptPreviewSnippets } from "@www/preview/rescript-preview-snippets";
+  import { robotframeworkPreviewSnippets } from "@www/preview/robotframework-preview-snippets";
   import { rocPreviewSnippets } from "@www/preview/roc-preview-snippets";
   import { ronPreviewSnippets } from "@www/preview/ron-preview-snippets";
   import { rpmspecPreviewSnippets } from "@www/preview/rpmspec-preview-snippets";
@@ -295,6 +296,7 @@
   import rego from "svelte-highlight/languages/rego";
   import renpy from "svelte-highlight/languages/renpy";
   import rescript from "svelte-highlight/languages/rescript";
+  import robotframework from "svelte-highlight/languages/robotframework";
   import roc from "svelte-highlight/languages/roc";
   import ron from "svelte-highlight/languages/ron";
   import rpmspec from "svelte-highlight/languages/rpmspec";
@@ -517,6 +519,10 @@
     blockdiag: { lang: blockdiag, snippets: blockdiagPreviewSnippets },
     apex: { lang: apex, snippets: apexPreviewSnippets },
     cobol: { lang: cobol, snippets: cobolPreviewSnippets },
+    robotframework: {
+      lang: robotframework,
+      snippets: robotframeworkPreviewSnippets,
+    },
   };
 
   $: ({ lang, snippets } = registry[language]);
