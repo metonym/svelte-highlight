@@ -385,4 +385,15 @@ interface types {
     }
 }
 `,
+  cobol: `       PROCEDURE DIVISION.
+       MAIN-PARA.
+           PERFORM VARYING WS-I FROM 1 BY 1 UNTIL WS-I > 10
+               ADD WS-I TO WS-TOTAL
+           END-PERFORM
+           IF WS-TOTAL > 50
+               MOVE 'HIGH' TO WS-STATUS
+           END-IF
+           DISPLAY WS-STATUS
+           STOP RUN.
+`,
 };

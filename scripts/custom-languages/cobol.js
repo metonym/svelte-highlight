@@ -98,10 +98,39 @@ function defineCobol(hljs) {
   };
 
   // Columns 1-6 of fixed form hold sequence numbers the compiler ignores.
-  // Keep them plain, as LEVEL and PARAGRAPH do.
+  // Keep them plain, as LEVEL and PARAGRAPH do. BASIC scores any line
+  // number, so a six-digit one must score too.
   const SEQUENCE_AREA = {
     begin: /^\d{6}(?=[ \t]|$)/,
-    relevance: 0,
+    relevance: 5,
+  };
+
+  // Scope terminators such as END-IF and END-PERFORM exist only in COBOL.
+  // The keyword table styles them already. This mode adds relevance.
+  const SCOPE_TERMINATOR = {
+    className: "keyword",
+    begin:
+      /\bend-(?:if|perform|evaluate|read|write|compute|call|search|string|unstring|add|subtract|multiply|divide|start|delete|rewrite|return|accept|display|exec)\b/,
+    relevance: 10,
+  };
+
+  // STOP RUN, and an inline PERFORM loop: PERFORM VARYING, PERFORM UNTIL.
+  const COBOL_PHRASE = {
+    variants: [
+      { begin: [/\bstop/, /[ \t]+/, /run\b/] },
+      { begin: [/\bperform/, /[ \t]+/, /(?:varying|until|forever)\b/] },
+    ],
+    beginScope: { 1: "keyword", 3: "keyword" },
+    relevance: 10,
+  };
+
+  // MOVE 'OK' TO WS-STATUS, ADD WS-I TO WS-TOTAL. A lookahead checks the
+  // rest, so the operand and TO keep their own styles.
+  const MOVE_TO = {
+    className: "keyword",
+    begin:
+      /\b(?:move|add)(?=[ \t]+(?:'[^']*'|"[^"]*"|[\w-]+(?:\([^)\n]*\))?)[ \t]+to\b)/,
+    relevance: 5,
   };
 
   const PERFORM = {
@@ -160,6 +189,9 @@ function defineCobol(hljs) {
       PARAGRAPH,
       SEQUENCE_AREA,
       PICTURE,
+      SCOPE_TERMINATOR,
+      COBOL_PHRASE,
+      MOVE_TO,
       PERFORM,
       INTRINSIC,
       USAGE_TYPE,
