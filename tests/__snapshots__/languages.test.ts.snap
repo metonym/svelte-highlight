@@ -192,6 +192,7 @@ exports[`Languages 1`] = `
   "leaf",
   "lean",
   "less",
+  "lex",
   "likec4",
   "liquid",
   "lisp",

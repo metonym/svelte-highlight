@@ -2578,4 +2578,35 @@ void yyerror(const char *s) {
   fprintf(stderr, "error: %s\\n", s);
 }
 `,
+  lex: `%{
+#include "calc.tab.h"
+%}
+
+%option noyywrap yylineno
+%x COMMENT
+
+DIGIT    [0-9]
+ID       [a-zA-Z_][a-zA-Z0-9_]*
+
+%%
+
+"/*"                BEGIN(COMMENT);
+<COMMENT>"*/"       BEGIN(INITIAL);
+<COMMENT>[^*\\n]+    /* skip */
+
+{DIGIT}+("."{DIGIT}*)?  {
+    yylval.num = atof(yytext);
+    return NUMBER;
+  }
+{ID}                { yylval.name = strdup(yytext); return IDENT; }
+"+"                 |
+"-"                 { return yytext[0]; }
+[ \\t]+              ;
+<<EOF>>             { yyterminate(); }
+.                   ECHO;
+
+%%
+
+int main(void) { return yylex(); }
+`,
 };
