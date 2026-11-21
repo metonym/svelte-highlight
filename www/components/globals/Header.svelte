@@ -225,6 +225,7 @@
     "/preview-fluent": "Fluent language preview",
     "/preview-riscv": "RISC-V Assembly language preview",
     "/preview-abap": "ABAP language preview",
+    "/preview-freemarker": "FreeMarker language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
