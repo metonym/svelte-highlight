@@ -194,6 +194,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "cython",
   "metal",
   "po",
+  "sshconfig",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =

@@ -314,6 +314,7 @@ exports[`Languages 1`] = `
   "splunk",
   "sqf",
   "sql",
+  "sshconfig",
   "stan",
   "starlark",
   "stata",
