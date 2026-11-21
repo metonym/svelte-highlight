@@ -51,6 +51,7 @@
   import { esqlPreviewSnippets } from "@www/preview/esql-preview-snippets";
   import { fennelPreviewSnippets } from "@www/preview/fennel-preview-snippets";
   import { fishPreviewSnippets } from "@www/preview/fish-preview-snippets";
+  import { fluentPreviewSnippets } from "@www/preview/fluent-preview-snippets";
   import { fluxPreviewSnippets } from "@www/preview/flux-preview-snippets";
   import { fstarPreviewSnippets } from "@www/preview/fstar-preview-snippets";
   import { gbnfPreviewSnippets } from "@www/preview/gbnf-preview-snippets";
@@ -231,6 +232,7 @@
   import esql from "svelte-highlight/languages/esql";
   import fennel from "svelte-highlight/languages/fennel";
   import fish from "svelte-highlight/languages/fish";
+  import fluent from "svelte-highlight/languages/fluent";
   import flux from "svelte-highlight/languages/flux";
   import fstar from "svelte-highlight/languages/fstar";
   import gbnf from "svelte-highlight/languages/gbnf";
@@ -544,6 +546,7 @@
     metal: { lang: metal, snippets: metalPreviewSnippets },
     po: { lang: po, snippets: poPreviewSnippets },
     sshconfig: { lang: sshconfig, snippets: sshconfigPreviewSnippets },
+    fluent: { lang: fluent, snippets: fluentPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
