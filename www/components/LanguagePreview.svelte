@@ -114,6 +114,7 @@
   import { pklPreviewSnippets } from "@www/preview/pkl-preview-snippets";
   import { plantumlPreviewSnippets } from "@www/preview/plantuml-preview-snippets";
   import { plsqlPreviewSnippets } from "@www/preview/plsql-preview-snippets";
+  import { poPreviewSnippets } from "@www/preview/po-preview-snippets";
   import { polarPreviewSnippets } from "@www/preview/polar-preview-snippets";
   import { powerqueryPreviewSnippets } from "@www/preview/powerquery-preview-snippets";
   import { previewThemes } from "@www/preview/preview-themes";
@@ -292,6 +293,7 @@
   import pkl from "svelte-highlight/languages/pkl";
   import plantuml from "svelte-highlight/languages/plantuml";
   import plsql from "svelte-highlight/languages/plsql";
+  import po from "svelte-highlight/languages/po";
   import polar from "svelte-highlight/languages/polar";
   import powerquery from "svelte-highlight/languages/powerquery";
   import prisma from "svelte-highlight/languages/prisma";
@@ -538,6 +540,7 @@
     antlr: { lang: antlr, snippets: antlrPreviewSnippets },
     cython: { lang: cython, snippets: cythonPreviewSnippets },
     metal: { lang: metal, snippets: metalPreviewSnippets },
+    po: { lang: po, snippets: poPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);
