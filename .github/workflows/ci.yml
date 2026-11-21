@@ -1,9 +1,18 @@
 on:
+  # `paths`, not `paths-ignore`, so the docs files a test reads can opt back
+  # in. Which suites run is bivium's to decide, in the plan job.
   pull_request:
-    paths-ignore:
-      - "**.md"
-      - "www/**"
-      - "examples/**"
+    paths:
+      - "**"
+      - "!**.md"
+      - "!www/**"
+      - "!examples/**"
+      - README.md
+      - SUPPORTED_LANGUAGES.md
+      - SUPPORTED_STYLES.md
+      - www/preview/tsrx-kitchen-sink.ts
+  # A push runs every test, so a docs-only one skips CI, as its PR ran the
+  # tests that read the docs.
   push:
     branches: [master]
     paths-ignore:
@@ -16,6 +25,37 @@ permissions:
   contents: read
 
 jobs:
+  # PRs run only the tests the diff can reach in bivium's static dependency
+  # graph (bivium.config.ts). Pushes and manual runs plan nothing, so their
+  # outputs are empty and every suite runs in full, which catches any miss.
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      # `all`, `none`, or space-separated test files; empty (= all) off PRs.
+      unit: ${{ steps.plan.outputs.unit-tests }}
+      e2e: ${{ steps.plan.outputs.e2e-tests }}
+      perf: ${{ steps.plan.outputs.perf-tests }}
+    steps:
+      # The PR's merge commit and its parents: HEAD^1 is the base tip it
+      # merges into, so HEAD^1..HEAD is the PR's diff.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        if: github.event_name == 'pull_request'
+        with:
+          fetch-depth: 2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        if: github.event_name == 'pull_request'
+      # No install: bivium has no dependencies, and the config imports only
+      # types. Run the version package.json pins.
+      - id: plan
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git update-ref "refs/remotes/origin/$BASE_REF" HEAD^1
+          version=$(sed -n 's/^ *"bivium": "\([^"]*\)".*/\1/p' package.json)
+          bunx --bun "bivium@$version" plan "origin/$BASE_REF" --github
+
   lint:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -26,12 +66,16 @@ jobs:
           # canary, since `bun lint` is in canary only.
           bun-version-file: .bun-version
       - run: bun ci
+      # Fails when a test reaches a file whose dependencies bivium can't
+      # read, which would make that test run on every PR, or when a
+      # `@depends-on` or `@reads` glob can never select its file.
+      - run: bunx --bun bivium check
       - run: bun fmt --check
       - run: bun lint
       - run: bun run lint:svelte
 
   unit-tests:
-    needs: [lint]
+    needs: [lint, plan]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -44,19 +88,33 @@ jobs:
         run: bun build:lib
 
       - name: Run unit tests
-        run: bun test:unit
+        if: needs.plan.outputs.unit != 'none'
+        env:
+          FILES: ${{ needs.plan.outputs.unit }}
+        run: |
+          if [ -z "$FILES" ] || [ "$FILES" = all ]; then
+            bun test:unit
+          else
+            bun test $FILES
+          fi
 
+      # Always: it checks every file, not just the ones a test reaches.
       - name: Run typecheck
         run: bun test:types
 
-      - name: Run engine perf budget
-        run: bun scripts/benchmark-engine.ts
-
-      - name: Run diff perf budget
-        run: bun scripts/benchmark-diff.ts
+      - name: Run perf budgets
+        if: needs.plan.outputs.perf != 'none'
+        env:
+          FILES: ${{ needs.plan.outputs.perf }}
+        run: |
+          if [ -z "$FILES" ] || [ "$FILES" = all ]; then
+            FILES="scripts/benchmark-engine.ts scripts/benchmark-diff.ts"
+          fi
+          for file in $FILES; do bun "$file"; done
 
   e2e-tests:
-    needs: [lint]
+    needs: [lint, plan]
+    if: needs.plan.outputs.e2e != 'none'
     runs-on: macos-15
     timeout-minutes: 30
     steps:
@@ -85,4 +143,11 @@ jobs:
         run: bun build:lib
 
       - name: Run e2e tests
-        run: bun test:e2e
+        env:
+          FILES: ${{ needs.plan.outputs.e2e }}
+        run: |
+          if [ -z "$FILES" ] || [ "$FILES" = all ]; then
+            bun test:e2e
+          else
+            bunx playwright test $FILES
+          fi
