@@ -6,6 +6,9 @@ import base from "highlight.js/lib/languages/dart";
  * - Inside a `class` / `interface` header the stock grammar only knows
  *   `extends` and `implements`; `with` (mixin application) and `on` (`mixin
  *   class M on Base`) were styled as class titles.
+ * - Dart 3.0 `interface class I {}`: the header mode begins at `interface`,
+ *   so the following `class` was styled as the class title. `class` now
+ *   joins the header's keyword list.
  *
  * @type {import("highlight.js").LanguageFn}
  */
@@ -23,7 +26,7 @@ function register(hljs) {
   );
   if (!clauseKeywords)
     throw new Error("dart patch: class clause mode not found");
-  clauseKeywords.beginKeywords = "extends implements with on";
+  clauseKeywords.beginKeywords = "extends implements with on class";
 
   return lang;
 }
