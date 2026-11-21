@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 367 languages: 193 exported from highlight.js@11.12.0, 174 custom grammars added by svelte-highlight
+> 368 languages: 193 exported from highlight.js@11.12.0, 175 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -2693,6 +2693,20 @@
 
   // base import
   import { mermaid } from "svelte-highlight/languages";
+</script>
+```
+
+## meson (`meson`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import meson from "svelte-highlight/languages/meson";
+
+  // base import
+  import { meson } from "svelte-highlight/languages";
 </script>
 ```
 

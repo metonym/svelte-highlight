@@ -2226,4 +2226,30 @@ Login As \${user}
     \${result}=    Run Keyword And Return Status    Submit
     RETURN    \${result}
 `,
+  meson: `project('demo', 'c',
+  version : '1.2.0',
+  default_options : ['warning_level=3'])
+
+cc = meson.get_compiler('c')
+m_dep = cc.find_library('m', required : false)
+deps = [dependency('glib-2.0', version : '>=2.56'), m_dep]
+
+# Pick sources per platform.
+src = files('main.c', 'util.c')
+if host_machine.system() == 'windows'
+  src += files('win32.c')
+elif not get_option('tests')
+  message(f'tests off for @0@'.format(meson.project_name()))
+else
+  src += ['posix.c']
+endif
+
+foreach name : ['a', 'b']
+  test(name, executable(name, name + '.c', dependencies : deps))
+endforeach
+
+doc = '''Multi-line
+string'''
+exe = executable('demo', src, install : true, link_args : ['-lz'])
+`,
 };

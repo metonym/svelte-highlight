@@ -188,6 +188,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "apex",
   "cobol",
   "robotframework",
+  "meson",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
