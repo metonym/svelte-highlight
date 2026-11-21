@@ -1,4 +1,5 @@
 <script>
+  import { abapPreviewSnippets } from "@www/preview/abap-preview-snippets";
   import { agdaPreviewSnippets } from "@www/preview/agda-preview-snippets";
   import { alloyPreviewSnippets } from "@www/preview/alloy-preview-snippets";
   import { angularPreviewSnippets } from "@www/preview/angular-preview-snippets";
@@ -181,6 +182,7 @@
   import { zigPreviewSnippets } from "@www/preview/zig-preview-snippets";
   import { Column, Row } from "carbon-components-svelte";
   import { CopyButton, Highlight } from "svelte-highlight";
+  import abap from "svelte-highlight/languages/abap";
   import agda from "svelte-highlight/languages/agda";
   import alloy from "svelte-highlight/languages/alloy";
   import angular from "svelte-highlight/languages/angular";
@@ -550,6 +552,7 @@
     sshconfig: { lang: sshconfig, snippets: sshconfigPreviewSnippets },
     fluent: { lang: fluent, snippets: fluentPreviewSnippets },
     riscv: { lang: riscv, snippets: riscvPreviewSnippets },
+    abap: { lang: abap, snippets: abapPreviewSnippets },
   };
 
   $: ({ lang, snippets } = registry[language]);

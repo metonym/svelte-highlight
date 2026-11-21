@@ -224,6 +224,7 @@
     "/preview-sshconfig": "SSH Config language preview",
     "/preview-fluent": "Fluent language preview",
     "/preview-riscv": "RISC-V Assembly language preview",
+    "/preview-abap": "ABAP language preview",
   };
 
   $: path = pathname === "/" ? pathname : pathname.replace(/\/$/, "");
