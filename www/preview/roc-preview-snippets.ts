@@ -36,4 +36,16 @@ main =
     |> List.map (\\n -> n * 2)
     |> List.sum`,
   },
+  {
+    title: "Loops and var",
+    description: "the new compiler's var bindings and for-in loops",
+    code: `sum_lengths! = |words| {
+    var total_ = 0
+    for word in words {
+        total_ = total_ + Str.count_utf8_bytes(word)
+    }
+    Stdout.line!("\${total_} bytes")
+    total_
+}`,
+  },
 ];
