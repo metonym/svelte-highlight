@@ -2429,4 +2429,23 @@ msgstr ""
 #~ msgid "Obsolete"
 #~ msgstr "Veraltet"
 `,
+  sshconfig: `# ~/.ssh/config
+Include ~/.ssh/config.d/*
+
+Host bastion
+  HostName 203.0.113.10
+  Port 2222
+  ForwardAgent no
+
+Host *.internal !legacy.internal
+  ProxyJump bastion
+  ProxyCommand ssh -W %h:%p bastion
+  ControlPath ~/.ssh/cm-%r@%h:%p
+  ControlPersist 10m
+  MACs hmac-sha2-512,hmac-sha2-256
+
+Match host *.corp exec "test -f \${HOME}/.vpn-up"
+  User=jdoe
+  IdentityFile ~/.ssh/id_ed25519
+`,
 };
