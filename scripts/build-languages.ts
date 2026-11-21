@@ -220,6 +220,7 @@ const HLJS_PATCH_NAMES = [
   "rust",
   "swift",
   "typescript",
+  "vim",
 ] as const;
 
 export type HljsPatch = {
