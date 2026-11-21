@@ -1,6 +1,6 @@
 # Supported Languages
 
-> 377 languages: 193 exported from highlight.js@11.12.0, 184 custom grammars added by svelte-highlight
+> 378 languages: 193 exported from highlight.js@11.12.0, 185 custom grammars added by svelte-highlight
 
 ## 1c (`_1c`)
 
@@ -1515,6 +1515,20 @@
 
   // base import
   import { freedesktop } from "svelte-highlight/languages";
+</script>
+```
+
+## freemarker (`freemarker`)
+
+> Custom svelte-highlight language (not exported by highlight.js)
+
+```html
+<script>
+  // direct import (recommended)
+  import freemarker from "svelte-highlight/languages/freemarker";
+
+  // base import
+  import { freemarker } from "svelte-highlight/languages";
 </script>
 ```
 

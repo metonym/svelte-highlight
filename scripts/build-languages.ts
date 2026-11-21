@@ -198,6 +198,7 @@ const CUSTOM_LANGUAGE_NAMES = [
   "fluent",
   "riscv",
   "abap",
+  "freemarker",
 ] as const;
 
 export const CUSTOM_LANGUAGES: readonly CustomLanguage[] =
