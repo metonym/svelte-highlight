@@ -53,6 +53,7 @@ import HighlightStreamRegenerate from "./HighlightStream.regenerate.test.svelte"
 import HighlightStreamSealing from "./HighlightStream.sealing.test.svelte";
 import HighlightStreamStability from "./HighlightStream.stability.test.svelte";
 import HighlightStreamTemplateLiteral from "./HighlightStream.templateLiteral.test.svelte";
+import EditablePrerendered from "./Editable.prerendered.test.svelte";
 import HighlightStream from "./HighlightStream.test.svelte";
 import HighlightStreamVirtualize from "./HighlightStream.virtualize.test.svelte";
 import HighlightStyleDedupe from "./HighlightStyle.dedupe.test.svelte";
@@ -2716,6 +2717,55 @@ test("HighlightEditable css-highlights engine - falls back to the DOM engine wit
 
   await expect(page.locator(".hljs-keyword").first()).toHaveText("const");
   expect(await readResolvedEngine(page)).toBe("dom");
+});
+
+test("createEditor - keeps prerendered markup that matches its code", async ({
+  mount,
+  page,
+}) => {
+  await mount(EditablePrerendered);
+
+  const code = page.locator("code");
+  await expect(page.getByTestId("kept")).toHaveAttribute("data-value", "true");
+  await expect(page.getByTestId("comments")).toHaveAttribute("data-value", "0");
+  await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
+  expect(await code.evaluate((el) => el.textContent)).toBe(
+    "const a = 1;\nlet b = 'two';",
+  );
+
+  // Edits patch the adopted lines as they would painted ones.
+  // Caret at the end of the code; End after a click is unreliable across browsers.
+  await code.evaluate((el) => {
+    (el as HTMLElement).focus();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  });
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("var c;");
+  await expect(code).toHaveText("const a = 1;\nlet b = 'two';\nvar c;");
+  await expect(code.locator(".hljs-keyword")).toHaveText([
+    "const",
+    "let",
+    "var",
+  ]);
+});
+
+test("createEditor - repaints prerendered markup for other code", async ({
+  mount,
+  page,
+}) => {
+  await mount(EditablePrerendered, {
+    props: { renderedCode: "let a = 1;", code: "const z = 2;" },
+  });
+
+  const code = page.locator("code");
+  await expect(page.getByTestId("kept")).toHaveAttribute("data-value", "false");
+  await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
+  expect(await code.evaluate((el) => el.textContent)).toBe("const z = 2;");
 });
 
 test("Search - shows a match count and highlights occurrences in the rendered window", async ({

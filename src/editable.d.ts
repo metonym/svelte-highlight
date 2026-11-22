@@ -50,7 +50,38 @@ export interface EditorOptions extends Partial<EditorSettings> {
   onHistory?: (snapshot: EditorHistorySnapshot) => void;
   /** Called on blur. */
   onBlur?: (code: string) => void;
+  /**
+   * `prerenderEditor`'s result for the element's server-rendered markup.
+   * The first paint reuses its parse and keeps the markup instead of
+   * rebuilding it, when they match `code` and `language`.
+   */
+  prerendered?: EditorPrerender;
 }
+
+/** What `prerenderEditor` returns. */
+export interface EditorPrerender {
+  /** The markup the `"dom"` engine paints for `code`, for the element's content. */
+  html: string;
+  code: string;
+  /** The parse `html` came from, opaque. */
+  parse: unknown;
+}
+
+/**
+ * The markup the `"dom"` engine paints for `code`, for a server to render
+ * inside the editor's element, and the parse it came from. Pass the result
+ * as `createEditor`'s `prerendered`. Runs without a DOM.
+ *
+ * @example
+ * // On the server: `<code contenteditable>${prerendered.html}</code>`
+ * const prerendered = prerenderEditor(typescript, code);
+ * // In the browser, with the same code:
+ * createEditor(element, { language: typescript, code, prerendered: prerenderEditor(typescript, code) });
+ */
+export function prerenderEditor(
+  language: LanguageType<string>,
+  code: string,
+): EditorPrerender;
 
 export interface Editor {
   /** The id used in this editor's `CSS.highlights` names. */

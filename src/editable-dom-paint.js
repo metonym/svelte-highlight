@@ -23,6 +23,16 @@ export function lineHtmlFromEvents(events, code) {
 }
 
 /**
+ * The editor's markup for `lines`, as `renderLines` builds it: one `<span>`
+ * per line, joined by "\n".
+ * @param {string[]} lines
+ * @returns {string}
+ */
+export function editorHtml(lines) {
+  return lines.map((line) => `<span>${line}</span>`).join("\n");
+}
+
+/**
  * @param {string} code
  * @param {number} from
  * @param {number} end

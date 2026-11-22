@@ -46,7 +46,7 @@
   export let label = "Code editor";
 
   import { createEventDispatcher, onMount } from "svelte";
-  import { createEditor } from "./editable.js";
+  import { createEditor, prerenderEditor } from "./editable.js";
 
   const dispatch = createEventDispatcher();
   const instanceId = nextInstanceId();
@@ -59,6 +59,11 @@
 
   // Tracks `code` so parent updates vs local edits can be distinguished.
   let internalCode = code;
+
+  // The first paint's markup, rendered on the server too, so the code has its
+  // colors before hydration. The editor keeps it rather than repainting.
+  // Never reassigned: the editor owns the element's content after mount.
+  const prerendered = prerenderEditor(language, code ?? "");
 
   $: editor?.update({
     language,
@@ -140,6 +145,7 @@
       engine,
       theme,
       instanceId,
+      prerendered,
       onChange: (value) => {
         code = value;
         internalCode = value;
@@ -165,7 +171,7 @@
     role="textbox"
     aria-multiline="true"
     aria-readonly={readonly ? "true" : undefined}
-    aria-label={label}>{code}</code
+    aria-label={label}>{@html prerendered.html}</code
   ></pre>
 
 <style>

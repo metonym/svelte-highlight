@@ -44,6 +44,19 @@ describe("HighlightEditable SSR", () => {
     expect(body).toContain("a &lt; b");
   });
 
+  it("renders the tokens the dom engine paints, one span per line", async () => {
+    const { default: HighlightEditable } = await compileForServer();
+
+    const { body } = render(HighlightEditable, {
+      props: { language: typescript, code: "const a = 1;\nlet b;" },
+    });
+
+    expect(body).toContain('<span><span class="hljs-keyword">const</span> a');
+    expect(body).toContain(
+      '</span>\n<span><span class="hljs-keyword">let</span> b;</span>',
+    );
+  });
+
   it("renders the editor as a named multiline textbox", async () => {
     const { default: HighlightEditable } = await compileForServer();
 

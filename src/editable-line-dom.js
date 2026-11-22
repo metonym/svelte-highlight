@@ -3,12 +3,15 @@
  * `<span>` per line, joined by literal "\n" text nodes.
  */
 
+import { editorHtml } from "./editable-dom-paint.js";
+
 /** `NodeFilter.SHOW_TEXT`, inlined so this module loads outside a browser. */
 const SHOW_TEXT = 4;
 
 /** `Node.TEXT_NODE` and `Node.ELEMENT_NODE`, inlined for the same reason. */
 const TEXT_NODE = 3;
 const ELEMENT_NODE = 1;
+const COMMENT_NODE = 8;
 
 /**
  * @typedef {{
@@ -76,6 +79,10 @@ function spliceIn(array, index, removed, items) {
  */
 export function renderLines(editor, view, lines, setContent, hooks) {
   const doc = /** @type {Document} */ (editor.ownerDocument);
+  if (view.lineEls.length === 0 && adoptLines(editor, view, lines)) {
+    hooks.onReset();
+    return null;
+  }
   // Typing at a selection boundary outside a line's <span> (e.g. Firefox
   // after select-all) adds a stray text node: rebuild when the count drifts.
   const expectedChildren =
@@ -156,6 +163,34 @@ export function renderLines(editor, view, lines, setContent, hooks) {
 
   view.renderedLines = lines;
   return prevLen === newLen && changedCount === 1 ? changedIndex : null;
+}
+
+/**
+ * Takes over markup already in `editor` when it's what `renderLines` would
+ * build for `lines`, such as `prerenderEditor`'s on a server-rendered page,
+ * so the first paint doesn't rebuild it. Drops the comments a framework's
+ * hydration leaves around it first.
+ * @param {HTMLElement} editor
+ * @param {LineView} view
+ * @param {string[]} lines
+ * @returns {boolean}
+ */
+function adoptLines(editor, view, lines) {
+  if (!editor.firstElementChild) return false;
+  for (const node of Array.from(editor.childNodes)) {
+    if (node.nodeType === COMMENT_NODE) node.remove();
+  }
+  const doc = /** @type {Document} */ (editor.ownerDocument);
+  const expected = doc.createElement("template");
+  expected.innerHTML = editorHtml(lines);
+  if (editor.innerHTML !== expected.innerHTML) return false;
+  const spans = /** @type {HTMLElement[]} */ (Array.from(editor.children));
+  view.lineEls = spans;
+  view.lineLengths = spans.map(
+    (span) => /** @type {string} */ (span.textContent).length,
+  );
+  view.renderedLines = lines;
+  return true;
 }
 
 /**

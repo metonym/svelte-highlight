@@ -1224,6 +1224,16 @@ editor.destroy();
 
 For the `"css-highlights"` engine, pass `theme` to `createEditor` or `update`. The editor adds its `::highlight()` rules to the page and removes them on `destroy`.
 
+To render the editor on a server, put `prerenderEditor(language, code).html` inside the `<code>`: the markup the `"dom"` engine paints, so the code has its colors before any script runs. In the browser, pass `prerenderEditor`'s result for the same code as `prerendered`. The first paint then reuses its parse and keeps the markup instead of rebuilding it. `HighlightEditable` does this on its own, so a server-rendered page shows its colors before hydration.
+
+```js
+import { createEditor, prerenderEditor } from "svelte-highlight/editable";
+
+// Server: `<pre><code contenteditable="true">${prerenderEditor(typescript, code).html}</code></pre>`
+// Browser:
+createEditor(element, { language: typescript, code, prerendered: prerenderEditor(typescript, code) });
+```
+
 `instanceHighlightStyle(theme, editor.instanceId)` still works for an editor made without `theme`. Add its `<style>` tag to the page's `<head>`. It only converts single-class `.hljs-<scope>` rules, so compound scopes such as `title.function_` get no color.
 
 ### Adding a gutter
