@@ -2254,6 +2254,8 @@ That still dynamically imports each allowed language's grammar on first use. For
 
 See [Code-splitting](#code-splitting) for the tradeoffs between a static import (bundled up front, no request-time latency) and `loadLanguage` (smaller initial bundle, one chunk fetched per language actually seen).
 
+A resolver that returns the grammar directly, as above, highlights each fence on the first render, so a server-rendered page sends the fences highlighted. A promise, such as `loadLanguage`'s, can't be awaited by the server: those fences render as plain text until the grammar loads in the browser.
+
 ## Large documents
 
 `HighlightVirtual` renders only the visible lines of a huge document (plus a small overscan margin) inside its own scroll container -- a 100k-line file costs a couple dozen DOM line nodes, not one per line. It exploits the same engine checkpoint/resume primitive `HighlightStream` uses for streaming, but for *random-access* windows into a static document instead of a growing tail.
