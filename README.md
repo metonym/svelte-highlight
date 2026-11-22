@@ -2841,6 +2841,8 @@ Each token has `text`, `scopes`, and the theme's `color`, `background`, `bold`, 
 
 It works with the DOM too, with HTML elements in the snippets.
 
+See [examples/terminal](examples/terminal) for a complete terminal renderer that prints highlighted files.
+
 ## Component API
 
 ### `Highlight`
@@ -3711,8 +3713,10 @@ A grammar's `illegal` pattern only aborts `tokenizeAuto`/`highlightAuto`: a cand
 By default, example set-ups use Svelte 5. The exception is `examples/vite@svelte-4`, which uses Svelte 4.
 
 - [examples/rollup](examples/rollup)
+- [examples/cdn](examples/cdn): no bundler, no Svelte
 - [examples/routify](examples/routify)
 - [examples/sveltekit](examples/sveltekit)
+- [examples/terminal](examples/terminal): a Svelte custom renderer for terminals
 - [examples/vite](examples/vite)
 - [examples/vite@svelte-4](examples/vite@svelte-4)
 - [examples/webpack](examples/webpack)

@@ -1,0 +1,2 @@
+# Compiles `.svelte` files on import, for the terminal renderer.
+preload = ["./svelte-plugin.js"]
