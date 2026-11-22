@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "svelte": "^5.59.1",
-    "svelte-highlight": "^7.26.0"
+    "svelte-highlight": "^7.27.0"
   }
 }

@@ -1,0 +1,2 @@
+# Compiles `.svelte` files on import, for the opentui renderer.
+preload = ["./svelte-plugin.js"]
