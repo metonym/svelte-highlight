@@ -451,6 +451,7 @@
       () => probe,
       () => lineHeight,
       (height) => (lineHeight = height),
+      tick,
     );
     tick().then(() => {
       if (charProbe)
