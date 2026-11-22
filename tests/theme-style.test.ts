@@ -26,6 +26,31 @@ describe("resolveThemeVar", () => {
     expect(resolveThemeVar(vars, "--shl-title-class_", fallbacks)).toBe("blue");
   });
 
+  it("follows a chain of fallbacks, nearest first", () => {
+    const fallbacks = {
+      "--shl-title-class_-inherited__": "--shl-title-class_",
+      "--shl-title-class_": "--shl-title",
+    };
+    const key = "--shl-title-class_-inherited__";
+    expect(
+      resolveThemeVar(
+        { "--shl-title": "blue", "--shl-title-class_": "green" },
+        key,
+        fallbacks,
+      ),
+    ).toBe("green");
+    expect(resolveThemeVar({ "--shl-title": "blue" }, key, fallbacks)).toBe(
+      "blue",
+    );
+  });
+
+  it("stops on a fallback cycle", () => {
+    const fallbacks = { "--shl-a": "--shl-b", "--shl-b": "--shl-a" };
+    expect(resolveThemeVar({ "--shl-fg": "black" }, "--shl-a", fallbacks)).toBe(
+      "black",
+    );
+  });
+
   it("falls back to --shl-fg for an unresolved color key", () => {
     const vars = { "--shl-fg": "black" };
     expect(resolveThemeVar(vars, "--shl-keyword", {})).toBe("black");

@@ -1,5 +1,8 @@
-import type { Declaration } from "postcss";
+import type { Declaration, Root, Rule } from "postcss";
 import postcss from "postcss";
+// Not `highlight-cascade.js`: it imports `themes/_base-css.js`, which this
+// script generates.
+import { shorthandBackgroundColor, substituteVars } from "../src/css-walk.js";
 import { scopeSelectors } from "../src/scoped.js";
 import { paletteToCss } from "../src/theme.js";
 import type { ThemeInput } from "./build-styles.ts";
@@ -61,12 +64,79 @@ function declText(decls: Declaration[]): string {
   return decls.map((d) => `${d.prop}:${d.value}`).join(";");
 }
 
+/** Selectors whose custom properties every `.hljs` element inherits. */
+const ROOT_SELECTORS = new Set([":root", ":host", "html"]);
+
+/**
+ * Custom properties a theme sets on `:root`, `:host` or `html`, resolved
+ * against each other. A palette has no such element to set them on, so
+ * its values must not refer to them.
+ */
+function rootCustomProperties(root: Root): Map<string, string> {
+  const raw = new Map<string, string>();
+  root.walkRules((rule) => {
+    if (rule.parent?.type !== "root") return;
+    if (!rule.selectors.every((selector) => ROOT_SELECTORS.has(selector))) {
+      return;
+    }
+    rule.walkDecls((decl) => {
+      if (decl.prop.startsWith("--")) raw.set(decl.prop, decl.value.trim());
+    });
+  });
+  const resolved = new Map<string, string>();
+  const resolving = new Set<string>();
+  const lookup = (name: string): string | undefined => {
+    if (resolved.has(name)) return resolved.get(name);
+    const value = raw.get(name);
+    if (value === undefined || resolving.has(name)) return undefined;
+    resolving.add(name);
+    const result = substituteVars(value, lookup) ?? undefined;
+    resolving.delete(name);
+    if (result !== undefined) resolved.set(name, result);
+    return result;
+  };
+  for (const name of raw.keys()) lookup(name);
+  return resolved;
+}
+
+/** A rule that only sets custom properties on the root element. */
+function isRootVarRule(node: Rule): boolean {
+  return (
+    node.selectors.every((selector) => ROOT_SELECTORS.has(selector)) &&
+    node.nodes.every((n) => n.type === "decl" && n.prop.startsWith("--"))
+  );
+}
+
+/**
+ * A declaration's value as a palette var can hold it: root custom
+ * properties substituted, and `inherit` colors as `currentColor`. A var set
+ * to `inherit` inherits the var, not the color, so it would be unset.
+ */
+function paletteValue(
+  prop: string,
+  value: string,
+  rootVars: Map<string, string>,
+): string {
+  const substituted =
+    rootVars.size === 0
+      ? value
+      : (substituteVars(value, (name) => rootVars.get(name)) ?? value);
+  if (
+    (prop === "color" || prop === "background-color") &&
+    substituted.trim().toLowerCase() === "inherit"
+  ) {
+    return "currentColor";
+  }
+  return substituted.trim();
+}
+
 function processTheme(
   input: ThemeInput,
   selectorUnion: Map<string, UnionEntry>,
   structuralMismatches: Array<{ theme: string; selector: string }>,
 ): { artifact: ThemeArtifact; report: ThemeReportEntry } {
   const root = postcss.parse(input.css);
+  const rootVars = rootCustomProperties(root);
   const vars = new Map<string, string>();
   const extras = new Map<string, Map<string, string>>();
   const rawBlocks: string[] = [];
@@ -91,6 +161,8 @@ function processTheme(
       continue;
     }
     if (node.type !== "rule") continue;
+    // Resolved into the values that use them, below.
+    if (rootVars.size > 0 && isRootVarRule(node)) continue;
 
     const decls = node.nodes.filter((n): n is Declaration => n.type === "decl");
 
@@ -113,7 +185,7 @@ function processTheme(
 
       for (const decl of decls) {
         const prop = canonicalizeProperty(decl.prop);
-        const value = decl.value.trim();
+        let value = paletteValue(prop, decl.value, rootVars);
 
         const shapeSupported = shape.kind !== "unsupported";
         const propSupported = SUPPORTED_PROPERTIES.has(prop);
@@ -122,8 +194,16 @@ function processTheme(
 
         if (!shapeSupported || !propSupported || !valueSimpleEnough) {
           excludedSelectors.add(normalized);
-          addExtra(normalized, decl.prop, decl.value);
-          continue;
+          addExtra(normalized, decl.prop, value);
+          // An image background still names a color under the image. Keep
+          // it as the var too, so a palette without its extras isn't
+          // left without a background.
+          if (shape.kind === "unsupported" || prop !== "background-color") {
+            continue;
+          }
+          const color = shorthandBackgroundColor(value);
+          if (color === "transparent" || !isSimpleColorValue(color)) continue;
+          value = color;
         }
 
         const vn = varName(shape.scopes, prop);
@@ -174,17 +254,58 @@ function processTheme(
   };
 }
 
-/** `--shl-*` var -> its `var(x, var(y))` fallback in `base.css`, for runtime theme merging. */
+/**
+ * The scopes whose var `entry`'s `prop` falls back to. A compound such as
+ * `.hljs-title.class_.inherited__` falls back to its longest shorter
+ * compound that sets `prop` (`.hljs-title.class_`), since that rule also
+ * matches it in the theme CSS, and only then to its anchor (`.hljs-title`).
+ */
+function fallbackScopes(
+  entry: Pick<UnionEntry, "kind" | "scopes">,
+  prop: string,
+  selectorUnion: Map<string, UnionEntry>,
+): string[] | null {
+  const subject = subjectScope(entry);
+  if (!subject) return null;
+  if (entry.kind === "compound") {
+    for (let length = entry.scopes.length - 1; length >= 2; length--) {
+      const prefix = entry.scopes.slice(0, length);
+      const selector = `.hljs-${prefix.join(".")}`;
+      if (selectorUnion.get(selector)?.properties.has(prop)) return prefix;
+    }
+  }
+  return subject;
+}
+
+/** `var(<scopes' var>, <its fallback chain>)`, down to a single scope. */
+function varChain(
+  scopes: string[],
+  prop: string,
+  selectorUnion: Map<string, UnionEntry>,
+): string {
+  const vn = varName(scopes, prop) as string;
+  const kind = scopes.length > 1 ? "compound" : "single";
+  const entry = selectorUnion.get(`.hljs-${scopes.join(".")}`);
+  const fallback =
+    entry && kind === "compound"
+      ? fallbackScopes({ kind, scopes }, prop, selectorUnion)
+      : null;
+  return fallback
+    ? `var(${vn}, ${varChain(fallback, prop, selectorUnion)})`
+    : `var(${vn})`;
+}
+
+/** `--shl-*` var -> the var it falls back to in `base.css`, for runtime theme merging. */
 function buildFallbackMap(
   selectorUnion: Map<string, UnionEntry>,
 ): Map<string, string> {
   const fallbacks = new Map<string, string>();
   for (const entry of selectorUnion.values()) {
-    const subject = subjectScope(entry);
-    if (!subject) continue;
     for (const prop of entry.properties) {
+      const fallback = fallbackScopes(entry, prop, selectorUnion);
+      if (!fallback) continue;
       const vn = varName(entry.scopes, prop);
-      const fallbackVn = varName(subject, prop);
+      const fallbackVn = varName(fallback, prop);
       if (vn && fallbackVn) fallbacks.set(vn, fallbackVn);
     }
   }
@@ -210,13 +331,12 @@ function buildBaseCss(selectorUnion: Map<string, UnionEntry>): string {
   });
 
   const rules = sorted.map(([selector, entry]) => {
-    const subject = subjectScope(entry);
     const decls = PROPERTY_ORDER.filter((prop) => entry.properties.has(prop))
       .map((prop) => {
         const vn = varName(entry.scopes, prop) as string;
-        if (!subject) return `${prop}:var(${vn})`;
-        const fallback = varName(subject, prop) as string;
-        return `${prop}:var(${vn}, var(${fallback}))`;
+        const fallback = fallbackScopes(entry, prop, selectorUnion);
+        if (!fallback) return `${prop}:var(${vn})`;
+        return `${prop}:var(${vn}, ${varChain(fallback, prop, selectorUnion)})`;
       })
       .join(";");
     return `${selector}{${decls}}`;

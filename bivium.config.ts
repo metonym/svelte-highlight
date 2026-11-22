@@ -160,6 +160,7 @@ export default {
     // Import generated grammars, styles and themes by name. Each names the
     // generator inputs with `@depends-on`.
     "tests/custom-styles.test.ts",
+    "tests/palette-css-parity.test.ts",
     "tests/differential.test.ts",
     "tests/theme-fidelity.test.ts",
     "tests/theme-role-map-fidelity.test.ts",

@@ -27,18 +27,20 @@ function isFontKey(key) {
 }
 
 /**
- * Mirrors `themes/base.css`: key, then its `fallbacks` key, then (for color
- * keys) `--shl-fg`.
+ * Mirrors `themes/base.css`: key, then each `fallbacks` key in turn, then
+ * (for color keys) `--shl-fg`.
  * @param {Record<string, string>} vars
  * @param {string} key
  * @param {Record<string, string>} fallbacks
  * @returns {string | undefined}
  */
 export function resolveThemeVar(vars, key, fallbacks) {
-  if (vars[key] !== undefined) return vars[key];
-  const fallbackKey = fallbacks[key];
-  if (fallbackKey !== undefined && vars[fallbackKey] !== undefined) {
-    return vars[fallbackKey];
+  for (
+    let current = /** @type {string | undefined} */ (key), hops = 0;
+    current !== undefined && hops < 8;
+    current = fallbacks[current], hops++
+  ) {
+    if (vars[current] !== undefined) return vars[current];
   }
   if (isColorKey(key) && vars["--shl-fg"] !== undefined)
     return vars["--shl-fg"];
