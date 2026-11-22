@@ -11,6 +11,7 @@ import {
   replaceSelection,
   shiftLines,
 } from "./editable-commands.js";
+import { editorHtml, lineHtmlFromEvents } from "./editable-dom-paint.js";
 import { createEditHistory } from "./editable-history.js";
 import {
   createLineView,
@@ -19,9 +20,29 @@ import {
   writeSelection,
 } from "./editable-line-dom.js";
 import { createEditorPainter } from "./editable-painter.js";
+import { parseIncremental } from "./incremental-tokenize.js";
 import { ensureRegistered, registry } from "./registry.js";
 
 export { instanceHighlightStyle } from "./highlight-theme.js";
+
+/**
+ * The markup the "dom" engine paints for `code`, for a server to render
+ * inside the editor's element, and the parse it came from. Pass the result
+ * as `createEditor`'s `prerendered`: the first paint keeps the markup
+ * instead of rebuilding it. Runs without a DOM.
+ * @param {import("./languages").LanguageType<string>} language
+ * @param {string} code
+ * @returns {{ html: string, code: string, parse: import("./incremental-tokenize.js").IncrementalParse }}
+ */
+export function prerenderEditor(language, code) {
+  ensureRegistered(language);
+  const parse = parseIncremental(registry, language.name, code);
+  return {
+    html: editorHtml(lineHtmlFromEvents(parse.events, code)),
+    code,
+    parse,
+  };
+}
 
 const TRAILING_NEWLINE = /\n$/;
 
@@ -46,6 +67,7 @@ let instanceCount = 0;
  *   onChange?: (code: string) => void,
  *   onHistory?: (snapshot: import("./editable-history.js").HistorySnapshot) => void,
  *   onBlur?: (code: string) => void,
+ *   prerendered?: ReturnType<typeof prerenderEditor>,
  * }} EditorOptions
  */
 
@@ -83,6 +105,7 @@ export function createEditor(element, options) {
 
   const view = createLineView();
   const painter = createEditorPainter({
+    initialParse: options.prerendered?.parse,
     editor: () => element,
     view,
     registry,

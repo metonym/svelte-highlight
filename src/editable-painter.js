@@ -63,6 +63,9 @@ const setText = (el, line) => {
  * @param {() => void} [options.onCascadeLoad] Called once the resolver for
  *   a theme loads. Until then, "css-highlights" paints as "dom" does, so
  *   the code never shows without colors. Repaint from here.
+ * @param {import("./incremental-tokenize.js").IncrementalParse | undefined} [options.initialParse]
+ *   A parse to start from, such as `prerenderEditor`'s. The first paint
+ *   reuses it when its code and language match.
  */
 export function createEditorPainter({
   editor,
@@ -70,6 +73,7 @@ export function createEditorPainter({
   registry,
   highlightPrefix,
   onCascadeLoad,
+  initialParse,
 }) {
   let destroyed = false;
   let cascadeRequested = false;
@@ -79,7 +83,7 @@ export function createEditorPainter({
    */
   let paintedEngine = "dom";
   /** @type {import("./incremental-tokenize.js").IncrementalParse | undefined} */
-  let incrementalParse;
+  let incrementalParse = initialParse;
   const domLinePainter = createDomLinePainter();
 
   const cssHighlights = createScopeHighlights(highlightPrefix);
