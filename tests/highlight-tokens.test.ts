@@ -1,25 +1,11 @@
 // @depends-on tests/highlight-tokens/**
 import fs from "node:fs";
 import path from "node:path";
-import { plugin } from "bun";
 import { compile, parse } from "svelte/compiler";
 import { render } from "svelte/server";
 import rust from "../src/languages/rust.js";
 import github from "../src/themes/github.js";
-
-plugin({
-  name: "svelte-server-compile",
-  setup(build) {
-    build.onLoad({ filter: /\.svelte$/ }, ({ path: filePath }) => {
-      const source = fs.readFileSync(filePath, "utf-8");
-      const { js } = compile(source, {
-        generate: "server",
-        filename: path.basename(filePath),
-      });
-      return { contents: js.code, loader: "js" };
-    });
-  },
-});
+import "./svelte-server.ts";
 
 const COMPONENT = path.join(import.meta.dir, "../src/HighlightTokens.svelte");
 const FIXTURES = path.join(import.meta.dir, "highlight-tokens");
@@ -67,11 +53,7 @@ describe("HighlightTokens", () => {
 
   it("renders through a custom renderer and updates", () => {
     const run = Bun.spawnSync(
-      [
-        process.execPath,
-        "--conditions=svelte-custom-renderer",
-        path.join(FIXTURES, "run.ts"),
-      ],
+      [process.execPath, path.join(FIXTURES, "run.ts")],
       { stderr: "pipe" },
     );
     expect(run.stderr.toString()).toBe("");

@@ -1,2 +1,2 @@
-# Compiles `.svelte` files on import, for the opentui renderer.
-preload = ["./svelte-plugin.js"]
+# Compiles the `.svelte` files `bun run` imports, with svelte.config.js.
+preload = ["svelte-bun/register"]

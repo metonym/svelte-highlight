@@ -15,27 +15,12 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { plugin } from "bun";
-import { compile } from "svelte/compiler";
 import { render } from "svelte/server";
 import { createRegistry, registerAll } from "../src/engine.js";
 import allLanguages from "../src/languages/all.js";
 import svelteLanguage from "../src/languages/svelte.js";
 import typescript from "../src/languages/typescript.js";
-
-plugin({
-  name: "svelte-server-compile",
-  setup(build) {
-    build.onLoad({ filter: /\.svelte$/ }, ({ path: filePath }) => {
-      const source = fs.readFileSync(filePath, "utf-8");
-      const { js } = compile(source, {
-        generate: "server",
-        filename: path.basename(filePath),
-      });
-      return { contents: js.code, loader: "js" };
-    });
-  },
-});
+import "./svelte-server.ts";
 
 const srcDir = path.join(import.meta.dir, "../src");
 
