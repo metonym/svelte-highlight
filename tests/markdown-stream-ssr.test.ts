@@ -81,4 +81,33 @@ describe("MarkdownStream SSR", () => {
     expect(body).toContain("Here is some intro text.");
     expect(body).not.toContain("undefined");
   });
+
+  it("highlights a fence whose language the resolver returns directly", async () => {
+    const { default: MarkdownStream } = await compileForServer();
+    const { default: typescript } =
+      await import("../src/languages/typescript.js");
+
+    const { body } = render(MarkdownStream, {
+      props: {
+        text: "```ts\nconst a = 1;\n```\n",
+        done: true,
+        // The splitter passes the fence's language by its full name.
+        resolveLanguage: (lang: string | undefined) =>
+          lang === "typescript" ? typescript : undefined,
+      },
+    });
+
+    expect(body).toContain('<span class="hljs-keyword">const</span>');
+  });
+
+  it("renders a fence as plain text while an async resolver loads", async () => {
+    const { default: MarkdownStream } = await compileForServer();
+
+    const { body } = render(MarkdownStream, {
+      props: { text: "```ts\nconst a = 1;\n```\n", done: true },
+    });
+
+    expect(body).toContain("const a = 1;");
+    expect(body).not.toContain("hljs-keyword");
+  });
 });

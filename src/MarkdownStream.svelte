@@ -12,7 +12,9 @@
   export let done = false;
 
   /**
-   * Resolves a fence's language, cached per name.
+   * Resolves a fence's language, cached per name. A language returned
+   * directly, not in a promise, highlights the fence on the first render,
+   * on the server too; the default loads grammars with `import()`.
    * @type {(lang: string | undefined, segment: import("./fence.d.ts").FenceSegment) => import("./languages").LanguageType<string> | Promise<import("./languages").LanguageType<string>> | undefined}
    */
   export let resolveLanguage = defaultResolveLanguage;
@@ -76,7 +78,24 @@
     const key = cacheKey(segment.lang);
     if (pendingLanguages.has(key)) return;
     pendingLanguages.add(key);
-    Promise.resolve(resolveLanguage(segment.lang, segment))
+    /** @type {ReturnType<typeof resolveLanguage>} */
+    let resolved;
+    try {
+      resolved = resolveLanguage(segment.lang, segment);
+    } catch {
+      resolved = undefined;
+    }
+    if (
+      typeof (/** @type {{ then?: unknown }} */ (resolved)?.then) !== "function"
+    ) {
+      // In this render, so the server renders the fence highlighted.
+      resolvedLanguages = {
+        ...resolvedLanguages,
+        [key]: resolved ?? plaintext,
+      };
+      return;
+    }
+    resolved
       .then((language) => {
         resolvedLanguages = {
           ...resolvedLanguages,
