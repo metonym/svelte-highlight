@@ -31,6 +31,7 @@ import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelt
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAll from "./HighlightAll.test.svelte";
+import HighlightElement from "./HighlightElement.test.svelte";
 import HighlightAutoDispatchOnce from "./HighlightAuto.dispatchOnce.test.svelte";
 import HighlightAutoEmptyCode from "./HighlightAuto.emptyCode.test.svelte";
 import HighlightAutoEvents from "./HighlightAuto.events.test.svelte";
@@ -725,6 +726,33 @@ test("highlightAll - highlights each language-xxx block on a plain page", async 
     "plain",
     "no class",
   ]);
+});
+
+test("<shl-code> - highlights its text, and follows language and code changes", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightElement);
+
+  const authored = page.getByTestId("authored").locator("pre > code.hljs");
+  await expect(authored).toHaveText("const add = (a, b) => a + b;");
+  await expect(authored.locator(".hljs-keyword").first()).toHaveText("const");
+
+  const dynamic = page.getByTestId("dynamic").locator("pre > code");
+  const lastEvent = page.getByTestId("last-event");
+  await expect(dynamic.locator(".hljs-keyword").first()).toHaveText("def");
+  await expect(lastEvent).toHaveText("highlighted python");
+
+  await page.getByRole("button", { name: "rust" }).click();
+  await page.getByRole("button", { name: "code" }).click();
+  await expect(dynamic).toHaveText("fn main() {}");
+  await expect(dynamic.locator(".hljs-keyword").first()).toHaveText("fn");
+  await expect(lastEvent).toHaveText("highlighted rust");
+
+  await page.getByRole("button", { name: "unknown" }).click();
+  await expect(lastEvent).toHaveText("error");
+  await expect(dynamic).toHaveText("fn main() {}");
+  await expect(dynamic.locator("span")).toHaveCount(0);
 });
 
 test("HighlightAuto", async ({ mount, page }) => {
