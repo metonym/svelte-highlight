@@ -3683,6 +3683,14 @@ const { foreground, background, lines } = styleTokens(events, github);
 
 Lines split the same way as `tokenLines`. Colors are CSS values as the theme writes them, usually hex. For many event streams with one theme, `createTokenStyler(theme)` resolves the theme once and returns a styler with `lines(events)`. Pass `{ color }` to either function for themes that leave the text uncolored.
 
+For a terminal, `toAnsi` turns styled lines into a string with true-color escapes. Pass `{ background: true }` to paint the theme's background too.
+
+```js
+import { styleTokens, toAnsi } from "svelte-highlight/styled-tokens";
+
+console.log(toAnsi(styleTokens(events, github)));
+```
+
 ### Errors
 
 - **`UnknownLanguageError`** (`{ language }`): thrown by `tokenize`, `highlight`, `tokenizeRanges`, and `createSession` when `language` isn't registered.

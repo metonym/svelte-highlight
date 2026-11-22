@@ -43,6 +43,7 @@ pkgJson.exports = Object.fromEntries([
   ...entry("diff", "diff", "default"),
   ...entry("diff-edits", "diff-edits", "default"),
   ...entry("diff-controller", "diff-controller", "default"),
+  ...entry("diff-languages", "diff-languages", "default", false),
   ...entry("typewriter-units", "typewriter-units", "default"),
   ...entry("registry", "registry", "default"),
   ...entry("ansi", "ansi", "default", false),
