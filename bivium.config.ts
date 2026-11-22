@@ -157,7 +157,6 @@ export default {
     "tests/markdown-stream-updates.test.ts",
     "tests/stream-regenerate.test.ts",
     "tests/svelte-dom.ts",
-    "tests/highlight-tokens/run.ts",
     // Import generated grammars, styles and themes by name. Each names the
     // generator inputs with `@depends-on`.
     "tests/custom-styles.test.ts",

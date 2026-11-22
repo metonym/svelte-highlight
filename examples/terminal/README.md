@@ -14,8 +14,8 @@ Prints the same thing with no Svelte: `styleTokens` and `toAnsi` from `svelte-hi
 
 ## How it fits together
 
-- `svelte-plugin.js` compiles every `.svelte` file with the terminal renderer, including `svelte-highlight/HighlightTokens.svelte`. A component and the snippets it renders must use the same renderer.
-- `bun start` runs with `--conditions=svelte-custom-renderer`, so `svelte` resolves to the runtime that supports custom renderers.
+- [svelte-bun](https://github.com/metonym/svelte-bun) compiles the `.svelte` files, preloaded from `bunfig.toml`. `svelte.config.js` names the terminal renderer, so every component compiles with it, `svelte-highlight/HighlightTokens.svelte` included. A component and the snippets it renders must use the same renderer.
+- svelte-bun also resolves `svelte` to the runtime that supports custom renderers, so `bun start` needs no `--conditions` flag.
 - `draw` in `src/renderer.js` reads the tree back and prints it with `toAnsi`.
 
 Needs a terminal with true-color support, and Svelte 5.59 or later.

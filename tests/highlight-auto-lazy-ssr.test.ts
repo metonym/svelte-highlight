@@ -8,23 +8,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { plugin } from "bun";
-import { compile } from "svelte/compiler";
 import { render } from "svelte/server";
-
-plugin({
-  name: "svelte-server-compile",
-  setup(build) {
-    build.onLoad({ filter: /\.svelte$/ }, ({ path: filePath }) => {
-      const source = fs.readFileSync(filePath, "utf-8");
-      const { js } = compile(source, {
-        generate: "server",
-        filename: path.basename(filePath),
-      });
-      return { contents: js.code, loader: "js" };
-    });
-  },
-});
+import "./svelte-server.ts";
 
 describe("HighlightAutoLazy SSR", () => {
   test("renders escaped plain text with no language", async () => {

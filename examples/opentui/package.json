@@ -2,12 +2,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "bun --conditions=svelte-custom-renderer src/main.js",
-    "check": "bun --conditions=svelte-custom-renderer src/check.js"
+    "start": "bun src/main.js",
+    "check": "bun src/check.js"
   },
   "dependencies": {
     "@opentui/core": "^0.9.7",
     "svelte": "^5.59.1",
     "svelte-highlight": "^7.27.0"
+  },
+  "devDependencies": {
+    "svelte-bun": "^0.1.0"
   }
 }
