@@ -1,4 +1,5 @@
 import type { LanguageType } from "./languages";
+import type { ThemePalette } from "./theme";
 
 export interface HighlightParameters {
   /**
@@ -55,3 +56,40 @@ export function highlightAll(
   root?: ParentNode,
   options?: HighlightAllOptions,
 ): HighlightAllResult;
+
+export interface PaintHighlightsOptions {
+  /** Grammar to use. */
+  language: LanguageType<string>;
+  /** Code to highlight. Defaults to the element's initial text. */
+  code?: string;
+  /**
+   * Theme CSS or a `ThemePalette`. Needed for the CSS Custom Highlight API:
+   * `::highlight()` rules can't come from the page's theme CSS. Without it,
+   * the element gets `<span>`s for that CSS to color.
+   */
+  theme?: string | ThemePalette;
+}
+
+export interface PaintHighlightsHandle {
+  /**
+   * `"css-highlights"` when the browser paints the tokens, or `"dom"` for
+   * `<span>` markup (no `theme`, or no `CSS.highlights`).
+   */
+  readonly engine: "dom" | "css-highlights";
+  /** Highlights again with changed options. */
+  update(options: Partial<PaintHighlightsOptions>): void;
+  /** Removes the highlights and their `<style>`, and restores the text. */
+  destroy(): void;
+}
+
+/**
+ * Highlights an element's code with the CSS Custom Highlight API, the
+ * `"css-highlights"` engine without a component: the text stays one text
+ * node, with no `<span>` per token. Adds its `::highlight()` rules in a
+ * `<style>`. Falls back to `<span>` markup without a `theme` or where
+ * `CSS.highlights` is missing.
+ */
+export function paintHighlights(
+  element: HTMLElement,
+  options: PaintHighlightsOptions,
+): PaintHighlightsHandle;

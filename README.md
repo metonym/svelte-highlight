@@ -1738,6 +1738,22 @@ await ready; // { highlighted: 1, failed: 0 }
 
 Pass a root element to limit the search, and `{ selector, language }` to pick other elements or skip the class lookup. `highlight(element, { language, code })` from the same entry highlights a single element and returns `{ update, destroy }`.
 
+`paintHighlights` from the same entry is the `"css-highlights"` engine without a component. The text stays a single text node and the browser paints each token through the CSS Custom Highlight API. It adds the `::highlight()` rules in a `<style>` and needs the `theme` for them, since those rules can't come from the page's theme CSS. Without a `theme`, or where `CSS.highlights` is missing, it renders `<span>`s like the action. `engine` says which one painted.
+
+```js
+import { paintHighlights } from "svelte-highlight/dom";
+import typescript from "svelte-highlight/languages/typescript";
+import github from "svelte-highlight/themes/github";
+
+const painted = paintHighlights(document.querySelector("pre code"), {
+  language: typescript,
+  theme: github,
+});
+painted.engine; // "css-highlights"
+painted.update({ code: "let total = 1;" });
+painted.destroy(); // removes the highlights and restores the text
+```
+
 Without a bundler, an import map points the package at a CDN, and the same imports work in a `<script type="module">`. Browsers don't read the package's `exports`, so add the `.js` extension (`svelte-highlight/dom.js`). See [examples/cdn](examples/cdn).
 
 ### Web component

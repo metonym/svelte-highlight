@@ -31,6 +31,7 @@ import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelt
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
 import HighlightAll from "./HighlightAll.test.svelte";
+import PaintHighlights from "./PaintHighlights.test.svelte";
 import HighlightElement from "./HighlightElement.test.svelte";
 import HighlightAutoDispatchOnce from "./HighlightAuto.dispatchOnce.test.svelte";
 import HighlightAutoEmptyCode from "./HighlightAuto.emptyCode.test.svelte";
@@ -704,6 +705,61 @@ test('highlight action - honors class="language-xxx" and errors when no class ma
   await expect(code).toBeVisible();
   await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
   await expect(page.locator('[data-testid="last-event"]')).toHaveText("error");
+});
+
+/** Runs in the page: the color rule painting the token with `text`. */
+function highlightColorOf(text: string) {
+  for (const [name, highlight] of CSS.highlights) {
+    for (const range of highlight) {
+      if (range.toString() !== text) continue;
+      const rules = [...document.querySelectorAll("style")]
+        .map((style) => style.textContent ?? "")
+        .join("");
+      return new RegExp(`::highlight\\(${name}\\)\\{color:([^;}]+)`).exec(
+        rules,
+      )?.[1];
+    }
+  }
+  return undefined;
+}
+
+test("paintHighlights - paints text with CSS highlights, updates, and cleans up", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+  await mount(PaintHighlights);
+  const code = page.locator("pre code");
+  await expect(page.getByTestId("engine")).toHaveText("css-highlights");
+  await expect(code).toHaveText("const add = (a, b) => a + b;");
+  expect(await code.locator("span").count()).toBe(0);
+  expect(await page.evaluate(highlightColorOf, "const")).toBe("#d73a49");
+
+  await page.getByRole("button", { name: "update" }).click();
+  await expect(code).toHaveText("let total = 1;");
+  expect(await page.evaluate(highlightColorOf, "let")).toBe("#d73a49");
+
+  await page.getByRole("button", { name: "destroy" }).click();
+  await expect(code).toHaveText("const add = (a, b) => a + b;");
+  expect(await page.evaluate(() => CSS.highlights.size)).toBe(0);
+  await expect(code).not.toHaveClass(/hljs/);
+});
+
+test("paintHighlights - renders spans without CSS.highlights", async ({
+  mount,
+  page,
+}) => {
+  await page.evaluate(() => {
+    Reflect.deleteProperty(CSS, "highlights");
+  });
+  await mount(PaintHighlights);
+  await expect(page.getByTestId("engine")).toHaveText("dom");
+  await expect(page.locator("pre code .hljs-keyword").first()).toHaveText(
+    "const",
+  );
 });
 
 test("highlightAll - highlights each language-xxx block on a plain page", async ({

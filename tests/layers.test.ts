@@ -73,6 +73,7 @@ const DOM = [
   "editable-line-dom.js",
   "editable-painter.js",
   "highlight-painter.js",
+  "paint.js",
   "search.js",
   "stream.js",
   "virtual-window.js",
