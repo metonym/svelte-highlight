@@ -50,6 +50,10 @@
   import ScopedThemes from "@components/ScopedThemes.svelte";
   import ScopedThemesDark from "@components/ScopedThemesDark.svelte";
   import TypewriterBasic from "@components/Typewriter/Basic.svelte";
+  import CustomRenderer from "@components/WithoutSvelte/CustomRenderer.svelte";
+  import PlainPage from "@components/WithoutSvelte/PlainPage.svelte";
+  import Terminal from "@components/WithoutSvelte/Terminal.svelte";
+  import WebComponent from "@components/WithoutSvelte/WebComponent.svelte";
   import TypewriterControls from "@components/Typewriter/Controls.svelte";
   import { PKG_NAME, THEME_MODULE_NAME, THEME_NAME } from "@www/constants";
   import {
@@ -1448,6 +1452,86 @@ export { add, mul };\`,
     </p>
     <Link size="lg" href="/preview-engine">Try the headless engine</Link>
   </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}><h2 id="without-svelte">Without Svelte</h2></Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      The engine, grammars and themes don't depend on Svelte. Plain pages, other
+      frameworks and terminals import them from the same package.
+    </p>
+  </Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}><h3 id="plain-pages">Plain pages</h3></Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">highlightAll</code>
+      from <code class="code">svelte-highlight/dom</code> highlights every
+      <code class="code">{'pre code[class*="language-"]'}</code>
+      in place, loading each grammar from its class.
+      <code class="code">destroy</code> puts the original text back.
+    </p>
+    <p class="mb-5">
+      No bundler? An import map points the package at a CDN, so the same imports
+      work in a plain page.
+    </p>
+    <Link
+      size="lg"
+      href="https://github.com/metonym/svelte-highlight/tree/master/examples/cdn"
+      >See the no-build example</Link
+    >
+  </Column>
+  <Column xlg={10} lg={10} md={12}><PlainPage /></Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}><h3 id="web-component">Web component</h3></Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">defineHighlightElement</code>
+      from <code class="code">svelte-highlight/element</code> defines
+      <code class="code">{"<shl-code>"}</code>, which works in any framework or
+      none. Changing its <code class="code">language</code> attribute or
+      <code class="code">code</code> property highlights again.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}><WebComponent /></Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}><h3 id="terminals">Terminals</h3></Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      <code class="code">styleTokens</code>
+      resolves a theme per token, with no CSS, and
+      <code class="code">toAnsi</code> prints the result with true-color
+      escapes. The output below is that string, shown with
+      <code class="code">AnsiOutput</code>.
+    </p>
+  </Column>
+  <Column xlg={10} lg={10} md={12}><Terminal /></Column>
+</Row>
+
+<Row class="mb-9">
+  <Column xlg={12}><h3 id="custom-renderers">Custom renderers</h3></Column>
+  <Column xlg={6} lg={6} md={12}>
+    <p class="mb-5">
+      With a Svelte custom renderer, components render to terminals, canvas, PDF
+      or native views instead of the DOM.
+      <code class="code">HighlightTokens</code>
+      has no markup of its own and renders only through your snippets, so it works
+      with any renderer.
+    </p>
+    <Link
+      size="lg"
+      href="https://github.com/metonym/svelte-highlight/tree/master/examples/terminal"
+      >See the terminal example</Link
+    >
+  </Column>
+  <Column xlg={10} lg={10} md={12}><CustomRenderer /></Column>
 </Row>
 
 <Row>

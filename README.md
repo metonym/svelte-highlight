@@ -3525,12 +3525,16 @@ The highlighting engine's output is a flat scope-event stream (`ScopeEvent[]`): 
 
 ### Zero-bundler usage from a CDN
 
-`svelte-highlight/engine` has no `import` statements of its own, so it — and any generated language grammar — can be loaded straight from a CDN like [esm.sh](https://esm.sh), with no bundler, build step, or Svelte in the loop:
+The engine, grammars and DOM entries are plain ES modules with only relative imports, so a page can load them from a CDN with no bundler, build step, or Svelte in the loop. An import map points the package at the published files, so the imports read the same as with a bundler. Browsers don't read the package's `exports`, so add the `.js` extension:
 
 ```html
+<script type="importmap">
+  { "imports": { "svelte-highlight/": "https://cdn.jsdelivr.net/npm/svelte-highlight/" } }
+</script>
+
 <script type="module">
-  import { createRegistry, registerAll, renderHtml } from "https://esm.sh/svelte-highlight/engine";
-  import typescript from "https://esm.sh/svelte-highlight/languages/typescript";
+  import { createRegistry, registerAll, renderHtml } from "svelte-highlight/engine.js";
+  import typescript from "svelte-highlight/languages/typescript.js";
 
   const registry = createRegistry();
   registerAll(registry, typescript);
@@ -3540,7 +3544,7 @@ The highlighting engine's output is a flat scope-event stream (`ScopeEvent[]`): 
 </script>
 ```
 
-See it as a complete page in [examples/cdn](examples/cdn).
+Use a CDN that serves the files unchanged, such as jsDelivr or unpkg. `loadLanguage` imports grammars by relative path, which breaks on CDNs that rewrite modules. See it as a complete page in [examples/cdn](examples/cdn).
 
 ### Stability tiers
 
