@@ -2674,6 +2674,11 @@ test("HighlightEditable css-highlights engine - Enter mid-document repaints shif
   });
 
   const editor = page.locator("[contenteditable='true']");
+  // The first paint is "dom" until the theme's resolver loads; wait for the
+  // "css-highlights" repaint, which rewrites every line, before taking a node.
+  await expect
+    .poll(() => page.evaluate(() => CSS.highlights.size))
+    .toBeGreaterThan(0);
   // A line's content nodes, unlike its <span>, are replaced by a rewrite.
   const lastLine = await editor
     .locator("> span")
