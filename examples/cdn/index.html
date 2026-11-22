@@ -24,10 +24,12 @@
     <pre><code class="language-typescript">const add = (a: number, b: number) => a + b;</code></pre>
     <pre><code class="language-rust">fn main() { println!("hi"); }</code></pre>
     <pre id="from-string"></pre>
+    <shl-code language="go">func main() { fmt.Println("hi") }</shl-code>
 
     <script type="module">
       // Browsers don't read the package's `exports`, hence the `.js`.
       import { highlightAll } from "svelte-highlight/dom.js";
+      import { defineHighlightElement } from "svelte-highlight/element.js";
       import {
         createRegistry,
         registerAll,
@@ -39,6 +41,9 @@
       // block's `language-xxx` class.
       const { ready } = highlightAll();
       console.log(await ready); // { highlighted: 2, failed: 0 }
+
+      // <shl-code>, which also follows `language` and `code` changes.
+      defineHighlightElement();
 
       // A string, rendered yourself.
       const registry = createRegistry();
