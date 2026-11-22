@@ -168,6 +168,8 @@ export function scopeStyle(style, scope, nonce) {
   return `${match[1] ?? ""}${body}${match[3] ?? ""}`;
 }
 
+const ROOT_SELECTORS = new Set([":root", ":host", "html"]);
+
 /**
  * Bare scoped CSS (any `<style>` wrapper stripped).
  * @param {string} style
@@ -178,7 +180,12 @@ export function scopeStyle(style, scope, nonce) {
 function scopedBody(style, scope, prefix = "") {
   const scopeSelector = prefix ? `${prefix} .${scope}` : `.${scope}`;
   /** @type {(selector: string) => string} */
-  const transform = (selector) => `${scopeSelector} ${selector}`;
+  const transform = (selector) =>
+    // The scope stands in for the root: `.scope :root` would match nothing,
+    // and the custom properties themes set there would never reach the code.
+    ROOT_SELECTORS.has(selector.toLowerCase())
+      ? scopeSelector
+      : `${scopeSelector} ${selector}`;
   const match = STYLE_TAG.exec(style);
   const css = match ? (match[2] ?? "") : style;
   return scopeSelectors(css, transform);
