@@ -53,6 +53,7 @@ pkgJson.exports = Object.fromEntries([
   ...entry("compat", "compat", "default"),
   ...entry("transformers", "transformers", "default"),
   ...entry("worker", "worker", "import"),
+  ...entry("dom", "dom", "import"),
   ...entry("search", "search", "import"),
   ...entry("editable", "editable", "import"),
   ...entry("stream", "stream", "import"),

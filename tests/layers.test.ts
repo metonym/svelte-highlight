@@ -67,6 +67,7 @@ const DOM = [
   "action.js",
   "css-highlights-paint.js",
   "css-highlights.js",
+  "dom.js",
   "editable.js",
   "editable-line-dom.js",
   "editable-painter.js",
