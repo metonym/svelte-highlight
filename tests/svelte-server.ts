@@ -10,6 +10,8 @@ import { svelte } from "svelte-bun";
 plugin(
   svelte({
     side: "server",
+    // Dev checks off, as in a production build.
+    production: true,
     // The source's own warnings are linted elsewhere.
     onwarn: () => {},
   }),
