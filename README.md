@@ -2555,7 +2555,7 @@ Every part on a controller stays in sync. For example, a toolbar button that cal
 
 ### Many files
 
-`DiffFileList` shows a page of per-file diffs, like a large pull request. It mounts files near the viewport and unmounts far ones, and keeps each file's measured height so the page doesn't jump. A page of 827 files stays near 10,000 DOM nodes.
+`DiffFileList` shows a page of per-file diffs, like a large pull request. It mounts files near the viewport and unmounts far ones, and keeps each file's measured height so the page doesn't jump. A page of 827 files stays near 10,000 DOM nodes. Before it mounts, it renders the first files down to about a screen and a half, so a server-rendered page shows them; a file's `language`, or a `languageFor` that returns one directly, highlights them there too.
 
 ```svelte
 <script>

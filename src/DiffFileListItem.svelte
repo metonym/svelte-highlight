@@ -27,9 +27,22 @@
   else diff.update(file.before ?? "", file.after ?? "");
   $: onStats($diff.stats());
 
+  // A language given directly applies now, so a server-rendered diff is
+  // highlighted; a promise resolves after mount.
+  const pick = file.language ?? languageFor(file.path);
+  if (
+    pick &&
+    typeof (/** @type {{ then?: unknown }} */ (pick).then) !== "function"
+  ) {
+    diff.setOptions({
+      language: /** @type {import("./languages").LanguageType<string>} */ (
+        pick
+      ),
+    });
+  }
+
   onMount(() => {
     let alive = true;
-    const pick = file.language ?? languageFor(file.path);
     Promise.resolve(pick)
       .then((language) => {
         if (alive && language) diff.setOptions({ language });

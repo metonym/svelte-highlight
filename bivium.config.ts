@@ -152,6 +152,7 @@ export default {
     // Compile `.svelte` files to a temp file and import it. Each names the
     // components it compiles with `@depends-on`.
     "tests/*-ssr.test.ts",
+    "tests/_ssr.ts",
     "tests/highlight-non-string-code.test.ts",
     "tests/markdown-stream-updates.test.ts",
     "tests/stream-regenerate.test.ts",
