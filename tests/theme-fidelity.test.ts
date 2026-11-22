@@ -48,10 +48,11 @@ function setDecl(map: DeclMap, selector: string, prop: string, value: string) {
   decls.set(prop, value);
 }
 
-const VAR_CALL = /^var\((--[\w-]+)(?:,\s*var\((--[\w-]+)\))?\)$/;
+const VAR_CHAIN = /^(?:var\(--[\w-]+(?:, )?)+\)+$/;
+const VAR_NAME = /var\((--[\w-]+)/g;
 
-/** Resolve `base.css`'s `var(--x[, var(--y)])` declarations against one
- * theme's `vars`, following the single fallback hop base.css encodes. */
+/** Resolve `base.css`'s `var(--x[, var(--y[, ...])])` declarations against
+ * one theme's `vars`, taking the first var in the chain the theme sets. */
 function reconstructFromBase(vars: Record<string, string>): DeclMap {
   const reconstructed: DeclMap = new Map();
 
@@ -59,16 +60,14 @@ function reconstructFromBase(vars: Record<string, string>): DeclMap {
     if (node.type !== "rule") continue;
     for (const decl of node.nodes) {
       if (decl.type !== "decl") continue;
-      const match = VAR_CALL.exec(decl.value);
-      if (!match) {
+      if (!VAR_CHAIN.test(decl.value)) {
         // Structural literal rules (pre code.hljs / code.hljs): no var().
         setDecl(reconstructed, node.selector, decl.prop, decl.value);
         continue;
       }
-      const [, primary, fallback] = match;
-      const value =
-        (primary ? vars[primary] : undefined) ??
-        (fallback ? vars[fallback] : undefined);
+      const value = [...decl.value.matchAll(VAR_NAME)]
+        .map((match) => vars[match[1] as string])
+        .find((candidate) => candidate !== undefined);
       if (value !== undefined) {
         setDecl(reconstructed, node.selector, decl.prop, value);
       }
@@ -117,6 +116,47 @@ function legacyDeclMap(css: string): DeclMap {
   return legacy;
 }
 
+const ROOT_SELECTORS = new Set([":root", ":host", "html"]);
+const VAR_REF = /var\((--[\w-]+)\)/g;
+
+/** Custom properties the legacy CSS sets on `:root`, `:host` or `html`. */
+function legacyRootVars(css: string): Map<string, string> {
+  const vars = new Map<string, string>();
+  postcss.parse(css).walkRules((rule) => {
+    if (!rule.selectors.every((selector) => ROOT_SELECTORS.has(selector))) {
+      return;
+    }
+    rule.walkDecls((decl) => {
+      if (decl.prop.startsWith("--")) vars.set(decl.prop, decl.value.trim());
+    });
+  });
+  return vars;
+}
+
+/**
+ * The legacy value as the palette stores it: root custom properties
+ * substituted, since a palette has no root element to set them on, and an
+ * `inherit` color as `currentColor`, since a var set to `inherit` would be
+ * unset rather than inherit the color.
+ */
+function paletteForm(
+  prop: string,
+  value: string,
+  rootVars: Map<string, string>,
+): string {
+  const substituted = value.replace(
+    VAR_REF,
+    (ref, name: string) => rootVars.get(name) ?? ref,
+  );
+  if (
+    (prop === "color" || prop === "background-color") &&
+    substituted.toLowerCase() === "inherit"
+  ) {
+    return "currentColor";
+  }
+  return substituted;
+}
+
 describe("theme fidelity differential", () => {
   it("compiled at least one theme per legacy stylesheet", () => {
     const legacyNames = fs
@@ -139,6 +179,7 @@ describe("theme fidelity differential", () => {
         "utf8",
       );
       const legacy = legacyDeclMap(legacyCss);
+      const rootVars = legacyRootVars(legacyCss);
       const excluded = excludedKeysFrom(palette.extras);
       const reconstructed = reconstructFromBase(palette.vars);
 
@@ -148,9 +189,11 @@ describe("theme fidelity differential", () => {
         for (const [prop, value] of decls) {
           const key = `${selector}::${prop}`;
           if (excluded.has(key)) continue;
+          // Substituted into the values that use them; see `paletteForm`.
+          if (ROOT_SELECTORS.has(selector) && prop.startsWith("--")) continue;
 
           const actual = reconstructed.get(selector)?.get(prop);
-          if (actual !== value) {
+          if (actual !== paletteForm(prop, value, rootVars)) {
             unexplainedDiffs.push(
               `${selector} { ${prop}: ${value} } -> got ${JSON.stringify(actual)}`,
             );

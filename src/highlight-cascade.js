@@ -6,7 +6,12 @@
 // "dom" engine. Only `color` and `background-color` carry over; the CSS
 // Custom Highlight API can't change font weight or style.
 
-import { forEachRule, splitTopLevel } from "./css-walk.js";
+import {
+  forEachRule,
+  shorthandBackgroundColor,
+  splitTopLevel,
+  substituteVars,
+} from "./css-walk.js";
 import { CLOSE, OPEN, scopeToCssClass } from "./engine.js";
 import { BASE_CSS } from "./themes/_base-css.js";
 
@@ -34,7 +39,6 @@ const COMPOUND = /^(\*|[a-zA-Z][\w-]*)?((?:\.[\w-]+)*)$/;
 const IMPORTANT = /\s*!\s*important\s*$/i;
 const CHILD_COMBINATOR = /\s*>\s*/g;
 const WHITESPACE = /\s+/;
-const SPACE = /\s/;
 const CLASS_WEIGHT = 256;
 
 // Above this many cached scope chains, the cache restarts.
@@ -164,122 +168,6 @@ function matchesAt(selector, index, node) {
     if (matchesAt(selector, index - 1, ancestor)) return true;
   }
   return false;
-}
-
-/**
- * Index of the `)` matching the `(` just before `start`, skipping strings.
- * @param {string} value
- * @param {number} start
- */
-function closingParen(value, start) {
-  let depth = 1;
-  for (let i = start; i < value.length; i++) {
-    const ch = value[i];
-    if (ch === "(") depth++;
-    else if (ch === ")" && --depth === 0) return i;
-  }
-  return -1;
-}
-
-/**
- * Replaces each `var(--name, fallback)` in `value`. `null` when a reference
- * has no value and no fallback: the declaration is then invalid at
- * computed-value time and behaves as `unset`.
- * @param {string} value
- * @param {(name: string) => string | undefined} lookup
- * @returns {string | null}
- */
-export function substituteVars(value, lookup) {
-  let out = "";
-  let i = 0;
-  for (;;) {
-    const start = value.toLowerCase().indexOf("var(", i);
-    if (start === -1) return out + value.slice(i);
-    const end = closingParen(value, start + 4);
-    if (end === -1) return null;
-    const inner = value.slice(start + 4, end);
-    const comma = splitTopLevel(inner, ",");
-    const name = (comma[0] ?? "").trim();
-    const fallback =
-      comma.length > 1 ? inner.slice(inner.indexOf(",") + 1) : undefined;
-    let replacement = lookup(name);
-    if (replacement === undefined && fallback !== undefined) {
-      const resolved = substituteVars(fallback, lookup);
-      if (resolved === null) return null;
-      replacement = resolved;
-    }
-    if (replacement === undefined) return null;
-    out += value.slice(i, start) + replacement;
-    i = end + 1;
-  }
-}
-
-const BACKGROUND_KEYWORDS = new Set([
-  "none",
-  "repeat",
-  "repeat-x",
-  "repeat-y",
-  "no-repeat",
-  "space",
-  "round",
-  "scroll",
-  "fixed",
-  "local",
-  "center",
-  "top",
-  "bottom",
-  "left",
-  "right",
-  "border-box",
-  "padding-box",
-  "content-box",
-  "text",
-  "auto",
-  "cover",
-  "contain",
-]);
-const IMAGE_FUNCTION =
-  /^(url|image|image-set|cross-fade|element|paint|(repeating-)?(linear|radial|conic)-gradient)\(/i;
-const LENGTH_LIKE = /^[-+.\d]/;
-
-/**
- * Splits on top-level whitespace and `/`, keeping functions whole.
- * @param {string} value
- */
-function shorthandTokens(value) {
-  /** @type {string[]} */
-  const tokens = [];
-  let depth = 0;
-  let current = "";
-  for (const ch of value) {
-    if (ch === "(") depth++;
-    else if (ch === ")") depth--;
-    if (depth === 0 && (ch === "/" || SPACE.test(ch))) {
-      if (current) tokens.push(current);
-      current = "";
-      continue;
-    }
-    current += ch;
-  }
-  if (current) tokens.push(current);
-  return tokens;
-}
-
-/**
- * The `background-color` a `background` shorthand sets: its final layer's
- * color, or `transparent` when it names none.
- * @param {string} value
- */
-export function shorthandBackgroundColor(value) {
-  const layers = splitTopLevel(value, ",");
-  const last = layers[layers.length - 1] ?? "";
-  for (const token of shorthandTokens(last)) {
-    const lower = token.toLowerCase();
-    if (BACKGROUND_KEYWORDS.has(lower)) continue;
-    if (IMAGE_FUNCTION.test(token) || LENGTH_LIKE.test(token)) continue;
-    return token;
-  }
-  return "transparent";
 }
 
 /** @param {string | null} value */
@@ -583,7 +471,33 @@ export function createThemeCascade(theme, outsideColor) {
     }
     return createResolver(parseThemeRules(BASE_CSS), vars, outsideColor);
   }
-  return createResolver(parseThemeRules(theme), {}, outsideColor);
+  return createResolver(parseThemeRules(theme), rootVars(theme), outsideColor);
+}
+
+const ROOT_SELECTORS = new Set([":root", ":host", "html"]);
+
+/**
+ * Custom properties theme CSS sets on `:root`, `:host` or `html`, which
+ * every `.hljs` element inherits. The selector model above can't match
+ * those elements, so they come in like a palette's vars.
+ * @param {string} css
+ * @returns {Record<string, string>}
+ */
+function rootVars(css) {
+  /** @type {Record<string, string>} */
+  const vars = {};
+  forEachRule(css, (prelude, body) => {
+    const selectors = splitTopLevel(prelude, ",").map((s) => s.trim());
+    if (!selectors.every((selector) => ROOT_SELECTORS.has(selector))) return;
+    for (const part of splitTopLevel(body, ";")) {
+      const colon = part.indexOf(":");
+      const name = part.slice(0, colon).trim();
+      if (colon === -1 || !name.startsWith("--")) continue;
+      const value = part.slice(colon + 1).trim();
+      if (!CSS_WIDE.has(value.toLowerCase())) vars[name] = value;
+    }
+  });
+  return vars;
 }
 
 /**

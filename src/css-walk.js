@@ -136,3 +136,121 @@ export function forEachRule(css, visit) {
     i += 1;
   }
 }
+
+const SPACE = /\s/;
+
+/**
+ * Index of the `)` matching the `(` just before `start`, skipping strings.
+ * @param {string} value
+ * @param {number} start
+ */
+function closingParen(value, start) {
+  let depth = 1;
+  for (let i = start; i < value.length; i++) {
+    const ch = value[i];
+    if (ch === "(") depth++;
+    else if (ch === ")" && --depth === 0) return i;
+  }
+  return -1;
+}
+
+/**
+ * Replaces each `var(--name, fallback)` in `value`. `null` when a reference
+ * has no value and no fallback: the declaration is then invalid at
+ * computed-value time and behaves as `unset`.
+ * @param {string} value
+ * @param {(name: string) => string | undefined} lookup
+ * @returns {string | null}
+ */
+export function substituteVars(value, lookup) {
+  let out = "";
+  let i = 0;
+  for (;;) {
+    const start = value.toLowerCase().indexOf("var(", i);
+    if (start === -1) return out + value.slice(i);
+    const end = closingParen(value, start + 4);
+    if (end === -1) return null;
+    const inner = value.slice(start + 4, end);
+    const comma = splitTopLevel(inner, ",");
+    const name = (comma[0] ?? "").trim();
+    const fallback =
+      comma.length > 1 ? inner.slice(inner.indexOf(",") + 1) : undefined;
+    let replacement = lookup(name);
+    if (replacement === undefined && fallback !== undefined) {
+      const resolved = substituteVars(fallback, lookup);
+      if (resolved === null) return null;
+      replacement = resolved;
+    }
+    if (replacement === undefined) return null;
+    out += value.slice(i, start) + replacement;
+    i = end + 1;
+  }
+}
+
+const BACKGROUND_KEYWORDS = new Set([
+  "none",
+  "repeat",
+  "repeat-x",
+  "repeat-y",
+  "no-repeat",
+  "space",
+  "round",
+  "scroll",
+  "fixed",
+  "local",
+  "center",
+  "top",
+  "bottom",
+  "left",
+  "right",
+  "border-box",
+  "padding-box",
+  "content-box",
+  "text",
+  "auto",
+  "cover",
+  "contain",
+]);
+const IMAGE_FUNCTION =
+  /^(url|image|image-set|cross-fade|element|paint|(repeating-)?(linear|radial|conic)-gradient)\(/i;
+const LENGTH_LIKE = /^[-+.\d]/;
+
+/**
+ * Splits on top-level whitespace and `/`, keeping functions whole.
+ * @param {string} value
+ */
+function shorthandTokens(value) {
+  /** @type {string[]} */
+  const tokens = [];
+  let depth = 0;
+  let current = "";
+  for (const ch of value) {
+    if (ch === "(") depth++;
+    else if (ch === ")") depth--;
+    if (depth === 0 && (ch === "/" || SPACE.test(ch))) {
+      if (current) tokens.push(current);
+      current = "";
+      continue;
+    }
+    current += ch;
+  }
+  if (current) tokens.push(current);
+  return tokens;
+}
+
+/**
+ * The `background-color` a `background` shorthand sets: its final layer's
+ * color, or `transparent` when it names none.
+ * @param {string} value
+ */
+export function shorthandBackgroundColor(value) {
+  const layers = splitTopLevel(value, ",");
+  const last = layers[layers.length - 1] ?? "";
+  for (const token of shorthandTokens(last)) {
+    const lower = token.toLowerCase();
+    if (BACKGROUND_KEYWORDS.has(lower)) continue;
+    if (IMAGE_FUNCTION.test(token) || LENGTH_LIKE.test(token)) continue;
+    return token;
+  }
+  return "transparent";
+}

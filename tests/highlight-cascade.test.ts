@@ -40,6 +40,15 @@ describe("createThemeCascade", () => {
     expect(paint(theme, fn)).toEqual([["load", "blue", undefined]]);
   });
 
+  it("reads custom properties the theme sets on :root, :host or html", () => {
+    const theme =
+      ":root,:host{--hue:#c50263}html{--mono:#abb2bf}.hljs{color:var(--mono)}.hljs-title{color:var(--hue)}";
+    expect(paint(theme, [text("a "), ...fn])).toEqual([
+      ["load", "#c50263", undefined],
+    ]);
+    expect(createThemeCascade(theme).root.color).toBe("#abb2bf");
+  });
+
   it("falls back to the base scope's rule without a compound rule", () => {
     expect(paint(".hljs-title{color:red}", fn)).toEqual([
       ["load", "red", undefined],
