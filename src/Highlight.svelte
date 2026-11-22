@@ -5,25 +5,25 @@
   }
 
   /**
-   * The resolver loads on first paint, so `"dom"`-only pages don't bundle
+   * The painter loads on first paint, so `"dom"`-only pages don't bundle
    * it. One load serves every instance.
-   * @type {Promise<typeof import("./highlight-cascade.js")> | undefined}
+   * @type {Promise<typeof import("./highlight-painter.js")> | undefined}
    */
-  let cascadeLoad;
+  let painterLoad;
 
-  /** @type {typeof import("./highlight-cascade.js") | undefined} */
-  let cascadeModule;
+  /** @type {typeof import("./highlight-painter.js") | undefined} */
+  let painterModule;
 
-  function loadCascade() {
+  function loadPainter() {
     // A static specifier, so bundlers split the module into its own chunk.
-    cascadeLoad ??= import("./highlight-cascade.js").then(
-      (module) => (cascadeModule = module),
+    painterLoad ??= import("./highlight-painter.js").then(
+      (module) => (painterModule = module),
       (error) => {
-        cascadeLoad = undefined;
+        painterLoad = undefined;
         throw error;
       },
     );
-    return cascadeLoad;
+    return painterLoad;
   }
 </script>
 
@@ -59,11 +59,7 @@
   export let theme = undefined;
 
   import { afterUpdate, createEventDispatcher, onMount } from "svelte";
-  import {
-    createScopeHighlights,
-    paintTokenRanges,
-    resolveEngine,
-  } from "./css-highlights.js";
+  import { resolveEngine } from "./css-highlights.js";
   import LangTag from "./LangTag.svelte";
   import { ensureRegistered, registry } from "./registry.js";
 
@@ -75,8 +71,6 @@
 
   // Distinct from HighlightEditable's numeric ids, so names never clash.
   const highlightPrefix = `hljs-highlight-${nextInstanceId()}`;
-  const cssHighlights = createScopeHighlights(highlightPrefix);
-
   /** @type {string} */
   let highlighted = "";
 
@@ -91,24 +85,21 @@
 
   let mounted = false;
 
-  /** The resolver, once loaded. */
-  let cascadeApi = cascadeModule;
+  /** The painter module, once loaded. */
+  let painterApi = painterModule;
 
-  /**
-   * What the current ranges were painted from, if any.
-   * @type {{ runs: unknown; code: HTMLElement; text: Node | null } | undefined}
-   */
-  let painted;
+  /** @type {ReturnType<typeof import("./highlight-painter.js").createHighlightPainter> | undefined} */
+  let painter;
 
   $: resolvedEngineValue = resolveEngine(engine);
   // Wait for mount, so hydration sees the same markup as SSR.
   $: wantsPainting = mounted && resolvedEngineValue === "css-highlights";
-  $: if (wantsPainting && !cascadeApi) {
-    loadCascade().then(
+  $: if (wantsPainting && !painterApi) {
+    loadPainter().then(
       (module) => {
         // Unmounted meanwhile: paint nothing. Otherwise the reactive
         // statements below paint the latest props.
-        if (mounted) cascadeApi = module;
+        if (mounted) painterApi = module;
       },
       () => {
         // Keep the "dom" markup.
@@ -116,22 +107,16 @@
     );
   }
   // When painting, LangTag gets an empty `highlighted` and renders `code` as
-  // plain text. Until the resolver loads, keep the "dom" markup, so the code
+  // plain text. Until the painter loads, keep the "dom" markup, so the code
   // never shows as plain text without colors.
-  $: painting = wantsPainting && cascadeApi !== undefined;
-  $: cascade =
-    painting && cascadeApi && theme !== undefined
-      ? cascadeApi.createThemeCascade(theme, outsideColor)
-      : undefined;
-  // One range per run of text, named by its resolved color and background.
-  $: runs =
-    cascade && cascadeApi
-      ? cascadeApi.cascadeRanges(events, cascade)
-      : undefined;
-  $: cssHighlightStyle =
-    runs && cascadeApi
-      ? cascadeApi.cascadeHighlightStyle(runs.styles, highlightPrefix)
-      : "";
+  $: painting = wantsPainting && painterApi !== undefined;
+  $: if (painting && painterApi && !painter) {
+    painter = painterApi.createHighlightPainter(highlightPrefix, outsideColor);
+  } else if (!painting && painter) {
+    painter.clear();
+    painter = undefined;
+  }
+  $: cssHighlightStyle = painter ? painter.update(events, theme) : "";
 
   /** The color the `<pre>` inherits, for themes that use `currentColor`. */
   function outsideColor() {
@@ -139,40 +124,19 @@
     return outside ? getComputedStyle(outside).color : null;
   }
 
-  function paint() {
-    if (!painting || !codeElement || !runs) {
-      if (painted) {
-        cssHighlights.clear();
-        painted = undefined;
-      }
-      return;
-    }
-    const text = codeElement.firstChild;
-    if (
-      painted?.runs === runs &&
-      painted.code === codeElement &&
-      painted.text === text
-    ) {
-      return;
-    }
-    cssHighlights.clear();
-    paintTokenRanges(cssHighlights, codeElement, runs.ranges);
-    painted = { runs, code: codeElement, text };
-  }
-
   afterUpdate(() => {
     if (events !== lastDispatchedEvents) {
       lastDispatchedEvents = events;
       dispatch("highlight", { highlighted, events });
     }
-    paint();
+    painter?.paint(codeElement);
   });
 
   onMount(() => {
     mounted = true;
     return () => {
       mounted = false;
-      cssHighlights.clear();
+      painter?.clear();
     };
   });
 
