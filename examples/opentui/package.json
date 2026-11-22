@@ -11,6 +11,6 @@
     "svelte-highlight": "^7.27.0"
   },
   "devDependencies": {
-    "svelte-bun": "^0.1.0"
+    "svelte-bun": "^0.2.0"
   }
 }
