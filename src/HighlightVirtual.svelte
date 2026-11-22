@@ -86,6 +86,38 @@
 
   $: source = typeof code === "string" ? code : String(code ?? "");
 
+  // Before mount, the first lines render highlighted and the rest as plain
+  // text, on the server and in the first client render alike, so hydration
+  // keeps them. The cap keeps the server's work independent of length.
+  const PRERENDER_LINES = 100;
+  $: prerendered = hydrated
+    ? undefined
+    : prerenderHead(source, language, checkpointInterval);
+
+  /**
+   * @param {string} text
+   * @param {import("./languages").LanguageType<string>} _language
+   * @param {number} _checkpointInterval
+   */
+  function prerenderHead(text, _language, _checkpointInterval) {
+    ensureDoc();
+    const current = /** @type {NonNullable<typeof doc>} */ (doc);
+    current.setCode(text);
+    // The offset after the last line rendered highlighted.
+    let cut = 0;
+    let lines = 0;
+    while (lines < PRERENDER_LINES && cut < text.length) {
+      const newline = text.indexOf("\n", cut);
+      cut = newline === -1 ? text.length : newline + 1;
+      lines++;
+    }
+    const head = current.lineRange(0, lines).join("\n");
+    return {
+      head: text.slice(0, cut).endsWith("\n") ? `${head}\n` : head,
+      rest: text.slice(cut),
+    };
+  }
+
   function ensureDoc() {
     if (
       doc &&
@@ -295,7 +327,7 @@
   aria-label={label ?? $windowLabel ?? "Code"}
   on:scroll={onScroll}
   {...$$restProps}><code
-    >{#if !hydrated}{source}{:else}<span
+    >{#if !hydrated && prerendered}{@html prerendered.head}{prerendered.rest}{:else}<span
       class="shl-virtual-sizer"
       style="height: {lineCount * lineHeight}px;"
       ><span
