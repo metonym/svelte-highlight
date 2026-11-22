@@ -2764,6 +2764,67 @@ When the tab strip overflows, its overflowing edge fades to signal there's more 
 
 The active tab's `--tab-active-color` and `--tab-active-background` are resolved from the highlighted code's computed style after mount, so they render as `inherit`/`transparent` on first paint; for an SSR-critical, above-the-fold tab strip, set `--tab-active-background` and `--tab-active-color` yourself to avoid a flash before hydration.
 
+## Custom renderers
+
+Svelte 5.59 added [custom renderers](https://svelte.dev/docs/svelte/custom-renderers), which render components to terminals, canvas, PDF or native views instead of the DOM. The components above render HTML, so they only work with the DOM. `HighlightTokens` works anywhere: it has no markup of its own, and renders styled tokens only through your snippets. Import it by path. It's Svelte 5 only, so it isn't in the package's main entry.
+
+```svelte
+<svelte:options customRenderer="terminal-renderer" />
+
+<script>
+  import HighlightTokens from "svelte-highlight/HighlightTokens.svelte";
+  import rust from "svelte-highlight/languages/rust";
+  import github from "svelte-highlight/themes/github";
+
+  let { code } = $props();
+</script>
+
+<box>
+  <HighlightTokens {code} language={rust} theme={github}>
+    {#snippet line(tokens)}
+      <line>
+        {#each tokens as token}
+          <text fg={token.color} bold={token.bold}>{token.text}</text>
+        {/each}
+      </line>
+    {/snippet}
+  </HighlightTokens>
+</box>
+```
+
+`HighlightTokens` has to be compiled with the same renderer as the component that passes it snippets. A default `customRenderer` in your config already covers it. If components pick their renderer with `<svelte:options>`, pick one for `HighlightTokens` in your config too:
+
+```js
+// svelte.config.js
+export default {
+  compilerOptions: {
+    experimental: {
+      customRenderer: ({ filename }) =>
+        filename.includes("/src/terminal/") ||
+        filename.endsWith("svelte-highlight/HighlightTokens.svelte")
+          ? "terminal-renderer"
+          : null,
+    },
+  },
+};
+```
+
+Each token has `text`, `scopes`, and the theme's `color`, `background`, `bold`, `italic`, `underline` and `strikethrough` (see [Styled tokens, without CSS](#styled-tokens-without-css)). For the whole block at once, including the theme's `foreground` and `background`, use the `children` snippet instead of `line`:
+
+```svelte
+<HighlightTokens {code} language={rust} theme={github}>
+  {#snippet children({ lines, foreground, background })}
+    <box fg={foreground} bg={background}>
+      {#each lines as tokens}
+        <line>{#each tokens as token}<text fg={token.color}>{token.text}</text>{/each}</line>
+      {/each}
+    </box>
+  {/snippet}
+</HighlightTokens>
+```
+
+It works with the DOM too, with HTML elements in the snippets.
+
 ## Component API
 
 ### `Highlight`
@@ -3394,6 +3455,23 @@ Use `bind:this`, then call `scrollToFile(index, options)`. `options` are `scroll
   <Highlight language={sources[active].language} code={sources[active].code} />
 </FileTabs>
 ```
+
+### `HighlightTokens`
+
+Svelte 5 only. Import from `svelte-highlight/HighlightTokens.svelte`. See [Custom renderers](#custom-renderers).
+
+#### Props
+
+| Name     | Type                                                    | Default value |
+| :------- | :------------------------------------------------------ | :------------ |
+| code     | `any`                                                   | —             |
+| language | `LanguageType`                                          | —             |
+| theme    | `string \| ThemePalette`                                | `undefined`   |
+| color    | `string`                                                | `undefined`   |
+| line     | `Snippet<[tokens, index]>`                              | `undefined`   |
+| children | `Snippet<[{ lines, events, foreground, background }]>` | `undefined`   |
+
+Without `theme`, tokens carry only `text` and `scopes`. `color` is the text color for themes that leave text uncolored. `children` takes precedence over `line`.
 
 ### `Typewriter`
 
