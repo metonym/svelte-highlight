@@ -9,6 +9,8 @@ import { highlight as action } from "./action.js";
  */
 export const highlight = /** @type {any} */ (action);
 
+export { paintHighlights } from "./paint.js";
+
 const DEFAULT_SELECTOR = 'pre code[class*="language-"]';
 
 /** @typedef {import("./dom.d.ts").HighlightAllOptions} HighlightAllOptions */
