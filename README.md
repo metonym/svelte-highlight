@@ -3562,6 +3562,10 @@ The engine, grammars and DOM entries are plain ES modules with only relative imp
 
 Use a CDN that serves the files unchanged, such as jsDelivr or unpkg. `loadLanguage` imports grammars by relative path, which breaks on CDNs that rewrite modules. See it as a complete page in [examples/cdn](examples/cdn).
 
+### Other hosts
+
+[spec/ENGINE.md](spec/ENGINE.md) specifies what the engine computes, for running the same grammars outside JavaScript or in another JS runtime. [spec/corpus.json](spec/corpus.json) has samples with their expected events, and a host conforms if it reproduces them.
+
 ### Stability tiers
 
 - **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `SearchMatch`, `SearchOptions`, `Search`, `createSearch`, `highlightMatches`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`textRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
