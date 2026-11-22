@@ -50,6 +50,7 @@ const CORE = [
   "stream-regenerate.js",
   "stream-sealed-chunks.js",
   "style-registry.js",
+  "styled-tokens.js",
   "text-diff.js",
   "textmate-theme.js",
   "theme-style.js",

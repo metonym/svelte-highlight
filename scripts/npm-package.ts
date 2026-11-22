@@ -39,6 +39,7 @@ pkgJson.exports = Object.fromEntries([
   ...entry("languages/*", "languages/*", "import"),
   ...entry("engine", "engine", "default"),
   ...entry("tokenized-document", "tokenized-document", "default"),
+  ...entry("styled-tokens", "styled-tokens", "default"),
   ...entry("diff", "diff", "default"),
   ...entry("diff-edits", "diff-edits", "default"),
   ...entry("diff-controller", "diff-controller", "default"),

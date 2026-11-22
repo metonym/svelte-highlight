@@ -3430,7 +3430,7 @@ See it as a complete page in [examples/cdn](examples/cdn).
 
 - **Stable, semver-governed:** `ScopeEvent`, `TEXT`/`OPEN`/`CLOSE`, `TokenRange`, `HighlightResult`, `LineToken`, `Renderer`, `renderHtml`, `toRanges`, `extendLines`, `tokenLines`, `escapeHtml`, `createHtmlRenderer`, `createRangeRenderer`, `createLineRenderer`, `Registry` and its methods, `createRegistry`, `registerAll`, `StreamSession`, `TokenizedDocument`, `createTokenizedDocument`, `TextSegment`, `FenceSegment`, `MarkdownSegment`, `FenceSplitter`, `createFenceSplitter`, `SearchMatch`, `SearchOptions`, `Search`, `createSearch`, `highlightMatches`, `UnknownLanguageError`, `TokenizerLoopError`. `Snapshot` is a serializable format that round-trips within one library version, but is **not** guaranteed stable across versions — a snapshot from an older release may be rejected on resume. The same caveat applies to `TokenizedDocument`: its method surface (`setCode`/`append`/`lineCount`/`lineRange`/`textRange`/`tokenizedThrough`/`checkpointCount`) is stable and semver-governed, but internally it resumes from `Snapshot`s the same way `StreamSession` does, so anything that tried to serialize and later resume a `TokenizedDocument`'s internal state directly would hit the same cross-version instability -- the public API doesn't expose that today.
 - **Generated data, versioned with the library:** `GrammarIR`/`GrammarState`. These come from the build pipeline and are consumed by `registerAll`; treat them as opaque payloads whose field-level structure may change in any minor release. Always load grammars from the same package version as the engine.
-- **Experimental, may change in a minor release:** everything in `svelte-highlight/diff`, `svelte-highlight/diff-edits`, and `svelte-highlight/diff-controller`, and the `HighlightDiff`, `DiffView`, `DiffMinimap`, `DiffStats`, and `DiffFileList` components. They're new, and their API may change before they're stable. Also `createWorkerHighlighter`, `serveHighlighter`, `PostMessageTarget`, `WorkerHighlighter`, `WorkerSession`, `ServeHighlighterOptions` (`svelte-highlight/worker`). The wire protocol between the two halves is not part of the public contract — only the documented function behavior is.
+- **Experimental, may change in a minor release:** everything in `svelte-highlight/diff`, `svelte-highlight/diff-edits`, `svelte-highlight/diff-controller`, and `svelte-highlight/styled-tokens`, and the `HighlightDiff`, `DiffView`, `DiffMinimap`, `DiffStats`, and `DiffFileList` components. They're new, and their API may change before they're stable. Also `createWorkerHighlighter`, `serveHighlighter`, `PostMessageTarget`, `WorkerHighlighter`, `WorkerSession`, `ServeHighlighterOptions` (`svelte-highlight/worker`). The wire protocol between the two halves is not part of the public contract — only the documented function behavior is.
 
 ### Headless highlighting, isolated registry
 
@@ -3548,6 +3548,26 @@ const myRenderer = {
   },
 };
 ```
+
+### Styled tokens, without CSS
+
+Terminals, canvas, PDF, images and native views can't read theme CSS. `styleTokens` from `svelte-highlight/styled-tokens` resolves a theme per token instead: each token gets its text `color`, its own `background` when it paints one, and `bold`, `italic`, `underline` and `strikethrough` flags. The theme can be a `ThemePalette` (`svelte-highlight/themes/*`) or theme CSS (`svelte-highlight/styles/*`). The colors match what the theme's CSS paints for `<Highlight>`.
+
+```js
+import { createRegistry, registerAll } from "svelte-highlight/engine";
+import rust from "svelte-highlight/languages/rust";
+import { styleTokens } from "svelte-highlight/styled-tokens";
+import github from "svelte-highlight/themes/github";
+
+const registry = createRegistry();
+registerAll(registry, rust);
+
+const { events } = registry.highlight("fn main() {}", { language: "rust" });
+const { foreground, background, lines } = styleTokens(events, github);
+// lines[0][0]: { text: "fn", scopes: ["keyword"], color: "#d73a49" }
+```
+
+Lines split the same way as `tokenLines`. Colors are CSS values as the theme writes them, usually hex. For many event streams with one theme, `createTokenStyler(theme)` resolves the theme once and returns a styler with `lines(events)`. Pass `{ color }` to either function for themes that leave the text uncolored.
 
 ### Errors
 

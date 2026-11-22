@@ -4,7 +4,9 @@
 // theme's rules (compound, descendant and child selectors, specificity,
 // source order, `!important`, `var()`, inheritance), so colors match the
 // "dom" engine. Only `color` and `background-color` carry over; the CSS
-// Custom Highlight API can't change font weight or style.
+// Custom Highlight API can't change font weight or style. With `fonts`,
+// the cascade also resolves `font-weight`, `font-style` and
+// `text-decoration`, for targets that aren't CSS (see `styled-tokens.js`).
 
 import {
   forEachRule,
@@ -23,6 +25,14 @@ import { BASE_CSS } from "./themes/_base-css.js";
  * @typedef {{ tag: string; classes: Set<string> }} ElementShape
  * @typedef {{ key: string; color?: string; background?: string }} RunStyle
  * @typedef {{
+ *   color?: string;
+ *   background?: string;
+ *   bold?: true;
+ *   italic?: true;
+ *   underline?: true;
+ *   strikethrough?: true;
+ * }} TokenStyle
+ * @typedef {{
  *   parent: CascadeNode | null;
  *   element: ElementShape | null;
  *   isToken: boolean;
@@ -32,6 +42,10 @@ import { BASE_CSS } from "./themes/_base-css.js";
  *   custom: Record<string, string>;
  *   children: Map<string, CascadeNode>;
  *   style: RunStyle | null | undefined;
+ *   fontWeight: string | null;
+ *   fontStyle: string | null;
+ *   decorations: string[];
+ *   tokenStyle: TokenStyle | undefined;
  * }} CascadeNode
  */
 
@@ -82,14 +96,23 @@ export function parseSelector(text) {
   return { compounds, combinators, specificity };
 }
 
+const FONT_PROPS = new Set([
+  "font-weight",
+  "font-style",
+  "text-decoration",
+  "text-decoration-line",
+]);
+
 /**
  * Declarations that affect color: `color`, `background-color`, the
- * `background` shorthand, and custom properties (for `var()`).
+ * `background` shorthand, and custom properties (for `var()`). With
+ * `fonts`, also `font-weight`, `font-style` and `text-decoration`.
  * @param {string} body
  * @param {{ order: number }} counter
+ * @param {boolean} fonts
  * @returns {Declaration[]}
  */
-function colorDeclarations(body, counter) {
+function colorDeclarations(body, counter, fonts) {
   /** @type {Declaration[]} */
   const declarations = [];
   for (const part of splitTopLevel(body, ";")) {
@@ -101,7 +124,8 @@ function colorDeclarations(body, counter) {
       prop !== "color" &&
       prop !== "background-color" &&
       prop !== "background" &&
-      !prop.startsWith("--")
+      !prop.startsWith("--") &&
+      !(fonts && FONT_PROPS.has(prop))
     ) {
       continue;
     }
@@ -117,16 +141,17 @@ function colorDeclarations(body, counter) {
 
 /**
  * The theme's style rules, in source order, keeping only declarations and
- * selectors that bear on token colors.
+ * selectors that bear on token colors (and fonts, with `fonts`).
  * @param {string} css
+ * @param {boolean} [fonts]
  * @returns {Rule[]}
  */
-export function parseThemeRules(css) {
+export function parseThemeRules(css, fonts = false) {
   /** @type {Rule[]} */
   const rules = [];
   const counter = { order: 0 };
   forEachRule(css, (prelude, body) => {
-    const declarations = colorDeclarations(body, counter);
+    const declarations = colorDeclarations(body, counter, fonts);
     if (declarations.length === 0) return;
     const selectors = splitTopLevel(prelude, ",")
       .map((selector) => parseSelector(selector))
@@ -189,6 +214,63 @@ const CSS_WIDE = new Map([
 
 const CURRENT_COLOR = /(?<![\w-])currentcolor(?![\w-])/gi;
 
+/** @type {string[]} */
+const NO_DECORATIONS = [];
+const DECORATION_LINES = new Set(["underline", "line-through", "overline"]);
+const ITALIC = /^(?:italic|oblique)\b/i;
+
+/**
+ * The value an inherited property (`font-weight`, `font-style`) computes
+ * to: the winner's value, or the parent's when there is none, it can't
+ * resolve, or it's a CSS-wide keyword.
+ * @param {{ declaration: Declaration } | undefined} winner
+ * @param {(name: string) => string | undefined} lookup
+ * @param {string | null} parentValue
+ * @param {string} initial
+ * @returns {string | null}
+ */
+function inheritedValue(winner, lookup, parentValue, initial) {
+  if (winner === undefined) return parentValue;
+  const value = substituteVars(winner.declaration.value, lookup);
+  const lower = keyword(value);
+  if (lower === "initial") return initial;
+  if (
+    value === null ||
+    lower === "inherit" ||
+    lower === "unset" ||
+    lower === "revert" ||
+    lower === "revert-layer"
+  ) {
+    return parentValue;
+  }
+  return lower;
+}
+
+/**
+ * The lines a `text-decoration` or `text-decoration-line` value draws.
+ * `none`, keywords and an unresolved `var()` draw none.
+ * @param {string | null} value
+ * @returns {string[]}
+ */
+function decorationLines(value) {
+  if (value === null) return NO_DECORATIONS;
+  return value
+    .toLowerCase()
+    .split(WHITESPACE)
+    .filter((part) => DECORATION_LINES.has(part));
+}
+
+/**
+ * `bold`, `bolder`, or a numeric weight of 600 or more. `bolder` is
+ * relative in CSS, but every theme uses it on normal-weight text.
+ * @param {string} weight
+ */
+function isBold(weight) {
+  if (weight === "bold" || weight === "bolder") return true;
+  const number = Number(weight);
+  return Number.isFinite(number) && number >= 600;
+}
+
 /**
  * Replaces `currentColor` with the inherited color. Inside `::highlight()`,
  * `currentColor` doesn't mean the token's parent color, so it can't stay.
@@ -213,8 +295,9 @@ function withCurrentColor(value, color, known) {
  *   from outside the `<pre>` (a palette's `--shl-*` vars).
  * @param {(() => string | null) | undefined} outsideColor The color the
  *   `<pre>` inherits. Read only when a `currentColor` needs it.
+ * @param {boolean} fonts Also resolve font weight, style and decoration.
  */
-function createResolver(rules, rootCustom, outsideColor) {
+function createResolver(rules, rootCustom, outsideColor, fonts) {
   /** @type {string | null | undefined} */
   let pageColor;
   /** @param {string | null} color */
@@ -242,6 +325,10 @@ function createResolver(rules, rootCustom, outsideColor) {
       custom: parent ? parent.custom : rootCustom,
       children: new Map(),
       style: undefined,
+      fontWeight: parent ? parent.fontWeight : null,
+      fontStyle: parent ? parent.fontStyle : null,
+      decorations: parent ? parent.decorations : NO_DECORATIONS,
+      tokenStyle: undefined,
     };
 
     /** @type {Map<string, { declaration: Declaration; specificity: number }>} */
@@ -261,7 +348,9 @@ function createResolver(rules, rootCustom, outsideColor) {
         const key =
           declaration.prop === "background"
             ? "background-color"
-            : declaration.prop;
+            : declaration.prop === "text-decoration"
+              ? "text-decoration-line"
+              : declaration.prop;
         const previous = winners.get(key);
         if (
           previous === undefined ||
@@ -373,6 +462,32 @@ function createResolver(rules, rootCustom, outsideColor) {
     node.effectiveBackground = isToken
       ? (node.background ?? parent?.effectiveBackground ?? null)
       : null;
+
+    if (fonts) {
+      node.fontWeight = inheritedValue(
+        winners.get("font-weight"),
+        lookup,
+        node.fontWeight,
+        "normal",
+      );
+      node.fontStyle = inheritedValue(
+        winners.get("font-style"),
+        lookup,
+        node.fontStyle,
+        "normal",
+      );
+      // Decorations don't inherit either, but an ancestor's underline
+      // still draws under its descendants' text.
+      const decoration = winners.get("text-decoration-line");
+      if (decoration) {
+        const own = decorationLines(
+          substituteVars(decoration.declaration.value, lookup),
+        );
+        if (own.length > 0) {
+          node.decorations = [...new Set([...node.decorations, ...own])];
+        }
+      }
+    }
     return node;
   }
 
@@ -386,6 +501,10 @@ function createResolver(rules, rootCustom, outsideColor) {
     custom: rootCustom,
     children: new Map(),
     style: null,
+    fontWeight: null,
+    fontStyle: null,
+    decorations: NO_DECORATIONS,
+    tokenStyle: undefined,
   });
   const pre = compute(outside, { tag: "pre", classes: new Set() }, false);
   const code = compute(pre, { tag: "code", classes: new Set(["hljs"]) }, false);
@@ -446,6 +565,35 @@ function createResolver(rules, rootCustom, outsideColor) {
             };
       return node.style;
     },
+
+    /**
+     * Everything that styles text directly inside `node`, in full: `color`
+     * is the text color even where it matches `<code>`'s. Font fields are
+     * set only for a cascade made with `fonts`.
+     * @param {CascadeNode} node
+     * @returns {TokenStyle}
+     */
+    tokenStyleOf(node) {
+      if (node.tokenStyle !== undefined) return node.tokenStyle;
+      /** @type {TokenStyle} */
+      const style = {};
+      if (node.color !== null) style.color = node.color;
+      if (node.effectiveBackground !== null) {
+        style.background = node.effectiveBackground;
+      }
+      if (node.fontWeight !== null && isBold(node.fontWeight)) {
+        style.bold = true;
+      }
+      if (node.fontStyle !== null && ITALIC.test(node.fontStyle)) {
+        style.italic = true;
+      }
+      if (node.decorations.includes("underline")) style.underline = true;
+      if (node.decorations.includes("line-through")) {
+        style.strikethrough = true;
+      }
+      node.tokenStyle = style;
+      return style;
+    },
   };
 }
 
@@ -458,9 +606,15 @@ function createResolver(rules, rootCustom, outsideColor) {
  * @param {string | import("./theme.d.ts").ThemePalette} theme
  * @param {() => string | null} [outsideColor] The color the `<pre>`
  *   inherits from the page. Needed only by themes that use `currentColor`.
+ * @param {{ fonts?: boolean }} [options] `fonts` also resolves font
+ *   weight, style and decoration, for `tokenStyleOf`.
  * @returns {ThemeCascade}
  */
-export function createThemeCascade(theme, outsideColor) {
+export function createThemeCascade(
+  theme,
+  outsideColor,
+  { fonts = false } = {},
+) {
   if (typeof theme === "object") {
     // The vars sit on a wrapper with no `--shl-*` vars above it, so a
     // CSS-wide keyword leaves the var unset.
@@ -469,9 +623,19 @@ export function createThemeCascade(theme, outsideColor) {
     for (const [name, value] of Object.entries(theme.vars)) {
       if (!CSS_WIDE.has(value.trim().toLowerCase())) vars[name] = value;
     }
-    return createResolver(parseThemeRules(BASE_CSS), vars, outsideColor);
+    return createResolver(
+      parseThemeRules(BASE_CSS, fonts),
+      vars,
+      outsideColor,
+      fonts,
+    );
   }
-  return createResolver(parseThemeRules(theme), rootVars(theme), outsideColor);
+  return createResolver(
+    parseThemeRules(theme, fonts),
+    rootVars(theme),
+    outsideColor,
+    fonts,
+  );
 }
 
 const ROOT_SELECTORS = new Set([":root", ":host", "html"]);
