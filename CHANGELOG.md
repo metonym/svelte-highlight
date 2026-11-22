@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.25.2](https://github.com/metonym/svelte-highlight/releases/tag/v7.25.2) - 2026-11-21
+
+**Performance**
+
+- load `Highlight`'s `css-highlights` painting only when it's used, so pages on the default `"dom"` engine bundle less (29,047 B to 28,666 B gzipped for a page with only `<Highlight>`) ([#639](https://github.com/metonym/svelte-highlight/issues/639))
+
 ## [7.25.1](https://github.com/metonym/svelte-highlight/releases/tag/v7.25.1) - 2026-11-21
 
 **Fixes**
