@@ -5,6 +5,16 @@ import github from "../src/styles/github.js";
 import zenburn from "../src/styles/zenburn.js";
 
 describe("scopeStyle", () => {
+  it("puts root custom properties on the scope element", () => {
+    const out = scopeStyle(
+      ":root,:host{--hue:#c50263}html{--mono:#abb2bf}.hljs{color:var(--mono)}",
+      "scope",
+    );
+    expect(out).toBe(
+      ".scope,.scope{--hue:#c50263}.scope{--mono:#abb2bf}.scope .hljs{color:var(--mono)}",
+    );
+  });
+
   it("scopes a bare .hljs selector beneath the scope class", () => {
     const out = scopeStyle(".hljs{color:red}", "scope");
     expect(out).toBe(".scope .hljs{color:red}");
