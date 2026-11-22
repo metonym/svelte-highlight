@@ -130,3 +130,94 @@ function withColor(style, color) {
     ? { color, ...style }
     : style;
 }
+
+const ESC = "\u001B[";
+const RESET = `${ESC}0m`;
+const HEX = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+const RGB = /^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)\s*(?:[,/].*)?\)$/i;
+
+/** CSS named colors the bundled themes use, plus the basic sixteen. */
+const NAMED = new Map([
+  ["black", "#000000"],
+  ["silver", "#c0c0c0"],
+  ["gray", "#808080"],
+  ["grey", "#808080"],
+  ["white", "#ffffff"],
+  ["maroon", "#800000"],
+  ["red", "#ff0000"],
+  ["purple", "#800080"],
+  ["fuchsia", "#ff00ff"],
+  ["green", "#008000"],
+  ["lime", "#00ff00"],
+  ["olive", "#808000"],
+  ["yellow", "#ffff00"],
+  ["navy", "#000080"],
+  ["blue", "#0000ff"],
+  ["teal", "#008080"],
+  ["aqua", "#00ffff"],
+  ["cyan", "#00ffff"],
+  ["orange", "#ffa500"],
+  ["gold", "#ffd700"],
+  ["pink", "#ffc0cb"],
+]);
+
+/**
+ * `r;g;b` for a hex, `rgb()` or named color. `undefined` for anything a
+ * terminal can't take as-is (`color-mix()`, system colors), which then
+ * keeps the terminal's own color.
+ * @param {string | undefined} color
+ * @returns {string | undefined}
+ */
+function rgbOf(color) {
+  if (color === undefined) return undefined;
+  const value = color.trim().toLowerCase();
+  const hex = HEX.exec(NAMED.get(value) ?? value)?.[1];
+  if (hex !== undefined) {
+    const full =
+      hex.length <= 4 ? [...hex.slice(0, 3)].map((c) => c + c).join("") : hex;
+    return [0, 2, 4]
+      .map((i) => Number.parseInt(full.slice(i, i + 2), 16))
+      .join(";");
+  }
+  const rgb = RGB.exec(value);
+  if (rgb === null) return undefined;
+  return rgb
+    .slice(1, 4)
+    .map((channel) => Math.min(255, Math.round(Number(channel))))
+    .join(";");
+}
+
+/**
+ * Styled lines as a string for a true-color terminal: each token's color,
+ * background, bold, italic, underline and strikethrough as SGR escapes,
+ * reset after every token. Lines join with LF.
+ * @param {StyledLines} styled From `styleTokens`.
+ * @param {{ background?: boolean }} [options] `background` also paints the
+ *   theme's background behind text that has none of its own.
+ * @returns {string}
+ */
+export function toAnsi({ lines, foreground, background }, options = {}) {
+  const blockBackground = options.background ? rgbOf(background) : undefined;
+  const fallback = rgbOf(foreground);
+  return lines
+    .map((line) => {
+      let out = "";
+      for (const token of line) {
+        const codes = [];
+        const color = rgbOf(token.color) ?? fallback;
+        if (color !== undefined) codes.push(`38;2;${color}`);
+        const back = rgbOf(token.background) ?? blockBackground;
+        if (back !== undefined) codes.push(`48;2;${back}`);
+        if (token.bold) codes.push("1");
+        if (token.italic) codes.push("3");
+        if (token.underline) codes.push("4");
+        if (token.strikethrough) codes.push("9");
+        out +=
+          codes.length === 0
+            ? token.text
+            : `${ESC}${codes.join(";")}m${token.text}${RESET}`;
+      }
+      return out;
+    })
+    .join("\n");
+}
