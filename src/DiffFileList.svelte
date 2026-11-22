@@ -92,8 +92,26 @@
   const keyOf = (file, index) =>
     file.key ?? `${index}\u0000${file.oldPath ?? file.path}\u0000${file.path}`;
 
+  // Before mount, the first files down to about a screen and a half render,
+  // on the server and in the first client render alike, so a server-rendered
+  // page shows them and hydration keeps them. Windowing takes over on mount.
+  const PRERENDER_HEIGHT = 1500;
+
   /** @type {Set<string>} */
-  let mounted = new Set();
+  let mounted = initialFiles(files);
+
+  /** @param {DiffFile[]} list */
+  function initialFiles(list) {
+    /** @type {Set<string>} */
+    const keys = new Set();
+    let top = 0;
+    for (const [index, file] of list.entries()) {
+      if (top >= PRERENDER_HEIGHT) break;
+      keys.add(keyOf(file, index));
+      top += estimate(file);
+    }
+    return keys;
+  }
   /** @type {Map<string, number>} */
   let heights = new Map();
   /** @type {Map<string, { additions: number, deletions: number, changes: number }>} */
