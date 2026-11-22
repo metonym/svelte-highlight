@@ -5,7 +5,7 @@
  * Framework-free; needs a DOM, plus `CSS.highlights` for "css-highlights".
  */
 
-import { createScopeHighlights } from "./css-highlights.js";
+import { createScopeHighlights } from "./css-highlights-paint.js";
 import { lineTokenRanges, retokenizedEnd } from "./editable-css-paint.js";
 import { createDomLinePainter } from "./editable-dom-paint.js";
 import { lineStartOffset, renderLines } from "./editable-line-dom.js";

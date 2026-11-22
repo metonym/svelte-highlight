@@ -64,10 +64,12 @@ const CORE = [
 
 const DOM = [
   "action.js",
+  "css-highlights-paint.js",
   "css-highlights.js",
   "editable.js",
   "editable-line-dom.js",
   "editable-painter.js",
+  "highlight-painter.js",
   "search.js",
   "stream.js",
   "virtual-window.js",
