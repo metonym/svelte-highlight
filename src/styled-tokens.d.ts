@@ -67,3 +67,24 @@ export function styleTokens(
   theme: string | ThemePalette,
   options?: TokenStylerOptions,
 ): StyledLines;
+
+export interface ToAnsiOptions {
+  /** Also paint the theme's background behind text with none of its own. */
+  background?: boolean;
+}
+
+/**
+ * Styled lines as a string for a true-color terminal, with SGR escapes for
+ * each token's color, background, bold, italic, underline and
+ * strikethrough. Colors a terminal can't take (`color-mix()`) keep the
+ * terminal's own.
+ *
+ * @example
+ * ```js
+ * console.log(toAnsi(styleTokens(events, github)));
+ * ```
+ */
+export function toAnsi(
+  styled: Pick<StyledLines, "lines" | "foreground" | "background">,
+  options?: ToAnsiOptions,
+): string;

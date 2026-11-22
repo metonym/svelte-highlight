@@ -4,7 +4,11 @@ import diff from "../src/languages/diff.js";
 import rust from "../src/languages/rust.js";
 import githubCss from "../src/styles/github.js";
 import github from "../src/themes/github.js";
-import { createTokenStyler, styleTokens } from "../src/styled-tokens.js";
+import {
+  createTokenStyler,
+  styleTokens,
+  toAnsi,
+} from "../src/styled-tokens.js";
 
 const text = (v: string): ScopeEvent => ({ t: 0, v });
 const open = (s: string): ScopeEvent => ({ t: 1, s });
@@ -192,5 +196,61 @@ describe("createTokenStyler", () => {
       "#24292e",
       "#ffffff",
     ]);
+  });
+});
+
+describe("toAnsi", () => {
+  const sgr = (codes: string, text: string) =>
+    `\u001B[${codes}m${text}\u001B[0m`;
+
+  it("writes each token's color and fonts as SGR escapes", () => {
+    const out = toAnsi({
+      lines: [
+        [
+          { text: "fn", scopes: ["keyword"], color: "#d73a49", bold: true },
+          { text: " a", scopes: [], color: "#24292e" },
+        ],
+        [{ text: "x", scopes: [], italic: true, underline: true }],
+      ],
+    });
+    expect(out).toBe(
+      `${sgr("38;2;215;58;73;1", "fn")}${sgr("38;2;36;41;46", " a")}\n${sgr("3;4", "x")}`,
+    );
+  });
+
+  it("reads short hex, rgb() and named colors, and skips the rest", () => {
+    const token = (color: string) => [{ text: "a", scopes: [], color }];
+    const ansi = (color: string) => toAnsi({ lines: [token(color)] });
+    expect(ansi("#f0a")).toBe(sgr("38;2;255;0;170", "a"));
+    expect(ansi("rgb(1, 2, 3)")).toBe(sgr("38;2;1;2;3", "a"));
+    expect(ansi("rgb(1 2 3 / 50%)")).toBe(sgr("38;2;1;2;3", "a"));
+    expect(ansi("navy")).toBe(sgr("38;2;0;0;128", "a"));
+    expect(ansi("color-mix(in srgb,currentColor,pink)")).toBe("a");
+  });
+
+  it("falls back to the foreground, and paints the background on request", () => {
+    const styled = {
+      foreground: "#ffffff",
+      background: "#000000",
+      lines: [
+        [
+          { text: "a", scopes: [] },
+          { text: "b", scopes: [], background: "#ff0000" },
+        ],
+      ],
+    };
+    expect(toAnsi(styled)).toBe(
+      `${sgr("38;2;255;255;255", "a")}${sgr("38;2;255;255;255;48;2;255;0;0", "b")}`,
+    );
+    expect(toAnsi(styled, { background: true })).toBe(
+      `${sgr("38;2;255;255;255;48;2;0;0;0", "a")}${sgr("38;2;255;255;255;48;2;255;0;0", "b")}`,
+    );
+  });
+
+  it("round-trips through parseAnsi to the same text", async () => {
+    const { parseAnsi } = await import("../src/ansi.js");
+    const { events } = registry.highlight(RUST, { language: "rust" });
+    const segments = parseAnsi(toAnsi(styleTokens(events, github)));
+    expect(segments.map((segment) => segment.text).join("")).toBe(RUST);
   });
 });
