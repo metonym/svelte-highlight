@@ -1740,6 +1740,22 @@ Pass a root element to limit the search, and `{ selector, language }` to pick ot
 
 Without a bundler, an import map points the package at a CDN, and the same imports work in a `<script type="module">`. Browsers don't read the package's `exports`, so add the `.js` extension (`svelte-highlight/dom.js`). See [examples/cdn](examples/cdn).
 
+### Web component
+
+`defineHighlightElement` from `svelte-highlight/element` defines `<shl-code>`, which highlights its text in the language its `language` attribute names. It renders `<pre><code class="hljs">` inside itself, so theme CSS applies. It works on plain pages and in any framework.
+
+```html
+<shl-code language="typescript">const add = (a, b) => a + b;</shl-code>
+```
+
+```js
+import { defineHighlightElement } from "svelte-highlight/element";
+
+defineHighlightElement();
+```
+
+Changing `language`, or setting the `code` property, highlights again. Set `code` for code with `<` or `&` in it, since the element's text is parsed as HTML. The element dispatches `highlighted` (`{ html, language }`) or `error` (`{ error }`). Pass a name, as in `defineHighlightElement("my-code")`, to use another tag.
+
 ## Code Window
 
 Wrap a code block in `CodeWindow` to frame it with window chrome. It's purely cosmetic; the default slot renders your content unchanged.
