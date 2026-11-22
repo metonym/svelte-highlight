@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bundle": "bun build engine.entry.js --outfile dist/engine.js --format iife --minify"
+  },
+  "dependencies": {
+    "svelte-highlight": "^7.26.0"
+  }
+}

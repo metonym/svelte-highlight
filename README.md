@@ -3564,7 +3564,7 @@ Use a CDN that serves the files unchanged, such as jsDelivr or unpkg. `loadLangu
 
 ### Other hosts
 
-[spec/ENGINE.md](spec/ENGINE.md) specifies what the engine computes, for running the same grammars outside JavaScript or in another JS runtime. [spec/corpus.json](spec/corpus.json) has samples with their expected events, and a host conforms if it reproduces them.
+[spec/ENGINE.md](spec/ENGINE.md) specifies what the engine computes, for running the same grammars outside JavaScript or in another JS runtime. [spec/corpus.json](spec/corpus.json) has samples with their expected events, and a host conforms if it reproduces them. [examples/rust](examples/rust) passes it from Rust, by running the engine in QuickJS.
 
 ### Stability tiers
 
@@ -3739,6 +3739,7 @@ By default, example set-ups use Svelte 5. The exception is `examples/vite@svelte
 - [examples/rollup](examples/rollup)
 - [examples/cdn](examples/cdn): no bundler, no Svelte
 - [examples/routify](examples/routify)
+- [examples/rust](examples/rust): the engine in Rust, through QuickJS
 - [examples/sveltekit](examples/sveltekit)
 - [examples/terminal](examples/terminal): a Svelte custom renderer for terminals
 - [examples/vite](examples/vite)
