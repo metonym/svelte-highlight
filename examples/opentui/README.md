@@ -16,4 +16,4 @@ The renderer rebuilds opentui's renderables after each change, which is simple a
 
 `bun run check [file]` renders the view once in opentui's test renderer and prints the frame, with a count of the styled runs.
 
-Needs Bun, Svelte 5.59 or later, and a terminal with true-color support.
+Needs Bun canary (`bun upgrade --canary`), where svelte-bun applies the custom-renderer condition at runtime, Svelte 5.59 or later, and a terminal with true-color support.

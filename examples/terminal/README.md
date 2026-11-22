@@ -18,4 +18,4 @@ Prints the same thing with no Svelte: `styleTokens` and `toAnsi` from `svelte-hi
 - svelte-bun also resolves `svelte` to the runtime that supports custom renderers, so `bun start` needs no `--conditions` flag.
 - `draw` in `src/renderer.js` reads the tree back and prints it with `toAnsi`.
 
-Needs a terminal with true-color support, and Svelte 5.59 or later.
+Needs Bun canary (`bun upgrade --canary`), where svelte-bun applies the custom-renderer condition at runtime, Svelte 5.59 or later, and a terminal with true-color support.
