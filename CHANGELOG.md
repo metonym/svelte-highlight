@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.27.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.27.0) - 2026-11-22
+
+**Features**
+
+- add `svelte-highlight/styled-tokens`: `styleTokens` and `createTokenStyler` resolve a theme per token with no CSS, giving each token its color, background, bold, italic, underline and strikethrough, for terminals, canvas, PDF and native views ([#643](https://github.com/metonym/svelte-highlight/issues/643))
+- add `toAnsi` to `svelte-highlight/styled-tokens`, which prints styled tokens with true-color terminal escapes ([#653](https://github.com/metonym/svelte-highlight/issues/653))
+- add `HighlightTokens`, which renders styled tokens only through your `line` or `children` snippet, so it works with Svelte 5.59's custom renderers as well as the DOM; import it from `svelte-highlight/HighlightTokens.svelte` (Svelte 5 only) ([#645](https://github.com/metonym/svelte-highlight/issues/645))
+- add `svelte-highlight/dom` for plain pages: `highlightAll` highlights every `pre code[class*="language-"]` in place, loading each grammar from its class, and `highlight` is the action as a plain function ([#644](https://github.com/metonym/svelte-highlight/issues/644))
+- add `paintHighlights` to `svelte-highlight/dom`, the `css-highlights` engine without a component ([#656](https://github.com/metonym/svelte-highlight/issues/656))
+- add a `<shl-code>` web component, defined with `defineHighlightElement` from `svelte-highlight/element` ([#646](https://github.com/metonym/svelte-highlight/issues/646))
+- export `languageNameForPath` from `svelte-highlight/diff-languages` ([#653](https://github.com/metonym/svelte-highlight/issues/653))
+
+**Fixes**
+
+- make every `ThemePalette` paint the same colors as its theme CSS (111 of 348 didn't): `title.class.inherited` now falls back through `title.class`, agate's `inherit` color carries over, the cybertopia themes resolve their `:root` variables, and pojoaque and brown-paper keep their background color ([#652](https://github.com/metonym/svelte-highlight/issues/652))
+- keep a theme's `:root` variables when `HighlightStyle` scopes theme CSS, and read them in the `css-highlights` engine, so the cybertopia themes have colors there ([#652](https://github.com/metonym/svelte-highlight/issues/652))
+- measure `DiffView`'s line height on mount instead of throwing, so its rows follow a page's own line height ([#655](https://github.com/metonym/svelte-highlight/issues/655))
+
+**Documentation**
+
+- add `spec/ENGINE.md`, a specification of the engine for other hosts, and `spec/corpus.json`, a conformance corpus the engine is tested against ([#657](https://github.com/metonym/svelte-highlight/issues/657))
+- add a "Without Svelte" section to the docs site, with live `highlightAll`, `<shl-code>` and terminal demos ([#654](https://github.com/metonym/svelte-highlight/issues/654))
+- add examples: `cdn` (no bundler), `terminal` and `opentui` (Svelte custom renderers), and `rust` (the engine in QuickJS, passing the corpus) ([#644](https://github.com/metonym/svelte-highlight/issues/644)) ([#653](https://github.com/metonym/svelte-highlight/issues/653)) ([#658](https://github.com/metonym/svelte-highlight/issues/658)) ([#659](https://github.com/metonym/svelte-highlight/issues/659))
+
 ## [7.26.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.26.0) - 2026-11-22
 
 **Features**
