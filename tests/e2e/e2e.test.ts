@@ -4549,6 +4549,9 @@ test("DiffFileList - keeps content still while scrolling up from a far jump", as
   mount,
   page,
 }) => {
+  // Twelve scroll steps, each waiting for the list to settle: about 4s in
+  // Firefox and WebKit locally, more on a loaded CI runner.
+  test.slow();
   await mount(DiffFileList);
 
   await page.getByTestId("jump-index").fill("250");
@@ -4568,7 +4571,19 @@ test("DiffFileList - keeps content still while scrolling up from a far jump", as
       if (!header || window.scrollY < 1000) return null;
       const before = header.getBoundingClientRect().top;
       window.scrollBy(0, -900);
-      await new Promise((r) => setTimeout(r, 400));
+      // Wait for files to mount and the list to re-anchor: until the
+      // header holds still for 5 frames, or 1s. A fixed 400ms wait per
+      // step ran the test past its timeout on slow CI runners.
+      const frame = () => new Promise((r) => requestAnimationFrame(r));
+      const deadline = performance.now() + 1000;
+      let last = Number.NaN;
+      let still = 0;
+      while (still < 5 && performance.now() < deadline) {
+        await frame();
+        const top = header.getBoundingClientRect().top;
+        still = top === last ? still + 1 : 0;
+        last = top;
+      }
       return header.isConnected
         ? header.getBoundingClientRect().top - before
         : null;
