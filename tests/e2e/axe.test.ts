@@ -52,6 +52,9 @@ for (const [component, name] of CASES) {
     mount,
     page,
   }) => {
+    // A scan takes under 2s locally, but on a loaded CI runner Firefox and
+    // WebKit scans have run past the 10s default inside `analyze()`.
+    test.slow();
     await mount(A11y, { props: { component } });
     await page.locator("main").waitFor();
     expect(await violations(page)).toEqual([]);
