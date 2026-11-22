@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.26.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.26.0) - 2026-11-22
+
+**Features**
+
+- render `HighlightEditable`'s tokens on the server, and keep that markup on mount instead of repainting it; add `prerenderEditor` and a `prerendered` option to `createEditor` in `svelte-highlight/editable` ([#635](https://github.com/metonym/svelte-highlight/issues/635))
+- server-render `HighlightVirtual`'s first 100 lines highlighted, and the rest as plain text, so a page no longer flashes from plain to highlighted code on hydration
+- server-render the first files of a `DiffFileList`, down to about a screen and a half, instead of empty placeholders, and apply a language given directly before mount
+
+**Fixes**
+
+- highlight `MarkdownStream` fences on the first render, including on the server, when `resolveLanguage` returns a grammar directly rather than a promise
+
 ## [7.25.2](https://github.com/metonym/svelte-highlight/releases/tag/v7.25.2) - 2026-11-21
 
 **Performance**
