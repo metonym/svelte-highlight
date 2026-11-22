@@ -4337,6 +4337,30 @@ test("HighlightDiff - streaming stops following after any reader scroll", async 
   expect(await scrollTop()).toBe(0);
 });
 
+test("DiffView - measures its line height on mount", async ({
+  mount,
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  // A page that sets its own row height, taller than the 18px DiffView
+  // assumes until it measures.
+  await page.addStyleTag({
+    content: ".shl-diff-row { line-height: 30px !important; }",
+  });
+  await mount(DiffViewSlots);
+
+  const view = page.getByTestId("view");
+  await expect
+    .poll(() =>
+      view.evaluate((el) =>
+        getComputedStyle(el).getPropertyValue("--shl-diff-line"),
+      ),
+    )
+    .toBe("30px");
+  expect(errors).toEqual([]);
+});
+
 test("DiffView - fills note and actions slots, with stats and a minimap", async ({
   mount,
   page,
