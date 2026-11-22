@@ -2857,7 +2857,7 @@ Each token has `text`, `scopes`, and the theme's `color`, `background`, `bold`, 
 
 It works with the DOM too, with HTML elements in the snippets.
 
-See [examples/terminal](examples/terminal) for a complete terminal renderer that prints highlighted files.
+See [examples/terminal](examples/terminal) for a complete terminal renderer that prints highlighted files, and [examples/opentui](examples/opentui) for an interactive [opentui](https://opentui.com) view.
 
 ## Component API
 
@@ -3738,6 +3738,7 @@ By default, example set-ups use Svelte 5. The exception is `examples/vite@svelte
 
 - [examples/rollup](examples/rollup)
 - [examples/cdn](examples/cdn): no bundler, no Svelte
+- [examples/opentui](examples/opentui): an opentui terminal view, through a custom renderer
 - [examples/routify](examples/routify)
 - [examples/rust](examples/rust): the engine in Rust, through QuickJS
 - [examples/sveltekit](examples/sveltekit)
