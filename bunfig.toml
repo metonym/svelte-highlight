@@ -132,4 +132,6 @@ ignorePatterns = [
   "**/*.yaml",
   "examples/**",
   "astro.config.ts",
+  # Written by scripts/build-conformance.ts.
+  "spec/corpus.json",
 ]
