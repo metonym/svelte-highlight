@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>svelte-highlight without a bundler</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/svelte-highlight/styles/github.css"
+    />
+    <!--
+      Maps the package to its published files, so imports read the same as
+      with a bundler. jsDelivr serves them unchanged, which keeps the
+      relative imports that load grammars working.
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "svelte-highlight/": "https://cdn.jsdelivr.net/npm/svelte-highlight/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <pre><code class="language-typescript">const add = (a: number, b: number) => a + b;</code></pre>
+    <pre><code class="language-rust">fn main() { println!("hi"); }</code></pre>
+    <pre id="from-string"></pre>
+
+    <script type="module">
+      // Browsers don't read the package's `exports`, hence the `.js`.
+      import { highlightAll } from "svelte-highlight/dom.js";
+      import {
+        createRegistry,
+        registerAll,
+        renderHtml,
+      } from "svelte-highlight/engine.js";
+      import python from "svelte-highlight/languages/python.js";
+
+      // Existing markup, in place. Grammars load on demand from each
+      // block's `language-xxx` class.
+      const { ready } = highlightAll();
+      console.log(await ready); // { highlighted: 2, failed: 0 }
+
+      // A string, rendered yourself.
+      const registry = createRegistry();
+      registerAll(registry, python);
+      const { events } = registry.highlight("def add(a, b): return a + b", {
+        language: "python",
+      });
+      const code = document.createElement("code");
+      code.className = "hljs";
+      code.innerHTML = renderHtml(events);
+      document.querySelector("#from-string").append(code);
+    </script>
+  </body>
+</html>

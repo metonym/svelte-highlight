@@ -1720,6 +1720,26 @@ The action dispatches `highlighted` (`detail: { html, language }`) on success an
 
 `highlighted` is also a composition hook for a sibling `LineNumbers`: `on:highlighted={(e) => (highlighted = e.detail.html)}` feeding `<LineNumbers {highlighted} languageName={typescript.name} />`.
 
+### Without Svelte
+
+`svelte-highlight/dom` runs the action on plain pages. `highlightAll` highlights every `pre code[class*="language-"]` in place and loads each block's grammar from its class. `ready` settles once every block is done, and `destroy` puts the original text back.
+
+```html
+<pre><code class="language-typescript">const add = (a, b) => a + b;</code></pre>
+```
+
+```js
+import "svelte-highlight/styles/github.css";
+import { highlightAll } from "svelte-highlight/dom";
+
+const { ready } = highlightAll();
+await ready; // { highlighted: 1, failed: 0 }
+```
+
+Pass a root element to limit the search, and `{ selector, language }` to pick other elements or skip the class lookup. `highlight(element, { language, code })` from the same entry highlights a single element and returns `{ update, destroy }`.
+
+Without a bundler, an import map points the package at a CDN, and the same imports work in a `<script type="module">`. Browsers don't read the package's `exports`, so add the `.js` extension (`svelte-highlight/dom.js`). See [examples/cdn](examples/cdn).
+
 ## Code Window
 
 Wrap a code block in `CodeWindow` to frame it with window chrome. It's purely cosmetic; the default slot renders your content unchanged.

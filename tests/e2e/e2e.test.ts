@@ -30,6 +30,7 @@ import HighlightActionEvents from "./HighlightAction.events.test.svelte";
 import HighlightActionOmittedCode from "./HighlightAction.omittedCode.test.svelte";
 import HighlightActionRegisterThrows from "./HighlightAction.registerThrows.test.svelte";
 import HighlightAction from "./HighlightAction.test.svelte";
+import HighlightAll from "./HighlightAll.test.svelte";
 import HighlightAutoDispatchOnce from "./HighlightAuto.dispatchOnce.test.svelte";
 import HighlightAutoEmptyCode from "./HighlightAuto.emptyCode.test.svelte";
 import HighlightAutoEvents from "./HighlightAuto.events.test.svelte";
@@ -702,6 +703,28 @@ test('highlight action - honors class="language-xxx" and errors when no class ma
   await expect(code).toBeVisible();
   await expect(code.locator(".hljs-keyword").first()).toHaveText("const");
   await expect(page.locator('[data-testid="last-event"]')).toHaveText("error");
+});
+
+test("highlightAll - highlights each language-xxx block on a plain page", async ({
+  mount,
+  page,
+}) => {
+  await mount(HighlightAll);
+  await expect(page.getByTestId("result")).toHaveText(
+    "2 highlighted, 1 failed",
+  );
+  const highlighted = page.locator("pre code.hljs");
+  await expect(highlighted).toHaveCount(2);
+  await expect(highlighted.nth(0).locator(".hljs-keyword").first()).toHaveText(
+    "const",
+  );
+  await expect(highlighted.nth(1).locator(".hljs-keyword").first()).toHaveText(
+    "def",
+  );
+  await expect(page.locator("pre code:not(.hljs)")).toHaveText([
+    "plain",
+    "no class",
+  ]);
 });
 
 test("HighlightAuto", async ({ mount, page }) => {
