@@ -150,6 +150,13 @@ export function createEditor(element, options) {
   function renderAt(start, end) {
     const changedIndex = paint();
     if (start == null) return;
+    // The browser's edit already drew what the paint would have: leave its
+    // selection alone if it's at the target. Setting it costs a layout and
+    // an O(document) selection sync in Chromium.
+    if (!view.wrote) {
+      const current = getSelectionRange();
+      if (current?.start === start && current.end === (end ?? start)) return;
+    }
     restoringSelection = true;
     if (changedIndex != null) {
       const lineStart = lineStartOffset(view, changedIndex);

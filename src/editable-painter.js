@@ -42,13 +42,70 @@ function loadCascade() {
   return cascadeLoad;
 }
 
-/** @param {HTMLElement} el @param {string} line */
+/**
+ * One `<template>` per document to parse lines into, so a line the
+ * browser's own edit already left right is compared, not rewritten.
+ * @type {WeakMap<Document, HTMLTemplateElement>}
+ */
+const templates = new WeakMap();
+
+/**
+ * @param {Node} el
+ * @param {DocumentFragment} fragment
+ */
+function sameChildren(el, fragment) {
+  const { childNodes } = fragment;
+  if (el.childNodes.length !== childNodes.length) return false;
+  for (let i = 0; i < childNodes.length; i++) {
+    const child = /** @type {Node} */ (childNodes[i]);
+    if (!child.isEqualNode(el.childNodes[i] ?? null)) return false;
+  }
+  return true;
+}
+
+/**
+ * Writes `line`'s markup to `el` unless it's already there. Returns
+ * whether it wrote.
+ * @param {HTMLElement} el
+ * @param {string} line
+ */
 const setHtml = (el, line) => {
-  el.innerHTML = line;
+  // A new line's span: nothing to compare.
+  if (!el.firstChild) {
+    if (line === "") return false;
+    el.innerHTML = line;
+    return true;
+  }
+  const doc = /** @type {Document} */ (el.ownerDocument);
+  let template = templates.get(doc);
+  if (!template) {
+    template = doc.createElement("template");
+    templates.set(doc, template);
+  }
+  template.innerHTML = line;
+  if (sameChildren(el, template.content)) return false;
+  el.replaceChildren(template.content);
+  return true;
 };
-/** @param {HTMLElement} el @param {string} line */
+
+/**
+ * Writes `line` to `el` unless it's already its one text node (the ranges
+ * "css-highlights" adds assume one). Returns whether it wrote.
+ * @param {HTMLElement} el
+ * @param {string} line
+ */
 const setText = (el, line) => {
+  const only = el.firstChild;
+  const showing =
+    line === ""
+      ? only === null
+      : only !== null &&
+        only === el.lastChild &&
+        only.nodeType === 3 &&
+        /** @type {Text} */ (only).data === line;
+  if (showing) return false;
   el.textContent = line;
+  return true;
 };
 
 /**

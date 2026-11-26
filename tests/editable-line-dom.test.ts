@@ -99,6 +99,33 @@ describe("renderLines", () => {
     expect(editor.textContent).toContain("let x &");
   });
 
+  it("reports whether the paint wrote to the DOM", () => {
+    // Writes only what the line doesn't already show, as the painter does.
+    const setIfChanged = (el: HTMLElement, line: string) => {
+      if (el.textContent === line) return false;
+      el.textContent = line;
+      return true;
+    };
+    const { editor, view, render } = setup(doc(5), setIfChanged);
+    expect(view.wrote).toBe(true);
+
+    // The browser's own edit already put the new text in line 2.
+    const typed = doc(5);
+    typed[2] = "line 2x";
+    (view.lineEls[2] as HTMLElement).textContent = "line 2x";
+    expect(render(typed)).toBe(2);
+    expect(view.wrote).toBe(false);
+    expectPainted(editor, view, typed);
+
+    const rewritten = typed.slice();
+    rewritten[2] = "line 2y";
+    expect(render(rewritten)).toBe(2);
+    expect(view.wrote).toBe(true);
+
+    expect(render([...rewritten, "line 5"])).toBeNull();
+    expect(view.wrote).toBe(true);
+  });
+
   it("matches the lines across inserts, deletes, and rewrites anywhere", () => {
     let seed = 7;
     const random = (n: number) => {

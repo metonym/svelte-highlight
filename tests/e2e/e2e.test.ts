@@ -2645,6 +2645,42 @@ test("HighlightEditable - only repaints the edited line, leaving others' DOM con
   expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
 });
 
+test("HighlightEditable - leaves the DOM and caret alone when typing doesn't change the markup", async ({
+  mount,
+  page,
+}) => {
+  const lines = Array.from({ length: 20 }, (_, i) => `// note ${i}`).join("\n");
+  await mount(HighlightEditable, { props: { initialCode: lines } });
+
+  const editor = page.locator("[contenteditable='true']");
+  const comment = editor.locator("> span").nth(10).locator(".hljs-comment");
+  const text = await comment.evaluateHandle((el) => el.firstChild);
+  await comment.click();
+  await page.evaluate(() => {
+    const state = window as unknown as { selectionWrites: number };
+    state.selectionWrites = 0;
+    const addRange = Selection.prototype.addRange;
+    Selection.prototype.addRange = function (range) {
+      state.selectionWrites++;
+      addRange.call(this, range);
+    };
+  });
+  // Typing inside a comment keeps it one comment token: the browser's
+  // own insert already matches the repaint, so neither is redone.
+  await page.keyboard.type("xyz");
+
+  const code = await page.getByTestId("code").getAttribute("data-value");
+  // Contiguous in line 10: the caret stayed put between keys.
+  expect(code?.split("\n")[10]).toContain("xyz");
+  expect(code?.replace("xyz", "")).toBe(lines);
+  expect(await text.evaluate((node) => node?.isConnected)).toBe(true);
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { selectionWrites: number }).selectionWrites,
+    ),
+  ).toBe(0);
+});
+
 test("HighlightEditable - Enter mid-document keeps later lines' DOM connected", async ({
   mount,
   page,
@@ -2762,6 +2798,49 @@ test("HighlightEditable css-highlights engine - unrelated lines stay connected a
   const code = await page.getByTestId("code").getAttribute("data-value");
   expect(code).toHaveLength(lines.length + 20);
   expect(await handle?.evaluate((el) => el.isConnected)).toBe(true);
+});
+
+test("HighlightEditable css-highlights engine - keeps the edited line's text node when typing", async ({
+  mount,
+  page,
+}) => {
+  const supported = await page.evaluate(
+    () => typeof CSS !== "undefined" && "highlights" in CSS,
+  );
+  test.skip(!supported, "CSS Custom Highlight API not supported");
+
+  const lines = Array.from({ length: 5 }, (_, i) => `const v${i} = 1;`).join(
+    "\n",
+  );
+  await mount(HighlightEditableCssHighlights, {
+    props: { initialCode: lines },
+  });
+  await expect.poll(() => readResolvedEngine(page)).toBe("css-highlights");
+
+  const editor = page.locator("[contenteditable='true']");
+  const line = editor.locator("> span").nth(2);
+  const text = await line.evaluateHandle((el) => el.firstChild);
+  await line.click();
+  await page.keyboard.type("xyz");
+
+  const code = await page.getByTestId("code").getAttribute("data-value");
+  expect(code?.split("\n")[2]).toContain("xyz");
+  expect(code?.replace("xyz", "")).toBe(lines);
+  // The browser typed into the line's text node, so the repaint kept it
+  // and only redrew the ranges over it.
+  expect(await text.evaluate((node) => node?.isConnected)).toBe(true);
+  expect(
+    await text.evaluate((node) =>
+      [...CSS.highlights.values()].some((highlight) =>
+        [...highlight].some(
+          (range) =>
+            range instanceof Range &&
+            range.startContainer === node &&
+            range.toString() === "const",
+        ),
+      ),
+    ),
+  ).toBe(true);
 });
 
 test("HighlightEditable css-highlights engine - Enter mid-document repaints shifted lines", async ({
