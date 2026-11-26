@@ -29,7 +29,7 @@
         "postcss-merge-rules": "^9.1.5",
         "svelte": "^5.59.1",
         "svelte-bun": "^0.2.0",
-        "svelte-lint": "^0.3.0",
+        "svelte-lint": "^0.4.0",
         "vite": "^7.3.7",
       },
     },
@@ -781,7 +781,7 @@
 
     "svelte-bun": ["svelte-bun@0.2.0", "", { "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-CXbKASd1GWiwR7UHlPXBho7h1EM99dXnFtk8d55MysUOFSvqauDlfp7LHgmqiJgH8gCleuitX3Y0DIrVpYrpEg=="],
 
-    "svelte-lint": ["svelte-lint@0.3.0", "", { "bin": { "svelte-lint": "cli.js" } }, "sha512-XkG2idJkMi/K3GuiZVJTSOfkzYwd1NOShMhtwp0STC/kao1KEHNvCo2phaExHKBOuuWhmvmDdCTfyfUaf/Lk9w=="],
+    "svelte-lint": ["svelte-lint@0.4.0", "", { "bin": { "svelte-lint": "cli.js" } }, "sha512-ce1vTtJ4i4m6XGT8oGvDdNX0ywMIo2x3TRNqeVDm/MTnUwB7tW5Lnxeq5UG14chv06pJ3BC1d3rrwFiPEqXe/w=="],
 
     "svelte2tsx": ["svelte2tsx@0.7.62", "", { "dependencies": { "dedent-js": "^1.0.1", "scule": "^1.3.0" }, "peerDependencies": { "svelte": "^3.55 || ^4.0.0-next.0 || ^4.0 || ^5.0.0-next.0", "typescript": "^4.9.4 || ^5.0.0 || ^6.0.0" } }, "sha512-ZXfsmL0jzAs01ho0w5z5LSIC2WgSdpTF0QCwaXLq7oHgho4P9fTgHlLp1pKAx6/xtVYRSW5nGH5ZRpEHZCqliA=="],
 
