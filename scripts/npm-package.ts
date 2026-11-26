@@ -72,7 +72,6 @@ pkgJson.types = "./index.d.ts";
 pkgJson.sideEffects = [
   "styles/*.css",
   "themes/*.css",
-  "langtag.css",
   "search.css",
   "stream.css",
 ];

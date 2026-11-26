@@ -1330,8 +1330,8 @@ export { add, mul };\`,
     </UnorderedList>
     <p class="mb-5">
       A truthy <code class="code">langtag</code> can't pull in
-      <code class="code">langtag.css</code>
-      at build time, so it renders the language badge as a plain inline-styled
+      <code class="code">LangTag</code>'s styles at build time, so it renders
+      the language badge as a plain inline-styled
       <code class="code">{"<span>"}</code>
       instead, themed with the same
       <code class="code">--langtag-*</code>

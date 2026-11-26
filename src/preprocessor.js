@@ -270,7 +270,7 @@ function escapeSvelteBraces(html) {
   return html.replace(/[{}]/g, (char) => (char === "{" ? "{'{'}" : "{'}'}"));
 }
 
-// Inline copy of `.langtag::after` (src/langtag.css), so static usage needs no stylesheet.
+// Inline copy of `.langtag::after` (src/LangTag.svelte), so static usage needs no stylesheet.
 const LANGTAG_BADGE_STYLE =
   "position:absolute;top:var(--langtag-top, 0);right:var(--langtag-right, 0);" +
   "display:flex;align-items:center;justify-content:center;" +
