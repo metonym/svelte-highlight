@@ -14,10 +14,13 @@ const ELEMENT_NODE = 1;
 const COMMENT_NODE = 8;
 
 /**
+ * `wrote` is whether the last `renderLines` changed the DOM. When it didn't,
+ * the selection is still where the browser left it.
  * @typedef {{
  *   lineEls: HTMLElement[],
  *   lineLengths: number[],
  *   renderedLines: string[],
+ *   wrote: boolean,
  * }} LineView
  */
 
@@ -33,7 +36,7 @@ const COMMENT_NODE = 8;
 
 /** @returns {LineView} */
 export function createLineView() {
-  return { lineEls: [], lineLengths: [], renderedLines: [] };
+  return { lineEls: [], lineLengths: [], renderedLines: [], wrote: false };
 }
 
 /**
@@ -69,16 +72,18 @@ function spliceIn(array, index, removed, items) {
  * Patches `editor` to match `lines`, touching only changed lines. Lines are
  * matched from both ends so Enter/Backspace mid-document doesn't rewrite
  * every line below. Returns the index of the single changed line when
- * nothing else shifted, or null.
+ * nothing else shifted, or null. `setContent` returns false when the line
+ * already showed `line`, as after the browser's own edit, and wrote nothing.
  * @param {HTMLElement} editor
  * @param {LineView} view
  * @param {string[]} lines
- * @param {(el: HTMLElement, line: string) => void} setContent
+ * @param {(el: HTMLElement, line: string) => boolean | void} setContent
  * @param {LineHooks} hooks
  * @returns {number | null}
  */
 export function renderLines(editor, view, lines, setContent, hooks) {
   const doc = /** @type {Document} */ (editor.ownerDocument);
+  view.wrote = true;
   if (view.lineEls.length === 0 && adoptLines(editor, view, lines)) {
     hooks.onReset();
     return null;
@@ -116,10 +121,13 @@ export function renderLines(editor, view, lines, setContent, hooks) {
 
   let changedIndex = null;
   let changedCount = 0;
+  let wrote = prevLen !== newLen || prevLen === 0;
   for (let i = head; i < pairedEnd; i++) {
     if (renderedLines[i] === lines[i]) continue;
     const el = /** @type {HTMLElement} */ (lineEls[i]);
-    setContent(el, /** @type {string} */ (lines[i]));
+    if (setContent(el, /** @type {string} */ (lines[i])) !== false) {
+      wrote = true;
+    }
     lineLengths[i] = /** @type {string} */ (el.textContent).length;
     changedIndex = i;
     changedCount++;
@@ -162,6 +170,7 @@ export function renderLines(editor, view, lines, setContent, hooks) {
   }
 
   view.renderedLines = lines;
+  view.wrote = wrote;
   return prevLen === newLen && changedCount === 1 ? changedIndex : null;
 }
 
