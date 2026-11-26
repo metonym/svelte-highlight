@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.27.1](https://github.com/metonym/svelte-highlight/releases/tag/v7.27.1) - 2026-11-26
+
+**Fixes**
+
+- inline `LangTag` and `LineNumbers`' badge styles instead of importing `langtag.css`, which 404'd in dev when vite-plugin-svelte prebundled the package (SvelteKit) ([#663](https://github.com/metonym/svelte-highlight/issues/663))
+
+**Performance**
+
+- `HighlightEditable` skips the line rewrite and caret restore when the browser's own edit already matches the repaint, about 4 in 5 keystrokes, so typing no longer slows down as fast with document size (`onInput` 38.9 ms to 10.9 ms at 1,000 lines on 4x CPU throttling) ([#662](https://github.com/metonym/svelte-highlight/issues/662))
+
 ## [7.27.0](https://github.com/metonym/svelte-highlight/releases/tag/v7.27.0) - 2026-11-22
 
 **Features**
