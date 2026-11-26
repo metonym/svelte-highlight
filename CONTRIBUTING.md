@@ -161,6 +161,14 @@ bun fix:changed
 
 For a full run, use `bun run test:unit`. A bare `bun test` also picks up the Playwright files under `tests/e2e/`, which fail outside `bun run test:e2e`.
 
+## Component styles
+
+Components ship as `.svelte` source, and the app compiles them in whatever mode it uses: CSS injected or external, SSR, or prebundled by vite-plugin-svelte in dev. A `<style>` block has to work in all of them, so it can't rely on the bundler resolving a file.
+
+Svelte keeps `@import` and `url()` as written. With injected CSS, the browser resolves a relative path against the page URL and gets a 404 ([#663](https://github.com/metonym/svelte-highlight/issues/663)). Write the rules inline in each component that needs them, even if that duplicates a few lines. For styles a user opts into, ship a CSS file in the `exports` map (like `search.css`) and have the user import it.
+
+`tests/component-css-imports.test.ts` compiles every component and fails if its CSS has an `@import` or a relative `url()`.
+
 ## Benchmarks
 
 Suites live in `bench/*.bench.ts` and run on [ostia](https://github.com/metonym/ostia).
