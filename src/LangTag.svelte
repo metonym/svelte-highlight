@@ -55,7 +55,31 @@
   ></pre>
 
 <style>
-  @import "./langtag.css";
+  /* Inline, not imported: injected CSS keeps a relative import as written,
+     and the browser resolves it against the page URL (#663). */
+  .langtag {
+    position: relative;
+  }
+
+  .wrap {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .langtag::after {
+    content: attr(data-language);
+    position: absolute;
+    top: var(--langtag-top, 0);
+    right: var(--langtag-right, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--langtag-background, inherit);
+    color: var(--langtag-color, inherit);
+    border-radius: var(--langtag-border-radius, 0);
+    padding: var(--langtag-padding, 1em);
+    font-size: var(--langtag-font-size, inherit);
+  }
 
   pre {
     direction: ltr;

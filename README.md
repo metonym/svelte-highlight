@@ -1269,13 +1269,13 @@ See [SUPPORTED_LANGUAGES.md](SUPPORTED_LANGUAGES.md) for a list of supported lan
 
 ## Language Tags
 
-The language tag is one badge (`LangTag.svelte` + `langtag.css`) reached three ways: automatically, via `Highlight`/`HighlightAuto`/`HighlightSvelte`'s built-in fallback render when `langtag` is set; directly, via the standalone `LangTag` component; or via `LineNumbers`' own `langtag`/`languageName` props, which are not wired to a wrapping `Highlight` automatically and must be forwarded manually from slot props (see [Language Tag](#language-tag) under Line Numbers).
+The language tag is one badge (`LangTag.svelte`) reached three ways: automatically, via `Highlight`/`HighlightAuto`/`HighlightSvelte`'s built-in fallback render when `langtag` is set; directly, via the standalone `LangTag` component; or via `LineNumbers`' own `langtag`/`languageName` props, which are not wired to a wrapping `Highlight` automatically and must be forwarded manually from slot props (see [Language Tag](#language-tag) under Line Numbers).
 
 Set `langtag` to `true` to display the language name in the top right corner of the code block.
 
 Customize the language tag `background`, `color`, and `border-radius` using style props.
 
-Setting `langtag` opts a `<Highlight>` usage out of the [`svelte-highlight/static`](#static-mode) build-time transform, since static output can't pull in `langtag.css`.
+Setting `langtag` opts a `<Highlight>` usage out of the [`svelte-highlight/static`](#static-mode) build-time transform, since static output can't pull in `LangTag`'s styles.
 
 If the highlighted output is empty (e.g. empty `code`, or code that highlights to an empty string), the badge and code block still render, but the code falls back to plain, unhighlighted text — the `hljs` class is still applied, there's just no syntax-highlighting markup inside it.
 
@@ -1545,7 +1545,7 @@ The static transform runs only when all of these are true:
 - `language` is a plain identifier from a static `import` of `svelte-highlight/languages/*`.
 - `code` is a string literal or a template literal with no `${...}` interpolation.
 - The element has no slot content, spread props, or directives (`bind:`, `on:`, etc.).
-- `langtag`, if set, is a bare flag or a static boolean literal (`langtag={true}`/`langtag={false}`) - not a variable or expression. Static output can't pull in `langtag.css` (that only happens when a runtime `LangTag` is in the bundle), so a truthy `langtag` renders the language badge as a plain inline-styled `<span>` instead, themed with the same `--langtag-*` custom properties `LangTag` reads - customization is limited to those variables, not `LangTag`'s slot content.
+- `langtag`, if set, is a bare flag or a static boolean literal (`langtag={true}`/`langtag={false}`) - not a variable or expression. Static output can't pull in `LangTag`'s styles (that only happens when a runtime `LangTag` is in the bundle), so a truthy `langtag` renders the language badge as a plain inline-styled `<span>` instead, themed with the same `--langtag-*` custom properties `LangTag` reads - customization is limited to those variables, not `LangTag`'s slot content.
 - `label`, if set, is a string literal. Static output can't read a parent `CodeWindow`, so it uses `label` or `"Code"`.
 
 Dynamic `code` or `language`, `loadLanguage`, `HighlightAuto`, `HighlightSvelte`, and `HighlightEditable` keep the runtime component. No warning. That's intentional.
